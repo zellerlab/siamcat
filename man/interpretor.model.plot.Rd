@@ -4,6 +4,6 @@
 \alias{interpretor.model.plot}
 \title{model interpretation plot}
 \usage{
-interpretor.model.plot(fn.plot = "model_interpretation.pdf", feat, label,
-  meta, model, pred, positive.lab, negative.lab, color.scheme, consens.thres)
+interpretor.model.plot(feat, label, meta, model, pred, color.scheme,
+  consens.thres)
 }

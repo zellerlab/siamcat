@@ -4,5 +4,5 @@
 \alias{evaluation.model.plot}
 \title{plor model evaluation plot}
 \usage{
-evaluation.model.plot(fn.plot, pred, eval.data, model.type)
+evaluation.model.plot(fn.plot, label, pred, eval.data, model.type)
 }

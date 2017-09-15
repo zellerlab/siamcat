@@ -31,7 +31,7 @@ sample.strat = function(label, frac) {
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(feat, label, method, hyper.par) {
+train.plm <- function(feat, label, method, hyper.par, subset) {
   method <- tolower(method)
   model <- list(original.model=NULL, feat.weights=NULL)
   # note that some of the logit models are set up inversely to each other,
@@ -44,11 +44,28 @@ train.plm <- function(feat, label, method, hyper.par) {
     #print(label.fac)
     #saveList <- list(feat=feat, label.fac=label.fac)
     #save(saveList, file="featwhat.RData")
-    model$original.model <- glmnet(x=feat, y=label.fac, family='binomial', standardize=FALSE, alpha=1, lambda=lambda)
-    #print("do")
-    coef     <- coefficients(model$original.model)
-    bias.idx <- which(rownames(coef) == '(Intercept)')
-    coef     <- coef[-bias.idx,]
+    #model$original.model <- glmnet(x=feat, y=label.fac, family='binomial', standardize=FALSE, alpha=1, lambda=lambda)
+    data                <- cbind(t(feat),label.fac[rownames(feat)])
+    data                <- as.data.frame(data)
+    data[,ncol(data)]          <- as.factor(data[,ncol(data)])
+    colnames(data) <- paste0("Sample_",1:ncol(data))
+    colnames(data)[ncol(data)] <- "cancer"
+    ## 1) Define the task
+    ## Specify the type of analysis (e.g. classification) and provide data and response variable
+    print(data[,"cancer"])
+    task                <- makeClassifTask(data = data, target = "cancer")
+
+    ## 2) Define the learner
+    ## Choose a specific algorithm (e.g. linear discriminant analysis)
+    lrn                 <- makeLearner("classif.cvglmnet", predict.type="prob")
+
+    ## 3) Fit the model
+    ## Train the learner on the task using a random subset of the data as training set
+    model               <- train(lrn, task)
+
+    coef                <- coefficients(model$learner.model)
+    bias.idx            <- which(rownames(coef) == '(Intercept)')
+    coef                <- coef[-bias.idx,]
     
     # Remove bias/intercept term when returning model feature weights
     model$feat.weights <- (-1) *  as.numeric(coef) ### check!!!
@@ -113,7 +130,7 @@ train.plm <- function(feat, label, method, hyper.par) {
     stop('unknown method')
   }
   
-  return(model)
+  return(list(model=model,task=task))
 }
 
 
@@ -126,9 +143,7 @@ predict.plm <- function(feat, model, method, opt.hyper.par) {
   if (method == 'lasso') {
     col.idx <- 1
     # glmnet's predict function needs to be given a lambda value
-    pred <- predict(model$original.model, feat,
-                    alpha=1, s=opt.hyper.par$lambda,
-                    type="response")[,col.idx]
+    pred <- predict(model, task = task, subset = test.set)
     
   } else if (method == 'lasso_ll' || method == 'ridge_ll') {
     col.idx <- 2 # this is a bit counter-intuitive given the column names of the predict data frame

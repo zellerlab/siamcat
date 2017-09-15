@@ -222,7 +222,7 @@ normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n
     m = apply(feat, 1, mean)
     s = apply(feat, 1, sd)
     q = quantile(s, sd.min.q, names=FALSE)
-    cat(sort(s, decreasing=TRUE), '\n')
+    #cat(sort(s, decreasing=TRUE), '\n')
     stopifnot(q > 0)
     # TODO needs an apply-style rewrite!
     for (r in 1:nrow(feat)) {
@@ -915,7 +915,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
                                      num.folds=num.folds, stratified=FALSE, foldid=foldid)
     # cat('  optimal C=', opt.hyper.par$lambda, ' (', which(opt.C$lambda==C.vec), ' of ', length(hyper.par$lambda), ')\n', sep='')
     ### retrain whole training set with best parameter setting (after every internal CV run!)
-    model            <- train.plm(train.feat, train.label, model.type, opt.hyper.par)
+    model            <- train.plm(train.feat, train.label, model.type, opt.hyper.par, )
     models.list[[r]] <- model
 
     

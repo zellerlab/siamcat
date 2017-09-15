@@ -77,8 +77,7 @@ label       <- read.labels(fn.label,feat)
 ### load trained model(s)
 model        <- NULL
 model$W      <- read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
-num.models   <- dim(model$W)[2]
-stopifnot(dim(model$W)[1] == dim(feat)[1])
+stopifnot(nrow(model$W) == nrow(feat))
 # parse model header
 con          <- file(fn.model, 'r')
 model.header <- readLines(con, 1)

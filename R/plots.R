@@ -14,7 +14,7 @@
 #' @title model interpretation plot
 #' @export
 interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme, consens.thres){
-
+  num.models   <- ncol(model$W)
   ### some color preprocessing
   if (color.scheme == 'matlab') {
     color.scheme = matlab.like(100)
@@ -53,8 +53,8 @@ interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme,
   sel.idx = sel.idx[median.sorted.models$ix]
 
   rel.model.weights = rel.model.weights[,sel.idx]
-  print(sel.idx)
-  print(rel.model.weights)
+  #print(sel.idx)
+  #print(rel.model.weights)
   sel.W = t(model$W[sel.idx,])
   num.sel.f = length(sel.idx)
 
