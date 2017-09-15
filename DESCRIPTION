@@ -1,0 +1,22 @@
+Package: SIAMCAT
+Type: Package
+Title: Statistical Inference of Associations between Microbial Communities And host phenoTypes
+Version: 0.2.0
+Author: Georg Zeller, Nicolai Karcher, Konrad Zych
+Maintainer: Konrad Zych <konrad.zych@embl.de>
+Description: SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes. A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots).
+Depends: 
+    R (>= 3.1.0),
+    RColorBrewer,
+    beanplot,
+    glmnet,
+    LiblineaR,
+    pROC
+Imports: 
+    optparse,
+    colorRamps,
+    gelnet
+License: GNU GPL-3.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
