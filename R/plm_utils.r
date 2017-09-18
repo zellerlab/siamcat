@@ -31,7 +31,7 @@ sample.strat = function(label, frac) {
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(feat, label, method, hyper.par, subset) {
+train.plm <- function(feat, label, method, hyper.par, data, subset) {
   method <- tolower(method)
   model <- list(original.model=NULL, feat.weights=NULL)
   # note that some of the logit models are set up inversely to each other,
@@ -39,20 +39,14 @@ train.plm <- function(feat, label, method, hyper.par, subset) {
   if (method == 'lasso') {
     # here we will ignore any hyper.par$alpha to ensure a LASSO model (and not an Elastic Net) is trained
     lambda              <- hyper.par$lambda
-    label.fac           <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
     # Note that ordering of label vector is important!
     #print(label.fac)
     #saveList <- list(feat=feat, label.fac=label.fac)
     #save(saveList, file="featwhat.RData")
     #model$original.model <- glmnet(x=feat, y=label.fac, family='binomial', standardize=FALSE, alpha=1, lambda=lambda)
-    data                <- cbind(t(feat),label.fac[rownames(feat)])
-    data                <- as.data.frame(data)
-    data[,ncol(data)]          <- as.factor(data[,ncol(data)])
-    colnames(data) <- paste0("Sample_",1:ncol(data))
-    colnames(data)[ncol(data)] <- "cancer"
+
     ## 1) Define the task
     ## Specify the type of analysis (e.g. classification) and provide data and response variable
-    print(data[,"cancer"])
     task                <- makeClassifTask(data = data, target = "cancer")
 
     ## 2) Define the learner
@@ -69,6 +63,8 @@ train.plm <- function(feat, label, method, hyper.par, subset) {
     
     # Remove bias/intercept term when returning model feature weights
     model$feat.weights <- (-1) *  as.numeric(coef) ### check!!!
+    model$lrn          <- lrn
+    model$task         <- task
     
   } else if (method == 'lasso_ll') {
     liblin.type <- 6
@@ -130,12 +126,12 @@ train.plm <- function(feat, label, method, hyper.par, subset) {
     stop('unknown method')
   }
   
-  return(list(model=model,task=task))
+  return(model)
 }
 
 
 #' @export
-predict.plm <- function(feat, model, method, opt.hyper.par) {
+predict.plm <- function(feat, model, method, opt.hyper.par, data, subset) {
   method <- tolower(method)
   
   # note that some of the logit models are set up inversely to each other,
@@ -143,7 +139,7 @@ predict.plm <- function(feat, model, method, opt.hyper.par) {
   if (method == 'lasso') {
     col.idx <- 1
     # glmnet's predict function needs to be given a lambda value
-    pred <- predict(model, task = task, subset = test.set)
+    pred <- predict(model, task = task, subset = subset)
     
   } else if (method == 'lasso_ll' || method == 'ridge_ll') {
     col.idx <- 2 # this is a bit counter-intuitive given the column names of the predict data frame
@@ -173,7 +169,7 @@ predict.plm <- function(feat, model, method, opt.hyper.par) {
 
 #' @export
 select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
-                         num.folds=5, stratified=FALSE, foldid=foldid) {
+                         num.folds=5, stratified=FALSE, foldid=foldid, data) {
   method        <- tolower(method)
   opt.hyper.par <- NULL
   nonzero.coeff <- matrix(0, num.folds, length(hyper.par$lambda))
@@ -243,8 +239,8 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
           train.idx <- setdiff(1:length(label$label), test.idx)
           label.train <- label
           label.train$label <- label.train$label[train.idx]
-          model       <- train.plm(feat[train.idx,], label.train, method, hp)
-          p[test.idx] <- predict.plm(feat[test.idx,], model, method, hp)
+          model       <- train.plm(feat[train.idx,], label.train, method, hp, data, train.idx)
+          p[test.idx] <- predict.plm(feat[test.idx,], model, method, hp, data, test.idx)
         }
         aucs[i,j] <- roc(response=label, predictor=p)$auc
         cat('    ', method, ' model selection: (alpha=', hyper.par$alpha[i], 

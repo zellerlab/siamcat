@@ -830,7 +830,12 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   
   # transpose feature matrix as a convenience preprocessing
   feat         <- t(feat)
-  
+  label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
+  data                       <- cbind(t(feat),label.fac[rownames(feat)])
+  data                       <- as.data.frame(data)
+  data[,ncol(data)]          <- as.factor(data[,ncol(data)])
+  colnames(data)             <- paste0("Sample_",1:ncol(data))
+  colnames(data)[ncol(data)] <- "cancer"
   ### subselect training examples as specified in fn.train.sample (if given)
   num.runs     <- 1
   fold.name    <- list()
@@ -912,10 +917,10 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
                       #                 mtry   = c(sqrt.mdim/2, sqrt.mdim, sqrt.mdim*2)            # RF (not functional for now)
     )  
     opt.hyper.par    <- select.model(train.feat, train.label, model.type, hyper.par, min.nonzero = min.nonzero.coeff,
-                                     num.folds=num.folds, stratified=FALSE, foldid=foldid)
+                                     num.folds=num.folds, stratified=FALSE, foldid=foldid, data)
     # cat('  optimal C=', opt.hyper.par$lambda, ' (', which(opt.C$lambda==C.vec), ' of ', length(hyper.par$lambda), ')\n', sep='')
     ### retrain whole training set with best parameter setting (after every internal CV run!)
-    model            <- train.plm(train.feat, train.label, model.type, opt.hyper.par, )
+    model            <- train.plm(train.feat, train.label, model.type, opt.hyper.par, data)
     models.list[[r]] <- model
 
     
