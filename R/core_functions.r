@@ -917,7 +917,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
                       alpha  = c(0.7,0.8,0.9)                                    # ENet
                       #                 ntree  = c(250, 500, 1000),                                # RF (not functional for now)
                       #                 mtry   = c(sqrt.mdim/2, sqrt.mdim, sqrt.mdim*2)            # RF (not functional for now)
-    )  
+    ) 
     opt.hyper.par    <- select.model(train.feat, train.label, model.type, hyper.par, min.nonzero = min.nonzero.coeff,
                                      num.folds=num.folds, stratified=FALSE, foldid=foldid, data=data)
     # cat('  optimal C=', opt.hyper.par$lambda, ' (', which(opt.C$lambda==C.vec), ' of ', length(hyper.par$lambda), ')\n', sep='')
@@ -951,10 +951,10 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   for (i in 1:length(models.list)){
     if (model.type == 'lasso') {
       # glmnet needs lambda, a0 and beta. 
-      vec <- rep(NA, nrow(models.list[[i]]$original.model$beta) + 2)
+      vec <- rep(NA, nrow(models.list[[i]]$learner.model$glmnet.fit$beta) + 2)
       vec[1] <- hyperpar.mat[1, i]
-      vec[2] <- models.list[[i]]$original.model$a0
-      vec[3:length(vec)] <- as.numeric(models.list[[i]]$original.model$beta)
+      vec[2] <- models.list[[i]]$learner.model$glmnet.fit$a0
+      vec[3:length(vec)] <- as.numeric(models.list[[i]]$learner.model$glmnet.fit$beta)
       if (i == 1) {
         out.matrix <- matrix(vec)
       } else {
@@ -962,9 +962,9 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
       }
       # This overwrites rownames everytime, but doesnt need an additional conditional statement.
       # paste0 pastes two equal-length string vectors element-wise
-      rownames(out.matrix) <- c("lambda", "a0", rownames(models.list[[i]]$original.model$beta))
+      rownames(out.matrix) <- c("lambda", "a0", rownames(models.list[[i]]$learner.model$glmnet.fit$beta))
       # In the case of glmnet, make the coefficient matrix from a sparse matrix into a regular one.
-      models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$original.model$beta)
+      #models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$learner.model$glmnet.fit$beta)
     } else if (model.type == 'enet'){
       # glmnet needs lambda, a0 and beta. 
       vec <- rep(NA, length(models.list[[i]]$original.model$beta) + 3)
