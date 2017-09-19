@@ -1016,7 +1016,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     }
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
-  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat))
+  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, model=model))
 }
 
 #' @export
