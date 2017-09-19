@@ -139,7 +139,7 @@ predict.plm <- function(feat, model, method, opt.hyper.par, data, subset) {
   if (method == 'lasso') {
     col.idx <- 1
     # glmnet's predict function needs to be given a lambda value
-    pred <- predict(model, task = task, subset = subset)
+    pred <- predict(model, task = model$task, subset = subset)
     
   } else if (method == 'lasso_ll' || method == 'ridge_ll') {
     col.idx <- 2 # this is a bit counter-intuitive given the column names of the predict data frame
@@ -179,7 +179,7 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
   p             <- rep(NA, length(label$label))
   if (method == 'lasso') {
     aucs <- rep(0, length(hyper.par$lambda))
-    for (i in 1:length(hyper.par$lambda)) {
+    for (i in 1){#:length(hyper.par$lambda)) {
       hp <- NULL
       hp$lambda <- hyper.par$lambda[i]
       for (f in 1:num.folds) {
@@ -189,12 +189,12 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
         label.train       <- label
         label.train$label <- label.train$label[train.idx]
         #print(feat[train.idx,])
-        model             <- train.plm(feat[train.idx,], label.train, method, hp)
-        p[test.idx]       <- predict.plm(feat[test.idx,], model, method, hp)
+        model             <- train.plm(feat[train.idx,], label.train, method, hp, data=data, subset=train.idx)
+        pred              <- predict.plm(feat[test.idx,], model, method, hp, data=data, subset=test.idx)
         #print(model)
         nonzero.coeff[f,i] = sum(model$feat.weights[1:(ncol(feat)-1)] != 0)
       }
-      aucs[i] <- roc(response=label$label, predictor=p)$auc
+      aucs[i]   <- performance(pred, measures = auc)#roc(response=label$label, predictor=p)$auc
       cat('    ', method, ' model selection: (lambda=', hyper.par$lambda[i],
           ') AU-ROC=', format(aucs[i], digits=3), '\n', sep='')
     }
