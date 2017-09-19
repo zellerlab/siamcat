@@ -86,6 +86,7 @@ model$header <- readLines(con, 1)
 close(con)
 model$header <- parse.model.header(model$header)
 start.time   <- proc.time()[1]
+load("mlrModel.RData")
 
 ### read test data and the trained model(s)
 # features
