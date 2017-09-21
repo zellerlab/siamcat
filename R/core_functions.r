@@ -831,8 +831,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   # transpose feature matrix as a convenience preprocessing
   feat         <- t(feat)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
-  print(length(label.fac))
-  print(dim(feat))
+
   data                       <- cbind(feat,label.fac[rownames(feat)])
   data                       <- as.data.frame(data)
   data[,ncol(data)]          <- as.factor(data[,ncol(data)])
@@ -1021,8 +1020,14 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
 
 #' @export
 plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
-  # transpose feature matrix as a convenience preprocessing for LASSO
-  feat = t(feat)
+  feat         <- t(feat)
+  label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
+
+  data                       <- cbind(feat,label.fac[rownames(feat)])
+  data                       <- as.data.frame(data)
+  data[,ncol(data)]          <- as.factor(data[,ncol(data)])
+  colnames(data)             <- paste0("Sample_",1:ncol(data))
+  colnames(data)[ncol(data)] <- "cancer"
   
  
   ### subselect test examples as specified in fn.test.sample (if given)
@@ -1139,7 +1144,7 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
     
-    p <- predict.plm(test.feat, curr.model.new, model.type, opt.hp)
+    p <- predict.plm(test.feat, model, model.type, opt.hp, subset=fold.exm.idx[[r]])
     
     pred = c(pred, p)
     fold.pred.idx[[r]] = (length(pred)-length(p)+1):length(pred)
