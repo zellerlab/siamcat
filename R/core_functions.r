@@ -1144,9 +1144,11 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
     
-    p <- predict.plm(test.feat, model, model.type, opt.hp, subset=fold.exm.idx[[r]])
+    pdata    <- predict.plm(test.feat, model, model.type, opt.hp, data = data, subset=fold.exm.idx[[r]])
+    p        <- pdata$data[,"response"]
+    names(p) <- rownames(pdata$data)
     
-    pred = c(pred, p)
+    pred     <- c(pred, p)
     fold.pred.idx[[r]] = (length(pred)-length(p)+1):length(pred)
   }
   

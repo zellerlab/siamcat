@@ -197,6 +197,7 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
       aucs[i]   <- performance(pred, measures = auc)#roc(response=label$label, predictor=p)$auc
       #cat('    ', method, ' model selection: (lambda=', hyper.par$lambda[i],
       #    ') AU-ROC=', format(aucs[i], digits=3), '\n', sep='')
+      print(performance(pred, measures = auc))
       cat("    AU-ROC = ", format(aucs[i], digits=3), '\n', sep='')
     }
     suff.nonzero         <- apply(nonzero.coeff, 2, min) > min.nonzero
@@ -204,7 +205,7 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
     aucs                 <- aucs[suff.nonzero]
     opt.idx              <- which.max(aucs)
     opt.hyper.par$lambda <- hyper.par$lambda[opt.idx]
-    #cat('    optimal lambda =', hyper.par$lambda[opt.idx], '\n')
+    # cat('    optimal lambda =', hyper.par$lambda[opt.idx], '\n')
     
   } else if (method == 'lasso_ll' || method == 'ridge_ll' || method == 'l1_svm' || method == 'l2_svm') {
     aucs <- rep(0, length(hyper.par$C))
