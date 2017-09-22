@@ -841,11 +841,13 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   num.runs     <- 1
   fold.name    <- list()
   fold.exm.idx <- list()
+  print(fn.train.sample)
   if (!is.null(fn.train.sample)) {
     num.runs      <- 0
     con           <- file(fn.train.sample, 'r') 
     input         <- readLines(con)
     close(con)
+    print(length(input))
     for (i in 1:length(input)) { 
       l               <- input[[i]]
       if (substr(l, 1, 1) != '#') {
@@ -866,6 +868,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     fold.name[[1]]    <- 'whole data set'
     fold.exm.idx[[1]] <- names(label$label)
   }
+  print(num.runs)
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
@@ -945,12 +948,14 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   }
   # Preprocess hyper parameters
   hyperpar.mat           <- matrix(unlist(hyperpar.list), ncol = num.runs, nrow = length(hyperpar.list[[1]]), byrow = FALSE)
+  print(dim(hyperpar.mat))
   rownames(hyperpar.mat) <- names(hyperpar.list[[1]])
   ### Write models into matrix to reload in plm_predictor.r
   for (i in 1:length(models.list)){
     if (model.type == 'lasso') {
       # glmnet needs lambda, a0 and beta. 
       vec <- rep(NA, nrow(models.list[[i]]$learner.model$glmnet.fit$beta) + 2)
+      print(i)
       vec[1] <- hyperpar.mat[1, i]
       vec[2] <- models.list[[i]]$learner.model$glmnet.fit$a0
       vec[3:length(vec)] <- as.numeric(models.list[[i]]$learner.model$glmnet.fit$beta)
