@@ -1065,6 +1065,7 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
   ### apply one LASSO model per test sample (i.e. CV fold)
   # predictions are made on a concatenation of test examples from all test samples
   pred = NULL
+  predList = list()
   fold.pred.idx = list()
   
   # Init hyperpar list
@@ -1145,7 +1146,7 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
     
     pdata    <- predict.plm(test.feat, model, model.type, opt.hp, data = data, subset=fold.exm.idx[[r]])
-    p        <- pdata$data[,"response"]
+    p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
     
     pred     <- c(pred, p)
