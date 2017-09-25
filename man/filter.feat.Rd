@@ -2,28 +2,34 @@
 % Please edit documentation in R/core_functions.r
 \name{filter.feat}
 \alias{filter.feat}
-\title{This function filters features in an unsupervised manner.}
+\title{Perform unsupervised feature filtering.}
 \usage{
 filter.feat(feat, filter.method, cutoff, recomp.prop, rm.unmapped)
 }
 \arguments{
-\item{filter.method}{TODO}
+\item{feat}{feature object}
+
+\item{filter.method}{method used for filtering the features, can be one of these: \code{c("abundance", "cum.abundance", "prevalence")}}
+
+\item{cutoff}{float, abundace or prevalence cutoff}
 
 \item{recomp.prop}{boolean, should absolute abundances be converted into relative abundances?}
 
-\item{rm.unmapped}{TODO}
-
-\item{fn.in.meta}{meta-data input file}
-
-\item{fn.out.meta}{meta-data output file}
-
-\item{abundance.cutoff}{TODO}
+\item{rm.unmapped}{boolean, should unmapped reads be discarded?}
+}
+\value{
+Returns the filtered feature matrix
 }
 \description{
-This function filters features in an unsupervised manner.
+This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, can remove unmapped reads.
 }
-\examples{
-filter.feat()
+\details{
+Currently, there are three filtering methods implemented:
+\itemize{
+ \item \code{"abundance"} remove features for which the abundance is never above the threshold value (e.g. 0.5\%) in any of the samples
+ \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up (1-cutoff) of the reads in any samples
+ \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than (1-cutoff) proportion of samples
+}
 }
 \keyword{SIAMCAT}
-\keyword{association_check}
+\keyword{filter.feat}

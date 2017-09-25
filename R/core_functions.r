@@ -87,23 +87,27 @@ confounder.check <- function(meta, label){
   }
 }
 
-#' This function filters features in an unsupervised manner.
-#' @param fn.in.meta meta-data input file
-#' @param fn.out.meta meta-data output file
-#' @param filter.method TODO
-#' @param abundance.cutoff TODO
+#' @title Perform unsupervised feature filtering.
+#' @description This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, can remove unmapped reads.
+#' @param feat feature object
+#' @param filter.method method used for filtering the features, can be one of these: \code{c("abundance", "cum.abundance", "prevalence")}
+#' @param cutoff float, abundace or prevalence cutoff
 #' @param recomp.prop boolean, should absolute abundances be converted into relative abundances?
-#' @param rm.unmapped TODO
-#' @keywords SIAMCAT association_check
+#' @param rm.unmapped boolean, should unmapped reads be discarded?
+#' @details Currently, there are three filtering methods implemented:
+#' \itemize{
+#'  \item \code{"abundance"} remove features for which the abundance is never above the threshold value (e.g. 0.5\%) in any of the samples
+#'  \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up (1-cutoff) of the reads in any samples
+#'  \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than (1-cutoff) proportion of samples
+#' }
+#' @keywords SIAMCAT filter.feat
 #' @export
-#' @examples
-#' filter.feat()
-
-
+#' @return Returns the filtered feature matrix
 filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
-  ### Instead, it's purpose is to be able to calculate f.idx (specifying the indeces of features which are to be kept)
+  ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
+  ## TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
     ra.feat = prop.table(feat, 2)
