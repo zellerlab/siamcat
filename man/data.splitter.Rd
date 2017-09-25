@@ -20,7 +20,12 @@ data.splitter(label, num.folds, num.resample, stratify, inseparable, meta)
 \item{meta}{metadata object (obsolete)}
 }
 \value{
-list containing the indices of the training and test folds and the parameters of the splits:  \code{$training.folds, $test.folds, $num.resample, $num.folds}
+list containing the indices of the training and test folds and the parameters of the splits: \itemize{
+ \item \code{$training.folds};
+ \item \code{$test.folds};
+ \item \code{$num.resample};
+ \item \code{$num.folds}
+}
 }
 \description{
 This functions prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.

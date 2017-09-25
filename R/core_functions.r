@@ -18,7 +18,11 @@
 #' @param meta metadata object
 #' @keywords SIAMCAT validate.data
 #' @export
-#' @return a list containing values after filtering: \code{$feat} - features; \code{$label} - labels; \code{$meta} - metadata
+#' @return a list containing values after filtering: \itemize{
+#'  \item \code{$feat} = features;
+#'  \item \code{$label} = labels;
+#'  \item \code{$meta} = metadata
+#' }
 validate.data <- function(feat, label, meta = NULL){
   # TODO attempt multiple reading attempts!
   # TODO 2: should this function also validate the features? (at the moment, nothing happens to the features...)
@@ -39,10 +43,11 @@ validate.data <- function(feat, label, meta = NULL){
   # TODO !!!
 
 #' @title Check for potential confounders in the metadata
-#' @description This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata. Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
+#' @description This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata.
+#' Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
 #' @param meta metadata object
 #' @param label labels object
-#' @keywords SIAMCAT confounder_check
+#' @keywords SIAMCAT confounder.check
 #' @export
 #' @return Does not return anything, but produces a single plot for each metadata category
 confounder.check <- function(meta, label){
@@ -88,7 +93,7 @@ confounder.check <- function(meta, label){
 }
 
 #' @title Perform unsupervised feature filtering.
-#' @description This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, can remove unmapped reads.
+#' @description This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, unmapped reads can be removed.
 #' @param feat feature object
 #' @param filter.method method used for filtering the features, can be one of these: \code{c("abundance", "cum.abundance", "prevalence")}
 #' @param cutoff float, abundace or prevalence cutoff
@@ -97,8 +102,8 @@ confounder.check <- function(meta, label){
 #' @details Currently, there are three filtering methods implemented:
 #' \itemize{
 #'  \item \code{"abundance"} remove features for which the abundance is never above the threshold value (e.g. 0.5\%) in any of the samples
-#'  \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up (1-cutoff) of the reads in any samples
-#'  \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than (1-cutoff) proportion of samples
+#'  \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up \code{(1-cutoff)} of the reads in any samples
+#'  \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than \code{(1-cutoff)} proportion of samples
 #' }
 #' @keywords SIAMCAT filter.feat
 #' @export
@@ -162,15 +167,15 @@ filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
 }
 
 #' @title Perform feature normalization according to specified parameters.
-#' @description This function performs microbiome feature normalization according to user-specified parameters.
+#' @description This function performs feature normalization according to user-specified parameters.
 #' @param feat feature object
 #' @param norm.method normalization method, can be one of these: \code{c("rank.unit", "rank.std", "log.std", "log.unit")}
 #' @param log.n0 pseudocount to be added before log-transformation
-#' @param sd.min.q quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for method=\code{"log.std"})
-#' @param n.p vector norm to use
-#' @param n.sample boolean, normalize by feature?
-#' @param n.feature boolean, normalize by sample?
-#' @param n.global boolean, Normalize by global rescaling?
+#' @param sd.min.q quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for methods=\code{c("rank.std", "log.std")})
+#' @param n.p vector norm to use, (only for method=\code{"log.unit"})
+#' @param n.sample boolean, normalize by feature? (only for method=\code{"log.unit"})
+#' @param n.feature boolean, normalize by sample? (only for method=\code{"log.unit"})
+#' @param n.global boolean, Normalize by global rescaling? (only for method=\code{"log.unit"})
 #' @details There are four different normalization methods implemented:
 #' \itemize{
 #'  \item \code{"rank.unit"} converts features to ranks and normalizes each column by the square root of the sum of ranks
@@ -181,7 +186,10 @@ filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
 #' The other parameters are depending on the normalization method of choice, e.g. \code{log.n0} as pseudocount is only needed for the methods making use of the log-transformation.
 #' @keywords SIAMCAT normalize.feat
 #' @export
-#' @return list containing the matrix of normalized features and a list of normalization parameters: \code{$par} = parameters, \code{$feat} = features
+#' @return list containing the matrix of normalized features and a list of normalization parameters: \itemize{
+#'  \item \code{$par} = parameters utilized in the normalization;
+#'  \item \code{$feat} = normalized features
+#'}
 normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature, n.global) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
@@ -300,7 +308,12 @@ normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n
 #' @param meta metadata object (obsolete)
 #' @keywords SIAMCAT data.splitter
 #' @export
-#' @return list containing the indices of the training and test folds and the parameters of the splits:  \code{$training.folds, $test.folds, $num.resample, $num.folds}
+#' @return list containing the indices of the training and test folds and the parameters of the splits: \itemize{
+#'  \item \code{$training.folds};
+#'  \item \code{$test.folds};
+#'  \item \code{$num.resample};
+#'  \item \code{$num.folds}
+#'}
 data.splitter <- function(label, num.folds, num.resample, stratify, inseparable, meta){
   ### read label and meta-data
   # (assuming the label file has 1 column)
@@ -378,13 +391,25 @@ data.splitter <- function(label, num.folds, num.resample, stratify, inseparable,
   return(list("training.folds" = train.list, "test.folds" = test.list, "num.resample" = num.resample, "num.folds" = num.folds))
 }
 
-#' This function splits a dataset into a training and a test set.
+#' @title Evaluate prediction results
+#' @description This functions takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
+#'  \item Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)
+#'  \item and the Precision-recall Curve
+#' }
+#' as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.
 #' @param label label input file
-#' @keywords SIAMCAT association_check
+#' @param pred prediction for each sample by the model, should be a matrix with dimensions \code{length(label) x 1} or \code{length(label) x num.resample}
+#' @keywords SIAMCAT eval.result
 #' @export
-#' @examples
-#' eval.result()
-
+#' @return list containing \itemize{
+#'  \item \code{$rov.average};
+#'  \item \code{$auc.average};
+#'  \item \code{$ev.list};
+#'  \item \code{$pr.list};
+#' }. If \code{prediction} had more than one column, the function will additonally return \itemize{
+#'  \item \code{$auc.all};
+#'  \item \code{$aucspr}
+#'}
 eval.result <- function(label, pred){
 
   # TODO compare header to label
@@ -445,7 +470,7 @@ eval.result <- function(label, pred){
   }
 }
 
-#' @title Validate data
+#' @title Select samples
 #' @description Filter samples based on metadata
 #' @param meta metadata object
 #' @param feat features object
@@ -453,8 +478,13 @@ eval.result <- function(label, pred){
 #' @param filter name of the column from metadata on which the selection should be done
 #' @param allowed.set a vector of allowed values
 #' @param allowed.range a range of allowed values
+#' @keywords SIAMCAT select.samples
 #' @export
-#' @return a list containing values after filtering: $feat - features; $label - labels; $meta - metadata
+#' @return list containing values after selection: \itemize{
+#'  \item \code{$feat} = features;
+#'  \item \code{$label} = labels;
+#'  \item \code{$meta} = metadata
+#' }
 select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allowed.range = NULL){
   # parse interval
   if(!is.null(allowed.range )) {
@@ -503,6 +533,7 @@ select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allow
   invisible(results)
 }
 
+#' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alpha=0.05, min.fc=0, mult.corr="fdr",
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
@@ -790,6 +821,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
 #' @param meta metadata object
 #' @param pred.names vector of names of the metavariables to be added to the feature matrix as predictors
 #' @param std.meta Shall added (metadata) features be standardized?
+#' @keywords SIAMCAT add.meta.pred
 #' @export
 #' @return features object
 add.meta.pred <- function(feat, meta, pred.names, std.meta){
@@ -1033,6 +1065,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
 }
 
 #' @export
+#' @keywords SIAMCAT plm.predictor
 plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
   feat         <- t(feat)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))

@@ -21,3 +21,5 @@ features object
 \description{
 Adds medata as columns to the feat data to be later used as predictors
 }
+\keyword{SIAMCAT}
+\keyword{add.meta.pred}

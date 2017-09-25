@@ -2,7 +2,7 @@
 % Please edit documentation in R/core_functions.r
 \name{select.samples}
 \alias{select.samples}
-\title{Validate data}
+\title{Select samples}
 \usage{
 select.samples(meta, feat, label, filter, allowed.set = NULL,
   allowed.range = NULL)
@@ -21,8 +21,14 @@ select.samples(meta, feat, label, filter, allowed.set = NULL,
 \item{allowed.range}{a range of allowed values}
 }
 \value{
-a list containing values after filtering: $feat - features; $label - labels; $meta - metadata
+list containing values after selection: \itemize{
+ \item \code{$feat} = features;
+ \item \code{$label} = labels;
+ \item \code{$meta} = metadata
+}
 }
 \description{
 Filter samples based on metadata
 }
+\keyword{SIAMCAT}
+\keyword{select.samples}

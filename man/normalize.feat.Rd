@@ -14,21 +14,24 @@ normalize.feat(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature,
 
 \item{log.n0}{pseudocount to be added before log-transformation}
 
-\item{sd.min.q}{quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for method=\code{"log.std"})}
+\item{sd.min.q}{quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for methods=\code{c("rank.std", "log.std")})}
 
-\item{n.p}{vector norm to use}
+\item{n.p}{vector norm to use, (only for method=\code{"log.unit"})}
 
-\item{n.sample}{boolean, normalize by feature?}
+\item{n.sample}{boolean, normalize by feature? (only for method=\code{"log.unit"})}
 
-\item{n.feature}{boolean, normalize by sample?}
+\item{n.feature}{boolean, normalize by sample? (only for method=\code{"log.unit"})}
 
-\item{n.global}{boolean, Normalize by global rescaling?}
+\item{n.global}{boolean, Normalize by global rescaling? (only for method=\code{"log.unit"})}
 }
 \value{
-list containing the matrix of normalized features and a list of normalization parameters: \code{$par} = parameters, \code{$feat} = features
+list containing the matrix of normalized features and a list of normalization parameters: \itemize{
+ \item \code{$par} = parameters utilized in the normalization;
+ \item \code{$feat} = normalized features
+}
 }
 \description{
-This function performs microbiome feature normalization according to user-specified parameters.
+This function performs feature normalization according to user-specified parameters.
 }
 \details{
 There are four different normalization methods implemented:

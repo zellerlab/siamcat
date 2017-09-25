@@ -14,7 +14,11 @@ validate.data(feat, label, meta = NULL)
 \item{meta}{metadata object}
 }
 \value{
-a list containing values after filtering: \code{$feat} - features; \code{$label} - labels; \code{$meta} - metadata
+a list containing values after filtering: \itemize{
+ \item \code{$feat} = features;
+ \item \code{$label} = labels;
+ \item \code{$meta} = metadata
+}
 }
 \description{
 Check if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.

@@ -21,14 +21,14 @@ filter.feat(feat, filter.method, cutoff, recomp.prop, rm.unmapped)
 Returns the filtered feature matrix
 }
 \description{
-This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, can remove unmapped reads.
+This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, unmapped reads can be removed.
 }
 \details{
 Currently, there are three filtering methods implemented:
 \itemize{
  \item \code{"abundance"} remove features for which the abundance is never above the threshold value (e.g. 0.5\%) in any of the samples
- \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up (1-cutoff) of the reads in any samples
- \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than (1-cutoff) proportion of samples
+ \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up \code{(1-cutoff)} of the reads in any samples
+ \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than \code{(1-cutoff)} proportion of samples
 }
 }
 \keyword{SIAMCAT}

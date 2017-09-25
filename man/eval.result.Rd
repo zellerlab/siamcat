@@ -2,18 +2,32 @@
 % Please edit documentation in R/core_functions.r
 \name{eval.result}
 \alias{eval.result}
-\title{This function splits a dataset into a training and a test set.}
+\title{Evaluate prediction results}
 \usage{
 eval.result(label, pred)
 }
 \arguments{
 \item{label}{label input file}
+
+\item{pred}{prediction for each sample by the model, should be a matrix with dimensions \code{length(label) x 1} or \code{length(label) x num.resample}}
+}
+\value{
+list containing \itemize{
+ \item \code{$rov.average};
+ \item \code{$auc.average};
+ \item \code{$ev.list};
+ \item \code{$pr.list};
+}. If \code{prediction} had more than one column, the function will additonally return \itemize{
+ \item \code{$auc.all};
+ \item \code{$aucspr}
+}
 }
 \description{
-This function splits a dataset into a training and a test set.
+This functions takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
+ \item Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)
+ \item and the Precision-recall Curve
 }
-\examples{
-eval.result()
+as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.
 }
 \keyword{SIAMCAT}
-\keyword{association_check}
+\keyword{eval.result}
