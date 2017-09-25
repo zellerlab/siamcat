@@ -161,22 +161,27 @@ filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
   return(feat)
 }
 
-#' This function normalizes features according to specified parameters.
-#' @param fn.in.feat feature input file
-#' @param fn.out.feat feature output file
-#' @param fn.out.param output file for normalization parameters
-#' @param norm.method Normalization method
-#' @param log.n0 Pseudocount to be added before log-transformation
-#' @param sd.min.q Quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for metod==\"log.std\")'
-#' @param n.p Vector norm to use
-#' @param n.sample Normalize by feature?
-#' @param n.feature Normalize by sample?
-#' @param  n.global Normalize by global rescaling?
-#' @keywords SIAMCAT association_check
+#' @title Perform feature normalization according to specified parameters.
+#' @description This function performs microbiome feature normalization according to user-specified parameters.
+#' @param feat feature object
+#' @param norm.method normalization method, can be one of these: \code{c("rank.unit", "rank.std", "log.std", "log.unit")}
+#' @param log.n0 pseudocount to be added before log-transformation
+#' @param sd.min.q quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for method=\code{"log.std"})
+#' @param n.p vector norm to use
+#' @param n.sample boolean, normalize by feature?
+#' @param n.feature boolean, normalize by sample?
+#' @param n.global boolean, Normalize by global rescaling?
+#' @details There are four different normalization methods implemented:
+#' \itemize{
+#'  \item \code{"rank.unit"} converts features to ranks and normalizes each column by the square root of the sum of ranks
+#'  \item \code{"rank.std"} converts features to ranks and applies z-score standardization
+#'  \item \code{"log.unit"} log-transforms features (after addition of pseudocounts), converts features to ranks and normalizes by features or samples
+#'  \item \code{"log.std"} log-transforms features (after addition of pseudocounts) and applies z-score standardization
+#' }
+#' The other parameters are depending on the normalization method of choice, e.g. \code{log.n0} as pseudocount is only needed for the methods making use of the log-transformation.
+#' @keywords SIAMCAT normalize.feat
 #' @export
-#' @examples
-#' normalize.feat()
-
+#' @return list containing the matrix of normalized features and a list of normalization parameters: $par = parameters, $feat = features
 normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature, n.global) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features

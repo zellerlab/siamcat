@@ -2,37 +2,43 @@
 % Please edit documentation in R/core_functions.r
 \name{normalize.feat}
 \alias{normalize.feat}
-\title{This function normalizes features according to specified parameters.}
+\title{Perform feature normalization according to specified parameters.}
 \usage{
 normalize.feat(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature,
   n.global)
 }
 \arguments{
-\item{norm.method}{Normalization method}
+\item{feat}{feature object}
 
-\item{log.n0}{Pseudocount to be added before log-transformation}
+\item{norm.method}{normalization method, can be one of these: \code{c("rank.unit", "rank.std", "log.std", "log.unit")}}
 
-\item{sd.min.q}{Quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for metod==\"log.std\")'}
+\item{log.n0}{pseudocount to be added before log-transformation}
 
-\item{n.p}{Vector norm to use}
+\item{sd.min.q}{quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for method=\code{"log.std"})}
 
-\item{n.sample}{Normalize by feature?}
+\item{n.p}{vector norm to use}
 
-\item{n.feature}{Normalize by sample?}
+\item{n.sample}{boolean, normalize by feature?}
 
-\item{n.global}{Normalize by global rescaling?}
+\item{n.feature}{boolean, normalize by sample?}
 
-\item{fn.in.feat}{feature input file}
-
-\item{fn.out.feat}{feature output file}
-
-\item{fn.out.param}{output file for normalization parameters}
+\item{n.global}{boolean, Normalize by global rescaling?}
+}
+\value{
+list containing the matrix of normalized features and a list of normalization parameters: $par = parameters, $feat = features
 }
 \description{
-This function normalizes features according to specified parameters.
+This function performs microbiome feature normalization according to user-specified parameters.
 }
-\examples{
-normalize.feat()
+\details{
+There are four different normalization methods implemented:
+\itemize{
+ \item \code{"rank.unit"} converts features to ranks and normalizes each column by the square root of the sum of ranks
+ \item \code{"rank.std"} converts features to ranks and applies z-score standardization
+ \item \code{"log.unit"} log-transforms features (after addition of pseudocounts), converts features to ranks and normalizes by features or samples
+ \item \code{"log.std"} log-transforms features (after addition of pseudocounts) and applies z-score standardization
+}
+The other parameters are depending on the normalization method of choice, e.g. \code{log.n0} as pseudocount is only needed for the methods making use of the log-transformation.
 }
 \keyword{SIAMCAT}
-\keyword{association_check}
+\keyword{normalize.feat}
