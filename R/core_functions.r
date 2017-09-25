@@ -852,6 +852,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
       l               <- input[[i]]
       if (substr(l, 1, 1) != '#') {
         num.runs                 <- num.runs + 1
+        print(num.runs)
         s                        <- unlist(strsplit(l, '\t'))
         fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
         ### Note that the %in%-operation is order-dependend.
@@ -869,6 +870,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     fold.exm.idx[[1]] <- names(label$label)
   }
   print(num.runs)
+  #stop()
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
