@@ -2,34 +2,28 @@
 % Please edit documentation in R/core_functions.r
 \name{data.splitter}
 \alias{data.splitter}
-\title{This function splits a dataset into a training and a test set.}
+\title{Split a dataset into training and a test sets.}
 \usage{
 data.splitter(label, num.folds, num.resample, stratify, inseparable, meta)
 }
 \arguments{
-\item{label}{label input file}
+\item{label}{label object}
 
-\item{num.folds}{Number of cross-validation folds (i.e. subsets, needs to be >= 2)}
+\item{num.folds}{number of cross-validation folds (needs to be >=2)}
 
-\item{num.resample}{Resampling rounds (values <= 1 deactivate resampling)}
+\item{num.resample}{resampling rounds (values <= 1 deactivate resampling)}
 
-\item{stratify}{Should cross-validation be stratified such that an approx. equal proportion of positive examples are contained in each subset (only for binary labels)?')}
+\item{stratify}{boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?}
 
-\item{inseparable}{defaults to NULL}
+\item{inseparable}{defaults to NULL (obsolete)}
 
-\item{label.header}{file containing information about the label header}
-
-\item{fn.train.folds}{Output file containing training sets}
-
-\item{fn.test.folds}{Output file containing test sets}
-
-\item{fn.in.meta}{input file for metadata (only of inseperable is specified)}
+\item{meta}{metadata object (obsolete)}
+}
+\value{
+list containing the indices of the training and test folds and the parameters of the splits:  \code{$training.folds, $test.folds, $num.resample, $num.folds}
 }
 \description{
-This function splits a dataset into a training and a test set.
-}
-\examples{
-data.splitter()
+This functions prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
 }
 \keyword{SIAMCAT}
-\keyword{association_check}
+\keyword{data.splitter}

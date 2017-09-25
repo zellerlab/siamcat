@@ -25,7 +25,7 @@ normalize.feat(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature,
 \item{n.global}{boolean, Normalize by global rescaling?}
 }
 \value{
-list containing the matrix of normalized features and a list of normalization parameters: $par = parameters, $feat = features
+list containing the matrix of normalized features and a list of normalization parameters: \code{$par} = parameters, \code{$feat} = features
 }
 \description{
 This function performs microbiome feature normalization according to user-specified parameters.

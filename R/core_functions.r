@@ -18,7 +18,7 @@
 #' @param meta metadata object
 #' @keywords SIAMCAT validate.data
 #' @export
-#' @return a list containing values after filtering: $feat - features; $label - labels; $meta - metadata
+#' @return a list containing values after filtering: \code{$feat} - features; \code{$label} - labels; \code{$meta} - metadata
 validate.data <- function(feat, label, meta = NULL){
   # TODO attempt multiple reading attempts!
   # TODO 2: should this function also validate the features? (at the moment, nothing happens to the features...)
@@ -181,7 +181,7 @@ filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
 #' The other parameters are depending on the normalization method of choice, e.g. \code{log.n0} as pseudocount is only needed for the methods making use of the log-transformation.
 #' @keywords SIAMCAT normalize.feat
 #' @export
-#' @return list containing the matrix of normalized features and a list of normalization parameters: $par = parameters, $feat = features
+#' @return list containing the matrix of normalized features and a list of normalization parameters: \code{$par} = parameters, \code{$feat} = features
 normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature, n.global) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
@@ -290,24 +290,22 @@ normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n
 }
 
 
-#' This function splits a dataset into a training and a test set.
-#' @param label label input file
-#' @param label.header file containing information about the label header
-#' @param fn.train.folds Output file containing training sets
-#' @param fn.test.folds Output file containing test sets
-#' @param num.folds Number of cross-validation folds (i.e. subsets, needs to be >= 2)
-#' @param num.resample Resampling rounds (values <= 1 deactivate resampling)
-#' @param stratify Should cross-validation be stratified such that an approx. equal proportion of positive examples are contained in each subset (only for binary labels)?')
-#' @param inseparable defaults to NULL
-#' @param fn.in.meta input file for metadata (only of inseperable is specified)
-#' @keywords SIAMCAT association_check
+#' @title Split a dataset into training and a test sets.
+#' @description This functions prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
+#' @param label label object
+#' @param num.folds number of cross-validation folds (needs to be >=2)
+#' @param num.resample resampling rounds (values <= 1 deactivate resampling)
+#' @param stratify boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?
+#' @param inseparable defaults to NULL (obsolete)
+#' @param meta metadata object (obsolete)
+#' @keywords SIAMCAT data.splitter
 #' @export
-#' @examples
-#' data.splitter()
-
+#' @return list containing the indices of the training and test folds and the parameters of the splits:  \code{$training.folds, $test.folds, $num.resample, $num.folds}
 data.splitter <- function(label, num.folds, num.resample, stratify, inseparable, meta){
   ### read label and meta-data
   # (assuming the label file has 1 column)
+  # TODO delete inseparable parameter
+  # TODO delete meta parameter
 
   if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {
     inseparable <- NULL
