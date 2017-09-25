@@ -2,7 +2,7 @@
 % Please edit documentation in R/core_functions.r
 \name{validate.data}
 \alias{validate.data}
-\title{This function checks for potential confounders in the metadata}
+\title{Validate samples in metadata, labels, and features}
 \usage{
 validate.data(feat, label, meta = NULL)
 }
@@ -11,13 +11,13 @@ validate.data(feat, label, meta = NULL)
 
 \item{label}{labels object}
 
-\item{meta}{fmetadata object}
+\item{meta}{metadata object}
 }
 \value{
 a list containing values after filtering: $feat - features; $label - labels; $meta - metadata
 }
 \description{
-This function checks for potential confounders in the metadata
+Check if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.
 }
 \keyword{SIAMCAT}
 \keyword{validate.data}

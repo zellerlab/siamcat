@@ -11,15 +11,17 @@
 # GNU GPL 3.0
 ###
 
-#' This function checks for potential confounders in the metadata
+#' @title Validate samples in metadata, labels, and features
+#' @description Check if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.
 #' @param feat features object
 #' @param label labels object
-#' @param meta fmetadata object
+#' @param meta metadata object
 #' @keywords SIAMCAT validate.data
 #' @export
 #' @return a list containing values after filtering: $feat - features; $label - labels; $meta - metadata
 validate.data <- function(feat, label, meta = NULL){
   # TODO attempt multiple reading attempts!
+  # TODO 2: should this function also validate the features? (at the moment, nothing happens to the features...)
 
   if (!is.null(meta)) {
   stopifnot(all(names(label) %in% rownames(meta)) && all(rownames(meta) %in% names(label)))
@@ -36,17 +38,15 @@ validate.data <- function(feat, label, meta = NULL){
   ### run data checks / validation / format conversion
   # TODO !!!
 
-#' This function checks for potential confounders in the metadata
-#' @param source.dir SIAMCAT script directory
-#' @param fn.in.meta meta-data input file
-#' @param fn.in.label label input file
+#' @title Check for potential confounders in the metadata
+#' @description This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata. Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
+#' @param meta metadata object
+#' @param label labels object
 #' @keywords SIAMCAT confounder_check
 #' @export
-#' @examples
-#' confounder.check()
-
+#' @return Does not return anything, but produces a single plot for each metadata category
 confounder.check <- function(meta, label){
-  
+
   for (m in 1:ncol(meta)) {
     mname <- gsub('[_.-]', ' ', colnames(meta)[m])
     mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep="")
@@ -777,7 +777,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
 
 }
 
-#' @title Add metadata as predictors 
+#' @title Add metadata as predictors
 #' @description Adds medata as columns to the feat data to be later used as predictors
 #' @param feat features object
 #' @param meta metadata object
@@ -818,7 +818,7 @@ add.meta.pred <- function(feat, meta, pred.names, std.meta){
   invisible(feat)
 }
 
-#' @title Add metadata as predictors 
+#' @title Add metadata as predictors
 #' @description Adds medata as columns to the feat data to be later used as predictors
 #' @param feat features object
 #' @param meta metadata object
@@ -827,7 +827,7 @@ add.meta.pred <- function(feat, meta, pred.names, std.meta){
 #' @export
 #' @return features object
 plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, modsel.crit, min.nonzero.coeff){
-  
+
   # transpose feature matrix as a convenience preprocessing
   feat         <- t(feat)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
@@ -844,11 +844,11 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   print(fn.train.sample)
   if (!is.null(fn.train.sample)) {
     num.runs      <- 0
-    con           <- file(fn.train.sample, 'r') 
+    con           <- file(fn.train.sample, 'r')
     input         <- readLines(con)
     close(con)
     print(length(input))
-    for (i in 1:length(input)) { 
+    for (i in 1:length(input)) {
       l               <- input[[i]]
       if (substr(l, 1, 1) != '#') {
         num.runs                 <- num.runs + 1
@@ -863,7 +863,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
         #      cat('Ignoring commented line:', l, '\n\n')
       }
     }
-    
+
   } else {
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
@@ -875,19 +875,19 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
   cat('\nPreparing to train', model.type,  'models on', num.runs, 'training set samples...\n\n')
-  
+
   ### train one model per training sample (i.e. CV fold)
-  # feat has structure: examples in rows; features in columns!  
+  # feat has structure: examples in rows; features in columns!
   W.mat           <- matrix(data=NA, nrow=ncol(feat), ncol=num.runs)
   rownames(W.mat) <- c(colnames(feat))
   colnames(W.mat) <- paste('M', fold.name, sep='_')
-  
+
   # Create matrix with hyper parameters.
   hyperpar.list   <- list()
-  
+
   # Create List to save models.
   models.list     <- list()
-  
+
   for (r in 1:num.runs) {
     cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     ### subselect examples for training
@@ -896,14 +896,14 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     train.feat        <- feat[fold.exm.idx[[r]],]
     stopifnot(nrow(train.feat)         == length(train.label$label))
     stopifnot(all(rownames(train.feat) == names(train.label$label)))
-    
+
     # reorder training examples so that class order is the same for all models
     #print(train.label$label)
     exm.order         <- sort(train.label$label, index.return=TRUE)$ix
     train.label$label <- train.label$label[exm.order]
     train.feat        <- train.feat[exm.order,]
-    
-    
+
+
     ### assign training data to internal folds for model selection
     ### For structure of foldid, see data_splitter.r
     foldid            <- rep(0, length(train.label$label))
@@ -914,14 +914,14 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     train.label.exp   <- sample(train.label$label)
     foldid            <- assign.fold(label = train.label.exp, num.folds, stratified = stratify, foldid = foldid)
     ### internal cross-validation for model selection
-    
+
     sqrt.mdim         <- sqrt(nrow(feat))
     hyper.par <- list(C      = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10),  # all LiblineaR methods
                       lambda = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3),            # LASSO & ENet
                       alpha  = c(0.7,0.8,0.9)                                    # ENet
                       #                 ntree  = c(250, 500, 1000),                                # RF (not functional for now)
                       #                 mtry   = c(sqrt.mdim/2, sqrt.mdim, sqrt.mdim*2)            # RF (not functional for now)
-    ) 
+    )
     opt.hyper.par    <- select.model(train.feat, train.label, model.type, hyper.par, min.nonzero = min.nonzero.coeff,
                                      num.folds=num.folds, stratified=FALSE, foldid=foldid, data=data)
     # cat('  optimal C=', opt.hyper.par$lambda, ' (', which(opt.C$lambda==C.vec), ' of ', length(hyper.par$lambda), ')\n', sep='')
@@ -929,7 +929,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     model            <- train.plm(train.feat, train.label, model.type, opt.hyper.par, data=data, subset=fold.exm.idx[[r]])
     models.list[[r]] <- model
 
-    
+
     ### TODO Important: the 'mh' variable gets written into the coefficient matrix.
     ### This needs to be changed ASAP, as the check in plm_predictor.r is obsolete with a hard-coded string like this.
     mh = paste('#LASSO (L1-regularized logistic regression (L1R_LR)',': [BINARY:',
@@ -945,7 +945,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     stopifnot(all(names(model$W) == rownames(W.mat)))
     W.mat[,r]          <- as.numeric(c(model$feat.weights))
     hyperpar.list[[r]] <- unlist(opt.hyper.par)
-    stopifnot(!all(model$feat.weights == 0))  
+    stopifnot(!all(model$feat.weights == 0))
     cat('\n')
   }
   # Preprocess hyper parameters
@@ -955,7 +955,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   ### Write models into matrix to reload in plm_predictor.r
   for (i in 1:length(models.list)){
     if (model.type == 'lasso') {
-      # glmnet needs lambda, a0 and beta. 
+      # glmnet needs lambda, a0 and beta.
       vec <- rep(NA, nrow(models.list[[i]]$learner.model$glmnet.fit$beta) + 2)
       print(i)
       vec[1] <- hyperpar.mat[1, i]
@@ -972,7 +972,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
       # In the case of glmnet, make the coefficient matrix from a sparse matrix into a regular one.
       #models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$learner.model$glmnet.fit$beta)
     } else if (model.type == 'enet'){
-      # glmnet needs lambda, a0 and beta. 
+      # glmnet needs lambda, a0 and beta.
       vec <- rep(NA, length(models.list[[i]]$original.model$beta) + 3)
       vec[1:2] <- hyperpar.mat[, i]
       vec[3] <- models.list[[i]]$original.model$a0
@@ -1003,7 +1003,7 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
       # paste0 pastes two equal-length string vectors element-wise
       # Note that the weight-vector is a row-vector here.
       rownames(out.matrix) <- c("C", "negative label", "positive label", colnames(models.list[[i]]$original.model$W))
-      
+
     } else if (model.type == 'gelnet') {
       # gelnet needs b (intercept), w, as well as alpha and lambda.
       vec <- rep(NA, length(models.list[[i]]$original.model$w) + 3)
@@ -1035,16 +1035,16 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
   data[,ncol(data)]          <- as.factor(data[,ncol(data)])
   colnames(data)             <- paste0("Sample_",1:ncol(data))
   colnames(data)[ncol(data)] <- "cancer"
-  
- 
+
+
   ### subselect test examples as specified in fn.test.sample (if given)
   fold.name = list()
   fold.exm.idx = list()
   if (!is.null(fn.test.sample)) {
-    con = file(fn.test.sample, 'r') 
+    con = file(fn.test.sample, 'r')
     input = readLines(con)
     m.idx = 0
-    for (i in 1:length(input)) { 
+    for (i in 1:length(input)) {
       l = input[[i]]
       if (substr(l, 1, 1) != '#') {
         m.idx = m.idx + 1
@@ -1068,21 +1068,21 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
   }
   fold.name = unlist(fold.name)
   cat('\nPreparing to make predictions with', num.runs,   model.type, ' model(s)...\n')
-  
+
   ### apply one LASSO model per test sample (i.e. CV fold)
   # predictions are made on a concatenation of test examples from all test samples
   pred = NULL
   predList = list()
   fold.pred.idx = list()
-  
+
   # Init hyperpar list
   opt.hp <- list(lambda = NULL, C = NULL, alpha = NULL, ntree = NULL)
-  
+
   for (r in 1:num.runs) {
     cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     curr.model.new <- list()
     curr.model.new$original.model <- list()
-    
+
     # Rebuild model
     if (model.type == 'lasso'){
       curr.model.new$original.model$lambda <- model.mat[1, r]
@@ -1093,10 +1093,10 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
       # glmnet needs sparse matrix
       curr.model.new$original.model$beta <- Matrix(curr.model.new$original.model$beta, sparse = TRUE)
       class(curr.model.new$original.model) <- c("lognet", "glmnet")
-      
+
       # Create hp list
       opt.hp$lambda <- curr.model.new$original.model$lambda
-      
+
     } else if (model.type == 'enet') {
       curr.model.new$original.model$lambda <- model.mat[1, r]
       curr.model.new$original.model$lambda <- model.mat[2, r]
@@ -1107,11 +1107,11 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
       # glmnet needs sparse matrix
       curr.model.new$original.model$beta <- Matrix(curr.model.new$original.model$beta, sparse = TRUE)
       class(curr.model.new$original.model) <- c("lognet", "glmnet")
-      
+
       # Create hp list
       opt.hp$lambda <- curr.model.new$original.model$lambda
       opt.hp$alpha <- curr.model.new$original.model$alpha
-      
+
     } else if (model.type == 'lasso_ll'){
       curr.model.new$original.model$W <- t(as.matrix(model.mat[4:dim(model.mat)[1], r]))
       curr.model.new$original.model$Bias <- "TRUE"
@@ -1120,10 +1120,10 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
       curr.model.new$original.model$ClassNames <- model.mat[2:3, r]
       curr.model.new$original.model$NbClass <- 2
       class(curr.model.new$original.model) <- c("LiblineaR")
-      
+
       # Create hp list
       opt.hp$C <- curr.model.new$original.model$C
-      
+
     } else if (model.type == 'ridge_ll'){
       curr.model.new$original.model$W <- t(as.matrix(model.mat[4:dim(model.mat)[1], r]))
       curr.model.new$original.model$Bias <- "TRUE"
@@ -1132,36 +1132,36 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
       curr.model.new$original.model$ClassNames <- model.mat[2:3, r]
       curr.model.new$original.model$NbClass <- 2
       class(curr.model.new$original.model) <- c("LiblineaR")
-      
+
       # Create hp list
-      opt.hp$C <- curr.model.new$original.model$C 
+      opt.hp$C <- curr.model.new$original.model$C
     } else if (model.type == 'gelnet') {
       curr.model.new$original.model$alpha <- as.vector(na.omit(model.mat[,1]))
       curr.model.new$original.model$lambda <- as.vector(na.omit(model.mat[,2]))
       curr.model.new$original.model$b <- as.vector(na.omit(model.mat[3,r]))
       curr.model.new$original.model$w <- as.vector(na.omit(model.mat[4:dim(model.mat)[1], r]))
-      
-      # Create hp list 
+
+      # Create hp list
       opt.hp$alpha <- curr.model.new$original.model$alpha
       opt.hp$lambda <- curr.model.new$original.model$lambda
     }
     # subselect appropriate model
     m = model
     m$W = m$W[,r]
-    
+
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
-    
+
     pdata    <- predict.plm(test.feat, model, model.type, opt.hp, data = data, subset=fold.exm.idx[[r]])
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
-    
+
     pred     <- c(pred, p)
     fold.pred.idx[[r]] = (length(pred)-length(p)+1):length(pred)
   }
-  
+
   cat('\nTotal number of predictions made:', length(pred), '\n')
-  
+
   if (!is.null(fn.test.label)) {
     ### if test labels are given do some evaluation as well
     # get the appropriate labels for all test sets
@@ -1179,7 +1179,7 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
     }
     stopifnot(length(test.label) == length(pred))
     stopifnot(names(test.label) == names(pred))
-    
+
     # in case of cross-validation there should be exactly one prediction per labeled example,
     # so we reorder them according to the order of label
     if (length(label$label) == length(pred) && all(names(label$label) %in% names(pred)) && all(names(pred) %in% names(label$label))) {
@@ -1188,7 +1188,7 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
       test.label = test.label[m]
       stopifnot(all(names(label$label) == names(pred)))
     }
-    
+
     # test accuracy of combined test set
     c.auc = NA
     if (length(unique(test.label)) == 2) {
@@ -1199,8 +1199,8 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
         ' (m=', format(mean(aucs, na.rm=TRUE), digits=3),
         ', s.d.=', format(sd(aucs, na.rm=TRUE), digits=3), ')\n', sep='')
   }
-  
-  
+
+
   ### reformat predictions in case models were trained in repeated cross-validation
   if (length(unique(names(pred))) < length(pred)) {
     ref.names = NULL
@@ -1226,15 +1226,15 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
     #  cat(ref.names, '\n\n')
     #  cat(names(label), '\n\n')
     #  cat(names(pred), '\n\n')
-    
+
     pred.mat = matrix(data=NA, nrow=length(ref.names), ncol=length(runs))
     rownames(pred.mat) = ref.names
     if (any(substr(fold.name,1,14) == 'whole data set')) {
-      colnames(pred.mat) = paste('Model', runs, sep='') 
+      colnames(pred.mat) = paste('Model', runs, sep='')
     } else {
-      colnames(pred.mat) = paste('CV_rep', runs, sep='') 
+      colnames(pred.mat) = paste('CV_rep', runs, sep='')
     }
-    
+
     for (r in runs) {
       idx = which(r.idx == r)
       p = unlist(fold.pred.idx[idx])

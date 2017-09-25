@@ -2,22 +2,20 @@
 % Please edit documentation in R/core_functions.r
 \name{confounder.check}
 \alias{confounder.check}
-\title{This function checks for potential confounders in the metadata}
+\title{Check for potential confounders in the metadata}
 \usage{
 confounder.check(meta, label)
 }
 \arguments{
-\item{source.dir}{SIAMCAT script directory}
+\item{meta}{metadata object}
 
-\item{fn.in.meta}{meta-data input file}
-
-\item{fn.in.label}{label input file}
+\item{label}{labels object}
+}
+\value{
+Does not return anything, but produces a single plot for each metadata category
 }
 \description{
-This function checks for potential confounders in the metadata
-}
-\examples{
-confounder.check()
+This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata. Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
 }
 \keyword{SIAMCAT}
 \keyword{confounder_check}
