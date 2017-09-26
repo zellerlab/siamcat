@@ -28,7 +28,8 @@ list containing values after selection: \itemize{
 }
 }
 \description{
-This functions filters samples based on metadata. Provide a column in the metadata and a range or a set of allowed values and the function will return the filtered labels, metadata, and features.
+This functions filters samples based on metadata.
+Provided with a column in the metadata and a range or a set of allowed values, the function will return the labels, metadata, and features for the samples matching the allowed range or set.
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}

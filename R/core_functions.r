@@ -476,7 +476,8 @@ eval.result <- function(label, pred){
 }
 
 #' @title Select samples
-#' @description This functions filters samples based on metadata. Provide a column in the metadata and a range or a set of allowed values and the function will return the filtered labels, metadata, and features.
+#' @description This functions filters samples based on metadata.
+#' Provided with a column in the metadata and a range or a set of allowed values, the function will return the labels, metadata, and features for the samples matching the allowed range or set.
 #' @param meta metadata object
 #' @param feat features object
 #' @param label labels object
@@ -508,7 +509,7 @@ select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allow
   }
   if (!xor(is.null(allowed.range ), is.null(allowed.set))) {
     cat('Neither allowed.range  nor allowed.set (or both at the same time) have been provided, exiting!\n')
-    quit(save='no', status = 1)
+    quit(save='no', status = 1) # TODO this really sucks in Rstudio, maybe it can be less harsh?
   } else {
     if (!is.null(allowed.range )) {
       cat('allowed.range  = [', paste(allowed.range , collapse=','), ']\n', sep='')
