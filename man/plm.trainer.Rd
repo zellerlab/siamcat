@@ -2,7 +2,7 @@
 % Please edit documentation in R/core_functions.r
 \name{plm.trainer}
 \alias{plm.trainer}
-\title{Add metadata as predictors}
+\title{Model training}
 \usage{
 plm.trainer(feat, label, fn.train.sample, num.folds = 5, stratify,
   modsel.crit, min.nonzero.coeff)
@@ -10,15 +10,29 @@ plm.trainer(feat, label, fn.train.sample, num.folds = 5, stratify,
 \arguments{
 \item{feat}{features object}
 
-\item{meta}{metadata object}
+\item{label}{label object}
 
-\item{pred.names}{vector of names of the metavariables to be added to the feature matrix as predictors}
+\item{fn.train.sample}{file containing the training samples}
 
-\item{std.meta}{Shall added (metadata) features be standardized?}
+\item{num.folds}{integer, number of folds for the internal model cross-validation}
+
+\item{stratify}{boolean, should the folds in the internal cross-validation be stratified?}
+
+\item{modsel.crit}{model selection criterion (not used at the moment)}
+
+\item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that should be present in the model}
 }
 \value{
-features object
+list containing \itemize{
+\item \code{$out.matrix};
+\item \code{$model.header};
+\item \code{$W.mat};
+\item \code{$hyperpar.mat};
+\item \code{$model}
+}
 }
 \description{
-Adds medata as columns to the feat data to be later used as predictors
+This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
 }
+\keyword{SIAMCAT}
+\keyword{plm.trainer}

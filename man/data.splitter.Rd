@@ -28,7 +28,7 @@ list containing the indices of the training and test folds and the parameters of
 }
 }
 \description{
-This functions prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
+This function prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
 }
 \keyword{SIAMCAT}
 \keyword{data.splitter}

@@ -23,7 +23,7 @@ list containing \itemize{
 }
 }
 \description{
-This functions takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
+This function takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
  \item Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)
  \item and the Precision-recall Curve (PR)
 }

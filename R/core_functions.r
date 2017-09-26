@@ -305,7 +305,7 @@ normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n
 
 
 #' @title Split a dataset into training and a test sets.
-#' @description This functions prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
+#' @description This function prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
 #' @param label label object
 #' @param num.folds number of cross-validation folds (needs to be \code{>=2})
 #' @param num.resample resampling rounds (values \code{<= 1} deactivate resampling)
@@ -398,7 +398,7 @@ data.splitter <- function(label, num.folds, num.resample, stratify, inseparable,
 }
 
 #' @title Evaluate prediction results
-#' @description This functions takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
+#' @description This function takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
 #'  \item Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)
 #'  \item and the Precision-recall Curve (PR)
 #' }
@@ -886,16 +886,28 @@ add.meta.pred <- function(feat, meta, pred.names, std.meta){
   invisible(feat)
 }
 
-#' @title Add metadata as predictors
-#' @description Adds medata as columns to the feat data to be later used as predictors
+#' @title Model training
+#' @description This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
 #' @param feat features object
-#' @param meta metadata object
-#' @param pred.names vector of names of the metavariables to be added to the feature matrix as predictors
-#' @param std.meta Shall added (metadata) features be standardized?
+#' @param label label object
+#' @param fn.train.sample file containing the training samples
+#' @param num.folds integer, number of folds for the internal model cross-validation
+#' @param stratify boolean, should the folds in the internal cross-validation be stratified?
+#' @param modsel.crit model selection criterion (not used at the moment)
+#' @param min.nonzero.coeff integer number of minimum nonzero coefficients that should be present in the model
 #' @export
-#' @return features object
+#' @keywords SIAMCAT plm.trainer
+#' @return list containing \itemize{
+#' \item \code{$out.matrix};
+#' \item \code{$model.header};
+#' \item \code{$W.mat};
+#' \item \code{$hyperpar.mat};
+#' \item \code{$model}
+#'}
 plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, modsel.crit, min.nonzero.coeff){
-
+  # TODO 1: modsel.criterion should be implemented
+  # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
+  # TODO 3: add model.type as parameter
   # transpose feature matrix as a convenience preprocessing
   feat         <- t(feat)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
@@ -1093,9 +1105,23 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, model=model))
 }
 
+#' @title Prediction on the test set
+#' @description This function takes the test set instances and the model trained by \link{plm.trainer} in order to predict the classes.
+#' @param feat features object
+#' @param label label object
+#' @param model model object trained by \link{plm.trainer}
+#' @param model.mat model matrix needed to rebuild the model
+#' @param hyperpars (not used)
+#' @param model.type string, type of the model that was trained
 #' @export
 #' @keywords SIAMCAT plm.predictor
+#' @return list containing the precitions \itemize{
+#'  \item \code{$pred};
+#'  \item \code{$mat}
+#'}
 plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
+  # TODO hyperpars is not used at the moment, as far as i see
+  # TODO 2: instead of feat and label containing the test sample indices, provide all features and the list from data.splitter
   feat         <- t(feat)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
 
