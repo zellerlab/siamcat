@@ -198,6 +198,7 @@ filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
 normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature, n.global) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
+  # TODO 2 add defaults for the parameters!!! Not all parameters are needed for all normalization methods
   num.orig.feat = nrow(feat)
   keep.idx = rowSums(is.na(feat) == 0)
   if (any(!keep.idx)) {
