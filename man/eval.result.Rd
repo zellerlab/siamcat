@@ -28,6 +28,8 @@ This function takes the correct labels and predictions for all samples and evalu
  \item and the Precision-recall Curve (PR)
 }
 as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.
+
+Prediction results are usually produced with the function \link{plm.predictor}.
 }
 \keyword{SIAMCAT}
 \keyword{eval.result}

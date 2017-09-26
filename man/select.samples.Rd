@@ -2,7 +2,7 @@
 % Please edit documentation in R/core_functions.r
 \name{select.samples}
 \alias{select.samples}
-\title{Select samples}
+\title{Select samples based on metadata}
 \usage{
 select.samples(meta, feat, label, filter, allowed.set = NULL,
   allowed.range = NULL)
@@ -28,7 +28,7 @@ list containing values after selection: \itemize{
 }
 }
 \description{
-This functions filters samples based on metadata.
+This functions filters features, labels, and metadata based on a specific column in the metadata.
 Provided with a column in the metadata and a range or a set of allowed values, the function will return the labels, metadata, and features for the samples matching the allowed range or set.
 }
 \keyword{SIAMCAT}

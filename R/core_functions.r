@@ -403,6 +403,8 @@ data.splitter <- function(label, num.folds, num.resample, stratify, inseparable,
 #'  \item and the Precision-recall Curve (PR)
 #' }
 #' as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.
+#'
+#' Prediction results are usually produced with the function \link{plm.predictor}.
 #' @param label label object
 #' @param pred prediction for each sample by the model, should be a matrix with dimensions \code{length(label) x 1} or \code{length(label) x num.resample}
 #' @keywords SIAMCAT eval.result
@@ -476,8 +478,8 @@ eval.result <- function(label, pred){
   }
 }
 
-#' @title Select samples
-#' @description This functions filters samples based on metadata.
+#' @title Select samples based on metadata
+#' @description This functions filters features, labels, and metadata based on a specific column in the metadata.
 #' Provided with a column in the metadata and a range or a set of allowed values, the function will return the labels, metadata, and features for the samples matching the allowed range or set.
 #' @param meta metadata object
 #' @param feat features object
