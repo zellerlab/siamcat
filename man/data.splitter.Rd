@@ -9,9 +9,9 @@ data.splitter(label, num.folds, num.resample, stratify, inseparable, meta)
 \arguments{
 \item{label}{label object}
 
-\item{num.folds}{number of cross-validation folds (needs to be >=2)}
+\item{num.folds}{number of cross-validation folds (needs to be \code{>=2})}
 
-\item{num.resample}{resampling rounds (values <= 1 deactivate resampling)}
+\item{num.resample}{resampling rounds (values \code{<= 1} deactivate resampling)}
 
 \item{stratify}{boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?}
 
@@ -21,10 +21,10 @@ data.splitter(label, num.folds, num.resample, stratify, inseparable, meta)
 }
 \value{
 list containing the indices of the training and test folds and the parameters of the splits: \itemize{
- \item \code{$training.folds};
- \item \code{$test.folds};
- \item \code{$num.resample};
- \item \code{$num.folds}
+ \item \code{$training.folds} nested list, containing for \code{length(num.resample)} the sample names of the \code{length(num.folds)} training folds;
+ \item \code{$test.folds} nested list, containing for \code{length(num.resample)} the sample names of the \code{length(num.folds)} test folds;
+ \item \code{$num.resample} = number of repeated samplings;
+ \item \code{$num.folds} = number of folds
 }
 }
 \description{

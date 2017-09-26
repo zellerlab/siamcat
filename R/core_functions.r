@@ -12,7 +12,7 @@
 ###
 
 #' @title Validate samples in metadata, labels, and features
-#' @description Check if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.
+#' @description This function checks if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.
 #' @param feat features object
 #' @param label labels object
 #' @param meta metadata object
@@ -49,6 +49,10 @@ validate.data <- function(feat, label, meta = NULL){
 #' @param label labels object
 #' @keywords SIAMCAT confounder.check
 #' @export
+#' @examples
+#' pdf(filename.pdf)
+#' confounder.check(meta, label)
+#' dev.off()
 #' @return Does not return anything, but produces a single plot for each metadata category
 confounder.check <- function(meta, label){
 
@@ -93,7 +97,7 @@ confounder.check <- function(meta, label){
 }
 
 #' @title Perform unsupervised feature filtering.
-#' @description This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, unmapped reads can be removed.
+#' @description This function may convert absolute abundances into relative abundances and then performs unsupervised feature filtering. Features can be filtered based on abundance or prevalence. Additionally, unmapped reads may be removed.
 #' @param feat feature object
 #' @param filter.method method used for filtering the features, can be one of these: \code{c("abundance", "cum.abundance", "prevalence")}
 #' @param cutoff float, abundace or prevalence cutoff
@@ -172,7 +176,7 @@ filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
 #' @param norm.method normalization method, can be one of these: \code{c("rank.unit", "rank.std", "log.std", "log.unit")}
 #' @param log.n0 pseudocount to be added before log-transformation
 #' @param sd.min.q quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for methods=\code{c("rank.std", "log.std")})
-#' @param n.p vector norm to use, (only for method=\code{"log.unit"})
+#' @param n.p vector norm to use, can be either \code{1} or \code{2}, (only for method=\code{"log.unit"})
 #' @param n.sample boolean, normalize by feature? (only for method=\code{"log.unit"})
 #' @param n.feature boolean, normalize by sample? (only for method=\code{"log.unit"})
 #' @param n.global boolean, Normalize by global rescaling? (only for method=\code{"log.unit"})
@@ -301,23 +305,23 @@ normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n
 #' @title Split a dataset into training and a test sets.
 #' @description This functions prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
 #' @param label label object
-#' @param num.folds number of cross-validation folds (needs to be >=2)
-#' @param num.resample resampling rounds (values <= 1 deactivate resampling)
+#' @param num.folds number of cross-validation folds (needs to be \code{>=2})
+#' @param num.resample resampling rounds (values \code{<= 1} deactivate resampling)
 #' @param stratify boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?
 #' @param inseparable defaults to NULL (obsolete)
 #' @param meta metadata object (obsolete)
 #' @keywords SIAMCAT data.splitter
 #' @export
 #' @return list containing the indices of the training and test folds and the parameters of the splits: \itemize{
-#'  \item \code{$training.folds};
-#'  \item \code{$test.folds};
-#'  \item \code{$num.resample};
-#'  \item \code{$num.folds}
+#'  \item \code{$training.folds} nested list, containing for \code{length(num.resample)} the sample names of the \code{length(num.folds)} training folds;
+#'  \item \code{$test.folds} nested list, containing for \code{length(num.resample)} the sample names of the \code{length(num.folds)} test folds;
+#'  \item \code{$num.resample} = number of repeated samplings;
+#'  \item \code{$num.folds} = number of folds
 #'}
 data.splitter <- function(label, num.folds, num.resample, stratify, inseparable, meta){
   ### read label and meta-data
   # (assuming the label file has 1 column)
-  # TODO delete inseparable parameter
+  # TODO delete inseparable parameter (or at least add an default)
   # TODO delete meta parameter
 
   if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {

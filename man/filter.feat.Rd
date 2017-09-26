@@ -21,7 +21,7 @@ filter.feat(feat, filter.method, cutoff, recomp.prop, rm.unmapped)
 Returns the filtered feature matrix
 }
 \description{
-This function converts absolute abundances into relative abundances and performs unsupervised feature filtering. Features may be filtered based on abundance or prevalence. Additionally, unmapped reads can be removed.
+This function may convert absolute abundances into relative abundances and then performs unsupervised feature filtering. Features can be filtered based on abundance or prevalence. Additionally, unmapped reads may be removed.
 }
 \details{
 Currently, there are three filtering methods implemented:

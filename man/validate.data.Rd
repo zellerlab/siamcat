@@ -21,7 +21,7 @@ a list containing values after filtering: \itemize{
 }
 }
 \description{
-Check if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.
+This function checks if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.
 }
 \keyword{SIAMCAT}
 \keyword{validate.data}

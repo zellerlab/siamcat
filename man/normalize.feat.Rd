@@ -16,7 +16,7 @@ normalize.feat(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature,
 
 \item{sd.min.q}{quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for methods=\code{c("rank.std", "log.std")})}
 
-\item{n.p}{vector norm to use, (only for method=\code{"log.unit"})}
+\item{n.p}{vector norm to use, can be either \code{1} or \code{2}, (only for method=\code{"log.unit"})}
 
 \item{n.sample}{boolean, normalize by feature? (only for method=\code{"log.unit"})}
 
