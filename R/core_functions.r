@@ -315,8 +315,8 @@ normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n
 #' @keywords SIAMCAT data.splitter
 #' @export
 #' @return list containing the indices of the training and test folds and the parameters of the splits: \itemize{
-#'  \item \code{$training.folds} nested list, containing for \code{length(num.resample)} the sample names of the \code{length(num.folds)} training folds;
-#'  \item \code{$test.folds} nested list, containing for \code{length(num.resample)} the sample names of the \code{length(num.folds)} test folds;
+#'  \item \code{$training.folds} nested list, containing for \code{length(num.folds)} the sample names of the \code{length(num.resample)} training folds;
+#'  \item \code{$test.folds} nested list, containing for \code{length(num.folds)} the sample names of the \code{length(num.resample)} test folds;
 #'  \item \code{$num.resample} = number of repeated samplings;
 #'  \item \code{$num.folds} = number of folds
 #'}
