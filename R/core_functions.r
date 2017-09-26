@@ -542,6 +542,25 @@ select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allow
   invisible(results)
 }
 
+#' @title Check and visualize associations between features and classes
+#' @description This function calculates for each feature the median log10 fold change between the different classes found in labels.
+#'
+#' Significance of the differences is computed for each feature using a wilcoxon test followed by multiple hypothesis testing correction.
+#'
+#' Additionally, the Area under the Receiver Operating Characteristic Curve (AU-ROC) is computed for the features found to be associated with the two different classes at a user-specified significance level \code{alpha}.
+#'
+#' Finally, the function produces a plot of the top \code{max.show} associated features, showing the distribution of the log10-transformed abundances for both classes, the median fold change, and the AU-ROC.
+#' @param feat feature object
+#' @param label label object
+#' @param fn.plot filename for the pdf-plot
+#' @param color.scheme valid R color scheme, defaults to \code{'RdYlBu'}
+#' @param alpha float, significance level, defaults to \code{0.05}
+#' @param min.fc float, minimum log10 fold change for significantly associated features, defaults to \code{0}
+#' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
+#' @param detect.lim float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}
+#' @param max.show integer, how many associated features should be shown, defaults to \code{50}
+#' @param plot.type string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"bean"}
+#' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alpha=0.05, min.fc=0, mult.corr="fdr",
@@ -585,7 +604,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
   }
 
 
-
+  # TODO sort.by not an option of the function
   if (length(idx) > 0) {
     if (sort.by == 'fc') {
       idx <- idx[order(fc[idx], decreasing=FALSE)]
