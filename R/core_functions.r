@@ -845,14 +845,14 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
 }
 
 #' @title Add metadata as predictors
-#' @description Adds medata as columns to the feat data to be later used as predictors
+#' @description This function adds metadata to the feature matrix to be later used as predictors
 #' @param feat features object
 #' @param meta metadata object
 #' @param pred.names vector of names of the metavariables to be added to the feature matrix as predictors
-#' @param std.meta Shall added (metadata) features be standardized?
+#' @param std.meta boolean, should added metadata features be standardized?
 #' @keywords SIAMCAT add.meta.pred
 #' @export
-#' @return features object
+#' @return features object with added metadata
 add.meta.pred <- function(feat, meta, pred.names, std.meta){
   ### add metadata as predictors to the feature matrix
   cnt <- 0

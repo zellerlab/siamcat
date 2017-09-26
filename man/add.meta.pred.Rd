@@ -13,13 +13,13 @@ add.meta.pred(feat, meta, pred.names, std.meta)
 
 \item{pred.names}{vector of names of the metavariables to be added to the feature matrix as predictors}
 
-\item{std.meta}{Shall added (metadata) features be standardized?}
+\item{std.meta}{boolean, should added metadata features be standardized?}
 }
 \value{
-features object
+features object with added metadata
 }
 \description{
-Adds medata as columns to the feat data to be later used as predictors
+This function adds metadata to the feature matrix to be later used as predictors
 }
 \keyword{SIAMCAT}
 \keyword{add.meta.pred}
