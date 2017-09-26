@@ -7,7 +7,7 @@
 eval.result(label, pred)
 }
 \arguments{
-\item{label}{label input file}
+\item{label}{label object}
 
 \item{pred}{prediction for each sample by the model, should be a matrix with dimensions \code{length(label) x 1} or \code{length(label) x num.resample}}
 }
@@ -25,7 +25,7 @@ list containing \itemize{
 \description{
 This functions takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
  \item Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)
- \item and the Precision-recall Curve
+ \item and the Precision-recall Curve (PR)
 }
 as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.
 }

@@ -26,6 +26,7 @@
 validate.data <- function(feat, label, meta = NULL){
   # TODO attempt multiple reading attempts!
   # TODO 2: should this function also validate the features? (at the moment, nothing happens to the features...)
+  # TODO 3: this functions takes label$label at the moment, not an label object. also does not return an label obejct. Should be changed, i guess?
 
   if (!is.null(meta)) {
   stopifnot(all(names(label) %in% rownames(meta)) && all(rownames(meta) %in% names(label)))
@@ -398,10 +399,10 @@ data.splitter <- function(label, num.folds, num.resample, stratify, inseparable,
 #' @title Evaluate prediction results
 #' @description This functions takes the correct labels and predictions for all samples and evaluates the results using the \itemize{
 #'  \item Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)
-#'  \item and the Precision-recall Curve
+#'  \item and the Precision-recall Curve (PR)
 #' }
 #' as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.
-#' @param label label input file
+#' @param label label object
 #' @param pred prediction for each sample by the model, should be a matrix with dimensions \code{length(label) x 1} or \code{length(label) x num.resample}
 #' @keywords SIAMCAT eval.result
 #' @export
@@ -475,7 +476,7 @@ eval.result <- function(label, pred){
 }
 
 #' @title Select samples
-#' @description Filter samples based on metadata
+#' @description This functions filters samples based on metadata. Provide a column in the metadata and a range or a set of allowed values and the function will return the filtered labels, metadata, and features.
 #' @param meta metadata object
 #' @param feat features object
 #' @param label labels object
@@ -490,6 +491,7 @@ eval.result <- function(label, pred){
 #'  \item \code{$meta} = metadata
 #' }
 select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allowed.range = NULL){
+  # TODO at the moment, this functions takes label$label, not an label-object. Should be corrected
   # parse interval
   if(!is.null(allowed.range )) {
     allowed.range  <- gsub('\\[|\\]','', allowed.range)
@@ -497,7 +499,7 @@ select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allow
     stopifnot(length(allowed.range) == 2)
     stopifnot(allowed.range [1] <= allowed.range[2])
   }
-  allowed.set  <- opt$allowed.set
+  #allowed.set  <- opt$allowed.set # TODO should be removed, i guess?
   if (!is.null(allowed.set)) {
     # parse set
     allowed.set  <- gsub('\\{|\\}','', allowed.set)
@@ -515,9 +517,10 @@ select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allow
     }
   }
   cat('\n')
-  if (substr(source.dir, nchar(source.dir), nchar(source.dir)) != '/') {
-    source.dir   <- paste(source.dir, '/', sep='')
-  }
+  # TODO throws an error when called in Rstudio, should be removed i guess
+  # if (substr(source.dir, nchar(source.dir), nchar(source.dir)) != '/') {
+  #   source.dir   <- paste(source.dir, '/', sep='')
+  # }
   if(!filter %in% colnames(meta)) stop("The filter name is not present in colnames of the metadata. Stopping.\n")
   filter.var    <- meta[,filter]
 
@@ -530,10 +533,11 @@ select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allow
     cat('Removed ', sum(!s.idx), ' samples with ', filter,
         ' not in {', paste(allowed.set, collapse=', '), '} (retaining ', sum(s.idx), ')\n', sep='')
   }
-  results         <- list(NULL)
+  results         <- list(NULL) # why?
   results$feat    <- feat[,s.idx]
   results$label   <- label[s.idx]
   results$meta    <- meta[s.idx,]
+  # why invisible return?
   invisible(results)
 }
 
