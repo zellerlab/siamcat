@@ -12,5 +12,3 @@ This is a helper function to uniformly pass command line parameters for model in
 \examples{
 make_model_interpretor_options()
 }
-\keyword{SIAMCAT}
-\keyword{make_evaler_options}

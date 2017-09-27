@@ -12,5 +12,3 @@ This is a helper function to uniformly pass command line parameters for metadata
 \examples{
 make_meta_adder_options()
 }
-\keyword{SIAMCAT}
-\keyword{make_evaler_options}

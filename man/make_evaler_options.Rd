@@ -12,5 +12,3 @@ This is a helper function to uniformly pass command line parameters for model ev
 \examples{
 make_evaler_options()
 }
-\keyword{SIAMCAT}
-\keyword{make_evaler_options}

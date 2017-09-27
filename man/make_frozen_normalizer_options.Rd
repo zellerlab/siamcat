@@ -12,5 +12,3 @@ This is a helper function to uniformly pass command line parameters for frozen n
 \examples{
 make_frozen_normalizer_options()
 }
-\keyword{SIAMCAT}
-\keyword{make_evaler_options}

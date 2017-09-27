@@ -12,5 +12,3 @@ This is a helper function to uniformly pass command line parameters for generic 
 \examples{
 make_normalizater_options()
 }
-\keyword{SIAMCAT}
-\keyword{make_normalizer_options}

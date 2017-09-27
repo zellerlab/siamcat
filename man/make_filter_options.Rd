@@ -12,5 +12,3 @@ This is a helper function to uniformly pass command line parameters forgeneric  
 \examples{
 make_filter_options()
 }
-\keyword{SIAMCAT}
-\keyword{make_filter_options}
