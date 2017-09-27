@@ -16,18 +16,18 @@
 #model.tag      = 'LASSO'
 #eps            = 1e-8
 
-
+# TODO: to be removed, since it is not used by any other function
 ##### function to draw a stratified sample from the label vector
-#' @export
-sample.strat = function(label, frac) {
-  classes = unique(label)
-  s = NULL
-  for (c in classes) {
-    idx = which(label==c)
-    s = c(s, sample(which(label==c), round(frac * sum(label==c))))
-  }
-  return(s)
-}
+# #' @export
+# sample.strat = function(label, frac) {
+#   classes = unique(label)
+#   s = NULL
+#   for (c in classes) {
+#     idx = which(label==c)
+#     s = c(s, sample(which(label==c), round(frac * sum(label==c))))
+#   }
+#   return(s)
+# }
 
 ##### function to train a LASSO model for a single given C
 #' @export
@@ -60,15 +60,15 @@ train.plm <- function(feat, label, method, hyper.par, data, subset) {
     coef                <- coefficients(model$learner.model)
     bias.idx            <- which(rownames(coef) == '(Intercept)')
     coef                <- coef[-bias.idx,]
-    
+
     # Remove bias/intercept term when returning model feature weights
     model$feat.weights <- (-1) *  as.numeric(coef) ### check!!!
     model$lrn          <- lrn
     model$task         <- task
-    
+
   } else if (method == 'lasso_ll') {
     liblin.type <- 6
-    model$original.model <- LiblineaR(feat, label$label, 
+    model$original.model <- LiblineaR(feat, label$label,
                                       type=liblin.type, bias=TRUE, epsilon=1e-6,
                                       cost=hyper.par$C)
     stopifnot((is.numeric(label$positive.lab) &&  is.numeric(label$negative.lab)) || label$positive.lab < label$negative.lab)
@@ -84,10 +84,10 @@ train.plm <- function(feat, label, method, hyper.par, data, subset) {
     }
     bias.idx <- which(colnames(model$original.model$W) == 'Bias')
     model$feat.weights <- as.numeric(model$original.model$W[,-bias.idx])
-    
+
   } else if (method == 'ridge_ll') {
     liblin.type <- 0
-    model$original.model <- LiblineaR(feat, label$label, 
+    model$original.model <- LiblineaR(feat, label$label,
                                       type=liblin.type, bias=TRUE, epsilon=1e-6,
                                       cost=hyper.par$C)
     stopifnot((is.numeric(label$postive.lab) &&  is.numeric(label$negative.lab)) || label$postive.lab < label$negative.lab)
@@ -103,7 +103,7 @@ train.plm <- function(feat, label, method, hyper.par, data, subset) {
     }
     bias.idx <- which(colnames(model$original.model$W) == 'Bias')
     model$feat.weights <- as.numeric(model$original.model$W[,-bias.idx])
-    
+
   } else if (method == 'enet') {
     stopifnot(hyper.par$alpha < 1) # otherwise we're going to train a LASSO model
     model$original.model <- glmnet(feat, factor(label$label, levels=c(label$negative.lab, label$postive.lab)),
@@ -112,8 +112,8 @@ train.plm <- function(feat, label, method, hyper.par, data, subset) {
     c <- coefficients(model$original.model)
     c <- c[,ncol(c)]
     bias.idx <- which(names(c) == '(Intercept)')
-    model$feat.weights <- -1 * as.numeric(c[-bias.idx])    
-    
+    model$feat.weights <- -1 * as.numeric(c[-bias.idx])
+
   } else if (method == 'gelnet') {
     stopifnot(hyper.par$alpha < 1) # otherwise we're going to train a LASSO model
     model$original.model <- gelnet(feat, factor(label$label, levels=c(label$negative.lab, label$postive.lab)),
@@ -121,46 +121,45 @@ train.plm <- function(feat, label, method, hyper.par, data, subset) {
                                    silent=TRUE)
     # for consistency with the other models the coefficient sign needs to be flipped
     model$feat.weights <- model$original.model$w
-    
+
   } else {
     stop('unknown method')
   }
-  
+
   return(model)
 }
-
 
 #' @export
 predict.plm <- function(feat, model, method, opt.hyper.par, data, subset) {
   method <- tolower(method)
-  
+
   # note that some of the logit models are set up inversely to each other,
-  # requiring to select coefficient/prediction columns accordingly using col.idx 
+  # requiring to select coefficient/prediction columns accordingly using col.idx
   if (method == 'lasso') {
     col.idx <- 1
     # glmnet's predict function needs to be given a lambda value
     pred <- predict(model, task = model$task, subset = subset)
-    
+
   } else if (method == 'lasso_ll' || method == 'ridge_ll') {
     col.idx <- 2 # this is a bit counter-intuitive given the column names of the predict data frame
-    pred <- predict(model$original.model, feat, 
+    pred <- predict(model$original.model, feat,
                     proba=TRUE)$probabilities[,col.idx]
     # Adding rownames here is important.
     names(pred) <- rownames(feat)
-    
+
   } else if (method == 'enet') {
     col.idx <- 1
-    # glmnet's predict function needs to be given a lambda value 
+    # glmnet's predict function needs to be given a lambda value
     pred <- predict(model$original.model, feat,
                     alpha=opt.hyper.par$alpha, s=opt.hyper.par$lambda,
                     type="response")[,col.idx]
-    
+
   } else if (method == 'gelnet') {
     # gelnet's predictions need to be calculated "by hand"
     m = model$original.model
     pred <- 1.0 / (1.0 + exp(feat %*% m$w + m$b))
     names(pred) <- rownames(feat)
-    
+
   } else {
     stop('unknown method')
   }
@@ -206,7 +205,7 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
     opt.idx              <- which.max(aucs)
     opt.hyper.par$lambda <- hyper.par$lambda[opt.idx]
     # cat('    optimal lambda =', hyper.par$lambda[opt.idx], '\n')
-    
+
   } else if (method == 'lasso_ll' || method == 'ridge_ll' || method == 'l1_svm' || method == 'l2_svm') {
     aucs <- rep(0, length(hyper.par$C))
     for (i in 1:length(hyper.par$C)) {
@@ -226,8 +225,8 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
     }
     opt.idx <- which.max(aucs)
     opt.hyper.par$C <- hyper.par$C[opt.idx]
-    cat('    optimal C =', hyper.par$C[opt.idx], '\n') 
-    
+    cat('    optimal C =', hyper.par$C[opt.idx], '\n')
+
   } else if (method == 'enet' || method == 'gelnet') {
     aucs <- matrix(0, nrow=length(hyper.par$alpha),
                    ncol=length(hyper.par$lambda))
@@ -245,23 +244,22 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
           p[test.idx] <- predict.plm(feat[test.idx,], model, method, hp, data, test.idx)
         }
         aucs[i,j] <- roc(response=label, predictor=p)$auc
-        cat('    ', method, ' model selection: (alpha=', hyper.par$alpha[i], 
-            ', lambda=', hyper.par$lambda[j], ') AU-ROC=', 
+        cat('    ', method, ' model selection: (alpha=', hyper.par$alpha[i],
+            ', lambda=', hyper.par$lambda[j], ') AU-ROC=',
             format(aucs[i,j], digits=3), '\n', sep='')
       }
     }
     opt.idx              <- arrayInd(which.max(aucs), dim(aucs))
     opt.hyper.par$alpha  <- hyper.par$lambda[opt.idx[1]]
     opt.hyper.par$lambda <- hyper.par$lambda[opt.idx[2]]
-    cat('    optimal alpha =' , hyper.par$alpha[opt.idx[1]], 
-        ', lambda =', hyper.par$lambda[opt.idx[2]], '\n') 
-    
+    cat('    optimal alpha =' , hyper.par$alpha[opt.idx[1]],
+        ', lambda =', hyper.par$lambda[opt.idx[2]], '\n')
+
   } else {
     stop('unknown method')
   }
   return(opt.hyper.par)
 }
-
 
 ##### function to partition training set into cross-validation folds for model selection
 ### Works analogous to the function used in data_splitter.r
@@ -298,7 +296,7 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, foldid
     } else {
       foldid      <- sample(rep(1:num.folds, length.out=length(label)))
     }
-    
+
   }
   # make sure each fold contains examples from all classes
   for (f in 1:num.folds) {
@@ -307,5 +305,3 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, foldid
   stopifnot(length(label) == length(foldid))
   return(foldid)
 }
-
-##### end function
