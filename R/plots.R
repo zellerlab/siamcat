@@ -78,7 +78,7 @@ interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme,
 
 
   ### start plotting model properties
-  
+
 
   ### plot layout
   sel.f.cex = max(0.3, 0.8 - 0.01*num.sel.f)
@@ -349,5 +349,15 @@ evaluation.model.plot <- function(fn.plot, label, pred, eval.data, model.type){
   } else {
     cat('AU-PRC:', format(aupr, digits=3), '\n')
     text(0.7, 0.1, paste('AUC:', format(aupr, digits=3)))
+  }
+}
+
+# ### xv is vector containing values to draw a barplot, z and y determine upper and lower boundary of barplot, respectively.
+draw.error.bar <- function(plot.coords, z, y){
+  g <- (max(plot.coords)-min(plot.coords))/(3*length(plot.coords))
+  for (i in 1:length(plot.coords)) {
+    lines(c(z[i],y[i]),c(plot.coords[i], plot.coords[i]))
+    lines(c(z[i],z[i]),c(plot.coords[i]+g, plot.coords[i]-g))
+    lines(c(y[i],y[i]),c(plot.coords[i]+g, plot.coords[i]-g))
   }
 }

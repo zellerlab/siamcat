@@ -23,19 +23,6 @@ trim = function (x) {
 ###  alongside the y-axis. outer.diff on the other hand is used as a multiplication factor which changes the distance between each different
 ### feature example combination globally.
 
-
-
-# ### xv is vector containing values to draw a barplot, z and y determine upper and lower boundary of barplot, respectively.
-# #' @export
-# draw.error.bar <- function(plot.coords, z, y){
-#   g <- (max(plot.coords)-min(plot.coords))/(3*length(plot.coords))
-#   for (i in 1:length(plot.coords)) {
-#     lines(c(z[i],y[i]),c(plot.coords[i], plot.coords[i]))
-#     lines(c(z[i],z[i]),c(plot.coords[i]+g, plot.coords[i]-g))
-#     lines(c(y[i],y[i]),c(plot.coords[i]+g, plot.coords[i]-g))
-#   }
-# }
-
 ##### function to parse the header of a label file
 ### label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
 ###   where <TYPE> is a string specifying the type of label variable such as
@@ -60,32 +47,32 @@ parse.label.header <- function(label.header) {
 
 # ##### function to parse the header of a model file
 # ### TODO documentation
-# #' @export
-# parse.model.header <- function(model.header) {
-#   s = strsplit(model.header, ':')[[1]]
-#   type = trim(s[1])
-#   if (substr(type, 1, 1) == '#')
-#     type = trim(substr(type, 2, nchar(type)))
-#   label.header = trim(paste(s[2:length(s)], collapse=':'))
-#   if (substr(label.header, 1, 1) == '[') {
-#     stopifnot(substr(label.header, nchar(label.header), nchar(label.header)) == ']')
-#     label.header = substr(label.header, 2, nchar(label.header)-1)
-#   }
-#   p = grep('\\(.*\\)', type)
-#   properties = NULL
-#   if (length(p) > 0) {
-#     stopifnot(length(p) == 1)
-#     stopifnot(substr(type, nchar(type), nchar(type)) == ')')
-#     properties = substr(type, p+1, nchar(type)-1)
-#     type = trim(substr(type, 1, p-1))
-#   }
-#
-#   model.info = list()
-#   model.info$type = type
-#   model.info$properties = properties
-#   model.info$label.header = label.header
-#   return(model.info)
-# }
+#' @export
+parse.model.header <- function(model.header) {
+  s = strsplit(model.header, ':')[[1]]
+  type = trim(s[1])
+  if (substr(type, 1, 1) == '#')
+    type = trim(substr(type, 2, nchar(type)))
+  label.header = trim(paste(s[2:length(s)], collapse=':'))
+  if (substr(label.header, 1, 1) == '[') {
+    stopifnot(substr(label.header, nchar(label.header), nchar(label.header)) == ']')
+    label.header = substr(label.header, 2, nchar(label.header)-1)
+  }
+  p = grep('\\(.*\\)', type)
+  properties = NULL
+  if (length(p) > 0) {
+    stopifnot(length(p) == 1)
+    stopifnot(substr(type, nchar(type), nchar(type)) == ')')
+    properties = substr(type, p+1, nchar(type)-1)
+    type = trim(substr(type, 1, p-1))
+  }
+
+  model.info = list()
+  model.info$type = type
+  model.info$properties = properties
+  model.info$label.header = label.header
+  return(model.info)
+}
 
 #' @title Read feature file
 #' @description This file reads in the tsv file with features and converts it into a matrix
