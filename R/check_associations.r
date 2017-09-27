@@ -312,6 +312,11 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
 
 }
 
+### label.plot.horizontal() takes as input lists of (significantly) differentially abundant bacterial features and plots their names
+### on the left side of a figur, parallel to each associated plot. inner.diff.x, inner.diff.y and outer.diff are numerical values that can be
+### used to tweak the position of the text lines relatively to their plot. Specifically, inner.diff.y and inner.diff.x will shift the text
+###  alongside the y-axis. outer.diff on the other hand is used as a multiplication factor which changes the distance between each different
+### feature example combination globally.
 label.plot.horizontal <- function(x, y, labels = NULL, x.suff, y.suff, inner.diff.x = NULL, inner.diff.y = NULL, outer.diff = NULL){
   stopifnot(length(labels) == dim(c)[1])
   if (!is.null(y) && !is.null(x.suff) && !is.null(y.suff)) {

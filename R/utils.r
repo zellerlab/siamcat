@@ -17,12 +17,6 @@ trim = function (x) {
   gsub("^\\s+|\\s+$", "", x)
 }
 
-### label.plot.horizontal() takes as input lists of (significantly) differentially abundant bacterial features and plots their names
-### on the left side of a figur, parallel to each associated plot. inner.diff.x, inner.diff.y and outer.diff are numerical values that can be
-### used to tweak the position of the text lines relatively to their plot. Specifically, inner.diff.y and inner.diff.x will shift the text
-###  alongside the y-axis. outer.diff on the other hand is used as a multiplication factor which changes the distance between each different
-### feature example combination globally.
-
 ##### function to parse the header of a label file
 ### label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
 ###   where <TYPE> is a string specifying the type of label variable such as
