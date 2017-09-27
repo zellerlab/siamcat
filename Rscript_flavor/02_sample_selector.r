@@ -67,11 +67,11 @@ stopifnot(all(names(label$label) == rownames(meta)))
 
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
-results     <-  select.samples(meta, feat, label$label, filter, allowed.set, allowed.range)
+results     <-  select.samples(meta=meta, feat=feat, label=label$label, filter=filter, allowed.range=allowed.range)
 
 
 
-### write label, feature and meta-data with selected sample set 
+### write label, feature and meta-data with selected sample set
 # labels
 write(label$header,        file=fn.out.label, append=FALSE)
 write.table(t(as.matrix(results$label)), file=fn.out.label, quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
