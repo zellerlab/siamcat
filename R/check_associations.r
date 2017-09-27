@@ -311,3 +311,104 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
   }
 
 }
+
+label.plot.horizontal <- function(x, y, labels = NULL, x.suff, y.suff, inner.diff.x = NULL, inner.diff.y = NULL, outer.diff = NULL){
+  stopifnot(length(labels) == dim(c)[1])
+  if (!is.null(y) && !is.null(x.suff) && !is.null(y.suff)) {
+    for (i in 1:dim(x)[1]) {
+      mtext(paste(labels[i], x.suff), 2, line=1, at=i*outer.diff+inner.diff.x, las=1, cex=min(0.7, 1-(nrow(x)/70)))
+      mtext(y.suff, 2, line=1, at=i*outer.diff+inner.diff.y, las=1, cex=min(0.7, 1-(nrow(x)/70)))
+    }
+  } else {
+    for (i in 1:dim(x)[1]) {
+      mtext(labels[i], 2, line=1, at=i*outer.diff+inner.diff.x, las=1, cex=min(0.7, 1-(nrow(x)/50)))
+    }
+  }
+}
+
+##### function to create different tints of a color based on the color's rgb specifications. Each column specifies one tint.
+### Make sure that you specify your rgb values as rgb/255! Also, DO NOT call rgb() on your color vector!
+create.tints.rgb <- function(color.rgb, nr.tints, tint.steps = 1/nr.tints) {
+  tints <- matrix(rep(0,(3*(nr.tints))),nrow=3, ncol=nr.tints)
+  for (i in 1:nr.tints){
+    tints[1,i] = color.rgb[1] + (1 - color.rgb[1]) * (tint.steps*i)
+    tints[2,i] = color.rgb[2] + (1 - color.rgb[2]) * (tint.steps*i)
+    tints[3,i] = color.rgb[3] + (1 - color.rgb[3]) * (tint.steps*i)
+  }
+  return (tints)
+}
+
+### TODO docu!
+# # # #' @export
+plot.data.range <- function(x, y=NULL, x.col='black', y.col='black', labels=NULL, x.suff=NULL, y.suff=NULL) {
+  if (is.null(y)) {
+    p.m = min(x, na.rm=TRUE)
+  } else {
+    stopifnot(dim(x)[1] == dim(y)[1])
+    p.m = min(c(min(x, na.rm=TRUE), min(y, na.rm=TRUE)))
+  }
+  plot(rep(p.m, dim(x)[1]), 1:dim(x)[1],
+       xlab='', ylab='', yaxs='i', axes=FALSE,
+       xlim=c(p.m, 0), ylim=c(0.5, dim(x)[1]+0.5), frame.plot=FALSE, type='n')
+  for (v in seq(p.m,-1,1)) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+
+  tck = floor(p.m):0
+  axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
+
+  x.q = apply(x, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE, names=FALSE))
+  if (is.null(y)) {
+    # inter-quartile range
+    rect(x.q[2,], (1:dim(x)[1])-0.2, x.q[4,], (1:dim(x)[1])+0.2)
+    # 90% interval
+    segments(x.q[1,], 1:dim(x)[1], x.q[2,], 1:dim(x)[1])
+    segments(x.q[4,], 1:dim(x)[1], x.q[5,], 1:dim(x)[1])
+    segments(x.q[1,], y0=(1:dim(x)[1])-0.15, y1=(1:dim(x)[1])+0.15)
+    segments(x.q[5,], y0=(1:dim(x)[1])-0.15, y1=(1:dim(x)[1])+0.15)
+    # median
+    segments(x.q[3,], y0=(1:dim(x)[1])-0.2, y1=(1:dim(x)[1])+0.2, lwd=2)
+    # scatter plot on top
+    for (i in 1:dim(x)[1]) {
+      if (nchar(x.col) > 7) {
+        # adjust alpha channel by reducing transparency
+        a = substr(x.col,nchar(x.col)-1, nchar(x.col))
+        a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
+        x.col = gsub('..$', toupper(as.hexmode(round(a*255))), x.col)
+      }
+      points(x[i,], rep(i, dim(x)[2])+rnorm(ncol(x),sd=0.05), pch=16, cex=0.6, col=x.col)
+    }
+  } else {
+    y.q = apply(y, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE, names=FALSE))
+    # inter-quartile range
+    rect(x.q[2,], 1:dim(x)[1], x.q[4,], (1:dim(x)[1])+0.3, col=x.col)
+    rect(y.q[2,], (1:dim(y)[1])-0.3, y.q[4,], 1:dim(y)[1], col=y.col)
+    # 90% interval
+    segments(x.q[1,], 1:dim(x)[1], x.q[5,], 1:dim(x)[1])#, col=x.col)
+    segments(y.q[1,], 1:dim(x)[1], y.q[5,], 1:dim(x)[1])#, col=x.col)
+    segments(x.q[1,], y0=1:dim(x)[1], y1=(1:dim(x)[1])+0.2)
+    segments(y.q[1,], y0=(1:dim(x)[1])-0.2, y1=1:dim(x)[1])
+    segments(x.q[5,], y0=1:dim(x)[1], y1=(1:dim(x)[1])+0.2)
+    segments(y.q[5,], y0=(1:dim(x)[1])-0.2, y1=1:dim(x)[1])
+    # median
+    segments(x.q[3,], y0=1:dim(x)[1], y1=(1:dim(x)[1])+0.3, lwd=3)#, col=x.col)
+    segments(y.q[3,], y0=(1:dim(x)[1])-0.3, y1=1:dim(x)[1], lwd=3)#, col=y.col)
+    # scatter plot on top
+    for (i in 1:dim(x)[1]) {
+      if (nchar(x.col) > 7) {
+        # adjust alpha channel by reducing transparency
+        a = substr(x.col,nchar(x.col)-1, nchar(x.col))
+        a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
+        x.col = gsub('..$', toupper(as.hexmode(round(a*255))), x.col)
+      }
+      if (nchar(y.col) > 7) {
+        # adjust alpha channel by reducing transparency
+        a = substr(y.col,nchar(y.col)-1, nchar(y.col))
+        a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
+        y.col = gsub('..$', toupper(as.hexmode(round(a*255))), y.col)
+      }
+      points(x[i,], rep(i+0.15, ncol(x))+rnorm(ncol(x),sd=0.03), pch=16, cex=0.6, col=x.col)
+      points(y[i,], rep(i-0.15, ncol(y))+rnorm(ncol(y),sd=0.03), pch=16, cex=0.6, col=y.col)
+    }
+  }
+}
