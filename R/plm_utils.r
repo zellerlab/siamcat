@@ -264,15 +264,16 @@ select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
 ##### function to partition training set into cross-validation folds for model selection
 ### Works analogous to the function used in data_splitter.r
 #' @export
-assign.fold <- function(label, num.folds, stratified, inseparable = NULL, foldid) {
+assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=NULL) {
+  foldid  <- rep(0, length(label))
   classes <- sort(unique(label))
   # Transform number of classes into vector of 1 to x for looping over.
   # stratify positive examples
   if (stratified) {
     # If stratify is TRUE, make sure that num.folds does not exceed the maximum number of examples for the class with the fewest training examples.
     if (any(as.data.frame(table(label))[,2] < num.folds)) {
-      print("+++ Number of CV folds is too large for this data set to maintain stratification. Reduce num.folds or turn stratification off. Exiting.\n")
-      q(status = 1)
+      stop("+++ Number of CV folds is too large for this data set to maintain stratification. Reduce num.folds or turn stratification off. Exiting.\n")
+      # q(status = 1)
     }
     for (c in 1:length(classes)) {
       idx         <- which(label==classes[c])
@@ -285,11 +286,10 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, foldid
       num.folds   <- length(label)-1
     }
     if (!is.null(inseparable)) {
-      strata      <- unique(meta.data[,inseparable])
+      strata      <- unique(meta[,inseparable])
       sid         <- sample(rep(1:num.folds, length.out=length(strata)))
-      foldid      <- rep(NA, length(label))
       for (s in 1:length(strata)) {
-        idx          <- which(meta.data[,inseparable] == strata[s])
+        idx          <- which(meta[,inseparable] == strata[s])
         foldid[idx]  <-sid[s]
       }
       stopifnot(all(!is.na(foldid)))
@@ -298,10 +298,21 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, foldid
     }
 
   }
-  # make sure each fold contains examples from all classes
-  for (f in 1:num.folds) {
-    stopifnot(all(sort(unique(label[foldid==f])) == classes))
+
+  # make sure that for each test fold the training fold
+  # (i.e. all other folds together) contain examples from all classes
+  # except for stratified CV
+  if (!stratified){
+    for (f in 1:num.folds) {
+      stopifnot(all(sort(unique(label[foldid!=f])) == classes))
+    }
+  } else {
+    for (f in 1:num.folds) {
+      stopifnot(all(sort(unique(label[foldid==f])) == classes))
+    }
   }
+
   stopifnot(length(label) == length(foldid))
+
   return(foldid)
 }
