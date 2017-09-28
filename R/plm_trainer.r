@@ -248,5 +248,5 @@ plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratif
     }
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
-  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, model=models.list))
+  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, models.list=models.list))
 }
