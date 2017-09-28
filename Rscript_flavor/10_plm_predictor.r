@@ -81,11 +81,11 @@ model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFac
   
 # model$W = model$W[1:dim(model$W)[1]-1,]
 # parse model header
-con = file(fn.model, 'r')
-model$header <- readLines(con, 1)
-close(con)
-model$header <- parse.model.header(model$header)
-start.time   <- proc.time()[1]
+#con = file(fn.model, 'r')
+#model$header <- readLines(con, 1)
+#close(con)
+#model$header <- parse.model.header(model$header)
+#start.time   <- proc.time()[1]
 load("mlrModel.RData")
 num.runs = length(model.list)
 
