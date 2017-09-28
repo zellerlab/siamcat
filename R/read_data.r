@@ -40,8 +40,6 @@ parse.label.header <- function(label.header) {
 }
 
 # ##### function to parse the header of a model file
-# ### TODO documentation
-#' @export
 parse.model.header <- function(model.header) {
   s = strsplit(model.header, ':')[[1]]
   type = trim(s[1])
@@ -139,7 +137,7 @@ read.labels <- function(fn.in.label,feat=NULL){
 #' @description This file reads in the tsv file with metadata and converts it into a matrix
 #' @param fn.in.meta name of the tsv file containing metadata
 #' @export
-#' @return matrix containing features from the file
+#' @return matrix containing metadata from the file
 read.meta <- function(fn.in.meta){
   if (is.null(fn.in.meta) || toupper(fn.in.meta)=='NULL' || toupper(fn.in.meta)=='NONE' || toupper(fn.in.meta)=='UNKNOWN') {
     cat("Filename for metadata file not provided, continuing without it.\n")
@@ -151,11 +149,11 @@ read.meta <- function(fn.in.meta){
   invisible(meta)
 }
 
-#' @title Append source directory path
-#' @description Append / at the end of the name of the directory path if it is not there
-#' @param source.dir string with path to the source directory
-#' @export
-#' @return string with / at the end
+# #' @title Append source directory path
+# #' @description Append / at the end of the name of the directory path if it is not there
+# #' @param source.dir string with path to the source directory
+# #' @export
+# #' @return string with / at the end
 appendDirName <- function(source.dir){
   if (substr(source.dir, nchar(source.dir), nchar(source.dir)) != '/') {
     source.dir <- paste(source.dir, '/', sep='')
