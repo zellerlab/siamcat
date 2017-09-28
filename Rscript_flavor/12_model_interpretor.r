@@ -26,7 +26,7 @@ fc.lim      <- c(-5,5)
 detect.lim  <- 10^-8
 
 # define arguments
-option_list  <- option_list = list(
+option_list  <-  list(
   make_option(c('-s', '--srcdir'), type='character', help='Source directory of this and other utility scripts'),
   make_option('--label', type='character', help='Input file containing labels'),
   make_option('--feat', type='character', help='Input file containing features'),
