@@ -4,20 +4,21 @@
 \alias{data.splitter}
 \title{Split a dataset into training and a test sets.}
 \usage{
-data.splitter(label, num.folds, num.resample, stratify, inseparable, meta)
+data.splitter(label, num.folds = 2, num.resample = 1, stratify = TRUE,
+  inseparable = NULL, meta = NULL)
 }
 \arguments{
 \item{label}{label object}
 
-\item{num.folds}{number of cross-validation folds (needs to be \code{>=2})}
+\item{num.folds}{number of cross-validation folds (needs to be \code{>=2}), defaults to \code{2}}
 
-\item{num.resample}{resampling rounds (values \code{<= 1} deactivate resampling)}
+\item{num.resample}{resampling rounds (values \code{<= 1} deactivate resampling), defaults to \code{1}}
 
-\item{stratify}{boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?}
+\item{stratify}{boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?, defaults to \code{TRUE}}
 
-\item{inseparable}{defaults to NULL (obsolete)}
+\item{inseparable}{column index or column name of metadata variable, defaults to \code{NULL}}
 
-\item{meta}{metadata object (obsolete)}
+\item{meta}{metadata object, only needed when \code{inseparable} is given, defaults to \code{NULL}}
 }
 \value{
 list containing the indices of the training and test folds and the parameters of the splits: \itemize{

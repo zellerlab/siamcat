@@ -4,15 +4,16 @@
 \alias{plm.trainer}
 \title{Model training}
 \usage{
-plm.trainer(feat, label, fn.train.sample, num.folds = 5, stratify,
-  modsel.crit, min.nonzero.coeff)
+plm.trainer(feat, label, training.samples = NULL, num.folds = 5, stratify,
+  modsel.crit, min.nonzero.coeff, model.type = "lasso", inseparable = NULL,
+  meta = NULL)
 }
 \arguments{
 \item{feat}{features object}
 
 \item{label}{label object}
 
-\item{fn.train.sample}{file containing the training samples}
+\item{training.samples}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
 
 \item{num.folds}{integer, number of folds for the internal model cross-validation}
 

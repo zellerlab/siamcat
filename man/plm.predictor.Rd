@@ -4,20 +4,20 @@
 \alias{plm.predictor}
 \title{Prediction on the test set}
 \usage{
-plm.predictor(feat, label, model, model.mat, hyperpars, model.type)
+plm.predictor(feat, label, model.list, model.mat, hyperpars, model.type)
 }
 \arguments{
 \item{feat}{features object}
 
 \item{label}{label object}
 
-\item{model}{model object trained by \link{plm.trainer}}
-
 \item{model.mat}{model matrix needed to rebuild the model}
 
 \item{hyperpars}{(not used)}
 
 \item{model.type}{string, type of the model that was trained}
+
+\item{model}{model object trained by \link{plm.trainer}}
 }
 \value{
 list containing the precitions \itemize{
