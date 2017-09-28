@@ -12,7 +12,12 @@
 ###
 
 #' @title Read feature file
-#' @description This file reads in the tsv file with features and converts it into a matrix
+#' @description This file reads in the tsv file with features and converts it into a matrix.
+#'
+#' The file should be oragnized as follows:
+#' features (in rows) x samples (in columns).
+#'
+#' First row should contain sample labels (consistent with label data), while the first column should contain feature labels (e.g. taxonomic identifiers). The remaining entries are expected to be real values \code{>= 0} that quantify the abundance of each feature in each sample.
 #' @param fn.in.feat name of the tsv file containing features
 #' @export
 #' @return matrix containing features from the file
@@ -25,11 +30,28 @@ read.features <- function(fn.in.feat){
 }
 
 #' @title Read labels file
-#' @description This file reads in the tsv file with labels and converts it into a matrix
+#' @description This file reads in the tsv file with labels and converts it into a matrix.
+#'
+#' First row is expected to be \code{#BINARY:1=[label for cases];-1=[label for controls]}. Second row should contain the sample identifiers as tab-separated list (consistent with feature and metadata).
+#'
+#' Third row is expected to contain the actual class labels (tab-separated): \code{1} for each case and \code{-1} for each control.
+#'
+#' Note: Labels can take other numeric values (but not characters or strings); importantly, the label for cases has to be greater than the one for controls.
 #' @param fn.in.label name of the tsv file containing labels
 #' @export
-#' @return list with two values: - $header contains header of the file and - $label stores matrix containing features from the file
+#' @return list with nine values:\itemize{
+#' \item \code{$label} named vector containing the numerical labels from the file;
+#' \item \code{$header} first row of the label file;
+#' \item \code{$info} information about the type of label (e.g. \code{BINARY});
+#' \item \code{$positive.lab} numerical label for controls, e.g. \code{-1};
+#' \item \code{$negative.lab} numerical label for cases, e.g. \code{1};
+#' \item \code{$n.idx} logical vector of labels (\code{TRUE} for controls, \code{FALSE} otherwise);
+#' \item \code{$n.lab} label for controls, e.g. \code{healthy};
+#' \item \code{$p.idx} logical vector of labels (\code{TRUE} for cases, \code{FALSE} otherwise);
+#' \item \code{$p.lab} label for cases, e.g. \code{cancer}
+#'}
 read.labels <- function(fn.in.label,feat=NULL){
+  # TODO move feature/label agreement check to validate data?
   if (is.null(fn.in.label)) stop("Filename for labels file not provided!\n")
   if(!file.exists(fn.in.label)) stop("Label file ", fn.in.label, " does not exist!\n")
   label <- read.table(file=fn.in.label, sep='\t', header=TRUE, row.names=NULL, stringsAsFactors = FALSE,
@@ -79,7 +101,12 @@ read.labels <- function(fn.in.label,feat=NULL){
 }
 
 #' @title Read metadata file
-#' @description This file reads in the tsv file with metadata and converts it into a matrix
+#' @description This file reads in the tsv file with numerical metadata and converts it into a matrix.
+#'
+#' The file should be organized as follows:
+#' samples (in rows) x metadata (in columns). Metadata needs to be converted to numerical values by the user.
+#'
+#' Metadata may be optional for the SIAMCAT workflow, but are necessary for heatmap displays, see \link{interpretor.model.plot}
 #' @param fn.in.meta name of the tsv file containing metadata
 #' @export
 #' @return matrix containing metadata from the file
