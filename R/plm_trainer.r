@@ -150,7 +150,6 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     } else {
       stopifnot(model.header == mh)
     }
-    save(model,file="model.RData")
     stopifnot(all(names(model$W) == rownames(W.mat)))
     W.mat[,r]          <- as.numeric(c(model$feat.weights))
     hyperpar.list[[r]] <- unlist(opt.hyper.par)
@@ -231,5 +230,5 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     }
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
-  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, model=model))
+  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, model=models.list))
 }
