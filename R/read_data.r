@@ -144,7 +144,7 @@ trim <- function (x) {
 ###   where <TYPE> is a string specifying the type of label variable such as
 ###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
 ###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
-## #' @export
+#' @export
 parse.label.header <- function(label.header) {
   s = strsplit(label.header, ':')[[1]]
   type = trim(s[1])
@@ -162,6 +162,7 @@ parse.label.header <- function(label.header) {
 }
 
 # ##### function to parse the header of a model file
+#' @export
 parse.model.header <- function(model.header) {
   s = strsplit(model.header, ':')[[1]]
   type = trim(s[1])
