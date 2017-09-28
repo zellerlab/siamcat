@@ -11,61 +11,6 @@
 # GNU GPL-3.0
 ###
 
-##### auxiliary function to trim whitespace from string
-# returns string without leading or trailing whitespace
-trim = function (x) {
-  gsub("^\\s+|\\s+$", "", x)
-}
-
-##### function to parse the header of a label file
-### label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
-###   where <TYPE> is a string specifying the type of label variable such as
-###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
-###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
-## #' @export
-parse.label.header <- function(label.header) {
-  s = strsplit(label.header, ':')[[1]]
-  type = trim(s[1])
-  if (substr(type, 1, 1) == '#')
-    type = trim(substr(type, 2, nchar(type)))
-  class.descr = unlist(strsplit(strsplit(trim(s[2]), ';')[[1]], '='))
-  l = class.descr[seq(2,length(class.descr),2)]
-  class.descr = as.numeric(class.descr[seq(1,length(class.descr)-1,2)])
-  names(class.descr) = l
-
-  label.info = list()
-  label.info$type = type
-  label.info$class.descr = class.descr
-  return(label.info)
-}
-
-# ##### function to parse the header of a model file
-parse.model.header <- function(model.header) {
-  s = strsplit(model.header, ':')[[1]]
-  type = trim(s[1])
-  if (substr(type, 1, 1) == '#')
-    type = trim(substr(type, 2, nchar(type)))
-  label.header = trim(paste(s[2:length(s)], collapse=':'))
-  if (substr(label.header, 1, 1) == '[') {
-    stopifnot(substr(label.header, nchar(label.header), nchar(label.header)) == ']')
-    label.header = substr(label.header, 2, nchar(label.header)-1)
-  }
-  p = grep('\\(.*\\)', type)
-  properties = NULL
-  if (length(p) > 0) {
-    stopifnot(length(p) == 1)
-    stopifnot(substr(type, nchar(type), nchar(type)) == ')')
-    properties = substr(type, p+1, nchar(type)-1)
-    type = trim(substr(type, 1, p-1))
-  }
-
-  model.info = list()
-  model.info$type = type
-  model.info$properties = properties
-  model.info$label.header = label.header
-  return(model.info)
-}
-
 #' @title Read feature file
 #' @description This file reads in the tsv file with features and converts it into a matrix
 #' @param fn.in.feat name of the tsv file containing features
@@ -159,4 +104,59 @@ appendDirName <- function(source.dir){
     source.dir <- paste(source.dir, '/', sep='')
   }
   invisible(source.dir)
+}
+
+##### auxiliary function to trim whitespace from string
+# returns string without leading or trailing whitespace
+trim <- function (x) {
+  gsub("^\\s+|\\s+$", "", x)
+}
+
+##### function to parse the header of a label file
+### label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
+###   where <TYPE> is a string specifying the type of label variable such as
+###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
+###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
+## #' @export
+parse.label.header <- function(label.header) {
+  s = strsplit(label.header, ':')[[1]]
+  type = trim(s[1])
+  if (substr(type, 1, 1) == '#')
+    type = trim(substr(type, 2, nchar(type)))
+  class.descr = unlist(strsplit(strsplit(trim(s[2]), ';')[[1]], '='))
+  l = class.descr[seq(2,length(class.descr),2)]
+  class.descr = as.numeric(class.descr[seq(1,length(class.descr)-1,2)])
+  names(class.descr) = l
+
+  label.info = list()
+  label.info$type = type
+  label.info$class.descr = class.descr
+  return(label.info)
+}
+
+# ##### function to parse the header of a model file
+parse.model.header <- function(model.header) {
+  s = strsplit(model.header, ':')[[1]]
+  type = trim(s[1])
+  if (substr(type, 1, 1) == '#')
+    type = trim(substr(type, 2, nchar(type)))
+  label.header = trim(paste(s[2:length(s)], collapse=':'))
+  if (substr(label.header, 1, 1) == '[') {
+    stopifnot(substr(label.header, nchar(label.header), nchar(label.header)) == ']')
+    label.header = substr(label.header, 2, nchar(label.header)-1)
+  }
+  p = grep('\\(.*\\)', type)
+  properties = NULL
+  if (length(p) > 0) {
+    stopifnot(length(p) == 1)
+    stopifnot(substr(type, nchar(type), nchar(type)) == ')')
+    properties = substr(type, p+1, nchar(type)-1)
+    type = trim(substr(type, 1, p-1))
+  }
+
+  model.info = list()
+  model.info$type = type
+  model.info$properties = properties
+  model.info$label.header = label.header
+  return(model.info)
 }
