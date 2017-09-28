@@ -15,8 +15,13 @@ suppressMessages(library('optparse'))
 suppressMessages(library('SIAMCAT'))
 
 # define arguments
-option_list <- make_meta_adder_options()
-option_list[[length(option_list)+1]] <- make_option('--feat_out', type='character', help='Output file to which features after selection are written')
+option_list <- list(
+  make_option('--feat_in', type='character', help='Input file containing features'),
+  make_option('--metadata_in', type='character', help='Input file containing metadata'),
+  make_option('--pred_names', type='character', help='names (comma-separated list) of the metavariables to be added to the feature matrix as predictors'),
+  make_option('--std_meta', type='logical', default=TRUE, help='Shall added (metadata) features be standardized?'),
+  make_option('--feat_out', type='character', help='Output file to which features after selection are written')
+)
 
 
 # parse arguments

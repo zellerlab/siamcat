@@ -26,8 +26,21 @@ fc.lim      <- c(-5,5)
 detect.lim  <- 10^-8
 
 # define arguments
-option_list                          <- make_model_interpretor_options()
-option_list[[length(option_list)+1]] <- make_option('--plot', type='character', help='Output file for plotting')
+option_list  <- option_list = list(
+  make_option(c('-s', '--srcdir'), type='character', help='Source directory of this and other utility scripts'),
+  make_option('--label', type='character', help='Input file containing labels'),
+  make_option('--feat', type='character', help='Input file containing features'),
+  make_option('--origin_feat', type='character', help='Input file containing unnormalized/filtered features'),
+  make_option('--meta', type='character', default='NULL', help='Input file containing metadata'),
+  make_option('--model', type='character', help='Input file containing the trained classification model(s)'),
+  make_option('--pred', type='character', help='Input file containing the trained classification model(s)'),
+  #make_option('--plot', type='character', help='Output file for plotting'),
+  make_option('--col_scheme', type='character', default='RdYlBu', help='Color scheme'),
+  make_option('--heatmap_type', type='character', default='zscore', help='which metric should be used to plot feature changes in heatmap? (zscore|fc)'),
+  make_option('--consens_thres', type='double', default=0.5, help='specifies the minimal ratio of models incorporating a feature to include it into heatmap'),
+  make_option('--plot', type='character', help='Output file for plotting')
+)
+
 
 # parse arguments
 opt            <- parse_args(OptionParser(option_list=option_list))
@@ -97,7 +110,7 @@ if (dim(pred)[2] > 1) {
 pred         <- as.matrix(pred)
 #cat(dim(pred), '\n')
 
-### make sure that label and prediction are in the same order 
+### make sure that label and prediction are in the same order
 stopifnot(all(names(label$label) %in% rownames(pred)) && all(rownames(pred) %in% names(label$label)))
 m            <- match(names(label$label), rownames(pred))
 pred         <- pred[m,,drop=FALSE]
