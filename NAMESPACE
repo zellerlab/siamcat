@@ -2,6 +2,7 @@
 
 S3method(predict,plm)
 export(add.meta.pred)
+export(appendDirName)
 export(assign.fold)
 export(check.associations)
 export(confounder.check)
