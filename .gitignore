@@ -1,4 +1,5 @@
-
+.Rbuildignore
+SIAMCAT.RProj
 .Rproj.user
 .Rhistory
 .RData
