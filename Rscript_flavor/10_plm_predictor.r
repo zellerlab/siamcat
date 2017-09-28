@@ -20,7 +20,7 @@ suppressMessages(library('methods'))
   option_list = list(
     make_option(c('-s', '--srcdir'), type='character',                     help='Source directory of this and other utility scripts'),
     make_option('--feat_in',         type='character',                     help='Input file containing features'),
-    make_option('--model',           type='character',                     help='Input file containing the trained models'),
+    make_option('--fn.mlr_models_list',           type='character',                     help='Input RData file containing the trained models'),
     make_option('--label_in',        type='character', default='NULL',     help='Input file containing labels'),
     make_option('--test_sets',       type='character', default='NULL',     help='Input file specifying which examples to use for testing'),
     make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written'),
@@ -32,7 +32,7 @@ suppressMessages(library('methods'))
 opt            <- parse_args(OptionParser(option_list=option_list))
 source.dir     <- opt$srcdir
 fn.test.feat   <- opt$feat_in
-fn.model       <- opt$model
+fn.mlr_models_list  <- opt$fn.mlr_models_list 
 fn.test.label  <- opt$label_in
 fn.test.sample <- opt$test_sets
 fn.pred        <- opt$pred
@@ -42,15 +42,15 @@ model.type     <- opt$model_type
 
 # print parameters of the run
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir     =', source.dir,     '\n')
-cat('fn.test.feat   =', fn.test.feat,   '\n')
-cat('fn.model       =', fn.model,       '\n')
-cat('fn.test.label  =', fn.test.label,  '\n')
-cat('fn.test.sample =', fn.test.sample, '\n')
-cat('fn.pred        =', fn.pred,        '\n')
-cat('model.matrix   =', model.matrix,   '\n')
-cat('hyperpars      =', hyperpars,      '\n')
-cat('model.type     =', model.type,     '\n')
+cat('source.dir         =', source.dir,        '\n')
+cat('fn.test.feat       =', fn.test.feat,      '\n')
+cat('fn.mlr_models_list =', fn.mlr_models_list,'\n')
+cat('fn.test.label      =', fn.test.label,     '\n')
+cat('fn.test.sample     =', fn.test.sample,    '\n')
+cat('fn.pred            =', fn.pred,           '\n')
+cat('model.matrix       =', model.matrix,      '\n')
+cat('hyperpars          =', hyperpars,         '\n')
+cat('model.type         =', model.type,        '\n')
 cat('\n')
 
 source.dir <- appendDirName(source.dir)

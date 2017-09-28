@@ -28,7 +28,8 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--train_sets',        type='character', default='NULL',  help='Input file specifying which examples to use for training'),
-    make_option('--model',             type='character',                  help='Output file to which the trained models will be written'),
+    make_option('--model',             type='character',                  help='Text to which the trained models will be written'),
+    make_option('--mlr_models_list',   type='character',                  help='Output RData file to which the object with trained models will be written'),
     make_option('--num_folds',         type='integer',   default=5,       help='Number of cross-validation folds for model selection 
     	                                                                        (i.e. subsets, needs to be >= 2)'),
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified 
@@ -50,6 +51,7 @@ source.dir        <- opt$srcdir
 fn.train.label    <- opt$label_in
 fn.train.feat     <- opt$feat_in
 fn.model          <- opt$model
+fn.mlr_models_list<- opt$mlr_models_list
 fn.train.sample   <- opt$train_sets
 num.folds         <- opt$num_folds
 stratify          <- opt$stratify
@@ -66,6 +68,7 @@ cat('fn.train.label    =', fn.train.label, '\n')
 cat('fn.train.feat     =', fn.train.feat, '\n')
 cat('fn.train.sample   =', fn.train.sample, '\n')
 cat('fn.model          =', fn.model, '\n')
+cat('fn.mlr_models_list=', fn.mlr_models_list, '\n')
 cat('num.folds         =', num.folds, '\n')
 cat('stratify          =', stratify, '\n')
 cat('modsel.crit       =', modsel.crit, '\n')
@@ -101,10 +104,10 @@ write.table(plm.out$out.matrix,   file=model.matrix, quote = FALSE, sep='\t', ro
 write.table(plm.out$hyperpar.mat, file=hyper.params, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
 models.list  <- plm.out$models.list
 print(models.list)
-save(models.list, file=fn.model)
+save(models.list, file=fn.mlr_models_list)
 
 ### save models
-#write(plm.out$model.header, file=fn.model, append=FALSE)
+write(plm.out$model.header, file=fn.model, append=FALSE)
 suppressWarnings(write.table(plm.out$W.mat, file=fn.model, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 # suppressWarnings(write.table(hyperpar.mat, file=hyper.params, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA))
 cat('Saved all trained models.\n')
