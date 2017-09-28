@@ -15,8 +15,19 @@ suppressMessages(library('optparse'))
 suppressMessages(library('SIAMCAT'))
 
 # define arguments
-option_list <- make_normalizer_options()
-option_list[[length(option_list)+1]] <- make_option('--feat_out', type='character', help='Output file to which features after normalization are written')
+option_list = list(
+  # make_option('--pkgdir', type='character', help='Source directory of dataprep'),
+  make_option('--feat_in', type='character', help='Input file containing features'),
+  make_option('--param_out', type='character', help='Output file to which normalization parameters will be written'),
+  make_option('--method', type='character', default='log.std', help='Normalization method (either \"log.std\", \"rlog2.std\" or \"log.unit\")'),
+  make_option('--log_n0', type='double', default=10^-8, help='Pseudocount that is added before log-transformation'),
+  make_option('--sd_min_quantile', type='double', default=0.1, help='Quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for metod==\"log.std\")'),
+  make_option('--vector_norm', type='integer', default=2, help='Vector norm to use (either 1 or 2, only for method==\"log.unit\")'),
+  make_option('--norm_feature', type='logical', default=FALSE, help='Normalize by feature (only for method==\"log.unit\")?'),
+  make_option('--norm_sample', type='logical', default=TRUE, help='Normalize by sample (after feature normalization, only for method==\"log.unit\")?'),
+  make_option('--norm_global', type='logical', default=FALSE, help='Normalize by global rescaling (only if both norm_feature and norm_sample are FALSE and only for method==\"log.unit\")?'),
+  make_option('--feat_out', type='character', help='Output file to which features after normalization are written')
+)
 
 # parse arguments
 opt = parse_args(OptionParser(option_list=option_list))
@@ -39,12 +50,12 @@ start.time = proc.time()[1]
 feat  <- read.features(opt$feat_in)
 ### Start core function
 normalized.data <- normalize.feat(feat = feat,
-                      norm.method = opt$method, 
-                      log.n0      = opt$log_n0, 
-                      sd.min.q    = opt$sd_min_quantile, 
-                      n.p         = opt$vector_norm, 
-                      n.sample    = opt$norm_sample, 
-                      n.feature   = opt$norm_feature, 
+                      norm.method = opt$method,
+                      log.n0      = opt$log_n0,
+                      sd.min.q    = opt$sd_min_quantile,
+                      n.p         = opt$vector_norm,
+                      n.sample    = opt$norm_sample,
+                      n.feature   = opt$norm_feature,
                       n.global    = opt$norm_global)
 
 ### End core function
