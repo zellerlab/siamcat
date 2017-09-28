@@ -88,8 +88,6 @@ if (is.null(fn.test.label) || toupper(fn.test.label)=='NULL' || toupper(fn.test.
 start.time   <- proc.time()[1]
 load(fn.model)
 num.runs = length(models.list)
-print(num.runs)
-print(length(models.list))
 
 ### read test data and the trained model(s)
 # features

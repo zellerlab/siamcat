@@ -25,7 +25,7 @@
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-plm.predictor <- function(feat, label, model.list, model.mat, hyperpars, model.type){
+plm.predictor <- function(feat, label, models.list, model.mat, hyperpars, model.type){
   # TODO hyperpars is not used at the moment, as far as i see
   # TODO 2: instead of feat and label containing the test sample indices, provide all features and the list from data.splitter
   feat         <- t(feat)
@@ -59,7 +59,7 @@ plm.predictor <- function(feat, label, model.list, model.mat, hyperpars, model.t
     close(con)
     stopifnot(length(fold.name) == num.runs)
     stopifnot(length(fold.exm.idx) == num.runs)
-    stopifnot(all(paste('M', unlist(fold.name), sep='_') == colnames(model$W)))
+    stopifnot(all(paste('M', unlist(fold.name), sep='_') == colnames(models.list[[1]]$W)))
   } else {
     # apply each LASSO model on whole data set when only single test set is given
     for (r in 1:num.runs) {
@@ -80,6 +80,7 @@ plm.predictor <- function(feat, label, model.list, model.mat, hyperpars, model.t
   opt.hp <- list(lambda = NULL, C = NULL, alpha = NULL, ntree = NULL)
 
   for (r in 1:num.runs) {
+    model <- models.list[[r]]
     cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     curr.model.new <- list()
     curr.model.new$original.model <- list()
@@ -147,7 +148,7 @@ plm.predictor <- function(feat, label, model.list, model.mat, hyperpars, model.t
       opt.hp$lambda <- curr.model.new$original.model$lambda
     }
     # subselect appropriate model
-    m = model.list[[r]]
+    m = models.list[[r]]
     m$W = m$W[,r]
 
     # subselect test examples
