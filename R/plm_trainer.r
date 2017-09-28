@@ -15,7 +15,7 @@
 #' @description This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
 #' @param feat features object
 #' @param label label object
-#' @param fn.train.sample file containing the training samples
+#' @param training.samples filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset
 #' @param num.folds integer, number of folds for the internal model cross-validation
 #' @param stratify boolean, should the folds in the internal cross-validation be stratified?
 #' @param modsel.crit model selection criterion (not used at the moment)
@@ -29,7 +29,8 @@
 #' \item \code{$hyperpar.mat};
 #' \item \code{$model}
 #'}
-plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, modsel.crit, min.nonzero.coeff, inseparable=NULL, meta=NULL){
+# TODO add details section for this function
+plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratify, modsel.crit, min.nonzero.coeff, model.type='lasso', inseparable=NULL, meta=NULL){
   # TODO 1: modsel.criterion should be implemented
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
   # TODO 3: add model.type as parameter
@@ -46,33 +47,51 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
   num.runs     <- 1
   fold.name    <- list()
   fold.exm.idx <- list()
-  print(fn.train.sample)
-  if (!is.null(fn.train.sample)) {
-    num.runs      <- 0
-    con           <- file(fn.train.sample, 'r')
-    input         <- readLines(con)
-    close(con)
-    print(length(input))
-    for (i in 1:length(input)) {
-      l               <- input[[i]]
-      if (substr(l, 1, 1) != '#') {
-        num.runs                 <- num.runs + 1
-        print(num.runs)
-        s                        <- unlist(strsplit(l, '\t'))
-        fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
-        ### Note that the %in%-operation is order-dependend.
-        fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
-        cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
-        #      cat(fold.exm.idx[[num.runs]], '\n\n')
-        #    } else {
-        #      cat('Ignoring commented line:', l, '\n\n')
-      }
-    }
 
-  } else {
+  # print(fn.train.sample)
+  if (is.null(training.samples)){
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
     fold.exm.idx[[1]] <- names(label$label)
+  } else {
+    if (class(training.samples) == 'character') {
+      # read in file containing the training instances
+      num.runs      <- 0
+      con           <- file(training.samples, 'r')
+      input         <- readLines(con)
+      close(con)
+      print(length(input))
+      for (i in 1:length(input)) {
+        l               <- input[[i]]
+        if (substr(l, 1, 1) != '#') {
+          num.runs                 <- num.runs + 1
+          print(num.runs)
+          s                        <- unlist(strsplit(l, '\t'))
+          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
+          ### Note that the %in%-operation is order-dependend.
+          fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
+          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+          #      cat(fold.exm.idx[[num.runs]], '\n\n')
+          #    } else {
+          #      cat('Ignoring commented line:', l, '\n\n')
+        }
+      }
+    } else if (class(training.samples) == 'list') {
+      # use training samples as specified in training.folds in the list
+      num.runs <- 0
+      for (cv in 1:training.samples$num.folds){
+        for (res in 1:training.samples$num.resample){
+          num.runs <- num.runs + 1
+          print(num.runs)
+
+          fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
+          fold.exm.idx[[num.runs]] <- match(training.samples$training.folds[[res]][[cv]], names(label$label))
+          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+        }
+      }
+    } else {
+      stop('Wrong input for training samples!...')
+    }
   }
   print(num.runs)
   #stop()
@@ -119,7 +138,6 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
     # ####
     # Uncommented the lines above, because i wasn't sure what exactly they do. Foldid will be overwritten by assing.fold anyway, won't it?
     # ####
-    # TODO get inseparable and meta, if provided in the function call
     train.label.exp   <- sample(train.label$label)
     foldid            <- assign.fold(label = train.label.exp, num.folds, stratified = stratify, inseparable=inseparable, meta=meta)
 
