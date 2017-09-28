@@ -77,7 +77,7 @@ if (is.null(fn.test.label) || toupper(fn.test.label)=='NULL' || toupper(fn.test.
 #stopifnot(nrow(model$W) == nrow(feat))
   
 # Read in model matrix
-#model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
+model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
   
 #model$W = model$W[1:dim(model$W)[1]-1,]
 # parse model header
