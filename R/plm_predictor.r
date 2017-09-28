@@ -25,7 +25,7 @@
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
+plm.predictor <- function(feat, label, model.list, model.mat, hyperpars, model.type){
   # TODO hyperpars is not used at the moment, as far as i see
   # TODO 2: instead of feat and label containing the test sample indices, provide all features and the list from data.splitter
   feat         <- t(feat)
@@ -147,13 +147,13 @@ plm.predictor <- function(feat, label, model, model.mat, hyperpars, model.type){
       opt.hp$lambda <- curr.model.new$original.model$lambda
     }
     # subselect appropriate model
-    m = model
+    m = model.list[[r]]
     m$W = m$W[,r]
 
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
 
-    pdata    <- predict.plm(test.feat, model, model.type, opt.hp, data = data, subset=fold.exm.idx[[r]])
+    pdata    <- predict.plm(test.feat, m, model.type, opt.hp, data = data, subset=fold.exm.idx[[r]])
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 

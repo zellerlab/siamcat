@@ -71,10 +71,10 @@ if (is.null(fn.test.label) || toupper(fn.test.label)=='NULL' || toupper(fn.test.
 }
 
 # LASSO model (coefficients)
-model = NULL
-model$W = read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
-num.runs = ncol(model$W)
-stopifnot(nrow(model$W) == nrow(feat))
+#model = NULL
+#model$W = read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
+#num.runs = ncol(model$W)
+#stopifnot(nrow(model$W) == nrow(feat))
   
 # Read in model matrix
 model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
@@ -87,10 +87,11 @@ close(con)
 model$header <- parse.model.header(model$header)
 start.time   <- proc.time()[1]
 load("mlrModel.RData")
+num.runs = length(model.list)
 
 ### read test data and the trained model(s)
 # features
-pred <- plm.predictor(feat, label, model, model.mat, hyperpars, model.type)
+pred <- plm.predictor(feat, label, model.list, model.mat, hyperpars, model.type)
 
 ### save prediction
 ### save prediction
