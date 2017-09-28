@@ -21,7 +21,7 @@ option_list = list(
   make_option('--method', type='character', default='abundance', help='Filtering method (one of \"abundance\", \"cum.abundance\", or \"prevalence\")'),
   make_option('--cutoff', type='double', default=0.001, help='abundance / prevalence cutoff applied for filtering'),
   make_option('--recomp_prop', type='logical', default=FALSE, help='Should relative abundances be be recomputed?'),
-  make_option('--rm_unmapped', type='logical', default=TRUE, help='Should the abundance of unmapped reads be removed?')
+  make_option('--rm_unmapped', type='logical', default=TRUE, help='Should the abundance of unmapped reads be removed?'),
   make_option('--feat_out', type='character', help='Output file to which features after selection are written')
 )
 
