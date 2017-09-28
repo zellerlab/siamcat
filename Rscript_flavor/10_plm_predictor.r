@@ -89,11 +89,11 @@ start.time   <- proc.time()[1]
 load(fn.model)
 #num.runs = length(model.list)
 print(num.runs)
-print(length(model.list))
+print(length(models.list))
 
 ### read test data and the trained model(s)
 # features
-pred <- plm.predictor(feat, label, model.list, model.mat, hyperpars, model.type)
+pred <- plm.predictor(feat, label, models.list, model.mat, hyperpars, model.type)
 
 ### save prediction
 ### save prediction

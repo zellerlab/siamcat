@@ -99,9 +99,9 @@ runParams <- list(num.folds=num.folds, stratify=stratify, modsel.crit=modsel.cri
 save(runParams,file="runParams.RData")
 write.table(plm.out$out.matrix,   file=model.matrix, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
 write.table(plm.out$hyperpar.mat, file=hyper.params, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
-model.list  <- plm.out$model.list
-print(model.list)
-save(model.list, file=fn.model)
+model.list  <- plm.out$models.list
+print(models.list)
+save(models.list, file=fn.model)
 
 ### save models
 write(plm.out$model.header, file=fn.model, append=FALSE)
