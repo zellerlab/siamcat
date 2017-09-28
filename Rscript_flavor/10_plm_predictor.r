@@ -71,23 +71,23 @@ if (is.null(fn.test.label) || toupper(fn.test.label)=='NULL' || toupper(fn.test.
 }
 
 # LASSO model (coefficients)
-model = NULL
-model$W = read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
-num.runs = ncol(model$W)
-stopifnot(nrow(model$W) == nrow(feat))
+#model = NULL
+#model$W = read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
+#num.runs = ncol(model$W)
+#stopifnot(nrow(model$W) == nrow(feat))
   
 # Read in model matrix
-model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
+#model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
   
-model$W = model$W[1:dim(model$W)[1]-1,]
+#model$W = model$W[1:dim(model$W)[1]-1,]
 # parse model header
-con = file(fn.model, 'r')
-model$header <- readLines(con, 1)
-close(con)
-model$header <- parse.model.header(model$header)
+#con = file(fn.model, 'r')
+#model$header <- readLines(con, 1)
+#close(con)
+#model$header <- parse.model.header(model$header)
 start.time   <- proc.time()[1]
 load(fn.model)
-#num.runs = length(model.list)
+num.runs = length(models.list)
 print(num.runs)
 print(length(models.list))
 
