@@ -29,7 +29,7 @@
 #' \item \code{$hyperpar.mat};
 #' \item \code{$model}
 #'}
-plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, modsel.crit, min.nonzero.coeff){
+plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, modsel.crit, min.nonzero.coeff, inseparable=NULL, meta=NULL){
   # TODO 1: modsel.criterion should be implemented
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
   # TODO 3: add model.type as parameter
@@ -111,15 +111,19 @@ plm.trainer <- function(feat, label, fn.train.sample, num.folds=5, stratify, mod
 
     ### assign training data to internal folds for model selection
     ### For structure of foldid, see data_splitter.r
-    foldid            <- rep(0, length(train.label$label))
-    perm              <- sample(1:length(train.label$label), length(train.label$label)) / length(train.label$label)
-    for (f in num.folds:1) {
-      foldid[perm <= f/num.folds] = f
-    }
+    # foldid            <- rep(0, length(train.label$label))
+    # perm              <- sample(1:length(train.label$label), length(train.label$label)) / length(train.label$label)
+    # for (f in num.folds:1) {
+    #   foldid[perm <= f/num.folds] = f
+    # }
+    # ####
+    # Uncommented the lines above, because i wasn't sure what exactly they do. Foldid will be overwritten by assing.fold anyway, won't it?
+    # ####
+    # TODO get inseparable and meta, if provided in the function call
     train.label.exp   <- sample(train.label$label)
-    foldid            <- assign.fold(label = train.label.exp, num.folds, stratified = stratify, foldid = foldid)
-    ### internal cross-validation for model selection
+    foldid            <- assign.fold(label = train.label.exp, num.folds, stratified = stratify, inseparable=inseparable, meta=meta)
 
+    ### internal cross-validation for model selection
     sqrt.mdim         <- sqrt(nrow(feat))
     hyper.par <- list(C      = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10),  # all LiblineaR methods
                       lambda = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3),            # LASSO & ENet
