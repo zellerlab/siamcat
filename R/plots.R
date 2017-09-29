@@ -20,7 +20,7 @@
 #' @param pred matrix containing the model predictions for every CV repetition
 #' @param color.scheme color scheme for the heatmap, defaults to =\code{"BrBG"}
 #' @param consens.thres minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}
-#' @param heatmap.type type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore'}
+#' @param heatmap.type type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore"}
 #' @param norm.models boolean, should the feature weights be normalized across models?, defaults to \code{FALSE}
 #' @keywords SIAMCAT interpretor.model.plot
 #' @return Does not return anything, but produces the model interpretion plot.
