@@ -32,7 +32,7 @@ suppressMessages(library('methods'))
 opt            <- parse_args(OptionParser(option_list=option_list))
 source.dir     <- opt$srcdir
 fn.test.feat   <- opt$feat_in
-fn.mlr_models_list  <- opt$fn.mlr_models_list 
+fn.mlr_models_list  <- opt$fn.mlr_models_list
 fn.test.label  <- opt$label_in
 fn.test.sample <- opt$test_sets
 fn.pred        <- opt$pred
@@ -75,10 +75,10 @@ if (is.null(fn.test.label) || toupper(fn.test.label)=='NULL' || toupper(fn.test.
 #model$W = read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
 #num.runs = ncol(model$W)
 #stopifnot(nrow(model$W) == nrow(feat))
-  
+
 # Read in model matrix
 model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
-  
+
 #model$W = model$W[1:dim(model$W)[1]-1,]
 # parse model header
 #con = file(fn.model, 'r')
@@ -86,12 +86,12 @@ model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFac
 #close(con)
 #model$header <- parse.model.header(model$header)
 start.time   <- proc.time()[1]
-load(fn.model)
+load(fn.mlr_models_list)
 num.runs = length(models.list)
 
 ### read test data and the trained model(s)
 # features
-pred <- plm.predictor(feat, label, models.list, model.mat, hyperpars, model.type)
+pred <- plm.predictor(feat, label, test.samples=fn.test.sample, models.list, model.mat, hyperpars, model.type)
 
 ### save prediction
 ### save prediction
