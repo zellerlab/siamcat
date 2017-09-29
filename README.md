@@ -1,4 +1,3 @@
-
 # SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoType
 
 ## Overview
@@ -12,11 +11,11 @@ SIAMCAT provides a full pipeline supporting data preprocessing, statistical asso
 modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross 
 validation, parameter selection, ROC analysis and diagnostic model plots).  
 SIAMCAT is available in three different flavors: 
- + [Galaxy web server](#Galaxy-interface)
- + [command line tool](#Commandline-version)
- + [R package](#R-package)
+ + Galaxy web server
+ + command line tool
+ + R package
 
-Please see the [Support Section](#Support) if you run into problems when using SIAMCAT.
+Please see the Support Section if you run into problems when using SIAMCAT.
 
 ## Input data format
 
@@ -62,7 +61,7 @@ Additional info: https://usegalaxy.org/ (in particular the Help menu) and
 
 ### Getting started with Galaxy
 
-Start by uploading your data (see [above](#Input-data-format) for input data formats) using the `DATA IMPORT / Import Data module / Upload File`
+Start by uploading your data (see above for input data formats) using the `DATA IMPORT / Import Data module / Upload File`
 
 Then procede by executing all SIAMCAT modules in order (from A to I). 
 See example history / Workflow as well as each module's description for specific information on input and output data
