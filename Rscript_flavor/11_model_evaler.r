@@ -60,7 +60,7 @@ pred <- as.matrix(pred)
 
 eval.data <-  eval.result(label, pred)
 pdf(fn.plot)
-evaluation.model.plot(fn.plot, label, pred, eval.data, model.type)
+evaluation.model.plot(label, pred, eval.data, model.type)
 tmp <- dev.off()
 
 # The following code writes calculated auroc and aupr- values into a file for testing.
@@ -77,9 +77,3 @@ if (write.out == TRUE){
 
 cat('\nSuccessfully evaluated predictions in ', proc.time()[1] - start.time,
     ' seconds\n', sep='')
-
-
-
-
-
-
