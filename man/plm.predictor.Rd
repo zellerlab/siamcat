@@ -4,7 +4,7 @@
 \alias{plm.predictor}
 \title{Prediction on the test set}
 \usage{
-plm.predictor(feat, label, model.list, model.mat, hyperpars, model.type)
+plm.predictor(feat, label, models.list, model.mat, hyperpars, model.type)
 }
 \arguments{
 \item{feat}{features object}

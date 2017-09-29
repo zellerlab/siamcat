@@ -23,11 +23,11 @@
 #' @export
 #' @keywords SIAMCAT plm.trainer
 #' @return list containing \itemize{
-#' \item \code{$out.matrix};
-#' \item \code{$model.header};
-#' \item \code{$W.mat};
-#' \item \code{$hyperpar.mat};
-#' \item \code{$model}
+#' \item \code{$out.matrix} matrix containing all information to rebuild the model for each fold, coefficients for hyper-parameters, intercept, and for each feature (in rows) x training folds (in columns);
+#' \item \code{$model.header} name and information about the model as string;
+#' \item \code{$W.mat} matrix containng the feature weights in each CV fold, features (in rows) x training folds (in columns);
+#' \item \code{$hyperpar.mat} matrix containing the hyper-parameters chosen in each CV fold, hyper-parameters (in rows) x training folds (in columns);
+#' \item \code{$models.list} list of mlr \link[mlr]{WrappedModel} objects for each fold
 #'}
 # TODO add details section for this function
 plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratify, modsel.crit, min.nonzero.coeff, model.type='lasso', inseparable=NULL, meta=NULL){
