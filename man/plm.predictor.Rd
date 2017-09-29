@@ -4,12 +4,15 @@
 \alias{plm.predictor}
 \title{Prediction on the test set}
 \usage{
-plm.predictor(feat, label, models.list, model.mat, hyperpars, model.type)
+plm.predictor(feat, label, test.samples = NULL, models.list, model.mat,
+  hyperpars, model.type)
 }
 \arguments{
 \item{feat}{features object}
 
 \item{label}{label object}
+
+\item{test.samples}{filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset}
 
 \item{model.mat}{model matrix needed to rebuild the model}
 
