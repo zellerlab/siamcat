@@ -20,6 +20,8 @@
 #' @param pred matrix containing the model predictions for every CV repetition
 #' @param color.scheme color scheme for the heatmap, defaults to =\code{"BrBG"}
 #' @param consens.thres minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}
+#' @param heatmap.type type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore'}
+#' @param norm.models boolean, should the feature weights be normalized across models?, defaults to \code{FALSE}
 #' @keywords SIAMCAT interpretor.model.plot
 #' @return Does not return anything, but produces the model interpretion plot.
 #' @export
@@ -34,7 +36,7 @@
 #' pdf(filename.pdf)
 #' interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens_thres)
 #' dev.off()
-interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme='BrBG', consens.thres=0.5){
+interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme='BrBG', consens.thres=0.5, heatmap.type = 'zscore', norm.models=FALSE){
   num.models   <- ncol(model$W)
   ### some color preprocessing
   if (color.scheme == 'matlab') {
