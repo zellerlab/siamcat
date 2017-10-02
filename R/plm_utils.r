@@ -31,12 +31,11 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(data, subset) {
+train.plm <- function(data, cl = "classif.cvglmnet", subset) {
   method <- tolower(method)
   model <- list(original.model=NULL, feat.weights=NULL)
   # note that some of the logit models are set up inversely to each other,
   # requiring to swap coefficient signs
-  if (method == 'lasso') {
     # here we will ignore any hyper.par$alpha to ensure a LASSO model (and not an Elastic Net) is trained
     lambda              <- hyper.par$lambda
     # Note that ordering of label vector is important!
@@ -51,7 +50,7 @@ train.plm <- function(data, subset) {
 
     ## 2) Define the learner
     ## Choose a specific algorithm (e.g. linear discriminant analysis)
-    lrn                 <- makeLearner("classif.cvglmnet", predict.type="prob")
+    lrn                 <- makeLearner(cl, predict.type="prob")
 
     ## 3) Fit the model
     ## Train the learner on the task using a random subset of the data as training set
@@ -65,66 +64,6 @@ train.plm <- function(data, subset) {
     model$feat.weights <- (-1) *  as.numeric(coef) ### check!!!
     model$lrn          <- lrn
     model$task         <- task
-
-  } else if (method == 'lasso_ll') {
-    liblin.type <- 6
-    model$original.model <- LiblineaR(feat, label$label,
-                                      type=liblin.type, bias=TRUE, epsilon=1e-6,
-                                      cost=hyper.par$C)
-    stopifnot((is.numeric(label$positive.lab) &&  is.numeric(label$negative.lab)) || label$positive.lab < label$negative.lab)
-    # Apparently, LiblineaR orders class labels differently, depending on "type". I need to check this more thoroughly. Works for now.
-    if(model$original.model$ClassNames[2] != label$positive.lab){
-      # Since prediction function is mirrored on the y-axis, we also need to generate "swapped" models.
-      # This means model$ClassNames has to have structure c(NL, PL) and the model features have to be mirrored as well (neg. numbers become pos. and vice verca)
-      # If the upper is true, ensure that swapping takes place.
-      temp = model$original.model$ClassNames[1]
-      model$original.model$ClassNames[1] = model$original.model$ClassNames[2]
-      model$original.model$ClassNames[2] = temp
-      model$original.model$W = model$original.model$W * -1
-    }
-    bias.idx <- which(colnames(model$original.model$W) == 'Bias')
-    model$feat.weights <- as.numeric(model$original.model$W[,-bias.idx])
-
-  } else if (method == 'ridge_ll') {
-    liblin.type <- 0
-    model$original.model <- LiblineaR(feat, label$label,
-                                      type=liblin.type, bias=TRUE, epsilon=1e-6,
-                                      cost=hyper.par$C)
-    stopifnot((is.numeric(label$postive.lab) &&  is.numeric(label$negative.lab)) || label$postive.lab < label$negative.lab)
-    # Apparently, LiblineaR orders class labels differently, depending on "type". I need to check this more thoroughly. Works for now.
-    if(model$original.model$ClassNames[2] != label$postive.lab){
-      # Since prediction function is mirrored on the y-axis, we also need to generate "swapped" models.
-      # This means model$ClassNames has to have structure c(NL, PL) and the model features have to be mirrored as well (neg. numbers become pos. and vice verca)
-      # If the upper is true, ensure that swapping takes place.
-      temp = model$original.model$ClassNames[1]
-      model$original.model$ClassNames[1] = model$original.model$ClassNames[2]
-      model$original.model$ClassNames[2] = temp
-      model$original.model$W = model$original.model$W * -1
-    }
-    bias.idx <- which(colnames(model$original.model$W) == 'Bias')
-    model$feat.weights <- as.numeric(model$original.model$W[,-bias.idx])
-
-  } else if (method == 'enet') {
-    stopifnot(hyper.par$alpha < 1) # otherwise we're going to train a LASSO model
-    model$original.model <- glmnet(feat, factor(label$label, levels=c(label$negative.lab, label$postive.lab)),
-                                   family='binomial', standardize=FALSE,
-                                   alpha=hyper.par$alpha, lambda=hyper.par$lambda)
-    c <- coefficients(model$original.model)
-    c <- c[,ncol(c)]
-    bias.idx <- which(names(c) == '(Intercept)')
-    model$feat.weights <- -1 * as.numeric(c[-bias.idx])
-
-  } else if (method == 'gelnet') {
-    stopifnot(hyper.par$alpha < 1) # otherwise we're going to train a LASSO model
-    model$original.model <- gelnet(feat, factor(label$label, levels=c(label$negative.lab, label$postive.lab)),
-                                   l2=hyper.par$alpha, l1=hyper.par$lambda,
-                                   silent=TRUE)
-    # for consistency with the other models the coefficient sign needs to be flipped
-    model$feat.weights <- model$original.model$w
-
-  } else {
-    stop('unknown method')
-  }
 
   return(model)
 }
