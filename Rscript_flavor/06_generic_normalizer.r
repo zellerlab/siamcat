@@ -17,16 +17,16 @@ suppressMessages(library('SIAMCAT'))
 # define arguments
 option_list = list(
   # make_option('--pkgdir', type='character', help='Source directory of dataprep'),
-  make_option('--feat_in', type='character', help='Input file containing features'),
-  make_option('--param_out', type='character', help='Output file to which normalization parameters will be written'),
-  make_option('--method', type='character', default='log.std', help='Normalization method (either \"log.std\", \"rlog2.std\" or \"log.unit\")'),
-  make_option('--log_n0', type='double', default=10^-8, help='Pseudocount that is added before log-transformation'),
-  make_option('--sd_min_quantile', type='double', default=0.1, help='Quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for metod==\"log.std\")'),
-  make_option('--vector_norm', type='integer', default=2, help='Vector norm to use (either 1 or 2, only for method==\"log.unit\")'),
-  make_option('--norm_feature', type='logical', default=FALSE, help='Normalize by feature (only for method==\"log.unit\")?'),
-  make_option('--norm_sample', type='logical', default=TRUE, help='Normalize by sample (after feature normalization, only for method==\"log.unit\")?'),
-  make_option('--norm_global', type='logical', default=FALSE, help='Normalize by global rescaling (only if both norm_feature and norm_sample are FALSE and only for method==\"log.unit\")?'),
-  make_option('--feat_out', type='character', help='Output file to which features after normalization are written')
+  make_option('--feat_in',         type='character',                    help='Input file containing features'),
+  make_option('--param_out',       type='character',                    help='Output file to which normalization parameters will be written'),
+  make_option('--method',          type='character', default='log.std', help='Normalization method (either \"rank.unit\", \"rank.std\", \"log.std\" or \"log.unit\")'),
+  make_option('--log_n0',          type='double',    default=10^-8,     help='Pseudocount that is added before log-transformation'),
+  make_option('--sd_min_quantile', type='double',    default=0.1,       help='Quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for metod==\"log.std\")'),
+  make_option('--vector_norm',     type='integer',   default=2,         help='Vector norm to use (either 1 or 2, only for method==\"log.unit\")'),
+  make_option('--norm_feature',    type='logical',   default=FALSE,     help='Normalize by feature (only for method==\"log.unit\")?'),
+  make_option('--norm_sample',     type='logical',   default=TRUE,      help='Normalize by sample (after feature normalization, only for method==\"log.unit\")?'),
+  make_option('--norm_global',     type='logical',   default=FALSE,     help='Normalize by global rescaling (only if both norm_feature and norm_sample are FALSE and only for method==\"log.unit\")?'),
+  make_option('--feat_out',        type='character',                    help='Output file to which features after normalization are written')
 )
 
 # parse arguments

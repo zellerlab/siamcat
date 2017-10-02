@@ -35,7 +35,8 @@
 #'  \item \code{$par} = parameters utilized in the normalization;
 #'  \item \code{$feat} = normalized features
 #'}
-normalize.feat <- function(feat, norm.method, log.n0, sd.min.q, n.p, n.sample, n.feature, n.global) {
+normalize.feat <- function(feat, norm.method = c("log.std", "rlog2.std", "log.unit"), log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2, 
+                           n.sample = FALSE, n.feature = TRUE, n.global = FALSE) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
   # TODO 2 add defaults for the parameters!!! Not all parameters are needed for all normalization methods
