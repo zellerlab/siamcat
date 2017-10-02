@@ -43,21 +43,6 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     	                                                                        plm_predictor function')
 )
 
-# parse arguments
-opt               <- parse_args(OptionParser(option_list=option_list))
-source.dir        <- opt$srcdir
-fn.train.label    <- opt$label_in
-fn.train.feat     <- opt$feat_in
-fn.model          <- opt$model
-fn.mlr_models_list<- opt$mlr_models_list
-fn.train.sample   <- opt$train_sets
-stratify          <- opt$stratify
-modsel.crit       <- opt$sel_criterion
-min.nonzero.coeff <- opt$min_nonzero_coeff
-model.matrix      <- opt$model_matrix
-model.type        <- opt$model_type
-hyper.params      <- opt$hyperpars
-
 # print parameters of the run
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir        =', source.dir, '\n')
