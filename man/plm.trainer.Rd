@@ -12,7 +12,7 @@ plm.trainer(feat, label, cl = "lasso", data.split = NULL, stratify = TRUE,
 
 \item{label}{label object}
 
-\item{cl}{class of learner, directly passed to \link[mlr](makeLearner) function}
+\item{cl}{class of learner, directly passed to \link[mlr]{makeLearner}}
 
 \item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
 

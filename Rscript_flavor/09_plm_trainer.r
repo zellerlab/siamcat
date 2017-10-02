@@ -43,9 +43,11 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     	                                                                        plm_predictor function')
 )
 
+ opt         <- parse_args(OptionParser(option_list=option_list))
+
 # print parameters of the run
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir        =', source.dir, '\n')
+cat('srcdir            =', opt$srcdir,  '\n')
 cat('feat_in           =', opt$feat_in, '\n')
 cat('label_in          =', opt$label_in, '\n')
 cat('cl                =', opt$cl, '\n')
@@ -54,17 +56,17 @@ cat('mlr_models_list   =', opt$mlr_models_list, '\n')
 cat('stratify          =', opt$stratify, '\n')
 cat('sel_criterion     =', opt$sel_criterion, '\n')
 cat('min_nonzero_coeff =', opt$min_nonzero_coeff, '\n')
-cat('model             =', opt$model '\n')
-cat('model_matrix      =', opt$model_matrix '\n')
+cat('model             =', opt$model, '\n')
+cat('model_matrix      =', opt$model_matrix, '\n')
 cat('\n')
 
 
 
-source.dir <- appendDirName(source.dir)
+opt$srcdir <- appendDirName(opt$srcdir)
 
 # optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
-if (toupper(fn.train.sample)=='NULL' || toupper(fn.train.sample)=='NONE' || toupper(fn.train.sample)=='UNKNOWN') {
-  fn.train.sample = NULL
+if (toupper(opt$train_sets)=='NULL' || toupper(opt$train_sets)=='NONE' || toupper(opt$train_sets)=='UNKNOWN') {
+  opt$train_sets= NULL
   cat('fn.train.sample not specified: using whole data set for training\n')
 }
 
@@ -76,7 +78,7 @@ set.seed(r.seed)
 ### read training data
 # features
 feat         <- read.features(opt$feat_in)
-label        <- read.labels(fn.train.label, feat)
+label        <- read.labels(opt$label_in, feat)
 
 plm.out <- plm.trainer(feat = feat, label = label,  cl = opt$cl, data.split=opt$train_sets, stratify = TRUE, 
                        modsel.crit  = opt$sel_criterion,  min.nonzero.coeff = opt$min_nonzero_coeff)

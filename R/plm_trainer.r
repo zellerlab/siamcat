@@ -15,7 +15,7 @@
 #' @description This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
 #' @param feat features object
 #' @param label label object
-#' @param cl class of learner, directly passed to \link[mlr](makeLearner) function
+#' @param cl class of learner, directly passed to \link[mlr]{makeLearner}
 #' @param data.split filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset
 #' @param stratify boolean, should the folds in the internal cross-validation be stratified?
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that should be present in the model
@@ -29,9 +29,8 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   # TODO 3: add model.type as parameter
   # transpose feature matrix as a convenience preprocessing
 
-  modsel.crit  <- "auc"
   feat         <- t(feat)
-  print(model.type)
+
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
 
   data                       <- cbind(feat,label.fac[rownames(feat)])
@@ -95,7 +94,7 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
-  cat('\nPreparing to train', model.type,  'models on', num.runs, 'training set samples...\n\n')
+  cat('\nPreparing to train', cl,  'models on', num.runs, 'training set samples...\n\n')
 
   ### train one model per training sample (i.e. CV fold)
   # feat has structure: examples in rows; features in columns!
@@ -137,7 +136,7 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
     )
     model            <- train.plm(data=data, subset=fold.exm.idx[[r]])
     models.list[[r]] <- model
-    power            <- rbind(power,model$subset)
+    #power            <- rbind(power,model$subset)
 
 
     ### TODO Important: the 'mh' variable gets written into the coefficient matrix.
