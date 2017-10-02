@@ -30,7 +30,6 @@ plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, 
   # transpose feature matrix as a convenience preprocessing
 
   feat         <- t(feat)
-
   if(cl != 'classif.cvglmnet') stop("Sorry, only cl = classif.cvglmnet is supported for now!\n")
 
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
