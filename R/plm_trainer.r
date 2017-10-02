@@ -158,10 +158,11 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   # Preprocess hyper parameters
   ### Write models into matrix to reload in plm_predictor.r
   for (i in 1:length(models.list)){
-      vec <- rep(NA, nrow(models.list[[i]]$learner.model$glmnet.fit$beta) + 2)
+      beta <- models.list[[i]]$learner.model$glmnet.fit$beta
+      vec <- rep(NA, nrow(beta) + 2)
       vec[1] <- 0
-      vec[2] <- models.list[[i]]$learner.model$glmnet.fit$a0
-      vec[3:length(vec)] <- as.numeric(models.list[[i]]$learner.model$glmnet.fit$beta)
+      vec[2] <- beta
+      vec[3:length(vec)] <- as.numeric(beta)
       if (i == 1) {
         out.matrix <- matrix(vec)
       } else {
@@ -169,7 +170,7 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
       }
       # This overwrites rownames everytime, but doesnt need an additional conditional statement.
       # paste0 pastes two equal-length string vectors element-wise
-      rownames(out.matrix) <- c("lambda", "a0", rownames(models.list[[i]]$learner.model$glmnet.fit$beta))
+      rownames(out.matrix) <- c("lambda", "a0", rownames(beta))
       # In the case of glmnet, make the coefficient matrix from a sparse matrix into a regular one.
       #models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$learner.model$glmnet.fit$beta)
   }
