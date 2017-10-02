@@ -15,7 +15,7 @@
 #' @description This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
 #' @param feat features object
 #' @param label label object
-#' @param training.samples filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset
+#' @param data.split filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset
 #' @param num.folds integer, number of folds for the internal model cross-validation
 #' @param stratify boolean, should the folds in the internal cross-validation be stratified?
 #' @param modsel.crit model selection criterion (not used at the moment)
@@ -30,7 +30,7 @@
 #' \item \code{$models.list} list of mlr \link[mlr]{WrappedModel} objects for each fold
 #'}
 # TODO add details section for this function
-plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratify, modsel.crit, min.nonzero.coeff, model.type='lasso', inseparable=NULL, meta=NULL){
+plm.trainer <- function(feat, label, data.split=NULL, num.folds=5, stratify, modsel.crit, min.nonzero.coeff, model.type='lasso', inseparable=NULL, meta=NULL){
   # TODO 1: modsel.criterion should be implemented
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
   # TODO 3: add model.type as parameter
@@ -49,15 +49,15 @@ plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratif
   fold.exm.idx <- list()
 
   # print(fn.train.sample)
-  if (is.null(training.samples)){
+  if (is.null(data.split)){
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
     fold.exm.idx[[1]] <- names(label$label)
   } else {
-    if (class(training.samples) == 'character') {
+    if (class(data.split) == 'character') {
       # read in file containing the training instances
       num.runs      <- 0
-      con           <- file(training.samples, 'r')
+      con           <- file(data.split, 'r')
       input         <- readLines(con)
       close(con)
       print(length(input))
@@ -76,16 +76,16 @@ plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratif
           #      cat('Ignoring commented line:', l, '\n\n')
         }
       }
-    } else if (class(training.samples) == 'list') {
+    } else if (class(data.split) == 'list') {
       # use training samples as specified in training.folds in the list
       num.runs <- 0
-      for (cv in 1:training.samples$num.folds){
-        for (res in 1:training.samples$num.resample){
+      for (cv in 1:data.split$num.folds){
+        for (res in 1:data.split$num.resample){
           num.runs <- num.runs + 1
           print(num.runs)
 
           fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
-          fold.exm.idx[[num.runs]] <- match(training.samples$training.folds[[res]][[cv]], names(label$label))
+          fold.exm.idx[[num.runs]] <- match(data.split$training.folds[[res]][[cv]], names(label$label))
           cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
         }
       }
