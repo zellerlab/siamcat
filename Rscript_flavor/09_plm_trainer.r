@@ -37,9 +37,10 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     	                                                                        \'auroc\', \'auprc\', \'auroc.2\')'),
     make_option('--min_nonzero_coeff', type='integer',   default=1,       help='Minimum number of non-zero coefficients required for a model 
     	                                                                        to be considered in model selection'),
+    make_option('--model',             type='character',                  help='Text file to which the trained models will be written'),
+
     make_option('--model_matrix',      type='character',                  help='Output file containing information to rebuild models in 
-    	                                                                        plm_predictor.r'),
-    make_option('--hyperpars',         type='character',                  help='Output file containing the hyper-parameters')
+    	                                                                        plm_predictor function')
 )
 
 # parse arguments
@@ -68,6 +69,7 @@ cat('mlr_models_list   =', opt$mlr_models_list, '\n')
 cat('stratify          =', opt$stratify, '\n')
 cat('sel_criterion     =', opt$sel_criterion, '\n')
 cat('min_nonzero_coeff =', opt$min_nonzero_coeff, '\n')
+cat('model             =', opt$model '\n')
 cat('model_matrix      =', opt$model_matrix '\n')
 cat('\n')
 
@@ -100,8 +102,8 @@ models.list  <- plm.out$models.list
 save(models.list, file=opt$mlr_models_list)
 
 ### save models
-write(plm.out$model.header, file=fn.model, append=FALSE)
-suppressWarnings(write.table(plm.out$W.mat, file=fn.model, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
+write(plm.out$model.header, file=opt$model , append=FALSE)
+suppressWarnings(write.table(plm.out$W.mat, file=opt$model , quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 # suppressWarnings(write.table(hyperpar.mat, file=hyper.params, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA))
 cat('Saved all trained models.\n')
 
