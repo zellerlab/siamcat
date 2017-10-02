@@ -4,9 +4,9 @@
 \alias{normalize.feat}
 \title{Perform feature normalization according to specified parameters.}
 \usage{
-normalize.feat(feat, norm.method = c("log.std", "rlog2.std", "log.unit"),
-  log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2, n.sample = FALSE,
-  n.feature = TRUE, n.global = FALSE)
+normalize.feat(feat, norm.method = c("rank.unit", "rank.std", "log.std",
+  "log.unit"), log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2,
+  n.sample = FALSE, n.feature = TRUE, n.global = FALSE)
 }
 \arguments{
 \item{feat}{feature object}
