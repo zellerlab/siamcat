@@ -96,25 +96,6 @@ set.seed(r.seed)
 feat         <- read.features(fn.train.feat)
 label        <- read.labels(fn.train.label, feat)
 
-num.runs      <- 0
-con           <- file(fn.train.sample, 'r')
-input         <- readLines(con)
-close(con)
-
-for (i in 1:length(input)) {
-  l               <- input[[i]]
-  if (substr(l, 1, 1) != '#') {
-    num.runs                 <- num.runs + 1
-    print(num.runs)
-    s                        <- unlist(strsplit(l, '\t'))
-    fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
-    ### Note that the %in%-operation is order-dependend.
-    fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
-    cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
-  }
-}
-}     
-
 plm.out <- plm.trainer(feat, label, fn.train.sample, num.folds, stratify, modsel.crit, min.nonzero.coeff)
 
 runParams <- list(num.folds=num.folds, stratify=stratify, modsel.crit=modsel.crit, min.nonzero.coeff=min.nonzero.coeff)
