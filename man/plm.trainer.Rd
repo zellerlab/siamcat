@@ -4,8 +4,8 @@
 \alias{plm.trainer}
 \title{Model training}
 \usage{
-plm.trainer(feat, label, cl = "lasso", data.split = NULL, stratify = TRUE,
-  modsel.crit = "auc", min.nonzero.coeff = 1)
+plm.trainer(feat, label, cl = "classif.cvglmnet", data.split = NULL,
+  stratify = TRUE, modsel.crit = "auc", min.nonzero.coeff = 1)
 }
 \arguments{
 \item{feat}{features object}
