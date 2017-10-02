@@ -18,7 +18,6 @@
 #' @param test.samples filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset
 #' @param model model object trained by \link{plm.trainer}
 #' @param model.mat model matrix needed to rebuild the model
-#' @param hyperpars (not used)
 #' @param model.type string, type of the model that was trained
 #' @export
 #' @keywords SIAMCAT plm.predictor
@@ -26,8 +25,7 @@
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat, hyperpars, model.type){
-  # TODO hyperpars is not used at the moment, as far as i see
+plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat, model.type){
   # TODO 2: instead of feat and label containing the test sample indices, provide all features and the list from data.splitter
   feat         <- t(feat)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
