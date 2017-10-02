@@ -15,7 +15,7 @@
 #' @description This function takes the test set instances and the model trained by \link{plm.trainer} in order to predict the classes.
 #' @param feat features object
 #' @param label label object
-#' @param test.samples filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset
+#' @param data.split filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset
 #' @param model model object trained by \link{plm.trainer}
 #' @param model.mat model matrix needed to rebuild the model
 #' @param model.type string, type of the model that was trained
@@ -25,8 +25,8 @@
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat, model.type){
-  # TODO 2: instead of feat and label containing the test sample indices, provide all features and the list from data.splitter
+plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, model.type){
+
   feat         <- t(feat)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
 
@@ -37,18 +37,18 @@ plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat
   colnames(data)[ncol(data)] <- "cancer"
 
   num.runs = length(models.list)
-  ### subselect test examples as specified in test.samples (if given)
+  ### subselect test examples as specified in data.split (if given)
   fold.name = list()
   fold.exm.idx = list()
-  if (is.null(test.samples)){
+  if (is.null(data.split)){
     # apply each LASSO model on whole data set when only single test set is given
     for (r in 1:num.runs) {
       fold.name[[r]] = paste('whole data set predicted by model', r)
       fold.exm.idx[[r]] = rownames(feat)
     }
   } else {
-    if (class(test.samples) == 'character'){
-      con = file(test.samples, 'r')
+    if (class(data.split) == 'character'){
+      con = file(data.split, 'r')
       input = readLines(con)
       m.idx = 0
       for (i in 1:length(input)) {
@@ -66,12 +66,12 @@ plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat
       stopifnot(length(fold.name) == num.runs)
       stopifnot(length(fold.exm.idx) == num.runs)
       stopifnot(all(paste('M', unlist(fold.name), sep='_') == colnames(models.list[[1]]$W)))
-  } else if (class(test.samples) == 'list') {
+  } else if (class(data.split) == 'list') {
     i = 1
-    for (cv in 1:test.samples$num.folds){
-      for (res in 1:test.samples$num.resample){
+    for (cv in 1:data.split$num.folds){
+      for (res in 1:data.split$num.resample){
         fold.name[[i]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
-        fold.exm.idx[[i]] <- match(test.samples$test.folds[[res]][[cv]], names(label$label))
+        fold.exm.idx[[i]] <- match(data.split$test.folds[[res]][[cv]], names(label$label))
         i = i + 1
         # cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
       }
@@ -175,7 +175,7 @@ plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat
 
   cat('\nTotal number of predictions made:', length(pred), '\n')
 
-  if (!is.null(test.samples)) {
+  if (!is.null(data.split)) {
     ### if test labels are given do some evaluation as well
     # get the appropriate labels for all test sets
     test.label = NULL
@@ -221,7 +221,7 @@ plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat
       r.idx = as.numeric(sapply(strsplit(fold.name, 'predicted by model '), '[[', 2))
       runs = sort(unique(r.idx))
       stopifnot(all(runs == 1:length(runs)))
-      if (!is.null(test.samples)) {
+      if (!is.null(data.split)) {
         ref.names = names(label$label)
       } else {
         ref.names = unique(names(pred))
@@ -230,7 +230,7 @@ plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat
       r.idx = as.numeric(sapply(strsplit(fold.name, 'rep'), '[[', 2))
       runs = sort(unique(r.idx))
       stopifnot(all(runs == 1:length(runs)))
-      if (!is.null(test.samples)) {
+      if (!is.null(data.split)) {
         ref.names = names(label$label)
       } else {
         ref.names = names(pred)[unlist(fold.pred.idx[r.idx==1])]
@@ -255,7 +255,7 @@ plm.predictor <- function(feat, label, test.samples=NULL, models.list, model.mat
       #    cat(sort(m), '\n\n')
       #    cat(length(m), '\n\n')
       #    cat(length(label), '\n\n')
-      if (!is.null(test.samples)) {
+      if (!is.null(data.split)) {
         stopifnot(all(sort(m) == 1:length(label$label)))
       }
       pred.mat[m,r] = pred[p]

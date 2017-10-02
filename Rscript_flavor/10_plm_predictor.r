@@ -91,7 +91,7 @@ num.runs = length(models.list)
 
 ### read test data and the trained model(s)
 # features
-pred <- plm.predictor(feat, label, test.samples=fn.test.sample, models.list, model.mat, model.type)
+pred <- plm.predictor(feat, label, data.split=fn.test.sample, models.list, model.mat, model.type)
 
 ### save prediction
 ### save prediction
