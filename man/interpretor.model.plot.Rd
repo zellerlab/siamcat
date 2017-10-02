@@ -2,8 +2,50 @@
 % Please edit documentation in R/plots.R
 \name{interpretor.model.plot}
 \alias{interpretor.model.plot}
-\title{model interpretation plot}
+\title{Model Interpretation Plot}
 \usage{
-interpretor.model.plot(feat, label, meta, model, pred, color.scheme,
-  consens.thres)
+interpretor.model.plot(feat, label, meta, model, pred, color.scheme = "BrBG",
+  consens.thres = 0.5, heatmap.type = "zscore", norm.models = FALSE,
+  fc.lim = c(-5, 5), z.score.lim = c(-3, 3), detect.lim = 1e-08)
 }
+\arguments{
+\item{feat}{a feature object}
+
+\item{label}{a label object}
+
+\item{meta}{a metadata object}
+
+\item{model}{matrix containing the feature weights for every CV fold/repetition}
+
+\item{pred}{matrix containing the model predictions for every CV repetition}
+
+\item{color.scheme}{color scheme for the heatmap, defaults to =\code{"BrBG"}}
+
+\item{consens.thres}{minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}}
+
+\item{heatmap.type}{type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore"}}
+
+\item{norm.models}{boolean, should the feature weights be normalized across models?, defaults to \code{FALSE}}
+}
+\value{
+Does not return anything, but produces the model interpretion plot.
+}
+\description{
+Produces a plot for model interpretation, displaying feature weights, robustness of feature weights, and features scores across patients.
+}
+\details{
+Produces a plot consisting of \itemize{
+ \item a barplot showing the feature weights and their robustness (i.e. in what proportion of models have they been incorporated)
+ \item a heatmap showing the z-scores of the metagenomic features across patients
+ \item another heatmap displaying the metadata categories
+ \item a boxplot displaying the poportion of weight per model that is actually shown
+for the features that are incorporated into more than \code{consens.thres} % of the models.
+}
+}
+\examples{
+pdf(filename.pdf)
+interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens_thres)
+dev.off()
+}
+\keyword{SIAMCAT}
+\keyword{interpretor.model.plot}

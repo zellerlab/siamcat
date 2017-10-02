@@ -2,7 +2,29 @@
 % Please edit documentation in R/plots.R
 \name{evaluation.model.plot}
 \alias{evaluation.model.plot}
-\title{plor model evaluation plot}
+\title{Model Evaluation Plot}
 \usage{
-evaluation.model.plot(fn.plot, label, pred, eval.data, model.type)
+evaluation.model.plot(label, pred, eval.data, model.type = "lasso")
 }
+\arguments{
+\item{label}{a label object}
+
+\item{pred}{matrix containing the model predictions for every CV repetition}
+
+\item{eval.data}{list of evaluation results produced by \link{eval.results}}
+
+\item{model.type}{type of the model, defaults to \code{"lasso"}}
+}
+\value{
+Does not return anything, but produces the model evaluation plot.
+}
+\description{
+Produces two plots for model evaluation. The first plot shows the Receiver Operating Receiver (ROC)-curves, the other the Precision-recall (PR)-curves for the different CV repetitions.
+}
+\examples{
+pdf(filename.pdf)
+evaluation.model.plot(label, pred, eval.data, model.type)
+dev.off()
+}
+\keyword{SIAMCAT}
+\keyword{evaluation.model.plot}

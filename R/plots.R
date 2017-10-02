@@ -11,9 +11,32 @@
 # GNU GPL-3.0
 ###
 
-#' @title model interpretation plot
+#' @title Model Interpretation Plot
+#' @description Produces a plot for model interpretation, displaying feature weights, robustness of feature weights, and features scores across patients.
+#' @param feat a feature object
+#' @param label a label object
+#' @param meta a metadata object
+#' @param model matrix containing the feature weights for every CV fold/repetition
+#' @param pred matrix containing the model predictions for every CV repetition
+#' @param color.scheme color scheme for the heatmap, defaults to =\code{"BrBG"}
+#' @param consens.thres minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}
+#' @param heatmap.type type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore"}
+#' @param norm.models boolean, should the feature weights be normalized across models?, defaults to \code{FALSE}
+#' @keywords SIAMCAT interpretor.model.plot
+#' @return Does not return anything, but produces the model interpretion plot.
 #' @export
-interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme, consens.thres){
+#' @details Produces a plot consisting of \itemize{
+#'  \item a barplot showing the feature weights and their robustness (i.e. in what proportion of models have they been incorporated)
+#'  \item a heatmap showing the z-scores of the metagenomic features across patients
+#'  \item another heatmap displaying the metadata categories
+#'  \item a boxplot displaying the poportion of weight per model that is actually shown
+#' for the features that are incorporated into more than \code{consens.thres} % of the models.
+#'}
+#' @examples
+#' pdf(filename.pdf)
+#' interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens_thres)
+#' dev.off()
+interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme='BrBG', consens.thres=0.5, heatmap.type='zscore', norm.models=FALSE, fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){
   num.models   <- ncol(model$W)
   ### some color preprocessing
   if (color.scheme == 'matlab') {
@@ -285,9 +308,20 @@ interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme,
 
 }
 
-#' @title plor model evaluation plot
+#' @title Model Evaluation Plot
+#' @description Produces two plots for model evaluation. The first plot shows the Receiver Operating Receiver (ROC)-curves, the other the Precision-recall (PR)-curves for the different CV repetitions.
+#' @param label a label object
+#' @param pred matrix containing the model predictions for every CV repetition
+#' @param eval.data list of evaluation results produced by \link{eval.results}
+#' @param model.type type of the model, defaults to \code{"lasso"}
+#' @keywords SIAMCAT evaluation.model.plot
 #' @export
-evaluation.model.plot <- function(fn.plot, label, pred, eval.data, model.type){
+#' @return Does not return anything, but produces the model evaluation plot.
+#' @examples
+#' pdf(filename.pdf)
+#' evaluation.model.plot(label, pred, eval.data, model.type)
+#' dev.off()
+evaluation.model.plot <- function(label, pred, eval.data, model.type='lasso'){
   plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='False positive rate', ylab='True positive rate', type='n')
   title(paste('ROC curve for', model.type, 'model', sep=' '))
   abline(a=0, b=1, lty=3)
