@@ -55,7 +55,7 @@ train.plm <- function(feat, label, method, hyper.par, data, subset) {
 
     ## 3) Fit the model
     ## Train the learner on the task using a random subset of the data as training set
-    model               <- train(lrn, task)
+    model               <- train(lrn, task, subset=subset)
 
     coef                <- coefficients(model$learner.model)
     bias.idx            <- which(rownames(coef) == '(Intercept)')

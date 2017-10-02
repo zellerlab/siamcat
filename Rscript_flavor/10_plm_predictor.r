@@ -86,7 +86,7 @@ model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFac
 #close(con)
 #model$header <- parse.model.header(model$header)
 start.time   <- proc.time()[1]
-load(fn.model)
+load(fn.mlr_models_list)
 num.runs = length(models.list)
 
 ### read test data and the trained model(s)

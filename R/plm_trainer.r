@@ -111,6 +111,7 @@ plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratif
 
   # Create List to save models.
   models.list     <- list()
+  power           <- NULL
 
   for (r in 1:num.runs) {
     cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
@@ -155,6 +156,7 @@ plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratif
     ### retrain whole training set with best parameter setting (after every internal CV run!)
     model            <- train.plm(train.feat, train.label, model.type, opt.hyper.par, data=data, subset=fold.exm.idx[[r]])
     models.list[[r]] <- model
+    power            <- rbind(power,model$subset)
 
 
     ### TODO Important: the 'mh' variable gets written into the coefficient matrix.
@@ -175,7 +177,7 @@ plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratif
     cat('\n')
   }
   # Preprocess hyper parameters
-  hyperpar.mat           <- matrix(unlist(hyperpar.list), ncol = num.runs, nrow = length(hyperpar.list[[1]]), byrow = FALSE)
+  hyperpar.mat           <- matrix(0, ncol = num.runs, nrow = length(models.list), byrow = FALSE)
   print(dim(hyperpar.mat))
   rownames(hyperpar.mat) <- names(hyperpar.list[[1]])
   ### Write models into matrix to reload in plm_predictor.r
@@ -248,5 +250,6 @@ plm.trainer <- function(feat, label, training.samples=NULL, num.folds=5, stratif
     }
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
+  save(power,file="power.RData")
   invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, models.list=models.list))
 }
