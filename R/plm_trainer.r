@@ -45,10 +45,33 @@ plm.trainer <- function(feat, label, data.split=NULL, stratify, modsel.crit, min
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
     fold.exm.idx[[1]] <- names(label$label)
-  } else if (class(data.split) == 'list') {
+  } else {
+    if (class(data.split) == 'character') {
+      # read in file containing the training instances
+      num.runs      <- 0
+      con           <- file(data.split, 'r')
+      input         <- readLines(con)
+      close(con)
+      print(length(input))
+      for (i in 1:length(input)) {
+        l               <- input[[i]]
+        if (substr(l, 1, 1) != '#') {
+          num.runs                 <- num.runs + 1
+          print(num.runs)
+          s                        <- unlist(strsplit(l, '\t'))
+          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
+          ### Note that the %in%-operation is order-dependend.
+          fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
+          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+          #      cat(fold.exm.idx[[num.runs]], '\n\n')
+          #    } else {
+          #      cat('Ignoring commented line:', l, '\n\n')
+        }
+      }
+    } else if (class(data.split) == 'list') {
       # use training samples as specified in training.folds in the list
       num.folds <- data.split$num.folds
-      num.runs  <- 0
+      num.runs <- 0
       for (cv in 1:data.split$num.folds){
         for (res in 1:data.split$num.resample){
           num.runs <- num.runs + 1
@@ -59,10 +82,11 @@ plm.trainer <- function(feat, label, data.split=NULL, stratify, modsel.crit, min
           cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
         }
       }
-  } else {
-    stop('Wrong input for training samples!...')
+    } else {
+      stop('Wrong input for training samples!...')
+    }
   }
-
+  print(num.runs)
   #stop()
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
