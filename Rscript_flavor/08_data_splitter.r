@@ -73,6 +73,7 @@ training.data <- data.splitter(label = label, num.folds, num.resample, stratify,
 
 
 write('#Cross-validation training folds', file=fn.train.folds, append=FALSE)
+write(paste0('#num.folds:\n#',num.folds), file=fn.train.folds, append=TRUE)
 write('#Cross-validation test folds',     file=fn.test.folds, append=FALSE)
 
 for (r in 1:training.data$num.resample) {

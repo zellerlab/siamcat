@@ -32,17 +32,7 @@
 ##### function to train a LASSO model for a single given C
 #' @export
 train.plm <- function(data, cl = "classif.cvglmnet", subset) {
-  method <- tolower(method)
   model <- list(original.model=NULL, feat.weights=NULL)
-  # note that some of the logit models are set up inversely to each other,
-  # requiring to swap coefficient signs
-    # here we will ignore any hyper.par$alpha to ensure a LASSO model (and not an Elastic Net) is trained
-    lambda              <- hyper.par$lambda
-    # Note that ordering of label vector is important!
-    #print(label.fac)
-    #saveList <- list(feat=feat, label.fac=label.fac)
-    #save(saveList, file="featwhat.RData")
-    #model$original.model <- glmnet(x=feat, y=label.fac, family='binomial', standardize=FALSE, alpha=1, lambda=lambda)
 
     ## 1) Define the task
     ## Specify the type of analysis (e.g. classification) and provide data and response variable

@@ -41,7 +41,8 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   ### subselect training examples as specified in fn.train.sample (if given)
   num.runs     <- 1
   fold.name    <- list()
-  fold.exm.idx <- list()
+  fold.exm.idx <- list() 
+  num.folds    <- 2
 
   # print(fn.train.sample)
   if (is.null(data.split)){
@@ -55,7 +56,9 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
       con           <- file(data.split, 'r')
       input         <- readLines(con)
       close(con)
-      print(length(input))
+      #print(length(input))
+      
+      num.folds     <- strsplit(input[[3]],"#")[[1]][2]
       for (i in 1:length(input)) {
         l               <- input[[i]]
         if (substr(l, 1, 1) != '#') {
@@ -89,7 +92,6 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
       stop('Wrong input for training samples!...')
     }
   }
-  print(num.runs)
   #stop()
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
