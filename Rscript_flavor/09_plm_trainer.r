@@ -25,13 +25,11 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
 # define arguments
  option_list <- list(
     make_option(c('-s', '--srcdir'),   type='character',                  help='Source directory of this and other utility scripts'),
-    make_option('--label_in',          type='character',                  help='Input file containing labels'),
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
+    make_option('--label_in',          type='character',                  help='Input file containing labels'),
+    make_option('--cl',                type='character', default='classif.cvglmnet', help='class of learner, directly passed to mlr  makeLearner function'),
     make_option('--train_sets',        type='character', default='NULL',  help='Input file specifying which examples to use for training'),
-    make_option('--model',             type='character',                  help='Text to which the trained models will be written'),
     make_option('--mlr_models_list',   type='character',                  help='Output RData file to which the object with trained models will be written'),
-    make_option('--num_folds',         type='integer',   default=5,       help='Number of cross-validation folds for model selection 
-    	                                                                        (i.e. subsets, needs to be >= 2)'),
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified 
     	                                                                        such that an approx. equal proportion of positive examples 
     	                                                                        are contained in each subset (only for binary labels)?'),
@@ -41,7 +39,6 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     	                                                                        to be considered in model selection'),
     make_option('--model_matrix',      type='character',                  help='Output file containing information to rebuild models in 
     	                                                                        plm_predictor.r'),
-    make_option('--model_type',        type='character', default='lasso', help='Which plm should be trained?'),
     make_option('--hyperpars',         type='character',                  help='Output file containing the hyper-parameters')
 )
 
@@ -53,7 +50,6 @@ fn.train.feat     <- opt$feat_in
 fn.model          <- opt$model
 fn.mlr_models_list<- opt$mlr_models_list
 fn.train.sample   <- opt$train_sets
-num.folds         <- opt$num_folds
 stratify          <- opt$stratify
 modsel.crit       <- opt$sel_criterion
 min.nonzero.coeff <- opt$min_nonzero_coeff
@@ -64,19 +60,18 @@ hyper.params      <- opt$hyperpars
 # print parameters of the run
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir        =', source.dir, '\n')
-cat('fn.train.label    =', fn.train.label, '\n')
-cat('fn.train.feat     =', fn.train.feat, '\n')
-cat('fn.train.sample   =', fn.train.sample, '\n')
-cat('fn.model          =', fn.model, '\n')
-cat('fn.mlr_models_list=', fn.mlr_models_list, '\n')
-cat('num.folds         =', num.folds, '\n')
-cat('stratify          =', stratify, '\n')
-cat('modsel.crit       =', modsel.crit, '\n')
-cat('min.nonzero.coeff =', min.nonzero.coeff, '\n')
-cat('model.type        =', model.type, '\n')
-cat('model.matrix      =', model.matrix, '\n')
-cat('hyper.params      =', hyper.params, '\n')
+cat('feat_in           =', opt$feat_in, '\n')
+cat('label_in          =', opt$label_in, '\n')
+cat('cl                =', opt$cl, '\n')
+cat('train_sets        =', opt$train_sets, '\n')
+cat('mlr_models_list   =', opt$mlr_models_list, '\n')
+cat('stratify          =', opt$stratify, '\n')
+cat('sel_criterion     =', opt$sel_criterion, '\n')
+cat('min_nonzero_coeff =', opt$min_nonzero_coeff, '\n')
+cat('model_matrix      =', opt$model_matrix '\n')
 cat('\n')
+
+
 
 source.dir <- appendDirName(source.dir)
 
@@ -93,20 +88,16 @@ set.seed(r.seed)
 
 ### read training data
 # features
-feat         <- read.features(fn.train.feat)
+feat         <- read.features(opt$feat_in)
 label        <- read.labels(fn.train.label, feat)
 
-plm.out <- plm.trainer(feat = feat, label = label, data.split = fn.train.sample, stratify = stratify, modsel.crit = modsel.crit, 
-                       min.nonzero.coeff=min.nonzero.coeff, model.type = model.type)
+plm.out <- plm.trainer(feat = feat, label = label,  cl = opt$cl, data.split=opt$train_sets, stratify = TRUE, 
+                       modsel.crit  = opt$sel_criterion,  min.nonzero.coeff = opt$min_nonzero_coeff)
 
 
-runParams <- list(num.folds=num.folds, stratify=stratify, modsel.crit=modsel.crit, min.nonzero.coeff=min.nonzero.coeff)
-save(runParams,file="runParams.RData")
-write.table(plm.out$out.matrix,   file=model.matrix, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
-write.table(plm.out$hyperpar.mat, file=hyper.params, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
+write.table(plm.out$out.matrix, file = opt$model_matrix, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
 models.list  <- plm.out$models.list
-print(models.list)
-save(models.list, file=fn.mlr_models_list)
+save(models.list, file=opt$mlr_models_list)
 
 ### save models
 write(plm.out$model.header, file=fn.model, append=FALSE)

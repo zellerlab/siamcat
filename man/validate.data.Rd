@@ -14,14 +14,14 @@ validate.data(feat, label, meta = NULL)
 \item{meta}{metadata object}
 }
 \value{
-a list containing values after filtering: \itemize{
+a list containing values after validation: \itemize{
  \item \code{$feat} = features;
  \item \code{$label} = labels;
  \item \code{$meta} = metadata
 }
 }
 \description{
-This function checks if metadata is available for all samples in labels and vice versa. If yes, order metadata according to the order found in labels.
+This function checks if labels are available for all samples in features. Additionally validates metadata, if given
 }
 \keyword{SIAMCAT}
 \keyword{validate.data}

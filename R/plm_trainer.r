@@ -15,6 +15,7 @@
 #' @description This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
 #' @param feat features object
 #' @param label label object
+#' @param cl class of learner, directly passed to \link[mlr](makeLearner) function
 #' @param data.split filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset
 #' @param stratify boolean, should the folds in the internal cross-validation be stratified?
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that should be present in the model
@@ -22,11 +23,13 @@
 #' @keywords SIAMCAT plm.trainer
 #' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-plm.trainer <- function(feat, label, data.split=NULL, stratify, modsel.crit, min.nonzero.coeff, model.type='lasso', inseparable=NULL, meta=NULL){
+plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = TRUE, modsel.crit  = "auc",  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
   # TODO 3: add model.type as parameter
   # transpose feature matrix as a convenience preprocessing
+
+  modsel.crit  <- "auc"
   feat         <- t(feat)
   print(model.type)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))

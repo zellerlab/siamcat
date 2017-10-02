@@ -4,14 +4,15 @@
 \alias{plm.trainer}
 \title{Model training}
 \usage{
-plm.trainer(feat, label, data.split = NULL, stratify, modsel.crit,
-  min.nonzero.coeff, model.type = "lasso", inseparable = NULL,
-  meta = NULL)
+plm.trainer(feat, label, cl = "lasso", data.split = NULL, stratify = TRUE,
+  modsel.crit = "auc", min.nonzero.coeff = 1)
 }
 \arguments{
 \item{feat}{features object}
 
 \item{label}{label object}
+
+\item{cl}{class of learner, directly passed to \link[mlr](makeLearner) function}
 
 \item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
 
