@@ -31,7 +31,7 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(feat, label, method, hyper.par, data, subset) {
+train.plm <- function(data, subset) {
   method <- tolower(method)
   model <- list(original.model=NULL, feat.weights=NULL)
   # note that some of the logit models are set up inversely to each other,
@@ -47,7 +47,7 @@ train.plm <- function(feat, label, method, hyper.par, data, subset) {
 
     ## 1) Define the task
     ## Specify the type of analysis (e.g. classification) and provide data and response variable
-    task                <- makeClassifTask(data = data, target = "cancer")
+    task                <- makeClassifTask(data = data, target = "label")
 
     ## 2) Define the learner
     ## Choose a specific algorithm (e.g. linear discriminant analysis)
