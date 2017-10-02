@@ -24,7 +24,7 @@
 #' dev.off()
 #' @return Does not return anything, but produces a single plot for each metadata category
 confounder.check <- function(meta, label){
-
+  par(xpd=FALSE)
   for (m in 1:ncol(meta)) {
     mname <- gsub('[_.-]', ' ', colnames(meta)[m])
     mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep="")
