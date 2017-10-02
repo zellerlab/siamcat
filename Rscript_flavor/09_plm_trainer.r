@@ -27,7 +27,7 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option(c('-s', '--srcdir'),   type='character',                  help='Source directory of this and other utility scripts'),
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
-    make_option('--cl',                type='character', default='classif.cvglmnet', help='class of learner, directly passed to mlr  makeLearner function'),
+    make_option('--cl',                type='character', default='classif.cvglmnet', help='class of learner, directly passed to mlr::makeLearner'),
     make_option('--train_sets',        type='character', default='NULL',  help='Input file specifying which examples to use for training'),
     make_option('--mlr_models_list',   type='character',                  help='Output RData file to which the object with trained models will be written'),
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified 
