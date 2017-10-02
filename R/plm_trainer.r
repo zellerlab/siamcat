@@ -16,21 +16,13 @@
 #' @param feat features object
 #' @param label label object
 #' @param data.split filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset
-#' @param num.folds integer, number of folds for the internal model cross-validation
 #' @param stratify boolean, should the folds in the internal cross-validation be stratified?
-#' @param modsel.crit model selection criterion (not used at the moment)
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that should be present in the model
 #' @export
 #' @keywords SIAMCAT plm.trainer
-#' @return list containing \itemize{
-#' \item \code{$out.matrix} matrix containing all information to rebuild the model for each fold, coefficients for hyper-parameters, intercept, and for each feature (in rows) x training folds (in columns);
-#' \item \code{$model.header} name and information about the model as string;
-#' \item \code{$W.mat} matrix containng the feature weights in each CV fold, features (in rows) x training folds (in columns);
-#' \item \code{$hyperpar.mat} matrix containing the hyper-parameters chosen in each CV fold, hyper-parameters (in rows) x training folds (in columns);
-#' \item \code{$models.list} list of mlr \link[mlr]{WrappedModel} objects for each fold
-#'}
+#' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-plm.trainer <- function(feat, label, data.split=NULL, num.folds=5, stratify, modsel.crit, min.nonzero.coeff, model.type='lasso', inseparable=NULL, meta=NULL){
+plm.trainer <- function(feat, label, data.split=NULL, stratify, modsel.crit, min.nonzero.coeff, model.type='lasso', inseparable=NULL, meta=NULL){
   # TODO 1: modsel.criterion should be implemented
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
   # TODO 3: add model.type as parameter
@@ -53,32 +45,10 @@ plm.trainer <- function(feat, label, data.split=NULL, num.folds=5, stratify, mod
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
     fold.exm.idx[[1]] <- names(label$label)
-  } else {
-    if (class(data.split) == 'character') {
-      # read in file containing the training instances
-      num.runs      <- 0
-      con           <- file(data.split, 'r')
-      input         <- readLines(con)
-      close(con)
-      print(length(input))
-      for (i in 1:length(input)) {
-        l               <- input[[i]]
-        if (substr(l, 1, 1) != '#') {
-          num.runs                 <- num.runs + 1
-          print(num.runs)
-          s                        <- unlist(strsplit(l, '\t'))
-          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
-          ### Note that the %in%-operation is order-dependend.
-          fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
-          #      cat(fold.exm.idx[[num.runs]], '\n\n')
-          #    } else {
-          #      cat('Ignoring commented line:', l, '\n\n')
-        }
-      }
-    } else if (class(data.split) == 'list') {
+  } else if (class(data.split) == 'list') {
       # use training samples as specified in training.folds in the list
-      num.runs <- 0
+      num.folds <- data.split$num.folds
+      num.runs  <- 0
       for (cv in 1:data.split$num.folds){
         for (res in 1:data.split$num.resample){
           num.runs <- num.runs + 1
@@ -89,11 +59,10 @@ plm.trainer <- function(feat, label, data.split=NULL, num.folds=5, stratify, mod
           cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
         }
       }
-    } else {
-      stop('Wrong input for training samples!...')
-    }
+  } else {
+    stop('Wrong input for training samples!...')
   }
-  print(num.runs)
+)
   #stop()
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)

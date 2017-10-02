@@ -4,8 +4,8 @@
 \alias{plm.trainer}
 \title{Model training}
 \usage{
-plm.trainer(feat, label, data.split = NULL, num.folds = 5, stratify,
-  modsel.crit, min.nonzero.coeff, model.type = "lasso", inseparable = NULL,
+plm.trainer(feat, label, data.split = NULL, stratify, modsel.crit,
+  min.nonzero.coeff, model.type = "lasso", inseparable = NULL,
   meta = NULL)
 }
 \arguments{
@@ -15,22 +15,12 @@ plm.trainer(feat, label, data.split = NULL, num.folds = 5, stratify,
 
 \item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
 
-\item{num.folds}{integer, number of folds for the internal model cross-validation}
-
 \item{stratify}{boolean, should the folds in the internal cross-validation be stratified?}
-
-\item{modsel.crit}{model selection criterion (not used at the moment)}
 
 \item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that should be present in the model}
 }
 \value{
-list containing \itemize{
-\item \code{$out.matrix} matrix containing all information to rebuild the model for each fold, coefficients for hyper-parameters, intercept, and for each feature (in rows) x training folds (in columns);
-\item \code{$model.header} name and information about the model as string;
-\item \code{$W.mat} matrix containng the feature weights in each CV fold, features (in rows) x training folds (in columns);
-\item \code{$hyperpar.mat} matrix containing the hyper-parameters chosen in each CV fold, hyper-parameters (in rows) x training folds (in columns);
-\item \code{$models.list} list of mlr \link[mlr]{WrappedModel} objects for each fold
-}
+an object of class \link[mlr]{makeWrappedModel}
 }
 \description{
 This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
