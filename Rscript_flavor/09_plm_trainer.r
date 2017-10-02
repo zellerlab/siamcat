@@ -97,7 +97,7 @@ feat         <- read.features(fn.train.feat)
 label        <- read.labels(fn.train.label, feat)
 
 num.runs      <- 0
-con           <- file(data.split, 'r')
+con           <- file(fn.train.sample, 'r')
 input         <- readLines(con)
 close(con)
 
