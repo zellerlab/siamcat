@@ -4,7 +4,7 @@
 \alias{plm.trainer}
 \title{Model training}
 \usage{
-plm.trainer(feat, label, training.samples = NULL, num.folds = 5, stratify,
+plm.trainer(feat, label, data.split = NULL, num.folds = 5, stratify,
   modsel.crit, min.nonzero.coeff, model.type = "lasso", inseparable = NULL,
   meta = NULL)
 }
@@ -13,7 +13,7 @@ plm.trainer(feat, label, training.samples = NULL, num.folds = 5, stratify,
 
 \item{label}{label object}
 
-\item{training.samples}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
+\item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
 
 \item{num.folds}{integer, number of folds for the internal model cross-validation}
 
