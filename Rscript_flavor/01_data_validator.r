@@ -18,7 +18,7 @@ suppressMessages(library('SIAMCAT'))
 option_list <- list(
   make_option(c('-s', '--srcdir'),  type='character', help='Source directory of this and other utility scripts'),
   make_option('--metadata_in',      type='character', help='Input file containing meta-data'),
-  make_option('--metadata_out',     type='character', default = "meta_validated.tsv", 
+  make_option('--metadata_out',     type='character', default = "meta_validated.tsv",
                                     help='Output file to which validated meta-data is written'),
   make_option('--label_in',         type='character', help='Input file containing labels'),
   make_option('--label_out',        type='character', default = "label_validated.tsv",
@@ -44,7 +44,7 @@ cat("=== Paramaters of the run:\n\n")
 cat('source.dir   =', source.dir, '\n')
 cat('fn.in.meta   =', fn.in.meta, '\n')
 cat('fn.out.meta  =', fn.out.meta, '\n')
-cat('fn.in.label  =', fn.in.label, '\n') 
+cat('fn.in.label  =', fn.in.label, '\n')
 cat('fn.out.label =', fn.out.label, '\n')
 cat('fn.in.feat   =', fn.in.feat, '\n')
 cat('fn.out.feat  =', fn.out.feat, '\n')
@@ -61,7 +61,7 @@ meta  <- read.meta(fn.in.meta)
 
 
 ### Start Core function
-validated.files <- validate.data(feat = feat, label = label$label, meta = meta )
+validated.files <- validate.data(feat = feat, label = label, meta = meta )
 ### End Core function
 
 ### write validated label, feature and meta-data
@@ -69,7 +69,7 @@ validated.files <- validate.data(feat = feat, label = label$label, meta = meta )
 if (!is.null(fn.out.label)){
   write.table(label$header,          file = fn.out.label,  quote = FALSE, sep = '\t', row.names = FALSE,
               col.names = FALSE, append = FALSE)
-  write.table(t(as.matrix(validated.files$label)), file = fn.out.label,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
+  write.table(t(as.matrix(validated.files$label$label)), file = fn.out.label,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
               col.names = TRUE, append = TRUE)
 }
 write.table(validated.files$feat,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
