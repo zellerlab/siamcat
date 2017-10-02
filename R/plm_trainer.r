@@ -63,7 +63,6 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
         l               <- input[[i]]
         if (substr(l, 1, 1) != '#') {
           num.runs                 <- num.runs + 1
-          print(num.runs)
           s                        <- unlist(strsplit(l, '\t'))
           fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
           ### Note that the %in%-operation is order-dependend.
@@ -81,7 +80,6 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
       for (cv in 1:data.split$num.folds){
         for (res in 1:data.split$num.resample){
           num.runs <- num.runs + 1
-          print(num.runs)
 
           fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
           fold.exm.idx[[num.runs]] <- match(data.split$training.folds[[res]][[cv]], names(label$label))
@@ -112,7 +110,7 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   power           <- NULL
 
   for (r in 1:num.runs) {
-    cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
+    cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')', sep='')
     ### subselect examples for training
     train.label       <- label
     train.label$label <- train.label$label[fold.exm.idx[[r]]]
@@ -154,7 +152,6 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
     }
     stopifnot(all(names(model$W) == rownames(W.mat)))
     W.mat[,r]          <- as.numeric(c(model$feat.weights))
-    hyperpar.list[[r]] <- unlist(opt.hyper.par)
     stopifnot(!all(model$feat.weights == 0))
     cat('\n')
   }
@@ -162,7 +159,6 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   ### Write models into matrix to reload in plm_predictor.r
   for (i in 1:length(models.list)){
       vec <- rep(NA, nrow(models.list[[i]]$learner.model$glmnet.fit$beta) + 2)
-      print(i)
       vec[1] <- 0
       vec[2] <- models.list[[i]]$learner.model$glmnet.fit$a0
       vec[3:length(vec)] <- as.numeric(models.list[[i]]$learner.model$glmnet.fit$beta)
@@ -179,5 +175,5 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
   save(power,file="power.RData")
-  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, hyperpar.mat=hyperpar.mat, models.list=models.list))
+  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, models.list=models.list))
 }

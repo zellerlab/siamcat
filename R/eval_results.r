@@ -67,7 +67,6 @@ eval.result <- function(label, pred){
   if (ncol(pred) > 1) {
     aucspr = vector('numeric', dim(pred)[2])
     for (c in 1:ncol(pred)) {
-      print(c)
       ev[c] = list(eval.classifier(pred[,c], label$label, label))
       pr[c] = list(get.pr(ev[[c]]))
       aucspr[c] = calc.aupr(ev[[c]])

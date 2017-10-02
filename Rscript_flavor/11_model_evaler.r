@@ -70,7 +70,7 @@ if (write.out == TRUE){
     write.table(t(aucs), file=output.results, quote=FALSE, sep='\t', col.names=FALSE, append=FALSE, row.names="auroc values")
     write.table(t(aucspr), file=output.results, quote=FALSE, sep='\t', col.names=FALSE, append=TRUE, row.names="auprc values")
   }else{
-    cat("Only one predction available, ignoring the write_eval_results option.\n")
+    cat("Only one prediction available, ignoring the write_eval_results option.\n")
   }
 
 }
