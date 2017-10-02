@@ -35,7 +35,7 @@
 #'  \item \code{$par} = parameters utilized in the normalization;
 #'  \item \code{$feat} = normalized features
 #'}
-normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.std", "log.unit"), log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2, 
+normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.std", "log.unit"), log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2,
                            n.sample = FALSE, n.feature = TRUE, n.global = FALSE) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
@@ -138,8 +138,7 @@ normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.s
     cat('Feature sparsity after normalization: ', 100*mean(feat==0), '%\n', sep='')
     stopifnot(!any(is.na(feat)))
   } else {
-    cat('\nunrecognized norm.method, exiting!\n')
-    quit(save='no', status = 1)
+    stop('unrecognized norm.method, exiting!\n')
   }
   return(list("par" = par, "feat" = feat))
 }

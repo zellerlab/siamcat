@@ -44,8 +44,7 @@ select.samples  <- function(meta, feat, label, filter, allowed.set = NULL, allow
     allowed.set  <- sort(unique(allowed.set))
   }
   if (!xor(is.null(allowed.range ), is.null(allowed.set))) {
-    cat('Neither allowed.range  nor allowed.set (or both at the same time) have been provided, exiting!\n')
-    quit(save='no', status = 1) # TODO this really sucks in Rstudio, maybe it can be less harsh?
+    stop('Neither allowed.range  nor allowed.set (or both at the same time) have been provided, exiting!\n')
   } else {
     if (!is.null(allowed.range )) {
       cat('allowed.range  = [', paste(allowed.range , collapse=','), ']\n', sep='')

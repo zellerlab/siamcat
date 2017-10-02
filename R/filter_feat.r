@@ -62,8 +62,7 @@ filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
     # i.e. ones that are 0 (undetected) in more than (1-cutoff) proportion of samples
     f.idx = which(rowSums(ra.feat > 0) / ncol(ra.feat) > cutoff)
   } else {
-    cat('\nunrecognized filter.method, exiting!\n')
-    quit(save='no', status = 1)
+    stop('unrecognized filter.method, exiting!\n')
   }
 
   cat('Removed ', nrow(feat)-length(f.idx), ' features whose values did not exceed ', cutoff,
