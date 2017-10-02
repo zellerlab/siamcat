@@ -5,7 +5,8 @@
 \title{Model Interpretation Plot}
 \usage{
 interpretor.model.plot(feat, label, meta, model, pred, color.scheme = "BrBG",
-  consens.thres = 0.5, heatmap.type = "zscore", norm.models = FALSE)
+  consens.thres = 0.5, heatmap.type = "zscore", norm.models = FALSE,
+  fc.lim = c(-5, 5), z.score.lim = c(-3, 3), detect.lim = 1e-08)
 }
 \arguments{
 \item{feat}{a feature object}
