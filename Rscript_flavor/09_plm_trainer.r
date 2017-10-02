@@ -96,7 +96,9 @@ set.seed(r.seed)
 feat         <- read.features(fn.train.feat)
 label        <- read.labels(fn.train.label, feat)
 
-plm.out <- plm.trainer(feat, label, fn.train.sample, num.folds, stratify, modsel.crit, min.nonzero.coeff)
+plm.out <- plm.trainer(feat = feat, label = label, data.split = fn.train.sample, stratify = stratify, modsel.crit = modsel.crit, 
+                       min.nonzero.coeff=min.nonzero.coeff, model.type = model.type)
+
 
 runParams <- list(num.folds=num.folds, stratify=stratify, modsel.crit=modsel.crit, min.nonzero.coeff=min.nonzero.coeff)
 save(runParams,file="runParams.RData")

@@ -28,6 +28,7 @@ plm.trainer <- function(feat, label, data.split=NULL, stratify, modsel.crit, min
   # TODO 3: add model.type as parameter
   # transpose feature matrix as a convenience preprocessing
   feat         <- t(feat)
+  print(model.type)
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
 
   data                       <- cbind(feat,label.fac[rownames(feat)])
@@ -143,7 +144,7 @@ plm.trainer <- function(feat, label, data.split=NULL, stratify, modsel.crit, min
                       #                 ntree  = c(250, 500, 1000),                                # RF (not functional for now)
                       #                 mtry   = c(sqrt.mdim/2, sqrt.mdim, sqrt.mdim*2)            # RF (not functional for now)
     )
-    opt.hyper.par    <- select.model(train.feat, train.label, model.type, hyper.par, min.nonzero = min.nonzero.coeff,
+    opt.hyper.par    <- select.model(feat = train.feat, label = train.label, method = model.type, hyper.par, min.nonzero = min.nonzero.coeff,
                                      num.folds=num.folds, stratified=FALSE, foldid=foldid, data=data)
     # cat('  optimal C=', opt.hyper.par$lambda, ' (', which(opt.C$lambda==C.vec), ' of ', length(hyper.par$lambda), ')\n', sep='')
     ### retrain whole training set with best parameter setting (after every internal CV run!)

@@ -169,6 +169,7 @@ predict.plm <- function(feat, model, method, opt.hyper.par, data, subset) {
 #' @export
 select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
                          num.folds=5, stratified=FALSE, foldid=foldid, data) {
+  print(method)
   method        <- tolower(method)
   opt.hyper.par <- NULL
   nonzero.coeff <- matrix(0, num.folds, length(hyper.par$lambda))
