@@ -23,13 +23,15 @@
 #' @keywords SIAMCAT plm.trainer
 #' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = TRUE, modsel.crit  = "auc",  min.nonzero.coeff = 1){
+plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, stratify = TRUE, modsel.crit  = "auc",  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
   # TODO 3: add model.type as parameter
   # transpose feature matrix as a convenience preprocessing
 
   feat         <- t(feat)
+
+  if(cl != 'classif.cvglmnet') stop("Sorry, only cl = classif.cvglmnet is supported for now!\n")
 
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
 
@@ -134,7 +136,7 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
                       #                 ntree  = c(250, 500, 1000),                                # RF (not functional for now)
                       #                 mtry   = c(sqrt.mdim/2, sqrt.mdim, sqrt.mdim*2)            # RF (not functional for now)
     )
-    model            <- train.plm(data=data, subset=fold.exm.idx[[r]])
+    model            <- train.plm(data=data, cl = cl, subset=fold.exm.idx[[r]])
     models.list[[r]] <- model
     #power            <- rbind(power,model$subset)
 
@@ -158,6 +160,7 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
   # Preprocess hyper parameters
   ### Write models into matrix to reload in plm_predictor.r
   for (i in 1:length(models.list)){
+    if(cl == "classif.cvglmnet"){
       beta <- models.list[[i]]$learner.model$glmnet.fit$beta
       vec <- rep(NA, nrow(beta) + 2)
       vec[1] <- 0
@@ -173,6 +176,24 @@ plm.trainer <- function(feat, label,  cl = 'lasso', data.split=NULL, stratify = 
       rownames(out.matrix) <- c("lambda", "a0", rownames(beta))
       # In the case of glmnet, make the coefficient matrix from a sparse matrix into a regular one.
       #models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$learner.model$glmnet.fit$beta)
+    } else if(cl == "classif.LiblineaRL1LogReg"){
+            # Liblinear needs C, W (intercept term is included in W).
+      # Furthermore, it needs an element called "ClassNames" which is important in determining which class label is positive or negative.
+      vec <- rep(NA, length(models.list[[i]]$original.model$W) + 3)
+      vec[1] <- hyperpar.mat[1, i]
+      vec[2:3] <- as.numeric(models.list[[i]]$original.model$ClassNames)
+      vec[4:length(vec)] <- as.numeric(models.list[[i]]$original.model$W)
+      if (i == 1) {
+        out.matrix <- matrix(vec)
+      } else {
+        out.matrix <- cbind(out.matrix, vec)
+      }
+      # This overwrites rownames everytime, but doesnt need an additional conditional statement.
+      # paste0 pastes two equal-length string vectors element-wise
+      # Note that the weight-vector is a row-vector here.
+      rownames(out.matrix) <- c("C", "negative label", "positive label", colnames(models.list[[i]]$original.model$W))
+
+    }
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
   save(power,file="power.RData")

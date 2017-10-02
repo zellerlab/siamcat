@@ -45,13 +45,17 @@ train.plm <- function(data, cl = "classif.cvglmnet", subset) {
     ## 3) Fit the model
     ## Train the learner on the task using a random subset of the data as training set
     model               <- train(lrn, task, subset=subset)
+    save(model,file="modelio.RData")
 
-    coef                <- coefficients(model$learner.model)
-    bias.idx            <- which(rownames(coef) == '(Intercept)')
-    coef                <- coef[-bias.idx,]
+    if(cl == "classif.cvglmnet"){
+      coef                <- coefficients(model$learner.model)
+      bias.idx            <- which(rownames(coef) == '(Intercept)')
+      coef                <- coef[-bias.idx,]
+      model$feat.weights  <- (-1) *  as.numeric(coef) ### check!!!
+    } else if(cl == "classif.LiblineaRL1LogReg"){
+      model$feat.weights  <-model$learner.model$W[-which(colnames(model$learner.model$W)=="Bias")]
+    }
 
-    # Remove bias/intercept term when returning model feature weights
-    model$feat.weights <- (-1) *  as.numeric(coef) ### check!!!
     model$lrn          <- lrn
     model$task         <- task
 
