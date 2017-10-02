@@ -62,7 +62,7 @@ plm.trainer <- function(feat, label, data.split=NULL, stratify, modsel.crit, min
   } else {
     stop('Wrong input for training samples!...')
   }
-)
+
   #stop()
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
