@@ -93,79 +93,13 @@ plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, 
   for (r in 1:num.runs) {
     model <- models.list[[r]]
     cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
-    curr.model.new <- list()
-    curr.model.new$original.model <- list()
-
-    # Rebuild model
-    if (model.type == 'lasso'){
-      curr.model.new$original.model$lambda <- model.mat[1, r]
-      curr.model.new$original.model$a0 <- model.mat[2, r]
-      curr.model.new$original.model$beta <- model.mat[3:dim(model.mat)[1], r]
-      # glmnet needs "offset" value
-      curr.model.new$original.model$offset <- FALSE
-      # glmnet needs sparse matrix
-      curr.model.new$original.model$beta <- Matrix(curr.model.new$original.model$beta, sparse = TRUE)
-      class(curr.model.new$original.model) <- c("lognet", "glmnet")
-
-      # Create hp list
-      opt.hp$lambda <- curr.model.new$original.model$lambda
-
-    } else if (model.type == 'enet') {
-      curr.model.new$original.model$lambda <- model.mat[1, r]
-      curr.model.new$original.model$lambda <- model.mat[2, r]
-      curr.model.new$original.model$a0 <- model.mat[3, r]
-      curr.model.new$original.model$beta <- model.mat[4:dim(model.mat)[1], r]
-      # glmnet needs "offset" value
-      curr.model.new$original.model$offset <- FALSE
-      # glmnet needs sparse matrix
-      curr.model.new$original.model$beta <- Matrix(curr.model.new$original.model$beta, sparse = TRUE)
-      class(curr.model.new$original.model) <- c("lognet", "glmnet")
-
-      # Create hp list
-      opt.hp$lambda <- curr.model.new$original.model$lambda
-      opt.hp$alpha <- curr.model.new$original.model$alpha
-
-    } else if (model.type == 'lasso_ll'){
-      curr.model.new$original.model$W <- t(as.matrix(model.mat[4:dim(model.mat)[1], r]))
-      curr.model.new$original.model$Bias <- "TRUE"
-      curr.model.new$original.model$Type <- 6
-      curr.model.new$original.model$TypeDetail <- "L1-regularized logistic regression (L1R_LR)"
-      curr.model.new$original.model$ClassNames <- model.mat[2:3, r]
-      curr.model.new$original.model$NbClass <- 2
-      class(curr.model.new$original.model) <- c("LiblineaR")
-
-      # Create hp list
-      opt.hp$C <- curr.model.new$original.model$C
-
-    } else if (model.type == 'ridge_ll'){
-      curr.model.new$original.model$W <- t(as.matrix(model.mat[4:dim(model.mat)[1], r]))
-      curr.model.new$original.model$Bias <- "TRUE"
-      curr.model.new$original.model$Type <- 0
-      curr.model.new$original.model$TypeDetail <- "L2-regularized logistic regression primal (L2R_LR)"
-      curr.model.new$original.model$ClassNames <- model.mat[2:3, r]
-      curr.model.new$original.model$NbClass <- 2
-      class(curr.model.new$original.model) <- c("LiblineaR")
-
-      # Create hp list
-      opt.hp$C <- curr.model.new$original.model$C
-    } else if (model.type == 'gelnet') {
-      curr.model.new$original.model$alpha <- as.vector(na.omit(model.mat[,1]))
-      curr.model.new$original.model$lambda <- as.vector(na.omit(model.mat[,2]))
-      curr.model.new$original.model$b <- as.vector(na.omit(model.mat[3,r]))
-      curr.model.new$original.model$w <- as.vector(na.omit(model.mat[4:dim(model.mat)[1], r]))
-
-      # Create hp list
-      opt.hp$alpha <- curr.model.new$original.model$alpha
-      opt.hp$lambda <- curr.model.new$original.model$lambda
-    }
     # subselect appropriate model
-    m = models.list[[r]]
-    m$W = m$W[,r]
+    model$W = model$W[,r]
 
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
 
-    pdata    <- predict.plm(test.feat, m, model.type, opt.hp, data = data, subset=fold.exm.idx[[r]])
+    pdata    <- predict(data = data,  model = model, subset = fold.exm.idx[[r]])
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 

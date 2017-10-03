@@ -65,37 +65,7 @@ train.plm <- function(data, cl = "classif.cvglmnet", subset) {
 #' @export
 predict.plm <- function(feat, model, method, opt.hyper.par, data, subset) {
   method <- tolower(method)
-
-  # note that some of the logit models are set up inversely to each other,
-  # requiring to select coefficient/prediction columns accordingly using col.idx
-  if (method == 'lasso') {
-    col.idx <- 1
-    # glmnet's predict function needs to be given a lambda value
-    pred <- predict(model, task = model$task, subset = subset)
-
-  } else if (method == 'lasso_ll' || method == 'ridge_ll') {
-    col.idx <- 2 # this is a bit counter-intuitive given the column names of the predict data frame
-    pred <- predict(model$original.model, feat,
-                    proba=TRUE)$probabilities[,col.idx]
-    # Adding rownames here is important.
-    names(pred) <- rownames(feat)
-
-  } else if (method == 'enet') {
-    col.idx <- 1
-    # glmnet's predict function needs to be given a lambda value
-    pred <- predict(model$original.model, feat,
-                    alpha=opt.hyper.par$alpha, s=opt.hyper.par$lambda,
-                    type="response")[,col.idx]
-
-  } else if (method == 'gelnet') {
-    # gelnet's predictions need to be calculated "by hand"
-    m = model$original.model
-    pred <- 1.0 / (1.0 + exp(feat %*% m$w + m$b))
-    names(pred) <- rownames(feat)
-
-  } else {
-    stop('unknown method')
-  }
+  pred   <- predict(model, task = model$task, subset = subset)
   return(pred)
 }
 
