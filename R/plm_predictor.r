@@ -99,7 +99,7 @@ plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, 
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
 
-    pdata    <- predict(data = data,  model = model, subset = fold.exm.idx[[r]])
+    pdata    <- predict(model,  task = model$task, subset = fold.exm.idx[[r]])
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 
