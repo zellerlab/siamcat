@@ -59,7 +59,7 @@ plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, 
       close(con)
       #print(length(input))
       
-      num.folds     <- strsplit(input[[3]],"#")[[1]][2]
+      num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
       for (i in 1:length(input)) {
         l               <- input[[i]]
         if (substr(l, 1, 1) != '#') {
