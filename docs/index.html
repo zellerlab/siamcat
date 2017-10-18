@@ -50,13 +50,64 @@
       </header><div class="row">
   <div class="contents col-md-9">
     
-<p>SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes</p>
-<p>More information can be found in README_v0.1.1.txt</p>
+<div id="overview" class="section level2">
+<h2 class="hasAnchor">
+<a href="#overview" class="anchor"></a>Overview</h2>
+<p>SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes. A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots). SIAMCAT is available as Galaxy web server or can be downloaded and run as a command line tool, as detailed below.</p>
+</div>
+<div id="input-data-format" class="section level2">
+<h2 class="hasAnchor">
+<a href="#input-data-format" class="anchor"></a>Input data format</h2>
+<p>All files are in tab-separated column format</p>
+<p><strong>Label data</strong>: First row is expected to be #BINARY:1=[label for cases];-1=[label for controls] Second row should contain the sample identifiers as tab-separated list (consistent with feature and metadata). Third row is expected to contain the actual class labels (tab-separated) 1 for each case and -1 for each control. Note: Labels can take other numeric values (but not characters or strings); importantly, the label for cases has to be greater than the one for controls.</p>
+<p><strong>Feature matrix</strong>: features (in rows) x samples (in columns) First row should contain sample labels (consistent with label data). First column should contain feature labels (e.g. taxonomic identifiers). The remaining entries are expected to be real values &gt;= 0 that quantify the abundance of each feature in each sample.</p>
+<p><strong>Metadata (optional)</strong>: samples (in rows) x metadata (in columns) Metadata needs to be converted to numerical values by the user (This is necessary for heatmap displays)!</p>
+</div>
+<div id="galaxy-interface" class="section level2">
+<h2 class="hasAnchor">
+<a href="#galaxy-interface" class="anchor"></a>Galaxy interface:</h2>
+<p><a href="http://siamcat.embl.de/" class="uri">http://siamcat.embl.de/</a></p>
+<div id="galaxy-in-brief" class="section level3">
+<h3 class="hasAnchor">
+<a href="#galaxy-in-brief" class="anchor"></a>Galaxy in brief</h3>
+<p>Left panel: TOOLS lists available analysis modules, click to choose which ones you’d like to run</p>
+<p>Right panel: HISTORY keeps track of every analysis step you’ve been performing click on the “eye” icon to view data, or click on the “floppy disk” icon to download results if something goes wrong the “i” icon can provide useful details the “circular arrows” icon allows to rerun a job you can delete analysis steps from your history using the “x” icon</p>
+<p>center panel: ANALYZE DATA allows to specify input data sets and parameters for each analysis module</p>
+<p>Additional info: <a href="https://usegalaxy.org/" class="uri">https://usegalaxy.org/</a> (in particular the Help menu) and <a href="https://wiki.galaxyproject.org/Learn" class="uri">https://wiki.galaxyproject.org/Learn</a></p>
+</div>
+<div id="getting-started" class="section level3">
+<h3 class="hasAnchor">
+<a href="#getting-started" class="anchor"></a>Getting started</h3>
+<p>Start by uploading your data (see above for input data formats) using the DATA IMPORT / Import Data module / Upload File</p>
+<p>Then procede by executing all SIAMCAT modules in order (from A to I). See example history / Workflow as well as each module’s description for specific information on input and output data</p>
+</div>
+</div>
+<div id="commandline-version-bash-script-calling-modules-implemented-in-r" class="section level2">
+<h2 class="hasAnchor">
+<a href="#commandline-version-bash-script-calling-modules-implemented-in-r" class="anchor"></a>Commandline version (bash script calling modules implemented in R)</h2>
+<div id="stable-version" class="section level4">
+<h4 class="hasAnchor">
+<a href="#stable-version" class="anchor"></a>Stable version:</h4>
+<p><a href="https://git.embl.de/grp-zeller/SIAMCAT" class="uri">https://git.embl.de/grp-zeller/SIAMCAT</a></p>
+</div>
+<div id="development-version-the-most-up-to-date-but-not-always-stable" class="section level4">
+<h4 class="hasAnchor">
+<a href="#development-version-the-most-up-to-date-but-not-always-stable" class="anchor"></a>Development version (the most up to date but not always stable):</h4>
+<p><a href="https://git.embl.de/grp-zeller/SIAMCAT/tree/development" class="uri">https://git.embl.de/grp-zeller/SIAMCAT/tree/development</a></p>
+<p>R packages required to run SIAMCAT:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">"RColorBrewer"</span>,<span class="st">"beanplot"</span>,<span class="st">"glmnet"</span>,<span class="st">"LiblineaR"</span>,<span class="st">"pROC"</span>,<span class="st">"optparse"</span>,<span class="st">"colorRamps"</span>,<span class="st">"gelnet"</span>,<span class="st">"mlr"</span>))</code></pre></div>
+</div>
+</div>
+<div id="support" class="section level2">
+<h2 class="hasAnchor">
+<a href="#support" class="anchor"></a>Support</h2>
+<p>Google user group for support:</p>
+<p><a href="https://groups.google.com/d/forum/siamcat-users" class="uri">https://groups.google.com/d/forum/siamcat-users</a> <a href="mailto:zeller@embl.de">mailto:zeller@embl.de</a></p>
+</div>
 
   </div>
 
   <div class="col-md-3" id="sidebar">
-    <img src="logo.png", height="150", width="150">
     <h2>License</h2>
 <p>GNU <a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a>.0</p>
 <h2>Developers</h2>
