@@ -73,19 +73,21 @@ Then procede by executing all SIAMCAT modules in order (from A to I).
 See example history / Workflow as well as each module's description for specific information on input and output data
 
 
-##Commandline version (bash script calling modules implemented in R)
-
 ####Stable version:
 https://git.embl.de/grp-zeller/SIAMCAT
 
 ####Development version (the most up to date but not always stable):
 https://git.embl.de/grp-zeller/SIAMCAT/tree/development
 
+
 R packages required to run SIAMCAT:
 ```r
 install.packages(c("RColorBrewer","beanplot","glmnet","LiblineaR","pROC","optparse","colorRamps","gelnet","mlr"))
 ```
 
+
+##Commandline version (bash script calling modules implemented in R)
+https://git.embl.de/grp-zeller/SIAMCAT/tree/master/Rscript_flavor
 
 ##Support
 

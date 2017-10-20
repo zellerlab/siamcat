@@ -3,11 +3,10 @@ Type: Package
 Title: Statistical Inference of Associations between Microbial Communities And host phenoTypes
 Version: 0.2.0
 Author: Georg Zeller [aut,cre], Nicolai Karcher [aut], Jakob Wirbel[aut], Konrad Zych [aut]
-Authors@R: c(person("Georg", "Zeller", role = c("aut", "cre"),
-                     email = "zeller@embl.de"),
-                     person("Konrad", "Zych", role = "aut", email = "konrad.zych@embl.de"),
-              person("Nicolai", "Karcher", role = "aut"),
-              person("Jakob", "Wirbel", role = "aut")
+Authors@R: c(person("Georg", "Zeller", role = c("aut", "cre"), email = "zeller@embl.de"),
+             person("Konrad", "Zych", role = "aut", email = "konrad.zych@embl.de", comment = c(ORCID = "0000-0001-7426-0516")),
+             person("Nicolai", "Karcher", role = "aut"),
+             person("Jakob", "Wirbel", role = "aut")
               )
 Maintainer: Konrad Zych <konrad.zych@embl.de>
 Description: SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes. A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots).
