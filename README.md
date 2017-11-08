@@ -1,4 +1,4 @@
-##Overview
+###Overview
 
 SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial
 Communities And host phenoTypes. A primary goal of analyzing microbiome data is to 
@@ -13,7 +13,7 @@ plots). SIAMCAT is available as Galaxy web server or can be downloaded and run a
 command line tool, as detailed below.
 
 
-##Input data format
+###Input data format
 
 All files are in tab-separated column format
 
@@ -39,11 +39,11 @@ All files are in tab-separated column format
 
 
 
-##Galaxy interface: 
+###Galaxy interface: 
 
 http://siamcat.embl.de/
 
-###Galaxy in brief
+####Galaxy in brief
 
 
 Left panel:      TOOLS lists available analysis modules,
@@ -63,7 +63,7 @@ Additional info: https://usegalaxy.org/ (in particular the Help menu) and
                  https://wiki.galaxyproject.org/Learn
 
 
-###Getting started
+####Getting started
 
 
 Start by uploading your data (see above for input data formats) using the 
@@ -86,10 +86,10 @@ install.packages(c("RColorBrewer","beanplot","glmnet","LiblineaR","pROC","optpar
 ```
 
 
-##Commandline version (bash script calling modules implemented in R)
+###Commandline version (bash script calling modules implemented in R)
 https://git.embl.de/grp-zeller/SIAMCAT/tree/master/Rscript_flavor
 
-##Support
+###Support
 
 
 Google user group for support:
