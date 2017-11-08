@@ -31,35 +31,63 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(data, cl = "classif.cvglmnet", subset) {
+train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR"), subset) {
   model <- list(original.model=NULL, feat.weights=NULL)
 
-    ## 1) Define the task
-    ## Specify the type of analysis (e.g. classification) and provide data and response variable
-    task                <- makeClassifTask(data = data, target = "label")
+  ## 1) Define the task
+  ## Specify the type of analysis (e.g. classification) and provide data and response variable
+  task      <- makeClassifTask(data = data, target = "label")
 
-    ## 2) Define the learner
-    ## Choose a specific algorithm (e.g. linear discriminant analysis)
-    lrn                 <- makeLearner(cl, predict.type="prob")
+  ## 2) Define the learner
+  ## Choose a specific algorithm (e.g. linear discriminant analysis)
+  if(method == "lasso"){
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=1)
+    cl        <- "classif.cvglmnet"
+    paramSet  <- NULL
+  }else if(method == "ridge"){
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=0)
+    cl        <- "classif.cvglmnet"
+    paramSet  <- NULL
+  }else if(method == "enet"){
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
+    cl        <- "classif.cvglmnet"
+    paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
+  }else if(method == "libLineaR"){
+    lrn       <- makeLearner(cl, predict.type="prob")
+    cl        <- "classif.LiblineaRL1LogReg"
+    paramSet  <- NULL
+  } else{
+    stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR.\n")
+  }
+  
 
-    ## 3) Fit the model
-    ## Train the learner on the task using a random subset of the data as training set
-    model               <- train(lrn, task, subset=subset)
-    save(model,file="modelio.RData")
+  ## 3) Fit the model
+  ## Train the learner on the task using a random subset of the data as training set
+  if(!all(is.null(paramSet))){
+    hyperPars <- tuneParams(learner = lrn, 
+                         task = task,
+                         resampling =  makeResampleDesc('CV', iters=5L, stratify=TRUE),
+                         par.set = paramSet, 
+                         control = makeTuneControlGrid(resolution = 10L), 
+                         measures=list(acc))
+    lrn       <- setHyperPars(lrn, par.vals=hyperPars)
+  }
 
-    if(cl == "classif.cvglmnet"){
-      coef                <- coefficients(model$learner.model)
-      bias.idx            <- which(rownames(coef) == '(Intercept)')
-      coef                <- coef[-bias.idx,]
-      model$feat.weights  <- (-1) *  as.numeric(coef) ### check!!!
-    } else if(cl == "classif.LiblineaRL1LogReg"){
-      model$feat.weights  <-model$learner.model$W[-which(colnames(model$learner.model$W)=="Bias")]
-    }
+  model     <- train(lrn, task, subset=subset)
 
-    model$lrn          <- lrn
-    model$task         <- task
+  if(cl == "classif.cvglmnet"){
+    coef                <- coefficients(model$learner.model)
+    bias.idx            <- which(rownames(coef) == '(Intercept)')
+    coef                <- coef[-bias.idx,]
+    model$feat.weights  <- (-1) *  as.numeric(coef) ### check!!!
+  } else if(cl == "classif.LiblineaRL1LogReg"){
+    model$feat.weights  <-model$learner.model$W[-which(colnames(model$learner.model$W)=="Bias")]
+  }
 
-  return(model)
+  model$lrn          <- lrn
+  model$task         <- task
+
+return(model)
 }
 
 #' @export
