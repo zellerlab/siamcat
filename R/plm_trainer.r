@@ -23,14 +23,14 @@
 #' @keywords SIAMCAT plm.trainer
 #' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, stratify = TRUE, modsel.crit  = "auc",  min.nonzero.coeff = 1){
+plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libLineaR"), data.split=NULL, stratify = TRUE, 
+                        modsel.crit  = "auc",  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
   # TODO 3: add model.type as parameter
   # transpose feature matrix as a convenience preprocessing
 
   feat         <- t(feat)
-  if(cl != 'classif.cvglmnet') stop("Sorry, only cl = classif.cvglmnet is supported for now!\n")
 
   label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
 
@@ -95,7 +95,7 @@ plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, 
   fold.name     <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
-  cat('\nPreparing to train', cl,  'models on', num.runs, 'training set samples...\n\n')
+  cat('\nPreparing to train', method,  'models on', num.runs, 'training set samples...\n\n')
 
   ### train one model per training sample (i.e. CV fold)
   # feat has structure: examples in rows; features in columns!
@@ -128,17 +128,10 @@ plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, 
     foldid            <- assign.fold(label = train.label.exp, num.folds, stratified = stratify, inseparable=inseparable, meta=meta)
 
     ### internal cross-validation for model selection
-    sqrt.mdim         <- sqrt(nrow(feat))
-    hyper.par <- list(C      = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10),  # all LiblineaR methods
-                      lambda = c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3),            # LASSO & ENet
-                      alpha  = c(0.7,0.8,0.9)                                    # ENet
-                      #                 ntree  = c(250, 500, 1000),                                # RF (not functional for now)
-                      #                 mtry   = c(sqrt.mdim/2, sqrt.mdim, sqrt.mdim*2)            # RF (not functional for now)
-    )
-    model            <- train.plm(data=data, cl = cl, subset=fold.exm.idx[[r]])
-    models.list[[r]] <- model
-    #power            <- rbind(power,model$subset)
-
+    model             <- train.plm(data=data, method = method, subset=fold.exm.idx[[r]])
+    if(!all(model$feat.weights == 0)){
+       models.list[[r]]  <- model
+    }
 
     ### TODO Important: the 'mh' variable gets written into the coefficient matrix.
     ### This needs to be changed ASAP, as the check in plm_predictor.r is obsolete with a hard-coded string like this.
@@ -153,13 +146,12 @@ plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, 
     }
     stopifnot(all(names(model$W) == rownames(W.mat)))
     W.mat[,r]          <- as.numeric(c(model$feat.weights))
-    stopifnot(!all(model$feat.weights == 0))
     cat('\n')
   }
   # Preprocess hyper parameters
   ### Write models into matrix to reload in plm_predictor.r
   for (i in 1:length(models.list)){
-    if(cl == "classif.cvglmnet"){
+    if(method %in% c("lasso", "enet", "ridge")){
       beta <- models.list[[i]]$learner.model$glmnet.fit$beta
       vec <- rep(NA, nrow(beta) + 2)
       vec[1] <- 0
@@ -175,7 +167,7 @@ plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, 
       rownames(out.matrix) <- c("lambda", "a0", rownames(beta))
       # In the case of glmnet, make the coefficient matrix from a sparse matrix into a regular one.
       #models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$learner.model$glmnet.fit$beta)
-    } else if(cl == "classif.LiblineaRL1LogReg"){
+    } else if(method == "libLineaR"){
             # Liblinear needs C, W (intercept term is included in W).
       # Furthermore, it needs an element called "ClassNames" which is important in determining which class label is positive or negative.
       vec <- rep(NA, length(models.list[[i]]$original.model$W) + 3)
@@ -195,6 +187,6 @@ plm.trainer <- function(feat, label,  cl = 'classif.cvglmnet', data.split=NULL, 
     }
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
-  save(power,file="power.RData")
+  #save(power,file="power.RData")
   invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, models.list=models.list))
 }

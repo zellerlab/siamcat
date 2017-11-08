@@ -27,7 +27,7 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option(c('-s', '--srcdir'),   type='character',                  help='Source directory of this and other utility scripts'),
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
-    make_option('--cl',                type='character', default='classif.cvglmnet', help='class of learner, directly passed to mlr::makeLearner'),
+    make_option('--method',                type='character', default='lasso', help='class of learner, directly passed to mlr::makeLearner'),
     make_option('--train_sets',        type='character', default='NULL',  help='Input file specifying which examples to use for training'),
     make_option('--mlr_models_list',   type='character',                  help='Output RData file to which the object with trained models will be written'),
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified 
@@ -50,7 +50,7 @@ cat("=== Paramaters of the run:\n\n")
 cat('srcdir            =', opt$srcdir,  '\n')
 cat('feat_in           =', opt$feat_in, '\n')
 cat('label_in          =', opt$label_in, '\n')
-cat('cl                =', opt$cl, '\n')
+cat('method            =', opt$method, '\n')
 cat('train_sets        =', opt$train_sets, '\n')
 cat('mlr_models_list   =', opt$mlr_models_list, '\n')
 cat('stratify          =', opt$stratify, '\n')
@@ -80,7 +80,7 @@ set.seed(r.seed)
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
 
-plm.out <- plm.trainer(feat = feat, label = label,  cl = opt$cl, data.split=opt$train_sets, stratify = TRUE, 
+plm.out <- plm.trainer(feat = feat, label = label,  method = opt$method, data.split=opt$train_sets, stratify = TRUE, 
                        modsel.crit  = opt$sel_criterion,  min.nonzero.coeff = opt$min_nonzero_coeff)
 
 
