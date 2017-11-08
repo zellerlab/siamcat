@@ -40,21 +40,19 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR"), s
 
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
+  cl        <- "classif.cvglmnet"
   if(method == "lasso"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=1)
-    cl        <- "classif.cvglmnet"
     paramSet  <- NULL
   }else if(method == "ridge"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=0)
-    cl        <- "classif.cvglmnet"
     paramSet  <- NULL
   }else if(method == "enet"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
-    cl        <- "classif.cvglmnet"
     paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
   }else if(method == "libLineaR"){
-    lrn       <- makeLearner(cl, predict.type="prob")
     cl        <- "classif.LiblineaRL1LogReg"
+    lrn       <- makeLearner(cl, predict.type="prob")
     paramSet  <- NULL
   } else{
     stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR.\n")
@@ -70,7 +68,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR"), s
                          par.set = paramSet, 
                          control = makeTuneControlGrid(resolution = 10L), 
                          measures=list(acc))
-    lrn       <- setHyperPars(lrn, par.vals=hyperPars)
+    lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
 
   model     <- train(lrn, task, subset=subset)
