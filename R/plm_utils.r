@@ -31,8 +31,8 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR"), subset) {
-  model <- list(original.model=NULL, feat.weights=NULL)
+train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR", "randomForest"), subset) {
+  #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
   ## Specify the type of analysis (e.g. classification) and provide data and response variable
@@ -40,22 +40,27 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR"), s
 
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
-  cl        <- "classif.cvglmnet"
+  cl        <- "classif.cvglmnet" ### the most ocommon learner defined her so taht this does not have done multiple times
+  paramSet  <- NULL
+
   if(method == "lasso"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=1)
-    paramSet  <- NULL
   }else if(method == "ridge"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=0)
-    paramSet  <- NULL
   }else if(method == "enet"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
     paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
   }else if(method == "libLineaR"){
     cl        <- "classif.LiblineaRL1LogReg"
     lrn       <- makeLearner(cl, predict.type="prob")
-    paramSet  <- NULL
-  } else{
-    stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR.\n")
+  } else if(method == "randomForest"){
+    sqrt.mdim <- sqrt(nrow(data))
+    cl        <- "classif.randomForest"
+    lrn       <- makeLearner(cl, predict.type = "prob", fix.factors.prediction = TRUE)
+    paramSet  <- makeParamSet(makeNumericParam('ntree', lower=100, upper=1000),
+                        makeDiscreteParam('mtry', values=c(round(sqrt.mdim/2), round(sqrt.mdim), round(sqrt.mdim*2))))
+  } else {
+    stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR, randomForest.\n")
   }
   
 
@@ -80,20 +85,16 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR"), s
     model$feat.weights  <- (-1) *  as.numeric(coef) ### check!!!
   } else if(cl == "classif.LiblineaRL1LogReg"){
     model$feat.weights  <-model$learner.model$W[-which(colnames(model$learner.model$W)=="Bias")]
+  } else if(cl == "classif.randomForest"){
+    model$feat.weights  <-model$learner.model$importance
   }
 
-  model$lrn          <- lrn
+  model$lrn          <- lrn ### ???
   model$task         <- task
 
 return(model)
 }
 
-#' @export
-predict.plm <- function(feat, model, method, opt.hyper.par, data, subset) {
-  method <- tolower(method)
-  pred   <- predict(model, task = model$task, subset = subset)
-  return(pred)
-}
 
 #' @export
 select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
