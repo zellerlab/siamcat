@@ -1,0 +1,12 @@
+before_script:
+  - cd Rscript_flavor 
+  - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz
+  - tar -zxf siamcat_test_data.tar.gz
+
+test:
+  stage: test
+  script: ./execute.sh
+
+after_script:
+  - rm -r *.tsv
+  - echo "cleaned up"
