@@ -1,6 +1,8 @@
 image: r-base
 before_script:
   - cd Rscript_flavor
+  - wget https://git.embl.de/grp-zeller/SIAMCAT/repository/v0.2.0/archive.tar.gz
+  - mv archive.tar.gz siamcat_0.2.0.tar.gz
   - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz 
   - tar -zxf siamcat_test_data.tar.gz && rm siamcat_test_data.tar.gz
 
