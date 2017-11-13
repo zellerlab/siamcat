@@ -1,5 +1,6 @@
 image: r-base
 before_script:
+  - R CMD INSTALL -l ./
   - cd Rscript_flavor
   - wget https://git.embl.de/grp-zeller/SIAMCAT/repository/v0.2.0/archive.tar.gz
   - mv archive.tar.gz siamcat_0.2.0.tar.gz
