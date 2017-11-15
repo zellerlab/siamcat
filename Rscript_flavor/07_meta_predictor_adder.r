@@ -32,6 +32,7 @@ fn.out.feat <- opt$feat_out
 pred.names  <- opt$pred_names
 std.meta    <- opt$std_meta
 
+cat("=== 07_meta_predictor_adder.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('fn.in.feat  =', fn.in.feat, '\n')
 cat('fn.in.meta  =', fn.in.meta, '\n')

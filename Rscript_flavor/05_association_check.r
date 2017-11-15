@@ -43,6 +43,7 @@ detect.lim   <- opt$detect_limit
 max.show     <- opt$max_show
 plot.type    <- opt$plot_type
 
+cat("=== 05_association_check.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir   =', source.dir, '\n')
 cat('fn.in.label  =', fn.in.label, '\n')

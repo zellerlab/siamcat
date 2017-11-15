@@ -47,6 +47,7 @@ inseparable    <- opt$inseparable
 fn.in.meta     <- opt$metadata_in
 
 # print parameters of the run
+cat("=== 08_data_splitter.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir     =', source.dir, '\n')
 cat('fn.in.label    =', fn.in.label, '\n')

@@ -56,6 +56,7 @@ color.scheme   <- opt$col_scheme
 heatmap.type   <- opt$heatmap_type
 consens.thres  <- opt$consens_thres
 
+cat("=== 12_model_interpretor.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir     =', source.dir, '\n')
 cat('fn.feat        =', fn.feat, '\n')

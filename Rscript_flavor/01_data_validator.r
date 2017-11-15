@@ -40,6 +40,7 @@ fn.in.feat   <- opt$feat_in
 fn.out.feat  <- opt$feat_out
 
 # print parameters of the run
+cat("=== 01_data_validator.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir   =', source.dir, '\n')
 cat('fn.in.meta   =', fn.in.meta, '\n')

@@ -31,6 +31,7 @@ fn.in.label  <- opt$label_in
 fn.plot      <- opt$plot
 
 # print parameters of the run
+cat("=== 03_confounder_check.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir   =', source.dir, '\n')
 cat('fn.in.meta   =', fn.in.meta, '\n')

@@ -31,6 +31,7 @@ option_list = list(
 
 # parse arguments
 opt = parse_args(OptionParser(option_list=option_list))
+cat("=== 06_generic_normalizer.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('opt$feat_in         =', opt$feat_in, '\n')
 cat('opt$feat_out        =', opt$feat_out, '\n')

@@ -37,6 +37,7 @@ write.out      <- opt$write_eval_results
 output.results <- opt$output_results
 model.type     <- opt$model_type
 
+cat("=== 11_model_evaler.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir     =', source.dir, '\n')
 cat('fn.label       =', fn.label, '\n')

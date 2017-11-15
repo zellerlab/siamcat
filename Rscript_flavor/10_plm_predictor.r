@@ -41,6 +41,7 @@ hyperpars      <- opt$hyperpars
 model.type     <- opt$model_type
 
 # print parameters of the run
+cat("=== 10_plm_predictor.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir         =', source.dir,        '\n')
 cat('fn.test.feat       =', fn.test.feat,      '\n')

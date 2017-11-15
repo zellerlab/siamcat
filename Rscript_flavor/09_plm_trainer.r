@@ -46,6 +46,7 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
  opt         <- parse_args(OptionParser(option_list=option_list))
 
 # print parameters of the run
+cat("=== 09_plm_trainer.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('srcdir            =', opt$srcdir,  '\n')
 cat('feat_in           =', opt$feat_in, '\n')

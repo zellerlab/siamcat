@@ -36,6 +36,7 @@ recomp.prop   <- opt$recomp_prop
 rm.unmapped   <- opt$rm_unmapped
 
 # print parameters of the run
+cat("=== 04_generic_filter.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('opt$feat_in     =', fn.in.feat, '\n')
 cat('opt$feat_out    =', fn.out.feat, '\n')

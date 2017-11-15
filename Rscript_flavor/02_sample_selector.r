@@ -42,6 +42,7 @@ allowed.range <- opt$allowed_range
 
 
 # print parameters of the run
+cat("=== 02_sample_selector.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir   =', source.dir, '\n')
 cat('fn.in.meta   =', fn.in.meta, '\n')
