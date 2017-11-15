@@ -9,7 +9,9 @@ before_script:
 test:
   stage: test
   script: ./execute.sh
-
+  only:
+    - master
+    - development
 after_script:
   - rm -r *.tsv
   - echo "cleaned up"
