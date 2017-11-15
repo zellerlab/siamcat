@@ -1,0 +1,17 @@
+image: r-base
+before_script:
+  - R CMD build ./
+  - mv SIAMCAT*.tar.gz Rscript_flavor/.
+  - cd Rscript_flavor
+  - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz 
+  - tar -zxf siamcat_test_data.tar.gz && rm siamcat_test_data.tar.gz
+
+test:
+  stage: test
+  script: ./execute.sh
+  only:
+    - master
+    - development
+after_script:
+  - rm -r *.tsv
+  - echo "cleaned up"
