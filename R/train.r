@@ -60,7 +60,7 @@ plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
     label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab)) 
     train.label       <- label.fac
     train.label       <- label.fac[fold.exm.idx[[r]]]
-    train.feat        <- as.data.frame(feat[fold.exm.idx[[r]],])
+    data              <- as.data.frame(feat[fold.exm.idx[[r]],])
     stopifnot(nrow(train.feat)         == length(train.label))
     stopifnot(all(rownames(train.feat) == names(train.label)))
     data$label                     <- train.label
