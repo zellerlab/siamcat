@@ -63,7 +63,7 @@ plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
     train.feat        <- as.data.frame(feat[fold.exm.idx[[r]],])
     stopifnot(nrow(train.feat)         == length(train.label))
     stopifnot(all(rownames(train.feat) == names(train.label)))
-    data$label                     <- cbind(train.feat,train.label)
+    data$label                     <- train.label
 
     ### internal cross-validation for model selection
     model             <- train.plm(data=data, method = method)
