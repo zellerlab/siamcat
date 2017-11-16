@@ -36,49 +36,12 @@ plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, 
   colnames(data)             <- paste0("Sample_",1:ncol(data))
   colnames(data)[ncol(data)] <- "cancer"
 
-  num.runs = length(models.list)
-  ### subselect test examples as specified in data.split (if given)
-  fold.name = list()
-  fold.exm.idx = list()
-  if (is.null(data.split)){
-    # apply each LASSO model on whole data set when only single test set is given
-    for (r in 1:num.runs) {
-      fold.name[[r]] = paste('whole data set predicted by model', r)
-      fold.exm.idx[[r]] = rownames(feat)
-    }
-  } else {
-    if (class(data.split) == 'character'){
-      con = file(data.split, 'r')
-      input = readLines(con)
-      m.idx = 0
-      for (i in 1:length(input)) {
-        l = input[[i]]
-        if (substr(l, 1, 1) != '#') {
-          m.idx = m.idx + 1
-          s = unlist(strsplit(l, '\t'))
-          fold.name[[m.idx]] = substr(s[1], 2, nchar(s[1]))
-          fold.exm.idx[[m.idx]] = which(rownames(feat) %in% as.vector(s[2:length(s)]))
-          #      cat(fold.name[[m.idx]], 'contains', length(fold.exm.idx[[m.idx]]), 'test examples\n')
-          #      cat(fold.exm.idx[[m.idx]], '\n\n')
-        }
-      }
-      close(con)
-      stopifnot(length(fold.name) == num.runs)
-      stopifnot(length(fold.exm.idx) == num.runs)
-      stopifnot(all(paste('M', unlist(fold.name), sep='_') == colnames(models.list[[1]]$W)))
-  } else if (class(data.split) == 'list') {
-    i = 1
-    for (cv in 1:data.split$num.folds){
-      for (res in 1:data.split$num.resample){
-        fold.name[[i]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
-        fold.exm.idx[[i]] <- match(data.split$test.folds[[res]][[cv]], names(label$label))
-        i = i + 1
-        # cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
-      }
-    }
-    }
-  }
-  fold.name = unlist(fold.name)
+  ### subselect training examples as specified in fn.train.sample (if given)
+  foldList     <- get.foldList(data.split)
+  fold.name    <- foldList$fold.name
+  fold.exm.idx <- foldList$fold.exm.idx
+  num.runs     <- foldList$num.runs
+  num.folds    <- foldList$num.folds
   cat('\nPreparing to make predictions with', num.runs,   model.type, ' model(s)...\n')
 
   ### apply one LASSO model per test sample (i.e. CV fold)

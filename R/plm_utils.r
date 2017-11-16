@@ -97,48 +97,58 @@ return(model)
 
 #' @export
 get.foldList <- function(data.split){
+  num.runs     <- 1
+  num.folds    <- 2
   fold.name = list()
   fold.exm.idx = list() 
   if (is.null(data.split)){
-    # apply each LASSO model on whole data set when only single test set is given
-    for (r in 1:num.runs) {
-      fold.name[[r]] = paste('whole data set predicted by model', r)
-      fold.exm.idx[[r]] = rownames(feat)
-    }
+    # train on whole data set
+    fold.name[[1]]    <- 'whole data set'
+    fold.exm.idx[[1]] <- names(label$label)
   } else {
-    if (class(data.split) == 'character'){
-      con = file(data.split, 'r')
-      input = readLines(con)
-      m.idx = 0
+    if (class(data.split) == 'character') {
+      # read in file containing the training instances
+      num.runs      <- 0
+      con           <- file(data.split, 'r')
+      input         <- readLines(con)
+      close(con)
+      #print(length(input))
+      
+      num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
       for (i in 1:length(input)) {
-        l = input[[i]]
+        l               <- input[[i]]
         if (substr(l, 1, 1) != '#') {
-          m.idx = m.idx + 1
-          s = unlist(strsplit(l, '\t'))
-          fold.name[[m.idx]] = substr(s[1], 2, nchar(s[1]))
-          fold.exm.idx[[m.idx]] = which(rownames(feat) %in% as.vector(s[2:length(s)]))
-          #      cat(fold.name[[m.idx]], 'contains', length(fold.exm.idx[[m.idx]]), 'test examples\n')
-          #      cat(fold.exm.idx[[m.idx]], '\n\n')
+          num.runs                 <- num.runs + 1
+          s                        <- unlist(strsplit(l, '\t'))
+          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
+          ### Note that the %in%-operation is order-dependend.
+          fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
+          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+          #      cat(fold.exm.idx[[num.runs]], '\n\n')
+          #    } else {
+          #      cat('Ignoring commented line:', l, '\n\n')
         }
       }
-      close(con)
-      stopifnot(length(fold.name) == num.runs)
-      stopifnot(length(fold.exm.idx) == num.runs)
-      stopifnot(all(paste('M', unlist(fold.name), sep='_') == colnames(models.list[[1]]$W)))
-  } else if (class(data.split) == 'list') {
-    i = 1
-    for (cv in 1:data.split$num.folds){
-      for (res in 1:data.split$num.resample){
-        fold.name[[i]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
-        fold.exm.idx[[i]] <- match(data.split$test.folds[[res]][[cv]], names(label$label))
-        i = i + 1
-        # cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+    } else if (class(data.split) == 'list') {
+      # use training samples as specified in training.folds in the list
+      num.folds <- data.split$num.folds
+      num.runs <- 0
+      for (cv in 1:data.split$num.folds){
+        for (res in 1:data.split$num.resample){
+          num.runs <- num.runs + 1
+
+          fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
+          fold.exm.idx[[num.runs]] <- match(data.split$training.folds[[res]][[cv]], names(label$label))
+          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+        }
       }
-    }
+    } else {
+      stop('Wrong input for training samples!...')
     }
   }
-  fold.name = unlist(fold.name)
-  invisible(list(fold.name=fold.name,fold.exm.idx=fold.exm.idx))
+  stopifnot(length(fold.name) == num.runs)
+  stopifnot(length(fold.exm.idx) == num.runs)
+  invisible(list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds))
 }
 
 #' @export

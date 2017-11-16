@@ -41,61 +41,12 @@ plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
   colnames(data)             <- paste0("Sample_",1:ncol(data))
   colnames(data)[ncol(data)] <- "label"
   ### subselect training examples as specified in fn.train.sample (if given)
-  num.runs     <- 1
-  fold.name    <- list()
-  fold.exm.idx <- list() 
-  num.folds    <- 2
-
-  # print(fn.train.sample)
-  if (is.null(data.split)){
-    # train on whole data set
-    fold.name[[1]]    <- 'whole data set'
-    fold.exm.idx[[1]] <- names(label$label)
-  } else {
-    if (class(data.split) == 'character') {
-      # read in file containing the training instances
-      num.runs      <- 0
-      con           <- file(data.split, 'r')
-      input         <- readLines(con)
-      close(con)
-      #print(length(input))
-      
-      num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
-      for (i in 1:length(input)) {
-        l               <- input[[i]]
-        if (substr(l, 1, 1) != '#') {
-          num.runs                 <- num.runs + 1
-          s                        <- unlist(strsplit(l, '\t'))
-          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
-          ### Note that the %in%-operation is order-dependend.
-          fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
-          #      cat(fold.exm.idx[[num.runs]], '\n\n')
-          #    } else {
-          #      cat('Ignoring commented line:', l, '\n\n')
-        }
-      }
-    } else if (class(data.split) == 'list') {
-      # use training samples as specified in training.folds in the list
-      num.folds <- data.split$num.folds
-      num.runs <- 0
-      for (cv in 1:data.split$num.folds){
-        for (res in 1:data.split$num.resample){
-          num.runs <- num.runs + 1
-
-          fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
-          fold.exm.idx[[num.runs]] <- match(data.split$training.folds[[res]][[cv]], names(label$label))
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
-        }
-      }
-    } else {
-      stop('Wrong input for training samples!...')
-    }
-  }
-  #stop()
-  fold.name     <- unlist(fold.name)
-  stopifnot(length(fold.name) == num.runs)
-  stopifnot(length(fold.exm.idx) == num.runs)
+  foldList     <- get.foldList(data.split)
+  fold.name    <- foldList$fold.name
+  fold.exm.idx <- foldList$fold.exm.idx
+  num.runs     <- foldList$num.runs
+  num.folds    <- foldList$num.folds
+  
   cat('\nPreparing to train', method,  'models on', num.runs, 'training set samples...\n\n')
 
   ### train one model per training sample (i.e. CV fold)
