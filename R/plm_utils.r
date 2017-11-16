@@ -31,7 +31,7 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR", "randomForest"), subset) {
+train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR", "randomForest")) {
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
@@ -76,7 +76,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR", "r
     lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
 
-  model     <- train(lrn, task, subset=subset)
+  model     <- train(lrn, task)
 
   if(cl == "classif.cvglmnet"){
     coef                <- coefficients(model$learner.model)
