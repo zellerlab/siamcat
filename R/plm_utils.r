@@ -146,6 +146,7 @@ get.foldList <- function(data.split){
       stop('Wrong input for training samples!...')
     }
   }
+  fold.name  <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
   invisible(list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds))
