@@ -90,8 +90,7 @@ models.list  <- plm.out$models.list
 save(models.list, file=opt$mlr_models_list)
 
 ### save models
-write(plm.out$model.header, file=opt$model , append=FALSE)
-suppressWarnings(write.table(plm.out$W.mat, file=opt$model , quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
+suppressWarnings(write.table(plm.out$W.mat, file=opt$model , quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=FALSE))
 # suppressWarnings(write.table(hyperpar.mat, file=hyper.params, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA))
 cat('Saved all trained models.\n')
 

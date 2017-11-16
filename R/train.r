@@ -32,14 +32,6 @@ plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
   # transpose feature matrix as a convenience preprocessing
 
   feat         <- t(feat)
-
-  label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab)) 
-
-  data                       <- cbind(feat,label.fac[rownames(feat)])
-  data                       <- as.data.frame(data)
-  data[,ncol(data)]          <- as.factor(data[,ncol(data)]) ### ???!!!
-  colnames(data)             <- paste0("Sample_",1:ncol(data))
-  colnames(data)[ncol(data)] <- "label"
   ### subselect training examples as specified in fn.train.sample (if given)
   foldList     <- get.foldList(data.split)
   fold.name    <- foldList$fold.name
@@ -65,36 +57,18 @@ plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
   for (r in 1:num.runs) {
     cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')', sep='')
     ### subselect examples for training
-    train.label       <- label
-    train.label$label <- train.label$label[fold.exm.idx[[r]]]
-    train.feat        <- feat[fold.exm.idx[[r]],]
-    stopifnot(nrow(train.feat)         == length(train.label$label))
-    stopifnot(all(rownames(train.feat) == names(train.label$label)))
-
-    # reorder training examples so that class order is the same for all models
-    exm.order         <- sort(train.label$label, index.return=TRUE)$ix
-    train.label$label <- train.label$label[exm.order]
-    train.feat        <- train.feat[exm.order,]
-
-    train.label.exp   <- sample(train.label$label)
-    foldid            <- assign.fold(label = train.label.exp, num.folds, stratified = stratify, inseparable=inseparable, meta=meta)
+    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab)) 
+    train.label       <- label.fac
+    train.label       <- label.fac[fold.exm.idx[[r]]]
+    train.feat        <- as.data.frame(feat[fold.exm.idx[[r]],])
+    stopifnot(nrow(train.feat)         == length(train.label))
+    stopifnot(all(rownames(train.feat) == names(train.label)))
+    data$label                     <- cbind(train.feat,train.label)
 
     ### internal cross-validation for model selection
-    model             <- train.plm(data=data, method = method, subset=fold.exm.idx[[r]])
+    model             <- train.plm(data=data, method = method)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
-    }
-
-    ### TODO Important: the 'mh' variable gets written into the coefficient matrix.
-    ### This needs to be changed ASAP, as the check in plm_predictor.r is obsolete with a hard-coded string like this.
-    mh = paste('#LASSO (L1-regularized logistic regression (L1R_LR)',': [BINARY:',
-               label$negative.lab, '=negative',';',
-               label$positive.lab, '=positive', ']', sep='')
-    ### collect model parameters (feature weights)
-    if (r==1) {
-      model.header = mh
-    } else {
-      stopifnot(model.header == mh)
     }
     stopifnot(all(names(model$W) == rownames(W.mat)))
     W.mat[,r]          <- as.numeric(c(model$feat.weights))
@@ -105,7 +79,9 @@ plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
   for (i in 1:length(models.list)){
     if(method %in% c("lasso", "enet", "ridge")){
       beta <- models.list[[i]]$learner.model$glmnet.fit$beta
-      vec <- rep(NA, nrow(beta) + 2)
+      nRowVec <- 1
+      if(!all(is.null(dim(beta))))  nRowVec <- nrow(beta)
+      vec <- rep(NA, nRowVec + 2)
       vec[1] <- 0
       vec[2] <- beta
       vec[3:length(vec)] <- as.numeric(beta)
@@ -154,5 +130,5 @@ plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
   #save(power,file="power.RData")
-  invisible(list(out.matrix=out.matrix, model.header=model.header, W.mat=W.mat, models.list=models.list))
+  invisible(list(out.matrix=out.matrix, W.mat=W.mat, models.list=models.list))
 }
