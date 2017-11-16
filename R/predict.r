@@ -28,13 +28,6 @@
 plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, model.type){
 
   feat         <- t(feat)
-  label.fac                  <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
-
-  data                       <- cbind(feat,label.fac[rownames(feat)])
-  data                       <- as.data.frame(data)
-  data[,ncol(data)]          <- as.factor(data[,ncol(data)])
-  colnames(data)             <- paste0("Sample_",1:ncol(data))
-  colnames(data)[ncol(data)] <- "cancer"
 
   ### subselect training examples as specified in fn.train.sample (if given)
   foldList     <- get.foldList(data.split)
@@ -54,6 +47,13 @@ plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, 
   opt.hp <- list(lambda = NULL, C = NULL, alpha = NULL, ntree = NULL)
 
   for (r in 1:num.runs) {
+    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab)) 
+    test.label        <- label.fac
+    test.label        <- label.fac[fold.exm.idx[[r]]]
+    data              <- as.data.frame(feat[fold.exm.idx[[r]],])
+    stopifnot(nrow(data)         == length(test.label))
+    stopifnot(all(rownames(data) == names(test.label)))
+    data$label                     <- test.label
     model <- models.list[[r]]
     cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     # subselect appropriate model
@@ -61,8 +61,8 @@ plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, 
 
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
-
-    pdata    <- predict(model,  task = model$task, subset = fold.exm.idx[[r]])
+    task      <- makeClassifTask(data = data, target = "label")
+    pdata    <- predict(model,  task = task)
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 
