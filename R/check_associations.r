@@ -32,6 +32,7 @@
 #' @param alpha float, significance level, defaults to \code{0.05}
 #' @param min.fc float, minimum log10 fold change for significantly associated features, defaults to \code{0}
 #' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
+#' @param sort.by string, sort features by p-value (\code{"pv"}) or by fold change (\code{"fc"}), defaults to \code{"pv"}
 #' @param detect.lim float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}
 #' @param max.show integer, how many associated features should be shown, defaults to \code{50}
 #' @param plot.type string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"bean"}
@@ -39,7 +40,7 @@
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
-                               alpha=0.05, min.fc=0, mult.corr="fdr",
+                               alpha=0.05, min.fc=0, mult.corr="fdr", sort.by="pv",
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
 
   sort.by <- 'pv'
@@ -91,28 +92,24 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     stop('No significant associations found. Stopping...\n')
   }
 
-
-
   ### Sort features
-
-  # TODO sort.by not an option of the function
-
-    if (sort.by == 'fc') {
-      idx <- idx[order(fc[idx], decreasing=FALSE)]
-    } else if (sort.by == 'pv') {
-      idx <- idx[order(p.adj[idx], decreasing=TRUE)]
-    } else {
-      cat('Unknown sorting option:', sort.by, 'order by p-value...\n')
-      idx <- idx[order(p.adj[idx], decreasing=TRUE)]
-    }
-    for (i in idx) {
-      cat(sprintf('%-40s', rownames(feat)[i]), 'p-value:', format(p.adj[i], digits=4), '\n')
-    }
-    # truncated the list for the following plots
-    if (length(idx) > max.show) {
-      idx <- idx[(length(idx)-max.show+1):length(idx)]
-      cat('Truncating the list of significant associations to the top', max.show, '\n')
-    }
+  if (sort.by == 'fc') {
+    idx <- idx[order(fc[idx], decreasing=FALSE)]
+  } else if (sort.by == 'pv') {
+    idx <- idx[order(p.adj[idx], decreasing=TRUE)]
+  } else {
+    cat('Unknown sorting option:', sort.by, 'order by p-value...\n')
+    idx <- idx[order(p.adj[idx], decreasing=TRUE)]
+  }
+  # Really needed?
+  # for (i in idx) {
+  #   cat(sprintf('%-40s', rownames(feat)[i]), 'p-value:', format(p.adj[i], digits=4), '\n')
+  # }
+  # # truncated the list for the following plots
+  if (length(idx) > max.show) {
+    idx <- idx[(length(idx)-max.show+1):length(idx)]
+    cat('Truncating the list of significant associations to the top', max.show, '\n')
+  }
 
 
     # compute single-feature AUCs
