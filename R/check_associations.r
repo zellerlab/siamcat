@@ -12,13 +12,19 @@
 ###
 
 #' @title Check and visualize associations between features and classes
-#' @description This function calculates for each feature the median log10 fold change between the different classes found in labels.
+#' @description This function calculates for each feature the median log10 fold
+#' change between the different classes found in labels.
 #'
-#' Significance of the differences is computed for each feature using a wilcoxon test followed by multiple hypothesis testing correction.
+#' Significance of the differences is computed for each feature using a wilcoxon
+#' test followed by multiple hypothesis testing correction.
 #'
-#' Additionally, the Area under the Receiver Operating Characteristic Curve (AU-ROC) is computed for the features found to be associated with the two different classes at a user-specified significance level \code{alpha}.
+#' Additionally, the Area under the Receiver Operating Characteristic Curve
+#' '(AU-ROC) is computed for the features found to be associated with the two
+#' different classes at a user-specified significance level \code{alpha}.
 #'
-#' Finally, the function produces a plot of the top \code{max.show} associated features, showing the distribution of the log10-transformed abundances for both classes, the median fold change, and the AU-ROC.
+#' Finally, the function produces a plot of the top \code{max.show} associated
+#' features, showing the distribution of the log10-transformed abundances for
+#' both classes, the median fold change, and the AU-ROC.
 #' @param feat feature object
 #' @param label label object
 #' @param fn.plot filename for the pdf-plot
@@ -32,7 +38,8 @@
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
-check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alpha=0.05, min.fc=0, mult.corr="fdr",
+check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
+                               alpha=0.05, min.fc=0, mult.corr="fdr",
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
 
   sort.by <- 'pv'
@@ -40,41 +47,56 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
   if (color.scheme == 'matlab') {
     color.scheme <- matlab.like(100)
   } else {
-    # TODO check for valid param!
-    color.scheme <- rev(colorRampPalette(brewer.pal(11, color.scheme))(100))
+    if (!color.scheme %in% row.names(brewer.pal.info)){
+      warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n
+      See brewer.pal.info for more information about RColorBrewer palettes...")
+      color.scheme <- 'RdYlBu'
+    }
+    color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
   }
   col.p <- color.scheme[length(color.scheme)-4]
   col.n <- color.scheme[1+4]
 
   ### Define set of vectors that have the indeces and "description" of all positively and negatively labeled training examples.
-
   p.val <- vector('numeric', nrow(feat))
   fc    <- vector('numeric', nrow(feat))
 
+  ### Calculate wilcoxon and FC for each feature
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
     p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
   }
 
   ### Apply multi-hypothesis testing correction
-  if(!tolower(mult.corr) %in% c('none','bonferroni','holm','fdr','bhy')) stop('Unknown multiple testing correction method:', mult.corr,' Stopping!\n')
+  if(!tolower(mult.corr) %in% c('none','bonferroni','holm','fdr','bhy')) {
+    stop("Unknown multiple testing correction method:', mult.corr,' Stopping!\n
+          Must of one of c('none','bonferroni','holm','fdr','bhy')\n")
+  }
   if (mult.corr == 'none') {
+    warning('No multiple hypothesis testing performed...')
     p.adj <- p.val
   } else {
     p.adj <- p.adjust(p.val, method=tolower(mult.corr))
   }
-
   cat('Found', sum(p.adj < alpha, na.rm=TRUE), 'significant associations at a significance level <', alpha, '\n')
 
   idx <- which(p.adj < alpha)
+
   if (min.fc > 0) {
     idx <- which(p.adj < alpha & abs(fc) > min.fc)
     cat('Found', length(idx), 'significant associations with absolute log10 fold change >', min.fc, '\n')
   }
+  ### Stop if no significant features were found
+  if (length(idx) == 0){
+    stop('No significant associations found. Stopping...\n')
+  }
 
+
+
+  ### Sort features
 
   # TODO sort.by not an option of the function
-  if (length(idx) > 0) {
+
     if (sort.by == 'fc') {
       idx <- idx[order(fc[idx], decreasing=FALSE)]
     } else if (sort.by == 'pv') {
@@ -308,7 +330,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu", alph
     title(main='Feature AUCs', xlab='AU-ROC')
     # close pdf device
     tmp <- dev.off()
-  }
+
 
 }
 
