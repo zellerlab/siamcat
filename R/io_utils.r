@@ -26,6 +26,11 @@ read.features <- function(fn.in.feat){
   if(!file.exists(fn.in.feat)) stop("Feature file ", fn.in.feat, " does not exist!\n")
   feat <- read.table(file = fn.in.feat, sep = '\t', header = TRUE, stringsAsFactors = FALSE, check.names = FALSE, quote = '')
   feat <- as.matrix(feat)
+  featNames <- make.names(rownames(feat))
+  if(any(rownames(feat)==featNames)){
+  	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
+  	rownames(feat) <- featNames
+  }
   invisible(feat)
 }
 
