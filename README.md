@@ -1,7 +1,7 @@
 ### Overview
 
 SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial
-Communities And host phenoTypes. A primary goal of analyzing microbiome data is to 
+Communities And host phenoTypes. A primary goal of analyzing microbiome data is to
 determine changes in community composition that are associated with environmental factors.
 In particular, linking human microbiome composition to host phenotypes such as diseases
 has become an area of intense research. For this, robust statistical modeling and
@@ -39,7 +39,7 @@ All files are in tab-separated column format
 
 
 
-### Galaxy interface: 
+### Galaxy interface:
 
 http://siamcat.embl.de/
 
@@ -66,7 +66,7 @@ Additional info: https://usegalaxy.org/ (in particular the Help menu) and
 #### Getting started
 
 
-Start by uploading your data (see above for input data formats) using the 
+Start by uploading your data (see above for input data formats) using the
 DATA IMPORT / Import Data module / Upload File
 
 Then procede by executing all SIAMCAT modules in order (from A to I).
@@ -88,6 +88,10 @@ install.packages(c("RColorBrewer","beanplot","glmnet","LiblineaR","pROC","optpar
 
 ### Commandline version (bash script calling modules implemented in R)
 https://git.embl.de/grp-zeller/SIAMCAT/tree/master/Rscript_flavor
+
+### License
+
+Distributed under the GNU GPLv3 License. See accompanying file [LICENSE](https://git.embl.de/grp-zeller/SIAMCAT/blob/development/LICENSE) or copy at http://www.gnu.org/licenses/gpl-3.0.html.
 
 ### Support
 
