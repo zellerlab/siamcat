@@ -25,7 +25,7 @@
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-plm.predictor <- function(feat, label, data.split=NULL, models.list, model.mat, model.type){
+make.predictions <- function(feat, label, data.split=NULL, models.list, model.mat, model.type){
 
   feat         <- t(feat)
 
