@@ -5,8 +5,8 @@
 \title{Check and visualize associations between features and classes}
 \usage{
 check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
-  alpha = 0.05, min.fc = 0, mult.corr = "fdr", detect.lim = 10^-8,
-  max.show = 50, plot.type = "bean")
+  alpha = 0.05, min.fc = 0, mult.corr = "fdr", sort.by = "pv",
+  detect.lim = 10^-8, max.show = 50, plot.type = "bean")
 }
 \arguments{
 \item{feat}{feature object}
@@ -23,6 +23,8 @@ check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
 
 \item{mult.corr}{multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}}
 
+\item{sort.by}{string, sort features by p-value (\code{"pv"}) or by fold change (\code{"fc"}), defaults to \code{"pv"}}
+
 \item{detect.lim}{float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}}
 
 \item{max.show}{integer, how many associated features should be shown, defaults to \code{50}}
@@ -33,13 +35,19 @@ check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
 Does not return anything, but produces an association plot
 }
 \description{
-This function calculates for each feature the median log10 fold change between the different classes found in labels.
+This function calculates for each feature the median log10 fold
+change between the different classes found in labels.
 
-Significance of the differences is computed for each feature using a wilcoxon test followed by multiple hypothesis testing correction.
+Significance of the differences is computed for each feature using a wilcoxon
+test followed by multiple hypothesis testing correction.
 
-Additionally, the Area under the Receiver Operating Characteristic Curve (AU-ROC) is computed for the features found to be associated with the two different classes at a user-specified significance level \code{alpha}.
+Additionally, the Area under the Receiver Operating Characteristic Curve
+'(AU-ROC) is computed for the features found to be associated with the two
+different classes at a user-specified significance level \code{alpha}.
 
-Finally, the function produces a plot of the top \code{max.show} associated features, showing the distribution of the log10-transformed abundances for both classes, the median fold change, and the AU-ROC.
+Finally, the function produces a plot of the top \code{max.show} associated
+features, showing the distribution of the log10-transformed abundances for
+both classes, the median fold change, and the AU-ROC.
 }
 \keyword{SIAMCAT}
 \keyword{check.associations}

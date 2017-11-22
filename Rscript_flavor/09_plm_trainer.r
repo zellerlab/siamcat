@@ -81,7 +81,7 @@ set.seed(r.seed)
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
 
-plm.out <- plm.trainer(feat = feat, label = label,  method = opt$method, data.split=opt$train_sets, stratify = TRUE, 
+plm.out <- train.model(feat = feat, label = label,  method = opt$method, data.split=opt$train_sets, stratify = TRUE, 
                        modsel.crit  = opt$sel_criterion,  min.nonzero.coeff = opt$min_nonzero_coeff)
 
 

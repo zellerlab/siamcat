@@ -23,7 +23,7 @@
 #' @keywords SIAMCAT plm.trainer
 #' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-plm.trainer <- function(feat, label,  method = c("lasso", "enet", "ridge", "libLineaR", "randomForest"), 
+train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "libLineaR", "randomForest"), 
                         data.split=NULL, stratify = TRUE, 
                         modsel.crit  = "auc",  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
