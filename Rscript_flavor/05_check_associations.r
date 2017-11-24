@@ -31,18 +31,6 @@ option_list <- list(
 
 # parse arguments
 opt          <- parse_args(OptionParser(option_list=option_list))
-source.dir   <- opt$srcdir
-fn.in.label  <- opt$label_in
-fn.in.feat   <- opt$feat_in
-fn.plot      <- opt$plot
-color.scheme <- opt$col_scheme
-alpha        <- opt$alpha
-min.fc       <- opt$min_fc
-mult.corr    <- opt$mult_test
-detect.lim   <- opt$detect_limit
-max.show     <- opt$max_show
-plot.type    <- opt$plot_type
-
 cat("=== 05_association_check.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('srcdir       =', opt$srcdir, '\n')
