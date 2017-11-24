@@ -64,7 +64,7 @@ start.time <- proc.time()[1]
 
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label, feat)
-check.associations(feat, label, fn.plot, color.scheme, alpha, min.fc, mult.corr, detect.lim, max.show, plot.type)
+check.associations(feat, label, fn.plot, color.scheme, alpha, mult.corr, detect.lim, max.show, plot.type)
 
 
 cat('\nSuccessfully analyzed statistically significant associations between individual features and labels in ', proc.time()[1] - start.time, ' seconds\n', sep='')
