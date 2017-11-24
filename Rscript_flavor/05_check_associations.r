@@ -52,9 +52,13 @@ start.time <- proc.time()[1]
 
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label, feat)
+<<<<<<< HEAD
 check.associations(feat = feat, label = label, fn.plot = opt$plot, color.scheme = opt$col_scheme, alpha = opt$alpha, 
                    min.fc = opt$min_fc, mult.corr = opt$mult_test, detect.lim = opt$detect_limit, max.show = opt$max_show,
                    plot.type = opt$plot_type)
+=======
+check.associations(feat, label, fn.plot, color.scheme, alpha, mult.corr, detect.lim, max.show, plot.type)
+>>>>>>> 3a7a4f2007aaa43d62c94673c1c9e1f05dc225f7
 
 
 cat('\nSuccessfully analyzed statistically significant associations between individual features and labels in ', proc.time()[1] - start.time, ' seconds\n', sep='')

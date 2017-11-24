@@ -36,15 +36,19 @@
 #' pdf(filename.pdf)
 #' interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens_thres)
 #' dev.off()
-interpretor.model.plot <- function(feat, label, meta, model, pred, color.scheme='BrBG', consens.thres=0.5, heatmap.type='zscore', norm.models=FALSE, fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){
+interpretor.model.plot <- function(feat, label, meta, model, pred,
+  color.scheme='BrBG', consens.thres=0.5, heatmap.type='zscore',
+  norm.models=FALSE, fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){
   num.models   <- ncol(model$W)
   ### some color preprocessing
-  if (color.scheme == 'matlab') {
-    color.scheme = matlab.like(100)
-  } else {
-    # TODO check for valid param!
-    color.scheme = rev(colorRampPalette(brewer.pal(11, color.scheme))(100))
+  ### some color pre-processing
+  if (!color.scheme %in% row.names(brewer.pal.info)){
+    warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n
+    See brewer.pal.info for more information about RColorBrewer palettes...")
+    color.scheme <- 'RdYlBu'
   }
+  color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
+  
   col.p = color.scheme[length(color.scheme)-4]
   col.n = color.scheme[1+4]
 
