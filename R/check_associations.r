@@ -30,7 +30,6 @@
 #' @param fn.plot filename for the pdf-plot
 #' @param color.scheme valid R color scheme, defaults to \code{'RdYlBu'}
 #' @param alpha float, significance level, defaults to \code{0.05}
-#' @param min.fc float, minimum log10 fold change for significantly associated features, defaults to \code{0}
 #' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
 #' @param sort.by string, sort features by p-value (\code{"pv"}) or by fold change (\code{"fc"}), defaults to \code{"pv"}
 #' @param detect.lim float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}
@@ -40,21 +39,18 @@
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
-                               alpha=0.05, min.fc=0, mult.corr="fdr", sort.by="pv",
+                               alpha=0.05, mult.corr="fdr", sort.by="pv",
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
 
-  sort.by <- 'pv'
+
   ### some color pre-processing
-  if (color.scheme == 'matlab') {
-    color.scheme <- matlab.like(100)
-  } else {
-    if (!color.scheme %in% row.names(brewer.pal.info)){
-      warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n
-      See brewer.pal.info for more information about RColorBrewer palettes...")
-      color.scheme <- 'RdYlBu'
-    }
-    color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
+  if (!color.scheme %in% row.names(brewer.pal.info)){
+    warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n
+    See brewer.pal.info for more information about RColorBrewer palettes...")
+    color.scheme <- 'RdYlBu'
   }
+  color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
+  
   col.p <- color.scheme[length(color.scheme)-4]
   col.n <- color.scheme[1+4]
 
@@ -83,10 +79,10 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
 
   idx <- which(p.adj < alpha)
 
-  if (min.fc > 0) {
-    idx <- which(p.adj < alpha & abs(fc) > min.fc)
-    cat('Found', length(idx), 'significant associations with absolute log10 fold change >', min.fc, '\n')
-  }
+  # if (min.fc > 0) {
+  #   idx <- which(p.adj < alpha & abs(fc) > min.fc)
+  #   cat('Found', length(idx), 'significant associations with absolute log10 fold change >', min.fc, '\n')
+  # }
   ### Stop if no significant features were found
   if (length(idx) == 0){
     stop('No significant associations found. Stopping...\n')
@@ -112,20 +108,21 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   }
 
 
-    # compute single-feature AUCs
-    cat('\nCalculating the area under the ROC curve for each significantly associated feature\n')
-    aucs <- vector('numeric', nrow(feat))
-    for (i in idx) {
-      f       <- feat[i,]
-      ev      <- eval.classifier(f, label$label, label)
-      aucs[i] <- calc.auroc(ev)
-      if (aucs[i] < 0.5) {
-        aucs[i] <- 1-aucs[i]
-      }
+  ### compute single-feature AUCs
+  cat('\nCalculating the area under the ROC curve for each significantly associated feature\n')
+  aucs <- vector('numeric', nrow(feat))
+  for (i in idx) {
+    f       <- feat[i,]
+    ev      <- eval.classifier(f, label$label, label)
+    aucs[i] <- calc.auroc(ev)
+    if (aucs[i] < 0.5) {
+      aucs[i] <- 1-aucs[i]
     }
-    for (i in idx) {
-      cat(sprintf('%-40s', rownames(feat)[i]), aucs[i], '\n')
-    }
+  }
+
+  # for (i in idx) {
+  #   cat(sprintf('%-40s', rownames(feat)[i]), aucs[i], '\n')
+  # }
 
     ### generate plots with significant associations between features and labels
     pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
