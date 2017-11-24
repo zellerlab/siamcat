@@ -41,7 +41,7 @@
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, min.fc=0, mult.corr="fdr", sort.by="pv",
-                               detect.lim=10^-8, max.show=50, plot.type="bean"){
+                               detect.lim=1e-08, max.show=50, plot.type="bean"){
 
   sort.by <- 'pv'
   ### some color pre-processing
@@ -62,6 +62,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   p.val <- vector('numeric', nrow(feat))
   fc    <- vector('numeric', nrow(feat))
 
+  
   ### Calculate wilcoxon and FC for each feature
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))

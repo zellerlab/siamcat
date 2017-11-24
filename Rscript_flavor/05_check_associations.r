@@ -45,17 +45,17 @@ plot.type    <- opt$plot_type
 
 cat("=== 05_association_check.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir   =', source.dir, '\n')
-cat('fn.in.label  =', fn.in.label, '\n')
-cat('fn.in.feat   =', fn.in.feat, '\n')
-cat('fn.plot      =', fn.plot, '\n')
-cat('color.scheme =', color.scheme, '\n')
-cat('alpha        =', alpha, '\n')
-cat('min.fc       =', min.fc, '\n')
-cat('mult.corr    =', mult.corr, '\n')
-cat('detect.lim   =', detect.lim, '\n')
-cat('max.show     =', max.show, '\n')
-cat('plot.type    =', plot.type, '\n')
+cat('srcdir       =', opt$srcdir, '\n')
+cat('label_in     =', opt$label_in, '\n')
+cat('feat_in      =', opt$feat_in, '\n')
+cat('plot         =', opt$plot, '\n')
+cat('col_scheme   =', opt$col_scheme, '\n')
+cat('alpha        =', opt$alpha, '\n')
+cat('min_fc       =', opt$min_fc, '\n')
+cat('mult_test    =', opt$mult_test, '\n')
+cat('detect_limit =', opt$detect_limit, '\n')
+cat('max_show     =', opt$max_show, '\n')
+cat('plot_type    =', opt$plot_type, '\n')
 cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
@@ -64,7 +64,9 @@ start.time <- proc.time()[1]
 
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label, feat)
-check.associations(feat, label, fn.plot, color.scheme, alpha, min.fc, mult.corr, detect.lim, max.show, plot.type)
+check.associations(feat = feat, label = label, fn.plot = opt$plot, color.scheme = opt$col_scheme, alpha = opt$alpha, 
+                   min.fc = opt$min_fc, mult.corr = opt$mult_test, detect.lim = opt$detect_limit, max.show = opt$max_show,
+                   plot.type = opt$plot_type)
 
 
 cat('\nSuccessfully analyzed statistically significant associations between individual features and labels in ', proc.time()[1] - start.time, ' seconds\n', sep='')
