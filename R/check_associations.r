@@ -109,36 +109,53 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   }
 
   # # truncated the list for the following plots
-  if (length(idx) > max.show) {
+  truncated = FALSE
+  if (length(idx) >= max.show) {
+    truncated = TRUE
     idx <- idx[(length(idx)-max.show+1):length(idx)]
     cat('Truncating the list of significant associations to the top', max.show, '\n')
   }
 
+  ### generate plots with significant associations between features and labels
 
-    ### generate plots with significant associations between features and labels
-    pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
+  # get maximum length of longest label in order to set margin of first panel
+  # needs an active plot to work (?)
 
-    lmat  <- cbind(1,2,3,4)
-    layout(lmat, widths=c(0.6,0.075,0.2,0.2))
+
+  pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
+
+  layout(cbind(2,1,3,4), widths=c(0.6,0.075,0.2,0.2))
+
+  # print p-values in second panel of the plot
+  print.pvals(indices=idx, p.val.all=p.adj)
 
     x <- log10(as.matrix(feat[idx, label$p.idx, drop=FALSE]) + detect.lim)
     y <- log10(as.matrix(feat[idx, label$n.idx, drop=FALSE]) + detect.lim)
 
     ### TODO TODO TODO
     ### Clear up!!!!
+    prepare.margins(row.names(feat)[idx], label$p.lab)
+
+  # TODO
+  # function to prepare plot:
+  #   -margin (dependent on how long the longest label is)
+  #   -plotting area (should be the same for every kind of plot? - not true...)
+  #   -plot labels
+  # function for each kind of plot: plot.bean, plot.box, etc.
+
     # IDEA TODO
     # remove bean plot
     # make general for multi-class stuff already (AUCS, P-value calcuatlions and stuff need also to be adjusted)
     col <- c(paste(col.n, '77', sep=''), paste(col.p, '77', sep=''), 'gray')
+
     if (plot.type == 'box') {
-      par(mar=c(5.1, 25.1, 4.1, 0))
       box.colors <- rep(c(col[1],col[2]),nrow(x))
       plot.data <- data.frame()
       for (i in 1:nrow(x)){
         temp <- as.data.frame(rbind(cbind(x[i,],rep(paste(label$n.lab, rownames(x)[i]), length(x[i,]))), cbind(y[i,], rep(paste(label$p.lab, rownames(x)[i]), length((y[i,]))))))
         temp[,1] <- as.numeric(as.character(temp[,1]))
         plot.data <- rbind(plot.data, temp)
-        if (i == nrow(x)) {
+      }
           plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
                xlim=c(min(plot.data[,1]-0.2), max(plot.data[,1]) + 1), ylim=c(+0.5, length(idx)*2+0.5), type='n')
           boxplot(plot.data[,1] ~ plot.data[,ncol(plot.data)],horizontal=TRUE,
@@ -154,18 +171,16 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
           ### function label.plot.horizontal has been written in utils.r.
           label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
                                 y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 2, inner.diff.x = 0, inner.diff.y = -1)
-        }
-      }
+
+
     }
     else if (plot.type == "quantile.box"){
-      par(mar=c(5.1, 25.1, 4.1, 0))
       plot.data.range(x, y, rownames(feat)[idx], x.col=col[2], y.col=col[1])
       label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
                             y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
     }
 
     else if (plot.type == "quantile.rect"){
-      par(mar=c(5.1, 25.1, 4.1, 0))
       quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
       x.q = apply(x, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
       x.medians = apply(x,1,function (x) median(x))
@@ -223,7 +238,6 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                             y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = -0.3, inner.diff.y = -0.6)
     }
     else if (plot.type == "bean"){
-      par(mar=c(5.1, 25.1, 4.1, 0))
       bean.data <- data.frame()
       for (i in 1:nrow(x)){
         temp      <- as.data.frame(rbind(cbind(x[i, ], rep(paste(label$n.lab, rownames(x)[i]), length(x[i, ]))),
@@ -252,19 +266,13 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     else {
       print("plot type has not been specified properly; continue with quantileplot")
       plot.type <- "quantile.box"
-      par(mar=c(5.1, 25.1, 4.1, 0))
       plot.data.range(x, y, rownames(feat)[idx], x.col=col[2], y.col=col[1])
       label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
                             y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
     }
 
-    ### TODO
-    ### export to external function for printing of P-value
 
-
-
-  truncated = sum(p.adj < alpha, na.rm=TRUE) <= max.show
-  if (truncated) {
+  if (!truncated) {
     title(main='Differentially abundant features',
           xlab='Abundance (log10-scale)')
   } else {
@@ -272,11 +280,9 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
           xlab='Abundance (log10-scale)')
         }
 
-  print.pvals(indices=idx, p.val.all=p.adj)
-
   # convert to binary coloring for each signficantly associated features
   # only for binary classification
-  bcol  <- ifelse(fc[idx] > 0, col[2], col[1])
+  bcol  <- ifelse(fc[idx] > 0, paste0(col.p, '77'), paste0(col.n, '77'))
 
   # plot single-feature Fold changes
   plot.fcs(indices=idx, fc.all=fc, binary.cols=bcol)
@@ -288,6 +294,17 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   dev.off()
   cat('Successfully created association plot...\n')
 
+}
+
+### Prepare margins for the first plots
+#     make left margin as big as the longest label or maximally 20.1 lines
+prepare.margins <- function(species_names, p.label){
+  par(mar=c(5.1, 20.1, 4.1, 3.1))
+  temp = par()$mai
+  max_name = max(ceiling(strwidth(paste0(species_names, ' (', p.label, ')'),
+                      units = 'inches')))
+  temp[2] = min(temp[2], max_name)
+  par(mai=temp)
 }
 
 ### Plot single feature AUCs in single panel
