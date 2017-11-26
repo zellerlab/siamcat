@@ -260,31 +260,19 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
 
     ### TODO
     ### export to external function for printing of P-value
-    p.val.annot <- formatC(p.adj[idx], format='E', digits=2)
-    if (sum(p.adj < alpha, na.rm=TRUE) <= max.show) {
-      title(main='Differentially abundant features', xlab='Abundance (log10-scale)')
-    } else {
-      title(main=paste('Differentially abundant features\ntruncated to the top', max.show),
-            xlab='Abundance (log10-scale)')
-    }
-    par(mar=c(5.1,0,4.1, 0))
-    for (i in 1:length(p.val.annot)) {
-      if (plot.type == 'box'){
-        mtext(p.val.annot[i], 4, line=2, at=(2*i)-0.5, las=1, cex=min(0.7, 1-(length(idx)/100)))
-      }
-      else if (plot.type == "quantile.rect"){
-        mtext(p.val.annot[i], 4, line=2, at=i-0.5, las=1, cex=min(0.7, 1-(length(idx)/100)))
-      }
-      else {
-        mtext(p.val.annot[i], 4, line=2, at=i, las=1, cex=min(0.7, 1-(length(idx)/100)))
-      }
-    }
-    plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
-         type='n', xlim=c(0,10), ylim=c(0,length(p.val.annot)+0.5))
-    title(main='Adj. p-value')
 
 
 
+  truncated = sum(p.adj < alpha, na.rm=TRUE) <= max.show
+  if (truncated) {
+    title(main='Differentially abundant features',
+          xlab='Abundance (log10-scale)')
+  } else {
+    title(main=paste('Differentially abundant features\nshowing top', max.show, 'features'),
+          xlab='Abundance (log10-scale)')
+        }
+
+  print.pvals(indices=idx, p.val.all=p.adj)
 
   # convert to binary coloring for each signficantly associated features
   # only for binary classification
@@ -356,6 +344,24 @@ plot.fcs <- function(indices, fc.all, binary.cols){
   tick.labels <- formatC(10^ticks, format='E', digits=0)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Fold change', xlab='FC (log10-scale)')
+}
+
+### Print p-values of significantly associated features
+print.pvals <- function(indices, p.val.all){
+
+  # format p-values
+  p.val.annot <- formatC(p.val.all[indices], format='E', digits=2)
+  # set margins
+  par(mar=c(5.1, 0, 4.1, 0))
+  # plot background
+  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+       xlim=c(0,1), ylim=c(0.5, length(indices)+0.5), type='n')
+  ticks       <- seq(0.5, 1.0, length.out=6)
+  # print pvals
+  text(x=.5, y=1:length(indices), labels=p.val.annot,
+      cex=min(0.7, 1-(length(indices)/100)))
+  # Title and axis label
+  title(main='Adj. p-value')
 }
 
 ### label.plot.horizontal() takes as input lists of (significantly) differentially abundant bacterial features and plots their names
