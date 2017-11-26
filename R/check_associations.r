@@ -39,35 +39,41 @@
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
+                               effect.size = c("prevalence", "auroc"),
                                alpha=0.05, mult.corr="fdr", sort.by="pv",
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
 
-
+  # TODO
+  # choose colors differently:
+  # either give n_classes colors or color palette
   ### some color pre-processing
   if (!color.scheme %in% row.names(brewer.pal.info)){
-    warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n
-    See brewer.pal.info for more information about RColorBrewer palettes...")
+    warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n  See brewer.pal.info for more information about RColorBrewer palettes...")
     color.scheme <- 'RdYlBu'
   }
   color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
-  
+
   col.p <- color.scheme[length(color.scheme)-4]
   col.n <- color.scheme[1+4]
 
-  ### Define set of vectors that have the indeces and "description" of all positively and negatively labeled training examples.
-  p.val <- vector('numeric', nrow(feat))
-  fc    <- vector('numeric', nrow(feat))
+  ### Define set of vectors that have the indeces and "description"
+  # of all positively and negatively labeled training examples.
+  p.val     <- vector('numeric', nrow(feat))
+  fc        <- vector('numeric', nrow(feat))
+  aucs      <- vector('numeric', nrow(feat))
+  pr.shift  <- vector('numeric', nrow(feat))
 
   ### Calculate wilcoxon and FC for each feature
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
     p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
+    aucs[i]  <- roc(predictor=feat[i,], response=label$label)$auc
+    if (aucs[i] < 0.5){aucs[i] <- 1 - aucs[i]}
   }
 
   ### Apply multi-hypothesis testing correction
   if(!tolower(mult.corr) %in% c('none','bonferroni','holm','fdr','bhy')) {
-    stop("Unknown multiple testing correction method:', mult.corr,' Stopping!\n
-          Must of one of c('none','bonferroni','holm','fdr','bhy')\n")
+    stop("Unknown multiple testing correction method:', mult.corr,' Stopping!\n  Must of one of c('none','bonferroni','holm','fdr','bhy')")
   }
   if (mult.corr == 'none') {
     warning('No multiple hypothesis testing performed...')
@@ -108,18 +114,6 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   }
 
 
-  ### compute single-feature AUCs
-  cat('\nCalculating the area under the ROC curve for each significantly associated feature\n')
-  aucs <- vector('numeric', nrow(feat))
-  for (i in idx) {
-    f       <- feat[i,]
-    ev      <- eval.classifier(f, label$label, label)
-    aucs[i] <- calc.auroc(ev)
-    if (aucs[i] < 0.5) {
-      aucs[i] <- 1-aucs[i]
-    }
-  }
-
   # for (i in idx) {
   #   cat(sprintf('%-40s', rownames(feat)[i]), aucs[i], '\n')
   # }
@@ -133,6 +127,11 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     x <- log10(as.matrix(feat[idx, label$p.idx, drop=FALSE]) + detect.lim)
     y <- log10(as.matrix(feat[idx, label$n.idx, drop=FALSE]) + detect.lim)
 
+    ### TODO TODO TODO
+    ### Clear up!!!!
+    # IDEA TODO
+    # remove bean plot
+    # make general for multi-class stuff already (AUCS, P-value calcuatlions and stuff need also to be adjusted)
     col <- c(paste(col.n, '77', sep=''), paste(col.p, '77', sep=''), 'gray')
     if (plot.type == 'box') {
       par(mar=c(5.1, 25.1, 4.1, 0))
@@ -262,6 +261,8 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                             y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
     }
 
+    ### TODO
+    ### export to external function for printing of P-value
     p.val.annot <- formatC(p.adj[idx], format='E', digits=2)
     if (sum(p.adj < alpha, na.rm=TRUE) <= max.show) {
       title(main='Differentially abundant features', xlab='Abundance (log10-scale)')
@@ -286,6 +287,10 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     title(main='Adj. p-value')
 
     # plot fold changes
+    ### TODO
+    ### export as external function
+    ### convert to prevalence shift first
+    ### add another function for FC
     par(mar=c(5.1, 2.1, 4.1, 2.1))
     bcol  <- ifelse(fc[idx] > 0, col[2], col[1])
     mn    <- floor(min(fc[idx]))
@@ -308,24 +313,42 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     title(main='Fold change', xlab='FC (log10-scale)')
 
     # plot single-feature AUCs
-    par(mar=c(5.1, 1.1, 4.1, 3.1))
-    plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
-         xlim=c(0.5,1), ylim=c(0.5, length(idx)+0.5), type='n')
-    ticks       <- seq(0.5, 1.0, length.out=6)
-    for (v in ticks) {
-      abline(v=v, lty=3, col='lightgrey')
-    }
-    for (b in 1:length(idx)) {
-      i <- idx[b]
-      points(aucs[i], b, pch=18, col=bcol[b])
-      points(aucs[i], b, pch=5, col='black', cex=0.9)
-    }
-    axis(side=1, at=ticks, cex.axis=0.7)
-    title(main='Feature AUCs', xlab='AU-ROC')
+
+    ## TODO
+    ### export to external function
+    ### plot AUCS with 95% Confidence intervals
+    ### first compute cis for significantly associated features (or for all?)
+    ### check meta analysis plotting script for error bar drawing
+    plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
+
     # close pdf device
     tmp <- dev.off()
 
 
+}
+
+plot.aucs <- function(indices, aucs.all, binary.cols){
+
+  # set margins
+  par(mar=c(5.1, 1.1, 4.1, 3.1))
+  # plot background
+  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+       xlim=c(0.5,1), ylim=c(0.5, length(indices)+0.5), type='n')
+  ticks       <- seq(0.5, 1.0, length.out=6)
+  # plot gridlines
+  for (v in ticks) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+  # plot single feature aucs
+  for (b in 1:length(indices)) {
+    i <- indices[b]
+    points(aucs.all[i], b, pch=18, col=binary.cols[b])
+    points(aucs.all[i], b, pch=5, col='black', cex=0.9)
+  }
+
+  # Title and axis label
+  axis(side=1, at=ticks, cex.axis=0.7)
+  title(main='Feature AUCs', xlab='AU-ROC')
 }
 
 ### label.plot.horizontal() takes as input lists of (significantly) differentially abundant bacterial features and plots their names
