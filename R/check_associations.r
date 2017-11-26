@@ -63,6 +63,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   aucs      <- vector('numeric', nrow(feat))
   pr.shift  <- vector('numeric', nrow(feat))
 
+
   ### Calculate wilcoxon and FC for each feature
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
@@ -85,11 +86,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
 
   idx <- which(p.adj < alpha)
 
-  # if (min.fc > 0) {
-  #   idx <- which(p.adj < alpha & abs(fc) > min.fc)
-  #   cat('Found', length(idx), 'significant associations with absolute log10 fold change >', min.fc, '\n')
-  # }
-  ### Stop if no significant features were found
+
   if (length(idx) == 0){
     stop('No significant associations found. Stopping...\n')
   }
@@ -103,20 +100,13 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     cat('Unknown sorting option:', sort.by, 'order by p-value...\n')
     idx <- idx[order(p.adj[idx], decreasing=TRUE)]
   }
-  # Really needed?
-  # for (i in idx) {
-  #   cat(sprintf('%-40s', rownames(feat)[i]), 'p-value:', format(p.adj[i], digits=4), '\n')
-  # }
+
   # # truncated the list for the following plots
   if (length(idx) > max.show) {
     idx <- idx[(length(idx)-max.show+1):length(idx)]
     cat('Truncating the list of significant associations to the top', max.show, '\n')
   }
 
-
-  # for (i in idx) {
-  #   cat(sprintf('%-40s', rownames(feat)[i]), aucs[i], '\n')
-  # }
 
     ### generate plots with significant associations between features and labels
     pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
