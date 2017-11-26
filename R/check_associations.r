@@ -63,14 +63,20 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   aucs      <- vector('list', nrow(feat))
   pr.shift  <- vector('numeric', nrow(feat))
 
+  ### TODO
+  ### remove fold changes in favour of prevalence shift
 
-  ### Calculate wilcoxon and FC for each feature
+
+  ### Calculate wilcoxon, FC, and AUC for each feature
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
     p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
     temp  <- roc(predictor=feat[i,], response=label$label, ci=TRUE)
-    if (temp$auc < 0.5){temp$auc <- 1 - temp$auc}
-    aucs[[i]] = c(temp$ci)
+    if (temp$auc < 0.5){
+      aucs[[i]] = rev(1-c(temp$ci))
+    } else {
+      aucs[[i]] = c(temp$ci)
+    }
   }
 
   ### Apply multi-hypothesis testing correction
@@ -277,47 +283,26 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
          type='n', xlim=c(0,10), ylim=c(0,length(p.val.annot)+0.5))
     title(main='Adj. p-value')
 
-    # plot fold changes
-    ### TODO
-    ### export as external function
-    ### convert to prevalence shift first
-    ### add another function for FC
-    par(mar=c(5.1, 2.1, 4.1, 2.1))
-    bcol  <- ifelse(fc[idx] > 0, col[2], col[1])
-    mn    <- floor(min(fc[idx]))
-    mx    <- ceiling(max(fc[idx]))
-    mx    <- max(abs(mn), abs(mx))
-    if (!is.finite(mx)) {
-      mx    <- 10
-    }
-    mn    <- -mx
-    plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
-         xlim=c(mn, mx), ylim=c(0.2, length(idx)+0.2), type='n')
-    barplot(fc[idx], horiz=TRUE, width=0.6, space=2/3, col=bcol, axes=FALSE, add=TRUE)
 
-    ticks <- mn:mx
-    for (v in ticks) {
-      abline(v=v, lty=3, col='lightgrey')
-    }
-    tick.labels <- formatC(10^ticks, format='E', digits=0)
-    axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-    title(main='Fold change', xlab='FC (log10-scale)')
 
-    # plot single-feature AUCs
 
-    ## TODO
-    ### export to external function
-    ### plot AUCS with 95% Confidence intervals
-    ### first compute cis for significantly associated features (or for all?)
-    ### check meta analysis plotting script for error bar drawing
-    plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
+  # convert to binary coloring for each signficantly associated features
+  # only for binary classification
+  bcol  <- ifelse(fc[idx] > 0, col[2], col[1])
 
-    # close pdf device
-    tmp <- dev.off()
+  # plot single-feature Fold changes
+  plot.fcs(indices=idx, fc.all=fc, binary.cols=bcol)
 
+  # plot single-feature AUCs
+  plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
+
+  # close pdf device
+  dev.off()
+  cat('Successfully created association plot...\n')
 
 }
 
+### Plot single feature AUCs in single panel
 plot.aucs <- function(indices, aucs.all, binary.cols){
 
   # set margins
@@ -341,6 +326,36 @@ plot.aucs <- function(indices, aucs.all, binary.cols){
   # Title and axis label
   axis(side=1, at=ticks, cex.axis=0.7)
   title(main='Feature AUCs', xlab='AU-ROC')
+}
+
+### Plot fold changes in single panel
+plot.fcs <- function(indices, fc.all, binary.cols){
+
+  # margins
+  par(mar=c(5.1, 2.1, 4.1, 2.1))
+
+  # get minimum and maximum fcs
+  mx    <- max(abs(round(range(fc.all[indices], na.rm=TRUE)))) + 1
+  if (!is.finite(mx)) {
+    mx    <- max(abs(round(range(fc.all[indices],
+                            na.rm=TRUE, finite=TRUE)))) + 2
+  }
+  mn    <- -mx
+  # plot background
+  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+       xlim=c(mn, mx), ylim=c(0.2, length(indices)+0.2), type='n')
+  # plot bars
+  barplot(fc.all[indices], horiz=TRUE, width=0.6, space=2/3,
+    col=binary.cols, axes=FALSE, add=TRUE)
+
+  # gridlines and axes labels
+  ticks <- mn:mx
+  for (v in ticks) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+  tick.labels <- formatC(10^ticks, format='E', digits=0)
+  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  title(main='Fold change', xlab='FC (log10-scale)')
 }
 
 ### label.plot.horizontal() takes as input lists of (significantly) differentially abundant bacterial features and plots their names
