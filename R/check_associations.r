@@ -60,7 +60,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   # of all positively and negatively labeled training examples.
   p.val     <- vector('numeric', nrow(feat))
   fc        <- vector('numeric', nrow(feat))
-  aucs      <- vector('numeric', nrow(feat))
+  aucs      <- vector('list', nrow(feat))
   pr.shift  <- vector('numeric', nrow(feat))
 
 
@@ -68,8 +68,9 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
     p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
-    aucs[i]  <- roc(predictor=feat[i,], response=label$label)$auc
-    if (aucs[i] < 0.5){aucs[i] <- 1 - aucs[i]}
+    temp  <- roc(predictor=feat[i,], response=label$label, ci=TRUE)
+    if (temp$auc < 0.5){temp$auc <- 1 - temp$auc}
+    aucs[[i]] = c(temp$ci)
   }
 
   ### Apply multi-hypothesis testing correction
@@ -332,8 +333,9 @@ plot.aucs <- function(indices, aucs.all, binary.cols){
   # plot single feature aucs
   for (b in 1:length(indices)) {
     i <- indices[b]
-    points(aucs.all[i], b, pch=18, col=binary.cols[b])
-    points(aucs.all[i], b, pch=5, col='black', cex=0.9)
+    segments(x0=aucs.all[[i]][1], x1=aucs.all[[i]][3], y0=b, col='lightgrey', lwd=1.5)
+    points(aucs.all[[i]][2], b, pch=18, col=binary.cols[b])
+    points(aucs.all[[i]][2], b, pch=5, col='black', cex=0.9)
   }
 
   # Title and axis label
