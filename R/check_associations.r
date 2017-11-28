@@ -39,35 +39,49 @@
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
+                               effect.size = c("prevalence", "auroc"),
                                alpha=0.05, mult.corr="fdr", sort.by="pv",
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
 
+  # TODO
+  # choose colors differently:
+  # either give n_classes colors or color palette
   ### some color pre-processing
   if (!color.scheme %in% row.names(brewer.pal.info)){
-    warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n
-    See brewer.pal.info for more information about RColorBrewer palettes...")
+    warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n  See brewer.pal.info for more information about RColorBrewer palettes...")
     color.scheme <- 'RdYlBu'
   }
   color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
-  
+
   col.p <- color.scheme[length(color.scheme)-4]
   col.n <- color.scheme[1+4]
 
-  ### Define set of vectors that have the indeces and "description" of all positively and negatively labeled training examples.
-  p.val <- vector('numeric', nrow(feat))
-  fc    <- vector('numeric', nrow(feat))
+  ### Define set of vectors that have the indeces and "description"
+  # of all positively and negatively labeled training examples.
+  p.val     <- vector('numeric', nrow(feat))
+  fc        <- vector('numeric', nrow(feat))
+  aucs      <- vector('list', nrow(feat))
+  pr.shift  <- vector('numeric', nrow(feat))
 
-  
-  ### Calculate wilcoxon and FC for each feature
+  ### TODO
+  ### remove fold changes in favour of prevalence shift
+
+
+  ### Calculate wilcoxon, FC, and AUC for each feature
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
     p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
+    temp  <- roc(predictor=feat[i,], response=label$label, ci=TRUE)
+    if (temp$auc < 0.5){
+      aucs[[i]] = rev(1-c(temp$ci))
+    } else {
+      aucs[[i]] = c(temp$ci)
+    }
   }
 
   ### Apply multi-hypothesis testing correction
   if(!tolower(mult.corr) %in% c('none','bonferroni','holm','fdr','bhy')) {
-    stop("Unknown multiple testing correction method:', mult.corr,' Stopping!\n
-          Must of one of c('none','bonferroni','holm','fdr','bhy')\n")
+    stop("Unknown multiple testing correction method:', mult.corr,' Stopping!\n  Must of one of c('none','bonferroni','holm','fdr','bhy')")
   }
   if (mult.corr == 'none') {
     warning('No multiple hypothesis testing performed...')
@@ -95,45 +109,53 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   }
 
   # # truncated the list for the following plots
-  if (length(idx) > max.show) {
+  truncated = FALSE
+  if (length(idx) >= max.show) {
+    truncated = TRUE
     idx <- idx[(length(idx)-max.show+1):length(idx)]
     cat('Truncating the list of significant associations to the top', max.show, '\n')
   }
 
+  ### generate plots with significant associations between features and labels
 
-  ### compute single-feature AUCs
-  cat('\nCalculating the area under the ROC curve for each significantly associated feature\n')
-  aucs <- vector('numeric', nrow(feat))
-  for (i in idx) {
-    f       <- feat[i,]
-    ev      <- eval.classifier(f, label$label, label)
-    aucs[i] <- calc.auroc(ev)
-    if (aucs[i] < 0.5) {
-      aucs[i] <- 1-aucs[i]
-    }
-  }
+  # get maximum length of longest label in order to set margin of first panel
+  # needs an active plot to work (?)
 
 
+  pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
 
-    ### generate plots with significant associations between features and labels
-    pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
+  layout(cbind(2,1,3,4), widths=c(0.6,0.075,0.2,0.2))
 
-    lmat  <- cbind(1,2,3,4)
-    layout(lmat, widths=c(0.6,0.075,0.2,0.2))
+  # print p-values in second panel of the plot
+  print.pvals(indices=idx, p.val.all=p.adj)
 
     x <- log10(as.matrix(feat[idx, label$p.idx, drop=FALSE]) + detect.lim)
     y <- log10(as.matrix(feat[idx, label$n.idx, drop=FALSE]) + detect.lim)
 
+    ### TODO TODO TODO
+    ### Clear up!!!!
+    prepare.margins(row.names(feat)[idx], label$p.lab)
+
+  # TODO
+  # function to prepare plot:
+  #   -margin (dependent on how long the longest label is)
+  #   -plotting area (should be the same for every kind of plot? - not true...)
+  #   -plot labels
+  # function for each kind of plot: plot.bean, plot.box, etc.
+
+    # IDEA TODO
+    # remove bean plot
+    # make general for multi-class stuff already (AUCS, P-value calcuatlions and stuff need also to be adjusted)
     col <- c(paste(col.n, '77', sep=''), paste(col.p, '77', sep=''), 'gray')
+
     if (plot.type == 'box') {
-      par(mar=c(5.1, 25.1, 4.1, 0))
       box.colors <- rep(c(col[1],col[2]),nrow(x))
       plot.data <- data.frame()
       for (i in 1:nrow(x)){
         temp <- as.data.frame(rbind(cbind(x[i,],rep(paste(label$n.lab, rownames(x)[i]), length(x[i,]))), cbind(y[i,], rep(paste(label$p.lab, rownames(x)[i]), length((y[i,]))))))
         temp[,1] <- as.numeric(as.character(temp[,1]))
         plot.data <- rbind(plot.data, temp)
-        if (i == nrow(x)) {
+      }
           plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
                xlim=c(min(plot.data[,1]-0.2), max(plot.data[,1]) + 1), ylim=c(+0.5, length(idx)*2+0.5), type='n')
           boxplot(plot.data[,1] ~ plot.data[,ncol(plot.data)],horizontal=TRUE,
@@ -149,18 +171,16 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
           ### function label.plot.horizontal has been written in utils.r.
           label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
                                 y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 2, inner.diff.x = 0, inner.diff.y = -1)
-        }
-      }
+
+
     }
     else if (plot.type == "quantile.box"){
-      par(mar=c(5.1, 25.1, 4.1, 0))
       plot.data.range(x, y, rownames(feat)[idx], x.col=col[2], y.col=col[1])
       label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
                             y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
     }
 
     else if (plot.type == "quantile.rect"){
-      par(mar=c(5.1, 25.1, 4.1, 0))
       quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
       x.q = apply(x, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
       x.medians = apply(x,1,function (x) median(x))
@@ -218,7 +238,6 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                             y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = -0.3, inner.diff.y = -0.6)
     }
     else if (plot.type == "bean"){
-      par(mar=c(5.1, 25.1, 4.1, 0))
       bean.data <- data.frame()
       for (i in 1:nrow(x)){
         temp      <- as.data.frame(rbind(cbind(x[i, ], rep(paste(label$n.lab, rownames(x)[i]), length(x[i, ]))),
@@ -247,76 +266,119 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     else {
       print("plot type has not been specified properly; continue with quantileplot")
       plot.type <- "quantile.box"
-      par(mar=c(5.1, 25.1, 4.1, 0))
       plot.data.range(x, y, rownames(feat)[idx], x.col=col[2], y.col=col[1])
       label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
                             y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
     }
 
-    p.val.annot <- formatC(p.adj[idx], format='E', digits=2)
-    if (sum(p.adj < alpha, na.rm=TRUE) <= max.show) {
-      title(main='Differentially abundant features', xlab='Abundance (log10-scale)')
-    } else {
-      title(main=paste('Differentially abundant features\ntruncated to the top', max.show),
-            xlab='Abundance (log10-scale)')
-    }
-    par(mar=c(5.1,0,4.1, 0))
-    for (i in 1:length(p.val.annot)) {
-      if (plot.type == 'box'){
-        mtext(p.val.annot[i], 4, line=2, at=(2*i)-0.5, las=1, cex=min(0.7, 1-(length(idx)/100)))
-      }
-      else if (plot.type == "quantile.rect"){
-        mtext(p.val.annot[i], 4, line=2, at=i-0.5, las=1, cex=min(0.7, 1-(length(idx)/100)))
-      }
-      else {
-        mtext(p.val.annot[i], 4, line=2, at=i, las=1, cex=min(0.7, 1-(length(idx)/100)))
-      }
-    }
-    plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
-         type='n', xlim=c(0,10), ylim=c(0,length(p.val.annot)+0.5))
-    title(main='Adj. p-value')
 
-    # plot fold changes
-    par(mar=c(5.1, 2.1, 4.1, 2.1))
-    bcol  <- ifelse(fc[idx] > 0, col[2], col[1])
-    mn    <- floor(min(fc[idx]))
-    mx    <- ceiling(max(fc[idx]))
-    mx    <- max(abs(mn), abs(mx))
-    if (!is.finite(mx)) {
-      mx    <- 10
-    }
-    mn    <- -mx
-    plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
-         xlim=c(mn, mx), ylim=c(0.2, length(idx)+0.2), type='n')
-    barplot(fc[idx], horiz=TRUE, width=0.6, space=2/3, col=bcol, axes=FALSE, add=TRUE)
+  if (!truncated) {
+    title(main='Differentially abundant features',
+          xlab='Abundance (log10-scale)')
+  } else {
+    title(main=paste('Differentially abundant features\nshowing top', max.show, 'features'),
+          xlab='Abundance (log10-scale)')
+        }
 
-    ticks <- mn:mx
-    for (v in ticks) {
-      abline(v=v, lty=3, col='lightgrey')
-    }
-    tick.labels <- formatC(10^ticks, format='E', digits=0)
-    axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-    title(main='Fold change', xlab='FC (log10-scale)')
+  # convert to binary coloring for each signficantly associated features
+  # only for binary classification
+  bcol  <- ifelse(fc[idx] > 0, paste0(col.p, '77'), paste0(col.n, '77'))
 
-    # plot single-feature AUCs
-    par(mar=c(5.1, 1.1, 4.1, 3.1))
-    plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
-         xlim=c(0.5,1), ylim=c(0.5, length(idx)+0.5), type='n')
-    ticks       <- seq(0.5, 1.0, length.out=6)
-    for (v in ticks) {
-      abline(v=v, lty=3, col='lightgrey')
-    }
-    for (b in 1:length(idx)) {
-      i <- idx[b]
-      points(aucs[i], b, pch=18, col=bcol[b])
-      points(aucs[i], b, pch=5, col='black', cex=0.9)
-    }
-    axis(side=1, at=ticks, cex.axis=0.7)
-    title(main='Feature AUCs', xlab='AU-ROC')
-    # close pdf device
-    tmp <- dev.off()
+  # plot single-feature Fold changes
+  plot.fcs(indices=idx, fc.all=fc, binary.cols=bcol)
 
+  # plot single-feature AUCs
+  plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
 
+  # close pdf device
+  dev.off()
+  cat('Successfully created association plot...\n')
+
+}
+
+### Prepare margins for the first plots
+#     make left margin as big as the longest label or maximally 20.1 lines
+prepare.margins <- function(species_names, p.label){
+  par(mar=c(5.1, 20.1, 4.1, 3.1))
+  temp = par()$mai
+  max_name = max(ceiling(strwidth(paste0(species_names, ' (', p.label, ')'),
+                      units = 'inches')))
+  temp[2] = min(temp[2], max_name)
+  par(mai=temp)
+}
+
+### Plot single feature AUCs in single panel
+plot.aucs <- function(indices, aucs.all, binary.cols){
+
+  # set margins
+  par(mar=c(5.1, 1.1, 4.1, 3.1))
+  # plot background
+  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+       xlim=c(0.5,1), ylim=c(0.5, length(indices)+0.5), type='n')
+  ticks       <- seq(0.5, 1.0, length.out=6)
+  # plot gridlines
+  for (v in ticks) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+  # plot single feature aucs
+  for (b in 1:length(indices)) {
+    i <- indices[b]
+    segments(x0=aucs.all[[i]][1], x1=aucs.all[[i]][3], y0=b, col='lightgrey', lwd=1.5)
+    points(aucs.all[[i]][2], b, pch=18, col=binary.cols[b])
+    points(aucs.all[[i]][2], b, pch=5, col='black', cex=0.9)
+  }
+
+  # Title and axis label
+  axis(side=1, at=ticks, cex.axis=0.7)
+  title(main='Feature AUCs', xlab='AU-ROC')
+}
+
+### Plot fold changes in single panel
+plot.fcs <- function(indices, fc.all, binary.cols){
+
+  # margins
+  par(mar=c(5.1, 2.1, 4.1, 2.1))
+
+  # get minimum and maximum fcs
+  mx    <- max(abs(round(range(fc.all[indices], na.rm=TRUE)))) + 1
+  if (!is.finite(mx)) {
+    mx    <- max(abs(round(range(fc.all[indices],
+                            na.rm=TRUE, finite=TRUE)))) + 2
+  }
+  mn    <- -mx
+  # plot background
+  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+       xlim=c(mn, mx), ylim=c(0.2, length(indices)+0.2), type='n')
+  # plot bars
+  barplot(fc.all[indices], horiz=TRUE, width=0.6, space=2/3,
+    col=binary.cols, axes=FALSE, add=TRUE)
+
+  # gridlines and axes labels
+  ticks <- mn:mx
+  for (v in ticks) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+  tick.labels <- formatC(10^ticks, format='E', digits=0)
+  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  title(main='Fold change', xlab='FC (log10-scale)')
+}
+
+### Print p-values of significantly associated features
+print.pvals <- function(indices, p.val.all){
+
+  # format p-values
+  p.val.annot <- formatC(p.val.all[indices], format='E', digits=2)
+  # set margins
+  par(mar=c(5.1, 0, 4.1, 0))
+  # plot background
+  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+       xlim=c(0,1), ylim=c(0.5, length(indices)+0.5), type='n')
+  ticks       <- seq(0.5, 1.0, length.out=6)
+  # print pvals
+  text(x=.5, y=1:length(indices), labels=p.val.annot,
+      cex=min(0.7, 1-(length(indices)/100)))
+  # Title and axis label
+  title(main='Adj. p-value')
 }
 
 ### label.plot.horizontal() takes as input lists of (significantly) differentially abundant bacterial features and plots their names
