@@ -47,11 +47,11 @@ cat('plot_type    =', opt$plot_type, '\n')
 cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
-source.dir <- appendDirName(source.dir)
+source.dir <- appendDirName(opt$srcdir)
 start.time <- proc.time()[1]
 
-feat  <- read.features(fn.in.feat)
-label <- read.labels(fn.in.label, feat)
+feat  <- read.features(opt$feat_in)
+label <- read.labels(opt$label_in, feat)
 check.associations(feat = feat, label = label, fn.plot = opt$plot, color.scheme = opt$col_scheme, alpha = opt$alpha, 
                    mult.corr = opt$mult_test, detect.lim = opt$detect_limit, max.show = opt$max_show,
                    plot.type = opt$plot_type)
