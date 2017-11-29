@@ -41,6 +41,7 @@ cat('feat_in       =', opt$feat_in, '\n')
 cat('feat_out      =', opt$feat_out, '\n')
 cat('filter_var    =', opt$filter_var, '\n')
 cat('allowed_range =', opt$allowed_range, '\n')
+cat('allowed_set   =', opt$allowed_set, '\n')
 
 source.dir  <- appendDirName(opt$srcdir)
 start.time  <- proc.time()[1]
@@ -55,7 +56,8 @@ stopifnot(all(names(label$label) == rownames(meta)))
 
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
-results     <-  select.samples(meta=meta, feat=feat, label=label$label, filter=opt$filter_var, allowed.range=opt$allowed_range)
+results     <-  select.samples(meta=meta, feat=feat, label=label$label, filter=opt$filter_var, 
+                               allowed.range=opt$allowed_range, allowed.range=opt$allowed_set)
 
 
 
