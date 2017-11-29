@@ -60,9 +60,9 @@ if (ncol(pred) > 1) {
 pred <- as.matrix(pred)
 
 eval.data <-  eval.result(label, pred)
-pdf(fn.plot)
-evaluation.model.plot(label, pred, eval.data, model.type)
-tmp <- dev.off()
+
+evaluation.model.plot(label, pred, eval.data, model.type, fn.plot=fn.plot)
+
 
 # The following code writes calculated auroc and aupr- values into a file for testing.
 if (write.out == TRUE){

@@ -121,8 +121,8 @@ stopifnot(all(names(label$label) == rownames(pred)))
 meta         <- read.meta(fn.meta)
 stopifnot(all(names(label$label) == rownames(meta)))
 
-pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
-interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens.thres)
-tmp <- dev.off()
+
+interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens.thres, fn.plot=fn.plot)
+
 cat('\nSuccessfully interpreted model in ', proc.time()[1] - start.time,
     ' seconds\n', sep='')
