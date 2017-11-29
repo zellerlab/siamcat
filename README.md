@@ -41,7 +41,7 @@ All files are in tab-separated column format
 
 ### Galaxy interface:
 
-http://siamcat.embl.de/
+[SIAMCAT galaxy server](http://congo.embl.de/galaxy/)
 
 #### Galaxy in brief
 

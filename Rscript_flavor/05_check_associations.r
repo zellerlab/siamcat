@@ -24,6 +24,7 @@ option_list <- list(
   make_option('--alpha',           type='double',    default=0.05,     help='Significance level: only features with p-values < alpha will be reported'),
   make_option('--min_fc',          type='double',    default=0,        help='Fold-change cutoff: only features with absolute log-10 fold change > min_fc will be reported'),
   make_option('--mult_test',       type='character', default='fdr',    help='Method to correct for multiple testing (one of \"fdr\", \"holm\", \"bonferroni\", \"BY\", or \"none\")'),
+  make_option('--sort_by',         type='character', default='pval',   help=' (one of \"fdr\", \"holm\", \"bonferroni\", \"BY\", or \"none\")'),
   make_option('--detect_limit',    type='double',    default=10^-8,    help='Lower detection limit for feature values (for log-transform and plots)'),
   make_option('--max_show',        type='integer',   default=50,       help='Maximum number of significant features to be shown in result plots'),
   make_option('--plot_type',       type='character', default='bean',   help = 'One of \"quantile.box\", \"box\", \"bean\", \"quantile.rect\"')
@@ -41,6 +42,7 @@ cat('col_scheme   =', opt$col_scheme, '\n')
 cat('alpha        =', opt$alpha, '\n')
 cat('min_fc       =', opt$min_fc, '\n')
 cat('mult_test    =', opt$mult_test, '\n')
+cat('sort_by      =', opt$sort_by, '\n')
 cat('detect_limit =', opt$detect_limit, '\n')
 cat('max_show     =', opt$max_show, '\n')
 cat('plot_type    =', opt$plot_type, '\n')
@@ -52,8 +54,9 @@ start.time <- proc.time()[1]
 
 feat  <- read.features(opt$feat_in)
 label <- read.labels(opt$label_in, feat)
-check.associations(feat = feat, label = label, fn.plot = opt$plot, color.scheme = opt$col_scheme, alpha = opt$alpha,
-                   mult.corr = opt$mult_test, detect.lim = opt$detect_limit, max.show = opt$max_show,
+
+check.associations(feat = feat, label = label, fn.plot = opt$plot, color.scheme = opt$col_scheme, alpha = opt$alpha, 
+                   mult.corr = opt$mult_test, sort.by=opt$sort_by, detect.lim = opt$detect_limit, max.show = opt$max_show,
                    plot.type = opt$plot_type)
 
 

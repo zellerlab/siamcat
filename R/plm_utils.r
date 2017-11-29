@@ -31,7 +31,7 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR", "randomForest")) {
+train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")) {
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
@@ -42,17 +42,23 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "libLineaR", "r
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
   cl        <- "classif.cvglmnet" ### the most ocommon learner defined her so taht this does not have done multiple times
   paramSet  <- NULL
+  cost      <- c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10)
 
   if(method == "lasso"){
-    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=1)
-  }else if(method == "ridge"){
-    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10, 'alpha'=0)
-  }else if(method == "enet"){
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
+  } else if(method == "ridge"){
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=0)
+  } else if(method == "enet"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
     paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
-  }else if(method == "libLineaR"){
+  } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
-    lrn       <- makeLearner(cl, predict.type="prob")
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-6, type=6)
+    paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
+  } else if(method == "ridge_ll"){
+    cl        <- "classif.LiblineaRL2LogReg"
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-6, type=0)
+        paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "randomForest"){
     sqrt.mdim <- sqrt(nrow(data))
     cl        <- "classif.randomForest"
