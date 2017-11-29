@@ -16,6 +16,7 @@
 #' @param feat a feature object
 #' @param label a label object
 #' @param meta a metadata object
+#' @param fn.plot string, filename for the pdf-plot
 #' @param model matrix containing the feature weights for every CV fold/repetition
 #' @param pred matrix containing the model predictions for every CV repetition
 #' @param color.scheme color scheme for the heatmap, defaults to =\code{"BrBG"}
@@ -36,10 +37,11 @@
 #' pdf(filename.pdf)
 #' interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens_thres)
 #' dev.off()
-interpretor.model.plot <- function(feat, label, meta, model, pred,
+interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   color.scheme='BrBG', consens.thres=0.5, heatmap.type='zscore',
   norm.models=FALSE, fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){
   num.models   <- ncol(model$W)
+
   ### some color preprocessing
   ### some color pre-processing
   if (!color.scheme %in% row.names(brewer.pal.info)){
@@ -48,7 +50,7 @@ interpretor.model.plot <- function(feat, label, meta, model, pred,
     color.scheme <- 'RdYlBu'
   }
   color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
-  
+
   col.p = color.scheme[length(color.scheme)-4]
   col.n = color.scheme[1+4]
 
@@ -120,7 +122,7 @@ interpretor.model.plot <- function(feat, label, meta, model, pred,
   ### header row
 
   # field 1 will be plotted later together with feature heatmap
-
+  pdf(fn.plot, paper='special', height=8.27, width=11.69)
   # field 2: header for feature heatmap
   par(mar=c(0, 4.1, 3.1, 5.1))
   hm.label = label$label[srt.idx]
@@ -309,7 +311,7 @@ interpretor.model.plot <- function(feat, label, meta, model, pred,
        ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
   mtext('Feature Weights', side=3, line=2, at=0.04, cex=1, adj=0.5)
 
-
+  tmp <- dev.off()
 }
 
 # ### xv is vector containing values to draw a barplot, z and y determine upper and lower boundary of barplot, respectively.

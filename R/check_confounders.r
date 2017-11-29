@@ -62,5 +62,5 @@ confounder.check <- function(meta, label, fn.plot){
            paste('MWW test p-value:', format(p.val, digits=4)), pos=2)
     }
   }
-  dev.off()
+  tmp <- dev.off()
 }

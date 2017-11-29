@@ -17,6 +17,7 @@
 #' @param pred matrix containing the model predictions for every CV repetition
 #' @param eval.data list of evaluation results produced by \link{eval.results}
 #' @param model.type type of the model, defaults to \code{"lasso"}
+#' @param fn.plot string, filename for the pdf-plot
 #' @keywords SIAMCAT evaluation.model.plot
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
@@ -24,7 +25,10 @@
 #' pdf(filename.pdf)
 #' evaluation.model.plot(label, pred, eval.data, model.type)
 #' dev.off()
-evaluation.model.plot <- function(label, pred, eval.data, model.type='lasso'){
+evaluation.model.plot <- function(label, pred, eval.data, model.type='lasso', fn.plot){
+
+  pdf(fn.plot, onefile=TRUE)
+
   plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='False positive rate', ylab='True positive rate', type='n')
   title(paste('ROC curve for', model.type, 'model', sep=' '))
   abline(a=0, b=1, lty=3)
@@ -87,4 +91,5 @@ evaluation.model.plot <- function(label, pred, eval.data, model.type='lasso'){
     cat('AU-PRC:', format(aupr, digits=3), '\n')
     text(0.7, 0.1, paste('AUC:', format(aupr, digits=3)))
   }
+  tmp <- dev.off()
 }

@@ -180,7 +180,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
 
   # close pdf device
-  dev.off()
+  tmp <- dev.off()
   cat('Successfully created association plot...\n')
 
 }
