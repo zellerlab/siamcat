@@ -1,4 +1,4 @@
-###
+ ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
 # RScript flavor
 #
@@ -42,22 +42,22 @@ fn.out.feat  <- opt$feat_out
 # print parameters of the run
 cat("=== 01_data_validator.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir   =', source.dir, '\n')
-cat('fn.in.meta   =', fn.in.meta, '\n')
-cat('fn.out.meta  =', fn.out.meta, '\n')
-cat('fn.in.label  =', fn.in.label, '\n')
-cat('fn.out.label =', fn.out.label, '\n')
-cat('fn.in.feat   =', fn.in.feat, '\n')
-cat('fn.out.feat  =', fn.out.feat, '\n')
+cat('srcdir       =', opt$srcdir, '\n')
+cat('metadata_in  =', opt$metadata_in, '\n')
+cat('metadata_out =', opt$metadata_out, '\n')
+cat('label_in     =', opt$label_in, '\n')
+cat('label_out    =', opt$label_out, '\n')
+cat('feat_in      =', opt$feat_in, '\n')
+cat('feat_out     =', opt$feat_out, '\n')
 cat('\n')
 
 source.dir <- appendDirName(source.dir)
 start.time <- proc.time()[1]
 
 # reading in the files
-feat  <- read.features(fn.in.feat)
-label <- read.labels(fn.in.label,feat)
-meta  <- read.meta(fn.in.meta)
+feat  <- read.features(opt$feat_in)
+label <- read.labels(opt$label_in,feat)
+meta  <- read.meta(opt$metadata_in)
 
 
 
@@ -67,10 +67,10 @@ validated.files <- validate.data(feat = feat, label = label, meta = meta )
 
 ### write validated label, feature and meta-data
 # labels
-if (!is.null(fn.out.label)){
-  write.table(label$header,          file = fn.out.label,  quote = FALSE, sep = '\t', row.names = FALSE,
+if (!is.null(opt$label_out)){
+  write.table(label$header,          file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE,
               col.names = FALSE, append = FALSE)
-  write.table(t(as.matrix(validated.files$label$label)), file = fn.out.label,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
+  write.table(t(as.matrix(validated.files$label$label)), file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
               col.names = TRUE, append = TRUE)
 }
 write.table(validated.files$feat,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
