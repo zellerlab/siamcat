@@ -40,7 +40,7 @@ cat('label_out     =', opt$label_out, '\n')
 cat('feat_in       =', opt$feat_in, '\n')
 cat('feat_out      =', opt$feat_out, '\n')
 cat('filter_var    =', opt$filter_var, '\n')
-cat('allowed_range =', opt$allowed_range '\n')
+cat('allowed_range =', opt$allowed_range, '\n')
 
 source.dir  <- appendDirName(opt$srcdir)
 start.time  <- proc.time()[1]
