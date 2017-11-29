@@ -40,7 +40,7 @@
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                                effect.size = c("prevalence", "auroc"),
-                               alpha=0.05, mult.corr="fdr", sort.by="pv",
+                               alpha=0.05, mult.corr="fdr", sort.by=c("fc","pval"),
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
 
   # TODO
@@ -101,7 +101,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   ### Sort features
   if (sort.by == 'fc') {
     idx <- idx[order(fc[idx], decreasing=FALSE)]
-  } else if (sort.by == 'pv') {
+  } else if (sort.by == 'pval') {
     idx <- idx[order(p.adj[idx], decreasing=TRUE)]
   } else {
     cat('Unknown sorting option:', sort.by, 'order by p-value...\n')
