@@ -27,7 +27,7 @@ opt          <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 03_confounder_check.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir   =', source.dir, '\n')
+cat('source.dir   =', opt$srcdir, '\n')
 cat('metadata_in  =', opt$metadata_in, '\n')
 cat('label_in     =', opt$label_in, '\n')
 cat('plot         =', opt$plot, '\n')
