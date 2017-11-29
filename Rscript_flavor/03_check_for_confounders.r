@@ -35,7 +35,7 @@ cat("=== 03_confounder_check.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir   =', source.dir, '\n')
 cat('fn.in.meta   =', fn.in.meta, '\n')
-cat('fn.in.label  =', fn.in.label, '\n') 
+cat('fn.in.label  =', fn.in.label, '\n')
 cat('fn.plot      =', fn.plot, '\n')
 cat('\n')
 
@@ -51,16 +51,11 @@ if(any(names(label$label) != rownames(meta))) stop("Label names do not match met
 m            <- match(names(label$label), rownames(meta))
 meta         <- meta[m,]
 
-pdf(opt$plot)
-
 ### Start core function
 
-confounder.check(meta = meta, label = label)
+confounder.check(meta = meta, label = label, fn.plot=opt$plot)
 
 ### End core function
 
-tmp <- dev.off()
 
 cat('\nSuccessfully analyzed meta-data for potential confounding in ', proc.time()[1] - start.time, ' seconds\n', sep='')
-
-

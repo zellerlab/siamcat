@@ -16,14 +16,13 @@
 #' Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
 #' @param meta metadata object
 #' @param label labels object
+#' @param fn.plot string, filename for the pdf-plot
 #' @keywords SIAMCAT confounder.check
 #' @export
-#' @examples
-#' pdf(filename.pdf)
-#' confounder.check(meta, label)
-#' dev.off()
 #' @return Does not return anything, but produces a single plot for each metadata category
-confounder.check <- function(meta, label){
+confounder.check <- function(meta, label, fn.plot){
+
+  pdf(fn.plot, onefile=TRUE)
   par(xpd=FALSE)
   for (m in 1:ncol(meta)) {
     mname <- gsub('[_.-]', ' ', colnames(meta)[m])
@@ -63,4 +62,5 @@ confounder.check <- function(meta, label){
            paste('MWW test p-value:', format(p.val, digits=4)), pos=2)
     }
   }
+  dev.off()
 }
