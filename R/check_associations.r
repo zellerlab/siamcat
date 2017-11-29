@@ -55,6 +55,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
 
   col.p <- color.scheme[length(color.scheme)-4]
   col.n <- color.scheme[1+4]
+  col <- c(paste(col.n, '77', sep=''), paste(col.p, '77', sep=''), 'gray')
 
   ### Define set of vectors that have the indeces and "description"
   # of all positively and negatively labeled training examples.
@@ -66,7 +67,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   ### TODO
   ### remove fold changes in favour of prevalence shift
 
-
+  ##############################################################################
   ### Calculate wilcoxon, FC, and AUC for each feature
   for (i in 1:nrow(feat)) {
     fc[i]    <- median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
@@ -116,177 +117,65 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     cat('Truncating the list of significant associations to the top', max.show, '\n')
   }
 
+  ##############################################################################
   ### generate plots with significant associations between features and labels
-
-  # get maximum length of longest label in order to set margin of first panel
-  # needs an active plot to work (?)
-
-
   pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
 
   layout(cbind(2,1,3,4), widths=c(0.6,0.075,0.2,0.2))
 
+  ##############################################################################
+  # PANEL 2: P-VALUES
   # print p-values in second panel of the plot
   print.pvals(indices=idx, p.val.all=p.adj)
 
-    x <- log10(as.matrix(feat[idx, label$p.idx, drop=FALSE]) + detect.lim)
-    y <- log10(as.matrix(feat[idx, label$n.idx, drop=FALSE]) + detect.lim)
+  ##############################################################################
+  # PANEL 1: DATA
+  # IDEA TODO
+  # remove bean plot
+  # make general for multi-class stuff already (AUCS, P-value calcuatlions
+  #   and stuff need also to be adjusted)
 
-    ### TODO TODO TODO
-    ### Clear up!!!!
-    prepare.margins(row.names(feat)[idx], label$p.lab)
+  # prepare margins
+  prepare.margins(row.names(feat)[idx], label$p.lab)
 
-  # TODO
-  # function to prepare plot:
-  #   -margin (dependent on how long the longest label is)
-  #   -plotting area (should be the same for every kind of plot? - not true...)
-  #   -plot labels
-  # function for each kind of plot: plot.bean, plot.box, etc.
+  # get data
+  data.n <- log10(as.matrix(feat[idx, label$n.idx, drop=FALSE]) + detect.lim)
+  data.p <- log10(as.matrix(feat[idx, label$p.idx, drop=FALSE]) + detect.lim)
 
-    # IDEA TODO
-    # remove bean plot
-    # make general for multi-class stuff already (AUCS, P-value calcuatlions and stuff need also to be adjusted)
-    col <- c(paste(col.n, '77', sep=''), paste(col.p, '77', sep=''), 'gray')
+  if (!plot.type %in% c("bean", "box", "quantile.box", "quantile.rect")){
+    warning("plot type has not been specified properly; continue with quantile.box")
+    plot.type <- "quantile.box"
+  }
+  if (plot.type == "bean"){
+    plot.bean(data.n, data.p, label, indices=idx, col=col)
+  } else if (plot.type == "box"){
+    plot.box(data.n, data.p, label, indices=idx, col=col)
+  } else if (plot.type == "quantile.box"){
+    plot.quantile.box(data.p, data.n, label, indices=idx, col=col)
+  } else if (plot.type == "quantile.rect"){
+    plot.quantile.rect(data.p, data.n, label, indices=idx, col=col)
+  }
 
-    if (plot.type == 'box') {
-      box.colors <- rep(c(col[1],col[2]),nrow(x))
-      plot.data <- data.frame()
-      for (i in 1:nrow(x)){
-        temp <- as.data.frame(rbind(cbind(x[i,],rep(paste(label$n.lab, rownames(x)[i]), length(x[i,]))), cbind(y[i,], rep(paste(label$p.lab, rownames(x)[i]), length((y[i,]))))))
-        temp[,1] <- as.numeric(as.character(temp[,1]))
-        plot.data <- rbind(plot.data, temp)
-      }
-          plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
-               xlim=c(min(plot.data[,1]-0.2), max(plot.data[,1]) + 1), ylim=c(+0.5, length(idx)*2+0.5), type='n')
-          boxplot(plot.data[,1] ~ plot.data[,ncol(plot.data)],horizontal=TRUE,
-                  names = c(""), show.names = FALSE, col = box.colors, axes = FALSE, outcol = c(col[1], col[2]), add = TRUE)
-          mn          <- as.integer(c(min(plot.data[,1])))
-          mx          <- as.integer(c(max(plot.data[,1])))
-          ticks       <- mn:mx
-          for (v in ticks) {
-            abline(v=v, lty=3, col='lightgrey')
-          }
-          tick.labels <- formatC(10^ticks, format='E', digits=0)
-          axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-          ### function label.plot.horizontal has been written in utils.r.
-          label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
-                                y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 2, inner.diff.x = 0, inner.diff.y = -1)
-
-
-    }
-    else if (plot.type == "quantile.box"){
-      plot.data.range(x, y, rownames(feat)[idx], x.col=col[2], y.col=col[1])
-      label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
-                            y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
-    }
-
-    else if (plot.type == "quantile.rect"){
-      quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
-      x.q = apply(x, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
-      x.medians = apply(x,1,function (x) median(x))
-      y.q = apply(y, 1, function (y) quantile(y, quantiles.vector, na.rm=TRUE, names=FALSE))
-      y.medians = apply(y,1,function (y) median(y))
-
-      p.m = min(c(min(x, na.rm=TRUE), min(y, na.rm=TRUE)))
-      plot(rep(p.m, dim(x)[1]), 1:dim(x)[1],
-           xlab='', ylab='', yaxs='i', axes=FALSE,
-           xlim=c(min(x,y), max(x,y+2)), ylim=c(0, dim(x)[1]), frame.plot=FALSE, type='n')
-      for (v in seq(p.m,0,1)) {
-        abline(v=v, lty=3, col='lightgrey')
-      }
-
-      tck = floor(p.m):0
-      axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
-      for (i in 1:(nrow(x.q)/2)){
-        if (i == 1) {
-          rect(x.q[i,], 0.5:dim(x)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(x)[1])+0.3, col = c("white"), border = c("black"), lwd = 0.9)
-          rect(y.q[i,], 0.5:dim(y)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(y)[1])-0.3, col = c("white"), border = c("black"), lwd = 0.9)
-
-        }
-        else {
-          rect(x.q[i,], 0.5:dim(x)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(x)[1])+0.3, col = col[2], border = c("black"), lwd = 0.9)
-          rect(y.q[i,], 0.5:dim(y)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(y)[1])-0.3, col = col[1], border = c("black"), lwd = 0.9)
-        }
-      }
-      points(x.medians, y=(0.5:dim(x)[1])+0.15, pch=18, cex = min(35/nrow(x),4))
-      points(y.medians, y=(0.5:dim(y)[1])-0.15, pch=18, cex = min(35/nrow(x),4))
-      mtext('Quantiles', 3, line=0, at=1, adj = 1.675, padj = 0.45, las=1, cex=0.7)
-      ### create.tints.rgb is in utils.r
-      red.tints  <- create.tints.rgb(col2rgb(col[2])/255, nr.tints=5, tint.steps = 1/5)
-      blue.tints <- create.tints.rgb(col2rgb(col[1])/255, nr.tints=5, tint.steps = 1/5)
-      legend(-1.75, nrow(x), legend = c("80%","60%","40%","20%","median","","","","",""),
-             bty='n', cex=1, fill=c(
-               rgb(matrix(red.tints[,5], ncol = 3)),
-               rgb(matrix(red.tints[,3], ncol = 3)),
-               rgb(matrix(red.tints[,2], ncol = 3)),
-               rgb(matrix(red.tints[,1], ncol = 3)),
-               0,
-               rgb(matrix(blue.tints[,5], ncol = 3)),
-               rgb(matrix(blue.tints[,3], ncol = 3)),
-               rgb(matrix(blue.tints[,2], ncol = 3)),
-               rgb(matrix(blue.tints[,1], ncol = 3)),
-               0),
-             lty    <- c(0,0,0,0,0,0,0,0,0,0),
-             lwd    <- c(1.3,1.3,1.3,1.3,2,1.3,1.3,1.3,1.3,1.3), ncol = 2,
-             border <- c("black", "black","black","black","white","black","black","black","black","white"))
-      legend(-1.675, nrow(x), legend = c("","","","",""),
-             bty='n', lty = c(0,0,0,0,0),
-             # cap legend size for diamond (should look symmetric to other symbols)
-             pch = 18, cex = 1, pt.cex = c(0,0,0,0, min(35/nrow(x), 2.25)))
-
-      label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
-                            y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = -0.3, inner.diff.y = -0.6)
-    }
-    else if (plot.type == "bean"){
-      bean.data <- data.frame()
-      for (i in 1:nrow(x)){
-        temp      <- as.data.frame(rbind(cbind(x[i, ], rep(paste(label$n.lab, rownames(x)[i]), length(x[i, ]))),
-                                    cbind(y[i, ], rep(paste(label$p.lab, rownames(x)[i]), length((y[i, ]))))))
-        temp[,1]  <- as.numeric(as.character(temp[,1]))
-        bean.data <- rbind(bean.data, temp)
-        if (i == nrow(x)){
-          plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
-               xlim = c(as.integer(min(x))-1.5,as.integer(max(x))+1), ylim=c(0.45, length(idx)+0.6), type='n')
-          beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)], side = "both", bw="nrd0", col = list(col[1],
-                                                                                                       col[2]), horizontal = TRUE, names = c(""), show.names = FALSE, beanlines = "median", maxstripline = 0.2, what = c(FALSE,TRUE,TRUE,FALSE),
-                   axes = FALSE, add = TRUE )
-          mn    <- as.integer(c(min(bean.data[,1])-1.5))
-          mx    <- as.integer(c(max(bean.data[,1])+1))
-          ticks <- mn:mx
-          for (v in ticks) {
-            abline(v=v, lty=3, col='lightgrey')
-          }
-          tick.labels <- formatC(10^ticks, format='E', digits=0)
-          axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-          label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
-                                y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
-        }
-      }
-    }
-    else {
-      print("plot type has not been specified properly; continue with quantileplot")
-      plot.type <- "quantile.box"
-      plot.data.range(x, y, rownames(feat)[idx], x.col=col[2], y.col=col[1])
-      label.plot.horizontal(x, y, rownames(feat)[idx], x.suff=paste(' (', label$p.lab, ')', sep=''),
-                            y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
-    }
-
-
+  # plot title
   if (!truncated) {
     title(main='Differentially abundant features',
           xlab='Abundance (log10-scale)')
   } else {
     title(main=paste('Differentially abundant features\nshowing top', max.show, 'features'),
           xlab='Abundance (log10-scale)')
-        }
+  }
+
+  ##############################################################################
+  # PANEL 3: FOLD CHANGES
+  # plot single-feature Fold changes
 
   # convert to binary coloring for each signficantly associated features
   # only for binary classification
   bcol  <- ifelse(fc[idx] > 0, paste0(col.p, '77'), paste0(col.n, '77'))
-
-  # plot single-feature Fold changes
   plot.fcs(indices=idx, fc.all=fc, binary.cols=bcol)
 
+  ##############################################################################
+  # PANEL 4: AU-ROCs
   # plot single-feature AUCs
   plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
 
@@ -294,6 +183,211 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   dev.off()
   cat('Successfully created association plot...\n')
 
+}
+
+### one function for each type of plot
+# bean plot
+plot.bean <- function(data1, data2, label, indices, col){
+  # create data.frame in format for beanplot
+  bean.data <- data.frame()
+  for (i in 1:nrow(data2)){
+    temp      <- as.data.frame(rbind(cbind(data1[i, ], rep(paste(label$p.lab, rownames(data1)[i]), length(data1[i, ]))),
+                                     cbind(data2[i, ], rep(paste(label$n.lab, rownames(data2)[i]), length((data2[i, ]))))))
+    temp[,1]  <- as.numeric(as.character(temp[,1]))
+    bean.data <- rbind(bean.data, temp)
+  }
+
+  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+      xlim = c(as.integer(min(data2))-1.5,as.integer(max(data2))+1),
+      ylim=c(0.45, length(indices)+0.6), type='n')
+
+  beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
+            side = "both", bw="nrd0", col = list(col[1], col[2]),
+            horizontal = TRUE, names = c(""), show.names = FALSE,
+            beanlines = "median", maxstripline = 0.2,
+            what = c(FALSE,TRUE,TRUE,FALSE), axes = FALSE, add = TRUE )
+  mn    <- as.integer(c(min(bean.data[,1])-1.5))
+  mx    <- as.integer(c(max(bean.data[,1])+1))
+  ticks <- mn:mx
+  for (v in ticks) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+  tick.labels <- formatC(10^ticks, format='E', digits=0)
+  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  label.plot.horizontal(data1, data2, rownames(data2),
+      x.suff=paste(' (', label$p.lab, ')', sep=''),
+      y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1,
+      inner.diff.x = 0.15, inner.diff.y = -0.15)
+}
+
+# box plot
+plot.box <- function(data1, data2, label, indices, col){
+
+  box.colors <- rep(c(col[1],col[2]),nrow(data1))
+
+  plot.data <- data.frame()
+  for (i in 1:nrow(data1)){
+    temp <- as.data.frame(rbind(cbind(data2[i,],rep(paste(label$n.lab, rownames(data2)[i]), length(data2[i,]))),
+                          cbind(data1[i,], rep(paste(label$p.lab, rownames(data1)[i]), length((data1[i,]))))))
+    temp[,1] <- as.numeric(as.character(temp[,1]))
+    plot.data <- rbind(plot.data, temp)
+  }
+
+  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+       xlim=c(min(plot.data[,1]-0.2), max(plot.data[,1]) + 1),
+       ylim=c(+0.5, length(indices)*2+0.5), type='n')
+
+  boxplot(plot.data[,1] ~ plot.data[,ncol(plot.data)],
+          horizontal=TRUE, names = c(""), show.names = FALSE,
+          col = box.colors, axes = FALSE,
+          outcol = c(col[1], col[2]), add = TRUE)
+
+  mn          <- as.integer(c(min(plot.data[,1])))
+  mx          <- as.integer(c(max(plot.data[,1])))
+  ticks       <- mn:mx
+  for (v in ticks) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+  tick.labels <- formatC(10^ticks, format='E', digits=0)
+  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  ### function label.plot.horizontal has been written in utils.r.
+  label.plot.horizontal(data1, data2, rownames(data1),
+      x.suff=paste(' (', label$p.lab, ')', sep=''),
+      y.suff=paste(' (', label$n.lab, ')', sep=''),
+      outer.diff = 2, inner.diff.x = 0, inner.diff.y = -1)
+}
+
+# quantile.box plot
+plot.quantile.box <- function(data1, data2, label, indices, col){
+  x.col <- col[2]
+  y.col <- col[1]
+
+  p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
+  plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
+       xlab='', ylab='', yaxs='i', axes=FALSE,
+       xlim=c(p.m, 0), ylim=c(0.5, dim(data1)[1]+0.5), frame.plot=FALSE, type='n')
+  for (v in seq(p.m,-1,1)) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+
+  tck = floor(p.m):0
+  axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
+
+  x.q = apply(data1, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+      na.rm=TRUE, names=FALSE))
+  y.q = apply(data2, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+  na.rm=TRUE, names=FALSE))
+
+  # inter-quartile range
+  rect(x.q[2,], 1:dim(data1)[1], x.q[4,], (1:dim(data1)[1])+0.3, col=x.col)
+  rect(y.q[2,], (1:dim(data2)[1])-0.3, y.q[4,], 1:dim(data2)[1], col=y.col)
+
+  # 90% interval
+  segments(x.q[1,], 1:dim(data1)[1], x.q[5,], 1:dim(data1)[1])#, col=x.col)
+  segments(y.q[1,], 1:dim(data1)[1], y.q[5,], 1:dim(data1)[1])#, col=x.col)
+  segments(x.q[1,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
+  segments(y.q[1,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
+  segments(x.q[5,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
+  segments(y.q[5,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
+
+  # median
+  segments(x.q[3,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.3, lwd=3)#, col=x.col)
+  segments(y.q[3,], y0=(1:dim(data1)[1])-0.3, y1=1:dim(data1)[1], lwd=3)#, col=y.col)
+
+  # scatter plot on top
+  for (i in 1:dim(data1)[1]) {
+    if (nchar(x.col) > 7) {
+    # adjust alpha channel by reducing transparency
+      a = substr(x.col,nchar(x.col)-1, nchar(x.col))
+      a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
+      x.col = gsub('..$', toupper(as.hexmode(round(a*255))), x.col)
+    }
+    if (nchar(y.col) > 7) {
+    # adjust alpha channel by reducing transparency
+      a = substr(y.col,nchar(y.col)-1, nchar(y.col))
+      a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
+      y.col = gsub('..$', toupper(as.hexmode(round(a*255))), y.col)
+    }
+
+    points(data1[i,], rep(i+0.15, ncol(data1))+rnorm(ncol(data1),sd=0.03), pch=16, cex=0.6, col=x.col)
+    points(data2[i,], rep(i-0.15, ncol(data2))+rnorm(ncol(data2),sd=0.03), pch=16, cex=0.6, col=y.col)
+  }
+
+  label.plot.horizontal(data1, data2, rownames(data1),
+      x.suff=paste(' (', label$p.lab, ')', sep=''),
+      y.suff=paste(' (', label$n.lab, ')', sep=''),
+      outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
+}
+
+# quantile.rect plot
+### not working at the moment!!!!!
+plot.quantile.rect <- function(data1, data2, label, indices, col){
+
+  quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
+
+  x.q = apply(data1, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
+  x.medians = apply(data1, 1, function (x) median(x))
+
+  y.q = apply(data2, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
+  y.medians = apply(data2, 1, function (x) median(x))
+
+  p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
+
+  plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
+      xlab='', ylab='', yaxs='i', axes=FALSE,
+      xlim=c(min(data1,data2), max(data1,data2+2)),
+      ylim=c(0, dim(data1)[1]), frame.plot=FALSE, type='n')
+  for (v in seq(p.m,0,1)) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+
+  tck = floor(p.m):0
+  axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
+
+  for (i in 1:(nrow(x.q)/2)){
+    if (i == 1) {
+      rect(x.q[i,], 0.5:dim(data1)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(data1)[1])+0.3, col = c("white"), border = c("black"), lwd = 0.9)
+      rect(y.q[i,], 0.5:dim(data2)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(data2)[1])-0.3, col = c("white"), border = c("black"), lwd = 0.9)
+    } else {
+      rect(x.q[i,], 0.5:dim(data1)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(data1)[1])+0.3, col = col[2], border = c("black"), lwd = 0.9)
+      rect(y.q[i,], 0.5:dim(data2)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(data2)[1])-0.3, col = col[1], border = c("black"), lwd = 0.9)
+    }
+  }
+
+  points(x.medians, y=(0.5:dim(data1)[1])+0.15, pch=18, cex = min(35/nrow(data1),4))
+  points(y.medians, y=(0.5:dim(data2)[1])-0.15, pch=18, cex = min(35/nrow(data2),4))
+
+  mtext('Quantiles', 3, line=0, at=1, adj = 1.675, padj = 0.45, las=1, cex=0.7)
+
+
+  ### create.tints.rgb is in utils.r
+  red.tints  <- create.tints.rgb(col2rgb(col[2])/255, nr.tints=5, tint.steps = 1/5)
+  blue.tints <- create.tints.rgb(col2rgb(col[1])/255, nr.tints=5, tint.steps = 1/5)
+  print(red.tints)
+  legend(-1.75, nrow(data1), legend = c("80%","60%","40%","20%","median","","","","",""), bty='n', cex=1,
+  fill=c(
+             rgb(matrix(red.tints[,5], ncol = 3)),
+             rgb(matrix(red.tints[,3], ncol = 3)),
+             rgb(matrix(red.tints[,2], ncol = 3)),
+             rgb(matrix(red.tints[,1], ncol = 3)),
+             0,
+             rgb(matrix(blue.tints[,5], ncol = 3)),
+             rgb(matrix(blue.tints[,3], ncol = 3)),
+             rgb(matrix(blue.tints[,2], ncol = 3)),
+             rgb(matrix(blue.tints[,1], ncol = 3)),
+             0),
+           lty    <- c(0,0,0,0,0,0,0,0,0,0),
+           lwd    <- c(1.3,1.3,1.3,1.3,2,1.3,1.3,1.3,1.3,1.3), ncol = 2,
+           border <- c("black", "black","black","black","white","black","black","black","black","white"))
+  #   legend(-1.675, nrow(x), legend = c("","","","",""),
+  #          bty='n', lty = c(0,0,0,0,0),
+  #          # cap legend size for diamond (should look symmetric to other symbols)
+  #          pch = 18, cex = 1, pt.cex = c(0,0,0,0, min(35/nrow(x), 2.25)))
+  #
+  label.plot.horizontal(data1, data2, rownames(data1),
+      x.suff=paste(' (', label$p.lab, ')', sep=''),
+      y.suff=paste(' (', label$n.lab, ')', sep=''),
+      outer.diff = 1, inner.diff.x = -0.3, inner.diff.y = -0.6)
 }
 
 ### Prepare margins for the first plots
@@ -410,79 +504,4 @@ create.tints.rgb <- function(color.rgb, nr.tints, tint.steps = 1/nr.tints) {
     tints[3,i] = color.rgb[3] + (1 - color.rgb[3]) * (tint.steps*i)
   }
   return (tints)
-}
-
-### TODO docu!
-# # # #' @export
-plot.data.range <- function(x, y=NULL, x.col='black', y.col='black', labels=NULL, x.suff=NULL, y.suff=NULL) {
-  if (is.null(y)) {
-    p.m = min(x, na.rm=TRUE)
-  } else {
-    stopifnot(dim(x)[1] == dim(y)[1])
-    p.m = min(c(min(x, na.rm=TRUE), min(y, na.rm=TRUE)))
-  }
-  plot(rep(p.m, dim(x)[1]), 1:dim(x)[1],
-       xlab='', ylab='', yaxs='i', axes=FALSE,
-       xlim=c(p.m, 0), ylim=c(0.5, dim(x)[1]+0.5), frame.plot=FALSE, type='n')
-  for (v in seq(p.m,-1,1)) {
-    abline(v=v, lty=3, col='lightgrey')
-  }
-
-  tck = floor(p.m):0
-  axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
-
-  x.q = apply(x, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE, names=FALSE))
-  if (is.null(y)) {
-    # inter-quartile range
-    rect(x.q[2,], (1:dim(x)[1])-0.2, x.q[4,], (1:dim(x)[1])+0.2)
-    # 90% interval
-    segments(x.q[1,], 1:dim(x)[1], x.q[2,], 1:dim(x)[1])
-    segments(x.q[4,], 1:dim(x)[1], x.q[5,], 1:dim(x)[1])
-    segments(x.q[1,], y0=(1:dim(x)[1])-0.15, y1=(1:dim(x)[1])+0.15)
-    segments(x.q[5,], y0=(1:dim(x)[1])-0.15, y1=(1:dim(x)[1])+0.15)
-    # median
-    segments(x.q[3,], y0=(1:dim(x)[1])-0.2, y1=(1:dim(x)[1])+0.2, lwd=2)
-    # scatter plot on top
-    for (i in 1:dim(x)[1]) {
-      if (nchar(x.col) > 7) {
-        # adjust alpha channel by reducing transparency
-        a = substr(x.col,nchar(x.col)-1, nchar(x.col))
-        a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
-        x.col = gsub('..$', toupper(as.hexmode(round(a*255))), x.col)
-      }
-      points(x[i,], rep(i, dim(x)[2])+rnorm(ncol(x),sd=0.05), pch=16, cex=0.6, col=x.col)
-    }
-  } else {
-    y.q = apply(y, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE, names=FALSE))
-    # inter-quartile range
-    rect(x.q[2,], 1:dim(x)[1], x.q[4,], (1:dim(x)[1])+0.3, col=x.col)
-    rect(y.q[2,], (1:dim(y)[1])-0.3, y.q[4,], 1:dim(y)[1], col=y.col)
-    # 90% interval
-    segments(x.q[1,], 1:dim(x)[1], x.q[5,], 1:dim(x)[1])#, col=x.col)
-    segments(y.q[1,], 1:dim(x)[1], y.q[5,], 1:dim(x)[1])#, col=x.col)
-    segments(x.q[1,], y0=1:dim(x)[1], y1=(1:dim(x)[1])+0.2)
-    segments(y.q[1,], y0=(1:dim(x)[1])-0.2, y1=1:dim(x)[1])
-    segments(x.q[5,], y0=1:dim(x)[1], y1=(1:dim(x)[1])+0.2)
-    segments(y.q[5,], y0=(1:dim(x)[1])-0.2, y1=1:dim(x)[1])
-    # median
-    segments(x.q[3,], y0=1:dim(x)[1], y1=(1:dim(x)[1])+0.3, lwd=3)#, col=x.col)
-    segments(y.q[3,], y0=(1:dim(x)[1])-0.3, y1=1:dim(x)[1], lwd=3)#, col=y.col)
-    # scatter plot on top
-    for (i in 1:dim(x)[1]) {
-      if (nchar(x.col) > 7) {
-        # adjust alpha channel by reducing transparency
-        a = substr(x.col,nchar(x.col)-1, nchar(x.col))
-        a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
-        x.col = gsub('..$', toupper(as.hexmode(round(a*255))), x.col)
-      }
-      if (nchar(y.col) > 7) {
-        # adjust alpha channel by reducing transparency
-        a = substr(y.col,nchar(y.col)-1, nchar(y.col))
-        a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
-        y.col = gsub('..$', toupper(as.hexmode(round(a*255))), y.col)
-      }
-      points(x[i,], rep(i+0.15, ncol(x))+rnorm(ncol(x),sd=0.03), pch=16, cex=0.6, col=x.col)
-      points(y[i,], rep(i-0.15, ncol(y))+rnorm(ncol(y),sd=0.03), pch=16, cex=0.6, col=y.col)
-    }
-  }
 }
