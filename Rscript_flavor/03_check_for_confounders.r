@@ -24,37 +24,29 @@ option_list    <- list(
 
 # parse arguments
 opt          <- parse_args(OptionParser(option_list=option_list))
-
-source.dir   <- opt$srcdir
-fn.in.meta   <- opt$metadata_in
-fn.in.label  <- opt$label_in
-fn.plot      <- opt$plot
-
 # print parameters of the run
 cat("=== 03_confounder_check.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('source.dir   =', source.dir, '\n')
-cat('fn.in.meta   =', fn.in.meta, '\n')
-cat('fn.in.label  =', fn.in.label, '\n')
-cat('fn.plot      =', fn.plot, '\n')
+cat('metadata_in  =', opt$metadata_in, '\n')
+cat('label_in     =', opt$label_in, '\n')
+cat('plot         =', opt$plot, '\n')
 cat('\n')
 
-source.dir   <- appendDirName(source.dir)
+source.dir   <- appendDirName(opt$srcdir)
 start.time   <- proc.time()[1]
 
 
 ### read label and meta- data
-label        <- read.labels(fn.in.label)
-meta         <- read.meta(fn.in.meta)
+label        <- read.labels(opt$label_in)
+meta         <- read.meta(opt$metadata_in)
 if(any(names(label$label) != rownames(meta))) stop("Label names do not match metadata names! Stopping.\n")
 
 m            <- match(names(label$label), rownames(meta))
 meta         <- meta[m,]
 
 ### Start core function
-
 confounder.check(meta = meta, label = label, fn.plot=opt$plot)
-
 ### End core function
 
 
