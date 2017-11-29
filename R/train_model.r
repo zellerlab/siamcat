@@ -23,7 +23,7 @@
 #' @keywords SIAMCAT plm.trainer
 #' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "libLineaR", "randomForest"), 
+train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), 
                         data.split=NULL, stratify = TRUE, 
                         modsel.crit  = "auc",  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
@@ -69,6 +69,8 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
     model             <- train.plm(data=data, method = method)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
+    }else{
+      stop("OOOPS!!\n")
     }
     stopifnot(all(names(model$W) == rownames(W.mat)))
     W.mat[,r]          <- as.numeric(c(model$feat.weights))
@@ -95,13 +97,13 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
       rownames(out.matrix) <- c("lambda", "a0", rownames(beta))
       # In the case of glmnet, make the coefficient matrix from a sparse matrix into a regular one.
       #models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$learner.model$glmnet.fit$beta)
-    } else if(method == "libLineaR"){
+    } else if(method == "lasso_ll" || method == "ridge_ll"){
             # Liblinear needs C, W (intercept term is included in W).
       # Furthermore, it needs an element called "ClassNames" which is important in determining which class label is positive or negative.
-      vec <- rep(NA, length(models.list[[i]]$original.model$W) + 3)
+      vec <- rep(NA, length(models.list[[i]]$learner.model$W) + 3)
       vec[1] <- 0
-      vec[2:3] <- as.numeric(models.list[[i]]$original.model$ClassNames)
-      vec[4:length(vec)] <- as.numeric(models.list[[i]]$original.model$W)
+      vec[2:3] <- as.numeric(models.list[[i]]$learner.model$ClassNames)
+      vec[4:length(vec)] <- as.numeric(models.list[[i]]$learner.model$W)
       if (i == 1) {
         out.matrix <- matrix(vec)
       } else {
@@ -110,7 +112,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "libL
       # This overwrites rownames everytime, but doesnt need an additional conditional statement.
       # paste0 pastes two equal-length string vectors element-wise
       # Note that the weight-vector is a row-vector here.
-      rownames(out.matrix) <- c("C", "negative label", "positive label", colnames(models.list[[i]]$original.model$W))
+      rownames(out.matrix) <- c("C", "negative label", "positive label", colnames(models.list[[i]]$learner.model$W))
 
     }else if(method == "randomForest"){
       vec <- rep(NA, length(models.list[[i]]$learner.model$importance) + 3)
