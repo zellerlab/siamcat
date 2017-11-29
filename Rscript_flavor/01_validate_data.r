@@ -31,14 +31,6 @@ option_list <- list(
 # parse arguments
 opt          <- parse_args(OptionParser(option_list=option_list))
 
-source.dir   <- opt$srcdir
-fn.in.meta   <- opt$metadata_in
-fn.out.meta  <- opt$metadata_out
-fn.in.label  <- opt$label_in
-fn.out.label <- opt$label_out
-fn.in.feat   <- opt$feat_in
-fn.out.feat  <- opt$feat_out
-
 # print parameters of the run
 cat("=== 01_data_validator.r\n")
 cat("=== Paramaters of the run:\n\n")
@@ -76,7 +68,7 @@ if (!is.null(opt$label_out)){
 write.table(validated.files$feat,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
             col.names = TRUE)
 if (!is.null(meta) && !is.null(opt$metadata_out)) {
-  write.table(validated.files$meta,  file=opt$metadata_out, quote = FALSE, sep = '\t', row.names = TRUE,
+write.table(validated.files$meta,  file=opt$metadata_out, quote = FALSE, sep = '\t', row.names = TRUE,
               col.names = NA)
 }
 

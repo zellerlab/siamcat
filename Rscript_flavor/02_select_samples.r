@@ -29,57 +29,44 @@ option_list <- list(
 )
 # parse arguments
 opt           <- parse_args(OptionParser(option_list=option_list))
-
-source.dir    <- opt$srcdir
-fn.in.meta    <- opt$metadata_in
-fn.out.meta   <- opt$metadata_out
-fn.in.label   <- opt$label_in
-fn.out.label  <- opt$label_out
-fn.in.feat    <- opt$feat_in
-fn.out.feat   <- opt$feat_out
-filter        <- opt$filter_var
-allowed.range <- opt$allowed_range
-
-
 # print parameters of the run
 cat("=== 02_sample_selector.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir   =', source.dir, '\n')
-cat('fn.in.meta   =', fn.in.meta, '\n')
-cat('fn.out.meta  =', fn.out.meta, '\n')
-cat('fn.in.label  =', fn.in.label, '\n')
-cat('fn.out.label =', fn.out.label, '\n')
-cat('fn.in.feat   =', fn.in.feat, '\n')
-cat('fn.out.feat  =', fn.out.feat, '\n')
-cat('filter       =', filter, '\n')
+cat('srcdir        =', opt$srcdir, '\n')
+cat('metadata_in   =', opt$metadata_in, '\n')
+cat('metadata_out  =', opt$metadata_out, '\n')
+cat('label_in      =', opt$label_in, '\n')
+cat('label_out     =', opt$label_out, '\n')
+cat('feat_in       =', opt$feat_in, '\n')
+cat('feat_out      =', opt$feat_out, '\n')
+cat('filter_var    =', opt$filter_var, '\n')
+cat('allowed_range =', opt$allowed_range '\n')
 
-source.dir  <- appendDirName(source.dir)
+source.dir  <- appendDirName(opt$srcdir)
 start.time  <- proc.time()[1]
 
 
 ### read label, feature and meta- data
-# features
-# reading in the files
-feat  <- read.features(fn.in.feat)
-label <- read.labels(fn.in.label, feat)
-meta  <- read.meta(fn.in.meta)
+feat  <- read.features(opt$feat_in)
+label <- read.labels(opt$label_in, feat)
+meta  <- read.meta(opt$metadata_in)
 stopifnot(all(names(label$label) == rownames(meta)))
 
 
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
-results     <-  select.samples(meta=meta, feat=feat, label=label$label, filter=filter, allowed.range=allowed.range)
+results     <-  select.samples(meta=meta, feat=feat, label=label$label, filter=opt$filter_var, allowed.range=opt$allowed_range)
 
 
 
 ### write label, feature and meta-data with selected sample set
 # labels
-write(label$header,        file=fn.out.label, append=FALSE)
-write.table(t(as.matrix(results$label)), file=fn.out.label, quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
+write(label$header,        file=opt$label_out, append=FALSE)
+write.table(t(as.matrix(results$label)), file=opt$label_out, quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
 # features
-write.table(results$feat,  file=fn.out.feat, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(results$feat,  file=opt$feat_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 # meta-data
-write.table(results$meta,  file=fn.out.meta, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(results$meta,  file=opt$metadata_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 
 
 cat('\nSuccessfully selected samples in ', proc.time()[1] - start.time, ' seconds\n', sep='')
