@@ -33,10 +33,6 @@
 #'  \item a boxplot displaying the poportion of weight per model that is actually shown
 #' for the features that are incorporated into more than \code{consens.thres} % of the models.
 #'}
-#' @examples
-#' pdf(filename.pdf)
-#' interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens_thres)
-#' dev.off()
 interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   color.scheme='BrBG', consens.thres=0.5, heatmap.type='zscore',
   norm.models=FALSE, fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){

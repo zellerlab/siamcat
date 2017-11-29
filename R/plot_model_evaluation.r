@@ -21,10 +21,6 @@
 #' @keywords SIAMCAT evaluation.model.plot
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
-#' @examples
-#' pdf(filename.pdf)
-#' evaluation.model.plot(label, pred, eval.data, model.type)
-#' dev.off()
 evaluation.model.plot <- function(label, pred, eval.data, model.type='lasso', fn.plot){
 
   pdf(fn.plot, onefile=TRUE)
