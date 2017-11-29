@@ -43,7 +43,7 @@ cat('feat_in      =', opt$feat_in, '\n')
 cat('feat_out     =', opt$feat_out, '\n')
 cat('\n')
 
-source.dir <- appendDirName(source.dir)
+source.dir <- appendDirName(opt$srcdir)
 start.time <- proc.time()[1]
 
 # reading in the files
