@@ -57,7 +57,7 @@ stopifnot(all(names(label$label) == rownames(meta)))
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
 results     <-  select.samples(meta=meta, feat=feat, label=label$label, filter=opt$filter_var, 
-                               allowed.range=opt$allowed_range, allowed.range=opt$allowed_set)
+                               allowed.range=opt$allowed_range, allowed.set=opt$allowed_set)
 
 
 
