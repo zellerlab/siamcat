@@ -76,7 +76,7 @@ model$W      <- read.table(file=opt$model, sep='\t', header=TRUE, row.names=1, s
 stopifnot(nrow(model$W) == nrow(feat))
 # parse model header
 
-pred         <- read.table(file=opt$pred, sep='\t', header=FALSE, row.names=1, check.names=FALSE, quote='')
+pred         <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred         <- as.matrix(pred)
 
 ### make sure that label and prediction are in the same order
