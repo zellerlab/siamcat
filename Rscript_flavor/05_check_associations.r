@@ -7,7 +7,7 @@
 # EMBL Heidelberg 2012-2017
 #
 # version 0.2.0
-# file last updated: 13.06.2017
+# file last updated: 14.06.2017
 # GNU GPL 3.0
 ###
 
@@ -55,8 +55,14 @@ start.time <- proc.time()[1]
 feat  <- read.features(opt$feat_in)
 label <- read.labels(opt$label_in, feat)
 
-check.associations(feat = feat, label = label, fn.plot = opt$plot, color.scheme = opt$col_scheme, alpha = opt$alpha, 
-                   mult.corr = opt$mult_test, sort.by=opt$sort_by, detect.lim = opt$detect_limit, max.show = opt$max_show,
+check.associations(feat = feat, label = label,
+                   fn.plot = opt$plot,
+                   color.scheme = opt$col_scheme,
+                   alpha = opt$alpha,
+                   mult.corr = opt$mult_test,
+                   sort.by=opt$sort_by,
+                   detect.lim = opt$detect_limit,
+                   max.show = opt$max_show,
                    plot.type = opt$plot_type)
 
 

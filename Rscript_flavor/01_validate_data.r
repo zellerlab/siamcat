@@ -54,7 +54,9 @@ meta  <- read.meta(opt$metadata_in)
 
 
 ### Start Core function
-validated.files <- validate.data(feat = feat, label = label, meta = meta )
+validated.files <- validate.data(feat = feat, 
+                                 label = label, 
+                                 meta = meta )
 ### End Core function
 
 ### write validated label, feature and meta-data

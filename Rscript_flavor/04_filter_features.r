@@ -27,36 +27,30 @@ option_list = list(
 
 # parse arguments
 opt         <-  parse_args(OptionParser(option_list=option_list))
-
-fn.in.feat    <- opt$feat_in
-fn.out.feat   <- opt$feat_out
-method        <- opt$method
-cutoff        <- opt$cutoff
-recomp.prop   <- opt$recomp_prop
-rm.unmapped   <- opt$rm_unmapped
-
 # print parameters of the run
 cat("=== 04_generic_filter.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('opt$feat_in     =', fn.in.feat, '\n')
-cat('opt$feat_out    =', fn.out.feat, '\n')
-cat('opt$method      =', method, '\n')
-cat('opt$cutoff      =', cutoff, '\n')
-cat('opt$recomp_prop =', recomp.prop, '\n')
-cat('opt$rm_unmapped =', rm.unmapped, '\n')
+cat('feat_in     =', opt$feat_in, '\n')
+cat('feat_out    =', opt$feat_out, '\n')
+cat('method      =', opt$method, '\n')
+cat('cutoff      =', opt$cutoff, '\n')
+cat('recomp_prop =', opt$recomp_prop, '\n')
+cat('rm_unmapped =', opt$rm_unmapped, '\n')
 cat('\n')
 
-start.time  <- proc.time()[1]
-
+start.time    <- proc.time()[1]
 #### read feature data and preprocess
-feat        <- read.features(fn.in.feat)
+feat          <- read.features(opt$feat_in)
 
 ### Start core function
-filtered.data <- filter.feat(feat = feat, filter.method = method, cutoff = cutoff, recomp.prop = recomp.prop,
-                   rm.unmapped = rm.unmapped)
+filtered.data <- filter.feat(feat = feat, 
+	                         filter.method = opt$method, 
+	                         cutoff = opt$cutoff, 
+	                         recomp.prop = opt$recomp_prop,
+                             rm.unmapped = opt$rm_unmapped)
 ### End core function
 
 # write filtered feature table
-write.table(filtered.data, file=fn.out.feat, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(filtered.data, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 cat('\nSuccessfully filtered feature data in ', proc.time()[1] - start.time, ' seconds\n', sep='')
