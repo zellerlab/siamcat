@@ -3,11 +3,11 @@
 # RScript flavor
 #
 # written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
+# with additions by Jakob Wirbel, Nicolai Karcher and Konrad Zych
 # EMBL Heidelberg 2012-2017
 #
 # version 0.2.0
-# file last updated: 12.06.2017
+# file last updated: 30.11.2017
 # GNU GPL 3.0
 ###
 
