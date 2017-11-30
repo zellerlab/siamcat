@@ -16,100 +16,68 @@ suppressMessages(library('optparse'))
 suppressMessages(library('SIAMCAT'))
 
 # define arguments
-
-# parameters that cannot be specified in the interface
-# consens.thres = 0.5 # Exposed
-norm.models <- FALSE
-# TODO determine these automatically
-z.score.lim <- c(-3,3)
-fc.lim      <- c(-5,5)
-detect.lim  <- 10^-8
-
-# define arguments
 option_list  <-  list(
-  make_option(c('-s', '--srcdir'), type='character', help='Source directory of this and other utility scripts'),
-  make_option('--label', type='character', help='Input file containing labels'),
-  make_option('--feat', type='character', help='Input file containing features'),
-  make_option('--origin_feat', type='character', help='Input file containing unnormalized/filtered features'),
-  make_option('--meta', type='character', default='NULL', help='Input file containing metadata'),
-  make_option('--model', type='character', help='Input file containing the trained classification model(s)'),
-  make_option('--pred', type='character', help='Input file containing the trained classification model(s)'),
-  #make_option('--plot', type='character', help='Output file for plotting'),
-  make_option('--col_scheme', type='character', default='RdYlBu', help='Color scheme'),
-  make_option('--heatmap_type', type='character', default='zscore', help='which metric should be used to plot feature changes in heatmap? (zscore|fc)'),
-  make_option('--consens_thres', type='double', default=0.5, help='specifies the minimal ratio of models incorporating a feature to include it into heatmap'),
-  make_option('--plot', type='character', help='Output file for plotting')
+  make_option(c('-s', '--srcdir'), type='character',                   help='Source directory of this and other utility scripts'),
+  make_option('--label',           type='character',                   help='Input file containing labels'),
+  make_option('--feat',            type='character',                   help='Input file containing features'),
+  make_option('--origin_feat',     type='character',                   help='Input file containing unnormalized/filtered features'),
+  make_option('--meta',            type='character', default=NULL,   help='Input file containing metadata'),
+  make_option('--model',           type='character',                   help='Input file containing the trained classification model(s)'),
+  make_option('--pred',            type='character',                   help='Input file containing the trained classification model(s)'),
+  make_option('--col_scheme',      type='character', default='RdYlBu', help='Color scheme'),
+  make_option('--heatmap_type',    type='character', default='zscore', help='which metric should be used to plot feature changes in heatmap? 
+                                                                             (zscore|fc)'),
+  make_option('--consens_thres',   type='double',    default=0.5,      help='specifies the minimal ratio of models incorporating a feature 
+                                                                             to include it into heatmap'),
+  make_option('--plot',            type='character',                   help='Output file for plotting')
 )
 
 
 # parse arguments
 opt            <- parse_args(OptionParser(option_list=option_list))
-source.dir     <- opt$srcdir
-fn.label       <- opt$label
-fn.feat        <- opt$feat
-fn.origin.feat <- opt$origin_feat
-fn.meta        <- opt$meta
-fn.model       <- opt$model
-fn.pred        <- opt$pred
-fn.plot        <- opt$plot
-color.scheme   <- opt$col_scheme
-heatmap.type   <- opt$heatmap_type
-consens.thres  <- opt$consens_thres
-
 cat("=== 12_model_interpretor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir     =', source.dir, '\n')
-cat('fn.feat        =', fn.feat, '\n')
-cat('fn.origin.feat =', fn.origin.feat, '\n')
-cat('fn.label       =', fn.label, '\n')
-cat('fn.model       =', fn.model, '\n')
-cat('fn.pred        =', fn.pred, '\n')
-cat('fn.meta        =', fn.meta, '\n')
-cat('fn.plot        =', fn.plot, '\n')
-cat('color.scheme   =', color.scheme, '\n')
-cat('consens.thres  =', consens.thres, '\n')
+cat('srcdir     =', opt$srcdir, '\n')
+cat('feat        =', opt$feat, '\n')
+cat('origin_feat =', opt$origin_feat, '\n')
+cat('label       =', opt$label, '\n')
+cat('model       =', opt$model, '\n')
+cat('pred        =', opt$pred, '\n')
+cat('plot        =', opt$plot, '\n')
+cat('plot        =', opt$plot, '\n')
+cat('col_scheme   =', opt$col_scheme, '\n')
+cat('consens_thres  =', opt$consens_thres, '\n')
 cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
-source.dir <- appendDirName(source.dir)
+source.dir <- appendDirName(opt$srcdir)
 # TODO (remove last check)
 # optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
-if (toupper(fn.meta)=='NULL' || toupper(fn.meta)=='NONE' || toupper(fn.meta)=='UNKNOWN' || fn.meta=='NULL.tsv') {
-  fn.meta = NULL
-  cat('fn.meta not given: no metadata to display\n')
-}
-start.time <- proc.time()[1]
+
 
 ### read features and labels
-# features
-feat        <- read.features(fn.feat)
-origin.feat <- read.features(fn.origin.feat)
-label       <- read.labels(fn.label,feat)
+start.time <- proc.time()[1]
+feat        <- read.features(opt$feat)
+label       <- read.labels(opt$label,feat)
+origin.feat <- read.features(opt$origin_feat)
+if (is.null(opt$meta)) {
+  cat('meta not given: no metadata to display\n')
+} else {
+  meta         <- read.meta(opt$meta)
+  stopifnot(all(names(label$label) == rownames(meta)))
+}
+
 
 
 
 ### load trained model(s)
 model        <- NULL
-model$W      <- read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
+model$W      <- read.table(file=opt$model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
 stopifnot(nrow(model$W) == nrow(feat))
 # parse model header
-con          <- file(fn.model, 'r')
-model.header <- readLines(con, 1)
-close(con)
-model.header <- parse.model.header(model.header)
-# TODO compare label and model headers
-#cat(label.header, '\n')
-#cat(model.header$label.header, '\n')
-#stopifnot(substr(label.header,2,length(label.header)) == model.header$label.header)
 
-### load predictions
-# TODO compare prediction and label headers
-pred         <- read.table(file=fn.pred, sep='\t', header=FALSE, row.names=1, check.names=FALSE, quote='')
-if (dim(pred)[2] > 1) {
-  pred           <- read.table(file=fn.pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, quote='')
-}
+pred         <- read.table(file=opt$pred, sep='\t', header=FALSE, row.names=1, check.names=FALSE, quote='')
 pred         <- as.matrix(pred)
-#cat(dim(pred), '\n')
 
 ### make sure that label and prediction are in the same order
 stopifnot(all(names(label$label) %in% rownames(pred)) && all(rownames(pred) %in% names(label$label)))
@@ -117,12 +85,16 @@ m            <- match(names(label$label), rownames(pred))
 pred         <- pred[m,,drop=FALSE]
 stopifnot(all(names(label$label) == rownames(pred)))
 
-### load metadata if provided
-meta         <- read.meta(fn.meta)
-stopifnot(all(names(label$label) == rownames(meta)))
 
 
-interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens.thres, fn.plot=fn.plot)
+interpretor.model.plot(feat=feat,
+                       label=label,
+                       meta=meta,
+                       model=model,
+                       pred=pred, 
+                       color.scheme=opt$col_scheme,
+                       consens.thres=opt$consens_thres,
+                       fn.plot=opt$plot)
 
 cat('\nSuccessfully interpreted model in ', proc.time()[1] - start.time,
     ' seconds\n', sep='')
