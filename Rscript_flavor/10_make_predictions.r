@@ -38,8 +38,6 @@ cat('opt$label_in       =', opt$label_in,     '\n')
 cat('opt$test_sets      =', opt$test_sets,    '\n')
 cat('opt$pred           =', opt$pred,           '\n')
 cat('opt$model_matrix   =', opt$model_matrix,      '\n')
-cat('hyperpars          =', hyperpars,         '\n')
-cat('model.type         =', model.type,        '\n')
 cat('\n')
 
 source.dir <- appendDirName(opt$srcdir)
