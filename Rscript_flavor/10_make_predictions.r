@@ -20,7 +20,7 @@ suppressMessages(library('methods'))
   option_list = list(
     make_option(c('-s', '--srcdir'), type='character',                     help='Source directory of this and other utility scripts'),
     make_option('--feat_in',         type='character',                     help='Input file containing features'),
-    make_option('--fn.mlr_models_list',           type='character',                     help='Input RData file containing the trained models'),
+    make_option('--mlr_models_list', type='character',                     help='Input RData file containing the trained models'),
     make_option('--label_in',        type='character', default='NULL',     help='Input file containing labels'),
     make_option('--test_sets',       type='character', default='NULL',     help='Input file specifying which examples to use for testing'),
     make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written'),
