@@ -18,14 +18,13 @@
 #' @param data.split filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset
 #' @param model model object trained by \link{plm.trainer}
 #' @param model.mat model matrix needed to rebuild the model
-#' @param model.type string, type of the model that was trained
 #' @export
 #' @keywords SIAMCAT plm.predictor
 #' @return list containing the precitions \itemize{
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-make.predictions <- function(feat, label, data.split=NULL, models.list, model.mat, model.type){
+make.predictions <- function(feat, label, data.split=NULL, models.list, model.mat){
 
   feat         <- t(feat)
 
@@ -35,7 +34,6 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, model.ma
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
   num.folds    <- foldList$num.folds
-  cat('\nPreparing to make predictions with', num.runs,   model.type, ' model(s)...\n')
 
   ### apply one LASSO model per test sample (i.e. CV fold)
   # predictions are made on a concatenation of test examples from all test samples

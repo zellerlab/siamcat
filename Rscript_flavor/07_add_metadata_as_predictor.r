@@ -43,7 +43,10 @@ meta        <- read.meta( opt$metadata_in)
 stopifnot(all(colnames(feat) == rownames(meta)))
 
 pred.names <- strsplit(opt$pred_names, ',', fixed=TRUE)[[1]]
-feat       <- add.meta.pred(feat, meta, pred.names, opt$std_meta)
+feat       <- add.meta.pred(feat=feat, 
+	                        meta=meta,
+	                        pred.names=pred.names,
+	                        std.meta=opt$std_meta)
 
 ### write combined feature table
 write.table(feat, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)

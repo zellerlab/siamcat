@@ -24,86 +24,61 @@ suppressMessages(library('methods'))
     make_option('--label_in',        type='character', default='NULL',     help='Input file containing labels'),
     make_option('--test_sets',       type='character', default='NULL',     help='Input file specifying which examples to use for testing'),
     make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written'),
-    make_option('--model_matrix',    type='character',                     help='Input file containing information to rebuild models'),
-    make_option('--model_type',      type='character', default='lasso',    help='Which plm was trained?'),
-    make_option('--hyperpars',       type='character',                     help='Input file containing the hyper-parameters'))
+    make_option('--model_matrix',    type='character',                     help='Input file containing information to rebuild models'))
 
 # parse arguments
 opt            <- parse_args(OptionParser(option_list=option_list))
-source.dir     <- opt$srcdir
-fn.test.feat   <- opt$feat_in
-fn.mlr_models_list  <- opt$fn.mlr_models_list
-fn.test.label  <- opt$label_in
-fn.test.sample <- opt$test_sets
-fn.pred        <- opt$pred
-model.matrix   <- opt$model_matrix
-hyperpars      <- opt$hyperpars
-model.type     <- opt$model_type
-
 # print parameters of the run
 cat("=== 10_plm_predictor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir         =', source.dir,        '\n')
-cat('fn.test.feat       =', fn.test.feat,      '\n')
-cat('fn.mlr_models_list =', fn.mlr_models_list,'\n')
-cat('fn.test.label      =', fn.test.label,     '\n')
-cat('fn.test.sample     =', fn.test.sample,    '\n')
-cat('fn.pred            =', fn.pred,           '\n')
-cat('model.matrix       =', model.matrix,      '\n')
+cat('srcdir         =', opt$srcdir,        '\n')
+cat('feat_in       =', opt$feat_in,      '\n')
+cat('fn.mlr_models_list =', opt$fn.mlr_models_list,'\n')
+cat('opt$label_in      =', opt$label_in,     '\n')
+cat('opt$test_sets     =', opt$test_sets,    '\n')
+cat('opt$pred            =', opt$pred,           '\n')
+cat('opt$model_matrix       =', opt$model_matrix,      '\n')
 cat('hyperpars          =', hyperpars,         '\n')
 cat('model.type         =', model.type,        '\n')
 cat('\n')
 
-source.dir <- appendDirName(source.dir)
+source.dir <- appendDirName(opt$srcdir)
 # optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
-if (is.null(fn.test.sample) || toupper(fn.test.sample)=='NULL' || toupper(fn.test.sample)=='NONE' || toupper(fn.test.sample)=='UNKNOWN') {
-  fn.test.sample = NULL
+if (is.null(opt$test_sets)) {
+  opt$test_sets = NULL
   cat('fn.test.sample not specified: applying model(s) on whole data set\n')
 }
 
-feat  <- read.features(fn.test.feat)
+feat  <- read.features(opt$feat_in)
 
-if (is.null(fn.test.label) || toupper(fn.test.label)=='NULL' || toupper(fn.test.label)=='NONE' || toupper(fn.test.label)=='UNKNOWN') {
-  fn.test.label = NULL
+if (is.null(opt$label_in)) {
   cat('fn.test.label not specified: skipping evaluation\n')
 }else{
-
-  label        <- read.labels(fn.test.label, feat)
+  label      <- read.labels(opt$label_in, feat)
 }
 
-# LASSO model (coefficients)
-#model = NULL
-#model$W = read.table(file=fn.model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
-#num.runs = ncol(model$W)
-#stopifnot(nrow(model$W) == nrow(feat))
+model.mat <- read.table(file=opt$model_matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
 
-# Read in model matrix
-model.mat <- read.table(file=model.matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
 
-#model$W = model$W[1:dim(model$W)[1]-1,]
-# parse model header
-#con = file(fn.model, 'r')
-#model$header <- readLines(con, 1)
-#close(con)
-#model$header <- parse.model.header(model$header)
 start.time   <- proc.time()[1]
-load(fn.mlr_models_list)
+load(opt$fn.mlr_models_list)
 num.runs = length(models.list)
+pred <- make.predictions(feat=feat,
+                         label=label,
+                         data.split=opt$test_sets,
+                         models.list=opt$fn.mlr_models_list,
+                         model.mat=model.mat)
 
-### read test data and the trained model(s)
-# features
-pred <- make.predictions(feat, label, data.split=fn.test.sample, models.list, model.mat, model.type)
 
-### save prediction
 ### save prediction
 pred.header <- paste('#Predictions for ', label$positive.label, ':', label$p.lab,
   ' [', label$header, ']', sep='')
-write(pred.header, file=fn.pred, append=FALSE)
+write(pred.header, file=opt$pred, append=FALSE)
 #print(pred$pred)
 if (length(unique(names(pred$pred))) < length(pred$pred)) {
-  suppressWarnings(write.table(pred$mat, file=fn.pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
+  suppressWarnings(write.table(pred$mat, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 } else {
-  write.table(pred$pred, file=fn.pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=FALSE, append=TRUE)
+  write.table(pred$pred, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=FALSE, append=TRUE)
 }
 cat('\nSaved all predictions\n')
 

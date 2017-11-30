@@ -3,11 +3,11 @@
 # RScript flavor
 #
 # written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
+# with additions by Jakob Wirbel, Nicolai Karcher and Konrad Zych
 # EMBL Heidelberg 2012-2017
 #
 # version 0.2.0
-# file last updated: 26.06.2017
+# file last updated: 30.11.2017
 # GNU GPL 3.0
 ###
 
@@ -81,8 +81,13 @@ set.seed(r.seed)
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
 
-plm.out <- train.model(feat = feat, label = label,  method = opt$method, data.split=opt$train_sets, stratify = TRUE, 
-                       modsel.crit  = opt$sel_criterion,  min.nonzero.coeff = opt$min_nonzero_coeff)
+plm.out <- train.model(feat = feat, 
+                       label = label,
+                       method = opt$method,
+                       data.split=opt$train_sets,
+                       stratify = opt$stratify, 
+                       modsel.crit  = opt$sel_criterion,
+                       min.nonzero.coeff = opt$min_nonzero_coeff)
 
 
 write.table(plm.out$out.matrix, file = opt$model_matrix, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
