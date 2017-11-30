@@ -62,7 +62,7 @@ model.mat <- read.table(file=opt$model_matrix, sep='\t', header = TRUE, stringsA
 
 start.time   <- proc.time()[1]
 load(opt$fn.mlr_models_list)
-num.runs = length(models.list)
+
 pred <- make.predictions(feat=feat,
                          label=label,
                          data.split=opt$test_sets,
