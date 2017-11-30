@@ -31,13 +31,13 @@ opt            <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 10_plm_predictor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir             =', opt$srcdir,        '\n')
-cat('feat_in            =', opt$feat_in,      '\n')
-cat('fn.mlr_models_list =', opt$fn.mlr_models_list,'\n')
-cat('opt$label_in       =', opt$label_in,     '\n')
-cat('opt$test_sets      =', opt$test_sets,    '\n')
-cat('opt$pred           =', opt$pred,           '\n')
-cat('opt$model_matrix   =', opt$model_matrix,      '\n')
+cat('srcdir          =', opt$srcdir,        '\n')
+cat('feat_in         =', opt$feat_in,      '\n')
+cat('mlr_models_list =', opt$fn.mlr_models_list,'\n')
+cat('label_in        =', opt$label_in,     '\n')
+cat('test_sets       =', opt$test_sets,    '\n')
+cat('pred            =', opt$pred,           '\n')
+cat('model_matrix    =', opt$model_matrix,      '\n')
 cat('\n')
 
 source.dir <- appendDirName(opt$srcdir)
@@ -59,12 +59,12 @@ model.mat <- read.table(file=opt$model_matrix, sep='\t', header = TRUE, stringsA
 
 
 start.time   <- proc.time()[1]
-load(opt$fn.mlr_models_list)
+load(opt$mlr_models_list)
 
 pred <- make.predictions(feat=feat,
                          label=label,
                          data.split=opt$test_sets,
-                         models.list=opt$fn.mlr_models_list,
+                         models.list=models_list,
                          model.mat=model.mat)
 
 
