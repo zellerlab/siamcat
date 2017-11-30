@@ -80,5 +80,5 @@ if (length(unique(names(pred$pred))) < length(pred$pred)) {
 }
 cat('\nSaved all predictions\n')
 
-cat('\nSuccessfully applied ', model.type, ' model in ' , proc.time()[1] - start.time,
+cat('\nSuccessfully made preictions with the model in ' , proc.time()[1] - start.time,
     ' seconds\n', sep='')
