@@ -59,7 +59,7 @@ label         <- read.labels(opt$label_in)
 ### Core function sourced from the library
 training.data <- data.splitter(label = label,
                                num.folds=opt$num_folds,
-                               num.resample=sopt$resample, 
+                               num.resample=opt$resample, 
                                stratify=opt$stratify, 
                                inseparable=opt$inseparable,
                                meta=opt$metadata_in)
