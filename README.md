@@ -100,3 +100,22 @@ Google user group for support:
 
 https://groups.google.com/d/forum/siamcat-users
 mailto:zeller@embl.de
+
+### Developer guidelines
+
+We are thrilled to have other people help us develop SIAMCAT. To make it effcient here are some basic rules of cooperation we adapted internally:
+
+1. How can I help?
+    - find an open issue in the https://git.embl.de/grp-zeller/SIAMCAT/issues **or**
+    - if you have an idea that is not mentioned in the issues - create an new issue
+2. How do I get started
+    - create a new branch and call it "Issue X"
+    - add a feature to the code in that branch
+    - one branch = one feature rule should be kept unless there is a **really** good reason to add more features together
+    - feature = a functionality + needed documentation
+3. Create a merge request with your branch once you are ready
+    - make sure it is clear and the code is easy to read
+    - CI will run a test on the merge request - of it fails the request will be rejected
+    - if the request passes the CI we will review the code and merge!
+
+

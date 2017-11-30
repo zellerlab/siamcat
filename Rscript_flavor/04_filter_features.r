@@ -44,10 +44,10 @@ feat          <- read.features(opt$feat_in)
 
 ### Start core function
 filtered.data <- filter.feat(feat = feat, 
-	                         filter.method = opt$method, 
-	                         cutoff = opt$cutoff, 
-	                         recomp.prop = opt$recomp_prop,
-                             rm.unmapped = opt$rm_unmapped)
+	                          filter.method = opt$method, 
+	                          cutoff = opt$cutoff, 
+	                          recomp.prop = opt$recomp_prop,
+                            rm.unmapped = opt$rm_unmapped)
 ### End core function
 
 # write filtered feature table
