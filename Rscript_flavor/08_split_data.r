@@ -83,8 +83,8 @@ if (opt$stratify) {
 } else {
   cat('Successfully created data split for ', opt$num_folds, '-fold cross-validation', sep='')
 }
-if (opt$resample, > 1) {
-  cat(' with ', opt$resample,, ' times repeated resampling\n', sep='')
+if (opt$resample > 1) {
+  cat(' with ', opt$resample, ' times repeated resampling\n', sep='')
 } else {
   cat('\n')
 }
