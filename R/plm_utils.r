@@ -44,6 +44,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   paramSet  <- NULL
   cost      <- c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10)
 
+  print("srako")
   if(method == "lasso"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
   } else if(method == "ridge"){
@@ -58,7 +59,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-6, type=0)
-        paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
+    paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "randomForest"){
     sqrt.mdim <- sqrt(nrow(data))
     cl        <- "classif.randomForest"
@@ -71,6 +72,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   
 
   ## 3) Fit the model
+  print("ejkupa")
   ## Train the learner on the task using a random subset of the data as training set
   if(!all(is.null(paramSet))){
     hyperPars <- tuneParams(learner = lrn, 
@@ -79,6 +81,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
                          par.set = paramSet, 
                          control = makeTuneControlGrid(resolution = 10L), 
                          measures=list(acc))
+    print(hyperPars)
     lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
 
