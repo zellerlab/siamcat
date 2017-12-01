@@ -62,7 +62,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, model.ma
     task      <- makeClassifTask(data = data, target = "label")
     pdata    <- predict(model,  task = task)
     save(pdata,file="pdata.RData")
-    p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata[,4]
+    p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 
     pred     <- c(pred, p)
