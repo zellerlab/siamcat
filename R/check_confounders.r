@@ -32,31 +32,40 @@ confounder.check <- function(meta, label, fn.plot){
     mvar  <- as.numeric(meta[,m])
     u.val <- unique(mvar)
     u.val <- u.val[!is.na(u.val)]
+    colors <- brewer.pal(5,"Dark2")
+
     if (length(u.val) == 1) {
       cat('  skipped because all subjects have the same value\n')
     } else if (length(u.val) <= 5) {
       cat('  using a bar plot\n')
       par(mar=c(6.1,4.1,4.1,4.1))
       ct     <- matrix(NA, nrow=2, ncol=length(u.val))
-      colors <- rainbow(length(u.val), s=0.4, v=0.6, alpha=1, start=0.0)
+
       for (i in 1:length(u.val)) {
         ct[1,i] = sum(mvar[label$n.idx] == u.val[i], na.rm=TRUE)
         ct[2,i] = sum(mvar[label$p.idx] == u.val[i], na.rm=TRUE)
       }
+
       freq   <- t(ct)
+
       for (i in 1:dim(freq)[2]) {
         freq[,i] <- freq[,i] / sum(freq[,i])
       }
+
       barplot(freq, ylim=c(0,1), main=mname, names.arg=c(label$n.lab, label$p.lab), col=colors)
+      #legend("right", legend=u.val, col=colors)
+
       p.val  <- fisher.test(ct)$p.value
       mtext(paste('Fisher test p-value:', format(p.val, digits=4)), side=1, line=3, at=1, adj=0)
     } else {
       cat('  using a Q-Q plot\n')
       par(mar=c(5.1,4.1,4.1,4.1))
       ax.int <- c(min(mvar, na.rm=TRUE), max(mvar, na.rm=TRUE))
+
       qqplot(mvar[label$n.idx], mvar[label$p.idx], xlim=ax.int, ylim=ax.int, pch=16, cex=0.6,
              xlab=label$n.lab, ylab=label$p.lab, main=paste('Q-Q plot for', mname))
       abline(0, 1, lty=3)
+
       p.val  <- wilcox.test(mvar[label$n.idx], mvar[label$p.idx], exact=FALSE)$p.value
       text(ax.int[1]+0.9*(ax.int[2]-ax.int[1]), ax.int[1]+0.1*(ax.int[2]-ax.int[1]),
            paste('MWW test p-value:', format(p.val, digits=4)), pos=2)
