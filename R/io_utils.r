@@ -62,8 +62,8 @@ read.labels <- function(fn.in.label,feat=NULL){
   # TODO move feature/label agreement check to validate data?
   if (is.null(fn.in.label)) stop("Filename for labels file not provided!\n")
   if(!file.exists(fn.in.label)) stop("Label file ", fn.in.label, " does not exist!\n")
-  label <- read.table(file=fn.in.label, sep='\t', header=TRUE, row.names=NULL, stringsAsFactors <- FALSE,
-                      check.names=FALSE, quote='', comment.char <- "#")
+  label <- read.table(file=fn.in.label, sep='\t', header=TRUE, row.names=NULL, stringsAsFactors=FALSE,
+                      check.names=FALSE, quote='', comment.char="#")
   label <- as.matrix(label)
   if (dim(label)[1] > dim(label)[2]){
     temp            <- names(label)
@@ -96,7 +96,7 @@ read.labels <- function(fn.in.label,feat=NULL){
     stop("Label header seems to be missing or broken.")
   }
   close(con)
-  label             <- list("label" <- label, "header" <- header)
+  label             <- list("label" = label, "header" = header)
   label$info <- parse.label.header(label$header)
   stopifnot(label$info$type == 'BINARY')
   label$positive.lab <- max(label$info$class.descr)
