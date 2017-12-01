@@ -1,4 +1,4 @@
-###
+ ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
 # RScript flavor
 #
@@ -20,35 +20,38 @@
 #' @keywords SIAMCAT add.meta.pred
 #' @export
 #' @return features object with added metadata
-add.meta.pred <- function(feat, meta, pred.names, std.meta){
+add.meta.pred <- function(feat, meta, pred.names=NULL, std.meta){
   ### add metadata as predictors to the feature matrix
   cnt <- 0
-  if (pred.names != '' && pred.names != 'NULL') {
+  if (pred.names != '' && !is.null(pred.names)) {
     for (p in pred.names) {
       if(!p%in%colnames(meta)) stop("There is no meta variable called ",p,"\n")
       idx <- which(colnames(meta) == p)
-      stopifnot(length(idx) == 1)
+      if(length(idx) != 1) stop(p, "matches multiple columns in the metada\n")
       cat('adding ', p, '\n', sep='')
-      m = meta[,idx]
+      m  <-  meta[,idx]
       if (!all(is.finite(m))) {
-        na.cnt = sum(!is.finite(m))
+        na.cnt <- sum(!is.finite(m))
         cat('filling in', na.cnt, 'missing values by mean imputation\n')
-        mn = mean(m, na.rm=TRUE)
-        m[!is.finite(m)] = mn
+        mn     <- mean(m, na.rm=TRUE)
+        m[!is.finite(m)] <- mn
       }
       if (std.meta) {
         cat('standardize metadata feature', p, '\n')
-        m.mean = mean(m, na.rm = TRUE)
-        m.sd = sd(m, na.rm = TRUE)
+        m.mean <- mean(m, na.rm = TRUE)
+        m.sd   <- sd(m, na.rm = TRUE)
         stopifnot(!m.sd == 0)
-        m = (m - m.mean)/m.sd
+        m      <- (m - m.mean)/m.sd
       }
       feat = rbind(feat, m)
       rownames(feat)[nrow(feat)] = paste('META-', toupper(p), sep='')
       cnt = cnt + 1
     }
+      cat('added', cnt, 'meta-variables as predictors to the feature matrix\n')
+  } else {
+      cat('Not adding any of the meta-variables as predictor to the feature matrix\n')
   }
   stopifnot(all(!is.na(feat)))
-  cat('added', cnt, 'meta-variables as predictors to the feature matrix\n')
+
   invisible(feat)
 }
