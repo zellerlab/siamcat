@@ -33,7 +33,7 @@
 #'  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 #'}
-eval.result <- function(label, pred){
+eval.predictions <- function(label, pred){
 
   # TODO compare header to label
   ### make sure that label and prediction are in the same order

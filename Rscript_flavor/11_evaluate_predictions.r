@@ -47,8 +47,8 @@ label      <- read.labels(opt$label)
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)
 
-eval.data <-  eval.result(label=label,
-                          pred=pred)
+eval.data <-  eval.predictions(label=label,
+                               pred=pred)
 
 evaluation.model.plot(label=label,
                       pred=pred, 
