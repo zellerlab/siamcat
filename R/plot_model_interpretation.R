@@ -111,6 +111,7 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   h_t = 0.10
   h_m = ifelse(is.null(meta), 0.8, max(0.5, 0.7-0.01*dim(meta)[2]))
   h_b = ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
+  pdf(fn.plot, paper='special', height=8.27, width=11.69, onefile=TRUE)
   cat('Layout height values: ', h_t, ', ', h_m, ', ', h_b, '\n', sep='')
   layout(lmat, widths=c(0.14, 0.58, 0.1, 0.14), heights=c(h_t, h_m, h_b))
   par(oma=c(3, 4, 3, 4))
@@ -118,7 +119,6 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   ### header row
 
   # field 1 will be plotted later together with feature heatmap
-  pdf(fn.plot, paper='special', height=8.27, width=11.69)
   # field 2: header for feature heatmap
   par(mar=c(0, 4.1, 3.1, 5.1))
   hm.label = label$label[srt.idx]
