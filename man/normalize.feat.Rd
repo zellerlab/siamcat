@@ -27,8 +27,8 @@ normalize.feat(feat, norm.method = c("rank.unit", "rank.std", "log.std",
 }
 \value{
 list containing the matrix of normalized features and a list of normalization parameters: \itemize{
- \item \code{$par} = parameters utilized in the normalization;
- \item \code{$feat} = normalized features
+ \item \code{$par} <- parameters utilized in the normalization;
+ \item \code{$feat} <- normalized features
 }
 }
 \description{
