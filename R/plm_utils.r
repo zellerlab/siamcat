@@ -26,7 +26,6 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   paramSet  <- NULL
   cost      <- c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10)
 
-  print("srako")
   if(method == "lasso"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
   } else if(method == "ridge"){
@@ -36,7 +35,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
-    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-6, type=6)
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-6)
     paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"

@@ -148,5 +148,5 @@ normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.s
   } else {
     stop('unrecognized norm.method, exiting!\n')
   }
-  return(list("par" <- par, "feat" <- feat))
+  return(list("par"= par, "feat" =feat))
 }
