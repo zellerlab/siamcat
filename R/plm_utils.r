@@ -11,24 +11,6 @@
 # GNU GPL 3.0
 ###
 
-#liblinear.type = 6
-#class.weights  = c(1, 1) # TODO reset!!!
-#model.tag      = 'LASSO'
-#eps            = 1e-8
-
-# TODO: to be removed, since it is not used by any other function
-##### function to draw a stratified sample from the label vector
-# #' @export
-# sample.strat = function(label, frac) {
-#   classes = unique(label)
-#   s = NULL
-#   for (c in classes) {
-#     idx = which(label==c)
-#     s = c(s, sample(which(label==c), round(frac * sum(label==c))))
-#   }
-#   return(s)
-# }
-
 ##### function to train a LASSO model for a single given C
 #' @export
 train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")) {
@@ -72,7 +54,6 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   
 
   ## 3) Fit the model
-  print("ejkupa")
   ## Train the learner on the task using a random subset of the data as training set
   if(!all(is.null(paramSet))){
     hyperPars <- tuneParams(learner = lrn, 
@@ -159,102 +140,6 @@ get.foldList <- function(data.split){
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
   invisible(list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds))
-}
-
-#' @export
-select.model <- function(feat, label, method, hyper.par, min.nonzero=1,
-                         num.folds=5, stratified=FALSE, foldid=foldid, data) {
-  print(method)
-  method        <- tolower(method)
-  opt.hyper.par <- NULL
-  nonzero.coeff <- matrix(0, num.folds, length(hyper.par$lambda))
-  # here we use the area under the ROC curve as a model selection criterion,
-  # but there are alternatives (e.g. accuracy, partial AU-ROC or the area under the precision-recall curve)
-  fold.id       <- foldid
-  p             <- rep(NA, length(label$label))
-  if (method == 'lasso') {
-    aucs <- rep(0, length(hyper.par$lambda))
-    for (i in 1){#:length(hyper.par$lambda)) {
-      hp <- NULL
-      hp$lambda <- hyper.par$lambda[i]
-      for (f in 1:num.folds) {
-        test.idx <- which(fold.id == f)
-        # Replace this with train.idx <- which(fold.id != f)? For better readability.
-        train.idx         <- setdiff(1:length(label$label), test.idx)
-        label.train       <- label
-        label.train$label <- label.train$label[train.idx]
-        #print(feat[train.idx,])
-        model             <- train.plm(feat[train.idx,], label.train, method, hp, data=data, subset=train.idx)
-        pred              <- predict.plm(feat[test.idx,], model, method, hp, data=data, subset=test.idx)
-        #print(model)
-        nonzero.coeff[f,i] = sum(model$feat.weights[1:(ncol(feat)-1)] != 0)
-      }
-      aucs[i]   <- performance(pred, measures = auc)#roc(response=label$label, predictor=p)$auc
-      #cat('    ', method, ' model selection: (lambda=', hyper.par$lambda[i],
-      #    ') AU-ROC=', format(aucs[i], digits=3), '\n', sep='')
-      print(performance(pred, measures = auc))
-      cat("    AU-ROC = ", format(aucs[i], digits=3), '\n', sep='')
-    }
-    suff.nonzero         <- apply(nonzero.coeff, 2, min) > min.nonzero
-    nonzero.coeff        <- nonzero.coeff[,suff.nonzero]
-    aucs                 <- aucs[suff.nonzero]
-    opt.idx              <- which.max(aucs)
-    opt.hyper.par$lambda <- hyper.par$lambda[opt.idx]
-    # cat('    optimal lambda =', hyper.par$lambda[opt.idx], '\n')
-
-  } else if (method == 'lasso_ll' || method == 'ridge_ll' || method == 'l1_svm' || method == 'l2_svm') {
-    aucs <- rep(0, length(hyper.par$C))
-    for (i in 1:length(hyper.par$C)) {
-      hp <- NULL
-      hp$C <- hyper.par$C[i]
-      for (f in 1:num.folds) {
-        test.idx    <- which(fold.id == f)
-        train.idx   <- setdiff(1:length(label$label), test.idx)
-        label.train <- label
-        label.train$label <- label.train$label[train.idx]
-        model       <- train.plm(feat[train.idx,], label.train, method, hp)
-        p[test.idx] <- predict.plm(feat[test.idx,], model, method, hp)
-      }
-      aucs[i] <- roc(response=label, predictor=p)$auc
-      cat('    ', method, ' model selection: (C=', hyper.par$C[i],
-          ') AU-ROC=', format(aucs[i], digits=3), '\n', sep='')
-    }
-    opt.idx <- which.max(aucs)
-    opt.hyper.par$C <- hyper.par$C[opt.idx]
-    cat('    optimal C =', hyper.par$C[opt.idx], '\n')
-
-  } else if (method == 'enet' || method == 'gelnet') {
-    aucs <- matrix(0, nrow=length(hyper.par$alpha),
-                   ncol=length(hyper.par$lambda))
-    for (i in 1:length(hyper.par$alpha)) {
-      for (j in 1:length(hyper.par$lambda)) {
-        hp <- NULL
-        hp$alpha <- hyper.par$alpha[i]
-        hp$lambda <- hyper.par$lambda[j]
-        for (f in 1:num.folds) {
-          test.idx <- which(fold.id == f)
-          train.idx <- setdiff(1:length(label$label), test.idx)
-          label.train <- label
-          label.train$label <- label.train$label[train.idx]
-          model       <- train.plm(feat[train.idx,], label.train, method, hp, data, train.idx)
-          p[test.idx] <- predict.plm(feat[test.idx,], model, method, hp, data, test.idx)
-        }
-        aucs[i,j] <- roc(response=label, predictor=p)$auc
-        cat('    ', method, ' model selection: (alpha=', hyper.par$alpha[i],
-            ', lambda=', hyper.par$lambda[j], ') AU-ROC=',
-            format(aucs[i,j], digits=3), '\n', sep='')
-      }
-    }
-    opt.idx              <- arrayInd(which.max(aucs), dim(aucs))
-    opt.hyper.par$alpha  <- hyper.par$lambda[opt.idx[1]]
-    opt.hyper.par$lambda <- hyper.par$lambda[opt.idx[2]]
-    cat('    optimal alpha =' , hyper.par$alpha[opt.idx[1]],
-        ', lambda =', hyper.par$lambda[opt.idx[2]], '\n')
-
-  } else {
-    stop('unknown method')
-  }
-  return(opt.hyper.par)
 }
 
 ##### function to partition training set into cross-validation folds for model selection
