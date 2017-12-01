@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Statistical Inference of Associations between Microbial Communities And host phenoTypes • SIAMCAT</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="tidyverse.css" rel="stylesheet">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -66,7 +66,7 @@
 <div id="galaxy-interface" class="section level3">
 <h3 class="hasAnchor">
 <a href="#galaxy-interface" class="anchor"></a>Galaxy interface:</h3>
-<p><a href="http://siamcat.embl.de/" class="uri">http://siamcat.embl.de/</a></p>
+<p><a href="http://congo.embl.de/galaxy/">SIAMCAT galaxy server</a></p>
 <div id="galaxy-in-brief" class="section level4">
 <h4 class="hasAnchor">
 <a href="#galaxy-in-brief" class="anchor"></a>Galaxy in brief</h4>
@@ -91,7 +91,15 @@
 <a href="#development-version-the-most-up-to-date-but-not-always-stable" class="anchor"></a>Development version (the most up to date but not always stable):</h4>
 <p><a href="https://git.embl.de/grp-zeller/SIAMCAT/tree/development" class="uri">https://git.embl.de/grp-zeller/SIAMCAT/tree/development</a></p>
 <p>R packages required to run SIAMCAT:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">"RColorBrewer"</span>,<span class="st">"beanplot"</span>,<span class="st">"glmnet"</span>,<span class="st">"LiblineaR"</span>,<span class="st">"pROC"</span>,<span class="st">"optparse"</span>,<span class="st">"colorRamps"</span>,<span class="st">"gelnet"</span>,<span class="st">"mlr"</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">"RColorBrewer"</span>,
+                   <span class="st">"beanplot"</span>,
+                   <span class="st">"glmnet"</span>,
+                   <span class="st">"LiblineaR"</span>,
+                   <span class="st">"pROC"</span>,
+                   <span class="st">"optparse"</span>,
+                   <span class="st">"colorRamps"</span>,
+                   <span class="st">"gelnet"</span>,
+                   <span class="st">"mlr"</span>))</code></pre></div>
 </div>
 </div>
 <div id="commandline-version-bash-script-calling-modules-implemented-in-r" class="section level3">
@@ -99,11 +107,45 @@
 <a href="#commandline-version-bash-script-calling-modules-implemented-in-r" class="anchor"></a>Commandline version (bash script calling modules implemented in R)</h3>
 <p><a href="https://git.embl.de/grp-zeller/SIAMCAT/tree/master/Rscript_flavor" class="uri">https://git.embl.de/grp-zeller/SIAMCAT/tree/master/Rscript_flavor</a></p>
 </div>
+<div id="license" class="section level3">
+<h3 class="hasAnchor">
+<a href="#license" class="anchor"></a>License</h3>
+<p>Distributed under the GNU GPLv3 License. See accompanying file <a href="https://git.embl.de/grp-zeller/SIAMCAT/blob/development/LICENSE">LICENSE</a> or copy at <a href="http://www.gnu.org/licenses/gpl-3.0.html" class="uri">http://www.gnu.org/licenses/gpl-3.0.html</a>.</p>
+</div>
 <div id="support" class="section level3">
 <h3 class="hasAnchor">
 <a href="#support" class="anchor"></a>Support</h3>
 <p>Google user group for support:</p>
 <p><a href="https://groups.google.com/d/forum/siamcat-users" class="uri">https://groups.google.com/d/forum/siamcat-users</a> <a href="mailto:zeller@embl.de">mailto:zeller@embl.de</a></p>
+</div>
+<div id="developer-guidelines" class="section level3">
+<h3 class="hasAnchor">
+<a href="#developer-guidelines" class="anchor"></a>Developer guidelines</h3>
+<p>We are thrilled to have other people help us develop SIAMCAT. To make it effcient here are some basic rules of cooperation we adapted internally:</p>
+<ol>
+<li>How can I help?
+<ul>
+<li>find an open issue in the <a href="https://git.embl.de/grp-zeller/SIAMCAT/issues" class="uri">https://git.embl.de/grp-zeller/SIAMCAT/issues</a> <strong>or</strong>
+</li>
+<li>if you have an idea that is not mentioned in the issues - create an new issue</li>
+</ul>
+</li>
+<li>How do I get started
+<ul>
+<li>create a new branch and call it “Issue X”</li>
+<li>add a feature to the code in that branch</li>
+<li>one branch = one feature rule should be kept unless there is a <strong>really</strong> good reason to add more features together</li>
+<li>feature = a functionality + needed documentation</li>
+</ul>
+</li>
+<li>Create a merge request with your branch once you are ready
+<ul>
+<li>make sure it is clear and the code is easy to read</li>
+<li>CI will run a test on the merge request - of it fails the request will be rejected</li>
+<li>if the request passes the CI we will review the code and merge!</li>
+</ul>
+</li>
+</ol>
 </div>
 
   </div>

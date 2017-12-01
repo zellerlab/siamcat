@@ -5,8 +5,9 @@
 \title{Check and visualize associations between features and classes}
 \usage{
 check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
-  alpha = 0.05, min.fc = 0, mult.corr = "fdr", sort.by = "pv",
-  detect.lim = 10^-8, max.show = 50, plot.type = "bean")
+  effect.size = c("prevalence", "auroc"), alpha = 0.05, mult.corr = "fdr",
+  sort.by = c("fc", "pval"), detect.lim = 10^-8, max.show = 50,
+  plot.type = "bean")
 }
 \arguments{
 \item{feat}{feature object}
@@ -18,8 +19,6 @@ check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
 \item{color.scheme}{valid R color scheme, defaults to \code{'RdYlBu'}}
 
 \item{alpha}{float, significance level, defaults to \code{0.05}}
-
-\item{min.fc}{float, minimum log10 fold change for significantly associated features, defaults to \code{0}}
 
 \item{mult.corr}{multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}}
 

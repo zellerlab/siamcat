@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Model Interpretation Plot <U+2014> interpretor.model.plot <e2><80><a2> SIAMCAT</title>
+<title>Evaluate prediction results <U+2014> eval.predictions <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -75,76 +75,45 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Model Interpretation Plot</h1>
+    <h1>Evaluate prediction results</h1>
     </div>
 
     
-    <p>Produces a plot for model interpretation, displaying feature weights, robustness of feature weights, and features scores across patients.</p>
+    <p>This function takes the correct labels and predictions for all samples and evaluates the results using the</p><ul>
+<li><p>Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)</p></li>
+<li><p>and the Precision-recall Curve (PR)</p></li>
+</ul><p>as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.</p>
+<p>Prediction results are usually produced with the function plm.predictor.</p>
     
 
-    <pre class="usage"><span class='fu'>interpretor.model.plot</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>meta</span>, <span class='no'>fn.plot</span>, <span class='no'>model</span>, <span class='no'>pred</span>,
-  <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>, <span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='st'>"zscore"</span>,
-  <span class='kw'>norm.models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>fc.lim</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>5</span>, <span class='fl'>5</span>), <span class='kw'>z.score.lim</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>3</span>, <span class='fl'>3</span>),
-  <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>)</pre>
+    <pre class="usage"><span class='fu'>eval.predictions</span>(<span class='no'>label</span>, <span class='no'>pred</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>a feature object</p></td>
-    </tr>
-    <tr>
       <th>label</th>
-      <td><p>a label object</p></td>
-    </tr>
-    <tr>
-      <th>meta</th>
-      <td><p>a metadata object</p></td>
-    </tr>
-    <tr>
-      <th>fn.plot</th>
-      <td><p>string, filename for the pdf-plot</p></td>
-    </tr>
-    <tr>
-      <th>model</th>
-      <td><p>matrix containing the feature weights for every CV fold/repetition</p></td>
+      <td><p>label object</p></td>
     </tr>
     <tr>
       <th>pred</th>
-      <td><p>matrix containing the model predictions for every CV repetition</p></td>
-    </tr>
-    <tr>
-      <th>color.scheme</th>
-      <td><p>color scheme for the heatmap, defaults to =<code>"BrBG"</code></p></td>
-    </tr>
-    <tr>
-      <th>consens.thres</th>
-      <td><p>minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to <code>0.5</code></p></td>
-    </tr>
-    <tr>
-      <th>heatmap.type</th>
-      <td><p>type of the heatmap, can be either <code>"fc"</code> or <code>"zscore"</code>, defaults to <code>"zscore"</code></p></td>
-    </tr>
-    <tr>
-      <th>norm.models</th>
-      <td><p>boolean, should the feature weights be normalized across models?, defaults to <code>FALSE</code></p></td>
+      <td><p>prediction for each sample by the model, should be a matrix with dimensions <code>length(label) x 1</code> or <code>length(label) x num.resample</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Does not return anything, but produces the model interpretion plot.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Produces a plot consisting of</p><ul>
-<li><p>a barplot showing the feature weights and their robustness (i.e. in what proportion of models have they been incorporated)</p></li>
-<li><p>a heatmap showing the z-scores of the metagenomic features across patients</p></li>
-<li><p>another heatmap displaying the metadata categories</p></li>
-<li><p>a boxplot displaying the poportion of weight per model that is actually shown
-for the features that are incorporated into more than <code>consens.thres</code> <!-- % of the models. --></p></li>
+    <p>list containing</p><ul>
+<li><p><code>$roc.average</code> average ROC-curve across repeats or a single ROC-curve on complete dataset;</p></li>
+<li><p><code>$auc.average</code> AUC value for the average ROC-curve;</p></li>
+<li><p><code>$ev.list</code> list of <code>length(num.folds)</code>, containing for different decision thresholds the number of false positives, false negatives, true negatives, and true positives;</p></li>
+<li><p><code>$pr.list</code> list of <code>length(num.folds)</code>, containing the positive predictive value (precision) and true positive rate (recall) values used to plot the PR curves;</p></li>
+</ul><p>. If <code>prediction</code> had more than one column, i.e. if the models has been trained with several repeats, the function will additonally return</p><ul>
+<li><p><code>$roc.all</code> list of roc objects (see <a href='http://www.rdocumentation.org/packages/pROC/topics/roc'>roc</a>) for every repeat;</p></li>
+<li><p><code>$aucspr</code> vector of AUC values for the PR curves for every repeat;</p></li>
+<li><p><code>$auc.all</code> vector of AUC values for the ROC curves for every repeat</p></li>
 </ul>
+
     
 
   </div>
@@ -154,8 +123,6 @@ for the features that are incorporated into more than <code>consens.thres</code>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

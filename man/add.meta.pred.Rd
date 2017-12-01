@@ -4,7 +4,7 @@
 \alias{add.meta.pred}
 \title{Add metadata as predictors}
 \usage{
-add.meta.pred(feat, meta, pred.names, std.meta)
+add.meta.pred(feat, meta, pred.names = NULL, std.meta)
 }
 \arguments{
 \item{feat}{features object}

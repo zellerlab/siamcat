@@ -83,7 +83,7 @@
 Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.</p>
     
 
-    <pre class="usage"><span class='fu'>confounder.check</span>(<span class='no'>meta</span>, <span class='no'>label</span>)</pre>
+    <pre class="usage"><span class='fu'>confounder.check</span>(<span class='no'>meta</span>, <span class='no'>label</span>, <span class='no'>fn.plot</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -96,6 +96,10 @@ Statistical testing is performed with Fisher's exact test or Wilcoxon test, whil
       <th>label</th>
       <td><p>labels object</p></td>
     </tr>
+    <tr>
+      <th>fn.plot</th>
+      <td><p>string, filename for the pdf-plot</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -103,9 +107,6 @@ Statistical testing is performed with Fisher's exact test or Wilcoxon test, whil
     <p>Does not return anything, but produces a single plot for each metadata category</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>pdf</span>(<span class='no'>filename.pdf</span>)</div><div class='output co'>#&gt; <span class='error'>Error in gsub("%%", "", s): object 'filename.pdf' not found</span></div><div class='input'><span class='fu'>confounder.check</span>(<span class='no'>meta</span>, <span class='no'>label</span>)</div><div class='output co'>#&gt; <span class='error'>Error in ncol(meta): object 'meta' not found</span></div><div class='input'><span class='fu'>dev.off</span>()</div><div class='output co'>#&gt; null device 
-#&gt;           1 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -113,9 +114,7 @@ Statistical testing is performed with Fisher's exact test or Wilcoxon test, whil
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

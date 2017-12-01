@@ -4,12 +4,14 @@
 \alias{confounder.check}
 \title{Check for potential confounders in the metadata}
 \usage{
-confounder.check(meta, label)
+confounder.check(meta, label, fn.plot)
 }
 \arguments{
 \item{meta}{metadata object}
 
 \item{label}{labels object}
+
+\item{fn.plot}{string, filename for the pdf-plot}
 }
 \value{
 Does not return anything, but produces a single plot for each metadata category
@@ -17,11 +19,6 @@ Does not return anything, but produces a single plot for each metadata category
 \description{
 This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata.
 Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
-}
-\examples{
-pdf(filename.pdf)
-confounder.check(meta, label)
-dev.off()
 }
 \keyword{SIAMCAT}
 \keyword{confounder.check}

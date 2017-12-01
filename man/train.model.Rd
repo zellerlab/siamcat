@@ -4,8 +4,8 @@
 \alias{train.model}
 \title{Model training}
 \usage{
-train.model(feat, label, method = c("lasso", "enet", "ridge", "libLineaR",
-  "randomForest"), data.split = NULL, stratify = TRUE,
+train.model(feat, label, method = c("lasso", "enet", "ridge", "lasso_ll",
+  "ridge_ll", "randomForest"), data.split = NULL, stratify = TRUE,
   modsel.crit = "auc", min.nonzero.coeff = 1)
 }
 \arguments{

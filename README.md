@@ -82,7 +82,15 @@ https://git.embl.de/grp-zeller/SIAMCAT/tree/development
 
 R packages required to run SIAMCAT:
 ```r
-install.packages(c("RColorBrewer","beanplot","glmnet","LiblineaR","pROC","optparse","colorRamps","gelnet","mlr"))
+install.packages(c("RColorBrewer",
+                   "beanplot",
+                   "glmnet",
+                   "LiblineaR",
+                   "pROC",
+                   "optparse",
+                   "colorRamps",
+                   "gelnet",
+                   "mlr"))
 ```
 
 

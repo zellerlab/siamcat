@@ -4,9 +4,10 @@
 \alias{interpretor.model.plot}
 \title{Model Interpretation Plot}
 \usage{
-interpretor.model.plot(feat, label, meta, model, pred, color.scheme = "BrBG",
-  consens.thres = 0.5, heatmap.type = "zscore", norm.models = FALSE,
-  fc.lim = c(-5, 5), z.score.lim = c(-3, 3), detect.lim = 1e-08)
+interpretor.model.plot(feat, label, meta, fn.plot, model, pred,
+  color.scheme = "BrBG", consens.thres = 0.5, heatmap.type = "zscore",
+  norm.models = FALSE, fc.lim = c(-5, 5), z.score.lim = c(-3, 3),
+  detect.lim = 1e-08)
 }
 \arguments{
 \item{feat}{a feature object}
@@ -14,6 +15,8 @@ interpretor.model.plot(feat, label, meta, model, pred, color.scheme = "BrBG",
 \item{label}{a label object}
 
 \item{meta}{a metadata object}
+
+\item{fn.plot}{string, filename for the pdf-plot}
 
 \item{model}{matrix containing the feature weights for every CV fold/repetition}
 
@@ -41,11 +44,6 @@ Produces a plot consisting of \itemize{
  \item a boxplot displaying the poportion of weight per model that is actually shown
 for the features that are incorporated into more than \code{consens.thres} % of the models.
 }
-}
-\examples{
-pdf(filename.pdf)
-interpretor.model.plot(feat, label, meta, model, pred, color.scheme, consens_thres)
-dev.off()
 }
 \keyword{SIAMCAT}
 \keyword{interpretor.model.plot}

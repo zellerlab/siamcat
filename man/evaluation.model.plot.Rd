@@ -4,7 +4,7 @@
 \alias{evaluation.model.plot}
 \title{Model Evaluation Plot}
 \usage{
-evaluation.model.plot(label, pred, eval.data, model.type = "lasso")
+evaluation.model.plot(label, pred, eval.data, fn.plot)
 }
 \arguments{
 \item{label}{a label object}
@@ -13,18 +13,13 @@ evaluation.model.plot(label, pred, eval.data, model.type = "lasso")
 
 \item{eval.data}{list of evaluation results produced by \link{eval.results}}
 
-\item{model.type}{type of the model, defaults to \code{"lasso"}}
+\item{fn.plot}{string, filename for the pdf-plot}
 }
 \value{
 Does not return anything, but produces the model evaluation plot.
 }
 \description{
 Produces two plots for model evaluation. The first plot shows the Receiver Operating Receiver (ROC)-curves, the other the Precision-recall (PR)-curves for the different CV repetitions.
-}
-\examples{
-pdf(filename.pdf)
-evaluation.model.plot(label, pred, eval.data, model.type)
-dev.off()
 }
 \keyword{SIAMCAT}
 \keyword{evaluation.model.plot}

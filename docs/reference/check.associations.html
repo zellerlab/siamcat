@@ -79,15 +79,22 @@
     </div>
 
     
-    <p>This function calculates for each feature the median log10 fold change between the different classes found in labels.</p>
-<p>Significance of the differences is computed for each feature using a wilcoxon test followed by multiple hypothesis testing correction.</p>
-<p>Additionally, the Area under the Receiver Operating Characteristic Curve (AU-ROC) is computed for the features found to be associated with the two different classes at a user-specified significance level <code>alpha</code>.</p>
-<p>Finally, the function produces a plot of the top <code>max.show</code> associated features, showing the distribution of the log10-transformed abundances for both classes, the median fold change, and the AU-ROC.</p>
+    <p>This function calculates for each feature the median log10 fold
+change between the different classes found in labels.</p>
+<p>Significance of the differences is computed for each feature using a wilcoxon
+test followed by multiple hypothesis testing correction.</p>
+<p>Additionally, the Area under the Receiver Operating Characteristic Curve
+'(AU-ROC) is computed for the features found to be associated with the two
+different classes at a user-specified significance level <code>alpha</code>.</p>
+<p>Finally, the function produces a plot of the top <code>max.show</code> associated
+features, showing the distribution of the log10-transformed abundances for
+both classes, the median fold change, and the AU-ROC.</p>
     
 
     <pre class="usage"><span class='fu'>check.associations</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>fn.plot</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>min.fc</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>mult.corr</span> <span class='kw'>=</span> <span class='st'>"fdr"</span>, <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>8</span>,
-  <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"bean"</span>)</pre>
+  <span class='kw'>effect.size</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"prevalence"</span>, <span class='st'>"auroc"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>mult.corr</span> <span class='kw'>=</span> <span class='st'>"fdr"</span>,
+  <span class='kw'>sort.by</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"fc"</span>, <span class='st'>"pval"</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>8</span>, <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+  <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"bean"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -113,12 +120,12 @@
       <td><p>float, significance level, defaults to <code>0.05</code></p></td>
     </tr>
     <tr>
-      <th>min.fc</th>
-      <td><p>float, minimum log10 fold change for significantly associated features, defaults to <code>0</code></p></td>
-    </tr>
-    <tr>
       <th>mult.corr</th>
       <td><p>multiple hypothesis correction method, see <code><a href='http://www.rdocumentation.org/packages/stats/topics/p.adjust'>p.adjust</a></code>, defaults to <code>"fdr"</code></p></td>
+    </tr>
+    <tr>
+      <th>sort.by</th>
+      <td><p>string, sort features by p-value (<code>"pv"</code>) or by fold change (<code>"fc"</code>), defaults to <code>"pv"</code></p></td>
     </tr>
     <tr>
       <th>detect.lim</th>
