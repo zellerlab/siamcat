@@ -32,113 +32,121 @@
 #' @keywords SIAMCAT normalize.feat
 #' @export
 #' @return list containing the matrix of normalized features and a list of normalization parameters: \itemize{
-#'  \item \code{$par} = parameters utilized in the normalization;
-#'  \item \code{$feat} = normalized features
+#'  \item \code{$par} <- parameters utilized in the normalization;
+#'  \item \code{$feat} <- normalized features
 #'}
-normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.std", "log.unit"), log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2,
-                           n.sample = FALSE, n.feature = TRUE, n.global = FALSE) {
+normalize.feat <- function(feat, norm.method <- c("rank.unit", "rank.std", "log.std", "log.unit"), log.n0 <- 10^-8, sd.min.q <- 0.1, n.p <- 2,
+                           n.sample <- FALSE, n.feature <- TRUE, n.global <- FALSE) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
   # TODO 2 add defaults for the parameters!!! Not all parameters are needed for all normalization methods
-  num.orig.feat = nrow(feat)
-  keep.idx = rowSums(is.na(feat) == 0)
+  num.orig.feat <- nrow(feat)
+  keep.idx <- rowSums(is.na(feat) == 0)
   if (any(!keep.idx)) {
-    feat = feat[keep.idx,]
+    feat <- feat[keep.idx,]
     cat('Removed ', nrow(feat)-num.orig.feat, ' features with missing values (retaining ', nrow(feat),' )\n', sep='')
   }
 
   ### keep track of normalization parameters
-  par = list()
-  par$norm.method = norm.method
-  par$log.n0 = log.n0
-  par$n.p = n.p
-  par$n.sample = n.sample
-  par$n.feature = n.feature
-  par$n.global = n.global
-  par$retained.feat = rownames(feat)
+  par <- list()
+  par$norm.method <- norm.method
+  par$log.n0 <- log.n0
+  par$n.p <- n.p
+  par$n.sample <- n.sample
+  par$n.feature <- n.feature
+  par$n.global <- n.global
+  par$retained.feat <- rownames(feat)
 
   ### apply normalization
   if (norm.method == 'rank.unit') {
     for (c in 1:ncol(feat)) {
-      feat[,c] = rank(feat[,c], ties.method='average')
+      feat[,c] <- rank(feat[,c], ties.method='average')
     }
     stopifnot(!any(is.na(feat)))
     for (c in 1:ncol(feat)) {
-      feat[,c] = feat[,c] / sqrt(sum(feat[,c]^2))
+      feat[,c] <- feat[,c] / sqrt(sum(feat[,c]^2))
     }
+
   } else if (norm.method == 'rank.std') {
     for (c in 1:ncol(feat)) {
-      feat[,c] = rank(feat[,c], ties.method='average')
+      feat[,c] <- rank(feat[,c], ties.method='average')
     }
-    m = apply(feat, 1, mean)
-    s = apply(feat, 1, sd)
-    q = quantile(s, sd.min.q, names=FALSE)
+    m <- apply(feat, 1, mean)
+    s <- apply(feat, 1, sd)
+    q <- quantile(s, sd.min.q, names=FALSE)
     stopifnot(q > 0)
     # TODO needs an apply-style rewrite!
     for (r in 1:nrow(feat)) {
-      feat[r,] = (feat[r,] - m[r]) / (s[r] + q)
+      feat[r,] <- (feat[r,] - m[r]) / (s[r] + q)
     }
-    par$feat.mean = m
-    par$feat.adj.sd = s + q
+    par$feat.mean <- m
+    par$feat.adj.sd <- s + q
     stopifnot(!any(is.na(feat)))
+
   } else if (norm.method == 'log.std') {
-    feat = log10(feat + log.n0)
-    m = apply(feat, 1, mean)
-    s = apply(feat, 1, sd)
-    q = quantile(s, sd.min.q, names=FALSE)
+    feat <- log10(feat + log.n0)
+    m <- apply(feat, 1, mean)
+    s <- apply(feat, 1, sd)
+    q <- quantile(s, sd.min.q, names=FALSE)
     #cat(sort(s, decreasing=TRUE), '\n')
     stopifnot(q > 0)
     # TODO needs an apply-style rewrite!
     for (r in 1:nrow(feat)) {
-      feat[r,] = (feat[r,] - m[r]) / (s[r] + q)
+      feat[r,] <- (feat[r,] - m[r]) / (s[r] + q)
     }
-    par$feat.mean = m
-    par$feat.adj.sd = s + q
+    par$feat.mean <- m
+    par$feat.adj.sd <- s + q
     stopifnot(!any(is.na(feat)))
+
   } else if (norm.method == 'log.unit') {
     cat('Feature sparsity before normalization: ', 100*mean(feat==0), '%\n', sep='')
-    feat = log10(feat + log.n0)
+    feat <- log10(feat + log.n0)
+    
     if (n.p == 1) {
       if (n.feature) {
-        feat.norm.denom = vector('numeric', nrow(feat))
+        feat.norm.denom <- vector('numeric', nrow(feat))
         # TODO needs an apply-style rewrite!
         for (r in 1:nrow(feat)) {
-          feat.norm.denom[r] = sum(feat[r,])
-          feat[r,] = feat[r,] / feat.norm.denom[r]
+          feat.norm.denom[r] <- sum(feat[r,])
+          feat[r,] <- feat[r,] / feat.norm.denom[r]
         }
-        par$feat.norm.denom = feat.norm.denom
+        par$feat.norm.denom <- feat.norm.denom
       }
       if (n.sample) {
         for (c in 1:ncol(feat)) {
-          feat[,c] = feat[,c] / sum(feat[,c])
+          feat[,c] <- feat[,c] / sum(feat[,c])
         }
       }
+
     } else if (n.p == 2) {
       if (n.feature) {
-        feat.norm.denom = vector('numeric', nrow(feat))
+        feat.norm.denom <- vector('numeric', nrow(feat))
         for (r in 1:nrow(feat)) {
-          feat.norm.denom[r] = sqrt(sum(feat[r,]^2))
-          feat[r,] = feat[r,] / feat.norm.denom[r]
+          feat.norm.denom[r] <- sqrt(sum(feat[r,]^2))
+          feat[r,] <- feat[r,] / feat.norm.denom[r]
         }
-        par$feat.norm.denom = feat.norm.denom
+        par$feat.norm.denom <- feat.norm.denom
       }
       if (n.sample) {
         for (c in 1:ncol(feat)) {
-          feat[,c] = feat[,c] / sqrt(sum(feat[,c]^2))
+          feat[,c] <- feat[,c] / sqrt(sum(feat[,c]^2))
         }
       }
+
     } else {
       stop('unknown norm!')
     }
+
     if (!n.feature && !n.sample && n.global) {
-      global.norm.denom = max(feat)
-      feat = feat / global.norm.denom
-      par$global.norm.denom = global.norm.denom
+      global.norm.denom <- max(feat)
+      feat <- feat / global.norm.denom
+      par$global.norm.denom <- global.norm.denom
     }
+
     cat('Feature sparsity after normalization: ', 100*mean(feat==0), '%\n', sep='')
     stopifnot(!any(is.na(feat)))
   } else {
     stop('unrecognized norm.method, exiting!\n')
   }
-  return(list("par" = par, "feat" = feat))
+  return(list("par" <- par, "feat" <- feat))
 }
