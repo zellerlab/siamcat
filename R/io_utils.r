@@ -24,13 +24,16 @@
 read.features <- function(fn.in.feat){
   if(is.null(fn.in.feat))      stop("Filename for features file not provided!\n")
   if(!file.exists(fn.in.feat)) stop("Feature file ", fn.in.feat, " does not exist!\n")
-  feat <- read.table(file = fn.in.feat, sep = '\t', header = TRUE, stringsAsFactors = FALSE, check.names = FALSE, quote = '')
+
+  feat <- read.table(file <- fn.in.feat, sep <- '\t', header <- TRUE, stringsAsFactors <- FALSE, check.names <- FALSE, quote <- '')
   feat <- as.matrix(feat)
-  featNames <- make.names(rownames(feat))
+  featNames <- make.names(rownames(feat)) ### making the names semantically correct
+
   if(any(rownames(feat)==featNames)){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
+
   invisible(feat)
 }
 
@@ -59,8 +62,8 @@ read.labels <- function(fn.in.label,feat=NULL){
   # TODO move feature/label agreement check to validate data?
   if (is.null(fn.in.label)) stop("Filename for labels file not provided!\n")
   if(!file.exists(fn.in.label)) stop("Label file ", fn.in.label, " does not exist!\n")
-  label <- read.table(file=fn.in.label, sep='\t', header=TRUE, row.names=NULL, stringsAsFactors = FALSE,
-                      check.names=FALSE, quote='', comment.char = "#")
+  label <- read.table(file=fn.in.label, sep='\t', header=TRUE, row.names=NULL, stringsAsFactors <- FALSE,
+                      check.names=FALSE, quote='', comment.char <- "#")
   label <- as.matrix(label)
   if (dim(label)[1] > dim(label)[2]){
     temp            <- names(label)
@@ -93,13 +96,15 @@ read.labels <- function(fn.in.label,feat=NULL){
     stop("Label header seems to be missing or broken.")
   }
   close(con)
-  label             <- list("label" = label, "header" = header)
+  label             <- list("label" <- label, "header" <- header)
   label$info <- parse.label.header(label$header)
   stopifnot(label$info$type == 'BINARY')
   label$positive.lab <- max(label$info$class.descr)
   label$negative.lab <- min(label$info$class.descr)
+
   label$n.idx <- label$label==label$negative.lab
   label$n.lab <- gsub('[_.-]', ' ', names(label$info$class.descr)[label$info$class.descr==label$negative.lab])
+
   label$p.idx <- label$label==label$positive.lab
   label$p.lab <- gsub('[_.-]', ' ', names(label$info$class.descr)[label$info$class.descr==label$positive.lab])
   invisible(label)
@@ -151,45 +156,45 @@ trim <- function (x) {
 ###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
 #' @export
 parse.label.header <- function(label.header) {
-  s = strsplit(label.header, ':')[[1]]
-  type = trim(s[1])
+  s    <- strsplit(label.header, ':')[[1]]
+  type <- trim(s[1])
   if (substr(type, 1, 1) == '#')
-    type = trim(substr(type, 2, nchar(type)))
-  class.descr = unlist(strsplit(strsplit(trim(s[2]), ';')[[1]], '='))
-  l = class.descr[seq(2,length(class.descr),2)]
-  class.descr = as.numeric(class.descr[seq(1,length(class.descr)-1,2)])
-  names(class.descr) = l
+  type <- trim(substr(type, 2, nchar(type)))
+  class.descr <- unlist(strsplit(strsplit(trim(s[2]), ';')[[1]], '='))
+  l <- class.descr[seq(2,length(class.descr),2)]
+  class.descr <- as.numeric(class.descr[seq(1,length(class.descr)-1,2)])
+  names(class.descr) <- l
 
-  label.info = list()
-  label.info$type = type
-  label.info$class.descr = class.descr
+  label.info <- list()
+  label.info$type <- type
+  label.info$class.descr <- class.descr
   return(label.info)
 }
 
 # ##### function to parse the header of a model file
 #' @export
 parse.model.header <- function(model.header) {
-  s = strsplit(model.header, ':')[[1]]
-  type = trim(s[1])
+  s <- strsplit(model.header, ':')[[1]]
+  type <- trim(s[1])
   if (substr(type, 1, 1) == '#')
-    type = trim(substr(type, 2, nchar(type)))
-  label.header = trim(paste(s[2:length(s)], collapse=':'))
+    type <- trim(substr(type, 2, nchar(type)))
+  label.header <- trim(paste(s[2:length(s)], collapse=':'))
   if (substr(label.header, 1, 1) == '[') {
     stopifnot(substr(label.header, nchar(label.header), nchar(label.header)) == ']')
-    label.header = substr(label.header, 2, nchar(label.header)-1)
+    label.header <- substr(label.header, 2, nchar(label.header)-1)
   }
-  p = grep('\\(.*\\)', type)
-  properties = NULL
+  p <- grep('\\(.*\\)', type)
+  properties <- NULL
   if (length(p) > 0) {
     stopifnot(length(p) == 1)
     stopifnot(substr(type, nchar(type), nchar(type)) == ')')
-    properties = substr(type, p+1, nchar(type)-1)
-    type = trim(substr(type, 1, p-1))
+    properties <- substr(type, p+1, nchar(type)-1)
+    type <- trim(substr(type, 1, p-1))
   }
 
-  model.info = list()
-  model.info$type = type
-  model.info$properties = properties
-  model.info$label.header = label.header
+  model.info <- list()
+  model.info$type <- type
+  model.info$properties <- properties
+  model.info$label.header <- label.header
   return(model.info)
 }
