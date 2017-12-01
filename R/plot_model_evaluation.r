@@ -16,17 +16,16 @@
 #' @param label a label object
 #' @param pred matrix containing the model predictions for every CV repetition
 #' @param eval.data list of evaluation results produced by \link{eval.results}
-#' @param model.type type of the model, defaults to \code{"lasso"}
 #' @param fn.plot string, filename for the pdf-plot
 #' @keywords SIAMCAT evaluation.model.plot
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
-evaluation.model.plot <- function(label, pred, eval.data, model.type='lasso', fn.plot){
+evaluation.model.plot <- function(label, pred, eval.data, fn.plot){
 
   pdf(fn.plot, onefile=TRUE)
 
   plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='False positive rate', ylab='True positive rate', type='n')
-  title(paste('ROC curve for', model.type, 'model', sep=' '))
+  title(paste('ROC curve for the model', sep=' '))
   abline(a=0, b=1, lty=3)
   if (dim(pred)[2] > 1) {
     aucs = vector('numeric', dim(pred)[2])
@@ -60,7 +59,7 @@ evaluation.model.plot <- function(label, pred, eval.data, model.type='lasso', fn
 
   # precision recall curve
   plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='Recall', ylab='Precision', type='n')
-  title(paste('Precision-recall curve for', model.type, 'model', sep=' '))
+  title(paste('Precision-recall curve for the model', sep=' '))
   abline(h=mean(label$label==label$positive.lab), lty=3)
 
   if (dim(pred)[2] > 1) {
