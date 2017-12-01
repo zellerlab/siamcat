@@ -4,7 +4,8 @@
 \alias{filter.feat}
 \title{Perform unsupervised feature filtering.}
 \usage{
-filter.feat(feat, filter.method, cutoff, recomp.prop, rm.unmapped)
+filter.feat(feat, filter.method = abundance, cutoff = 0.001,
+  recomp.prop = FALSE, rm.unmapped = TRUE)
 }
 \arguments{
 \item{feat}{feature object}

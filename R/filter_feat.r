@@ -27,54 +27,54 @@
 #' @keywords SIAMCAT filter.feat
 #' @export
 #' @return Returns the filtered feature matrix
-filter.feat <- function(feat, filter.method, cutoff, recomp.prop, rm.unmapped){
+filter.feat <- function(feat, filter.method=abundance, cutoff=0.001, recomp.prop=FALSE, rm.unmapped=TRUE){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
   ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
   ## TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
-    ra.feat = prop.table(feat, 2)
+    ra.feat <- prop.table(feat, 2)
   } else {
-    ra.feat = feat
+    ra.feat <- feat
   }
 
   ### apply filters
   if (filter.method == 'abundance') {
     # remove features whose abundance is never above the threshold value (e.g. 0.5%) in any of the samples
-    f.max = apply(ra.feat, 1, max)
-    f.idx = which(f.max >= cutoff)
+    f.max <- apply(ra.feat, 1, max)
+    f.idx <- which(f.max >= cutoff)
   } else if (filter.method == 'cum.abundance') {
     # remove features with very low abundance in all samples i.e. ones that are never among the most abundant
     # entities that collectively make up (1-cutoff) of the reads in any sample
-    f.idx = vector('numeric', 0)
+    f.idx <- vector('numeric', 0)
     # sort features per sample and apply cumsum to identify how many collectively have weight K
     for (s in 1:ncol(ra.feat)) {
-      srt = sort(ra.feat[,s], index.return=TRUE)
-      cs = cumsum(srt$x)
-      m = max(which(cs < cutoff))
-      f.idx = union(f.idx, srt$ix[-(1:m)])
+      srt   <- sort(ra.feat[,s], index.return=TRUE)
+      cs    <- cumsum(srt$x)
+      m     <- max(which(cs < cutoff))
+      f.idx <- union(f.idx, srt$ix[-(1:m)])
     }
     # an index of those features that collectively make up more than 1-K of the read mass in any sample
-    f.idx = sort(f.idx)
+    f.idx <- sort(f.idx)
   } else if (filter.method == 'prevalence') {
     # remove features with low prevalence across samples
     # i.e. ones that are 0 (undetected) in more than (1-cutoff) proportion of samples
-    f.idx = which(rowSums(ra.feat > 0) / ncol(ra.feat) > cutoff)
+    f.idx <- which(rowSums(ra.feat > 0) / ncol(ra.feat) > cutoff)
   } else {
     stop('unrecognized filter.method, exiting!\n')
   }
 
   cat('Removed ', nrow(feat)-length(f.idx), ' features whose values did not exceed ', cutoff,
       ' in any sample (retaining ', length(f.idx), ')\n', sep='')
-  feat = feat[f.idx,]
+  feat <- feat[f.idx,]
 
   ### postprocessing and output generation
   if (rm.unmapped) {
     # remove 'unmapped' feature
-    unm.idx = rownames(feat) == 'UNMAPPED' | rownames(feat) == 'unmapped' | rownames(feat) == '-1' | rownames(feat) == 'UNCLASSIFIED' | rownames(feat) == 'unclassified' | rownames(feat) == 'UNASSIGNED' | rownames(feat) == 'unassigned'
+    unm.idx <- rownames(feat) == 'UNMAPPED' | rownames(feat) == 'unmapped' | rownames(feat) == '-1' | rownames(feat) == 'UNCLASSIFIED' | rownames(feat) == 'unclassified' | rownames(feat) == 'UNASSIGNED' | rownames(feat) == 'unassigned'
     if (any(unm.idx)) {
-      feat = feat[!unm.idx,]
+      feat <- feat[!unm.idx,]
       cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads',
           ' (retaining ', nrow(feat), ')\n', sep='')
     } else {
