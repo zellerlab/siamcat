@@ -31,16 +31,16 @@
 #' @param color.scheme valid R color scheme, defaults to \code{'RdYlBu'}
 #' @param alpha float, significance level, defaults to \code{0.05}
 #' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
-#' @param sort.by string, sort features by p-value (\code{"pv"}) or by fold change (\code{"fc"}), defaults to \code{"pv"}
+#' @param sort.by string, sort features by p-value (\code{"pv"}), by fold change (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to \code{"pv"}
 #' @param detect.lim float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}
 #' @param max.show integer, how many associated features should be shown, defaults to \code{50}
 #' @param plot.type string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"bean"}
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
-check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
+check.associations2 <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                                effect.size = c("prevalence", "auroc"),
-                               alpha=0.05, mult.corr="fdr", sort.by=c("fc","pval"),
+                               alpha=0.05, mult.corr="fdr", sort.by="fc",
                                detect.lim=10^-8, max.show=50, plot.type="bean"){
 
   # TODO
@@ -62,10 +62,12 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   p.val     <- vector('numeric', nrow(feat))
   fc        <- vector('numeric', nrow(feat))
   aucs      <- vector('list', nrow(feat))
-  pr.shift  <- vector('numeric', nrow(feat))
+  pr.shift  <- matrix(NA, nrow=nrow(feat), ncol=3)
 
   ### TODO
   ### remove fold changes in favour of prevalence shift
+  pr.cutoff <- 5e-6 # TODO get as function parameter
+  # TODO get binary colors based on AUROC value
 
   ##############################################################################
   ### Calculate wilcoxon, FC, and AUC for each feature
@@ -74,10 +76,13 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
     temp  <- roc(predictor=feat[i,], response=label$label, ci=TRUE)
     if (temp$auc < 0.5){
-      aucs[[i]] = rev(1-c(temp$ci))
+      aucs[[i]] <- rev(1-c(temp$ci))
     } else {
-      aucs[[i]] = c(temp$ci)
+      aucs[[i]] <- c(temp$ci)
     }
+    temp.n <- sum(feat[i,label$n.idx] >= pr.cutoff)/sum(label$n.idx)
+    temp.p <- sum(feat[i,label$p.idx] >= pr.cutoff)/sum(label$p.idx)
+    pr.shift[i,] <- c(temp.p-temp.n, temp.n, temp.p)
   }
 
   ### Apply multi-hypothesis testing correction
@@ -104,6 +109,8 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     idx <- idx[order(fc[idx], decreasing=FALSE)]
   } else if (sort.by == 'pval') {
     idx <- idx[order(p.adj[idx], decreasing=TRUE)]
+  } else if (sort.by == 'pr.shift') {
+    idx <- idx[order(pr.shift[idx,1], decreasing=TRUE)]
   } else {
     cat('Unknown sorting option:', sort.by, 'order by p-value...\n')
     idx <- idx[order(p.adj[idx], decreasing=TRUE)]
