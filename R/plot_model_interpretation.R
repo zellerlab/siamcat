@@ -38,18 +38,16 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   norm.models=FALSE, fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){
   num.models   <- ncol(model$W)
 
-  ### some color preprocessing
   ### some color pre-processing
   if (!color.scheme %in% row.names(brewer.pal.info)){
-    warning("Not a valid RColorBrewer palette name, defaulting to RdYlBu...\n
+    warning("Not a valid RColorBrewer palette name, defaulting to BrBG...\n
     See brewer.pal.info for more information about RColorBrewer palettes...")
-    color.scheme <- 'RdYlBu'
+    color.scheme <- 'BrBG'
   }
   color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
 
   col.p = color.scheme[length(color.scheme)-4]
   col.n = color.scheme[1+4]
-
 
   ### preprocess models: discard hyperpar terms, (optionally normalize) and handle ones that are completely 0
   # keep.idx = grep('Bias', rownames(model$W), invert=TRUE)
@@ -101,94 +99,7 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   ### idx to sort samples according to their class membership and prediction score
   srt.idx = sort(label$label+mean.agg.pred, index.return=TRUE)$ix
 
-
-  ### start plotting model properties
-
-
-  ### plot layout
-  sel.f.cex = max(0.3, 0.8 - 0.01*num.sel.f)
-  lmat = rbind(c(8, 1, 5, 2), c(3, 4,0, 6), c(0, 7, 0, 0))
-  h_t = 0.10
-  h_m = ifelse(is.null(meta), 0.8, max(0.5, 0.7-0.01*dim(meta)[2]))
-  h_b = ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
-  pdf(fn.plot, paper='special', height=8.27, width=11.69, onefile=TRUE)
-  cat('Layout height values: ', h_t, ', ', h_m, ', ', h_b, '\n', sep='')
-  layout(lmat, widths=c(0.14, 0.58, 0.1, 0.14), heights=c(h_t, h_m, h_b))
-  par(oma=c(3, 4, 3, 4))
-
-  ### header row
-
-  # field 1 will be plotted later together with feature heatmap
-  # field 2: header for feature heatmap
-  par(mar=c(0, 4.1, 3.1, 5.1))
-  hm.label = label$label[srt.idx]
-  plot(NULL, type='n', xlim=c(0,length(hm.label)), xaxs='i', xaxt='n',
-       ylim=c(-0.5,0.5), yaxs='i', yaxt='n', xlab='', ylab='', bty='n')
-  ul = unique(hm.label)
-  for (l in 1:length(ul)) {
-    idx = which(ul[l] == hm.label)
-    lines(c(idx[1]-0.8, idx[length(idx)]-0.2), c(0, 0))
-    lines(c(idx[1]-0.8, idx[1]-0.8), c(-0.2, 0))
-    lines(c(idx[length(idx)]-0.2, idx[length(idx)]-0.2), c(-0.2, 0))
-    h = (idx[1] + idx[length(idx)]) / 2
-    t = gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[l]])
-    t = paste(t, ' (n=', length(idx), ')', sep='')
-    mtext(t, side=3, line=-0.5, at=h, cex=0.7, adj=0.5)
-  }
-  mtext('Metagenomic features', side=3, line=2, at=length(hm.label)/2, cex=1, adj=0.5)
-
-  # field 3: model header
-  par(mar=c(0, 6.1, 3.1, 1.1))
-  plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
-       ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
-  mtext('Linear model', side=3, line=2, at=0.04, cex=1, adj=0.5)
-  mtext(paste('(|W| = ', num.sel.f, ')', sep=''), side=3, line=1, at=0.04, cex=0.7, adj=0.5)
-
-
-  ### first data display row
-
-
-  med = apply(rel.model.weights, 2, median)
-  low.qt = apply(rel.model.weights, 2, quantile)[2,]
-  upp.qt = apply(rel.model.weights, 2, quantile)[4,]
-  # field 4: barplot of effect size associated with each feature
-  par(mar=c(0.1, 1.1, 0, 1.1))
-  mi = min(-med-(abs(low.qt-upp.qt)))
-  mx = max(-med+(abs(low.qt-upp.qt)))
-  barplot(-med, horiz = TRUE, width=1, space=0, yaxs='i',
-          xlim=c(-max(abs(mi),abs(mx)), max(abs(mi), max(mx))), ylim=c(0, num.sel.f), xlab='', ylab='', yaxt='n')
-  # to change the background color of the plot, invoking barplot twice seems easiest
-  rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col='gray90', border=NA)
-  plot.coords <- barplot(-med, col='gray30', border='white', horiz=TRUE, width=1, space=0, yaxs='i', xlab='', ylab='', yaxt='n', add=TRUE)
-  draw.error.bar(plot.coords = plot.coords, -low.qt, -upp.qt)
-  box(lwd=1)
-  mtext('median relative feat. weight', side=1, line=2, at=0, cex=0.7, adj=0.5)
-  # robustness indicated as percentage of models including a given feature (to the right of the barplot)
-  for (f in 1:num.sel.f) {
-    t = paste(format(100*rowSums(model$W[sel.idx[f],] != 0) / num.models, digits=1, scientific=FALSE), '%', sep='')
-    mtext(t, side=4, line=2.5, at=(f-0.5), cex=sel.f.cex, las=2, adj=1)
-    if (f == floor(num.sel.f/2)){
-      mtext(gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[1]]),
-            side = 2,
-            at = f,
-            line = -2
-      )
-      mtext(gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[2]]),
-            side = 4,
-            at = f,
-            line = -2
-      )
-    }
-  }
-  mtext('effect size', side=3, line=1, at=(mx/2), cex=0.7, adj=1)
-  mtext('robustness', side=3, line=1, at=mx, cex=0.7, adj=0)
-
-  cat('  finished plotting feature weights.\n')
-
-
-  # field 5: feature heatmap with feature names to the right
-
-  par(mar=c(0.1, 4.1, 0, 5.1))
+  # prepare heatmap
   if (heatmap.type == 'zscore'){
     # data is  transposed and transformed to feature z-scores for display
     img.data = t(feat[sel.idx, srt.idx])
@@ -225,24 +136,62 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   # truncate extreme values for heatmap visualization
   img.data[img.data < zlim[1]] = zlim[1]
   img.data[img.data > zlim[2]] = zlim[2]
-  image(img.data, zlim=zlim, col=color.scheme, xaxt='n', yaxt='n', xlab='', ylab='', bty='n')
-  for (f in 1:num.sel.f) {
-    mtext(colnames(sel.W)[f], side=4, line=1, at=(f-1)/(num.sel.f-1), cex=sel.f.cex, las=2,
-          col=ifelse(med[f]>0, col.n, col.p))
-  }
-  box(lwd=1)
-  cat('  finished plotting feature heatmap.\n')
 
-  # additonally add to header row a corresponding color bar
+  ### start plotting model properties
+  pdf(fn.plot, paper='special', height=8.27, width=11.69, onefile=TRUE)
+
+  ### plot layout
+  sel.f.cex = max(0.3, 0.8 - 0.01*num.sel.f)
+  lmat = rbind(c(1, 2, 3, 4),
+               c(5, 6, 0, 7),
+               c(0, 8, 0, 0))
+  h_t = 0.10
+  h_m = ifelse(is.null(meta), 0.8, max(0.5, 0.7-0.01*dim(meta)[2]))
+  h_b = ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
+  cat('Layout height values: ', h_t, ', ', h_m, ', ', h_b, '\n', sep='')
+  layout(lmat, widths=c(0.14, 0.58, 0.1, 0.14), heights=c(h_t, h_m, h_b))
+  par(oma=c(3, 4, 3, 4))
+
+  ### header row
+  # ############################################################################
+  # Title of Feature Weights plot
+  par(mar=c(0, 1.1, 3.1, 1.1))
+  plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
+       ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
+  mtext('Feature Weights', side=3, line=2, at=0.04, cex=1, adj=0.5)
+
+  # ############################################################################
+  # Title of heatmap and brackets for classes
+  par(mar=c(0, 4.1, 3.1, 5.1))
+  hm.label = label$label[srt.idx]
+  plot(NULL, type='n', xlim=c(0,length(hm.label)), xaxs='i', xaxt='n',
+       ylim=c(-0.5,0.5), yaxs='i', yaxt='n', xlab='', ylab='', bty='n')
+  ul = unique(hm.label)
+  for (l in 1:length(ul)) {
+    idx = which(ul[l] == hm.label)
+    lines(c(idx[1]-0.8, idx[length(idx)]-0.2), c(0, 0))
+    lines(c(idx[1]-0.8, idx[1]-0.8), c(-0.2, 0))
+    lines(c(idx[length(idx)]-0.2, idx[length(idx)]-0.2), c(-0.2, 0))
+    h = (idx[1] + idx[length(idx)]) / 2
+    t = gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[l]])
+    t = paste(t, ' (n=', length(idx), ')', sep='')
+    mtext(t, side=3, line=-0.5, at=h, cex=0.7, adj=0.5)
+  }
+  mtext('Metagenomic features', side=3, line=2, at=length(hm.label)/2, cex=1, adj=0.5)
+
+  # ############################################################################
+  # Heatmap legend
   par(mar=c(3.1, 1.1, 1.1, 1.1))
   # TODO would be nice to overplot a histogram
   #h = as.vector(img.data)
   #h = h[h > z.score.lim[1] & h < z.score.lim[2]]
   #h = hist(h, 100, plot=FALSE)$counts
   # end TODO
-  barplot(as.matrix(rep(1,100)), col = color.scheme, horiz=TRUE, border=0, ylab='', axes=FALSE)
+  barplot(as.matrix(rep(1,100)), col = color.scheme,
+          horiz=TRUE, border=0, ylab='', axes=FALSE)
   if (heatmap.type == 'fc') {
-    key.ticks = seq(round(min(img.data), digits = 1), round(max(img.data), digits = 1), length.out=7)
+    key.ticks = seq(round(min(img.data), digits = 1),
+                    round(max(img.data), digits = 1), length.out=7)
     key.label = 'Feature fold change over controls'
   } else if (heatmap.type == 'zscore') {
     key.ticks = seq(z.score.lim[1], z.score.lim[2], length.out=7)
@@ -251,19 +200,74 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   axis(side=1, at=seq(0, 100, length.out=7), labels=key.ticks)
   mtext(key.label, side=3, line=0.5, at=50, cex=0.7, adj=0.5)
 
+  # ############################################################################
+  # Model header (needs to be model sensitive)
+  par(mar=c(0, 6.1, 3.1, 1.1))
+  plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
+       ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
+  mtext('Linear model', side=3, line=2, at=0.04, cex=1, adj=0.5)
+  mtext(paste('(|W| = ', num.sel.f, ')', sep=''), side=3, line=1, at=0.04, cex=0.7, adj=0.5)
 
+  # ############################################################################
+  # Feature weights
+  med = apply(rel.model.weights, 2, median)
+  low.qt = apply(rel.model.weights, 2, quantile)[2,]
+  upp.qt = apply(rel.model.weights, 2, quantile)[4,]
+  # field 4: barplot of effect size associated with each feature
+  par(mar=c(0.1, 1.1, 0, 1.1))
+  mi = min(-med-(abs(low.qt-upp.qt)))
+  mx = max(-med+(abs(low.qt-upp.qt)))
+  barplot(-med, horiz = TRUE, width=1, space=0, yaxs='i',
+          xlim=c(-max(abs(mi),abs(mx)), max(abs(mi), max(mx))), ylim=c(0, num.sel.f), xlab='', ylab='', yaxt='n')
+  # to change the background color of the plot, invoking barplot twice seems easiest
+  rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col='gray90', border=NA)
+  plot.coords <- barplot(-med, col='gray30', border='white', horiz=TRUE, width=1, space=0, yaxs='i', xlab='', ylab='', yaxt='n', add=TRUE)
+  draw.error.bar(plot.coords = plot.coords, -low.qt, -upp.qt)
+  box(lwd=1)
+  mtext('median relative feat. weight', side=1, line=2, at=0, cex=0.7, adj=0.5)
+  # robustness indicated as percentage of models including a given feature (to the right of the barplot)
+  for (f in 1:num.sel.f) {
+    t = paste(format(100*rowSums(model$W[sel.idx[f],] != 0) / num.models, digits=1, scientific=FALSE), '%', sep='')
+    mtext(t, side=4, line=2.5, at=(f-0.5), cex=sel.f.cex, las=2, adj=1)
+    if (f == floor(num.sel.f/2)){
+      mtext(gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[1]]),
+            side = 2,
+            at = f,
+            line = -2
+      )
+      mtext(gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[2]]),
+            side = 4,
+            at = f,
+            line = -2
+      )
+    }
+  }
+  mtext('effect size', side=3, line=1, at=(mx/2), cex=0.7, adj=1)
+  mtext('robustness', side=3, line=1, at=mx, cex=0.7, adj=0)
+  cat('  finished plotting feature weights.\n')
 
-  # field 6: boxplot displaying the poportion of weight per model that is actually shown
+  # ############################################################################
+  # Heatmap
+  par(mar=c(0.1, 4.1, 0, 5.1))
+
+  image(img.data, zlim=zlim, col=color.scheme, xaxt='n', yaxt='n', xlab='', ylab='', bty='n')
+  for (f in 1:num.sel.f) {
+    mtext(colnames(sel.W)[f], side=4, line=1, at=(f-1)/(num.sel.f-1), cex=sel.f.cex, las=2,
+          col=ifelse(med[f]>0, col.n, col.p))
+  }
+  box(lwd=1)
+  cat('  finished plotting feature heatmap.\n')
+
+  # ############################################################################
+  # Proportion of weights shown
   par(mar=c(0.1, 6.1, 0, 1.1))
   boxplot(rowSums(abs(sel.W)) / sum.w, ylim=c(0,1))
   mtext('proportion of', side=1, line=1, at=1, adj=0.5, cex=0.7)
   mtext('weight shown', side=1, line=2, at=1, adj=0.5, cex=0.7)
   cat('  finished plotting proportion of model weight shown.\n')
 
-
-  # empty field (left)
-
-  # field 7 (middle): heatmap showing predictions and metadata (if given)
+  # ############################################################################
+  # Metadata and prediction
   par(mar=c(1.1, 4.1, 0.3, 5.1))
   img.data = as.matrix(mean.agg.pred[srt.idx])
   colnames(img.data) = 'Classification result'
@@ -299,14 +303,6 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   }
   cat('  finished plotting classification result and additional metadata.\n')
 
-  # empty field (right)
-
-  # field 8  : header for  feature weight barplot
-  par(mar=c(0, 1.1, 3.1, 1.1))
-  plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
-       ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
-  mtext('Feature Weights', side=3, line=2, at=0.04, cex=1, adj=0.5)
-
   tmp <- dev.off()
 }
 
@@ -318,4 +314,53 @@ draw.error.bar <- function(plot.coords, z, y){
     lines(c(z[i],z[i]),c(plot.coords[i]+g, plot.coords[i]-g))
     lines(c(y[i],y[i]),c(plot.coords[i]+g, plot.coords[i]-g))
   }
+}
+
+plot.heatmap <- function(heatmap.type, feat, sel.idx, str.idx, z.score.lim){
+
+  par(mar=c(0.1, 4.1, 0, 5.1))
+
+  if (!heatmap.type %in% c('zscore', 'fc')){
+    stop('unknown heatmap.type: ', heatmap.type, '\n Must be either "zscore" or "fc"')
+  } else if (heatmap.type == 'zscore'){
+    img.data = t(feat[sel.idx, srt.idx])
+    m = apply(img.data, 2, mean)
+    s = apply(img.data, 2, sd)
+    for (c in 1:dim(img.data)[2]) {
+      img.data[,c] = (img.data[,c] - m[c]) / s[c]
+    }
+    zlim = z.score.lim
+  } else if (heatmap.type == 'fc'){
+    # extract only those features which are specified by sel.idx. Necessary since
+    # the indices specified in sel.idx were generated on feat (and not on origin.feat)
+    m = match(rownames(feat)[sel.idx], rownames(origin.feat))
+    origin.feat.sel = origin.feat[m,]
+    feat.ct.median = apply(origin.feat.sel[,label$n.idx], 1, median)
+    img.data = log10(origin.feat.sel + detect.lim) - log10(feat.ct.median + detect.lim)
+    # reorder columns
+    img.data = img.data[,srt.idx]
+
+    if (any(is.na(m))) {
+      # this can be the case if meta-variables have been added as predictors
+      # (then there's no corresponding original feature)
+      idx = which(is.na(m))
+      img.data[idx,] = feat[sel.idx[idx],]
+      rownames(img.data)[idx] = rownames(feat)[sel.idx[idx]]
+    }
+    # transpose for heatmap plot
+    img.data = t(img.data)
+    img.data = img.data
+    zlim = fc.lim
+  }
+
+  # truncate extreme values for heatmap visualization
+  img.data[img.data < zlim[1]] = zlim[1]
+  img.data[img.data > zlim[2]] = zlim[2]
+  image(img.data, zlim=zlim, col=color.scheme, xaxt='n', yaxt='n', xlab='', ylab='', bty='n')
+  for (f in 1:num.sel.f) {
+    mtext(colnames(sel.W)[f], side=4, line=1, at=(f-1)/(num.sel.f-1), cex=sel.f.cex, las=2,
+          col=ifelse(med[f]>0, col.n, col.p))
+  }
+  box(lwd=1)
+  cat('  finished plotting feature heatmap.\n')
 }
