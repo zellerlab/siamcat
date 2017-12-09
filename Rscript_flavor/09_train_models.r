@@ -27,19 +27,19 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option(c('-s', '--srcdir'),   type='character',                  help='Source directory of this and other utility scripts'),
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
-    make_option('--method',                type='character', default='lasso', help='class of learner, directly passed to mlr::makeLearner'),
+    make_option('--method',            type='character', default='lasso', help='class of learner, directly passed to mlr::makeLearner'),
     make_option('--train_sets',        type='character', default='NULL',  help='Input file specifying which examples to use for training'),
     make_option('--mlr_models_list',   type='character',                  help='Output RData file to which the object with trained models will be written'),
-    make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified 
-    	                                                                        such that an approx. equal proportion of positive examples 
+    make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified
+    	                                                                        such that an approx. equal proportion of positive examples
     	                                                                        are contained in each subset (only for binary labels)?'),
-    make_option('--sel_criterion',     type='character', default='auroc', help='Evaluation criterion for model selection (options: \'acc\',
-    	                                                                        \'auroc\', \'auprc\', \'auroc.2\')'),
-    make_option('--min_nonzero_coeff', type='integer',   default=1,       help='Minimum number of non-zero coefficients required for a model 
+    make_option('--sel_criterion',     type='character', default='auc', help='Evaluation criterion for model selection (options: \'acc\',
+    	                                                                        \'auc\', \'auprc\', \'f1\')'),
+    make_option('--min_nonzero_coeff', type='integer',   default=1,       help='Minimum number of non-zero coefficients required for a model
     	                                                                        to be considered in model selection'),
     make_option('--model',             type='character',                  help='Text file to which the trained models will be written'),
 
-    make_option('--model_matrix',      type='character',                  help='Output file containing information to rebuild models in 
+    make_option('--model_matrix',      type='character',                  help='Output file containing information to rebuild models in
     	                                                                        plm_predictor function')
 )
 
@@ -81,11 +81,11 @@ set.seed(r.seed)
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
 
-plm.out <- train.model(feat = feat, 
+plm.out <- train.model(feat = feat,
                        label = label,
                        method = opt$method,
                        data.split=opt$train_sets,
-                       stratify = opt$stratify, 
+                       stratify = opt$stratify,
                        modsel.crit  = opt$sel_criterion,
                        min.nonzero.coeff = opt$min_nonzero_coeff)
 

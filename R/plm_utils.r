@@ -13,7 +13,7 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")) {
+train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), measure=list("acc")) {
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
@@ -50,17 +50,17 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   } else {
     stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR, randomForest.\n")
   }
-  
+
 
   ## 3) Fit the model
   ## Train the learner on the task using a random subset of the data as training set
   if(!all(is.null(paramSet))){
-    hyperPars <- tuneParams(learner = lrn, 
+    hyperPars <- tuneParams(learner = lrn,
                          task = task,
                          resampling =  makeResampleDesc('CV', iters=5L, stratify=TRUE),
-                         par.set = paramSet, 
-                         control = makeTuneControlGrid(resolution = 10L), 
-                         measures=list(acc))
+                         par.set = paramSet,
+                         control = makeTuneControlGrid(resolution = 10L),
+                         measures=measure)
     print(hyperPars)
     lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
@@ -89,7 +89,7 @@ get.foldList <- function(data.split){
   num.runs     <- 1
   num.folds    <- 2
   fold.name = list()
-  fold.exm.idx = list() 
+  fold.exm.idx = list()
   if (is.null(data.split)){
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
@@ -102,7 +102,7 @@ get.foldList <- function(data.split){
       input         <- readLines(con)
       close(con)
       #print(length(input))
-      
+
       num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
       for (i in 1:length(input)) {
         l               <- input[[i]]

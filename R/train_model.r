@@ -23,14 +23,24 @@
 #' @keywords SIAMCAT plm.trainer
 #' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), 
-                        data.split=NULL, stratify = TRUE, 
+train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
+                        data.split=NULL, stratify = TRUE,
                         modsel.crit  = "auc",  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
+  # check modsel.crit
+  if (!modsel.crit %in% c("auc", "f1", "acc")){
+    cat("Unkown model selection criterion... Defaulting to AU-ROC!\n")
+    measure <- list(mlr::auc)
+  } else if (modsel.crit == 'auc'){
+    measure <- list(mlr::auc)
+  } else if (modsel.crit == 'acc'){
+    measure <- list(mlr::acc)
+  } else if (modsel.crit == 'f1'){
+    measure <- list(mlr::f1)
+  }
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
-  # TODO 3: add model.type as parameter
-  # transpose feature matrix as a convenience preprocessing
 
+  # transpose feature matrix as a convenience preprocessing
   feat         <- t(feat)
   ### subselect training examples as specified in fn.train.sample (if given)
   foldList     <- get.foldList(data.split)
@@ -38,7 +48,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
   num.folds    <- foldList$num.folds
-  
+
   cat('\nPreparing to train', method,  'models on', num.runs, 'training set samples...\n\n')
 
   ### train one model per training sample (i.e. CV fold)
@@ -57,7 +67,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   for (r in 1:num.runs) {
     cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')', sep='')
     ### subselect examples for training
-    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab)) 
+    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
     train.label       <- label.fac
     train.label       <- label.fac[fold.exm.idx[[r]]]
     data              <- as.data.frame(feat[fold.exm.idx[[r]],])
@@ -66,7 +76,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     data$label                     <- train.label
 
     ### internal cross-validation for model selection
-    model             <- train.plm(data=data, method = method)
+    model             <- train.plm(data=data, method = method, measure=measure)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
     }else{
