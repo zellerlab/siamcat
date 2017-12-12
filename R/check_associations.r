@@ -39,9 +39,9 @@
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
-                               pr.cutoff=10^-6, alpha=0.05, mult.corr="fdr",
-                               sort.by="fc", detect.lim=10^-8,
-                               max.show=50, plot.type="bean"){
+                               alpha=0.05, mult.corr="fdr", sort.by="fc",
+                               detect.lim=10^-8, pr.cutoff=10^-6, max.show=50,
+                               plot.type="bean", panels=c("fc", "auroc")){
 
   # TODO
   # choose colors differently:
@@ -74,13 +74,13 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
     # pseudo-fold change as differential quantile area
     q.p <- quantile(log10(feat[i,label$p.idx]+detect.lim), probs=seq(.1, .9, .05))
     q.n <- quantile(log10(feat[i,label$n.idx]+detect.lim), probs=seq(.1, .9, .05))
-    fc[i]    <- sum(q.p - q.n) #median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
+    fc[i]    <- sum(q.p - q.n)/length(q.p) #median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
     # wilcoxon
     p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
     # AU-ROC
     temp  <- roc(predictor=feat[i,], response=label$label, ci=TRUE, direction='<')
     if (temp$auc < 0.5){
-      aucs[[i]] <- rev(1-c(temp$ci))
+      aucs[[i]] <- c(temp$ci)
       bcol[i] <- paste0(col.n, '77')
     } else {
       aucs[[i]] <- c(temp$ci)
@@ -133,9 +133,14 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
 
   ##############################################################################
   ### generate plots with significant associations between features and labels
+
+  # make plot matrix dependent on panels parameters
+  layout.mat <- cbind(2,1, t(seq(3, length.out=length(panels))))
+  widths <- c(0.6, 0.1, rep(0.2, length(panels)))
+
   pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
 
-  layout(cbind(2,1,3,4,5), widths=c(0.6,0.1,0.2,0.2,0.2))
+  layout(mat=layout.mat, widths=widths)
 
   ##############################################################################
   # PANEL 2: P-VALUES
@@ -180,19 +185,18 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   }
 
   ##############################################################################
-  # PANEL 3: FOLD CHANGES
-  # plot single-feature Fold changes
-  plot.fcs(indices=idx, fc.all=fc, binary.cols=bcol)
-
-  ##############################################################################
-  # PANEL 4: Prevalence Shift
-  # plot prevalence shift as barplot
-  plot.pr.shift(indices=idx, pr.shifts=pr.shift, col=col)
-
-  ##############################################################################
-  # PANEL 5: AU-ROC
-  # plot single-feature AUCs
-  plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
+  # OTHER PANELS
+  for (p in panels){
+    if (! p %in% c("fc", "auroc", "prevalence")){
+      stop('Panel type not supported!')
+    } else if (p == "fc"){
+      plot.fcs(indices=idx, fc.all=fc, binary.cols=bcol)
+    } else if (p == "prevalence"){
+      plot.pr.shift(indices=idx, pr.shifts=pr.shift, col=col)
+    } else if (p == "auroc"){
+      plot.aucs(indices=idx, aucs.all=aucs, binary.cols=bcol)
+    }
+  }
 
   # close pdf device
   tmp <- dev.off()
@@ -423,12 +427,15 @@ plot.aucs <- function(indices, aucs.all, binary.cols){
   par(mar=c(5.1, 1.1, 4.1, 3.1))
   # plot background
   plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
-       xlim=c(0.5,1), ylim=c(0.5, length(indices)+0.5), type='n')
-  ticks       <- seq(0.5, 1.0, length.out=6)
+       xlim=c(0,1), ylim=c(0.5, length(indices)+0.5), type='n')
+  ticks       <- seq(0, 1.0, length.out=5)
+  tick.labels <- formatC(ticks, digits=2)
   # plot gridlines
   for (v in ticks) {
     abline(v=v, lty=3, col='lightgrey')
   }
+  # make thicker line at .5
+  abline(v=.5, lty=1, col='lightgrey')
   # plot single feature aucs
   for (b in 1:length(indices)) {
     i <- indices[b]
@@ -438,7 +445,7 @@ plot.aucs <- function(indices, aucs.all, binary.cols){
   }
 
   # Title and axis label
-  axis(side=1, at=ticks, cex.axis=0.7)
+  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Feature AUCs', xlab='AU-ROC')
 }
 
