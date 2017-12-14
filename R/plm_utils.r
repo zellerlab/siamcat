@@ -81,7 +81,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   model$lrn          <- lrn ### ???
   model$task         <- task
 
-return(model)
+  return(model)
 }
 
 #' @export

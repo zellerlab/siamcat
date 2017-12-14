@@ -25,18 +25,25 @@
 # TODO add details section for this function
 train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                         data.split=NULL, stratify = TRUE,
-                        modsel.crit  = "auc",  min.nonzero.coeff = 1){
+                        modsel.crit=list("auc"),  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
   # check modsel.crit
-  if (!modsel.crit %in% c("auc", "f1", "acc")){
+  if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr"))){
     cat("Unkown model selection criterion... Defaulting to AU-ROC!\n")
     measure <- list(mlr::auc)
-  } else if (modsel.crit == 'auc'){
-    measure <- list(mlr::auc)
-  } else if (modsel.crit == 'acc'){
-    measure <- list(mlr::acc)
-  } else if (modsel.crit == 'f1'){
-    measure <- list(mlr::f1)
+  } else {
+    measure <- list()
+  }
+  for (m in modsel.crit){
+    if (m == 'auc'){
+      measure[[length(measure)+1]] <- mlr::auc
+    } else if (m == 'acc'){
+      measure[[length(measure)+1]] <- mlr::acc
+    } else if (m == 'f1'){
+      measure[[length(measure)+1]] <- mlr::f1
+    } else if (m == 'pr'){
+      measure[[length(measure)+1]] <- auprc
+    }
   }
   # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
 
@@ -65,7 +72,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   power           <- NULL
 
   for (r in 1:num.runs) {
-    cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')', sep='')
+    cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')\n', sep='')
     ### subselect examples for training
     label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
     train.label       <- label.fac
@@ -143,4 +150,20 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   colnames(out.matrix) = paste('M', fold.name, sep='_')
   #save(power,file="power.RData")
   invisible(list(out.matrix=out.matrix, W.mat=W.mat, models.list=models.list))
+}
+
+auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0,
+  properties = c("classif", "req.pred", "req.truth", "req.prob"),
+  name = "Area under the Precision Recall Curve",
+  fun = function(task, model, pred, feats, extra.args) {
+    #if (anyMissing(pred$data$response) || length(unique(pred$data$truth)) == 1L)
+    #  return(NA_real_)
+    measureAUPRC(getPredictionProbabilities(pred), pred$data$truth, pred$task.desc$negative, pred$task.desc$positive)
+  }
+)
+
+measureAUPRC <- function(probs, truth, negative, positive){
+  pr <- pr.curve(scores.class0 = probs[which(truth == positive)],
+                 scores.class1 = probs[which(truth == negative)])
+  return(pr$auc.integral)
 }
