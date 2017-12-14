@@ -17,10 +17,10 @@ Depends:
     glmnet,
     LiblineaR,
     pROC,
-    PRROC,
     mlr
 Imports:
     optparse,
+    PRROC,
     colorRamps,
     gelnet
 License: GNU GPL-3.0
