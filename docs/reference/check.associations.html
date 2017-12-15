@@ -92,9 +92,9 @@ both classes, the median fold change, and the AU-ROC.</p>
     
 
     <pre class="usage"><span class='fu'>check.associations</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>fn.plot</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
-  <span class='kw'>effect.size</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"prevalence"</span>, <span class='st'>"auroc"</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>mult.corr</span> <span class='kw'>=</span> <span class='st'>"fdr"</span>,
-  <span class='kw'>sort.by</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"fc"</span>, <span class='st'>"pval"</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>8</span>, <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"bean"</span>)</pre>
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>mult.corr</span> <span class='kw'>=</span> <span class='st'>"fdr"</span>, <span class='kw'>sort.by</span> <span class='kw'>=</span> <span class='st'>"fc"</span>, <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>8</span>,
+  <span class='kw'>pr.cutoff</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>6</span>, <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"bean"</span>, <span class='kw'>panels</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"fc"</span>,
+  <span class='st'>"auroc"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -125,7 +125,7 @@ both classes, the median fold change, and the AU-ROC.</p>
     </tr>
     <tr>
       <th>sort.by</th>
-      <td><p>string, sort features by p-value (<code>"pv"</code>) or by fold change (<code>"fc"</code>), defaults to <code>"pv"</code></p></td>
+      <td><p>string, sort features by p-value (<code>"pv"</code>), by fold change (<code>"fc"</code>) or by prevalence shift (<code>"pr.shift"</code>), defaults to <code>"pv"</code></p></td>
     </tr>
     <tr>
       <th>detect.lim</th>

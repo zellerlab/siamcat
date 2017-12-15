@@ -5,9 +5,9 @@
 \title{Check and visualize associations between features and classes}
 \usage{
 check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
-  effect.size = c("prevalence", "auroc"), alpha = 0.05, mult.corr = "fdr",
-  sort.by = c("fc", "pval"), detect.lim = 10^-8, max.show = 50,
-  plot.type = "bean")
+  alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 10^-8,
+  pr.cutoff = 10^-6, max.show = 50, plot.type = "bean", panels = c("fc",
+  "auroc"))
 }
 \arguments{
 \item{feat}{feature object}
@@ -22,7 +22,7 @@ check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
 
 \item{mult.corr}{multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}}
 
-\item{sort.by}{string, sort features by p-value (\code{"pv"}) or by fold change (\code{"fc"}), defaults to \code{"pv"}}
+\item{sort.by}{string, sort features by p-value (\code{"pv"}), by fold change (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to \code{"pv"}}
 
 \item{detect.lim}{float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}}
 
