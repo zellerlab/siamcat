@@ -19,7 +19,8 @@ package.list <- c("RColorBrewer",
                   "optparse",
                   "colorRamps",
                   "gelnet",
-                  "mlr")
+                  "mlr",
+                  "PRROC")
 
 notInst      <- which(!package.list%in%installed.packages())
 if(length(notInst)>0) install.packages(package.list[notInst])
