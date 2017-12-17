@@ -13,7 +13,8 @@
 
 ##### function to train a LASSO model for a single given C
 #' @export
-train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), measure=list("acc")) {
+train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
+                      measure=list("acc"), min.nonzero.coeff=5){
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
@@ -68,6 +69,14 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   model     <- train(lrn, task)
 
   if(cl == "classif.cvglmnet"){
+    opt.lambda           <- get.optimal.lambda.for.glmnet(model, task, measure, min.nonzero.coeff)
+    cat(opt.lambda, '\n')
+    # transform model
+    if (is.null(model$learner$par.vals$s)){
+      model$learner.model$lambda.1se <- opt.lambda
+    } else {
+      model$learner.model[[model$learner$par.vals$s]] <- opt.lambda
+    }
     coef                <- coefficients(model$learner.model)
     bias.idx            <- which(rownames(coef) == '(Intercept)')
     coef                <- coef[-bias.idx,]
@@ -139,4 +148,41 @@ get.foldList <- function(data.split){
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)
   invisible(list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds))
+}
+
+
+get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.measure, min.nonzero.coeff){
+  # get lambdas that fullfill the minimum nonzero coefficients criterion
+  lambdas <- trained.model$learner.model$glmnet.fit$lambda[which(trained.model$learner.model$nzero >= min.nonzero.coeff)]
+  # get performance on training set for all those lambdas in trace
+  performances <- sapply(lambdas, FUN=function(lambda, model, task, measure){
+    model.transformed <- model
+    # lambda.1se is the default parameter value, but could in principle be set be the user.... will not have an effect though...
+    if (is.null(model.transformed$learner$par.vals$s)){
+      model.transformed$learner.model$lambda.1se <- lambda
+    } else {
+      model.transformed$learner.model[[model.transformed$learner$par.vals$s]] <- lambda
+    }
+    pred.temp <- predict(model.transformed, task)
+    performance(pred.temp, measures = measure)
+  }, model=trained.model, task=training.task, measure=perf.measure)
+  # get optimal lambda in depence of the performance measure
+  if (length(perf.measure) == 1){
+    if (perf.measure[[1]]$minimize == TRUE){
+      opt.lambda <- lambdas[which(performances == min(performances))[1]]
+    } else {
+      opt.lambda <- lambdas[which(performances == max(performances))[1]]
+    }
+  } else {
+    opt.idx <- c()
+    for (m in 1:length(perf.measure)){
+      if (perf.measure[[m]]$minimize == TRUE){
+        opt.idx <- c(opt.idx, which(performances[m,] == min(performances[m,]))[1])
+      } else {
+        opt.idx <- c(opt.idx, which(performances[m,] == max(performances[m,]))[1])
+      }
+    }
+    opt.lambda <- lambdas[floor(mean(opt.idx))]
+  }
+  return(opt.lambda)
 }

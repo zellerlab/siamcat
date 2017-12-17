@@ -23,7 +23,7 @@
 #' @keywords SIAMCAT plm.trainer
 #' @return an object of class \link[mlr]{makeWrappedModel}
 # TODO add details section for this function
-train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
+train.model2 <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                         data.split=NULL, stratify = TRUE,
                         modsel.crit=list("auc"),  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
@@ -83,7 +83,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     data$label                     <- train.label
 
     ### internal cross-validation for model selection
-    model             <- train.plm(data=data, method = method, measure=measure)
+    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
     }else{
