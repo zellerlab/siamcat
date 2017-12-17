@@ -70,7 +70,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 
   if(cl == "classif.cvglmnet"){
     opt.lambda           <- get.optimal.lambda.for.glmnet(model, task, measure, min.nonzero.coeff)
-    cat(opt.lambda, '\n')
+    # cat(opt.lambda, '\n')
     # transform model
     if (is.null(model$learner$par.vals$s)){
       model$learner.model$lambda.1se <- opt.lambda
