@@ -21,7 +21,7 @@
 #' @export
 #' @return Does not return anything, but produces a single plot for each metadata category
 confounder.check <- function(meta, label, fn.plot){
-
+  # TODO: implement color.scheme selection as function parameter
   pdf(fn.plot, onefile=TRUE)
   par(xpd=FALSE)
   for (m in 1:ncol(meta)) {
