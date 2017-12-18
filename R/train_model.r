@@ -33,7 +33,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
                         modsel.crit=list("auc"),  min.nonzero.coeff = 1){
   # TODO 1: modsel.criterion should be implemented
   # check modsel.crit
-  if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr"))){
+  if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))){
     cat("Unkown model selection criterion... Defaulting to AU-ROC!\n")
     measure <- list(mlr::auc)
   } else {
@@ -46,7 +46,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
       measure[[length(measure)+1]] <- mlr::acc
     } else if (m == 'f1'){
       measure[[length(measure)+1]] <- mlr::f1
-    } else if (m == 'pr'){
+    } else if (m == 'pr' || m == 'auprc'){
       measure[[length(measure)+1]] <- auprc
     }
   }
