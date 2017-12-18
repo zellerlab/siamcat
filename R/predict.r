@@ -151,9 +151,9 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, model.ma
       #    cat(sort(m), '\n\n')
       #    cat(length(m), '\n\n')
       #    cat(length(label), '\n\n')
-      if (!is.null(data.split)) {
-        stopifnot(all(sort(m) == 1:length(label$label)))
-      }
+      #if (!is.null(data.split)) {
+      #   stopifnot(all(sort(m) == 1:length(label$label)))
+      #}
       pred.mat[m,r] = pred[p]
       stopifnot(all(names(pred)[p] == rownames(pred.mat)[m]))
     }
