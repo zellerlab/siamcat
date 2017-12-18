@@ -9,23 +9,29 @@ train.model(feat, label, method = c("lasso", "enet", "ridge", "lasso_ll",
   modsel.crit = list("auc"), min.nonzero.coeff = 1)
 }
 \arguments{
-\item{feat}{features object}
+\item{feat}{feature object}
 
 \item{label}{label object}
+
+\item{method}{string, specifies the type of model to be trained, may be one of these: \code{c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")}}
 
 \item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
 
 \item{stratify}{boolean, should the folds in the internal cross-validation be stratified?}
 
-\item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that should be present in the model}
+\item{modsel.crit}{list, specifies the model selection criterion during internal cross-validation, may contain these: \code{c("auc", "f1", "acc", "pr")}}
 
-\item{cl}{class of learner, directly passed to \link[mlr]{makeLearner}}
+\item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that should be present in the model (only for \code{"lasso"}, \code{"ridge"}, and \code{"enet"}}
 }
 \value{
-an object of class \link[mlr]{makeWrappedModel}
+list containing \itemize{
+ \item \code{models.list} the list of trained models for each cross-validation fold
+ \item \code{out.matrix} ?
+ \item \code{W.mat} ?
+}
 }
 \description{
-This function trains the a machine learning model on the training data, using a \code{num.folds}-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.
+This function trains the a machine learning model on the training data
 }
 \keyword{SIAMCAT}
 \keyword{plm.trainer}

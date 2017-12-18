@@ -4,7 +4,7 @@
 \alias{interpretor.model.plot}
 \title{Model Interpretation Plot}
 \usage{
-interpretor.model.plot(feat, label, meta, fn.plot, model, pred,
+interpretor.model.plot(feat, label, fn.plot, model, pred, meta = NULL,
   color.scheme = "BrBG", consens.thres = 0.5, heatmap.type = "zscore",
   norm.models = FALSE, fc.lim = c(-5, 5), z.score.lim = c(-3, 3),
   detect.lim = 1e-08)
@@ -14,13 +14,13 @@ interpretor.model.plot(feat, label, meta, fn.plot, model, pred,
 
 \item{label}{a label object}
 
-\item{meta}{a metadata object}
-
 \item{fn.plot}{string, filename for the pdf-plot}
 
 \item{model}{matrix containing the feature weights for every CV fold/repetition}
 
 \item{pred}{matrix containing the model predictions for every CV repetition}
+
+\item{meta}{a metadata object}
 
 \item{color.scheme}{color scheme for the heatmap, defaults to =\code{"BrBG"}}
 
@@ -29,6 +29,10 @@ interpretor.model.plot(feat, label, meta, fn.plot, model, pred,
 \item{heatmap.type}{type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore"}}
 
 \item{norm.models}{boolean, should the feature weights be normalized across models?, defaults to \code{FALSE}}
+
+\item{detect.lim}{float, pseudocount to be added before log10-transformation of features, defaults to \code{1e-08}}
+
+\item{limits}{vector, cutoff for extreme values in the heatmap, defaults to \code{c(-3, 3)}}
 }
 \value{
 Does not return anything, but produces the model interpretion plot.
@@ -40,9 +44,9 @@ Produces a plot for model interpretation, displaying feature weights, robustness
 Produces a plot consisting of \itemize{
  \item a barplot showing the feature weights and their robustness (i.e. in what proportion of models have they been incorporated)
  \item a heatmap showing the z-scores of the metagenomic features across patients
- \item another heatmap displaying the metadata categories
+ \item another heatmap displaying the metadata categories (if applicable)
  \item a boxplot displaying the poportion of weight per model that is actually shown
-for the features that are incorporated into more than \code{consens.thres} % of the models.
+for the features that are incorporated into more than \code{consens.thres} percent of the models.
 }
 }
 \keyword{SIAMCAT}

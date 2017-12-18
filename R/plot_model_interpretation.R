@@ -23,21 +23,24 @@
 #' @param consens.thres minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}
 #' @param heatmap.type type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore"}
 #' @param norm.models boolean, should the feature weights be normalized across models?, defaults to \code{FALSE}
+#' @param limits vector, cutoff for extreme values in the heatmap, defaults to \code{c(-3, 3)}
+#' @param detect.lim float, pseudocount to be added before log10-transformation of features, defaults to \code{1e-08}
 #' @keywords SIAMCAT interpretor.model.plot
 #' @return Does not return anything, but produces the model interpretion plot.
 #' @export
 #' @details Produces a plot consisting of \itemize{
 #'  \item a barplot showing the feature weights and their robustness (i.e. in what proportion of models have they been incorporated)
 #'  \item a heatmap showing the z-scores of the metagenomic features across patients
-#'  \item another heatmap displaying the metadata categories
+#'  \item another heatmap displaying the metadata categories (if applicable)
 #'  \item a boxplot displaying the poportion of weight per model that is actually shown
-#' for the features that are incorporated into more than \code{consens.thres} % of the models.
+#' for the features that are incorporated into more than \code{consens.thres} percent of the models.
 #'}
-interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
-  color.scheme='BrBG', consens.thres=0.5, heatmap.type='zscore',
-  norm.models=FALSE, fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){
-  num.models   <- ncol(model$W)
+interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
+  meta=NULL, color.scheme='BrBG', consens.thres=0.5,
+  heatmap.type='zscore', norm.models=FALSE,
+  fc.lim=c(-5,5), z.score.lim=c(-3,3), detect.lim=1e-08){
 
+  # ############################################################################
   ### some color pre-processing
   if (!color.scheme %in% row.names(brewer.pal.info)){
     warning("Not a valid RColorBrewer palette name, defaulting to BrBG...\n
@@ -45,42 +48,46 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
     color.scheme <- 'BrBG'
   }
   color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(100))
-
   col.p = color.scheme[length(color.scheme)-4]
   col.n = color.scheme[1+4]
 
-  ### preprocess models: discard hyperpar terms, (optionally normalize) and handle ones that are completely 0
-  # keep.idx = grep('Bias', rownames(model$W), invert=TRUE)
-  keep.idx = grep('optimal hyperpar', rownames(model$W), invert=TRUE)
-  model$W = model$W[keep.idx,]
+  # ############################################################################
+  ### preprocess models
+
+  # discard hyperpar terms, (optionally normalize) and handle ones that are completely 0
+  num.models   <- ncol(model$W)
+  # keep.idx = grep('Bias', rownames(model$W), invert=TRUE) # can go?
+  # keep.idx = grep('optimal hyperpar', rownames(model$W), invert=TRUE) # should go as well, i guess? # should better be based on feature rownames?
+  model$W = model$W[row.names(feat),] # works?
+
   sum.w = colSums(abs(model$W))
   sum.w[sum.w == 0] = 1
   if (norm.models) {
-    for (m in 1:dim(model$W)[2]) {
-      model$W[,m] = model$W[,m] / sum.w[m]
-    }
+    model$W = apply(model$W, 2, function(x){x/sum(x)})
+    # for (m in 1:dim(model$W)[2]) {
+      # model$W[,m] = model$W[,m] / sum.w[m]
+    # }
     sum.w = rep(1, dim(model$W)[2])
   }
+
+  # select the most relevant features
   sel.idx = which(rowSums(model$W != 0) / dim(model$W)[2] >= consens.thres)
-  sel.W = t(model$W[sel.idx,])
 
   # sort by mean relative model weight
   rel.model.weights = t(model$W) / rowSums(abs(t(model$W)))
   median.sorted.models <- sort(apply(rel.model.weights[,sel.idx], 2, median), decreasing=TRUE, index.return=TRUE)
+
   # Restrict amount of features to be plotted (Print 25 features with most positive and most negative feature weights, respectively)
   if (length(sel.idx) > 50){
-    print("Restricting amount of features to be plotted to 50")
+    cat("Restricting amount of features to be plotted to 50\n")
     median.sorted.models$x <- c(head(median.sorted.models$x,n = 25), tail(median.sorted.models$x, n = 25))
     median.sorted.models$ix <- c(head(median.sorted.models$ix,n = 25), tail(median.sorted.models$ix, n = 25))
   }
   sel.idx = sel.idx[median.sorted.models$ix]
 
   rel.model.weights = rel.model.weights[,sel.idx]
-  #print(sel.idx)
-  #print(rel.model.weights)
   sel.W = t(model$W[sel.idx,])
   num.sel.f = length(sel.idx)
-
   cat('Generating plot for a model with', num.sel.f, 'selected features\n')
 
   ### aggregate predictions of several models if more than one is given
@@ -137,6 +144,7 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   img.data[img.data < zlim[1]] = zlim[1]
   img.data[img.data > zlim[2]] = zlim[2]
 
+  # ############################################################################
   ### start plotting model properties
   pdf(fn.plot, paper='special', height=8.27, width=11.69, onefile=TRUE)
 
@@ -209,7 +217,7 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   mtext(paste('(|W| = ', num.sel.f, ')', sep=''), side=3, line=1, at=0.04, cex=0.7, adj=0.5)
 
   # ############################################################################
-  # Feature weights
+  # Feature weights (needs to be model sensitive)
   med = apply(rel.model.weights, 2, median)
   low.qt = apply(rel.model.weights, 2, quantile)[2,]
   upp.qt = apply(rel.model.weights, 2, quantile)[4,]
@@ -259,8 +267,8 @@ interpretor.model.plot <- function(feat, label, meta, fn.plot, model, pred,
   cat('  finished plotting feature heatmap.\n')
 
   # ############################################################################
-  # Proportion of weights shown
-  par(mar=c(0.1, 6.1, 0, 1.1))
+  # Proportion of weights shown (needs to be model sensitive)
+  par(mar=c(0.1, 6.1, 0, 1.1), bg='white')
   boxplot(rowSums(abs(sel.W)) / sum.w, ylim=c(0,1))
   mtext('proportion of', side=1, line=1, at=1, adj=0.5, cex=0.7)
   mtext('weight shown', side=1, line=2, at=1, adj=0.5, cex=0.7)

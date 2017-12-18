@@ -12,19 +12,22 @@
 ###
 
 #' @title Check and visualize associations between features and classes
-#' @description This function calculates for each feature the median log10 fold
-#' change between the different classes found in labels.
+#' @description This function calculates for each feature a pseudo-fold change
+#' (geometrical mean of the difference between quantiles)
+#' between the different classes found in labels.
 #'
 #' Significance of the differences is computed for each feature using a wilcoxon
 #' test followed by multiple hypothesis testing correction.
 #'
 #' Additionally, the Area under the Receiver Operating Characteristic Curve
-#' '(AU-ROC) is computed for the features found to be associated with the two
-#' different classes at a user-specified significance level \code{alpha}.
+#' (AU-ROC) and a prevalence shift are computed for the features found to be
+#' associated with the two different classes at a user-specified
+#' significance level \code{alpha}.
 #'
 #' Finally, the function produces a plot of the top \code{max.show} associated
 #' features, showing the distribution of the log10-transformed abundances for
-#' both classes, the median fold change, and the AU-ROC.
+#' both classes, and user-selected panels for the effect (AU-ROC, Prevalence
+#' Shift, and Fold Change)
 #' @param feat feature object
 #' @param label label object
 #' @param fn.plot filename for the pdf-plot
@@ -33,15 +36,17 @@
 #' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
 #' @param sort.by string, sort features by p-value (\code{"pv"}), by fold change (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to \code{"pv"}
 #' @param detect.lim float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}
+#' @param pr.cutoff float, cutoff for the prevalence computation, defaults to \code{1e-06}
 #' @param max.show integer, how many associated features should be shown, defaults to \code{50}
-#' @param plot.type string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"bean"}
+#' @param plot.type string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"quantile.box"}
+#' @param panels vector, name of the panels to be plotted next to the log10-transformed abundances, possible entries are \code{c("fc", "auroc", "prevalence")}, defaults to \code{c("fc", "auroc")}
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
                                detect.lim=10^-8, pr.cutoff=10^-6, max.show=50,
-                               plot.type="bean", panels=c("fc", "auroc")){
+                               plot.type="quantile.box", panels=c("fc", "auroc")){
 
   # TODO
   # choose colors differently:
@@ -186,10 +191,11 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
 
   ##############################################################################
   # OTHER PANELS
+  if (!all(panels %in% c("fc", "auroc", "prevalence"))){
+    stop("Unknown panel-type selected!...")
+  }
   for (p in panels){
-    if (! p %in% c("fc", "auroc", "prevalence")){
-      stop('Panel type not supported!')
-    } else if (p == "fc"){
+    if (p == "fc"){
       plot.fcs(indices=idx, fc.all=fc, binary.cols=bcol)
     } else if (p == "prevalence"){
       plot.pr.shift(indices=idx, pr.shifts=pr.shift, col=col)

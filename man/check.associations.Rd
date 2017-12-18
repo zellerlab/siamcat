@@ -6,8 +6,8 @@
 \usage{
 check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
   alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 10^-8,
-  pr.cutoff = 10^-6, max.show = 50, plot.type = "bean", panels = c("fc",
-  "auroc"))
+  pr.cutoff = 10^-6, max.show = 50, plot.type = "quantile.box",
+  panels = c("fc", "auroc"))
 }
 \arguments{
 \item{feat}{feature object}
@@ -26,27 +26,34 @@ check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
 
 \item{detect.lim}{float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}}
 
+\item{pr.cutoff}{float, cutoff for the prevalence computation, defaults to \code{1e-06}}
+
 \item{max.show}{integer, how many associated features should be shown, defaults to \code{50}}
 
-\item{plot.type}{string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"bean"}}
+\item{plot.type}{string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"quantile.box"}}
+
+\item{panels}{vector, name of the panels to be plotted next to the log10-transformed abundances, possible entries are \code{c("fc", "auroc", "prevalence")}, defaults to \code{c("fc", "auroc")}}
 }
 \value{
 Does not return anything, but produces an association plot
 }
 \description{
-This function calculates for each feature the median log10 fold
-change between the different classes found in labels.
+This function calculates for each feature a pseudo-fold change
+(geometrical mean of the difference between quantiles)
+between the different classes found in labels.
 
 Significance of the differences is computed for each feature using a wilcoxon
 test followed by multiple hypothesis testing correction.
 
 Additionally, the Area under the Receiver Operating Characteristic Curve
-'(AU-ROC) is computed for the features found to be associated with the two
-different classes at a user-specified significance level \code{alpha}.
+(AU-ROC) and a prevalence shift are computed for the features found to be
+associated with the two different classes at a user-specified
+significance level \code{alpha}.
 
 Finally, the function produces a plot of the top \code{max.show} associated
 features, showing the distribution of the log10-transformed abundances for
-both classes, the median fold change, and the AU-ROC.
+both classes, and user-selected panels for the effect (AU-ROC, Prevalence
+Shift, and Fold Change)
 }
 \keyword{SIAMCAT}
 \keyword{check.associations}
