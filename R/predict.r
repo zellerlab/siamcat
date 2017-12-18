@@ -45,7 +45,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, model.ma
   opt.hp <- list(lambda = NULL, C = NULL, alpha = NULL, ntree = NULL)
 
   for (r in 1:num.runs) {
-    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab)) 
+    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
     test.label        <- label.fac
     test.label        <- label.fac[fold.exm.idx[[r]]]
     data              <- as.data.frame(feat[fold.exm.idx[[r]],])
@@ -61,7 +61,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, model.ma
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
     task      <- makeClassifTask(data = data, target = "label")
     pdata    <- predict(model,  task = task)
-    save(pdata,file="pdata.RData")
+    # save(pdata,file="pdata.RData") # not very good, saves the data somewhere, depending on working directory
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 
