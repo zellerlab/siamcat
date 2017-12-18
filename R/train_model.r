@@ -154,7 +154,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
   #save(power,file="power.RData")
-  invisible(list(out.matrix=out.matrix, W.mat=W.mat, models.list=models.list))
+  invisible(list(out.matrix=out.matrix, W.mat=W.mat, models.list=models.list, model.type=method))
 }
 
 auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0,

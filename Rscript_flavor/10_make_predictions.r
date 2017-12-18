@@ -64,7 +64,7 @@ load(opt$mlr_models_list)
 pred <- make.predictions(feat=feat,
                          label=label,
                          data.split=opt$test_sets,
-                         models.list=models.list,
+                         models.list=plm.out$models.list,
                          model.mat=model.mat)
 
 

@@ -92,7 +92,7 @@ plm.out <- train.model(feat = feat,
 
 write.table(plm.out$out.matrix, file = opt$model_matrix, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
 models.list  <- plm.out$models.list
-save(models.list, file=opt$mlr_models_list)
+save(plm.out, file=opt$mlr_models_list)
 
 ### save models
 suppressWarnings(write.table(plm.out$W.mat, file=opt$model , quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=FALSE))
