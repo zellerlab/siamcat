@@ -25,7 +25,7 @@ package.list <- c("RColorBrewer",
 
 # script can take the location of the siamcat package as argument
 # by default it is assumed to be located in './SIAMCAT_0.2.0.tar.gz'
-args = commandArgs(trailingOnly = FALSE)
+args = commandArgs(trailingOnly = TRUE)
 package.path <- if(length(args)==0) "./SIAMCAT_0.2.0.tar.gz" else args[1]
 
 notInst      <- which(!package.list%in%installed.packages())
