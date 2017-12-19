@@ -36,7 +36,9 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
-    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=c(5,1))
+    class.weights        <- c(5, 1)
+    names(class.weights) <- c(label$negative.lab,label$positive.lab)
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
     paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
