@@ -1,0 +1,24 @@
+#!/bin/Rscript
+FROM ubuntu:16.04
+
+# Install essential unix packages and dependencies:
+RUN apt-get update -y --fix-missing
+RUN apt-get install -y build-essential \
+    wget \
+    tar
+RUN apt-get update -y --fix-missing
+RUN apt-get install -y r-base
+
+# Install R-package dependencies:
+ENV SIAMCAT_DEPEND "'optparse', 'LiblineaR', 'pROC', 'colorRamps', 'RColorBrewer', 'beanplot', 'glmnet', 'gelnet'" 
+RUN Rscript -e "install.packages(c(${SIAMCAT_DEPEND}), repos='http://cran.uni-muenster.de')"
+
+# Download and install SIAMCAT
+ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/development/archive.tar.gz"
+RUN cd /usr/local/ \
+    && wget -O siamcat.tar.gz ${SIAMCAT_URL} \
+    && tar -xvzf siamcat.tar.gz \
+    && mv ./SIAMCAT* ./siamcat \
+    && R CMD INSTALL ./siamcat.tar.gz \
+    && rm siamcat.tar.gz
+ENV PATH="/usr/local/siamcat/Rscript_flavor:${PATH}"
