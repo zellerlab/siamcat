@@ -45,7 +45,6 @@ cat('label       =', opt$label, '\n')
 cat('model       =', opt$model, '\n')
 cat('pred        =', opt$pred, '\n')
 cat('plot        =', opt$plot, '\n')
-cat('plot        =', opt$plot, '\n')
 cat('col_scheme   =', opt$col_scheme, '\n')
 cat('consens_thres  =', opt$consens_thres, '\n')
 cat('heatmap_type        =', opt$heatmap_type, '\n')
@@ -73,7 +72,7 @@ if (is.null(opt$meta)) {
 
 
 ### load trained model(s)
-load(opt$model)
+load(opt$model) ##loads plm.out
 # model        <- NULL
 # model$W      <- read.table(file=opt$model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
 # stopifnot(nrow(model$W) == nrow(feat))

@@ -23,7 +23,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
-  cl        <- "classif.cvglmnet" ### the most ocommon learner defined her so taht this does not have done multiple times
+  cl        <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
   paramSet  <- NULL
   cost      <- c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10)
 
@@ -36,11 +36,11 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
-    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-6)
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=c(5,1))
     paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
-    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-6, type=0)
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, type=0)
     paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "randomForest"){
     sqrt.mdim <- sqrt(nrow(data))
