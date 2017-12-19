@@ -10,11 +10,11 @@ RUN apt-get update -y --fix-missing
 RUN apt-get install -y r-base
 
 # Install R-package dependencies:
-ENV SIAMCAT_DEPEND "'optparse', 'LiblineaR', 'pROC', 'colorRamps', 'RColorBrewer', 'beanplot', 'glmnet', 'gelnet'" 
+ENV SIAMCAT_DEPEND "'optparse', 'LiblineaR', 'pROC', 'colorRamps', 'RColorBrewer', 'beanplot', 'glmnet', 'gelnet', 'mlr', 'PRROC'" 
 RUN Rscript -e "install.packages(c(${SIAMCAT_DEPEND}), repos='http://cran.uni-muenster.de')"
 
 # Download and install SIAMCAT
-ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/development/archive.tar.gz"
+ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/cwl-workflow/archive.tar.gz"
 RUN cd /usr/local/ \
     && wget -O siamcat.tar.gz ${SIAMCAT_URL} \
     && tar -xvzf siamcat.tar.gz \
