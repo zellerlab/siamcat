@@ -1,6 +1,8 @@
 image: r-base
 before_script:
+  - cd Rscript_flavor
   - Rscript 00_setup.r
+  - cd ../
   - R CMD build ./
   - mv SIAMCAT*.tar.gz Rscript_flavor/.
   - cd Rscript_flavor
