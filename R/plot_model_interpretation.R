@@ -13,7 +13,7 @@
 
 #' @title Model Interpretation Plot
 #' @description Produces a plot for model interpretation, displaying feature weights, robustness of feature weights, and features scores across patients.
-#' @param feat a feature object
+#' @param feat the feature object containing the normalized features for the \code{"zscore"} heatmap and the features \emph{before} normalization and addition of the metadata for the \code{"fc"} heatmap
 #' @param label a label object
 #' @param meta a metadata object
 #' @param fn.plot string, filename for the pdf-plot
@@ -56,14 +56,13 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   model.type <- paste(toupper(substring(model$model.type, 1, 1)),
                       substring(model$model.type, 2), sep="", collapse=" ")
 
-  all.weights <- model$W.mat[row.names(feat),]
+  all.weights <- model$W.mat[union(row.names(feat), grep('META', row.names(model$W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
   rel.weights <- apply(all.weights, 2, function(x){x/sum(abs(x))})
   # ############################################################################
   ### preprocess models
   sel.idx <- select.features(weights=all.weights,
                              model.type=model.type,
                              consens.thres=consens.thres,
-                             feat=feat,
                              label=label,
                              norm.models=norm.models,
                              max.show=max.show)
@@ -81,7 +80,8 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
     img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
                                        limits=limits)
   } else if (heatmap.type == 'fc') {
-    img.data <- prepare.heatmap.fc(heatmap.data=feat[sel.idx, srt.idx],
+    img.data <- prepare.heatmap.fc(heatmap.data=feat[, srt.idx],
+                                   sel.feat=names(sel.idx),
                                    limits=limits, meta=meta,
                                    label=label, detect.lim=detect.lim)
   } else {
@@ -144,8 +144,8 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   barplot(as.matrix(rep(1,100)), col = color.scheme,
           horiz=TRUE, border=0, ylab='', axes=FALSE)
   if (heatmap.type == 'fc') {
-    key.ticks <- seq(round(min(img.data), digits = 1),
-                    round(max(img.data), digits = 1), length.out=7)
+    key.ticks <- seq(round(min(img.data, na.rm=TRUE), digits = 1),
+                    round(max(img.data, na.rm=TRUE), digits = 1), length.out=7)
     key.label <- 'Feature fold change over controls'
   } else if (heatmap.type == 'zscore') {
     key.ticks <- seq(limits[1], limits[2], length.out=7)
@@ -187,15 +187,15 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
 
   # ############################################################################
   # Proportion of weights shown
-  if (model.type != 'RandomForest'){
+  # if (model.type != 'RandomForest'){
     plot.proportion.of.weights(selected.weights=all.weights[sel.idx,],
                                all.weights=all.weights)
-  } else {
-    cat(dim(all.weights[sel.idx,]), '\n')
-    cat(dim(all.weights), '\n')
-    plot.percentage.of.features(selected.weights=all.weights[sel.idx,],
-                               all.weights=all.weights)
-  }
+  # } else {
+    # cat(dim(all.weights[sel.idx,]), '\n')
+    # cat(dim(all.weights), '\n')
+    # plot.percentage.of.features(selected.weights=all.weights[sel.idx,],
+                               # all.weights=all.weights)
+  # }
 
   # ############################################################################
   # Metadata and prediction
@@ -361,23 +361,30 @@ plot.heatmap <- function(image.data, limits, color.scheme, effect.size){
 }
 
 #not really working atm
-prepare.heatmap.fc <- function(heatmap.data, limits, meta=NULL, label, detect.lim){
+prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label, detect.lim){
 
-  if (is.null(meta) || any(colnames(meta) %in% row.names(heatmap.data))){
-    img.data <- apply(heatmap.data, 1, FUN=function(x, label, detect.lim){
-          x - mean(x[label$n.idx])
+  if (!any(grepl('META', sel.feat))){
+    img.data <- apply(heatmap.data[sel.feat,], 1, FUN=function(x, label, detect.lim){
+          log10(x + detect.lim) - log10(median(x[label$n.idx]) + detect.lim)
     }, label=label, detect.lim=detect.lim)
   } else {
-    for (f in row.names(heatmap.data)){
-      if (!f %in% colnames(meta)){
-        median.ctr <- mean(heatmap.data[f,label$n.idx])
-        heatmap.data[f,] <- heatmap.data[f,] - median.ctr
+    img.data <- matrix(NA, nrow=length(sel.feat), ncol=dim(heatmap.data)[2])
+    row.names(img.data) <- sel.feat
+    for (f in sel.feat){
+      if (!grepl('META', f)){
+        median.ctr <- median(heatmap.data[f,label$n.idx])
+        img.data[f,] <- log10(heatmap.data[f,] + detect.lim) - log10(median.ctr + detect.lim)
+      } else {
+        meta.data <- meta[,grep(strsplit(f, '_')[[1]][2], colnames(meta), ignore.case=TRUE, value=TRUE)]
+        # transform metadata to zscores
+        meta.data <- (meta.data - mean(meta.data, na.rm=TRUE))/sd(meta.data, na.rm=TRUE)
+        img.data[f,] <- meta.data[colnames(heatmap.data)]
       }
     }
-    img.data <- t(heatmap.data)
+    img.data <- t(img.data)
   }
-  # img.data[img.data < limits[1]] = limits[1]
-  # img.data[img.data > limits[2]] = limits[2]
+  img.data[img.data < limits[1]] = limits[1]
+  img.data[img.data > limits[2]] = limits[2]
   return(img.data)
 }
 
@@ -389,7 +396,7 @@ prepare.heatmap.zscore <- function(heatmap.data, limits){
     return(img.data)
 }
 
-select.features <- function(weights, model.type, consens.thres, norm.models, feat, label, max.show){
+select.features <- function(weights, model.type, consens.thres, norm.models, label, max.show){
 
   # for linear models, select those that have been selected more than consens.thres percent of the models
   if (model.type != 'RandomForest'){
