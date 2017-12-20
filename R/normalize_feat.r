@@ -39,7 +39,6 @@ normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.s
                            n.sample = FALSE, n.feature = TRUE, n.global = FALSE) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
-  # TODO 2 add defaults for the parameters!!! Not all parameters are needed for all normalization methods
   num.orig.feat <- nrow(feat)
   keep.idx <- rowSums(is.na(feat) == 0)
   if (any(!keep.idx)) {
@@ -59,26 +58,24 @@ normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.s
 
   ### apply normalization
   if (norm.method == 'rank.unit') {
-    for (c in 1:ncol(feat)) {
-      feat[,c] <- rank(feat[,c], ties.method='average')
-    }
+
+    feat <- apply(feat, 2, rank, ties.method='average')
+
     stopifnot(!any(is.na(feat)))
-    for (c in 1:ncol(feat)) {
-      feat[,c] <- feat[,c] / sqrt(sum(feat[,c]^2))
-    }
+
+    feat <- apply(feat, 2, FUN=function(x){x/sqrt(sum(x^2))})
 
   } else if (norm.method == 'rank.std') {
-    for (c in 1:ncol(feat)) {
-      feat[,c] <- rank(feat[,c], ties.method='average')
-    }
+
+    feat <- apply(feat, 2, rank, ties.method='average')
+
     m <- apply(feat, 1, mean)
     s <- apply(feat, 1, sd)
     q <- quantile(s, sd.min.q, names=FALSE)
     stopifnot(q > 0)
-    # TODO needs an apply-style rewrite!
-    for (r in 1:nrow(feat)) {
-      feat[r,] <- (feat[r,] - m[r]) / (s[r] + q)
-    }
+
+    feat <- t(apply(feat, 1, FUN=function(x, q){(x - mean(x))/(sd(x) + q)}, q=q))
+
     par$feat.mean <- m
     par$feat.adj.sd <- s + q
     stopifnot(!any(is.na(feat)))
@@ -88,12 +85,10 @@ normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.s
     m <- apply(feat, 1, mean)
     s <- apply(feat, 1, sd)
     q <- quantile(s, sd.min.q, names=FALSE)
-    #cat(sort(s, decreasing=TRUE), '\n')
     stopifnot(q > 0)
-    # TODO needs an apply-style rewrite!
-    for (r in 1:nrow(feat)) {
-      feat[r,] <- (feat[r,] - m[r]) / (s[r] + q)
-    }
+
+    feat <- t(apply(feat, 1, FUN=function(x, q){(x - mean(x))/(sd(x) + q)}, q=q))
+
     par$feat.mean <- m
     par$feat.adj.sd <- s + q
     stopifnot(!any(is.na(feat)))
@@ -101,36 +96,25 @@ normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.s
   } else if (norm.method == 'log.unit') {
     cat('Feature sparsity before normalization: ', 100*mean(feat==0), '%\n', sep='')
     feat <- log10(feat + log.n0)
-    
+
     if (n.p == 1) {
       if (n.feature) {
-        feat.norm.denom <- vector('numeric', nrow(feat))
-        # TODO needs an apply-style rewrite!
-        for (r in 1:nrow(feat)) {
-          feat.norm.denom[r] <- sum(feat[r,])
-          feat[r,] <- feat[r,] / feat.norm.denom[r]
-        }
+        feat.norm.denom <- rowSums(feat)
+        feat <- apply(feat, 1, FUN=function(x){x/sum(x)})
         par$feat.norm.denom <- feat.norm.denom
       }
       if (n.sample) {
-        for (c in 1:ncol(feat)) {
-          feat[,c] <- feat[,c] / sum(feat[,c])
-        }
+        feat <- apply(feat, 2, FUN=function(x){x/sum(x)})
       }
 
     } else if (n.p == 2) {
       if (n.feature) {
-        feat.norm.denom <- vector('numeric', nrow(feat))
-        for (r in 1:nrow(feat)) {
-          feat.norm.denom[r] <- sqrt(sum(feat[r,]^2))
-          feat[r,] <- feat[r,] / feat.norm.denom[r]
-        }
+        feat.norm.denom <- sqrt(rowSums(feat^2))
+        feat <- apply(feat, 1, FUN=function(x){x/sqrt(sum(x^2))})
         par$feat.norm.denom <- feat.norm.denom
       }
       if (n.sample) {
-        for (c in 1:ncol(feat)) {
-          feat[,c] <- feat[,c] / sqrt(sum(feat[,c]^2))
-        }
+        feat <- apply(feat, 2, FUN=function(x){x/sqrt(sum(x^2))})
       }
 
     } else {
