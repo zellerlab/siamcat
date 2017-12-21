@@ -35,7 +35,8 @@
 #'  \item \code{$par} <- parameters utilized in the normalization;
 #'  \item \code{$feat} <- normalized features
 #'}
-normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.std", "log.unit"), log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2,
+normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
+                           log.n0 = 10^-8, sd.min.q = 0.1, n.p = 2,
                            n.sample = FALSE, n.feature = TRUE, n.global = FALSE) {
   ### remove features with missing values
   # TODO there may be better ways of dealing with NA features
@@ -64,6 +65,13 @@ normalize.feat <- function(feat, norm.method = c("rank.unit", "rank.std", "log.s
     stopifnot(!any(is.na(feat)))
 
     feat <- apply(feat, 2, FUN=function(x){x/sqrt(sum(x^2))})
+
+  } else if (norm.method == 'log.clr'){
+
+    feat <- feat + log.n0
+    gm <- apply(feat, 1, FUN=function(x){exp(mean(log(x)))})
+    feat <- t(apply(feat, 1, FUN=function(x){log(x/exp(mean(log(x))))}))
+    par$geometric.mean <- gm
 
   } else if (norm.method == 'rank.std') {
 
