@@ -1,7 +1,7 @@
 ---
 title: "SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes"
 author: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
-date: "`r Sys.Date()`"
+date: "2018-01-02"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{SIAMCAT}
@@ -15,6 +15,9 @@ vignette: >
 
 ```{r message=FALSE, warning=FALSE}
 library(SIAMCAT)
+fn.in.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.meta <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
 ```
 
 ### Read/Validate/Filter Data
@@ -55,16 +58,16 @@ feat.filtered <- filter.feat(feat = feat,
 ### Association/Confounder Testing
 
 ```{r}
-confounder.check(meta=meta, label=label, fn.plot=paste0(output.dir, 'conf_check.pdf'))
+# confounder.check(meta=meta, label=label, fn.plot=paste0(output.dir, 'conf_check.pdf'))
 ```
 
 ```{r}
-check.associations(feat = feat.filtered,
-                   label = label, sort.by='fc',
-                   fn.plot = paste0(output.dir, '/assoc.pdf'), 
-                   alpha = 0.05, mult.corr = "fdr",
-                   detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
-                   panels=c("fc", "prevalence", "auroc"))
+# check.associations(feat = feat.filtered,
+#                    label = label, sort.by='fc',
+#                    fn.plot = paste0(output.dir, '/assoc.pdf'), 
+#                    alpha = 0.05, mult.corr = "fdr",
+#                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
+#                    panels=c("fc", "prevalence", "auroc"))
 ```
 
 ### Data Normalization
@@ -118,21 +121,21 @@ prediction = make.predictions(feat=feat.fobt,
 ```{r}
 eval.data <-  eval.predictions(label = label, pred = prediction$mat)
 
-evaluation.model.plot(label = label, 
-                      pred = prediction$mat, 
-                      eval.data = eval.data, 
-                      fn.plot = paste0(output.dir, '/eval_plot.pdf'))
+# evaluation.model.plot(label = label, 
+#                       pred = prediction$mat, 
+#                       eval.data = eval.data, 
+#                       fn.plot = paste0(output.dir, '/eval_plot.pdf'))
 ```
 
 ```{r}
-interpretor.model.plot(feat = feat.filtered, 
-                       label = label, 
-                       meta = meta, 
-                       fn.plot=paste0(output.dir, 'interpretation.pdf'),
-                       model = plm.out,
-                       pred = prediction$mat,
-                       consens.thres = 0.5,
-                       norm.models = TRUE,
-                       limits=c(-5,5),
-                       heatmap.type = 'fc')
+# interpretor.model.plot(feat = feat.filtered, 
+#                        label = label, 
+#                        meta = meta, 
+#                        fn.plot=paste0(output.dir, 'interpretation.pdf'),
+#                        model = plm.out,
+#                        pred = prediction$mat,
+#                        consens.thres = 0.5,
+#                        norm.models = TRUE,
+#                        limits=c(-5,5),
+#                        heatmap.type = 'fc')
 ```
