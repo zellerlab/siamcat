@@ -6,11 +6,11 @@
 \usage{
 interpretor.model.plot(feat, label, fn.plot, model, pred, meta = NULL,
   color.scheme = "BrBG", consens.thres = 0.5, heatmap.type = "zscore",
-  norm.models = FALSE, fc.lim = c(-5, 5), z.score.lim = c(-3, 3),
-  detect.lim = 1e-08)
+  norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-08,
+  max.show = 50)
 }
 \arguments{
-\item{feat}{a feature object}
+\item{feat}{the feature object containing the normalized features for the \code{"zscore"} heatmap and the features \emph{before} normalization and addition of the metadata for the \code{"fc"} heatmap}
 
 \item{label}{a label object}
 
@@ -24,15 +24,18 @@ interpretor.model.plot(feat, label, fn.plot, model, pred, meta = NULL,
 
 \item{color.scheme}{color scheme for the heatmap, defaults to =\code{"BrBG"}}
 
-\item{consens.thres}{minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}}
+\item{consens.thres}{minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}
+Note that for \code{"randomForest"} models, this cutoff specifies the minimum median Gini coefficient for a feature to be included and should therefore be much lower, e.g. \code{0.01}}
 
 \item{heatmap.type}{type of the heatmap, can be either \code{"fc"} or \code{"zscore"}, defaults to \code{"zscore"}}
 
 \item{norm.models}{boolean, should the feature weights be normalized across models?, defaults to \code{FALSE}}
 
+\item{limits}{vector, cutoff for extreme values in the heatmap, defaults to \code{c(-3, 3)}}
+
 \item{detect.lim}{float, pseudocount to be added before log10-transformation of features, defaults to \code{1e-08}}
 
-\item{limits}{vector, cutoff for extreme values in the heatmap, defaults to \code{c(-3, 3)}}
+\item{max.show}{integer, maximum number of features to be shown in the model interpretation plot, defaults to 50}
 }
 \value{
 Does not return anything, but produces the model interpretion plot.
