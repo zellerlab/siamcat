@@ -35,7 +35,7 @@
 #'
 #' The list entries in \code{"norm.param"} specify the normalzation parameters,
 #' which are dependant on the normalization method of choice:
-#' \imtemize{
+#' \itemize{
 #'  \item \code{"rank.unit"} does not require any other parameters
 #'  \item \code{"rank.std"} requires \code{sd.min.q}, quantile of the
 #'        distribution of standard deviations of all features that will be added
