@@ -24,9 +24,7 @@ option_list = list(
   make_option('--log_n0',          type='double',    default=10^-8,     help='Pseudocount that is added before log-transformation'),
   make_option('--sd_min_quantile', type='double',    default=0.1,       help='Quantile of the distribution of standard deviation of all feature that will be added to the denominator during standardization of each feature in order to avoid underestimation (only for metod==\"log.std\")'),
   make_option('--vector_norm',     type='integer',   default=2,         help='Vector norm to use (either 1 or 2, only for method==\"log.unit\")'),
-  make_option('--norm_feature',    type='logical',   default=FALSE,     help='Normalize by feature (only for method==\"log.unit\")?'),
-  make_option('--norm_sample',     type='logical',   default=TRUE,      help='Normalize by sample (after feature normalization, only for method==\"log.unit\")?'),
-  make_option('--norm_global',     type='logical',   default=FALSE,     help='Normalize by global rescaling (only if both norm_feature and norm_sample are FALSE and only for method==\"log.unit\")?'),
+  make_option('--norm_margin',     type='integer',   default=1,         help='Margin for normalization (only for method==\"log.unit\"), can be either 1 (for features), 2 (for samples), or 3 (for global normalization)'),
   make_option('--feat_out',        type='character',                    help='Output file to which features after normalization are written')
 )
 
@@ -53,12 +51,11 @@ feat  <- read.features(opt$feat_in)
 ### Start core function
 normalized.data <- normalize.feat(feat = feat,
                       norm.method = opt$method,
+                      norm.param = list(
                       log.n0      = opt$log_n0,
                       sd.min.q    = opt$sd_min_quantile,
                       n.p         = opt$vector_norm,
-                      n.sample    = opt$norm_sample,
-                      n.feature   = opt$norm_feature,
-                      n.global    = opt$norm_global)
+                      norm.margin = opt$margin))
 
 ### End core function
 
