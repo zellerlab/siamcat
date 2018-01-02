@@ -62,11 +62,11 @@ normalized.data <- normalize.feat(feat = feat,
 write.table(normalized.data$feat.norm, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 ### write parameters
-write('#normalization parameters', opt$param_out, append=FALSE, sep='')
-for (p in 1:length(normalized.data$par)) {
-  write(paste('###par', names(normalized.data$par)[p], mode(normalized.data$par[[p]]), sep=':'), opt$param_out, append=TRUE, sep='')
-  write(normalized.data$par[[p]], opt$param_out, ncolumns=1, append=TRUE, sep='')
-}
+# write('#normalization parameters', opt$param_out, append=FALSE, sep='')
+# for (p in 1:length(normalized.data$par)) {
+  # write(paste('###par', names(normalized.data$par)[p], mode(normalized.data$par[[p]]), sep=':'), opt$param_out, append=TRUE, sep='')
+  # write(normalized.data$par[[p]], opt$param_out, ncolumns=1, append=TRUE, sep='')
+# }
 
 
 cat('\nSuccessfully normalized feature data in ', proc.time()[1] - start.time, ' seconds\n', sep='')
