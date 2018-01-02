@@ -39,9 +39,7 @@ cat('opt$method          =', opt$method, '\n')
 cat('opt$log_n0          =', opt$log_n0, '\n')
 cat('opt$sd_min_quantile =', opt$sd_min_quantile, '\n')
 cat('opt$vector_norm     =', opt$vector_norm, '\n')
-cat('opt$norm_sample     =', opt$norm_sample, '\n')
-cat('opt$norm_feature    =', opt$norm_feature, '\n')
-cat('opt$norm_global     =', opt$norm_global, '\n')
+cat('opt$norm_margin     =', opt$norm_margin, '\n')
 cat('\n')
 
 start.time = proc.time()[1]
@@ -55,7 +53,7 @@ normalized.data <- normalize.feat(feat = feat,
                       log.n0      = opt$log_n0,
                       sd.min.q    = opt$sd_min_quantile,
                       n.p         = opt$vector_norm,
-                      norm.margin = opt$margin))
+                      norm.margin = opt$norm_margin))
 
 ### End core function
 
