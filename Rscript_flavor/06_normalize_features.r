@@ -59,7 +59,7 @@ normalized.data <- normalize.feat(feat = feat,
 
 
 ### write output
-write.table(normalized.data$feat, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(normalized.data$feat.norm, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 ### write parameters
 write('#normalization parameters', opt$param_out, append=FALSE, sep='')
