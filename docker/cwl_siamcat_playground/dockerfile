@@ -30,16 +30,12 @@ RUN cd /usr/local/ \
 
 RUN pip install toil==${TOIL_VERSION}
 
-# Install R-package dependencies:
-ENV SIAMCAT_DEPEND "'optparse', 'LiblineaR', 'pROC', 'colorRamps', 'RColorBrewer', 'beanplot', 'glmnet', 'gelnet', 'mlr', 'PRROC'" 
-RUN Rscript -e "install.packages(c(${SIAMCAT_DEPEND}), repos='http://cran.uni-muenster.de')"
-
 # Download and install SIAMCAT
 ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/cwl-workflow/archive.tar.gz"
 RUN cd /usr/local/ \
-    && wget -O siamcat.tar.gz ${SIAMCAT_URL} \
-    && tar -xvzf siamcat.tar.gz \
-    && mv ./SIAMCAT* ./siamcat \
-    && R CMD INSTALL ./siamcat.tar.gz \
-    && rm siamcat.tar.gz
-ENV PATH="/usr/local/siamcat/Rscript_flavor:${PATH}"
+    && wget -O SIAMCAT.tar.gz ${SIAMCAT_URL} \
+    && tar -xvzf SIAMCAT.tar.gz \
+    && mv ./SIAMCAT* ./SIAMCAT \
+    && Rscript ./SIAMCAT/Rscript_flavor/00_setup.r ./SIAMCAT.tar.gz \
+    && rm SIAMCAT.tar.gz
+ENV PATH="/usr/local/SIAMCAT/Rscript_flavor:${PATH}"

@@ -1,0 +1,665 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="cwl-workflow" ct-click="" tabindex="-1" ct-drop-enabled="" ct-drop-zones="zone1">
+            <rect x="0" y="0" width="100%" height="100%" class="pan-handle" transform="matrix(1,0,0,1,0,0)" style="fill:rgb(48, 48, 48); stroke:none; stroke-width:1px; "/>
+            <g class="workflow" transform="matrix(1 0 0 1 148.042 317.5)">
+            <g tabindex="-1" class="edge  " data-source-port="feat_in" data-destination-port="feat_in" data-source-node="feat_in" data-source-connection="out/feat_in/feat_in" data-destination-connection="in/01_validate_data/feat_in" data-destination-node="01_validate_data">
+                <path class="sub-edge outer" d="M 37 228 C 72.63506126403809 228 72.63506126403809 136.25239753723145 108.27012252807617 136.25239753723145" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 37 228 C 72.63506126403809 228 72.63506126403809 136.25239753723145 108.27012252807617 136.25239753723145" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="label_in" data-destination-port="label_in" data-source-node="label_in" data-source-connection="out/label_in/label_in" data-destination-connection="in/01_validate_data/label_in" data-destination-node="01_validate_data">
+                <path class="sub-edge outer" d="M 37 121 C 68.0234375 121 68.0234375 107 99.046875 107" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 37 121 C 68.0234375 121 68.0234375 107 99.046875 107" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="metadata_in" data-destination-port="metadata_in" data-source-node="metadata_in" data-source-connection="out/metadata_in/metadata_in" data-destination-connection="in/01_validate_data/metadata_in" data-destination-node="01_validate_data">
+                <path class="sub-edge outer" d="M 37 14.000003814697266 C 72.63506126403809 14.000003814697266 72.63506126403809 77.74760246276855 108.27012252807617 77.74760246276855" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 37 14.000003814697266 C 72.63506126403809 14.000003814697266 72.63506126403809 77.74760246276855 108.27012252807617 77.74760246276855" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_label" data-destination-port="label_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_label" data-destination-connection="in/03_check_for_confounders/label_in" data-destination-node="03_check_for_confounders">
+                <path class="sub-edge outer" d="M 475.709716796875 107 C 565.6685371398926 107 565.6685371398926 245.42750549316406 655.6273574829102 245.42750549316406" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 475.709716796875 107 C 565.6685371398926 107 565.6685371398926 245.42750549316406 655.6273574829102 245.42750549316406" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_label" data-destination-port="label_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_label" data-destination-connection="in/03_check_for_confounders/label_in" data-destination-node="03_check_for_confounders">
+                <path class="sub-edge outer" d="M 475.709716796875 107 C 565.6685371398926 107 565.6685371398926 245.42750549316406 655.6273574829102 245.42750549316406" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 475.709716796875 107 C 565.6685371398926 107 565.6685371398926 245.42750549316406 655.6273574829102 245.42750549316406" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_metadata" data-destination-port="metadata_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_metadata" data-destination-connection="in/03_check_for_confounders/metadata_in" data-destination-node="03_check_for_confounders">
+                <path class="sub-edge outer" d="M 466.4864692687988 77.74760246276855 C 561.0569133758545 77.74760246276855 561.0569133758545 210.57249450683594 655.6273574829102 210.57249450683594" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 466.4864692687988 77.74760246276855 C 561.0569133758545 77.74760246276855 561.0569133758545 210.57249450683594 655.6273574829102 210.57249450683594" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_metadata" data-destination-port="metadata_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_metadata" data-destination-connection="in/03_check_for_confounders/metadata_in" data-destination-node="03_check_for_confounders">
+                <path class="sub-edge outer" d="M 466.4864692687988 77.74760246276855 C 561.0569133758545 77.74760246276855 561.0569133758545 210.57249450683594 655.6273574829102 210.57249450683594" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 466.4864692687988 77.74760246276855 C 561.0569133758545 77.74760246276855 561.0569133758545 210.57249450683594 655.6273574829102 210.57249450683594" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_feat" data-destination-port="feat_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_feat" data-destination-connection="in/04_filter_features/feat_in" data-destination-node="04_filter_features">
+                <path class="sub-edge outer" d="M 466.4864692687988 136.25239753723145 C 562.7576694488525 136.25239753723145 562.7576694488525 114 659.0288696289062 114" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 466.4864692687988 136.25239753723145 C 562.7576694488525 136.25239753723145 562.7576694488525 114 659.0288696289062 114" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_feat" data-destination-port="feat_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_feat" data-destination-connection="in/04_filter_features/feat_in" data-destination-node="04_filter_features">
+                <path class="sub-edge outer" d="M 466.4864692687988 136.25239753723145 C 562.7576694488525 136.25239753723145 562.7576694488525 114 659.0288696289062 114" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 466.4864692687988 136.25239753723145 C 562.7576694488525 136.25239753723145 562.7576694488525 114 659.0288696289062 114" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="filtered_feat" data-destination-port="feat_in" data-source-node="04_filter_features" data-source-connection="out/04_filter_features/filtered_feat" data-destination-connection="in/05_check_associations/feat_in" data-destination-node="05_check_associations">
+                <path class="sub-edge outer" d="M 733.0288696289062 114 C 815.2764778137207 114 815.2764778137207 591.4275054931641 897.5240859985352 591.4275054931641" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 733.0288696289062 114 C 815.2764778137207 114 815.2764778137207 591.4275054931641 897.5240859985352 591.4275054931641" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_label" data-destination-port="label_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_label" data-destination-connection="in/05_check_associations/label_in" data-destination-node="05_check_associations">
+                <path class="sub-edge outer" d="M 475.709716796875 107 C 686.6169013977051 107 686.6169013977051 556.5724945068359 897.5240859985352 556.5724945068359" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 475.709716796875 107 C 686.6169013977051 107 686.6169013977051 556.5724945068359 897.5240859985352 556.5724945068359" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_label" data-destination-port="label_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_label" data-destination-connection="in/05_check_associations/label_in" data-destination-node="05_check_associations">
+                <path class="sub-edge outer" d="M 475.709716796875 107 C 686.6169013977051 107 686.6169013977051 556.5724945068359 897.5240859985352 556.5724945068359" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 475.709716796875 107 C 686.6169013977051 107 686.6169013977051 556.5724945068359 897.5240859985352 556.5724945068359" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="filtered_feat" data-destination-port="feat_in" data-source-node="04_filter_features" data-source-connection="out/04_filter_features/filtered_feat" data-destination-connection="in/06_normalize_features/feat_in" data-destination-node="06_normalize_features">
+                <path class="sub-edge outer" d="M 733.0288696289062 114 C 813.9772338867188 114 813.9772338867188 114 894.9255981445312 114" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 733.0288696289062 114 C 813.9772338867188 114 813.9772338867188 114 894.9255981445312 114" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="feat_out" data-destination-port="feat_in" data-source-node="06_normalize_features" data-source-connection="out/06_normalize_features/feat_out" data-destination-connection="in/07_add_metadata_as_predictor/feat_in" data-destination-node="07_add_metadata_as_predictor">
+                <path class="sub-edge outer" d="M 979.3271064758301 131.42750930786133 C 1096.009183883667 131.42750930786133 1096.009183883667 439.42750549316406 1212.691261291504 439.42750549316406" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 979.3271064758301 131.42750930786133 C 1096.009183883667 131.42750930786133 1096.009183883667 439.42750549316406 1212.691261291504 439.42750549316406" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_metadata" data-destination-port="metadata_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_metadata" data-destination-connection="in/07_add_metadata_as_predictor/metadata_in" data-destination-node="07_add_metadata_as_predictor">
+                <path class="sub-edge outer" d="M 466.4864692687988 77.74760246276855 C 839.5888652801514 77.74760246276855 839.5888652801514 404.57249450683594 1212.691261291504 404.57249450683594" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 466.4864692687988 77.74760246276855 C 839.5888652801514 77.74760246276855 839.5888652801514 404.57249450683594 1212.691261291504 404.57249450683594" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_metadata" data-destination-port="metadata_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_metadata" data-destination-connection="in/07_add_metadata_as_predictor/metadata_in" data-destination-node="07_add_metadata_as_predictor">
+                <path class="sub-edge outer" d="M 466.4864692687988 77.74760246276855 C 839.5888652801514 77.74760246276855 839.5888652801514 404.57249450683594 1212.691261291504 404.57249450683594" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 466.4864692687988 77.74760246276855 C 839.5888652801514 77.74760246276855 839.5888652801514 404.57249450683594 1212.691261291504 404.57249450683594" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_label" data-destination-port="label_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_label" data-destination-connection="in/08_split_data/label_in" data-destination-node="08_split_data">
+                <path class="sub-edge outer" d="M 475.709716796875 107 C 565.6685371398926 107 565.6685371398926 17.42751693725677 655.6273574829102 17.42751693725677" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 475.709716796875 107 C 565.6685371398926 107 565.6685371398926 17.42751693725677 655.6273574829102 17.42751693725677" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="selected_metadata" data-destination-port="metadata_in" data-source-node="02_select_samples" data-source-connection="out/02_select_samples/selected_metadata" data-destination-connection="in/08_split_data/metadata_in" data-destination-node="08_split_data">
+                <path class="sub-edge outer" d="M 466.4864692687988 77.74760246276855 C 561.0569133758545 77.74760246276855 561.0569133758545 -17.427494049071356 655.6273574829102 -17.427494049071356" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 466.4864692687988 77.74760246276855 C 561.0569133758545 77.74760246276855 561.0569133758545 -17.427494049071356 655.6273574829102 -17.427494049071356" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="validated_feat" data-destination-port="feat_in" data-source-node="01_validate_data" data-source-connection="out/01_validate_data/validated_feat" data-destination-connection="in/02_select_samples/feat_in" data-destination-node="02_select_samples">
+                <path class="sub-edge outer" d="M 191.82362747192383 136.25239753723145 C 287.3782958984375 136.25239753723145 287.3782958984375 136.25239753723145 382.9329643249512 136.25239753723145" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 191.82362747192383 136.25239753723145 C 287.3782958984375 136.25239753723145 287.3782958984375 136.25239753723145 382.9329643249512 136.25239753723145" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="validated_label" data-destination-port="label_in" data-source-node="01_validate_data" data-source-connection="out/01_validate_data/validated_label" data-destination-connection="in/02_select_samples/label_in" data-destination-node="02_select_samples">
+                <path class="sub-edge outer" d="M 201.046875 107 C 287.3782958984375 107 287.3782958984375 107 373.709716796875 107" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 201.046875 107 C 287.3782958984375 107 287.3782958984375 107 373.709716796875 107" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="validated_metadata" data-destination-port="metadata_in" data-source-node="01_validate_data" data-source-connection="out/01_validate_data/validated_metadata" data-destination-connection="in/02_select_samples/metadata_in" data-destination-node="02_select_samples">
+                <path class="sub-edge outer" d="M 191.82362747192383 77.74760246276855 C 287.3782958984375 77.74760246276855 287.3782958984375 77.74760246276855 382.9329643249512 77.74760246276855" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 191.82362747192383 77.74760246276855 C 287.3782958984375 77.74760246276855 287.3782958984375 77.74760246276855 382.9329643249512 77.74760246276855" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="feat_out" data-destination-port="feat_in" data-source-node="07_add_metadata_as_predictor" data-source-connection="out/07_add_metadata_as_predictor/feat_out" data-destination-connection="in/09_train_models/feat_in" data-destination-node="09_train_models">
+                <path class="sub-edge outer" d="M 1297.0927734375 422 C 1394.8032627105713 422 1394.8032627105713 127.20006370544434 1492.5137519836426 127.20006370544434" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 1297.0927734375 422 C 1394.8032627105713 422 1394.8032627105713 127.20006370544434 1492.5137519836426 127.20006370544434" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="plot" data-destination-port="plot" data-source-node="03_check_for_confounders" data-source-connection="out/03_check_for_confounders/plot" data-destination-connection="in/plot/plot" data-destination-node="plot">
+                <path class="sub-edge outer" d="M 740.0288696289062 228 C 820.9772338867188 228 820.9772338867188 4.53119343397446e-15 901.9255981445312 4.53119343397446e-15" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 740.0288696289062 228 C 820.9772338867188 228 820.9772338867188 4.53119343397446e-15 901.9255981445312 4.53119343397446e-15" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="association_plots_out" data-destination-port="association_plots_out" data-source-node="05_check_associations" data-source-connection="out/05_check_associations/association_plots_out" data-destination-connection="in/association_plots_out/association_plots_out" data-destination-node="association_plots_out">
+                <path class="sub-edge outer" d="M 981.9255981445312 574 C 1096.0091857910156 574 1096.0091857910156 92 1210.0927734375 92" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 981.9255981445312 574 C 1096.0091857910156 574 1096.0091857910156 92 1210.0927734375 92" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            <g tabindex="-1" class="edge  " data-source-port="normalization_parameters_out" data-destination-port="normalization_parameters_out" data-source-node="06_normalize_features" data-source-connection="out/06_normalize_features/normalization_parameters_out" data-destination-connection="in/normalization_parameters_out/normalization_parameters_out" data-destination-node="normalization_parameters_out">
+                <path class="sub-edge outer" d="M 979.3271064758301 96.57249069213867 C 1093.709939956665 96.57249069213867 1093.709939956665 -33.99999618530273 1208.0927734375 -33.99999618530273" style="fill:none; stroke:rgb(48, 48, 48); stroke-width:7px; "/>
+                <path class="sub-edge inner" d="M 979.3271064758301 96.57249069213867 C 1093.709939956665 96.57249069213867 1093.709939956665 -33.99999618530273 1208.0927734375 -33.99999618530273" style="fill:none; stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+            </g>
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        <g tabindex="-1" class="node step " data-connection-id="04_filter_features" transform="matrix(1, 0, 0, 1, 696.0288696289062, 114)" data-id="04_filter_features">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="37" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="27.75" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 67)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">04_filter_features</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -37, 4.531193156845207e-15)" data-connection-id="in/04_filter_features/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 37, 0)" data-connection-id="out/04_filter_features/filtered_feat" data-port-id="filtered_feat">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node step " data-connection-id="06_normalize_features" transform="matrix(1, 0, 0, 1, 938.9255981445312, 114)" data-id="06_normalize_features">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="44" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="33" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 74)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">06_normalize_features</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -44, 5.3884459162483544e-15)" data-connection-id="in/06_normalize_features/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 40.401508509347615, -17.427510154038423)" data-connection-id="out/06_normalize_features/normalization_parameters_out" data-port-id="normalization_parameters_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 40.401508509347615, 17.427510154038423)" data-connection-id="out/06_normalize_features/feat_out" data-port-id="feat_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node step " data-connection-id="11_evaluate_predictions" transform="matrix(1, 0, 0, 1, 1637, 362.5)" data-id="11_evaluate_predictions">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="44" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="33" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 74)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">11_evaluate_predictions</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -40.401510249807416, -17.427506119198636)" data-connection-id="in/11_evaluate_predictions/pred" data-port-id="pred">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -40.401510249807416, 17.427506119198647)" data-connection-id="in/11_evaluate_predictions/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 40.401508509347615, -17.427510154038423)" data-connection-id="out/11_evaluate_predictions/evaluation_results" data-port-id="evaluation_results">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 40.401508509347615, 17.427510154038423)" data-connection-id="out/11_evaluate_predictions/evaluation_plot" data-port-id="evaluation_plot">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node input " data-connection-id="out/label_in/label_in" transform="matrix(1, 0, 0, 1, 0, 121)" data-id="label_in">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="37" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="27.75" class="inner" style="fill:rgb(195, 195, 195); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507.36 462.86" x="-9" y="-10" width="20" height="20"><title>file_output</title><g id="Layer_10" data-name="Layer 10"><g id="Layer_9_copy" data-name="Layer 9 copy"><polygon points="274 298.5 274 412.86 50 412.86 50 50 190.35 50 274 133.65 274 163.5 324 163.5 324 112.94 211.06 0 211.06 0 0 0 0 462.86 324 462.86 324 298.5 274 298.5" style="stroke:rgb(48, 48, 48); fill:rgb(48, 48, 48); "/></g></g><g id="Layer_7" data-name="Layer 7"><polyline points="323.78 138.76 187.93 138.38 187.81 138.38 187.81 1.06" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/></g><g id="Layer_11" data-name="Layer 11"><polyline points="376 327 472 231 377 136" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/><g id="Layer_9" data-name="Layer 9"><line x1="217" y1="231" x2="472" y2="231" style="stroke:rgb(0, 0, 0); stroke-width:50px; "/></g></g></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 67)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">label_in</text>
+                
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 37, 0)" data-connection-id="out/label_in/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node input " data-connection-id="out/feat_in/feat_in" transform="matrix(1, 0, 0, 1, 0, 228)" data-id="feat_in">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="37" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="27.75" class="inner" style="fill:rgb(195, 195, 195); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507.36 462.86" x="-9" y="-10" width="20" height="20"><title>file_output</title><g id="Layer_10" data-name="Layer 10"><g id="Layer_9_copy" data-name="Layer 9 copy"><polygon points="274 298.5 274 412.86 50 412.86 50 50 190.35 50 274 133.65 274 163.5 324 163.5 324 112.94 211.06 0 211.06 0 0 0 0 462.86 324 462.86 324 298.5 274 298.5" style="stroke:rgb(48, 48, 48); fill:rgb(48, 48, 48); "/></g></g><g id="Layer_7" data-name="Layer 7"><polyline points="323.78 138.76 187.93 138.38 187.81 138.38 187.81 1.06" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/></g><g id="Layer_11" data-name="Layer 11"><polyline points="376 327 472 231 377 136" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/><g id="Layer_9" data-name="Layer 9"><line x1="217" y1="231" x2="472" y2="231" style="stroke:rgb(0, 0, 0); stroke-width:50px; "/></g></g></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 67)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">feat_in</text>
+                
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 37, 0)" data-connection-id="out/feat_in/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node input " data-connection-id="out/metadata_in/metadata_in" transform="matrix(1, 0, 0, 1, 0, 14.000003814697266)" data-id="metadata_in">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="37" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="27.75" class="inner" style="fill:rgb(195, 195, 195); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507.36 462.86" x="-9" y="-10" width="20" height="20"><title>file_output</title><g id="Layer_10" data-name="Layer 10"><g id="Layer_9_copy" data-name="Layer 9 copy"><polygon points="274 298.5 274 412.86 50 412.86 50 50 190.35 50 274 133.65 274 163.5 324 163.5 324 112.94 211.06 0 211.06 0 0 0 0 462.86 324 462.86 324 298.5 274 298.5" style="stroke:rgb(48, 48, 48); fill:rgb(48, 48, 48); "/></g></g><g id="Layer_7" data-name="Layer 7"><polyline points="323.78 138.76 187.93 138.38 187.81 138.38 187.81 1.06" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/></g><g id="Layer_11" data-name="Layer 11"><polyline points="376 327 472 231 377 136" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/><g id="Layer_9" data-name="Layer 9"><line x1="217" y1="231" x2="472" y2="231" style="stroke:rgb(0, 0, 0); stroke-width:50px; "/></g></g></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 67)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">metadata_in</text>
+                
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 37, 0)" data-connection-id="out/metadata_in/metadata_in" data-port-id="metadata_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node output " data-connection-id="in/plot/plot" transform="matrix(1, 0, 0, 1, 938.9255981445312, 0)" data-id="plot">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="37" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="27.75" class="inner" style="fill:rgb(195, 195, 195); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 499 462.86" y="-10" x="-11" width="20" height="20"><title>file_input</title><g id="Layer_16" data-name="Layer 16"><polygon points="386.06 0 386.06 0 175 0 175 58.29 225 108.29 225 50 365.35 50 449 133.65 449 412.86 225 412.86 225 353.71 175 403.71 175 462.86 499 462.86 499 112.94 386.06 0" style="stroke:rgb(48, 48, 48); fill:rgb(48, 48, 48); "/></g><g id="Layer_7_copy" data-name="Layer 7 copy"><polyline points="498.78 138.76 362.93 138.38 362.81 138.38 362.81 1.06" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/></g><g id="Layer_11_copy" data-name="Layer 11 copy"><polyline points="159 327 255 231 160 136" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/><g id="Layer_9_copy_2" data-name="Layer 9 copy 2"><line y1="231" x2="255" y2="231" style="stroke:rgb(0, 0, 0); stroke-width:50px; "/></g></g></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 67)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">plot</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -37, 4.531193156845207e-15)" data-connection-id="in/plot/plot" data-port-id="plot">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            </g><g tabindex="-1" class="node output " data-connection-id="in/normalization_parameters_out/normalization_parameters_out" transform="matrix(1, 0, 0, 1, 1245.0927734375, -33.999996185302734)" data-id="normalization_parameters_out">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="37" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="27.75" class="inner" style="fill:rgb(195, 195, 195); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 499 462.86" y="-10" x="-11" width="20" height="20"><title>file_input</title><g id="Layer_16" data-name="Layer 16"><polygon points="386.06 0 386.06 0 175 0 175 58.29 225 108.29 225 50 365.35 50 449 133.65 449 412.86 225 412.86 225 353.71 175 403.71 175 462.86 499 462.86 499 112.94 386.06 0" style="stroke:rgb(48, 48, 48); fill:rgb(48, 48, 48); "/></g><g id="Layer_7_copy" data-name="Layer 7 copy"><polyline points="498.78 138.76 362.93 138.38 362.81 138.38 362.81 1.06" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/></g><g id="Layer_11_copy" data-name="Layer 11 copy"><polyline points="159 327 255 231 160 136" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/><g id="Layer_9_copy_2" data-name="Layer 9 copy 2"><line y1="231" x2="255" y2="231" style="stroke:rgb(0, 0, 0); stroke-width:50px; "/></g></g></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 67)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">normalization_parameters_out</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -37, 4.531193156845207e-15)" data-connection-id="in/normalization_parameters_out/normalization_parameters_out" data-port-id="normalization_parameters_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            </g><g tabindex="-1" class="node step " data-connection-id="08_split_data" transform="matrix(1, 0, 0, 1, 696.0288696289062, 0.000011444091796875)" data-id="08_split_data">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="44" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="33" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 74)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">08_split_data</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -40.401510249807416, -17.427506119198636)" data-connection-id="in/08_split_data/metadata_in" data-port-id="metadata_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -40.401510249807416, 17.427506119198647)" data-connection-id="in/08_split_data/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 40.401508509347615, -17.427510154038423)" data-connection-id="out/08_split_data/train_sets_out" data-port-id="train_sets_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 40.401508509347615, 17.427510154038423)" data-connection-id="out/08_split_data/test_sets_out" data-port-id="test_sets_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node step " data-connection-id="03_check_for_confounders" transform="matrix(1, 0, 0, 1, 696.0288696289062, 228)" data-id="03_check_for_confounders">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="44" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="33" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 74)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">03_check_for_confounders</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -40.401510249807416, -17.427506119198636)" data-connection-id="in/03_check_for_confounders/metadata_in" data-port-id="metadata_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -40.401510249807416, 17.427506119198647)" data-connection-id="in/03_check_for_confounders/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 44, 0)" data-connection-id="out/03_check_for_confounders/plot" data-port-id="plot">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node step " data-connection-id="07_add_metadata_as_predictor" transform="matrix(1, 0, 0, 1, 1253.0927734375, 422)" data-id="07_add_metadata_as_predictor">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="44" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="33" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 74)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">07_add_metadata_as_predictor</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -40.401510249807416, -17.427506119198636)" data-connection-id="in/07_add_metadata_as_predictor/metadata_in" data-port-id="metadata_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -40.401510249807416, 17.427506119198647)" data-connection-id="in/07_add_metadata_as_predictor/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 44, 0)" data-connection-id="out/07_add_metadata_as_predictor/feat_out" data-port-id="feat_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node step " data-connection-id="09_train_models" transform="matrix(1, 0, 0, 1, 1539.3427734375, 107)" data-id="09_train_models">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="51" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="38.25" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 81)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">09_train_models</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -46.82902324409496, -20.20006391088933)" data-connection-id="in/09_train_models/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -46.829023244094955, 20.20006391088934)" data-connection-id="in/09_train_models/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 41.776754258738585, -29.252398253903348)" data-connection-id="out/09_train_models/trained_model_rdata" data-port-id="trained_model_rdata">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 51, 0)" data-connection-id="out/09_train_models/trained_model_matrix" data-port-id="trained_model_matrix">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 41.776754258738585, 29.252398253903348)" data-connection-id="out/09_train_models/trained_model" data-port-id="trained_model">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node output " data-connection-id="in/association_plots_out/association_plots_out" transform="matrix(1, 0, 0, 1, 1247.0927734375, 92)" data-id="association_plots_out">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="37" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="27.75" class="inner" style="fill:rgb(195, 195, 195); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 499 462.86" y="-10" x="-11" width="20" height="20"><title>file_input</title><g id="Layer_16" data-name="Layer 16"><polygon points="386.06 0 386.06 0 175 0 175 58.29 225 108.29 225 50 365.35 50 449 133.65 449 412.86 225 412.86 225 353.71 175 403.71 175 462.86 499 462.86 499 112.94 386.06 0" style="stroke:rgb(48, 48, 48); fill:rgb(48, 48, 48); "/></g><g id="Layer_7_copy" data-name="Layer 7 copy"><polyline points="498.78 138.76 362.93 138.38 362.81 138.38 362.81 1.06" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/></g><g id="Layer_11_copy" data-name="Layer 11 copy"><polyline points="159 327 255 231 160 136" style="fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:50px"/><g id="Layer_9_copy_2" data-name="Layer 9 copy 2"><line y1="231" x2="255" y2="231" style="stroke:rgb(0, 0, 0); stroke-width:50px; "/></g></g></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 67)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">association_plots_out</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -37, 4.531193156845207e-15)" data-connection-id="in/association_plots_out/association_plots_out" data-port-id="association_plots_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            </g><g tabindex="-1" class="node step " data-connection-id="02_select_samples" transform="matrix(1, 0, 0, 1, 424.709716796875, 107)" data-id="02_select_samples">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="51" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="38.25" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 81)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">02_select_samples</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -41.77675425873859, -29.252398253903337)" data-connection-id="in/02_select_samples/metadata_in" data-port-id="metadata_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -51, 6.245698675651501e-15)" data-connection-id="in/02_select_samples/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -41.77675425873857, 29.252398253903365)" data-connection-id="in/02_select_samples/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 41.776754258738585, -29.252398253903348)" data-connection-id="out/02_select_samples/selected_metadata" data-port-id="selected_metadata">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 51, 0)" data-connection-id="out/02_select_samples/selected_label" data-port-id="selected_label">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 41.776754258738585, 29.252398253903348)" data-connection-id="out/02_select_samples/selected_feat" data-port-id="selected_feat">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node step " data-connection-id="01_validate_data" transform="matrix(1, 0, 0, 1, 150.046875, 107)" data-id="01_validate_data">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="51" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="38.25" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 81)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">01_validate_data</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -41.77675425873859, -29.252398253903337)" data-connection-id="in/01_validate_data/metadata_in" data-port-id="metadata_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -51, 6.245698675651501e-15)" data-connection-id="in/01_validate_data/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -41.77675425873857, 29.252398253903365)" data-connection-id="in/01_validate_data/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 41.776754258738585, -29.252398253903348)" data-connection-id="out/01_validate_data/validated_metadata" data-port-id="validated_metadata">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 51, 0)" data-connection-id="out/01_validate_data/validated_label" data-port-id="validated_label">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port output-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, 41.776754258738585, 29.252398253903348)" data-connection-id="out/01_validate_data/validated_feat" data-port-id="validated_feat">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g><g tabindex="-1" class="node step " data-connection-id="05_check_associations" transform="matrix(1, 0, 0, 1, 937.9255981445312, 574)" data-id="05_check_associations">
+                <g class="drag-handle" transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <circle cx="0" cy="0" r="44" class="outer" style="fill:rgb(48, 48, 48); stroke:rgb(195, 195, 195); stroke-width:2px; "/>
+                    <circle cx="0" cy="0" r="33" class="inner" style="fill:rgb(92, 141, 182); stroke:rgb(48, 48, 48); stroke-width:0px; "/>
+                    <svg class="node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500.07 500.24" x="-10" y="-10" width="20" height="20"><title>tool_new</title><rect x="284.07" y="450.07" width="216" height="50" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.14" y="117.56" width="353.4" height="50" transform="translate(142.62 -58.98) rotate(45)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/><rect x="-34.15" y="332.53" width="353.47" height="50" transform="translate(496.28 509.58) rotate(135)" style="fill:rgb(48, 48, 48); stroke:rgb(48, 48, 48); stroke-width:0px; "/></svg>
+                </g>
+                <text transform="matrix(1 0 0 1 0 74)" class="title label" style="fill:rgb(255, 255, 255); font-size:13px; text-anchor:middle; font-family:sans-serif; ">05_check_associations</text>
+                
+            <g class="port input-port" transform="matrix(1, 0, 0, 1, -40.401510249807416, -17.427506119198636)" data-connection-id="in/05_check_associations/label_in" data-port-id="label_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            <g class="port input-port" transform="matrix(0.9999999999999999, 0, 0, 0.9999999999999999, -40.401510249807416, 17.427506119198647)" data-connection-id="in/05_check_associations/feat_in" data-port-id="feat_in">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+                
+            <g class="port output-port" transform="matrix(1, 0, 0, 1, 44, 0)" data-connection-id="out/05_check_associations/association_plots_out" data-port-id="association_plots_out">
+                <g class="io-port">
+                    <circle cx="0" cy="0" r="7" class="port-handle" style="fill:rgb(195, 195, 195); stroke:none; stroke-width:1px; "/>
+                </g>
+                
+            </g>
+            
+        
+            </g></g>
+        </svg>
