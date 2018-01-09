@@ -196,7 +196,7 @@ normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std
                 all(names(norm.param$feat.mean) == row.names(feat.red)) &&
                 all(names(norm.param$feat.adj.s) == row.names(feat.red)))
       feat.log <- log10(feat.red + norm.param$log.n0)
-      feat.norm <- (feat.log - norm.param$m)/norm.param$feat.adj.sd
+      feat.norm <- (feat.log - norm.param$feat.mean)/norm.param$feat.adj.sd
     } else if (norm.param$norm.method == 'log.unit'){
       stopifnot(!is.null(norm.param$log.n0) && !is.null(norm.param$norm.margin) && norm.param$norm.margin %in% c(1,2,3) &&
                 ((norm.param$norm.margin == 1 && !is.null(norm.param$feat.norm.denom) && all(names(norm.param$feat.norm.denom) == row.names(feat.red))) ||
