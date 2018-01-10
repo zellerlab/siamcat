@@ -11,12 +11,12 @@ inputs:
     type: File
     inputBinding:
       prefix: --label_in
-      position: 2
+      position: 1
   metadata_in:
     type: File?
     inputBinding:
       prefix: --metadata_in
-      position: 2
+      position: 1
   num_folds:
     type: int?
     inputBinding:
@@ -40,10 +40,10 @@ inputs:
       position: 2
 
 arguments:
-    - position: 2
+    - position: 3
       prefix: --train_sets
       valueFrom: $(inputs.feat_in.nameroot)_trainSets.tsv
-    - position: 2
+    - position: 3
       prefix: --test_sets
       valueFrom: $(inputs.feat_in.nameroot)_testSets.tsv
 

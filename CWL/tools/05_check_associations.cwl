@@ -10,12 +10,12 @@ inputs:
   feat_in:
     type: File
     inputBinding:
-      position: 2
+      position: 1
       prefix: --feat_in
   label_in:
     type: File
     inputBinding:
-      position: 2
+      position: 1
       prefix: --label_in
   mult_test:
     type: string?
@@ -59,7 +59,7 @@ inputs:
       prefix: --plot_type
 
 arguments:
-  - position: 2
+  - position: 3
     prefix: --plot
     valueFrom: $(inputs.feat_in.nameroot)_assocToLabels.pdf
 

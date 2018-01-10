@@ -11,12 +11,12 @@ inputs:
     type: File
     inputBinding:
       prefix: --label
-      position: 2
+      position: 1
   predictions:
     type: File
     inputBinding:
       prefix: --pred
-      position: 2
+      position: 1
   write_eval_results:
     type: boolean?
     inputBinding:
@@ -25,10 +25,10 @@ inputs:
       position: 2
 
 arguments:
-  - position: 2
+  - position: 3
     prefix: --plot
     valueFrom:   $(inputs.feat_in.nameroot)_evalPlots.pdf
-  - position: 2
+  - position: 3
     prefix: --output_results
     valueFrom:   $(inputs.feat_in.nameroot)_evalResults.txt
 

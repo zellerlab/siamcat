@@ -11,7 +11,7 @@ inputs:
     type: File
     inputBinding:
       prefix: --feat_in
-      position: 2
+      position: 1
   norm_method:
     type: string?
     inputBinding:
@@ -64,10 +64,10 @@ inputs:
       valueFrom: $(self.toString())
 
 arguments:
-  - position: 2
+  - position: 3
     prefix:  --feat_out
     valueFrom: $(inputs.feat_in.nameroot)_norm.tsv
-  - position: 2
+  - position: 3
     prefix:  --param_out
     valueFrom: $(inputs.feat_in.nameroot)_normParam.txt
     

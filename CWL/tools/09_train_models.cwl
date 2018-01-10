@@ -11,21 +11,21 @@ inputs:
     type: File
     inputBinding:
       prefix: --feat_in
-      position: 2
+      position: 1
   label_in:
-    type: File
+    type: File?
     inputBinding:
       prefix: --label_in
-      position: 2
-  method:
-    type: string?
-    inputBinding:
-      prefix: --method
-      position: 2
+      position: 1
   train_sets:
     type: File?
     inputBinding:
       prefix: --train_sets
+      position: 1
+  method:
+    type: string?
+    inputBinding:
+      prefix: --method
       position: 2
   num_folds:
     type: int
@@ -50,13 +50,13 @@ inputs:
       position: 2
 
 arguments:
-    - position: 2
+    - position: 3
       prefix: --model
       valueFrom: $(inputs.feat_in.nameroot)_model.tsv
-    - position: 2
+    - position: 3
       prefix: --mlr_models_list
       valueFrom: $(inputs.feat_in.nameroot)_model.RData
-    - position: 2
+    - position: 3
       prefix: --model_matrix
       valueFrom: $(inputs.feat_in.nameroot)_modelMatrix.txt
 

@@ -7,6 +7,36 @@ requirements:
 baseCommand: 12_interpret_model.r
 
 inputs:
+  feat_in:
+    type: File
+    inputBinding:
+      position: 1
+      prefix: '--feat'
+  original_feat:
+    type: File
+    inputBinding:
+      position: 1
+      prefix: '--origin_feat'
+  label_in:
+    type: File
+    inputBinding:
+      position: 1
+      prefix: '--label'
+  metadata_in:
+    type: File?
+    inputBinding:
+      position: 1
+      prefix: '--meta'
+  model_tsv:
+    type: File
+    inputBinding:
+      position: 1
+      prefix: '--model'
+  predictions:
+    type: File
+    inputBinding:
+      position: 1
+      prefix: '--pred'
   color_scheme:
     type: string?
     inputBinding:
@@ -17,44 +47,14 @@ inputs:
     inputBinding:
       position: 2
       prefix: '--consens_thres'
-  feat_in:
-    type: File
-    inputBinding:
-      position: 2
-      prefix: '--feat'
   heatmap_type:
     type: string?
     inputBinding:
       position: 2
       prefix: '--heatmap_type'
-  label_in:
-    type: File
-    inputBinding:
-      position: 2
-      prefix: '--label'
-  metadata_in:
-    type: File?
-    inputBinding:
-      position: 2
-      prefix: '--meta'
-  model_tsv:
-    type: File
-    inputBinding:
-      position: 2
-      prefix: '--model'
-  original_feat:
-    type: File
-    inputBinding:
-      position: 2
-      prefix: '--origin_feat'
-  predictions:
-    type: File
-    inputBinding:
-      position: 2
-      prefix: '--pred'
 
 arguments:
-  - position: 2
+  - position: 3
     prefix: '--plot'
     valueFrom: $(inputs.feat_in.nameroot)_model_plots.pdf
 

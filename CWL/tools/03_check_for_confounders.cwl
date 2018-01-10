@@ -11,18 +11,17 @@ inputs:
     type: File
     inputBinding:
       prefix: --label_in
-      position: 2
+      position: 1
   metadata_in:
     type: File
     inputBinding:
-      position: 2
+      position: 1
       prefix: --metadata_in
       
 arguments:
   - prefix: --plot
     position: 2
     valueFrom: $(inputs.metadata_in.nameroot)_metaCheck.pdf
-    position: 2
 
 outputs:
   confounders_plot:

@@ -10,18 +10,36 @@ inputs:
   feat_in:
     type: File
     inputBinding:
-      position: 2
+      position: 1
       prefix: '--feat_in'
   label_in:
     type: File
     inputBinding:
-      position: 2
+      position: 1
       prefix: '--label_in'
   metadata_in:
     type: File?
     inputBinding:
-      position: 2
+      position: 1
       prefix: '--metadata_in'
+
+arguments:
+  - position: 2
+    prefix: '--feat_out'
+    valueFrom: $(inputs.feat_in.nameroot)_valid.tsv
+  - position: 2
+    prefix: '--label_out'
+    valueFrom: $(inputs.label_in.nameroot)_valid.tsv
+  - position: 2
+    valueFrom: |
+      ${
+        if (inputs.metadata_in){
+          return [ "--metadata_out", inputs.metadata_in.nameroot + "_valid.tsv" ];
+        } else {
+          return null;
+        }
+      }
+
 outputs:
   validated_feat:
     type: File
@@ -42,21 +60,3 @@ outputs:
             return null;
           }
         }
-arguments:
-  - position: 2
-    prefix: '--feat_out'
-    valueFrom: $(inputs.feat_in.nameroot)_valid.tsv
-  - position: 2
-    prefix: '--label_out'
-    valueFrom: $(inputs.label_in.nameroot)_valid.tsv
-  - position: 2
-    valueFrom: |
-      ${
-        if (inputs.metadata_in){
-          return [ "--metadata_out", inputs.metadata_in.nameroot + "_valid.tsv" ];
-        } else {
-          return null;
-        }
-      }
-requirements:
-  - class: InlineJavascriptRequirement

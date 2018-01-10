@@ -11,12 +11,12 @@ inputs:
     type: File
     inputBinding:
       prefix: --feat_in
-      position: 2
+      position: 1
   metadata_in:
     type: File
     inputBinding:
       prefix: --metadata_in
-      position: 2
+      position: 1
   pred_names:
     type: string
     inputBinding:
@@ -26,13 +26,13 @@ inputs:
     type: boolean?
     inputBinding:
       prefix: --std_meta
-      position: 2
+      position: 3
       valueFrom: $(self.toString())
 
 arguments:
   - prefix: --feat_out
     valueFrom: $(inputs.feat_in.nameroot)_metaAsPred.tsv
-    position: 2
+    position: 4
     
 outputs:
   feat_out:
