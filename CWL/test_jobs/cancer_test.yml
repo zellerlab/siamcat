@@ -1,6 +1,4 @@
 # test yaml job file for ../workflows/siamcal_cwl_workflow.cwl
-# execution in 
-
 label_in:
   class: File
   path: /home/kbreuer/test_data/label_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv
