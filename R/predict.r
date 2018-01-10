@@ -29,7 +29,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, model.ma
   feat         <- t(feat)
 
   ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(data.split)
+  foldList     <- get.foldList(data.split, label, mode="test")
   fold.name    <- foldList$fold.name
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
