@@ -19,10 +19,10 @@ suppressMessages(library('SIAMCAT'))
 # define arguments
 option_list  <-  list(
   make_option(c('-s', '--srcdir'), type='character',                   help='Source directory of this and other utility scripts'),
-  make_option('--label_in',           type='character',                   help='Input file containing labels'),
-  make_option('--feat_in',            type='character',                   help='Input file containing features'),
+  make_option('--label_in',        type='character',                   help='Input file containing labels'),
+  make_option('--feat_in',         type='character',                   help='Input file containing features'),
   make_option('--origin_feat',     type='character',                   help='Input file containing unnormalized/filtered features'),
-  make_option('--meta',            type='character', default=NULL,   help='Input file containing metadata'),
+  make_option('--metadata_in',     type='character', default=NULL,   help='Input file containing metadata'),
   make_option('--mlr_models_list', type='character',                   help='Input RData file containing the output from train.model'),
   make_option('--pred',            type='character',                   help='Input file containing the trained classification model(s)'),
   make_option('--col_scheme',      type='character', default='RdYlBu', help='Color scheme'),
@@ -41,6 +41,7 @@ cat("=== Paramaters of the run:\n\n")
 cat('srcdir          =', opt$srcdir, '\n')
 cat('feat            =', opt$feat, '\n')
 cat('origin_feat.    =', opt$origin_feat, '\n')
+cat('metadata_in     =', opt$metadata_in, '\n')
 cat('label           =', opt$label, '\n')
 cat('mlr_models_list =', opt$mlr_models_list, '\n')
 cat('pred            =', opt$pred, '\n')
@@ -61,10 +62,10 @@ start.time <- proc.time()[1]
 feat        <- read.features(opt$feat)
 label       <- read.labels(opt$label,feat)
 origin.feat <- read.features(opt$origin_feat)
-if (is.null(opt$meta)) {
+if (is.null(opt$metadata_in)) {
   cat('meta not given: no metadata to display\n')
 } else {
-  meta         <- read.meta(opt$meta)
+  meta         <- read.meta(opt$metadata_in)
   stopifnot(all(names(label$label) == rownames(meta)))
 }
 
