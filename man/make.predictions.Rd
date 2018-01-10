@@ -4,7 +4,7 @@
 \alias{make.predictions}
 \title{Prediction on the test set}
 \usage{
-make.predictions(feat, label, data.split = NULL, models.list, model.mat)
+make.predictions(feat, label, data.split = NULL, models.list)
 }
 \arguments{
 \item{feat}{features object}
@@ -14,8 +14,6 @@ make.predictions(feat, label, data.split = NULL, models.list, model.mat)
 \item{data.split}{filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset}
 
 \item{models.list}{list of models trained by \link{plm.trainer}}
-
-\item{model.mat}{model matrix needed to rebuild the model}
 }
 \value{
 list containing the precitions \itemize{

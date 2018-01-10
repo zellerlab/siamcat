@@ -55,8 +55,8 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   # get model type from model
   model.type <- paste(toupper(substring(model$model.type, 1, 1)),
                       substring(model$model.type, 2), sep="", collapse=" ")
-
-  all.weights <- model$W.mat[union(row.names(feat), grep('META', row.names(model$W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
+  W.mat       <- getWeightsMatrix(model)
+  all.weights <- W.mat[union(row.names(feat), grep('META', row.names(model$W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
   rel.weights <- apply(all.weights, 2, function(x){x/sum(abs(x))})
   # ############################################################################
   ### preprocess models
@@ -449,4 +449,15 @@ select.features <- function(weights, model.type, consens.thres, norm.models, lab
   cat('Generating plot for a model with', length(sel.idx), 'selected features\n')
 
   return(sel.idx)
+}
+
+getWeightsMatrix <- function(models.list){
+  W.mat <- as.numeric(models.list[[1]]$feat.weights)
+  for(i in grep("model.type",names(models.list), invert = T)[-1]){
+    print(i)
+    W.mat <- cbind(W.mat,as.numeric(models.list[[i]]$feat.weights))
+  }
+  rownames(W.mat) <- models.list[[1]]$features
+  colnames(W.mat) <- paste('M', 1:ncol(W.mat), sep='_')
+  invisible(W.mat)
 }

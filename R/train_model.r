@@ -47,6 +47,14 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     } else if (m == 'f1'){
       measure[[length(measure)+1]] <- mlr::f1
     } else if (m == 'pr' || m == 'auprc'){
+      auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0,
+                           properties = c("classif", "req.pred", "req.truth", "req.prob"),
+                           name = "Area under the Precision Recall Curve",
+                           fun = function(task, model, pred, feats, extra.args) {
+                           #if (anyMissing(pred$data$response) || length(unique(pred$data$truth)) == 1L)
+                           #  return(NA_real_)
+                           measureAUPRC(getPredictionProbabilities(pred), pred$data$truth, pred$task.desc$negative, pred$task.desc$positive)
+                           })
       measure[[length(measure)+1]] <- auprc
     }
   }
@@ -154,18 +162,9 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   }
   colnames(out.matrix) = paste('M', fold.name, sep='_')
   #save(power,file="power.RData")
-  invisible(list(out.matrix=out.matrix, W.mat=W.mat, models.list=models.list, model.type=method))
+  models.list$model.type <- method
+  invisible(models.list)
 }
-
-auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0,
-  properties = c("classif", "req.pred", "req.truth", "req.prob"),
-  name = "Area under the Precision Recall Curve",
-  fun = function(task, model, pred, feats, extra.args) {
-    #if (anyMissing(pred$data$response) || length(unique(pred$data$truth)) == 1L)
-    #  return(NA_real_)
-    measureAUPRC(getPredictionProbabilities(pred), pred$data$truth, pred$task.desc$negative, pred$task.desc$positive)
-  }
-)
 
 measureAUPRC <- function(probs, truth, negative, positive){
   pr <- pr.curve(scores.class0 = probs[which(truth == positive)],

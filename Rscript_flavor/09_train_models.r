@@ -37,11 +37,7 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option('--sel_criterion',     type='character', default='auc', help='Evaluation criterion for model selection (options: \'acc\',
     	                                                                        \'auc\', \'auprc\', \'f1\')'),
     make_option('--min_nonzero_coeff', type='integer',   default=1,       help='Minimum number of non-zero coefficients required for a model
-    	                                                                        to be considered in model selection'),
-    make_option('--model',             type='character',                  help='Text file to which the trained models will be written'),
-
-    make_option('--model_matrix',      type='character',                  help='Output file containing information to rebuild models in
-    	                                                                        plm_predictor function')
+    	                                                                        to be considered in model selection')
 )
 
  opt         <- parse_args(OptionParser(option_list=option_list))
@@ -58,8 +54,6 @@ cat('mlr_models_list   =', opt$mlr_models_list, '\n')
 cat('stratify          =', opt$stratify, '\n')
 cat('sel_criterion     =', opt$sel_criterion, '\n')
 cat('min_nonzero_coeff =', opt$min_nonzero_coeff, '\n')
-cat('model             =', opt$model, '\n')
-cat('model_matrix      =', opt$model_matrix, '\n')
 cat('\n')
 
 
@@ -82,7 +76,7 @@ set.seed(r.seed)
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
 
-plm.out <- train.model(feat = feat,
+models.list  <- train.model(feat = feat,
                        label = label,
                        method = opt$method,
                        data.split=opt$train_sets,
@@ -91,14 +85,6 @@ plm.out <- train.model(feat = feat,
                        min.nonzero.coeff = opt$min_nonzero_coeff)
 
 
-write.table(plm.out$out.matrix, file = opt$model_matrix, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
-models.list  <- plm.out$models.list
-save(plm.out, file=opt$mlr_models_list)
-
-### save models
-suppressWarnings(write.table(plm.out$W.mat, file=opt$model , quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=FALSE))
-# suppressWarnings(write.table(hyperpar.mat, file=hyper.params, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA))
-cat('Saved all trained models.\n')
-
-cat('\nSuccessfully built ', plm.out$num.runs, ' LASSO models in ', proc.time()[1] - start.time,
-    ' seconds\n', sep='')
+save(models.list , file=opt$mlr_models_list)
+cat('\n++++++++++++++++++++\nSuccessfully trained models in ', proc.time()[1] - start.time,
+    ' seconds\n++++++++++++++++++++\n', sep='')

@@ -25,7 +25,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
   cl        <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
   paramSet  <- NULL
-  cost      <- c(0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10)
+  cost      <- 10^seq(-2,3,length=6+5+10)
 
   if(method == "lasso"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
