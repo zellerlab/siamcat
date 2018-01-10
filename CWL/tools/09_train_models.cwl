@@ -66,15 +66,15 @@ arguments:
       valueFrom: $(inputs.feat_in.nameroot)_modelMatrix.txt
 
 outputs:
-  trained_model:
+  model_tsv:
     type: File
     outputBinding:
       glob: $(inputs.feat_in.nameroot)_model.tsv
-  trained_model_rdata:
+  model_rdata:
     type: File
     outputBinding:
       glob: $(inputs.feat_in.nameroot)_model.RData
-  trained_model_matrix:
+  model_matrix:
     type: File
     outputBinding:
       glob: $(inputs.feat_in.nameroot)_modelMatrix.txt

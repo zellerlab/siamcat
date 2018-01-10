@@ -30,7 +30,7 @@ arguments:
     position: 2
 
 outputs:
-  plot:
+  confounders_plot:
     type: File
     outputBinding:
       glob: $(inputs.metadata_in.nameroot)_metaCheck.pdf
