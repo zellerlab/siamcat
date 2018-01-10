@@ -12,7 +12,7 @@ inputs:
     inputBinding:
       prefix: --feat_in
       position: 1
-  filt_method:
+  filter_method:
     type: string?
     inputBinding:
       prefix: --method
