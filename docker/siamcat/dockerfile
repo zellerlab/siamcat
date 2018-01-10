@@ -13,9 +13,9 @@ RUN apt-get install -y r-base
 # Download and install SIAMCAT
 ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/cwl-workflow/archive.tar.gz"
 RUN cd /usr/local/ \
-    && wget -O siamcat.tar.gz ${SIAMCAT_URL} \
-    && tar -xvzf siamcat.tar.gz \
-    && mv ./SIAMCAT* ./siamcat \
-    && Rscript ./siamcat/Rscript_flavors/00_setup.r
-    && rm siamcat.tar.gz
+    && wget -O SIAMCAT.tar.gz ${SIAMCAT_URL} \
+    && tar -xvzf SIAMCAT.tar.gz \
+    && rm SIAMCAT.tar.gz \
+    && mv ./SIAMCAT* ./SIAMCAT \
+    && Rscript ./SIAMCAT/Rscript_flavor/00_setup.r ./SIAMCAT.tar.gz
 ENV PATH="/usr/local/siamcat/Rscript_flavor:${PATH}"

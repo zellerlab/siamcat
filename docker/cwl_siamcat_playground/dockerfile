@@ -35,7 +35,7 @@ ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/cwl-workflow/
 RUN cd /usr/local/ \
     && wget -O SIAMCAT.tar.gz ${SIAMCAT_URL} \
     && tar -xvzf SIAMCAT.tar.gz \
+    && rm SIAMCAT.tar.gz \
     && mv ./SIAMCAT* ./SIAMCAT \
-    && Rscript ./SIAMCAT/Rscript_flavor/00_setup.r ./SIAMCAT.tar.gz \
-    && rm SIAMCAT.tar.gz
+    && Rscript ./SIAMCAT/Rscript_flavor/00_setup.r ./SIAMCAT.tar.gz
 ENV PATH="/usr/local/SIAMCAT/Rscript_flavor:${PATH}"
