@@ -454,7 +454,6 @@ select.features <- function(weights, model.type, consens.thres, norm.models, lab
 getWeightsMatrix <- function(models.list){
   W.mat <- as.numeric(models.list[[1]]$feat.weights)
   for(i in grep("model.type",names(models.list), invert = T)[-1]){
-    print(i)
     W.mat <- cbind(W.mat,as.numeric(models.list[[i]]$feat.weights))
   }
   rownames(W.mat) <- models.list[[1]]$features
