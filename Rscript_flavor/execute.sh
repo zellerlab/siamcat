@@ -97,8 +97,7 @@ Rscript 10_make_predictions.r \
 --test_sets testSets.tsv \
 --pred pred.tsv \
 --mlr_models_list models.RData \
---model_matrix model.matrix.txt \
---hyperpars hyperpars.txt
+--model_matrix model.matrix.txt
 
 Rscript 11_evaluate_predictions.r \
 --srcdir .. \
