@@ -17,14 +17,13 @@
 #' @param label label object
 #' @param data.split filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset
 #' @param models.list list of models trained by \link{plm.trainer}
-#' @param model.mat model matrix needed to rebuild the model
 #' @export
 #' @keywords SIAMCAT plm.predictor
 #' @return list containing the precitions \itemize{
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-make.predictions <- function(feat, label, data.split=NULL, models.list, model.mat){
+make.predictions <- function(feat, label, data.split=NULL, models.list){
 
   feat         <- t(feat)
 

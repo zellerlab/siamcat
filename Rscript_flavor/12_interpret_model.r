@@ -19,11 +19,11 @@ suppressMessages(library('SIAMCAT'))
 # define arguments
 option_list  <-  list(
   make_option(c('-s', '--srcdir'), type='character',                   help='Source directory of this and other utility scripts'),
-  make_option('--label',           type='character',                   help='Input file containing labels'),
-  make_option('--feat',            type='character',                   help='Input file containing features'),
+  make_option('--label_in',           type='character',                   help='Input file containing labels'),
+  make_option('--feat_in',            type='character',                   help='Input file containing features'),
   make_option('--origin_feat',     type='character',                   help='Input file containing unnormalized/filtered features'),
   make_option('--meta',            type='character', default=NULL,   help='Input file containing metadata'),
-  make_option('--model',           type='character',                   help='Input RData file containing the output from train.model'),
+  make_option('--mlr_models_list', type='character',                   help='Input RData file containing the output from train.model'),
   make_option('--pred',            type='character',                   help='Input file containing the trained classification model(s)'),
   make_option('--col_scheme',      type='character', default='RdYlBu', help='Color scheme'),
   make_option('--heatmap_type',    type='character', default='zscore', help='which metric should be used to plot feature changes in heatmap?
@@ -38,16 +38,16 @@ option_list  <-  list(
 opt            <- parse_args(OptionParser(option_list=option_list))
 cat("=== 12_model_interpretor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir     =', opt$srcdir, '\n')
-cat('feat        =', opt$feat, '\n')
-cat('origin_feat =', opt$origin_feat, '\n')
-cat('label       =', opt$label, '\n')
-cat('model       =', opt$model, '\n')
-cat('pred        =', opt$pred, '\n')
-cat('plot        =', opt$plot, '\n')
-cat('col_scheme   =', opt$col_scheme, '\n')
-cat('consens_thres  =', opt$consens_thres, '\n')
-cat('heatmap_type        =', opt$heatmap_type, '\n')
+cat('srcdir          =', opt$srcdir, '\n')
+cat('feat            =', opt$feat, '\n')
+cat('origin_feat.    =', opt$origin_feat, '\n')
+cat('label           =', opt$label, '\n')
+cat('mlr_models_list =', opt$mlr_models_list, '\n')
+cat('pred            =', opt$pred, '\n')
+cat('plot            =', opt$plot, '\n')
+cat('col_scheme      =', opt$col_scheme, '\n')
+cat('consens_thres   =', opt$consens_thres, '\n')
+cat('heatmap_type    =', opt$heatmap_type, '\n')
 cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
@@ -72,7 +72,7 @@ if (is.null(opt$meta)) {
 
 
 ### load trained model(s)
-load(opt$model) ##loads plm.out
+load(opt$mlr_models_list) ##loads plm.out
 # model        <- NULL
 # model$W      <- read.table(file=opt$model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
 # stopifnot(nrow(model$W) == nrow(feat))
@@ -91,7 +91,7 @@ stopifnot(all(names(label$label) == rownames(pred)))
 interpretor.model.plot(feat=feat,
                        label=label,
                        meta=meta,
-                       model=plm.out,
+                       model=models.list,
                        pred=pred,
                        color.scheme=opt$col_scheme,
                        consens.thres=opt$consens_thres,

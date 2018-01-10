@@ -112,8 +112,7 @@ plm.out <- train.model(feat=feat.fobt,
 prediction = make.predictions(feat=feat.fobt, 
                               label=label, 
                               data.split=data.split,
-                              models.list=plm.out$models.list, 
-                              model.mat=plm.out$W.mat)
+                              models.list=plm.out)
 ```
 
 ### Model Evaluation and Interpretation
