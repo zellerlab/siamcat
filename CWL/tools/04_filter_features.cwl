@@ -1,8 +1,10 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+  
+baseCommand: 04_filter_features.r
 
 inputs:
   feat_in:
@@ -34,8 +36,6 @@ inputs:
       valueFrom: $(self.toString())
 
 arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/04_filter_features.r
   - prefix: --feat_out
     valueFrom: $(inputs.feat_in.nameroot)_filtered.tsv
     position: 2

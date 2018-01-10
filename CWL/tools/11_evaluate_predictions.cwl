@@ -1,15 +1,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+
+baseCommand: 11_evaluate_predictions.r
 
 inputs:
-  srcdir:
-    type: string
-    inputBinding:
-      prefix: --srcdir
-      position: 2
   label_in:
     type: File
     inputBinding:
@@ -28,8 +25,6 @@ inputs:
       position: 2
 
 arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/11_evaluate_predictions.r
   - position: 2
     prefix: --plot
     valueFrom:   $(inputs.feat_in.nameroot)_evalPlots.pdf

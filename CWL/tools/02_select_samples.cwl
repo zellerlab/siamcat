@@ -1,6 +1,11 @@
 class: CommandLineTool
 cwlVersion: v1.0
-baseCommand: Rscript
+
+requirements:
+  InlineJavascriptRequirement: {}
+
+baseCommand: 02_select_samples.r
+
 inputs:
   allowed_range:
     type: string?
@@ -32,11 +37,26 @@ inputs:
     inputBinding:
       position: 2
       prefix: '--metadata_in'
-  srcdir:
-    type: string
-    inputBinding:
-      position: 2
-      prefix: '--srcdir'
+
+arguments:
+  - position: 2
+    prefix: '--feat_out'
+    valueFrom: $(inputs.feat_in.nameroot)_select.tsv
+  - position: 2
+    prefix: '--label_out'
+    valueFrom: $(inputs.label_in.nameroot)_select_.tsv
+  - position: 2
+    valueFrom: |
+      ${
+        if (inputs.metadata_in){
+          return [ "--metadata_out", inputs.metadata_in.nameroot + "_select.tsv" ];
+        } else {
+          return null;
+        }
+      }
+requirements:
+  - class: InlineJavascriptRequirement
+
 outputs:
   selected_feat:
     type: File
@@ -57,23 +77,3 @@ outputs:
             return null;
           }
         }
-arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/02_select_samples.r
-  - position: 2
-    prefix: '--feat_out'
-    valueFrom: $(inputs.feat_in.nameroot)_select.tsv
-  - position: 2
-    prefix: '--label_out'
-    valueFrom: $(inputs.label_in.nameroot)_select_.tsv
-  - position: 2
-    valueFrom: |
-      ${
-        if (inputs.metadata_in){
-          return [ "--metadata_out", inputs.metadata_in.nameroot + "_select.tsv" ];
-        } else {
-          return null;
-        }
-      }
-requirements:
-  - class: InlineJavascriptRequirement

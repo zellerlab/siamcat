@@ -1,15 +1,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+
+baseCommand: 09_train_models.r
 
 inputs:
-  srcdir:
-    type: string
-    inputBinding:
-      prefix: --srcdir
-      position: 2
   feat_in:
     type: File
     inputBinding:
@@ -53,8 +50,6 @@ inputs:
       position: 2
 
 arguments:
-    - position: 0
-      valueFrom: $(inputs.srcdir)/09_train_models.r
     - position: 2
       prefix: --model
       valueFrom: $(inputs.feat_in.nameroot)_model.tsv

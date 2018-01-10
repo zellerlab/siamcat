@@ -1,15 +1,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+
+baseCommand: 05_check_associations.r
 
 inputs:
-  srcdir:
-    type: string
-    inputBinding:
-      position: 2
-      prefix: --srcdir
   feat_in:
     type: File
     inputBinding:
@@ -62,8 +59,6 @@ inputs:
       prefix: --plot_type
 
 arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/05_check_associations.r
   - position: 2
     prefix: --plot
     valueFrom: $(inputs.feat_in.nameroot)_assocToLabels.pdf

@@ -1,8 +1,10 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+
+baseCommand: 06_normalize_features.r
 
 inputs:
   feat_in:
@@ -60,15 +62,15 @@ inputs:
       prefix: --norm_global
       position: 2
       valueFrom: $(self.toString())
+
 arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/06_normalize_features.r
   - position: 2
     prefix:  --feat_out
     valueFrom: $(inputs.feat_in.nameroot)_norm.tsv
   - position: 2
     prefix:  --param_out
     valueFrom: $(inputs.feat_in.nameroot)_normParam.txt
+    
 outputs:
   feat_out:
     type: File

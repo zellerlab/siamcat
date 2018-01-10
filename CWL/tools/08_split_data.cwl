@@ -1,15 +1,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+
+baseCommand: 08_split_data.r
 
 inputs:
-  srcdir:
-    type: string
-    inputBinding:
-      prefix: --srcdir
-      position: 2
   label_in:
     type: File
     inputBinding:
@@ -43,8 +40,6 @@ inputs:
       position: 2
 
 arguments:
-    - position: 0
-      valueFrom: $(inputs.srcdir)/08_split_data.r
     - position: 2
       prefix: --train_sets
       valueFrom: $(inputs.feat_in.nameroot)_trainSets.tsv

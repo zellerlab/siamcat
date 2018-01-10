@@ -1,6 +1,11 @@
 class: CommandLineTool
 cwlVersion: v1.0
-baseCommand: Rscript
+
+requirements:
+  InlineJavascriptRequirement: {}
+
+baseCommand: 01_validate_data.r
+
 inputs:
   feat_in:
     type: File
@@ -17,11 +22,6 @@ inputs:
     inputBinding:
       position: 2
       prefix: '--metadata_in'
-  srcdir:
-    type: string
-    inputBinding:
-      position: 2
-      prefix: '--srcdir'
 outputs:
   validated_feat:
     type: File
@@ -43,8 +43,6 @@ outputs:
           }
         }
 arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/01_validate_data.r
   - position: 2
     prefix: '--feat_out'
     valueFrom: $(inputs.feat_in.nameroot)_valid.tsv

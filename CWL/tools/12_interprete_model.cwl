@@ -1,6 +1,11 @@
 class: CommandLineTool
 cwlVersion: v1.0
-baseCommand: Rscript
+
+requirements:
+  InlineJavascriptRequirement: {}
+
+baseCommand: 12_interpret_model.r
+
 inputs:
   color_scheme:
     type: string?
@@ -47,21 +52,14 @@ inputs:
     inputBinding:
       position: 2
       prefix: '--pred'
-  srcdir:
-    type: string
-    inputBinding:
-      position: 2
-      prefix: '--srcdir'
+
+arguments:
+  - position: 2
+    prefix: '--plot'
+    valueFrom: $(inputs.feat_in.nameroot)_model_plots.pdf
+
 outputs:
   model_plots:
     type: File
     outputBinding:
       glob: $(inputs.feat_in.nameroot)_model_plots.pdf
-arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/12_interpret_model.r
-  - position: 2
-    prefix: '--plot'
-    valueFrom: $(inputs.feat_in.nameroot)_model_plots.pdf
-requirements:
-  - class: InlineJavascriptRequirement

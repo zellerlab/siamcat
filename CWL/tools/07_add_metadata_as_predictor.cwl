@@ -1,8 +1,10 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+
+baseCommand: 07_add_metadata_as_predictor.r
 
 inputs:
   feat_in:
@@ -28,8 +30,6 @@ inputs:
       valueFrom: $(self.toString())
 
 arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/07_add_metadata_as_predictor.r
   - prefix: --feat_out
     valueFrom: $(inputs.feat_in.nameroot)_metaAsPred.tsv
     position: 2

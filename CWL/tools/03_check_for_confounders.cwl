@@ -1,15 +1,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: Rscript
+
 requirements:
-  - class: InlineJavascriptRequirement
+  InlineJavascriptRequirement: {}
+  
+baseCommand: 03_check_for_confounders.r
 
 inputs:
-  srcdir:
-    type: string
-    inputBinding:
-      prefix: --srcdir
-      position: 2
   label_in:
     type: File
     inputBinding:
@@ -22,8 +19,6 @@ inputs:
       prefix: --metadata_in
       
 arguments:
-  - position: 0
-    valueFrom: $(inputs.srcdir)/03_check_for_confounders.r
   - prefix: --plot
     position: 2
     valueFrom: $(inputs.metadata_in.nameroot)_metaCheck.pdf
