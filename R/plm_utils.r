@@ -213,7 +213,7 @@ get.parameters.from.param.set <- function(param.set, method){
       if("mtry"%in%names(param.set))  mtry  <- param.set$mtry
     }
     parameters  <- makeParamSet(makeNumericParam('ntree', lower=ntree[1], upper=ntree[2]),
-                               makeDiscreteParam('mtry', values=mtry)))
+                               makeDiscreteParam('mtry', values=mtry))
   }else if(method == "enet"){
     parameters <- makeParamSet(makeNumericParam('alpha', lower=alpha[1], upper=alpha[2]))
   }
