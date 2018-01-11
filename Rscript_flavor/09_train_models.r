@@ -25,7 +25,6 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
 
 # define arguments
  option_list <- list(
-    make_option(c('-s', '--srcdir'),   type='character',                  help='Source directory of this and other utility scripts'),
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
     make_option('--method',            type='character', default='lasso', help='class of learner, directly passed to mlr::makeLearner'),
@@ -34,14 +33,12 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified
     	                                                                        such that an approx. equal proportion of positive examples
     	                                                                        are contained in each subset (only for binary labels)?'),
-    make_option('--sel_criterion',     type='character', default='auc', help='Evaluation criterion for model selection (options: \'acc\',
+    make_option('--sel_criterion',     type='character', default='auc',   help='Evaluation criterion for model selection (options: \'acc\',
     	                                                                        \'auc\', \'auprc\', \'f1\')'),
     make_option('--min_nonzero_coeff', type='integer',   default=1,       help='Minimum number of non-zero coefficients required for a model
     	                                                                        to be considered in model selection'),
-    make_option('--model',             type='character',                  help='Text file to which the trained models will be written'),
-
-    make_option('--model_matrix',      type='character',                  help='Output file containing information to rebuild models in
-    	                                                                        plm_predictor function')
+    make_option('--param_set',          type='character', default=NULL,    help='a list of extra parameters for mlr run, may contain: cost - for lasso_ll and ridge_ll;
+                                                                                 alpha for enet and ntree, mtry for RandomForrest')
 )
 
  opt         <- parse_args(OptionParser(option_list=option_list))
@@ -49,7 +46,6 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
 # print parameters of the run
 cat("=== 09_plm_trainer.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir            =', opt$srcdir,  '\n')
 cat('feat_in           =', opt$feat_in, '\n')
 cat('label_in          =', opt$label_in, '\n')
 cat('method            =', opt$method, '\n')
@@ -58,13 +54,9 @@ cat('mlr_models_list   =', opt$mlr_models_list, '\n')
 cat('stratify          =', opt$stratify, '\n')
 cat('sel_criterion     =', opt$sel_criterion, '\n')
 cat('min_nonzero_coeff =', opt$min_nonzero_coeff, '\n')
-cat('model             =', opt$model, '\n')
-cat('model_matrix      =', opt$model_matrix, '\n')
+cat('param_set         =', opt$param_set, '\n')
 cat('\n')
 
-
-
-opt$srcdir <- appendDirName(opt$srcdir)
 
 # optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
 if (toupper(opt$train_sets)=='NULL' || toupper(opt$train_sets)=='NONE' || toupper(opt$train_sets)=='UNKNOWN') {
@@ -82,23 +74,16 @@ set.seed(r.seed)
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
 
-plm.out <- train.model(feat = feat,
+models.list  <- train.model(feat = feat,
                        label = label,
                        method = opt$method,
                        data.split=opt$train_sets,
                        stratify = opt$stratify,
                        modsel.crit  = opt$sel_criterion,
-                       min.nonzero.coeff = opt$min_nonzero_coeff)
+                       min.nonzero.coeff = opt$min_nonzero_coeff,
+                       param.set = opt$param_set)
 
 
-write.table(plm.out$out.matrix, file = opt$model_matrix, quote = FALSE, sep='\t', row.names=TRUE, col.names=NA)
-models.list  <- plm.out$models.list
-save(plm.out, file=opt$mlr_models_list)
-
-### save models
-suppressWarnings(write.table(plm.out$W.mat, file=opt$model , quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=FALSE))
-# suppressWarnings(write.table(hyperpar.mat, file=hyper.params, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA))
-cat('Saved all trained models.\n')
-
-cat('\nSuccessfully built ', plm.out$num.runs, ' LASSO models in ', proc.time()[1] - start.time,
-    ' seconds\n', sep='')
+save(models.list , file=opt$mlr_models_list)
+cat('\n++++++++++++++++++++\nSuccessfully trained models in ', proc.time()[1] - start.time,
+    ' seconds\n++++++++++++++++++++\n', sep='')

@@ -21,14 +21,12 @@ package.list <- c("RColorBrewer",
                   "colorRamps",
                   "gelnet",
                   "mlr",
-                  "PRROC")
-
-# script can take the location of the siamcat package as argument: Rscript 00_setup.r /path/to/SIAMCAT_0.2.0.tar.gz
-# by default it is assumed to be located in './SIAMCAT_0.2.0.tar.gz'
-args = commandArgs(trailingOnly = TRUE)
-package.path <- if(length(args)==0) "./SIAMCAT_0.2.0.tar.gz" else args[1]
+                  "PRROC",
+                  "knitr",
+                  "testthat",
+                  "rmarkdown")
 
 notInst      <- which(!package.list%in%installed.packages())
-if(length(notInst)>0) install.packages(package.list[notInst], repos="http://cran.uni-muenster.de")
+if(length(notInst)>0) install.packages(package.list[notInst])
 
-if(!"SIAMCAT"%in%installed.packages()) install.packages(package.path, repos=NULL, type="source")
+if(!"SIAMCAT"%in%installed.packages()) install.packages("SIAMCAT_0.2.0.tar.gz",repos=NULL, type="source")

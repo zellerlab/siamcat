@@ -27,11 +27,6 @@ inputs:
     inputBinding:
       prefix: --method
       position: 2
-  num_folds:
-    type: int
-    inputBinding:
-      prefix: --num_folds
-      position: 2
   stratify:
     type: boolean?
     inputBinding:

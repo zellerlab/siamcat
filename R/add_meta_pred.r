@@ -23,7 +23,7 @@
 add.meta.pred <- function(feat, meta, pred.names=NULL, std.meta){
   ### add metadata as predictors to the feature matrix
   cnt <- 0
-  
+
   if (pred.names != '' && !is.null(pred.names)) {
 
     for (p in pred.names) {
@@ -50,7 +50,7 @@ add.meta.pred <- function(feat, meta, pred.names=NULL, std.meta){
       }
 
       feat                       <- rbind(feat, m)
-      rownames(feat)[nrow(feat)] <- paste('META-', toupper(p), sep='')
+      rownames(feat)[nrow(feat)] <- paste('META_', toupper(p), sep='')
       cnt                        <- cnt + 1
     }
       cat('added', cnt, 'meta-variables as predictors to the feature matrix\n')

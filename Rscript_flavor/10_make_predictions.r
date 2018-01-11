@@ -19,29 +19,24 @@ suppressMessages(library('methods'))
 
 # define arguments
   option_list = list(
-    make_option(c('-s', '--srcdir'), type='character',                     help='Source directory of this and other utility scripts'),
     make_option('--feat_in',         type='character',                     help='Input file containing features'),
     make_option('--mlr_models_list', type='character',                     help='Input RData file containing the trained models'),
-    make_option('--label_in',        type='character', default='NULL',     help='Input file containing labels'),
+    make_option('--label_in',        type='character',                     help='Input file containing labels'),
     make_option('--test_sets',       type='character', default='NULL',     help='Input file specifying which examples to use for testing'),
-    make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written'),
-    make_option('--model_matrix',    type='character',                     help='Input file containing information to rebuild models'))
-
+    make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written')
+)
 # parse arguments
 opt            <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 10_plm_predictor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir          =', opt$srcdir,        '\n')
 cat('feat_in         =', opt$feat_in,      '\n')
-cat('mlr_models_list =', opt$fn.mlr_models_list,'\n')
+cat('mlr_models_list =', opt$mlr_models_list,'\n')
 cat('label_in        =', opt$label_in,     '\n')
 cat('test_sets       =', opt$test_sets,    '\n')
 cat('pred            =', opt$pred,           '\n')
-cat('model_matrix    =', opt$model_matrix,      '\n')
 cat('\n')
 
-source.dir <- appendDirName(opt$srcdir)
 # optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
 if (is.null(opt$test_sets)) {
   opt$test_sets = NULL
@@ -50,13 +45,7 @@ if (is.null(opt$test_sets)) {
 
 feat  <- read.features(opt$feat_in)
 
-if (is.null(opt$label_in)) {
-  cat('fn.test.label not specified: skipping evaluation\n')
-}else{
-  label      <- read.labels(opt$label_in, feat)
-}
-
-model.mat <- read.table(file=opt$model_matrix, sep='\t', header = TRUE, stringsAsFactors=FALSE, row.names = 1, check.names=FALSE, quote='')
+label      <- read.labels(opt$label_in, feat)
 
 
 start.time   <- proc.time()[1]
@@ -65,8 +54,7 @@ load(opt$mlr_models_list)
 pred <- make.predictions(feat=feat,
                          label=label,
                          data.split=opt$test_sets,
-                         models.list=plm.out$models.list,
-                         model.mat=model.mat)
+                         models.list=models.list)
 
 
 ### save prediction

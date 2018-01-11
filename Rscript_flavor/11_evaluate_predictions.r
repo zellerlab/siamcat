@@ -19,8 +19,7 @@ suppressMessages(library('SIAMCAT'))
 # define arguments
   option_list = list(
   #make_option('--pkgdir', type='character', help='Source directory of dataprep'),
-  make_option(c('-s', '--srcdir'),    type='character',                help='Source directory of this and other utility scripts'),
-  make_option('--label',              type='character',                help='Input file containing labels'),
+  make_option('--label_in',              type='character',                help='Input file containing labels'),
   make_option('--pred',               type='character',                help='Input file containing the trained classification model(s)'),
   make_option('--plot',               type='character',                help='Output file for plotting'),
   make_option('--write_eval_results', type='logical',   default=FALSE, help='Should calculated parameters be written into tab-delimited file? (Necessary for generation of test files'),
@@ -31,8 +30,7 @@ suppressMessages(library('SIAMCAT'))
 opt            <- parse_args(OptionParser(option_list=option_list))
 cat("=== 11_model_evaler.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir             =', opt$srcdir, '\n')
-cat('label              =', opt$label, '\n')
+cat('label_in           =', opt$label_in, '\n')
 cat('pred               =', opt$pred, '\n')
 cat('plot               =', opt$plot, '\n')
 cat('write_eval_results =', opt$write_eval_results, '\n')
@@ -40,9 +38,8 @@ cat('output_results     =', opt$output_results, '\n')
 cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
-source.dir <- appendDirName(opt$srcdir)
 start.time <- proc.time()[1]
-label      <- read.labels(opt$label)
+label      <- read.labels(opt$label_in)
 
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")

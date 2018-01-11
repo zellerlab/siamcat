@@ -60,6 +60,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/SIAMCAT_vignette.html">SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</a>
+    </li>
+  </ul>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -79,23 +91,27 @@
     </div>
 
     
-    <p>This function trains the a machine learning model on the training data, using a <code>num.folds</code>-fold internal cross-validation scheme to find the optimal hyper-parameters of the model.</p>
+    <p>This function trains the a machine learning model on the training data</p>
     
 
     <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
   <span class='st'>"ridge_ll"</span>, <span class='st'>"randomForest"</span>), <span class='kw'>data.split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='st'>"auc"</span>), <span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+  <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='st'>"auc"</span>), <span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>param.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>feat</th>
-      <td><p>features object</p></td>
+      <td><p>feature object</p></td>
     </tr>
     <tr>
       <th>label</th>
       <td><p>label object</p></td>
+    </tr>
+    <tr>
+      <th>method</th>
+      <td><p>string, specifies the type of model to be trained, may be one of these: <code>c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")</code></p></td>
     </tr>
     <tr>
       <th>data.split</th>
@@ -106,18 +122,27 @@
       <td><p>boolean, should the folds in the internal cross-validation be stratified?</p></td>
     </tr>
     <tr>
-      <th>min.nonzero.coeff</th>
-      <td><p>integer number of minimum nonzero coefficients that should be present in the model</p></td>
+      <th>modsel.crit</th>
+      <td><p>list, specifies the model selection criterion during internal cross-validation, may contain these: <code>c("auc", "f1", "acc", "pr")</code></p></td>
     </tr>
     <tr>
-      <th>cl</th>
-      <td><p>class of learner, directly passed to <a href='http://www.rdocumentation.org/packages/mlr/topics/makeLearner'>makeLearner</a></p></td>
+      <th>min.nonzero.coeff</th>
+      <td><p>integer number of minimum nonzero coefficients that should be present in the model (only for <code>"lasso"</code>, <code>"ridge"</code>, and <code>"enet"</code></p></td>
+    </tr>
+    <tr>
+      <th>param.set</th>
+      <td><p>a list of extra parameters for mlr run, may contain: <code>cost</code> - for lasso_ll and ridge_ll; <code>alpha</code> for enet and <code>ntree, mtry</code> for RandomForrest</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object of class <a href='http://www.rdocumentation.org/packages/mlr/topics/makeWrappedModel'>makeWrappedModel</a></p>
+    <p>list containing</p><ul>
+<li><p><code>models.list</code> the list of trained models for each cross-validation fold</p></li>
+<li><p><code>out.matrix</code> ?</p></li>
+<li><p><code>W.mat</code> ?</p></li>
+</ul>
+
     
 
   </div>

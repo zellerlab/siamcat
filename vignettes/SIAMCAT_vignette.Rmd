@@ -1,0 +1,141 @@
+---
+title: "SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes"
+author: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
+date: "2018-01-02"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SIAMCAT}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+## SIAMCAT Workflow
+
+```{r message=FALSE, warning=FALSE}
+library(SIAMCAT)
+fn.in.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.meta <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+```
+
+### Read/Validate/Filter Data
+
+```{r}
+feat  <- read.features(fn.in.feat)
+label <- read.labels(fn.in.label)
+meta  <- read.meta(fn.in.meta)
+```
+
+```{r}
+validated.files <- validate.data(feat = feat, 
+                                 label = label, 
+                                 meta = meta )
+```
+
+```{r}
+results <- select.samples(meta=meta, 
+                          feat=feat, 
+                          label=label$label, 
+                          filter='age', 
+                          allowed.set=NULL, 
+                          allowed.range=c(0,120))
+
+feat = results$feat
+label$label = results$label
+meta = results$meta
+```
+
+```{r}
+feat.filtered <- filter.feat(feat = feat,  
+                             filter.method = 'abundance', 
+                             cutoff =0.001, 
+                             recomp.prop = FALSE, 
+                             rm.unmapped = TRUE)
+```
+
+### Association/Confounder Testing
+
+```{r}
+# confounder.check(meta=meta, label=label, fn.plot=paste0(output.dir, 'conf_check.pdf'))
+```
+
+```{r}
+# check.associations(feat = feat.filtered,
+#                    label = label, sort.by='fc',
+#                    fn.plot = paste0(output.dir, '/assoc.pdf'), 
+#                    alpha = 0.05, mult.corr = "fdr",
+#                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
+#                    panels=c("fc", "prevalence", "auroc"))
+```
+
+### Data Normalization
+
+```{r}
+normalized.data <- normalize.feat(feat = feat.filtered, 
+                                  norm.method = "log.unit", 
+                                  norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1))
+feat.norm = normalized.data$feat.norm
+```
+
+### Model building and Prediction
+
+```{r}
+pred.names = strsplit(c('fobt'), ',', fixed=TRUE)[[1]]
+feat.fobt = add.meta.pred(feat = feat.norm, 
+                          meta = meta, 
+                          pred.names = pred.names, 
+                          std.meta = TRUE)
+```
+
+```{r}
+data.split <- data.splitter(label = label, 
+                            num.folds = 5, 
+                            num.resample = 2, 
+                            stratify = TRUE, 
+                            inseparable = NULL, 
+                            meta = NULL)
+```
+
+```{r}
+plm.out <- train.model(feat=feat.fobt, 
+                       label=label,  
+                       method = "lasso",
+                       data.split=data.split, 
+                       stratify = TRUE,
+                       modsel.crit=list("pr"),  
+                       min.nonzero.coeff = 5,
+                       param.set=NULL)
+```
+
+```{r}
+prediction = make.predictions(feat=feat.fobt, 
+                              label=label, 
+                              data.split=data.split,
+                              models.list=plm.out)
+```
+
+### Model Evaluation and Interpretation
+
+```{r}
+eval.data <-  eval.predictions(label = label, pred = prediction$mat)
+
+# evaluation.model.plot(label = label, 
+#                       pred = prediction$mat, 
+#                       eval.data = eval.data, 
+#                       fn.plot = paste0(output.dir, '/eval_plot.pdf'))
+```
+
+```{r}
+# interpretor.model.plot(feat = feat.filtered, 
+#                        label = label, 
+#                        meta = meta, 
+#                        fn.plot=paste0(output.dir, 'interpretation.pdf'),
+#                        model = plm.out,
+#                        pred = prediction$mat,
+#                        consens.thres = 0.5,
+#                        norm.models = TRUE,
+#                        limits=c(-5,5),
+#                        heatmap.type = 'fc')
+```

@@ -50,19 +50,7 @@ inputs:
       prefix: --norm_feature
       position: 2
       valueFrom: $(self.toString())
-  norm_sample:
-    type: boolean?
-    inputBinding:
-      prefix: --norm_sample
-      position: 2
-      valueFrom: $(self.toString())
-  norm_global:
-    type: boolean?
-    inputBinding:
-      prefix: --norm_global
-      position: 2
-      valueFrom: $(self.toString())
-
+      
 arguments:
   - position: 3
     prefix:  --feat_out

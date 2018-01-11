@@ -8,3 +8,4 @@ SIAMCAT.RProj
 .Rapp.history
 *.tar.gz
 *.Rcheck*/
+inst/doc

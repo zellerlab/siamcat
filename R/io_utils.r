@@ -131,17 +131,6 @@ read.meta <- function(fn.in.meta){
   invisible(meta)
 }
 
-#' @title Append source directory path
-#' @description Append / at the end of the name of the directory path if it is not there
-#' @param source.dir string with path to the source directory
-#' @export
-#' @return string with / at the end
-appendDirName <- function(source.dir){
-  if (substr(source.dir, nchar(source.dir), nchar(source.dir)) != '/') {
-    source.dir <- paste(source.dir, '/', sep='')
-  }
-  invisible(source.dir)
-}
 
 ##### auxiliary function to trim whitespace from string
 # returns string without leading or trailing whitespace

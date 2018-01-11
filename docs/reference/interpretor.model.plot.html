@@ -60,6 +60,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/SIAMCAT_vignette.html">SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</a>
+    </li>
+  </ul>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -82,25 +94,21 @@
     <p>Produces a plot for model interpretation, displaying feature weights, robustness of feature weights, and features scores across patients.</p>
     
 
-    <pre class="usage"><span class='fu'>interpretor.model.plot</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>meta</span>, <span class='no'>fn.plot</span>, <span class='no'>model</span>, <span class='no'>pred</span>,
+    <pre class="usage"><span class='fu'>interpretor.model.plot</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>fn.plot</span>, <span class='no'>model</span>, <span class='no'>pred</span>, <span class='kw'>meta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>, <span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='st'>"zscore"</span>,
-  <span class='kw'>norm.models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>fc.lim</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>5</span>, <span class='fl'>5</span>), <span class='kw'>z.score.lim</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>3</span>, <span class='fl'>3</span>),
-  <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>)</pre>
+  <span class='kw'>norm.models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>3</span>, <span class='fl'>3</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>,
+  <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>feat</th>
-      <td><p>a feature object</p></td>
+      <td><p>the feature object containing the normalized features for the <code>"zscore"</code> heatmap and the features <em>before</em> normalization and addition of the metadata for the <code>"fc"</code> heatmap</p></td>
     </tr>
     <tr>
       <th>label</th>
       <td><p>a label object</p></td>
-    </tr>
-    <tr>
-      <th>meta</th>
-      <td><p>a metadata object</p></td>
     </tr>
     <tr>
       <th>fn.plot</th>
@@ -115,12 +123,17 @@
       <td><p>matrix containing the model predictions for every CV repetition</p></td>
     </tr>
     <tr>
+      <th>meta</th>
+      <td><p>a metadata object</p></td>
+    </tr>
+    <tr>
       <th>color.scheme</th>
       <td><p>color scheme for the heatmap, defaults to =<code>"BrBG"</code></p></td>
     </tr>
     <tr>
       <th>consens.thres</th>
-      <td><p>minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to <code>0.5</code></p></td>
+      <td><p>minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to <code>0.5</code>
+Note that for <code>"randomForest"</code> models, this cutoff specifies the minimum median Gini coefficient for a feature to be included and should therefore be much lower, e.g. <code>0.01</code></p></td>
     </tr>
     <tr>
       <th>heatmap.type</th>
@@ -129,6 +142,18 @@
     <tr>
       <th>norm.models</th>
       <td><p>boolean, should the feature weights be normalized across models?, defaults to <code>FALSE</code></p></td>
+    </tr>
+    <tr>
+      <th>limits</th>
+      <td><p>vector, cutoff for extreme values in the heatmap, defaults to <code>c(-3, 3)</code></p></td>
+    </tr>
+    <tr>
+      <th>detect.lim</th>
+      <td><p>float, pseudocount to be added before log10-transformation of features, defaults to <code>1e-08</code></p></td>
+    </tr>
+    <tr>
+      <th>max.show</th>
+      <td><p>integer, maximum number of features to be shown in the model interpretation plot, defaults to 50</p></td>
     </tr>
     </table>
     
@@ -141,9 +166,9 @@
     <p>Produces a plot consisting of</p><ul>
 <li><p>a barplot showing the feature weights and their robustness (i.e. in what proportion of models have they been incorporated)</p></li>
 <li><p>a heatmap showing the z-scores of the metagenomic features across patients</p></li>
-<li><p>another heatmap displaying the metadata categories</p></li>
+<li><p>another heatmap displaying the metadata categories (if applicable)</p></li>
 <li><p>a boxplot displaying the poportion of weight per model that is actually shown
-for the features that are incorporated into more than <code>consens.thres</code> <!-- % of the models. --></p></li>
+for the features that are incorporated into more than <code>consens.thres</code> percent of the models.</p></li>
 </ul>
     
 

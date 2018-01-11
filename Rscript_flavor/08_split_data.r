@@ -20,7 +20,6 @@ r.seed          <- 223311
 
 # define arguments
 option_list     <- list(
-  make_option(c('-s', '--srcdir'), type='character',                 help='Source directoyr of utility scripts'),
   make_option('--label_in',        type='character',                 help='Input file containing labels'),
   make_option('--train_sets',      type='character',                 help='Output file containing training sets'),
   make_option('--test_sets',       type='character',                 help='Output file containing test sets'),
@@ -39,7 +38,6 @@ opt            <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 08_data_splitter.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir  =', opt$srcdir, '\n')
 cat('label_in    =', opt$label_in, '\n')
 cat('train_sets  =', opt$train_sets, '\n')
 cat('test_sets   =', opt$test_sets, '\n')
@@ -50,7 +48,6 @@ cat('inseparable =', opt$inseparable, '\n')
 cat('metadata_in =', opt$metadata_in, '\n')
 cat('\n')
 
-source.dir  <- appendDirName(opt$srcdir)
 start.time  <- proc.time()[1]
 set.seed(r.seed)
 

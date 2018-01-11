@@ -17,7 +17,6 @@ suppressMessages(library('optparse'))
 suppressMessages(library('SIAMCAT'))
 # define arguments
 option_list <- list(
-    make_option(c('-s', '--srcdir'), type='character',               help='Source directory of this and other utility scripts'),
     make_option('--metadata_in',     type='character',               help='Input file containing meta-data'),
     make_option('--metadata_out',    type='character',               help='Output file to which meta-data after selection is written'),
     make_option('--label_in',        type='character',               help='Input file containing labels'),
@@ -33,7 +32,6 @@ opt           <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 02_sample_selector.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir        =', opt$srcdir, '\n')
 cat('metadata_in   =', opt$metadata_in, '\n')
 cat('metadata_out  =', opt$metadata_out, '\n')
 cat('label_in      =', opt$label_in, '\n')
@@ -44,7 +42,6 @@ cat('filter_var    =', opt$filter_var, '\n')
 cat('allowed_range =', opt$allowed_range, '\n')
 cat('allowed_set   =', opt$allowed_set, '\n')
 
-source.dir  <- appendDirName(opt$srcdir)
 start.time  <- proc.time()[1]
 
 

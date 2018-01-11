@@ -6,7 +6,7 @@
 \usage{
 train.model(feat, label, method = c("lasso", "enet", "ridge", "lasso_ll",
   "ridge_ll", "randomForest"), data.split = NULL, stratify = TRUE,
-  modsel.crit = list("auc"), min.nonzero.coeff = 1)
+  modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL)
 }
 \arguments{
 \item{feat}{feature object}
@@ -22,6 +22,8 @@ train.model(feat, label, method = c("lasso", "enet", "ridge", "lasso_ll",
 \item{modsel.crit}{list, specifies the model selection criterion during internal cross-validation, may contain these: \code{c("auc", "f1", "acc", "pr")}}
 
 \item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that should be present in the model (only for \code{"lasso"}, \code{"ridge"}, and \code{"enet"}}
+
+\item{param.set}{a list of extra parameters for mlr run, may contain: \code{cost} - for lasso_ll and ridge_ll; \code{alpha} for enet and \code{ntree, mtry} for RandomForrest}
 }
 \value{
 list containing \itemize{
