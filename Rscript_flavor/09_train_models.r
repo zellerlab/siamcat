@@ -36,7 +36,7 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option('--sel_criterion',     type='character', default='auc',   help='Evaluation criterion for model selection (options: \'acc\',
     	                                                                        \'auc\', \'auprc\', \'f1\')'),
     make_option('--min_nonzero_coeff', type='integer',   default=1,       help='Minimum number of non-zero coefficients required for a model
-    	                                                                        to be considered in model selection')
+    	                                                                        to be considered in model selection'),
     make_option('--param_set',          type='character', default=NULL,    help='a list of extra parameters for mlr run, may contain: cost - for lasso_ll and ridge_ll;
                                                                                  alpha for enet and ntree, mtry for RandomForrest')
 )
