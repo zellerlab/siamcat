@@ -106,62 +106,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     W.mat[,r]          <- as.numeric(c(model$feat.weights))
     cat('\n')
   }
-  # Preprocess hyper parameters
-  ### Write models into matrix to reload in plm_predictor.r
-  for (i in 1:length(models.list)){
-    if(method %in% c("lasso", "enet", "ridge")){
-      beta <- models.list[[i]]$learner.model$glmnet.fit$beta
-      nRowVec <- 1
-      if(!all(is.null(dim(beta))))  nRowVec <- nrow(beta)
-      vec <- rep(NA, nRowVec + 2)
-      vec[1] <- 0
-      vec[2] <- beta
-      vec[3:length(vec)] <- as.numeric(beta)
-      if (i == 1) {
-        out.matrix <- matrix(vec)
-      } else {
-        out.matrix <- cbind(out.matrix, vec)
-      }
-      # This overwrites rownames everytime, but doesnt need an additional conditional statement.
-      # paste0 pastes two equal-length string vectors element-wise
-      rownames(out.matrix) <- c("lambda", "a0", rownames(beta))
-      # In the case of glmnet, make the coefficient matrix from a sparse matrix into a regular one.
-      #models.list[[i]]$original.model$beta <- as.matrix(models.list[[i]]$learner.model$glmnet.fit$beta)
-    } else if(method == "lasso_ll" || method == "ridge_ll"){
-            # Liblinear needs C, W (intercept term is included in W).
-      # Furthermore, it needs an element called "ClassNames" which is important in determining which class label is positive or negative.
-      vec <- rep(NA, length(models.list[[i]]$learner.model$W) + 3)
-      vec[1] <- 0
-      vec[2:3] <- as.numeric(models.list[[i]]$learner.model$ClassNames)
-      vec[4:length(vec)] <- as.numeric(models.list[[i]]$learner.model$W)
-      if (i == 1) {
-        out.matrix <- matrix(vec)
-      } else {
-        out.matrix <- cbind(out.matrix, vec)
-      }
-      # This overwrites rownames everytime, but doesnt need an additional conditional statement.
-      # paste0 pastes two equal-length string vectors element-wise
-      # Note that the weight-vector is a row-vector here.
-      rownames(out.matrix) <- c("C", "negative label", "positive label", colnames(models.list[[i]]$learner.model$W))
-
-    }else if(method == "randomForest"){
-      vec <- rep(NA, length(models.list[[i]]$learner.model$importance) + 3)
-      vec[1] <- 0
-      vec[2:3] <- as.numeric(models.list[[i]]$learner.model$classes)
-      vec[4:length(vec)] <- as.numeric(models.list[[i]]$learner.model$importance)
-      if (i == 1) {
-        out.matrix <- matrix(vec)
-      } else {
-        out.matrix <- cbind(out.matrix, vec)
-      }
-      # This overwrites rownames everytime, but doesnt need an additional conditional statement.
-      # paste0 pastes two equal-length string vectors element-wise
-      # Note that the weight-vector is a row-vector here.
-      rownames(out.matrix) <- c("C", "negative label", "positive label", rownames(models.list[[i]]$learner.model$importance))
-    }
-  }
-  colnames(out.matrix) = paste('M', fold.name, sep='_')
-  #save(power,file="power.RData")
+ 
   models.list$model.type <- method
   invisible(models.list)
 }
