@@ -19,7 +19,6 @@ suppressMessages(library('methods'))
 
 # define arguments
   option_list = list(
-    make_option(c('-s', '--srcdir'), type='character',                     help='Source directory of this and other utility scripts'),
     make_option('--feat_in',         type='character',                     help='Input file containing features'),
     make_option('--mlr_models_list', type='character',                     help='Input RData file containing the trained models'),
     make_option('--label_in',        type='character', default='NULL',     help='Input file containing labels'),
@@ -31,7 +30,6 @@ opt            <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 10_plm_predictor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir          =', opt$srcdir,        '\n')
 cat('feat_in         =', opt$feat_in,      '\n')
 cat('mlr_models_list =', opt$mlr_models_list,'\n')
 cat('label_in        =', opt$label_in,     '\n')
@@ -39,7 +37,6 @@ cat('test_sets       =', opt$test_sets,    '\n')
 cat('pred            =', opt$pred,           '\n')
 cat('\n')
 
-source.dir <- appendDirName(opt$srcdir)
 # optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
 if (is.null(opt$test_sets)) {
   opt$test_sets = NULL

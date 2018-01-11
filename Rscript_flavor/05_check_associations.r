@@ -17,7 +17,6 @@ suppressMessages(library('SIAMCAT'))
 
 # define arguments
 option_list <- list(
-  make_option(c('-s', '--srcdir'), type='character',                   help='Source directory of this and other utility scripts'),
   make_option('--label_in',        type='character',                   help='Input file containing labels'),
   make_option('--feat_in',         type='character',                   help='Input file containing features'),
   make_option('--plot',            type='character',                   help='Output pdf file which will contain resulting plots'),
@@ -35,7 +34,6 @@ option_list <- list(
 opt          <- parse_args(OptionParser(option_list=option_list))
 cat("=== 05_association_check.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir       =', opt$srcdir, '\n')
 cat('label_in     =', opt$label_in, '\n')
 cat('feat_in      =', opt$feat_in, '\n')
 cat('plot         =', opt$plot, '\n')
@@ -50,7 +48,6 @@ cat('plot_type    =', opt$plot_type, '\n')
 cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
-source.dir <- appendDirName(opt$srcdir)
 start.time <- proc.time()[1]
 
 feat  <- read.features(opt$feat_in)

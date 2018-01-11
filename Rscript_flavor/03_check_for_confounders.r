@@ -17,7 +17,6 @@ suppressMessages(library('SIAMCAT'))
 
 # define arguments
 option_list    <- list(
-  make_option(c('-s', '--srcdir'), type='character', help='Source directory of this and other utility scripts'),
   make_option('--metadata_in',     type='character', help='Input file containing meta-data'),
   make_option('--label_in',        type='character', help='Input file containing labels'),
   make_option('--plot',            type='character', help='Output pdf file which will contain resulting plots')
@@ -28,13 +27,11 @@ opt          <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 03_confounder_check.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('source.dir   =', opt$srcdir, '\n')
 cat('metadata_in  =', opt$metadata_in, '\n')
 cat('label_in     =', opt$label_in, '\n')
 cat('plot         =', opt$plot, '\n')
 cat('\n')
 
-source.dir   <- appendDirName(opt$srcdir)
 start.time   <- proc.time()[1]
 
 

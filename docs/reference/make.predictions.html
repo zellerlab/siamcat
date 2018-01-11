@@ -60,6 +60,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/SIAMCAT_vignette.html">SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</a>
+    </li>
+  </ul>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -82,7 +94,7 @@
     <p>This function takes the test set instances and the model trained by plm.trainer in order to predict the classes.</p>
     
 
-    <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='kw'>data.split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>models.list</span>, <span class='no'>model.mat</span>)</pre>
+    <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='kw'>data.split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>models.list</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -100,12 +112,8 @@
       <td><p>filename containing the test samples or list of test instances produced by data.splitter(), defaults to <code>NULL</code> leading to testing on the complete dataset</p></td>
     </tr>
     <tr>
-      <th>model.mat</th>
-      <td><p>model matrix needed to rebuild the model</p></td>
-    </tr>
-    <tr>
-      <th>model</th>
-      <td><p>model object trained by plm.trainer</p></td>
+      <th>models.list</th>
+      <td><p>list of models trained by plm.trainer</p></td>
     </tr>
     </table>
     

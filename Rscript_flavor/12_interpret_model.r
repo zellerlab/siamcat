@@ -18,7 +18,6 @@ suppressMessages(library('SIAMCAT'))
 
 # define arguments
 option_list  <-  list(
-  make_option(c('-s', '--srcdir'), type='character',                   help='Source directory of this and other utility scripts'),
   make_option('--label_in',        type='character',                   help='Input file containing labels'),
   make_option('--feat_in',         type='character',                   help='Input file containing features'),
   make_option('--origin_feat',     type='character',                   help='Input file containing unnormalized/filtered features'),
@@ -38,7 +37,6 @@ option_list  <-  list(
 opt            <- parse_args(OptionParser(option_list=option_list))
 cat("=== 12_model_interpretor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir          =', opt$srcdir, '\n')
 cat('feat            =', opt$feat, '\n')
 cat('origin_feat.    =', opt$origin_feat, '\n')
 cat('metadata_in     =', opt$metadata_in, '\n')
@@ -50,12 +48,6 @@ cat('col_scheme      =', opt$col_scheme, '\n')
 cat('consens_thres   =', opt$consens_thres, '\n')
 cat('heatmap_type    =', opt$heatmap_type, '\n')
 cat('\n')
-
-### If variable source.dir does not end with "/", append "/" to end of source.dir
-source.dir <- appendDirName(opt$srcdir)
-# TODO (remove last check)
-# optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
-
 
 ### read features and labels
 start.time <- proc.time()[1]

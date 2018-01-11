@@ -60,6 +60,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/SIAMCAT_vignette.html">SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</a>
+    </li>
+  </ul>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -79,22 +91,25 @@
     </div>
 
     
-    <p>This function calculates for each feature the median log10 fold
-change between the different classes found in labels.</p>
+    <p>This function calculates for each feature a pseudo-fold change
+(geometrical mean of the difference between quantiles)
+between the different classes found in labels.</p>
 <p>Significance of the differences is computed for each feature using a wilcoxon
 test followed by multiple hypothesis testing correction.</p>
 <p>Additionally, the Area under the Receiver Operating Characteristic Curve
-'(AU-ROC) is computed for the features found to be associated with the two
-different classes at a user-specified significance level <code>alpha</code>.</p>
+(AU-ROC) and a prevalence shift are computed for the features found to be
+associated with the two different classes at a user-specified
+significance level <code>alpha</code>.</p>
 <p>Finally, the function produces a plot of the top <code>max.show</code> associated
 features, showing the distribution of the log10-transformed abundances for
-both classes, the median fold change, and the AU-ROC.</p>
+both classes, and user-selected panels for the effect (AU-ROC, Prevalence
+Shift, and Fold Change)</p>
     
 
     <pre class="usage"><span class='fu'>check.associations</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>fn.plot</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
   <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>mult.corr</span> <span class='kw'>=</span> <span class='st'>"fdr"</span>, <span class='kw'>sort.by</span> <span class='kw'>=</span> <span class='st'>"fc"</span>, <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>8</span>,
-  <span class='kw'>pr.cutoff</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>6</span>, <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"bean"</span>, <span class='kw'>panels</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"fc"</span>,
-  <span class='st'>"auroc"</span>))</pre>
+  <span class='kw'>pr.cutoff</span> <span class='kw'>=</span> <span class='fl'>10</span>^-<span class='fl'>6</span>, <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"quantile.box"</span>,
+  <span class='kw'>panels</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"fc"</span>, <span class='st'>"auroc"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -132,12 +147,20 @@ both classes, the median fold change, and the AU-ROC.</p>
       <td><p>float, pseudocount to be added before log-transormation of the data, defaults to <code>1e-08</code></p></td>
     </tr>
     <tr>
+      <th>pr.cutoff</th>
+      <td><p>float, cutoff for the prevalence computation, defaults to <code>1e-06</code></p></td>
+    </tr>
+    <tr>
       <th>max.show</th>
       <td><p>integer, how many associated features should be shown, defaults to <code>50</code></p></td>
     </tr>
     <tr>
       <th>plot.type</th>
-      <td><p>string, specify how the abundance should be plotted, must be one of these: <code>c("bean", "box", "quantile.box", "quantile.rect")</code>, defaults to <code>"bean"</code></p></td>
+      <td><p>string, specify how the abundance should be plotted, must be one of these: <code>c("bean", "box", "quantile.box", "quantile.rect")</code>, defaults to <code>"quantile.box"</code></p></td>
+    </tr>
+    <tr>
+      <th>panels</th>
+      <td><p>vector, name of the panels to be plotted next to the log10-transformed abundances, possible entries are <code>c("fc", "auroc", "prevalence")</code>, defaults to <code>c("fc", "auroc")</code></p></td>
     </tr>
     </table>
     

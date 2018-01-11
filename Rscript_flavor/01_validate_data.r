@@ -17,7 +17,6 @@ suppressMessages(library('SIAMCAT'))
 
 # define arguments
 option_list <- list(
-  make_option(c('-s', '--srcdir'),  type='character', help='Source directory of this and other utility scripts'),
   make_option('--metadata_in',      type='character', help='Input file containing meta-data'),
   make_option('--metadata_out',     type='character', default = "meta_validated.tsv",
                                     help='Output file to which validated meta-data is written'),
@@ -35,7 +34,6 @@ opt          <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
 cat("=== 01_data_validator.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir       =', opt$srcdir, '\n')
 cat('metadata_in  =', opt$metadata_in, '\n')
 cat('metadata_out =', opt$metadata_out, '\n')
 cat('label_in     =', opt$label_in, '\n')
@@ -44,7 +42,6 @@ cat('feat_in      =', opt$feat_in, '\n')
 cat('feat_out     =', opt$feat_out, '\n')
 cat('\n')
 
-source.dir <- appendDirName(opt$srcdir)
 start.time <- proc.time()[1]
 
 # reading in the files

@@ -25,7 +25,6 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
 
 # define arguments
  option_list <- list(
-    make_option(c('-s', '--srcdir'),   type='character',                  help='Source directory of this and other utility scripts'),
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
     make_option('--method',            type='character', default='lasso', help='class of learner, directly passed to mlr::makeLearner'),
@@ -47,7 +46,6 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
 # print parameters of the run
 cat("=== 09_plm_trainer.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('srcdir            =', opt$srcdir,  '\n')
 cat('feat_in           =', opt$feat_in, '\n')
 cat('label_in          =', opt$label_in, '\n')
 cat('method            =', opt$method, '\n')
@@ -59,9 +57,6 @@ cat('min_nonzero_coeff =', opt$min_nonzero_coeff, '\n')
 cat('param_set         =', opt$param_set, '\n')
 cat('\n')
 
-
-
-opt$srcdir <- appendDirName(opt$srcdir)
 
 # optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
 if (toupper(opt$train_sets)=='NULL' || toupper(opt$train_sets)=='NONE' || toupper(opt$train_sets)=='UNKNOWN') {
