@@ -71,11 +71,6 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
 
   cat('\nPreparing to train', method,  'models on', num.runs, 'training set samples...\n\n')
 
-  ### train one model per training sample (i.e. CV fold)
-  # feat has structure: examples in rows; features in columns!
-  W.mat           <- matrix(data=NA, nrow=ncol(feat), ncol=num.runs)
-  rownames(W.mat) <- c(colnames(feat))
-  colnames(W.mat) <- paste('M', fold.name, sep='_')
 
   # Create matrix with hyper parameters.
   hyperpar.list   <- list()
@@ -100,10 +95,8 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
     }else{
-      stop("OOOPS!!\n")
+      warning("Model without any features selected!\n")
     }
-    stopifnot(all(names(model$W) == rownames(W.mat)))
-    W.mat[,r]          <- as.numeric(c(model$feat.weights))
     cat('\n')
   }
  
