@@ -28,7 +28,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
   feat         <- t(feat)
 
   ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(data.split, label, mode="test")
+  foldList     <- get.foldList(data.split, label, mode="test", model=models.list)
   fold.name    <- foldList$fold.name
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
@@ -113,7 +113,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
   if (length(unique(names(pred))) < length(pred)) {
     ref.names = NULL
     if (any(substr(fold.name,1,14) == 'whole data set')) {
-      r.idx = as.numeric(sapply(strsplit(fold.name, 'predicted by model '), '[[', 2))
+      r.idx = c(1:num.runs) #as.numeric(sapply(strsplit(fold.name, 'predicted by model '), '[[', 2))
       runs = sort(unique(r.idx))
       stopifnot(all(runs == 1:length(runs)))
       if (!is.null(data.split)) {

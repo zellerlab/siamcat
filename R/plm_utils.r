@@ -96,7 +96,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 }
 
 #' @export
-get.foldList <- function(data.split, label, mode=c("train", "test")){
+get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL){
   num.runs     <- 1
   num.folds    <- 2
   fold.name = list()
@@ -105,6 +105,12 @@ get.foldList <- function(data.split, label, mode=c("train", "test")){
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
     fold.exm.idx[[1]] <- names(label$label)
+    if (mode == "test" && !is.null(model)){
+      model$model.type <- NULL
+      num.runs <- length(model)
+      fold.name <- as.list(rep('whole data set', length(model)))
+      fold.exm.idx <- rep(list(names(label$label)), length(model))
+    }
   } else {
     if (class(data.split) == 'character') {
       # read in file containing the training instances
