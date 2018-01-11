@@ -65,7 +65,7 @@ write(pred.header, file=opt$pred, append=FALSE)
 if (length(unique(names(pred$pred))) < length(pred$pred)) {
   suppressWarnings(write.table(pred$mat, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 } else {
-  write.table(pred$pred, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=FALSE, append=TRUE)
+  suppressWarnings(write.table(pred$pred, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 }
 cat('\nSaved all predictions\n')
 
