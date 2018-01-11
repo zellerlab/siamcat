@@ -24,7 +24,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
   cl         <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
-  parameters <- get.parameters.from.param.set(param.set=param.set, method=methos)
+  parameters <- get.parameters.from.param.set(param.set=param.set, method=method, sqrt(nrow(data)))
 
   if(method == "lasso"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
@@ -195,10 +195,9 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
   return(opt.lambda)
 }
 
-get.parameters.from.param.set <- function(param.set, method){
+get.parameters.from.param.set <- function(param.set, method, sqrt.mdim){
   cost      <- 10^seq(-2,3,length=6+5+10)
   ntree     <- c(100,1000)
-  sqrt.mdim <- sqrt(nrow(data))
   mtry      <- c(round(sqrt.mdim/2), round(sqrt.mdim), round(sqrt.mdim*2))
   alpha     <- c(0,1)
   parameters<- NULL

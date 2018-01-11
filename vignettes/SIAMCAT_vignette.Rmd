@@ -105,7 +105,8 @@ plm.out <- train.model(feat=feat.fobt,
                        data.split=data.split, 
                        stratify = TRUE,
                        modsel.crit=list("pr"),  
-                       min.nonzero.coeff = 5)
+                       min.nonzero.coeff = 5,
+                       param.set=NULL)
 ```
 
 ```{r}
