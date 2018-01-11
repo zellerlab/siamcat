@@ -199,7 +199,7 @@ get.parameters.from.param.set <- function(param.set, method){
   cost      <- 10^seq(-2,3,length=6+5+10)
   ntree     <- c(100,1000)
   sqrt.mdim <- sqrt(nrow(data))
-  mtry      <- c(round(sqrt.mdim/2), round(sqrt.mdim), round(sqrt.mdim*2)
+  mtry      <- c(round(sqrt.mdim/2), round(sqrt.mdim), round(sqrt.mdim*2))
   alpha     <- c(0,1)
   parameters<- NULL
   if(method == "lasso_ll"){
