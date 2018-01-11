@@ -14,7 +14,7 @@
 ##### function to train a LASSO model for a single given C
 #' @export
 train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
-                      measure=list("acc"), min.nonzero.coeff=5){
+                      measure=list("acc"), min.nonzero.coeff=5, param.set=NULL){
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
@@ -23,9 +23,8 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
-  cl        <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
-  paramSet  <- NULL
-  cost      <- 10^seq(-2,3,length=6+5+10)
+  cl         <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
+  parameters <- get.parameters.from.param.set(param.set=param.set, method=methos)
 
   if(method == "lasso"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
@@ -33,23 +32,20 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=0)
   } else if(method == "enet"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
-    paramSet  <- makeParamSet(makeNumericParam('alpha', lower=0, upper=1))
+    
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
     class.weights        <- c(5, 1)
     names(class.weights) <- c(label$negative.lab,label$positive.lab)
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
-    paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, type=0)
-    paramSet  <- makeParamSet(makeDiscreteParam("cost", values=cost))
+    parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "randomForest"){
-    sqrt.mdim <- sqrt(nrow(data))
     cl        <- "classif.randomForest"
     lrn       <- makeLearner(cl, predict.type = "prob", fix.factors.prediction = TRUE)
-    paramSet  <- makeParamSet(makeNumericParam('ntree', lower=100, upper=1000),
-                        makeDiscreteParam('mtry', values=c(round(sqrt.mdim/2), round(sqrt.mdim), round(sqrt.mdim*2))))
+
   } else {
     stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR, randomForest.\n")
   }
@@ -57,11 +53,11 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 
   ## 3) Fit the model
   ## Train the learner on the task using a random subset of the data as training set
-  if(!all(is.null(paramSet))){
+  if(!all(is.null(parameters))){
     hyperPars <- tuneParams(learner = lrn,
                          task = task,
                          resampling =  makeResampleDesc('CV', iters=5L, stratify=TRUE),
-                         par.set = paramSet,
+                         par.set = parameters,
                          control = makeTuneControlGrid(resolution = 10L),
                          measures=measure)
     print(hyperPars)
@@ -197,4 +193,29 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
     opt.lambda <- lambdas[floor(mean(opt.idx))]
   }
   return(opt.lambda)
+}
+
+get.parameters.from.param.set <- function(param.set, method){
+  cost      <- 10^seq(-2,3,length=6+5+10)
+  ntree     <- c(100,1000)
+  sqrt.mdim <- sqrt(nrow(data))
+  mtry      <- c(round(sqrt.mdim/2), round(sqrt.mdim), round(sqrt.mdim*2)
+  alpha     <- c(0,1)
+  parameters<- NULL
+  if(method == "lasso_ll"){
+    if(!all(is.null(param.set))){
+      if("cost"%in%names(param.set)) cost <- param.set$cost
+    }
+    parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
+  }else if(method == "randomForest"){
+    if(!all(is.null(param.set))){
+      if("ntree"%in%names(param.set)) ntree <- param.set$ntree
+      if("mtry"%in%names(param.set))  mtry  <- param.set$mtry
+    }
+    parameters  <- makeParamSet(makeNumericParam('ntree', lower=ntree[1], upper=ntree[2]),
+                               makeDiscreteParam('mtry', values=mtry)))
+  }else if(method == "enet"){
+    parameters <- makeParamSet(makeNumericParam('alpha', lower=alpha[1], upper=alpha[2]))
+  }
+  return(parameters)
 }

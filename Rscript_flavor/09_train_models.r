@@ -34,10 +34,12 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified
     	                                                                        such that an approx. equal proportion of positive examples
     	                                                                        are contained in each subset (only for binary labels)?'),
-    make_option('--sel_criterion',     type='character', default='auc', help='Evaluation criterion for model selection (options: \'acc\',
+    make_option('--sel_criterion',     type='character', default='auc',   help='Evaluation criterion for model selection (options: \'acc\',
     	                                                                        \'auc\', \'auprc\', \'f1\')'),
     make_option('--min_nonzero_coeff', type='integer',   default=1,       help='Minimum number of non-zero coefficients required for a model
     	                                                                        to be considered in model selection')
+    make_option('--param_set',          type='character', default=NULL,    help='a list of extra parameters for mlr run, may contain: cost - for lasso_ll and ridge_ll;
+                                                                                 alpha for enet and ntree, mtry for RandomForrest')
 )
 
  opt         <- parse_args(OptionParser(option_list=option_list))
@@ -54,6 +56,7 @@ cat('mlr_models_list   =', opt$mlr_models_list, '\n')
 cat('stratify          =', opt$stratify, '\n')
 cat('sel_criterion     =', opt$sel_criterion, '\n')
 cat('min_nonzero_coeff =', opt$min_nonzero_coeff, '\n')
+cat('param_set         =', opt$param_set, '\n')
 cat('\n')
 
 
@@ -82,7 +85,8 @@ models.list  <- train.model(feat = feat,
                        data.split=opt$train_sets,
                        stratify = opt$stratify,
                        modsel.crit  = opt$sel_criterion,
-                       min.nonzero.coeff = opt$min_nonzero_coeff)
+                       min.nonzero.coeff = opt$min_nonzero_coeff,
+                       param.set = opt$param_set)
 
 
 save(models.list , file=opt$mlr_models_list)

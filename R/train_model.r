@@ -20,6 +20,7 @@
 #' @param stratify boolean, should the folds in the internal cross-validation be stratified?
 #' @param modsel.crit list, specifies the model selection criterion during internal cross-validation, may contain these: \code{c("auc", "f1", "acc", "pr")}
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that should be present in the model (only for \code{"lasso"}, \code{"ridge"}, and \code{"enet"}
+#' @param param.set a list of extra parameters for mlr run, may contain: \code{cost} - for lasso_ll and ridge_ll; \code{alpha} for enet and \code{ntree, mtry} for RandomForrest
 #' @export
 #' @keywords SIAMCAT plm.trainer
 #' @return list containing \itemize{
@@ -30,7 +31,7 @@
 # TODO add details section for this function
 train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                         data.split=NULL, stratify = TRUE,
-                        modsel.crit=list("auc"),  min.nonzero.coeff = 1){
+                        modsel.crit=list("auc"),  min.nonzero.coeff = 1, param.set=NULL){
   # TODO 1: modsel.criterion should be implemented
   # check modsel.crit
   if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))){
@@ -91,7 +92,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     data$label                     <- train.label
 
     ### internal cross-validation for model selection
-    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff)
+    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
     }else{
