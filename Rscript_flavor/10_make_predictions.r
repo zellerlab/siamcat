@@ -21,7 +21,7 @@ suppressMessages(library('methods'))
   option_list = list(
     make_option('--feat_in',         type='character',                     help='Input file containing features'),
     make_option('--mlr_models_list', type='character',                     help='Input RData file containing the trained models'),
-    make_option('--label_in',        type='character', default='NULL',     help='Input file containing labels'),
+    make_option('--label_in',        type='character',                     help='Input file containing labels'),
     make_option('--test_sets',       type='character', default='NULL',     help='Input file specifying which examples to use for testing'),
     make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written')
 )
@@ -45,11 +45,7 @@ if (is.null(opt$test_sets)) {
 
 feat  <- read.features(opt$feat_in)
 
-if (is.null(opt$label_in)) {
-  cat('fn.test.label not specified: skipping evaluation\n')
-}else{
-  label      <- read.labels(opt$label_in, feat)
-}
+label      <- read.labels(opt$label_in, feat)
 
 
 start.time   <- proc.time()[1]
