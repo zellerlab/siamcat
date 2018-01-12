@@ -1,0 +1,42 @@
+#!/bin/Rscript
+FROM ubuntu:16.04
+
+# Install essential unix packages and dependencies:
+RUN apt-get update -y --fix-missing
+RUN apt-get install -y build-essential \
+    wget \
+    unzip \
+    tar \
+    make \
+    less \
+    nano \
+    nodejs \
+    npm \
+    git
+RUN apt-get update -y --fix-missing
+RUN apt-get install -y r-base
+# needed for cwltool, toil:
+RUN apt-get -y install python-dev \
+    python-pip
+
+# Install cwl runners:
+ENV TOIL_VERSION 3.12.0
+#ENV CWLTOOL_VERSION 1.0.20171017195544
+# as long as fix #554 is not in release: use directly from github
+RUN cd /usr/local/ \
+    && git clone https://github.com/common-workflow-language/cwltool.git \
+    && cd cwltool \
+    && pip install .
+
+RUN pip install toil==${TOIL_VERSION}
+
+# Download and install SIAMCAT
+ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/cwl-workflow/archive.tar.gz"
+RUN cd /usr/local/ \
+    && wget -O siamcat.tar.gz ${SIAMCAT_URL} \
+    && tar -xvzf siamcat.tar.gz \
+    && mv ./SIAMCAT* ./SIAMCAT \
+    && Rscript ./SIAMCAT/Rscript_flavor/00_setup.r ./siamcat.tar.gz \
+    && rm siamcat.tar.gz \
+    && chmod 700 ./SIAMCAT/Rscript_flavor/*
+ENV PATH="/usr/local/SIAMCAT/Rscript_flavor:${PATH}"
