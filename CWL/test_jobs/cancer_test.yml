@@ -1,0 +1,10 @@
+# test yaml job file for ../workflows/siamcal_cwl_workflow.cwl
+label_in:
+  class: File
+  path: /home/kbreuer/test_data_siamcat/label_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv
+feat_in:
+  class: File
+  path: /home/kbreuer/test_data_siamcat/feat_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv
+metadata_in:
+  class: File
+  path: /home/kbreuer/test_data_siamcat/num_metadata_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv
