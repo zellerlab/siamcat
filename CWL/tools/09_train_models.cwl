@@ -22,7 +22,7 @@ inputs:
     inputBinding:
       prefix: --train_sets
       position: 1
-  method:
+  train_method:
     type: string?
     inputBinding:
       prefix: --method
@@ -42,6 +42,11 @@ inputs:
     type: int?
     inputBinding:
       prefix: --min_nonzero_coeff
+      position: 2
+  param_set:
+    type: string?
+    inputBinding:
+      prefix: --param_set
       position: 2
 
 arguments:

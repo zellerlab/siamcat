@@ -31,7 +31,7 @@ RUN cd /usr/local/ \
 RUN pip install toil==${TOIL_VERSION}
 
 # Download and install SIAMCAT
-ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/cwl-workflow/archive.tar.gz"
+ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/development/archive.tar.gz"
 RUN cd /usr/local/ \
     && wget -O siamcat.tar.gz ${SIAMCAT_URL} \
     && tar -xvzf siamcat.tar.gz \

@@ -27,28 +27,15 @@ inputs:
     inputBinding:
       prefix: --sd_min_quantile
       position: 2
-  norm_sample:
-    doc: TRUE or FALSE is allowed
-    type: string?
-    inputBinding:
-      prefix: --norm_sample
-      position: 2
-  norm_global:
-    doc: TRUE or FALSE is allowed
-    type: string?
-    inputBinding:
-      prefix: --norm_global
-      position: 2
   vector_norm:
     type: int?
     inputBinding:
       prefix: --vector_norm
       position: 2
-  norm_feature:
-    doc: TRUE or FALSE is allowed
-    type: string?
+  norm_margin:
+    type: int?
     inputBinding:
-      prefix: --norm_feature
+      prefix: --norm_margin
       position: 2
       
 arguments:

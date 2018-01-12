@@ -37,7 +37,7 @@ inputs:
     inputBinding:
       position: 1
       prefix: --pred
-  color_scheme:
+  interp_col_scheme:
     type: string?
     inputBinding:
       position: 2

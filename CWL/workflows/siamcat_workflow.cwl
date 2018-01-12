@@ -3,6 +3,8 @@ cwlVersion: v1.0
 id: siamcat_workflow
 label: siamcat_workflow
 inputs:
+
+  # Main input:
   - id: label_in
     type: File
     'sbg:x': -211.46906743520267
@@ -15,6 +17,105 @@ inputs:
     type: File?
     'sbg:x': -213.43544332479505
     'sbg:y': 65.19374084472656
+
+# for step check_associations:
+  - id: alpha
+    type: float?
+    'sbg:exposed': true
+  - id: detect_limit
+    type: float?
+    'sbg:exposed': true
+  - id: max_show
+    type: float?
+    'sbg:exposed': true
+  - id: min_fc
+    type: float?
+    'sbg:exposed': true
+  - id: mult_test
+    type: string?
+    'sbg:exposed': true
+  - id: plot_type
+    type: string?
+    'sbg:exposed': true
+  - id: sort_by
+    type: string?
+    'sbg:exposed': true
+  - id: assoc_col_scheme
+    type: string?
+    'sbg:exposed': true
+
+
+  # for step filter_features:
+  - id: rm_unmapped
+    type: string?
+    'sbg:exposed': true
+  - id: filter_cutoff
+    type: float?
+    'sbg:exposed': true
+  - id: filter_method
+    type: string?
+    'sbg:exposed': true
+  - id: recomp_prop
+    type: string?
+    'sbg:exposed': true
+
+  # for step normalize_features:
+  - id: norm_method
+    type: string?
+    'sbg:exposed': true
+  - id: norm_margin
+    type: int?
+    'sbg:exposed': true
+  - id: sd_min_quantile
+    type: float?
+    'sbg:exposed': true
+  - id: vector_norm
+    type: int?
+    'sbg:exposed': true
+
+  # for step split_data:
+  - id: num_folds
+    type: int?
+    'sbg:exposed': true
+  - id: resample
+    type: int?
+    'sbg:exposed': true
+  - id: inseparable
+    type: string?
+    'sbg:exposed': true
+
+  # for step train_models:
+  - id: train_method
+    type: string?
+    'sbg:exposed': true
+  - id: min_nonzero_coeff
+    type: int?
+    'sbg:exposed': true
+  - id: sel_criterion
+    type: string?
+    'sbg:exposed': true
+
+  # for step evaluate_predictions
+  - id: write_eval_results
+    type: string?
+    'sbg:exposed': true
+
+  # for step interprete_model:
+  - id: consensus_threshold
+    type: float?
+    'sbg:exposed': true
+  - id: heatmap_type
+    type: string?
+    'sbg:exposed': true
+  - id: interp_col_scheme
+    type: string?
+    'sbg:exposed': true
+
+  # for steps split_data and train_models:
+  - id: stratify
+    type: string?
+    'sbg:exposed': true
+
 outputs:
   - id: association_plots_out
     outputSource:
@@ -79,9 +180,21 @@ steps:
     'sbg:y': 213.78602506789176
   - id: filter_features
     in:
+      - id: filter_cutoff
+        source:
+          - filter_cutoff
       - id: feat_in
         source:
           - validate_data/validated_feat
+      - id: filter_method
+        source:
+          - filter_method
+      - id: recomp_prop
+        source:
+          - recomp_prop
+      - id: rm_unmapped
+        source:
+          - rm_unmapped
     out:
       - id: filtered_feat
     run: ../tools/04_filter_features.cwl
@@ -89,12 +202,36 @@ steps:
     'sbg:y': 460.4359285994099
   - id: check_associations
     in:
+      - id: alpha
+        source:
+          - alpha
+      - id: detect_limit
+        source:
+          - detect_limit
       - id: feat_in
         source:
           - validate_data/validated_feat
       - id: label_in
         source:
           - validate_data/validated_label
+      - id: max_show
+        source:
+          - max_show
+      - id: min_fc
+        source:
+          - min_fc
+      - id: mult_test
+        source:
+          - mult_test
+      - id: plot_type
+        source:
+          - plot_type
+      - id: sort_by
+        source:
+          - sort_by
+      - id: assoc_col_scheme
+        source:
+          - assoc_col_scheme
     out:
       - id: association_plots_out
     run: ../tools/05_check_associations.cwl
@@ -105,6 +242,15 @@ steps:
       - id: feat_in
         source:
           - filter_features/filtered_feat
+      - id: norm_method
+        source:
+          - norm_method
+      - id: sd_min_quantile
+        source:
+          - sd_min_quantile
+      - id: vector_norm
+        source:
+          - vector_norm
     out:
       - id: feat_out
       - id: normalization_parameters
@@ -113,12 +259,24 @@ steps:
     'sbg:y': 465.6464459739973
   - id: split_data
     in:
+      - id: inseparable
+        source:
+          - inseparable
       - id: label_in
         source:
           - validate_data/validated_label
       - id: metadata_in
         source:
           - validate_data/validated_metadata
+      - id: num_folds
+        source:
+          - num_folds
+      - id: resample
+        source:
+          - resample
+      - id: stratify
+        source:
+          - stratify
     out:
       - id: test_sets_out
       - id: train_sets_out
@@ -152,6 +310,18 @@ steps:
       - id: label_in
         source:
           - validate_data/validated_label
+      - id: train_method
+        source:
+          - train_method
+      - id: min_nonzero_coeff
+        source:
+          - min_nonzero_coeff
+      - id: sel_criterion
+        source:
+          - sel_criterion
+      - id: stratify
+        source:
+          - stratify
       - id: train_sets
         source:
           - split_data/train_sets_out
@@ -168,6 +338,9 @@ steps:
       - id: predictions
         source:
           - make_predictions/predictions
+      - id: write_eval_results
+        source:
+          - write_eval_results
     out:
       - id: evaluation_plot
       - id: evaluation_results
@@ -176,9 +349,15 @@ steps:
     'sbg:y': 473.4021848041717
   - id: interprete_model
     in:
+      - id: consensus_threshold
+        source:
+          - consensus_threshold
       - id: feat_in
         source:
           - normalize_features/feat_out
+      - id: heatmap_type
+        source:
+          - heatmap_type
       - id: label_in
         source:
           - validate_data/validated_label
@@ -194,6 +373,9 @@ steps:
       - id: predictions
         source:
           - make_predictions/predictions
+      - id: interp_col_scheme
+        source:
+          - interp_col_scheme
     out:
       - id: model_plots
     run: ../tools/12_interprete_model.cwl

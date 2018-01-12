@@ -12,9 +12,9 @@ output_dir="${working_dir}/out"
 temp_dir="${working_dir}/temp"
 base_dir="${working_dir}/base"
 cache_dir="${working_dir}/cache"
-cwl_dir="/home/kbreuer/siamcat_cwl/CWL"
+cwl_dir="/home/kbreuer/siamcat-dev/CWL"
 input_dir="/home/kbreuer/test_data_siamcat"
-yml_job_filepath="${cwl_dir}/test_jobs/cancer_test.yml"
+yml_job_filepath="${cwl_dir}/test_jobs/cancer_test_all_options.yml"
 workflow_file="${cwl_dir}/workflows/siamcat_workflow.cwl"
 
 mkdir $working_dir

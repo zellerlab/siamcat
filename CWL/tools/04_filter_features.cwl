@@ -17,7 +17,7 @@ inputs:
     inputBinding:
       prefix: --method
       position: 2
-  cutoff:
+  filter_cutoff:
     type: float?
     inputBinding:
       prefix: --cutoff

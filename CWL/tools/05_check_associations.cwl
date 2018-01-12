@@ -38,7 +38,7 @@ inputs:
       position: 2
       prefix: --max_show
   detect_limit:
-    type: int?
+    type: float?
     inputBinding:
       position: 2
       prefix: --detect_limit
@@ -47,7 +47,7 @@ inputs:
     inputBinding:
       position: 2
       prefix: --sort_by
-  col_scheme:
+  assoc_col_scheme:
     type: string?
     inputBinding:
       position: 2
