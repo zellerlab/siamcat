@@ -31,10 +31,11 @@ arguments:
     prefix: '--label_out'
     valueFrom: $(inputs.label_in.nameroot)_valid.tsv
   - position: 2
+    prefix: '--metadata_out'
     valueFrom: |
       ${
         if (inputs.metadata_in){
-          return [ "--metadata_out", inputs.metadata_in.nameroot + "_valid.tsv" ];
+          return inputs.metadata_in.nameroot + "_valid.tsv";
         } else {
           return null;
         }

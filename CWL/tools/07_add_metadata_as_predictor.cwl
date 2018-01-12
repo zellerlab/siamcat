@@ -23,11 +23,11 @@ inputs:
       prefix: --pred_names
       position: 2
   std_meta:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --std_meta
       position: 3
-      valueFrom: $(self.toString())
 
 arguments:
   - prefix: --feat_out

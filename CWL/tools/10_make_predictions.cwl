@@ -13,7 +13,7 @@ inputs:
       prefix: --feat_in
       position: 1
   label_in:
-    type: File?
+    type: File
     inputBinding:
       prefix: --label_in
       position: 1
@@ -22,15 +22,10 @@ inputs:
     inputBinding:
       prefix: --test_sets
       position: 1
-  model_rdata:
+  model:
     type: File
     inputBinding:
       prefix: --mlr_models_list
-      position: 1
-  model_matrix:
-    type: File
-    inputBinding:
-      prefix: --model_matrix
       position: 1
 
 arguments:

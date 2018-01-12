@@ -23,17 +23,17 @@ inputs:
       prefix: --cutoff
       position: 2
   rm_unmapped:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --rm_unmapped
       position: 2
-      valueFrom: $(self.toString())
   recomp_prop:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --recomp_prop
       position: 2
-      valueFrom: $(self.toString())
 
 arguments:
   - prefix: --feat_out

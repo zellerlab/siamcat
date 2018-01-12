@@ -11,51 +11,51 @@ inputs:
     type: File
     inputBinding:
       position: 1
-      prefix: '--feat'
+      prefix: --feat_in
   original_feat:
     type: File
     inputBinding:
       position: 1
-      prefix: '--origin_feat'
+      prefix: --origin_feat
   label_in:
     type: File
     inputBinding:
       position: 1
-      prefix: '--label'
+      prefix: --label_in
   metadata_in:
     type: File?
     inputBinding:
       position: 1
-      prefix: '--meta'
-  model_tsv:
+      prefix: --metadata_in
+  model:
     type: File
     inputBinding:
       position: 1
-      prefix: '--model'
+      prefix: --mlr_models_list
   predictions:
     type: File
     inputBinding:
       position: 1
-      prefix: '--pred'
+      prefix: --pred
   color_scheme:
     type: string?
     inputBinding:
       position: 2
-      prefix: '--col_scheme'
+      prefix: --col_scheme
   consensus_threshold:
     type: float?
     inputBinding:
       position: 2
-      prefix: '--consens_thres'
+      prefix: --consens_thres
   heatmap_type:
     type: string?
     inputBinding:
       position: 2
-      prefix: '--heatmap_type'
+      prefix: --heatmap_type
 
 arguments:
   - position: 3
-    prefix: '--plot'
+    prefix: --plot
     valueFrom: $(inputs.feat_in.nameroot)_model_plots.pdf
 
 outputs:

@@ -10,7 +10,7 @@ inputs:
   label_in:
     type: File
     inputBinding:
-      prefix: --label
+      prefix: --label_in
       position: 1
   predictions:
     type: File
@@ -18,26 +18,26 @@ inputs:
       prefix: --pred
       position: 1
   write_eval_results:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --write_eval_results
-      valueFrom: $(self.toString())
       position: 2
 
 arguments:
   - position: 3
     prefix: --plot
-    valueFrom:   $(inputs.feat_in.nameroot)_evalPlots.pdf
+    valueFrom:   $(inputs.label_in.nameroot)_evalPlots.pdf
   - position: 3
     prefix: --output_results
-    valueFrom:   $(inputs.feat_in.nameroot)_evalResults.txt
+    valueFrom:   $(inputs.label_in.nameroot)_evalResults.txt
 
 outputs:
   evaluation_plot:
     type: File
     outputBinding:
-      glob: $(inputs.feat_in.nameroot)_evalPlot.pdf
+      glob: $(inputs.label_in.nameroot)_evalPlots.pdf
   evaluation_results:
     type: File?
     outputBinding:
-      glob: $(inputs.feat_in.nameroot)_evalResults.txt
+      glob: $(inputs.label_in.nameroot)_evalResults.txt

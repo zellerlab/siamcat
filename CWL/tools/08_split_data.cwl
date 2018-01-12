@@ -24,15 +24,16 @@ inputs:
       position: 2
   resample:
     type: int?
+    default: 0
     inputBinding:
       prefix: --resample
       position: 2
   stratify:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       position: 2
       prefix: --stratify
-      valueFrom: $(self.toString())
   inseparable:
     type: string?
     inputBinding:
@@ -42,17 +43,17 @@ inputs:
 arguments:
     - position: 3
       prefix: --train_sets
-      valueFrom: $(inputs.feat_in.nameroot)_trainSets.tsv
+      valueFrom: $(inputs.label_in.nameroot)_trainSets.tsv
     - position: 3
       prefix: --test_sets
-      valueFrom: $(inputs.feat_in.nameroot)_testSets.tsv
+      valueFrom: $(inputs.label_in.nameroot)_testSets.tsv
 
 outputs:
   train_sets_out:
     type: File
     outputBinding:
-      glob: $(inputs.feat_in.nameroot)_trainSets.tsv
+      glob: $(inputs.label_in.nameroot)_trainSets.tsv
   test_sets_out:
     type: File
     outputBinding:
-      glob: $(inputs.feat_in.nameroot)_testSets.tsv
+      glob: $(inputs.label_in.nameroot)_testSets.tsv

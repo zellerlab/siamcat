@@ -28,28 +28,28 @@ inputs:
       prefix: --sd_min_quantile
       position: 2
   norm_sample:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --norm_sample
       position: 2
-      valueFrom: $(self.toString())
   norm_global:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --norm_global
       position: 2
-      valueFrom: $(self.toString())
   vector_norm:
     type: int?
     inputBinding:
       prefix: --vector_norm
       position: 2
   norm_feature:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --norm_feature
       position: 2
-      valueFrom: $(self.toString())
       
 arguments:
   - position: 3
@@ -64,7 +64,7 @@ outputs:
     type: File
     outputBinding:
       glob: $(inputs.feat_in.nameroot)_norm.tsv
-  normalization_parameters_out:
-    type: File
+  normalization_parameters:
+    type: File?
     outputBinding:
       glob: $(inputs.feat_in.nameroot)_normParam.txt

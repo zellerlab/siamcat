@@ -28,10 +28,10 @@ inputs:
       prefix: --method
       position: 2
   stratify:
-    type: boolean?
+    doc: TRUE or FALSE is allowed
+    type: string?
     inputBinding:
       prefix: --stratify
-      valueFrom: $(self.toString())
       position: 2
   sel_criterion:
     type: string?
@@ -46,25 +46,11 @@ inputs:
 
 arguments:
     - position: 3
-      prefix: --model
-      valueFrom: $(inputs.feat_in.nameroot)_model.tsv
-    - position: 3
       prefix: --mlr_models_list
       valueFrom: $(inputs.feat_in.nameroot)_model.RData
-    - position: 3
-      prefix: --model_matrix
-      valueFrom: $(inputs.feat_in.nameroot)_modelMatrix.txt
 
 outputs:
-  model_tsv:
-    type: File
-    outputBinding:
-      glob: $(inputs.feat_in.nameroot)_model.tsv
-  model_rdata:
+  model:
     type: File
     outputBinding:
       glob: $(inputs.feat_in.nameroot)_model.RData
-  model_matrix:
-    type: File
-    outputBinding:
-      glob: $(inputs.feat_in.nameroot)_modelMatrix.txt
