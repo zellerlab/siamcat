@@ -72,7 +72,7 @@ filter.feat <- function(feat, filter.method=abundance, cutoff=0.001, recomp.prop
   ### postprocessing and output generation
   if (rm.unmapped) {
     # remove 'unmapped' feature
-    unm.idx <- rownames(feat) == 'UNMAPPED' | rownames(feat) == 'unmapped' | rownames(feat) == '-1' | rownames(feat) == 'UNCLASSIFIED' | rownames(feat) == 'unclassified' | rownames(feat) == 'UNASSIGNED' | rownames(feat) == 'unassigned'
+    unm.idx <- rownames(feat) == 'UNMAPPED' | rownames(feat) == 'unmapped' | rownames(feat) == '-1' | rownames(feat) == 'X.1' | rownames(feat) == 'UNCLASSIFIED' | rownames(feat) == 'unclassified' | rownames(feat) == 'UNASSIGNED' | rownames(feat) == 'unassigned'
     if (any(unm.idx)) {
       feat <- feat[!unm.idx,]
       cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads',
