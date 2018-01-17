@@ -11,7 +11,7 @@ RUN apt-get install -y r-base
 
 
 # Download and install SIAMCAT
-ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/development/archive.tar.gz"
+ENV SIAMCAT_URL "https://git.embl.de/grp-zeller/SIAMCAT/repository/v0.3.2/archive.tar.gz"
 RUN cd /usr/local/ \
     && wget -O siamcat.tar.gz ${SIAMCAT_URL} \
     && tar -xvzf siamcat.tar.gz \
