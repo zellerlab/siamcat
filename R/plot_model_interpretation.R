@@ -56,7 +56,7 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   model.type <- paste(toupper(substring(model$model.type, 1, 1)),
                       substring(model$model.type, 2), sep="", collapse=" ")
   W.mat       <- getWeightsMatrix(model)
-  all.weights <- W.mat[union(row.names(feat), grep('META', row.names(model$W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
+  all.weights <- W.mat[union(row.names(feat), grep('META', row.names(W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
   rel.weights <- apply(all.weights, 2, function(x){x/sum(abs(x))})
   # ############################################################################
   ### preprocess models
@@ -99,7 +99,7 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
                c(0, 8, 0, 0))
   h_t <- 0.10
   h_m <- ifelse(is.null(meta), 0.8, max(0.5, 0.7-0.01*dim(meta)[2]))
-  h_b <- ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
+  h_b <- 1 - h_t - h_m # ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
   cat('Layout height values: ', h_t, ', ', h_m, ', ', h_b, '\n', sep='')
   layout(lmat, widths=c(0.14, 0.58, 0.1, 0.14), heights=c(h_t, h_m, h_b))
   par(oma=c(3, 4, 3, 4))
