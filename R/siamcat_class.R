@@ -22,10 +22,37 @@ setClass("siamcat", representation(modelList = "modelList", phyloseq = "phyloseq
 #' Build siamcat-class objects from their components.
 #' @name siamcat
 #' @export
-
 siamcat <- function(...){
   arglist   <- list(...)
-  ps <- phyloseq(arglist$otu_table,arglist$sample_data,arglist$tax_table,arglist$otu_table) 
+  
+  # Remove names from arglist. Will replace them based on their class
+  names(arglist) <- NULL
+  
+  # ignore all but component data classes.
+  arglist <- arglist[sapply(arglist, is.component.class)]
+  
+  ps <- phyloseq(arglist$otu_table,arglist$sample_data,arglist$phy_tree,arglist$tax_table,arglist$refseq) 
   sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps)
   return(sc)
 }
+
+# source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
+#' Show the component objects classes and slot names.
+#' @usage get.component.classes()
+#' @keywords internal
+get.component.classes <- function(){
+  # define classes vector
+  component.classes <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet", "modelList")
+  # the names of component.classes needs to be the slot names to match getSlots / splat
+  names(component.classes) <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq", "modelList")	
+  return(component.classes)
+}
+
+# source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
+# Returns TRUE if x is a component class, FALSE otherwise.
+# This shows up over and over again in data infrastructure
+#' @keywords internal
+is.component.class = function(x){
+  inherits(x, get.component.classes())
+}
+##
