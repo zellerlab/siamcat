@@ -19,6 +19,10 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 
   ## 1) Define the task
   ## Specify the type of analysis (e.g. classification) and provide data and response variable
+  # assert that the label for the first patient is always the same in order for lasso_ll to work correctly
+  if (data$label[1] != label$negative.lab){
+    data <- data[c(which(data$label == label$negative.lab)[1], c(1:nrow(data))[-which(data$label == label$negative.lab)[1]]),]
+  }
   task      <- makeClassifTask(data = data, target = "label")
 
   ## 2) Define the learner
@@ -32,7 +36,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=0)
   } else if(method == "enet"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
-    
+
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
     class.weights        <- c(5, 1)
