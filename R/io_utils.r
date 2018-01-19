@@ -29,7 +29,7 @@ read.features <- function(fn.in.feat){
   feat <- as.matrix(feat)
   featNames <- make.names(rownames(feat)) ### making the names semantically correct
 
-  if(any(rownames(feat)==featNames)){
+  if(any(rownames(feat)!=featNames)){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
