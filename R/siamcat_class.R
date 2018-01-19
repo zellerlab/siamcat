@@ -30,8 +30,8 @@ siamcat <- function(...){
   
   # ignore all but component data classes.
   arglist <- arglist[sapply(arglist, is.component.class)]
-  
-  ps <- phyloseq(arglist$otu_table,arglist$sample_data,arglist$phy_tree,arglist$tax_table,arglist$refseq) 
+  print(names(arglist$otu_table))
+  ps <- phyloseq(arglist$otu_table) 
   sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps)
   return(sc)
 }

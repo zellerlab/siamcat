@@ -13,14 +13,13 @@
 
 #' @title Add metadata as predictors
 #' @description This function adds metadata to the feature matrix to be later used as predictors
-#' @param feat features object
-#' @param meta metadata object
+#' @param siamcat object of class \link{siamcat-class}
 #' @param pred.names vector of names of the metavariables to be added to the feature matrix as predictors
 #' @param std.meta boolean, should added metadata features be standardized?
 #' @keywords SIAMCAT add.meta.pred
 #' @export
 #' @return features object with added metadata
-add.meta.pred <- function(feat, meta, pred.names=NULL, std.meta){
+add.meta.pred <- function(siamcat, pred.names=NULL, std.meta){
   ### add metadata as predictors to the feature matrix
   cnt <- 0
 
