@@ -14,14 +14,14 @@
 ##### function to train a LASSO model for a single given C
 #' @export
 train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
-                      measure=list("acc"), min.nonzero.coeff=5, param.set=NULL){
+                      measure=list("acc"), min.nonzero.coeff=5, param.set=NULL, neg.lab){
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
   ## Specify the type of analysis (e.g. classification) and provide data and response variable
   # assert that the label for the first patient is always the same in order for lasso_ll to work correctly
-  if (data$label[1] != label$negative.lab){
-    data <- data[c(which(data$label == label$negative.lab)[1], c(1:nrow(data))[-which(data$label == label$negative.lab)[1]]),]
+  if (data$label[1] != neg.lab){
+    data <- data[c(which(data$label == neg.lab)[1], c(1:nrow(data))[-which(data$label == neg.lab)[1]]),]
   }
   task      <- makeClassifTask(data = data, target = "label")
 

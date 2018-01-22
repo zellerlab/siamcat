@@ -92,7 +92,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     data$label                     <- train.label
 
     ### internal cross-validation for model selection
-    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set)
+    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set, neg.lab=label$negative.lab)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
     }else{
@@ -100,7 +100,7 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     }
     cat('\n')
   }
- 
+
   models.list$model.type <- method
   invisible(models.list)
 }
