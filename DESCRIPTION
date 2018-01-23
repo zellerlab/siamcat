@@ -18,7 +18,8 @@ Depends:
     LiblineaR,
     pROC,
     mlr,
-    PRROC
+    PRROC,
+    phyloseq
 Imports:
     optparse,
     colorRamps,

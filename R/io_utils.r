@@ -33,7 +33,7 @@ read.features <- function(fn.in.feat){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
-
+  
   invisible(feat)
 }
 
