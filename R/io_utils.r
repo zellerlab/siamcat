@@ -33,8 +33,7 @@ read.features <- function(fn.in.feat){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
-  feat <- otu_table(feat)
-  invisible(feat)
+  invisible(otu_table(feat))
 }
 
 #' @title Read labels file
@@ -107,7 +106,12 @@ read.labels <- function(fn.in.label,feat=NULL){
 
   label$p.idx <- label$label==label$positive.lab
   label$p.lab <- gsub('[_.-]', ' ', names(label$info$class.descr)[label$info$class.descr==label$positive.lab])
-  invisible(label)
+  
+  labelRes <- new("label", label = label$label, header = label$header, info=label$info, 
+                  positive.lab=label$positive.lab,
+                  negative.lab=label$negative.lab, n.idx=label$n.idx, p.idx=label$p.idx,
+                  n.lab=label$n.lab, p.lab=label$p.lab)
+  invisible(labelRes)
 }
 
 #' @title Read metadata file
@@ -128,7 +132,7 @@ read.meta <- function(fn.in.meta){
     meta <- read.table(file=fn.in.meta, sep='\t', header=TRUE, row.names=1, check.names=FALSE, quote='')
     meta <- as.matrix(meta)
   }
-  invisible(meta)
+  invisible(sample_data(meta))
 }
 
 

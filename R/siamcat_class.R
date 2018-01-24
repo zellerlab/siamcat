@@ -17,7 +17,7 @@ setClass("modelList", representation(models = "list", model.type = "character"))
 #' @rdname label-class
 #' @exportClass label
 setClass("label", representation(label = "vector", header = "character",
-                                 info="character", positive.lab="numeric",
+                                 info="list", positive.lab="numeric",
                                  negative.lab="numeric", 
                                  n.idx="vector", p.idx="vector",
                                  n.lab="character", p.lab="character"))
@@ -26,8 +26,8 @@ setClass("label", representation(label = "vector", header = "character",
 #' @name siamcat-class
 #' @rdname siamcat-class
 #' @exportClass siamcat
-setClass("siamcat", representation(modelList = "modelList", phyloseq = "phyloseq", "orig_feat"="otu_table", 
-                                   "label"="label"))
+setClass("siamcat", representation(modelList = "modelList", phyloseq = "phyloseq", orig_feat="otu_table", 
+                                   label="label"))
 
 #' Build siamcat-class objects from their components.
 #' @name siamcat
@@ -40,9 +40,14 @@ siamcat <- function(...){
   
   # ignore all but component data classes.
   arglist <- arglist[sapply(arglist, is.component.class)]
-  print(names(arglist$otu_table))
-  ps <- phyloseq(arglist$otu_table) 
-  sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps)
+  
+  for(argNr in 1:length())
+  
+  ps <- phyloseq(arglist$otu_table, arglist$sample_data, arglist$phylo, 
+                 arglist$taxonomyTable, arglist$XStringSet) 
+  
+  sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps,
+                       orig_feat = arglist$otu_table, label = arglist$label)
   return(sc)
 }
 
