@@ -13,30 +13,25 @@
 
 #' @title Perform unsupervised feature filtering.
 #' @description This function may convert absolute abundances into relative abundances and then performs unsupervised feature filtering. Features can be filtered based on abundance or prevalence. Additionally, unmapped reads may be removed.
-#' @param feat feature object
+#' @param siamcat an object of class \link{siamcat}
 #' @param filter.method method used for filtering the features, can be one of these: \code{c("abundance", "cum.abundance", "prevalence")}
 #' @param cutoff float, abundace or prevalence cutoff
 #' @param recomp.prop boolean, should absolute abundances be converted into relative abundances?
 #' @param rm.unmapped boolean, should unmapped reads be discarded?
-#' @details Currently, there are three filtering methods implemented:
-#' \itemize{
-#'  \item \code{"abundance"} remove features for which the abundance is never above the threshold value (e.g. 0.5\%) in any of the samples
-#'  \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up \code{(1-cutoff)} of the reads in any samples
-#'  \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than \code{(1-cutoff)} proportion of samples
-#' }
 #' @keywords SIAMCAT filter.feat
 #' @export
-#' @return Returns the filtered feature matrix
-filter.feat <- function(feat, filter.method=abundance, cutoff=0.001, recomp.prop=FALSE, rm.unmapped=TRUE){
+#' @return siamcat an object of class \link{siamcat}
+
+filter.feat <- function(siamcat, filter.method=abundance, cutoff=0.001, recomp.prop=FALSE, rm.unmapped=TRUE){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
   ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
   ## TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
-    ra.feat <- prop.table(feat, 2)
+    ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)
   } else {
-    ra.feat <- feat
+    ra.feat <- siamcat@phyloseq@otu_table
   }
 
   ### apply filters
@@ -65,21 +60,26 @@ filter.feat <- function(feat, filter.method=abundance, cutoff=0.001, recomp.prop
     stop('unrecognized filter.method, exiting!\n')
   }
 
-  cat('Removed ', nrow(feat)-length(f.idx), ' features whose values did not exceed ', cutoff,
+  cat('Removed ', nrow(siamcat@phyloseq@otu_table)-length(f.idx), ' features whose values did not exceed ', cutoff,
       ' in any sample (retaining ', length(f.idx), ')\n', sep='')
-  feat <- feat[f.idx,]
+  f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
 
   ### postprocessing and output generation
   if (rm.unmapped) {
     # remove 'unmapped' feature
-    unm.idx <- rownames(feat) == 'UNMAPPED' | rownames(feat) == 'unmapped' | rownames(feat) == '-1' | rownames(feat) == 'X.1' | rownames(feat) == 'UNCLASSIFIED' | rownames(feat) == 'unclassified' | rownames(feat) == 'UNASSIGNED' | rownames(feat) == 'unassigned'
+    unm.idx <- rownames(siamcat@phyloseq@otu_table) == 'UNMAPPED' | rownames(siamcat@phyloseq@otu_table) == 'unmapped' | 
+    rownames(siamcat@phyloseq@otu_table) == '-1' | rownames(siamcat@phyloseq@otu_table) == 'X.1' | 
+    rownames(siamcat@phyloseq@otu_table) == 'UNCLASSIFIED' | rownames(siamcat@phyloseq@otu_table) == 'unclassified' | 
+    rownames(siamcat@phyloseq@otu_table) == 'UNASSIGNED' | rownames(siamcat@phyloseq@otu_table) == 'unassigned'
     if (any(unm.idx)) {
-      feat <- feat[!unm.idx,]
+      f.names <- union(f.names,rownames(siamcat@phyloseq@otu_table)[unm.idx])
       cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads',
           ' (retaining ', nrow(feat), ')\n', sep='')
     } else {
       cat('tried to remove unmapped reads, but could not find them. Continue anyway.')
     }
   }
-  return(feat)
+
+  siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
+  return(siamcat)
 }
