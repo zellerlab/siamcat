@@ -33,7 +33,7 @@ read.features <- function(fn.in.feat){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
-  invisible(otu_table(feat))
+  invisible(otu_table(feat,taxa_are_rows=TRUE))
 }
 
 #' @title Read labels file
@@ -130,7 +130,6 @@ read.meta <- function(fn.in.meta){
   }else{
     if(!file.exists(fn.in.meta)) stop("Metadata file ", fn.in.meta, " does not exist!\n")
     meta <- read.table(file=fn.in.meta, sep='\t', header=TRUE, row.names=1, check.names=FALSE, quote='')
-    meta <- as.matrix(meta)
   }
   invisible(sample_data(meta))
 }
