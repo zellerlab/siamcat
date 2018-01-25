@@ -59,8 +59,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
     task      <- makeClassifTask(data = data, target = "label")
-    pdata    <- predict(model,  task = task)
-    # save(pdata,file="pdata.RData") # not very good, saves the data somewhere, depending on working directory
+    pdata     <- predict(model,  newdata = data)
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 
