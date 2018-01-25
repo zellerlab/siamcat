@@ -4,6 +4,13 @@ class: CommandLineTool
 requirements:
   InlineJavascriptRequirement: {}
 
+hints:
+  ResourceRequirement:
+    coresMin: 1
+    ramMin: 10000
+  DockerRequirement:
+    dockerPull: kerstenbreuer/siamcat:0.3.1
+
 baseCommand: 05_check_associations.r
 
 inputs:

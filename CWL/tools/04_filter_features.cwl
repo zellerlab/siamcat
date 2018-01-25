@@ -3,7 +3,14 @@ class: CommandLineTool
 
 requirements:
   InlineJavascriptRequirement: {}
-  
+ 
+hints:
+  ResourceRequirement:
+    coresMin: 1
+    ramMin: 10000
+  DockerRequirement:
+    dockerPull: kerstenbreuer/siamcat:0.3.1
+
 baseCommand: 04_filter_features.r
 
 inputs:

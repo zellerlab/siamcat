@@ -6,6 +6,13 @@ requirements:
   
 baseCommand: 03_check_for_confounders.r
 
+hints:
+  ResourceRequirement:
+    coresMin: 1
+    ramMin: 10000
+  DockerRequirement:
+    dockerPull: kerstenbreuer/siamcat:0.3.1
+
 inputs:
   label_in:
     type: File

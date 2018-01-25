@@ -4,6 +4,13 @@ class: CommandLineTool
 requirements:
   InlineJavascriptRequirement: {}
 
+hints:
+  ResourceRequirement:
+    coresMin: 1
+    ramMin: 10000
+  DockerRequirement:
+    dockerPull: kerstenbreuer/siamcat:0.3.1
+
 baseCommand: 07_add_metadata_as_predictor.r
 
 inputs:

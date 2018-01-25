@@ -6,7 +6,6 @@ RUN apt-get update -y --fix-missing
 RUN apt-get install -y build-essential \
     wget \
     tar
-RUN apt-get update -y --fix-missing
 RUN apt-get install -y r-base
 
 

@@ -4,6 +4,13 @@ cwlVersion: v1.0
 requirements:
   InlineJavascriptRequirement: {}
 
+hints:
+  ResourceRequirement:
+    coresMin: 1
+    ramMin: 10000
+  DockerRequirement:
+    dockerPull: kerstenbreuer/siamcat:0.3.1
+
 baseCommand: 12_interpret_model.r
 
 inputs:
