@@ -26,29 +26,23 @@ fn.in.meta <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_prof
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
 meta  <- read.meta(fn.in.meta)
+siamcat <- siamcat(feat, label, meta)
 ```
 
 ```{r}
-validated.files <- validate.data(feat = feat, 
-                                 label = label, 
-                                 meta = meta )
+siamcat <- validate.data(siamcat)
 ```
 
 ```{r}
-results <- select.samples(meta=meta, 
-                          feat=feat, 
-                          label=label$label, 
+siamcat <- select.samples(siamcat, 
                           filter='age', 
                           allowed.set=NULL, 
                           allowed.range=c(0,120))
 
-feat = results$feat
-label$label = results$label
-meta = results$meta
 ```
 
 ```{r}
-feat.filtered <- filter.feat(feat = feat,  
+siamcat <- filter.feat(siamcat,  
                              filter.method = 'abundance', 
                              cutoff =0.001, 
                              recomp.prop = FALSE, 
