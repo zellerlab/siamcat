@@ -39,9 +39,16 @@ siamcat <- function(...){
   names(arglist) <- NULL
   
   # ignore all but component data classes.
-  arglist <- arglist[sapply(arglist, is.component.class)]
+  component_classes <- get.component.classes()
   
-  for(argNr in 1:length())
+  for(argNr in 1:length(arglist)){
+    classOfArg <- class(arglist[[argNr]])[1]
+    if(classOfArg%in%names(component_classes)){
+      names(arglist)[argNr] <- classOfArg
+    }
+  }
+  
+  if(is.null(arglist$modelList)) arglist$modelList <- new("modelList",models=list(NULL), model.type="empty")
   
   ps <- phyloseq(arglist$otu_table, arglist$sample_data, arglist$phylo, 
                  arglist$taxonomyTable, arglist$XStringSet) 
@@ -57,19 +64,10 @@ siamcat <- function(...){
 #' @keywords internal
 get.component.classes <- function(){
   # define classes vector
-  component.classes <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet", "modelList",
-                         "orig_feat", "label")
   # the names of component.classes needs to be the slot names to match getSlots / splat
-  names(component.classes) <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq", "modelList",
-                                "orig_feat", "label")	
+  component.classes <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq", "modelList",
+                                "orig_feat", "label")	#slot names
+  names(component.classes) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet", "modelList",
+                                 "orig_feat", "label") #class names
   return(component.classes)
 }
-
-# source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
-# Returns TRUE if x is a component class, FALSE otherwise.
-# This shows up over and over again in data infrastructure
-#' @keywords internal
-is.component.class = function(x){
-  inherits(x, get.component.classes())
-}
-##
