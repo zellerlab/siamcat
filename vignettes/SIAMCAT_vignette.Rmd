@@ -43,10 +43,10 @@ siamcat <- select.samples(siamcat,
 
 ```{r}
 siamcat <- filter.feat(siamcat,  
-                             filter.method = 'abundance', 
-                             cutoff =0.001, 
-                             recomp.prop = FALSE, 
-                             rm.unmapped = TRUE)
+                       filter.method = 'abundance', 
+                       cutoff =0.001, 
+                       recomp.prop = FALSE, 
+                       rm.unmapped = TRUE)
 ```
 
 ### Association/Confounder Testing
@@ -67,10 +67,9 @@ siamcat <- filter.feat(siamcat,
 ### Data Normalization
 
 ```{r}
-normalized.data <- normalize.feat(feat = feat.filtered, 
-                                  norm.method = "log.unit", 
-                                  norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1))
-feat.norm = normalized.data$feat.norm
+siamcat <- normalize.feat(siamcat, 
+                          norm.method = "log.unit", 
+                          norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1))
 ```
 
 ### Model building and Prediction
