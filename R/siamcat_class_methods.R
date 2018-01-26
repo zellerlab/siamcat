@@ -28,4 +28,5 @@ filter.label <- function(siamcat,ids){
   cat('Keeping labels of',length(labels_new@label),'sample(s).\n')
   
   siamcat@label <- labels_new
+  return(siamcat)
 }

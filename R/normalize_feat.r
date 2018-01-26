@@ -14,7 +14,7 @@
 #' @title Perform feature normalization according to specified parameters.
 #' @description This function performs feature normalization according to user-
 #'  specified parameters.
-#' @param feat feature object
+#' @param siamcat an object of class \link{siamcat}
 #' @param norm.method string, normalization method, can be one of these:
 #'  '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "clr")}
 #' @param norm.param list, specifying the parameters of the different
@@ -62,12 +62,12 @@
 #'
 #' @keywords SIAMCAT normalize.feat
 #' @export
-#' @return list containing the matrix of normalized features and a list of normalization parameters: \itemize{
-#'  \item \code{$par} <- list of parameters utilized in the normalization;
-#'  \item \code{$feat.norm} <- normalized features
-#'}
-normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
+#' @return an object of class \link{siamcat}
+
+normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
                            norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1)) {
+
+  feat <- siamcat@phyloseq@otu_table
 
   if (is.null(norm.param$norm.method)){
     # de novo normalization
@@ -214,6 +214,9 @@ normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std
     cat('Feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
 
-    return(list("par" = norm.param, "feat.norm" = feat.norm))
+    siamcat@phyloseq@otu_table <- feat.norm
+    siamcat@norm.param         <- norm.param
+
+    return(siamcat)
   }
 }

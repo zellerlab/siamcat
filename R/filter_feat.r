@@ -27,6 +27,7 @@ filter.feat <- function(siamcat, filter.method=abundance, cutoff=0.001, recomp.p
   ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
   ## TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?
+  print(nrow(siamcat@phyloseq@otu_table))
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
     ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)
@@ -60,10 +61,6 @@ filter.feat <- function(siamcat, filter.method=abundance, cutoff=0.001, recomp.p
     stop('unrecognized filter.method, exiting!\n')
   }
 
-  cat('Removed ', nrow(siamcat@phyloseq@otu_table)-length(f.idx), ' features whose values did not exceed ', cutoff,
-      ' in any sample (retaining ', length(f.idx), ')\n', sep='')
-  f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
-
   ### postprocessing and output generation
   if (rm.unmapped) {
     # remove 'unmapped' feature
@@ -72,14 +69,16 @@ filter.feat <- function(siamcat, filter.method=abundance, cutoff=0.001, recomp.p
     rownames(siamcat@phyloseq@otu_table) == 'UNCLASSIFIED' | rownames(siamcat@phyloseq@otu_table) == 'unclassified' | 
     rownames(siamcat@phyloseq@otu_table) == 'UNASSIGNED' | rownames(siamcat@phyloseq@otu_table) == 'unassigned'
     if (any(unm.idx)) {
-      f.names <- union(f.names,rownames(siamcat@phyloseq@otu_table)[unm.idx])
-      cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads',
-          ' (retaining ', nrow(feat), ')\n', sep='')
+      f.idx <- union(f.idx,unm.idx)
+      cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads\n', sep='')
     } else {
-      cat('tried to remove unmapped reads, but could not find them. Continue anyway.')
+      cat('tried to remove unmapped reads, but could not find them. Continue anyway.\n')
     }
   }
-
+  keep.idx <- which(!(1:nrow(siamcat@phyloseq@otu_table))%in%f.idx)
+  cat('Removed ', length(f.idx)-sum(unm.idx), ' features whose values did not exceed ', cutoff,
+      ' in any sample (retaining ', length(keep.idx), ')\n', sep='')
+  f.names <- rownames(siamcat@phyloseq@otu_table)[keep.idx]
   siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
   return(siamcat)
 }
