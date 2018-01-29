@@ -33,5 +33,5 @@ RUN cd /usr/local/ \
     && mv ./SIAMCAT* ./SIAMCAT \
     && Rscript ./SIAMCAT/Rscript_flavor/00_setup.r ./siamcat.tar.gz \
     && rm siamcat.tar.gz \
-    && chmod 700 ./SIAMCAT/Rscript_flavor/*
+    && chmod a+rx ./SIAMCAT/Rscript_flavor/*
 ENV PATH="/usr/local/SIAMCAT/Rscript_flavor:${PATH}"
