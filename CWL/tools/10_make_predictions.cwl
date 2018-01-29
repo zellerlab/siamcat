@@ -9,7 +9,7 @@ hints:
     coresMin: 1
     ramMin: 10000
   DockerRequirement:
-    dockerPull: kerstenbreuer/siamcat:0.3.1
+    dockerPull: kerstenbreuer/siamcat:dev
 
 baseCommand: 10_make_predictions.r
 

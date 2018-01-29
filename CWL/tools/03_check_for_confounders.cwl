@@ -11,7 +11,7 @@ hints:
     coresMin: 1
     ramMin: 10000
   DockerRequirement:
-    dockerPull: kerstenbreuer/siamcat:0.3.1
+    dockerPull: kerstenbreuer/siamcat:dev
 
 inputs:
   label_in:
