@@ -26,12 +26,12 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta){
   if (pred.names != '' && !is.null(pred.names)) {
 
     for (p in pred.names) {
-      if(!p%in%colnames(meta)) stop("There is no meta variable called ",p,"\n")
-      idx <- which(colnames(meta) == p)
+      if(!p%in%colnames(siamcat@phyloseq@sam_data)) stop("There is no metadata variable called ",p,"\n")
+      idx <- which(colnames(siamcat@phyloseq@sam_data) == p)
       if(length(idx) != 1) stop(p, "matches multiple columns in the metada\n")
 
       cat('adding ', p, '\n', sep='')
-      m   <-  meta[,idx]
+      m   <-  unlist(siamcat@phyloseq@sam_data[,idx])
 
       if (!all(is.finite(m))) {
         na.cnt <- sum(!is.finite(m))
@@ -48,15 +48,15 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta){
         m      <- (m - m.mean)/m.sd
       }
 
-      feat                       <- rbind(feat, m)
-      rownames(feat)[nrow(feat)] <- paste('META_', toupper(p), sep='')
+      siamcat@phyloseq@otu_table                       <- otu_table(rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=T)
+      rownames(siamcat@phyloseq@otu_table)[nrow(siamcat@phyloseq@otu_table)] <- paste('META_', toupper(p), sep='')
       cnt                        <- cnt + 1
     }
       cat('added', cnt, 'meta-variables as predictors to the feature matrix\n')
   } else {
       cat('Not adding any of the meta-variables as predictor to the feature matrix\n')
   }
-  stopifnot(all(!is.na(feat)))
+  stopifnot(all(!is.na(siamcat@phyloseq@otu_table)))
 
-  invisible(feat)
+  return(siamcat)
 }

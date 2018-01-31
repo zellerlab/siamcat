@@ -67,7 +67,7 @@ siamcat <- filter.feat(siamcat,
 ### Data Normalization
 
 ```{r}
-siamcat <- normalize.feat(siamcat, 
+siamcat2 <- normalize.feat(siamcat, 
                           norm.method = "log.unit", 
                           norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1))
 ```
@@ -76,8 +76,7 @@ siamcat <- normalize.feat(siamcat,
 
 ```{r}
 pred.names = strsplit(c('fobt'), ',', fixed=TRUE)[[1]]
-feat.fobt = add.meta.pred(feat = feat.norm, 
-                          meta = meta, 
+siamcat <- add.meta.pred(siamcat, 
                           pred.names = pred.names, 
                           std.meta = TRUE)
 ```
