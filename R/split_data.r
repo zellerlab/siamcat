@@ -28,7 +28,7 @@
 #'  \item \code{$num.folds} = number of folds
 #'}
 # TODO add detail section for this function
-data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL, meta=NULL){
+data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL, meta=NULL, verbose=TRUE){
   ### read label and meta-data
   # (assuming the label file has 1 column)
   if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {
@@ -87,7 +87,7 @@ data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, ins
     train.temp    <- list(NULL)
     test.temp     <- list(NULL)
 
-    cat('\n+++ Splitting the dataset:\n')
+    if (verbose) cat('\n+++ Splitting the dataset:\n')
     for (f in 1:num.folds) {
       # make sure each fold contains examples from all classes
       # for stratify==TRUE should be tested before assignment of test/training set
@@ -105,7 +105,7 @@ data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, ins
         stopifnot(all(sort(unique(labelNum[foldid != f])) == classes))
       }
       stopifnot(length(intersect(train.idx, test.idx)) == 0)
-      cat('   + Fold ', f, ' contains ', sum(foldid==f), ' examples\n', sep='')
+      if(verbose) cat('   + Fold ', f, ' contains ', sum(foldid==f), ' examples\n', sep='')
     }
     train.list[[r]] <- train.temp
     test.list[[r]]  <- test.temp
