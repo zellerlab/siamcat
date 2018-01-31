@@ -125,7 +125,6 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
   # Transform number of classes into vector of 1 to x for looping over.
   # stratify positive examples
   if (stratified) {
-    print(num.folds)
     # If stratify is TRUE, make sure that num.folds does not exceed the maximum number of examples for the class with the fewest training examples.
     if (any(as.data.frame(table(label))[,2] < num.folds)) {
       stop("+++ Number of CV folds is too large for this data set to maintain stratification. Reduce num.folds or turn stratification off. Exiting.\n")
@@ -138,7 +137,7 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
   } else {
     # If stratify is not TRUE, make sure that num.sample is not bigger than number.folds
     if (length(label) <= num.folds){
-      print("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
+      cat("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
       num.folds   <- length(label)-1
     }
     if (!is.null(inseparable)) {
