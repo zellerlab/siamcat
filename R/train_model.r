@@ -31,7 +31,7 @@
 # TODO add details section for this function
 train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                         data.split=NULL, stratify = TRUE,
-                        modsel.crit=list("auc"),  min.nonzero.coeff = 1, param.set=NULL){
+                        modsel.crit=list("auc"),  min.nonzero.coeff = 1, param.set=NULL, verbose=TRUE){
   # TODO 1: modsel.criterion should be implemented
   # check modsel.crit
   if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))){
@@ -64,13 +64,13 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   # transpose feature matrix as a convenience preprocessing
   feat         <- t(feat)
   ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(data.split, label, mode="train")
+  foldList     <- get.foldList(data.split, label, mode="train", verbose=verbose)
   fold.name    <- foldList$fold.name
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
   num.folds    <- foldList$num.folds
 
-  cat('\nPreparing to train', method,  'models on', num.runs, 'training set samples...\n\n')
+  cat('\nPreparing to train', method,  'models on', num.runs, 'training set samples...\n')
 
 
   # Create matrix with hyper parameters.
@@ -79,9 +79,9 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
   # Create List to save models.
   models.list     <- list()
   power           <- NULL
-
+  if (!verbose) pb <- txtProgressBar(max=num.runs)
   for (r in 1:num.runs) {
-    cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')\n', sep='')
+    if(verbose) cat('Training on ', fold.name[r], ' (', r, ' of ', num.runs, ')\n', sep='')
     ### subselect examples for training
     label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
     train.label       <- label.fac
@@ -98,9 +98,10 @@ train.model <- function(feat, label,  method = c("lasso", "enet", "ridge", "lass
     }else{
       warning("Model without any features selected!\n")
     }
-    cat('\n')
-  }
+    if(!verbose) setTxtProgressBar(pb, (pb$getVal()+1))
 
+  }
+  if(!verbose)cat('\n')
   models.list$model.type <- method
   invisible(models.list)
 }
