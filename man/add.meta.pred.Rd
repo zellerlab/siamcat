@@ -4,12 +4,10 @@
 \alias{add.meta.pred}
 \title{Add metadata as predictors}
 \usage{
-add.meta.pred(feat, meta, pred.names = NULL, std.meta)
+add.meta.pred(siamcat, pred.names = NULL, std.meta)
 }
 \arguments{
-\item{feat}{features object}
-
-\item{meta}{metadata object}
+\item{siamcat}{object of class \link{siamcat-class}}
 
 \item{pred.names}{vector of names of the metavariables to be added to the feature matrix as predictors}
 

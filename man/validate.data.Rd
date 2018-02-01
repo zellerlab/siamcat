@@ -2,26 +2,18 @@
 % Please edit documentation in R/validate_data.r
 \name{validate.data}
 \alias{validate.data}
-\title{Validate samples in metadata, labels, and features}
+\title{Validate samples in siamcat@phyloseq@sam_datadata, labels, and features}
 \usage{
-validate.data(feat, label, meta = NULL)
+validate.data(siamcat)
 }
 \arguments{
-\item{feat}{features object}
-
-\item{label}{labels object}
-
-\item{meta}{metadata object}
+\item{siamcat}{an object of class \link{siamcat}}
 }
 \value{
-a list containing values after validation: \itemize{
- \item \code{$feat} = features;
- \item \code{$label} = labels;
- \item \code{$meta} = metadata
-}
+an object of class \link{siamcat}
 }
 \description{
-This function checks if labels are available for all samples in features. Additionally validates metadata, if given
+This function checks if labels are available for all samples in features. Additionally validates siamcat@phyloseq@sam_datadata, if given
 }
 \keyword{SIAMCAT}
 \keyword{validate.data}

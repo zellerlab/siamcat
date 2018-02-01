@@ -82,12 +82,11 @@ siamcat <- add.meta.pred(siamcat,
 ```
 
 ```{r}
-data.split <- data.splitter(label = label, 
+data.split <- data.splitter(siamcat, 
                             num.folds = 5, 
                             num.resample = 2, 
                             stratify = TRUE, 
-                            inseparable = NULL, 
-                            meta = NULL)
+                            inseparable = NULL)
 ```
 
 ```{r}

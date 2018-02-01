@@ -12,6 +12,15 @@
 #' @exportClass modelList
 setClass("modelList", representation(models = "list", model.type = "character"))
 
+#' The S4 class for storing data splits
+#' @name dataSplit-class
+#' @rdname dataSplit-class
+#' @exportClass dataSplit
+setClass("dataSplit", representation(training.folds = "list", 
+                                     test.folds = "list", 
+                                     num.resample = "numeric", 
+                                     num.folds = "numeric"))
+
 #' The S4 class for storing label info.
 #' @name label-class
 #' @rdname label-class
@@ -49,6 +58,10 @@ siamcat <- function(...){
   }
   
   if(is.null(arglist$modelList))  arglist$modelList <- new("modelList",models=list(NULL), model.type="empty")
+  if(is.null(arglist$dataSplit))  arglist$dataSplit <- new("dataSplit",training.folds=list(NULL),
+                                                           test.folds=list(NULL),
+                                                           num.resample=0,
+                                                           num.folds=0)
   if(is.null(arglist$norm.param)) arglist$norm.param <- list(NULL)
   
   if(is.null(arglist$phyloseq)) ps <- phyloseq(arglist$otu_table, arglist$sample_data, arglist$phylo, 
@@ -67,8 +80,8 @@ get.component.classes <- function(){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat
   component.classes <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq", "modelList",
-                                "orig_feat", "label", "list", "phyloseq")	#slot names
+                                "orig_feat", "label", "list", "dataSplit","phyloseq")	#slot names
   names(component.classes) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet", "modelList",
-                                 "orig_feat", "label","norm.param", "phyloseq") #class names
+                                 "orig_feat", "label","norm.param", "dataSplit", "phyloseq") #class names
   return(component.classes)
 }

@@ -4,12 +4,12 @@
 \alias{normalize.feat}
 \title{Perform feature normalization according to specified parameters.}
 \usage{
-normalize.feat(feat, norm.method = c("rank.unit", "rank.std", "log.std",
+normalize.feat(siamcat, norm.method = c("rank.unit", "rank.std", "log.std",
   "log.unit", "clr"), norm.param = list(log.n0 = 1e-08, sd.min.q = 0.1, n.p =
   2, norm.margin = 1))
 }
 \arguments{
-\item{feat}{feature object}
+\item{siamcat}{an object of class \link{siamcat}}
 
 \item{norm.method}{string, normalization method, can be one of these:
 '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "clr")}}
@@ -18,10 +18,7 @@ normalize.feat(feat, norm.method = c("rank.unit", "rank.std", "log.std",
 normalization methods, see details for more information}
 }
 \value{
-list containing the matrix of normalized features and a list of normalization parameters: \itemize{
- \item \code{$par} <- list of parameters utilized in the normalization;
- \item \code{$feat.norm} <- normalized features
-}
+an object of class \link{siamcat}
 }
 \description{
 This function performs feature normalization according to user-

@@ -2,34 +2,25 @@
 % Please edit documentation in R/select_samples.r
 \name{select.samples}
 \alias{select.samples}
-\title{Select samples based on metadata}
+\title{Select samples based on siamcat@phyloseq@sam_datadata}
 \usage{
-select.samples(meta, feat, label, filter, allowed.set = NULL,
-  allowed.range = NULL)
+select.samples(siamcat, filter, allowed.set = NULL, allowed.range = NULL)
 }
 \arguments{
-\item{meta}{metadata object}
+\item{siamcat}{an object of class \link{siamcat}}
 
-\item{feat}{features object}
-
-\item{label}{labels object}
-
-\item{filter}{name of the column from metadata on which the selection should be done}
+\item{filter}{name of the column from siamcat@phyloseq@sam_datadata on which the selection should be done}
 
 \item{allowed.set}{a vector of allowed values}
 
 \item{allowed.range}{a range of allowed values}
 }
 \value{
-list containing values after selection: \itemize{
- \item \code{$feat} = features;
- \item \code{$label} = labels;
- \item \code{$meta} = metadata
-}
+siamcat an object of class \link{siamcat}
 }
 \description{
-This functions filters features, labels, and metadata based on a specific column in the metadata.
-Provided with a column in the metadata and a range or a set of allowed values, the function will return the labels, metadata, and features for the samples matching the allowed range or set.
+This functions filters features, labels, and siamcat@phyloseq@sam_datadata based on a specific column in the siamcat@phyloseq@sam_datadata.
+Provided with a column in the siamcat@phyloseq@sam_datadata and a range or a set of allowed values, the function will return the labels, siamcat@phyloseq@sam_datadata, and features for the samples matching the allowed range or set.
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}
