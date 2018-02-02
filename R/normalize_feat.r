@@ -67,7 +67,7 @@
 #'  \item \code{$feat.norm} <- normalized features
 #'}
 normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
-                           norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1)) {
+                           norm.param=list(log.n0=NULL, sd.min.q=0.1, n.p=2, norm.margin=1)) {
 
   if (is.null(norm.param$norm.method)){
     # de novo normalization
@@ -93,17 +93,18 @@ normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std
     par$retained.feat <- rownames(feat.red)
 
     ## check if the right set of normalization parameters have been supplied for the chosen norm.method
-    if (norm.method == 'clr' && is.null(norm.param$log.n0)){
-      stop("The log.clr method requires the parameter log.n0, which is not supplied. Exiting ...")
-    }
     if (norm.method == 'rank.std' && is.null(norm.param$sd.min.q)){
       stop("The rank.std method requires the parameter sd.min.q, which is not supplied. Exiting ...")
     }
-    if (norm.method == 'log.std' && (is.null(norm.param$sd.min.q) || is.null(norm.param$log.n0))){
-      stop("The log.std method requires the parameters sd.min.q and log.n0, which are not supplied. Exiting ...")
+    if (norm.method != 'rank.std' && is.null(norm.param$log.n0)){
+      cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
+      norm.param$log.n0 <- quantile(feat.red[feat.red!=0], 0.05)
     }
-    if (norm.method == 'log.unit' && (is.null(norm.param$n.p) || is.null(norm.param$log.n0) || is.null(norm.param$norm.margin))){
-      stop("The log.std method requires the parameters n.p, norm.margin, and log.n0, which are not supplied. Exiting ...")
+    if (norm.method == 'log.std' && (is.null(norm.param$sd.min.q))){
+      stop("The log.std method requires the parameters sd.min.q, which is not supplied. Exiting ...")
+    }
+    if (norm.method == 'log.unit' && (is.null(norm.param$n.p) || is.null(norm.param$norm.margin))){
+      stop("The log.std method requires the parameters n.p and norm.margin, which are not supplied. Exiting ...")
     }
 
     ### keep track of normalization parameters

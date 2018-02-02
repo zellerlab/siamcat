@@ -40,7 +40,7 @@
 interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   meta=NULL, color.scheme='BrBG', consens.thres=0.5,
   heatmap.type='zscore', norm.models=FALSE,
-  limits=c(-3,3), detect.lim=1e-08, max.show=50){
+  limits=c(-3,3), detect.lim=NULL, max.show=50){
 
   # ############################################################################
   ### some color pre-processing
@@ -80,6 +80,10 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
     img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
                                        limits=limits)
   } else if (heatmap.type == 'fc') {
+    if (is.null(detect.lim)){
+      cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
+      detect.lim <- quantile(feat[feat!=0], 0.05)
+    }
     img.data <- prepare.heatmap.fc(heatmap.data=feat[, srt.idx],
                                    sel.feat=names(sel.idx),
                                    limits=limits, meta=meta,
