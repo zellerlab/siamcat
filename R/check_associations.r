@@ -45,7 +45,7 @@
 #' @export
 check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
-                               detect.lim=10^-8, pr.cutoff=10^-6, max.show=50,
+                               detect.lim=NULL, pr.cutoff=10^-6, max.show=50,
                                plot.type="quantile.box", panels=c("fc", "auroc")){
 
 
@@ -78,7 +78,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   feat.red  <- result.list$feat.red
   truncated <- result.list$truncated
   bcols     <- result.list$bcol
-
+  detect.lim <- result.list$detect.lim
   ##############################################################################
   ### generate plots with significant associations between features and labels
 
@@ -522,6 +522,10 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
   ##############################################################################
   ### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for each feature
   cat("Calculating effect size for each feature...\n")
+  if (is.null(detect.lim)){
+    cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
+    detect.lim <- quantile(feat[feat!=0], 0.05)
+  }
   pb = txtProgressBar(max=nrow(feat))
   effect.size <- t(apply(feat, 1, FUN=function(x){
 
@@ -606,5 +610,6 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
               "bcol"=bcol[idx],
               "p.adj"=p.adj[idx],
               "feat.red"=feat[idx,],
-              "truncated"=truncated))
+              "truncated"=truncated,
+              "detect.lim"=detect.lim))
 }
