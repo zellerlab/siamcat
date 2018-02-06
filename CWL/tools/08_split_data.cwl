@@ -46,20 +46,45 @@ inputs:
     inputBinding:
       prefix: --inseparable
       position: 2
+  subdivide_train_set:
+    type: string?
+    # "TRUE" or "FALSE"
+    inputBinding:
+      prefix: --subdivide_train_set
+      position: 2
 
 arguments:
     - position: 3
       prefix: --train_sets
-      valueFrom: $(inputs.label_in.nameroot)_trainSets.tsv
+      valueFrom: |
+        ${
+          if(inputs.subdivide_train_set){
+            return inputs.label_in.nameroot + "_trainSets"
+          } else{
+            return inputs.label_in.nameroot+ "_trainSets.tsv"
+          }
+        }
     - position: 3
       prefix: --test_sets
       valueFrom: $(inputs.label_in.nameroot)_testSets.tsv
 
 outputs:
   train_sets_out:
-    type: File
+    type:
+      # can be either a single File 
+      # or multiple files when "--subdivide_train_set"
+      # is set.
+      type: array
+      items: File
     outputBinding:
-      glob: $(inputs.label_in.nameroot)_trainSets.tsv
+      glob: |
+        ${
+          if(inputs.subdivide_train_set){
+            return inputs.label_in.nameroot + "_trainSets*"
+          } else{
+            return inputs.label_in.nameroot + "_trainSets.tsv"
+          }
+        }
   test_sets_out:
     type: File
     outputBinding:

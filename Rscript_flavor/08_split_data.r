@@ -30,7 +30,9 @@ option_list     <- list(
                                                                            (only for binary labels)?'),
   make_option('--inseparable',     type='character', default='NULL', help=''),
   make_option('--metadata_in',     type='character',                 help='Input file containing metadata (only required if argument 
-                                                                           \'inseparable\' is specified)')
+                                                                           \'inseparable\' is specified)'),
+  make_option('--subdivide_train_set', type='logical',   default=FALSE,  help='The train data will be subdevided into different files by folds and resamplings.
+                                                                              This enables to parallelization of the model training.')
 )
 
 # parse arguments
@@ -46,6 +48,7 @@ cat('resample    =', opt$resample, '\n')
 cat('stratify    =', opt$stratify, '\n')
 cat('inseparable =', opt$inseparable, '\n')
 cat('metadata_in =', opt$metadata_in, '\n')
+cat('subdivide_train_set =', opt$subdivide_train_set, '\n')
 cat('\n')
 
 start.time  <- proc.time()[1]
@@ -61,18 +64,32 @@ training.data <- data.splitter(label = label,
                                stratify=opt$stratify, 
                                inseparable=opt$inseparable,
                                meta=opt$metadata_in)
-
-write('#Cross-validation training folds', file=opt$train_sets, append=FALSE)
-write(paste0('#num.folds:\n#',opt$num_folds), file=opt$train_sets, append=TRUE)
+# write headers:
+if( !(opt$subdivide_train_set) ){
+  write('#Cross-validation training folds', file=opt$train_sets, append=FALSE)
+  write(paste0('#num.folds:\n#',opt$num_folds), file=opt$train_sets, append=TRUE)
+}
 write('#Cross-validation test folds',     file=opt$test_sets, append=FALSE)
 
 for (r in 1:training.data$num.resample) {
   for (f in 1:training.data$num.folds) {
-    # append training and test examples, one line per fold
+    if (opt$subdivide_train_set){
+      # train data is written to multiple files seperated by folds and resamplings
+      train.file <- paste0(opt$train_sets, "_", sprintf("%03d", r),"r_", sprintf("%03d", f), "f.tsv")
+      write('#Cross-validation training folds', file=train.file, append=FALSE)
+      write(paste0('#num.folds:\n#1'), file=train.file, append=TRUE)
+    } else{
+      # train data is written to one file
+      train.file <- opt$train_sets
+    }
+    test.file <- opt$test_sets
+    
     fold.name = paste('>cv_fold', ifelse(opt$resample>1, paste(f, '_rep', r, sep=''), as.character(f)), sep='')
-    write.table(t(c(fold.name, training.data$training.folds[[r]][[f]])), file=opt$train_sets, quote=FALSE, 
-                sep='\t', row.names=FALSE, col.names=FALSE, append=TRUE)
-    write.table(t(c(fold.name, training.data$test.folds[[r]][[f]])),     file=opt$test_sets,  quote=FALSE, 
+    
+    # append training and test examples, one line per fold
+    write.table(t(c(fold.name, training.data$training.folds[[r]][[f]])), file=train.file, quote=FALSE, 
+              sep='\t', row.names=FALSE, col.names=FALSE, append=TRUE)
+    write.table(t(c(fold.name, training.data$test.folds[[r]][[f]])),     file=test.file,  quote=FALSE, 
                 sep='\t', row.names=FALSE, col.names=FALSE, append=TRUE)
   }
 }

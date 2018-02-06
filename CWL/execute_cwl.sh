@@ -6,7 +6,8 @@ yaml_job_file="$1"
 job_name="$2"
 
 location_of_this_script="$( cd "$(dirname "${BASH_SOURCE[0]}")/.." ; pwd -P )"
-cwl_workflow="${location_of_this_script}/workflows/siamcat_workflow.cwl"
+#cwl_workflow="${location_of_this_script}/CWL/workflows/siamcat_workflow.cwl"
+cwl_workflow="${location_of_this_script}/CWL/workflows/siamcat_workflow_scatter_models.cwl"
 # If no csv with metadata is present, use the alternative workflow:
 #cwl_workflow="${location_of_this_script}/workflows/siamcat_workflow_no_meta.cwl"
 working_dir="${PWD}/${job_name}"
@@ -14,7 +15,6 @@ output_dir="${working_dir}/out"
 temp_dir="${working_dir}/temp"
 base_dir="${working_dir}/base"
 cache_dir="${working_dir}/cache"
-
 mkdir $working_dir
 mkdir $output_dir $temp_dir $base_dir $cache_dir
 

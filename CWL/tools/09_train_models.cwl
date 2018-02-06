@@ -59,10 +59,10 @@ inputs:
 arguments:
     - position: 3
       prefix: --mlr_models_list
-      valueFrom: $(inputs.feat_in.nameroot)_model.RData
+      valueFrom: $(inputs.train_sets.nameroot)_model.RData
 
 outputs:
   model:
     type: File
     outputBinding:
-      glob: $(inputs.feat_in.nameroot)_model.RData
+      glob: $(inputs.train_sets.nameroot)_model.RData
