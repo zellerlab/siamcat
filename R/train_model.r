@@ -80,7 +80,9 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
     ### subselect examples for training
     label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
     train.label       <- label.fac[fold.exm.idx[[r]]]
-    data              <- as.data.frame(t(siamcat@phyloseq@otu_table[fold.exm.idx[[r]],]))
+    data              <- as.data.frame(t(siamcat@phyloseq@otu_table)[fold.exm.idx[[r]],])
+    print(dim(data))
+    print(length(train.label))
     stopifnot(nrow(data)         == length(train.label))
     stopifnot(all(rownames(data) == names(train.label)))
     data$label                     <- train.label

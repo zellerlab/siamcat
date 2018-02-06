@@ -36,7 +36,7 @@ setClass("label", representation(label = "vector", header = "character",
 #' @rdname siamcat-class
 #' @exportClass siamcat
 setClass("siamcat", representation(modelList = "modelList", phyloseq = "phyloseq", orig_feat="otu_table", 
-                                   label="label", norm.param="list", dataSplit="dataSplit"))
+                                   label="label", norm.param="list", dataSplit="dataSplit", predMatrix="matrix"))
 
 #' Build siamcat-class objects from their components.
 #' @name siamcat
@@ -56,7 +56,7 @@ siamcat <- function(...){
       names(arglist)[argNr] <- classOfArg
     }
   }
-  
+  if(is.null(arglist$predMatrix))  arglist$predMatrix <- matrix(0)
   if(is.null(arglist$modelList))  arglist$modelList <- new("modelList",models=list(NULL), model.type="empty")
   if(is.null(arglist$dataSplit))  arglist$dataSplit <- new("dataSplit",training.folds=list(NULL),
                                                            test.folds=list(NULL),
@@ -67,7 +67,7 @@ siamcat <- function(...){
   if(is.null(arglist$phyloseq)) ps <- phyloseq(arglist$otu_table, arglist$sample_data, arglist$phylo, 
                  arglist$taxonomyTable, arglist$XStringSet) 
   
-  sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps,
+  sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps, predMatrix = arglist$predMatrix,
                        orig_feat = arglist$otu_table, label = arglist$label, norm.param = arglist$norm.param)
   return(sc)
 }

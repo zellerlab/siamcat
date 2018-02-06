@@ -100,10 +100,7 @@ siamcat <- train.model(siamcat,
 ```
 
 ```{r}
-prediction = make.predictions(feat=feat.fobt, 
-                              label=label, 
-                              data.split=data.split,
-                              models.list=plm.out)
+siamcat <- make.predictions(siamcat)
 ```
 
 ### Model Evaluation and Interpretation
