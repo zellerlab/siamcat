@@ -67,7 +67,7 @@ siamcat <- filter.feat(siamcat,
 ### Data Normalization
 
 ```{r}
-siamcat2 <- normalize.feat(siamcat, 
+siamcat <- normalize.feat(siamcat, 
                           norm.method = "log.unit", 
                           norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1))
 ```
@@ -82,7 +82,7 @@ siamcat <- add.meta.pred(siamcat,
 ```
 
 ```{r}
-data.split <- data.splitter(siamcat, 
+siamcat <- data.splitter(siamcat, 
                             num.folds = 5, 
                             num.resample = 2, 
                             stratify = TRUE, 
@@ -90,8 +90,7 @@ data.split <- data.splitter(siamcat,
 ```
 
 ```{r}
-plm.out <- train.model(feat=feat.fobt, 
-                       label=label,  
+siamcat <- train.model(siamcat, 
                        method = "lasso",
                        data.split=data.split, 
                        stratify = TRUE,

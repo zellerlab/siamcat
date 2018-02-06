@@ -167,8 +167,6 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
     cat('Feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
 
-    return(list("par" = par, "feat.norm" = feat.norm))
-
   } else {
     # frozen normalization
     cat('Performing frozen ', norm.param$norm.method, ' normalization using the supplied parameters\n')
@@ -214,10 +212,8 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
     cat('Feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
 
-    
-    siamcat@phyloseq@otu_table <- feat.norm
+    siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
     siamcat@norm.param         <- norm.param
-
     
   }
   return(siamcat)

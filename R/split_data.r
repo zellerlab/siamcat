@@ -34,7 +34,7 @@ data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, i
   exm.ids         <- names(labelNum)
 
   # parse label description
-  classes      <- sort(siamcat@label@info)
+  classes      <- sort(c(siamcat@label@negative.lab,siamcat@label@positive.lab))
 
   ### check arguments
   if (num.resample < 1) {
@@ -108,7 +108,7 @@ data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, i
 
   siamcat@dataSplit <- new("dataSplit",training.folds=train.list,
                            test.folds=test.list,
-                           num.resample=num.resampl,
+                           num.resample=num.resample,
                            num.folds=num.folds)
   return(siamcat)
 }
@@ -117,7 +117,7 @@ data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, i
 ##### function to partition training set into cross-validation folds for model selection
 ### Works analogous to the function used in data_splitter.r
 #' @export
-assign.fold <- function(siamcat, num.folds, stratified, inseparable = NULL, meta=NULL) {
+assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=NULL) {
   foldid  <- rep(0, length(label))
   classes <- sort(unique(label))
   # Transform number of classes into vector of 1 to x for looping over.

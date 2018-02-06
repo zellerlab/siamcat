@@ -36,7 +36,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
     class.weights        <- c(5, 1)
-    names(class.weights) <- c(label$negative.lab,label$positive.lab)
+    names(class.weights) <- c(label@negative.lab,label@positive.lab)
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
@@ -79,39 +79,37 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     bias.idx            <- which(rownames(coef) == '(Intercept)')
     coef                <- coef[-bias.idx,]
     model$feat.weights  <- (-1) *  as.numeric(coef) ### check!!!
-  } else if(cl == "classif.LiblineaRL1LogReg"){
+  } else if(cl == "classiflabel@.LiblineaRL1LogReg"){
     model$feat.weights  <-model$learner.model$W[-which(colnames(model$learner.model$W)=="Bias")]
   } else if(cl == "classif.randomForest"){
     model$feat.weights  <-model$learner.model$importance
   }
-
-  model$lrn          <- lrn ### ???
   model$task         <- task
 
   return(model)
 }
 
 #' @export
-get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL){
+get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL){
   num.runs     <- 1
   num.folds    <- 2
   fold.name = list()
   fold.exm.idx = list()
-  if (is.null(data.split)){
+  if (is.null(dataSplit)){
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
-    fold.exm.idx[[1]] <- names(label$label)
+    fold.exm.idx[[1]] <- names(label@label)
     if (mode == "test" && !is.null(model)){
       model$model.type <- NULL
       num.runs <- length(model)
       fold.name <- as.list(rep('whole data set', length(model)))
-      fold.exm.idx <- rep(list(names(label$label)), length(model))
+      fold.exm.idx <- rep(list(names(label@label)), length(model))
     }
   } else {
-    if (class(data.split) == 'character') {
+    if (class(dataSplit) == 'character') {
       # read in file containing the training instances
       num.runs      <- 0
-      con           <- file(data.split, 'r')
+      con           <- file(dataSplit, 'r')
       input         <- readLines(con)
       close(con)
       #print(length(input))
@@ -124,26 +122,26 @@ get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL)
           s                        <- unlist(strsplit(l, '\t'))
           fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
           ### Note that the %in%-operation is order-dependend.
-          fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
+          fold.exm.idx[[num.runs]] <- which(names(label@label) %in% as.vector(s[2:length(s)]))
           cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), paste0(mode, 'ing'), 'examples\n')
           #      cat(fold.exm.idx[[num.runs]], '\n\n')
           #    } else {
           #      cat('Ignoring commented line:', l, '\n\n')
         }
       }
-    } else if (class(data.split) == 'list') {
+    } else if (class(dataSplit) == 'dataSplit') {
       # use training samples as specified in training.folds in the list
-      num.folds <- data.split$num.folds
+      num.folds <- dataSplit@num.folds
       num.runs <- 0
-      for (cv in 1:data.split$num.folds){
-        for (res in 1:data.split$num.resample){
+      for (cv in 1:dataSplit@num.folds){
+        for (res in 1:dataSplit@num.resample){
           num.runs <- num.runs + 1
 
           fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
           if (mode == "train"){
-            fold.exm.idx[[num.runs]] <- match(data.split$training.folds[[res]][[cv]], names(label$label))
+            fold.exm.idx[[num.runs]] <- match(dataSplit@training.folds[[res]][[cv]], names(label@label))
           } else if (mode == "test"){
-            fold.exm.idx[[num.runs]] <- match(data.split$test.folds[[res]][[cv]], names(label$label))
+            fold.exm.idx[[num.runs]] <- match(dataSplit@test.folds[[res]][[cv]], names(label@label))
           }
           cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
         }
