@@ -28,7 +28,7 @@
 #'  \item \code{$num.folds} = number of folds
 #'}
 # TODO add detail section for this function
-data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL, meta=NULL){
+data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL, meta=NULL, verbose=TRUE){
   ### read label and meta-data
   # (assuming the label file has 1 column)
   if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {
@@ -87,7 +87,7 @@ data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, ins
     train.temp    <- list(NULL)
     test.temp     <- list(NULL)
 
-    cat('\n+++ Splitting the dataset:\n')
+    if (verbose) cat('\n+++ Splitting the dataset:\n')
     for (f in 1:num.folds) {
       # make sure each fold contains examples from all classes
       # for stratify==TRUE should be tested before assignment of test/training set
@@ -105,7 +105,7 @@ data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, ins
         stopifnot(all(sort(unique(labelNum[foldid != f])) == classes))
       }
       stopifnot(length(intersect(train.idx, test.idx)) == 0)
-      cat('   + Fold ', f, ' contains ', sum(foldid==f), ' examples\n', sep='')
+      if(verbose) cat('   + Fold ', f, ' contains ', sum(foldid==f), ' examples\n', sep='')
     }
     train.list[[r]] <- train.temp
     test.list[[r]]  <- test.temp
@@ -125,7 +125,6 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
   # Transform number of classes into vector of 1 to x for looping over.
   # stratify positive examples
   if (stratified) {
-    print(num.folds)
     # If stratify is TRUE, make sure that num.folds does not exceed the maximum number of examples for the class with the fewest training examples.
     if (any(as.data.frame(table(label))[,2] < num.folds)) {
       stop("+++ Number of CV folds is too large for this data set to maintain stratification. Reduce num.folds or turn stratification off. Exiting.\n")
@@ -138,7 +137,7 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
   } else {
     # If stratify is not TRUE, make sure that num.sample is not bigger than number.folds
     if (length(label) <= num.folds){
-      print("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
+      cat("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
       num.folds   <- length(label)-1
     }
     if (!is.null(inseparable)) {

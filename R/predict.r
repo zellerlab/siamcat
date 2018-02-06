@@ -23,12 +23,12 @@
 #'  \item \code{$pred};
 #'  \item \code{$mat}
 #'}
-make.predictions <- function(feat, label, data.split=NULL, models.list){
+make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=TRUE){
 
   feat         <- t(feat)
 
   ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(data.split, label, mode="test", model=models.list)
+  foldList     <- get.foldList(data.split, label, mode="test", model=models.list, verbose=verbose)
   fold.name    <- foldList$fold.name
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
@@ -52,7 +52,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
     stopifnot(all(rownames(data) == names(test.label)))
     data$label                     <- test.label
     model <- models.list[[r]]
-    cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
+    if(verbose) cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     # subselect appropriate model
     model$W = model$W[,r]
 
@@ -67,7 +67,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
     fold.pred.idx[[r]] = (length(pred)-length(p)+1):length(pred)
   }
 
-  cat('\nTotal number of predictions made:', length(pred), '\n')
+  if(verbose) cat('\nTotal number of predictions made:', length(pred), '\n')
 
   if (!is.null(data.split)) {
     ### if test labels are given do some evaluation as well
@@ -102,7 +102,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
       ev = eval.classifier(pred, as.vector(test.label), label)
       c.auc = calc.auroc(ev)
     }
-    cat('Combined test AUC = ', format(c.auc, digits=3),
+    if(verbose)cat('Combined test AUC = ', format(c.auc, digits=3),
         ' (m=', format(mean(aucs, na.rm=TRUE), digits=3),
         ', s.d.=', format(sd(aucs, na.rm=TRUE), digits=3), ')\n', sep='')
   }
@@ -156,8 +156,8 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
       stopifnot(all(names(pred)[p] == rownames(pred.mat)[m]))
     }
     correlation <- cor(pred.mat, method='spearman')
-    cat('\nCorrelation between predictions from repeated CV:\n')
-    cat('Min: ', min(correlation), ', Median: ', median(correlation), ', Mean: ', mean(correlation), '\n', sep='')
+    if(verbose)cat('\nCorrelation between predictions from repeated CV:\n')
+    if(verbose)cat('Min: ', min(correlation), ', Median: ', median(correlation), ', Mean: ', mean(correlation), '\n', sep='')
   }else{
     pred.mat = as.matrix(pred,byrow=TRUE)
   }

@@ -96,7 +96,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 }
 
 #' @export
-get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL){
+get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL, verbose=TRUE){
   num.runs     <- 1
   num.folds    <- 2
   fold.name = list()
@@ -129,7 +129,7 @@ get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL)
           fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
           ### Note that the %in%-operation is order-dependend.
           fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), paste0(mode, 'ing'), 'examples\n')
+          if(verbose) cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), paste0(mode, 'ing'), 'examples\n')
           #      cat(fold.exm.idx[[num.runs]], '\n\n')
           #    } else {
           #      cat('Ignoring commented line:', l, '\n\n')
@@ -149,7 +149,7 @@ get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL)
           } else if (mode == "test"){
             fold.exm.idx[[num.runs]] <- match(data.split$test.folds[[res]][[cv]], names(label$label))
           }
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+          if(verbose) cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
         }
       }
     } else {
