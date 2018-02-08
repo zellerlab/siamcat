@@ -28,7 +28,10 @@ label <- read.labels(fn.in.label)
 meta  <- read.meta(fn.in.meta)
 siamcat <- siamcat(feat, label, meta)
 ```
-
+#add workflow from a disk
+#keep in mind holdout prediction
+#check dtaa consistency function
+#CI low abudandt accuracy
 ```{r}
 siamcat <- validate.data(siamcat)
 ```
@@ -80,10 +83,11 @@ siamcat <- add.meta.pred(siamcat,
                           pred.names = pred.names, 
                           std.meta = TRUE)
 ```
-
+### vignette for cv/holdoput
+### int verbose for each function (0,5) with def=1
 ```{r}
 siamcat <- data.splitter(siamcat, 
-                            num.folds = 5, 
+                            num.folds = 5, ### holdout -> all train/ all test etc, cross-validation/holdout -> make rest defaults
                             num.resample = 2, 
                             stratify = TRUE, 
                             inseparable = NULL)
@@ -92,7 +96,7 @@ siamcat <- data.splitter(siamcat,
 ```{r}
 siamcat <- train.model(siamcat, 
                        method = "lasso",
-                       data.split=data.split, 
+                       data.split=data.split, #??
                        stratify = TRUE,
                        modsel.crit=list("pr"),  
                        min.nonzero.coeff = 5,
@@ -106,7 +110,7 @@ siamcat <- make.predictions(siamcat)
 ### Model Evaluation and Interpretation
 
 ```{r}
-eval.data <-  eval.predictions(label = label, pred = prediction$mat)
+siamcat <-  eval.predictions(siamcat)
 
 # evaluation.model.plot(label = label, 
 #                       pred = prediction$mat, 

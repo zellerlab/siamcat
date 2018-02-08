@@ -35,7 +35,7 @@ setClass("label", representation(label = "vector", header = "character",
 #' @name siamcat-class
 #' @rdname siamcat-class
 #' @exportClass siamcat
-setClass("siamcat", representation(modelList = "modelList", phyloseq = "phyloseq", orig_feat="otu_table", 
+setClass("siamcat", representation(modelList = "modelList", phyloseq = "phyloseq", orig_feat="otu_table", evalData = "list", 
                                    label="label", norm.param="list", dataSplit="dataSplit", predMatrix="matrix"))
 
 #' Build siamcat-class objects from their components.

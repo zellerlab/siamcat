@@ -19,8 +19,7 @@
 #' as metric. Predictions can be supplied either for a single case or as matrix after resampling of the dataset.
 #'
 #' Prediction results are usually produced with the function \link{plm.predictor}.
-#' @param label label object
-#' @param pred prediction for each sample by the model, should be a matrix with dimensions \code{length(label) x 1} or \code{length(label) x num.resample}
+#' @param siamcat object of class \link{siamcat-class}
 #' @keywords SIAMCAT eval.result
 #' @export
 #' @return list containing \itemize{
@@ -33,15 +32,15 @@
 #'  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 #'}
-eval.predictions <- function(label, pred){
+eval.predictions <- function(siamcat){
 
   # TODO compare header to label
   ### make sure that label and prediction are in the same order
   #stopifnot(all(names(label) %in% rownames(pred)) && all(rownames(pred) %in% names(label)))
-  m    <- match(names(label$label), rownames(pred))
+  m    <- match(names(siamcat@label@label), rownames(pred))
   #cat(m, '\n')
   pred <- pred[m,,drop=FALSE]
-  stopifnot(all(names(label$label) == rownames(pred)))
+  stopifnot(all(names(siamcat@label@label) == rownames(pred)))
 
   # ROC curve
   auroc = 0
@@ -49,16 +48,16 @@ eval.predictions <- function(label, pred){
     rocc = list(NULL)
     aucs = vector('numeric', ncol(pred))
     for (c in 1:ncol(pred)) {
-      rocc[c] = list(roc(response=label$label, predictor=pred[,c], ci=FALSE))
+      rocc[c] = list(roc(response=siamcat@label@label, predictor=pred[,c], ci=FALSE))
       aucs[c] = rocc[[c]]$auc
     }
-    l.vec = rep(label$label, ncol(pred))
+    l.vec = rep(siamcat@label@label, ncol(pred))
   } else {
-    l.vec = label$label
+    l.vec = siamcat@label@label
   }
   # average data for plotting one mean prediction curve
   summ.stat = 'mean'
-  rocsumm = list(roc(response=label$label, predictor=apply(pred, 1, summ.stat),
+  rocsumm = list(roc(response=siamcat@label@label, predictor=apply(pred, 1, summ.stat),
                  ci=TRUE, of="se", sp=seq(0, 1, 0.05)))
   auroc = list(rocsumm[[1]]$auc)
   # precision recall curve
@@ -67,13 +66,13 @@ eval.predictions <- function(label, pred){
   if (ncol(pred) > 1) {
     aucspr = vector('numeric', dim(pred)[2])
     for (c in 1:ncol(pred)) {
-      ev[c] = list(eval.classifier(pred[,c], label$label, label))
+      ev[c] = list(eval.classifier(pred[,c], siamcat@label@label, label))
       pr[c] = list(get.pr(ev[[c]]))
       aucspr[c] = calc.aupr(ev[[c]])
     }
-    ev = append(ev,list(eval.classifier(apply(pred, 1, summ.stat), label$label, label)))
+    ev = append(ev,list(eval.classifier(apply(pred, 1, summ.stat), siamcat@label@label, label)))
   } else {
-    ev[1] = list(eval.classifier(as.vector(pred), label$label, label))
+    ev[1] = list(eval.classifier(as.vector(pred), siamcat@label@label, label))
     pr[1] = list(get.pr(ev[[1]]))
   }
   if (ncol(pred) > 1) {

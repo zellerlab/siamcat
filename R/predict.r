@@ -46,10 +46,9 @@ make.predictions <- function(siamcat){
     stopifnot(nrow(data)         == length(test.label))
     stopifnot(all(rownames(data) == names(test.label)))
     data$label                     <- test.label
-    model <- siamcat@modelList[[r]]
-    cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
+    model <- siamcat@modelList@models[[r]]
+    cat('Applying ', siamcat@modelList@model.type, ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     # subselect appropriate model
-    model$W = model$W[,r]
 
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
@@ -111,7 +110,7 @@ make.predictions <- function(siamcat){
       r.idx = c(1:num.runs) #as.numeric(sapply(strsplit(fold.name, 'predicted by model '), '[[', 2))
       runs = sort(unique(r.idx))
       stopifnot(all(runs == 1:length(runs)))
-      if (!is.null(data.split)) {
+      if (!is.null(siamcat@dataSplit)) {
         ref.names = names(siamcat@label@label)
       } else {
         ref.names = unique(names(pred))
@@ -120,7 +119,7 @@ make.predictions <- function(siamcat){
       r.idx = as.numeric(sapply(strsplit(fold.name, 'rep'), '[[', 2))
       runs = sort(unique(r.idx))
       stopifnot(all(runs == 1:length(runs)))
-      if (!is.null(data.split)) {
+      if (!is.null(siamcat@dataSplit)) {
         ref.names = names(siamcat@label@label)
       } else {
         ref.names = names(pred)[unlist(fold.pred.idx[r.idx==1])]
@@ -145,7 +144,7 @@ make.predictions <- function(siamcat){
       #    cat(sort(m), '\n\n')
       #    cat(length(m), '\n\n')
       #    cat(length(label), '\n\n')
-      #if (!is.null(data.split)) {
+      #if (!is.null(siamcat@dataSplit)) {
       #   stopifnot(all(sort(m) == 1:length(label$label)))
       #}
       pred.mat[m,r] = pred[p]

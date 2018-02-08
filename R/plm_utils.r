@@ -60,7 +60,6 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
                          par.set = parameters,
                          control = makeTuneControlGrid(resolution = 10L),
                          measures=measure)
-    print(hyperPars)
     lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
 
@@ -99,11 +98,10 @@ get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL){
     # train on whole data set
     fold.name[[1]]    <- 'whole data set'
     fold.exm.idx[[1]] <- names(label@label)
-    if (mode == "test" && !is.null(model)){
-      model$model.type <- NULL
-      num.runs <- length(model)
-      fold.name <- as.list(rep('whole data set', length(model)))
-      fold.exm.idx <- rep(list(names(label@label)), length(model))
+    if (mode == "test" && !(all(is.null(model)))){
+      num.runs <- length(model@models)
+      fold.name <- as.list(rep('whole data set', length(model@models)))
+      fold.exm.idx <- rep(list(names(label@label)), length(model@models))
     }
   } else {
     if (class(dataSplit) == 'character') {
