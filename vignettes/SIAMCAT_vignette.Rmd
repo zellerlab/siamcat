@@ -83,7 +83,7 @@ siamcat <- add.meta.pred(siamcat,
                           pred.names = pred.names, 
                           std.meta = TRUE)
 ```
-### vignette for cv/holdoput
+### vignette for cv/holdout
 ### int verbose for each function (0,5) with def=1
 ```{r}
 siamcat <- data.splitter(siamcat, 
@@ -112,21 +112,14 @@ siamcat <- make.predictions(siamcat)
 ```{r}
 siamcat <-  eval.predictions(siamcat)
 
-# evaluation.model.plot(label = label, 
-#                       pred = prediction$mat, 
-#                       eval.data = eval.data, 
-#                       fn.plot = paste0(output.dir, '/eval_plot.pdf'))
+evaluation.model.plot(siamcat,'eval_plot.pdf')
 ```
 
 ```{r}
-# interpretor.model.plot(feat = feat.filtered, 
-#                        label = label, 
-#                        meta = meta, 
-#                        fn.plot=paste0(output.dir, 'interpretation.pdf'),
-#                        model = plm.out,
-#                        pred = prediction$mat,
-#                        consens.thres = 0.5,
-#                        norm.models = TRUE,
-#                        limits=c(-5,5),
-#                        heatmap.type = 'fc')
+interpretor.model.plot(siamcat,
+                        fn.plot=paste0(output.dir, 'interpretation.pdf'),
+                        consens.thres = 0.5,
+                        norm.models = TRUE,
+                        limits=c(-5,5),
+                        heatmap.type = 'fc')
 ```

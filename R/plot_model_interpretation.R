@@ -13,12 +13,8 @@
 
 #' @title Model Interpretation Plot
 #' @description Produces a plot for model interpretation, displaying feature weights, robustness of feature weights, and features scores across patients.
-#' @param feat the feature object containing the normalized features for the \code{"zscore"} heatmap and the features \emph{before} normalization and addition of the metadata for the \code{"fc"} heatmap
-#' @param label a label object
-#' @param meta a metadata object
+#' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
-#' @param model matrix containing the feature weights for every CV fold/repetition
-#' @param pred matrix containing the model predictions for every CV repetition
 #' @param color.scheme color scheme for the heatmap, defaults to =\code{"BrBG"}
 #' @param consens.thres minimal ratio of models incorporating a feature in order to include it into the heatmap, defaults to \code{0.5}
 #'        Note that for \code{"randomForest"} models, this cutoff specifies the minimum median Gini coefficient for a feature to be included and should therefore be much lower, e.g. \code{0.01}
@@ -37,11 +33,11 @@
 #'  \item a boxplot displaying the poportion of weight per model that is actually shown
 #' for the features that are incorporated into more than \code{consens.thres} percent of the models.
 #'}
-interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
-  meta=NULL, color.scheme='BrBG', consens.thres=0.5,
+interpretor.model.plot <- function(siamcat, fn.plot,
+  color.scheme='BrBG', consens.thres=0.5,
   heatmap.type='zscore', norm.models=FALSE,
   limits=c(-3,3), detect.lim=1e-08, max.show=50){
-
+  cat("+ interpretor.model.plot\n")
   # ############################################################################
   ### some color pre-processing
   if (!color.scheme %in% row.names(brewer.pal.info)){
@@ -53,37 +49,35 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
 
   # ############################################################################
   # get model type from model
-  model.type <- paste(toupper(substring(model$model.type, 1, 1)),
-                      substring(model$model.type, 2), sep="", collapse=" ")
-  W.mat       <- getWeightsMatrix(model)
-  all.weights <- W.mat[union(row.names(feat), grep('META', row.names(model$W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
+  W.mat       <- getWeightsMatrix(siamcat@modelList@models)
+  all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep('META', row.names(W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
   rel.weights <- apply(all.weights, 2, function(x){x/sum(abs(x))})
   # ############################################################################
   ### preprocess models
   sel.idx <- select.features(weights=all.weights,
-                             model.type=model.type,
+                             model.type=siamcat@modelList@model.type,
                              consens.thres=consens.thres,
-                             label=label,
+                             label=siamcat@label,
                              norm.models=norm.models,
                              max.show=max.show)
   num.sel.f <- length(sel.idx)
   # ############################################################################
   # aggreate predictions and sort patients by score
   ### aggregate predictions of several models if more than one is given
-  mean.agg.pred <- rowMeans(pred)
+  mean.agg.pred <- rowMeans(siamcat@predMatrix)
   ### idx to sort samples according to their class membership and prediction score
-  srt.idx <- sort(label$label + mean.agg.pred, index.return=TRUE)$ix
+  srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return=TRUE)$ix
 
   # ############################################################################
   # prepare heatmap
   if (heatmap.type == 'zscore'){
-    img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
+    img.data <- prepare.heatmap.zscore(heatmap.data=siamcat@phyloseq@otu_table[sel.idx, srt.idx],
                                        limits=limits)
   } else if (heatmap.type == 'fc') {
-    img.data <- prepare.heatmap.fc(heatmap.data=feat[, srt.idx],
+    img.data <- prepare.heatmap.fc(heatmap.data=siamcat@phyloseq@otu_table[, srt.idx],
                                    sel.feat=names(sel.idx),
-                                   limits=limits, meta=meta,
-                                   label=label, detect.lim=detect.lim)
+                                   limits=limits, meta=siamcat@phyloseq@sam_data,
+                                   label=siamcat@label, detect.lim=detect.lim)
   } else {
     stop('unknown heatmap.type: ', heatmap.type)
   }
@@ -98,8 +92,8 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
                c(5, 6, 0, 7),
                c(0, 8, 0, 0))
   h_t <- 0.10
-  h_m <- ifelse(is.null(meta), 0.8, max(0.5, 0.7-0.01*dim(meta)[2]))
-  h_b <- ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
+  h_m <- ifelse(is.null(siamcat@phyloseq@sam_data), 0.8, max(0.5, 0.7-0.01*dim(siamcat@phyloseq@sam_data)[2]))
+  h_b <- ifelse(is.null(siamcat@phyloseq@sam_data), 0.1, 0.1+0.02*dim(siamcat@phyloseq@sam_data)[2])
   cat('Layout height values: ', h_t, ', ', h_m, ', ', h_b, '\n', sep='')
   layout(lmat, widths=c(0.14, 0.58, 0.1, 0.14), heights=c(h_t, h_m, h_b))
   par(oma=c(3, 4, 3, 4))
@@ -115,7 +109,7 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   # ############################################################################
   # Title of heatmap and brackets for classes
   par(mar=c(0, 4.1, 3.1, 5.1))
-  hm.label <- label$label[srt.idx]
+  hm.label <- siamcat@label@label[srt.idx]
   plot(NULL, type='n', xlim=c(0,length(hm.label)), xaxs='i', xaxt='n',
        ylim=c(-0.5,0.5), yaxs='i', yaxt='n', xlab='', ylab='', bty='n')
   ul <- unique(hm.label)
@@ -125,7 +119,7 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
     lines(c(idx[1]-0.8, idx[1]-0.8), c(-0.2, 0))
     lines(c(idx[length(idx)]-0.2, idx[length(idx)]-0.2), c(-0.2, 0))
     h <- (idx[1] + idx[length(idx)]) / 2
-    t <- gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[l]])
+    t <- gsub('_', ' ', names(siamcat@label@class.descr)[siamcat@label@class.descr==ul[l]])
     t <- paste(t, ' (n=', length(idx), ')', sep='')
     mtext(t, side=3, line=-0.5, at=h, cex=0.7, adj=0.5)
   }
@@ -159,17 +153,17 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   par(mar=c(0, 6.1, 3.1, 1.1))
   plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
        ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
-  mtext(paste0(model.type, ' model'), side=3, line=2, at=0.04, cex=.7, adj=0.5)
+  mtext(paste0(siamcat@modelList@model.type, ' model'), side=3, line=2, at=0.04, cex=.7, adj=0.5)
   mtext(paste('(|W| = ', num.sel.f, ')', sep=''), side=3, line=1, at=0.04, cex=0.7, adj=0.5)
 
   # ############################################################################
   # Feature weights ( model sensitive)
   plot.feature.weights(rel.weights=rel.weights, sel.idx=sel.idx,
-                       mod.type=model.type, label=label)
+                       mod.type=siamcat@modelList@model.type, label=label)
 
   # ############################################################################
   # Heatmap
-  if (model.type!='RandomForest'){
+  if (siamcat@modelList@model.type!='RandomForest'){
     plot.heatmap(image.data=img.data,
                  limits=limits,
                  color.scheme=color.scheme,
@@ -177,7 +171,7 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
   } else {
     auroc.effect <-  sapply(colnames(img.data),
         FUN=function(f){roc(predictor=img.data[,f],
-                        response=label$label, direction='<')$auc})
+                        response=label@label, direction='<')$auc})
     bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
     plot.heatmap(image.data=img.data,
                  limits=limits,
@@ -207,7 +201,7 @@ interpretor.model.plot <- function(feat, label, fn.plot, model, pred,
 }
 
 plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label){
-
+  cat("+ plot.feature.weights\n")
   if (mod.type != 'RandomForest'){
     relative.weights <- rel.weights[sel.idx,]
   } else {
@@ -246,9 +240,9 @@ plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label){
     }
 
     # label cancer/healthy
-    mtext(gsub('_', ' ', label$n.lab), side = 2,
+    mtext(gsub('_', ' ', label@n.lab), side = 2,
           at = floor(length(sel.idx)/2), line = -2)
-    mtext(gsub('_', ' ', label$p.lab), side = 4,
+    mtext(gsub('_', ' ', label@p.lab), side = 4,
           at = floor(length(sel.idx)/2), line = -2)
 
     mtext('effect size', side=3, line=1, at=(mx/2), cex=0.7, adj=1)
@@ -281,6 +275,7 @@ plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label){
 }
 
 plot.pred.and.meta <- function(prediction, label, meta=NULL){
+  cat("+ plot.pred.and.meta\n")
   par(mar=c(1.1, 4.1, 0.3, 5.1))
   img.data = as.matrix(prediction)
   colnames(img.data) = 'Classification result'
@@ -300,7 +295,7 @@ plot.pred.and.meta <- function(prediction, label, meta=NULL){
         xaxt='n', yaxt='n', xlab='', ylab='', bty='n')
   box(lwd=1)
   # add deliminator between the different classes
-  abline(v=length(which(label$label == label$negative.lab))/length(label$label),
+  abline(v=length(which(label@label == label@negative.lab))/length(label@label),
          col='red')
 
   meta.cex = max(0.3, 0.7 - 0.01*dim(img.data)[2])
@@ -322,6 +317,7 @@ plot.pred.and.meta <- function(prediction, label, meta=NULL){
 }
 
 plot.proportion.of.weights <- function(selected.weights, all.weights){
+  cat("+ plot.proportion.of.weights\n")
   par(mar=c(0.1, 6.1, 0, 1.1))
   boxplot(colSums(abs(selected.weights)) / colSums(abs(all.weights)), ylim=c(0,1))
   mtext('proportion of', side=1, line=1, at=1, adj=0.5, cex=0.7)
@@ -330,6 +326,7 @@ plot.proportion.of.weights <- function(selected.weights, all.weights){
 }
 
 plot.percentage.of.features <- function(selected.weights, all.weights){
+  cat("+ plot.percentage.of.features\n")
   par(mar=c(0.1, 6.1, 0, 1.1))
   boxplot(dim(selected.weights)[1] / colSums(all.weights != 0), ylim=c(0,1))
   mtext('percentage of', side=1, line=1, at=1, adj=0.5, cex=0.7)
@@ -338,6 +335,7 @@ plot.percentage.of.features <- function(selected.weights, all.weights){
 }
 
 plot.heatmap <- function(image.data, limits, color.scheme, effect.size){
+  cat("+ plot.heatmap\n")
   par(mar=c(0.1, 4.1, 0, 5.1))
   image(image.data, zlim=limits, col=color.scheme,
         xaxt='n', yaxt='n', xlab='', ylab='', bty='n')
@@ -362,17 +360,24 @@ plot.heatmap <- function(image.data, limits, color.scheme, effect.size){
 
 #not really working atm
 prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label, detect.lim){
-
+  cat("+ prepare.heatmap.fc\n")
   if (!any(grepl('META', sel.feat))){
     img.data <- apply(heatmap.data[sel.feat,], 1, FUN=function(x, label, detect.lim){
-          log10(x + detect.lim) - log10(median(x[label$n.idx]) + detect.lim)
+          log10(x + detect.lim) - log10(median(x[label@n.idx]) + detect.lim)
     }, label=label, detect.lim=detect.lim)
   } else {
-    img.data <- matrix(NA, nrow=length(sel.feat), ncol=dim(heatmap.data)[2])
+    img.data <- matrix(NA, nrow=length(sel.feat), ncol=ncol(heatmap.data))
     row.names(img.data) <- sel.feat
     for (f in sel.feat){
+      print(f)
       if (!grepl('META', f)){
-        median.ctr <- median(heatmap.data[f,label$n.idx])
+        print(1)
+        curRow <- heatmap.data[f,]
+        print(length(curRow))
+        print(length(label@n.idx))
+        curRowCur <- curRow[label@n.idx]
+        print("ok2")
+        median.ctr   <- median(heatmap.data[f,label@n.idx])
         img.data[f,] <- log10(heatmap.data[f,] + detect.lim) - log10(median.ctr + detect.lim)
       } else {
         meta.data <- meta[,grep(strsplit(f, '_')[[1]][2], colnames(meta), ignore.case=TRUE, value=TRUE)]
@@ -389,6 +394,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label,
 }
 
 prepare.heatmap.zscore <- function(heatmap.data, limits){
+    cat("+ prepare.heatmap.zscore\n")
     # data is transposed and transformed to feature z-scores for display
     img.data <- apply(heatmap.data, 1, FUN=function(x){(x-mean(x))/sd(x)})
     img.data[img.data < limits[1]] <- limits[1]
@@ -397,7 +403,7 @@ prepare.heatmap.zscore <- function(heatmap.data, limits){
 }
 
 select.features <- function(weights, model.type, consens.thres, norm.models, label, max.show){
-
+  cat("+ select.features\n")
   # for linear models, select those that have been selected more than consens.thres percent of the models
   if (model.type != 'RandomForest'){
     # normalize by overall model size
@@ -434,7 +440,7 @@ select.features <- function(weights, model.type, consens.thres, norm.models, lab
     # sort again by auroc
     # auroc.effect <-  sapply(row.names(feat)[sel.idx],
     #    FUN=function(f, feat, label){roc(predictor=feat[f,],
-    #                    response=label$label, direction='<')$auc}, feat=feat, label=label)
+    #                    response=label@label, direction='<')$auc}, feat=feat, label=label)
     #
     # if (length(sel.idx) > 50){
     #   cat("Restricting amount of features to be plotted to 50\n")
@@ -452,8 +458,9 @@ select.features <- function(weights, model.type, consens.thres, norm.models, lab
 }
 
 getWeightsMatrix <- function(models.list){
+  cat("+ getWeightsMatrix\n")
   W.mat <- as.numeric(models.list[[1]]$feat.weights)
-  for(i in grep("model.type",names(models.list), invert = T)[-1]){
+  for(i in 1:length(models.list)){
     W.mat <- cbind(W.mat,as.numeric(models.list[[i]]$feat.weights))
   }
   rownames(W.mat) <- models.list[[1]]$features

@@ -37,9 +37,9 @@ eval.predictions <- function(siamcat){
   # TODO compare header to label
   ### make sure that label and prediction are in the same order
   #stopifnot(all(names(label) %in% rownames(pred)) && all(rownames(pred) %in% names(label)))
-  m    <- match(names(siamcat@label@label), rownames(pred))
+  m    <- match(names(siamcat@label@label), rownames(siamcat@predMatrix))
   #cat(m, '\n')
-  pred <- pred[m,,drop=FALSE]
+  pred <- siamcat@predMatrix[m,,drop=FALSE]
   stopifnot(all(names(siamcat@label@label) == rownames(pred)))
 
   # ROC curve
@@ -76,17 +76,18 @@ eval.predictions <- function(siamcat){
     pr[1] = list(get.pr(ev[[1]]))
   }
   if (ncol(pred) > 1) {
-    return(list("roc.all" = rocc,
+    siamcat@evalData <- list("roc.all" = rocc,
                 "auc.all"=aucs,
                 "roc.average"=rocsumm,
                 "auc.average"=auroc,
                 "ev.list"=ev,
                 "pr.list"=pr,
-                "aucspr"=aucspr))
+                "aucspr"=aucspr)
   } else {
-    return(list("roc.average"=rocsumm,
+    siamcat@evalData <- list("roc.average"=rocsumm,
                 "auc.average"=auroc,
                 "ev.list"=ev,
-                "pr.list"=pr))
+                "pr.list"=pr)
   }
+  return(siamcat)
 }
