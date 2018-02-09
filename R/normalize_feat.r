@@ -11,7 +11,7 @@
 # GNU GPL 3.0
 ###
 
-#' @title Perform feature normalization according to specified parameters.
+#' @title Perform feature normalization
 #' @description This function performs feature normalization according to user-
 #'  specified parameters.
 #' @param feat feature object
@@ -42,7 +42,8 @@
 #'        to the denominator during standardization in order to avoid
 #'        underestimation of the standard deviation, defaults to 0.1
 #'  \item \code{"clr"} requires \code{log.n0}, which is the pseudocount to be
-#'        added before log-transformation, defaults to \code{1e-08}
+#'        added before log-transformation, defaults to \code{NULL} leading to the
+#'        estimation of \code{log.n0} from the data
 #'  \item \code{"log.std"} requires both \code{log.n0} and \code{sd.min.q}, using
 #'        the same default values
 #'  \item \code{"log.unit"} requires next to \code{log.n0} also the parameters
