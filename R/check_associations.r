@@ -274,7 +274,6 @@ plot.quantile.box <- function(data1, data2, label, col){
 }
 
 # quantile.rect plot
-### not working at the moment!!!!!
 plot.quantile.rect <- function(data1, data2, label, col){
 
   quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
