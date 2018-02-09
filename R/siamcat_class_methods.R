@@ -13,8 +13,8 @@
 #' @keywords filter.label
 #' @export
 #' @return siamcat an object of class \link{siamcat}
-#' 
-filter.label <- function(siamcat,ids){
+#'
+filter.label <- function(siamcat,ids, verbose=1){
   labels_new      <- new("label", label = siamcat@label@label[ids],
                          header = siamcat@label@header,
                          info = siamcat@label@info,
@@ -24,9 +24,9 @@ filter.label <- function(siamcat,ids){
                          p.lab = siamcat@label@p.lab)
   labels_new@n.idx <- labels_new@label == labels_new@negative.lab
   labels_new@p.idx <- labels_new@label == labels_new@positive.lab
-  
-  cat('Keeping labels of',length(labels_new@label),'sample(s).\n')
-  
+
+  if (verbose > 0) cat('Keeping labels of',length(labels_new@label),'sample(s).\n')
+
   siamcat@label <- labels_new
   return(siamcat)
 }
