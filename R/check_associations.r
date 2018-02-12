@@ -28,8 +28,7 @@
 #' features, showing the distribution of the log10-transformed abundances for
 #' both classes, and user-selected panels for the effect (AU-ROC, Prevalence
 #' Shift, and Fold Change)
-#' @param feat feature object
-#' @param label label object
+#' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot filename for the pdf-plot
 #' @param color.scheme valid R color scheme, defaults to \code{'RdYlBu'}
 #' @param alpha float, significance level, defaults to \code{0.05}
@@ -43,7 +42,7 @@
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
-check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
+check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
                                detect.lim=10^-8, pr.cutoff=10^-6, max.show=50,
                                plot.type="quantile.box", panels=c("fc", "auroc")){
@@ -61,6 +60,7 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   col.p <- color.scheme[length(color.scheme)-4]
   col.n <- color.scheme[1+4]
   col <- c(paste(col.n, '77', sep=''), paste(col.p, '77', sep=''), 'gray')
+  feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table))
 
   ### Define set of vectors that have the indeces and "description"
   # of all positively and negatively labeled training examples.
@@ -77,13 +77,13 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   ### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for each feature
   for (i in 1:nrow(feat)) {
     # pseudo-fold change as differential quantile area
-    q.p <- quantile(log10(feat[i,label$p.idx]+detect.lim), probs=seq(.1, .9, .05))
-    q.n <- quantile(log10(feat[i,label$n.idx]+detect.lim), probs=seq(.1, .9, .05))
-    fc[i]    <- sum(q.p - q.n)/length(q.p) #median(log10(feat[i,label$p.idx] + detect.lim)) - median(log10(feat[i,label$n.idx] + detect.lim))
+    q.p <- quantile(log10(feat[i,siamcat@label@p.idx]+detect.lim), probs=seq(.1, .9, .05))
+    q.n <- quantile(log10(feat[i,siamcat@label@n.idx]+detect.lim), probs=seq(.1, .9, .05))
+    fc[i]    <- sum(q.p - q.n)/length(q.p) #median(log10(feat[i,siamcat@label@p.idx] + detect.lim)) - median(log10(feat[i,siamcat@label@n.idx] + detect.lim))
     # wilcoxon
-    p.val[i] <- wilcox.test(feat[i,label$n.idx], feat[i,label$p.idx], exact = FALSE)$p.value
+    p.val[i] <- wilcox.test(feat[i,siamcat@label@n.idx], feat[i,siamcat@label@p.idx], exact = FALSE)$p.value
     # AU-ROC
-    temp  <- roc(predictor=feat[i,], response=label$label, ci=TRUE, direction='<')
+    temp  <- roc(predictor=feat[i,], response=siamcat@label@label, ci=TRUE, direction='<')
     if (temp$auc < 0.5){
       aucs[[i]] <- c(temp$ci)
       bcol[i] <- paste0(col.n, '77')
@@ -92,8 +92,8 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
       bcol[i] <- paste0(col.p, '77')
     }
     # prevalence shift
-    temp.n <- sum(feat[i,label$n.idx] >= pr.cutoff)/sum(label$n.idx)
-    temp.p <- sum(feat[i,label$p.idx] >= pr.cutoff)/sum(label$p.idx)
+    temp.n <- sum(feat[i,siamcat@label@n.idx] >= pr.cutoff)/sum(siamcat@label@n.idx)
+    temp.p <- sum(feat[i,siamcat@label@p.idx] >= pr.cutoff)/sum(siamcat@label@p.idx)
     pr.shift[i,] <- c(temp.p-temp.n, temp.n, temp.p)
   }
 
@@ -160,24 +160,24 @@ check.associations <- function(feat, label, fn.plot, color.scheme="RdYlBu",
   #   and stuff need also to be adjusted)
 
   # prepare margins
-  prepare.margins(row.names(feat)[idx], label$p.lab)
+  prepare.margins(row.names(feat)[idx], siamcat@label@p.lab)
 
   # get data
-  data.n <- log10(as.matrix(feat[idx, label$n.idx, drop=FALSE]) + detect.lim)
-  data.p <- log10(as.matrix(feat[idx, label$p.idx, drop=FALSE]) + detect.lim)
+  data.n <- log10(as.matrix(feat[idx, siamcat@label@n.idx, drop=FALSE]) + detect.lim)
+  data.p <- log10(as.matrix(feat[idx, siamcat@label@p.idx, drop=FALSE]) + detect.lim)
 
   if (!plot.type %in% c("bean", "box", "quantile.box", "quantile.rect")){
     warning("plot type has not been specified properly; continue with quantile.box")
     plot.type <- "quantile.box"
   }
   if (plot.type == "bean"){
-    plot.bean(data.n, data.p, label, indices=idx, col=col)
+    plot.bean(data.n, data.p, siamcat@label, indices=idx, col=col)
   } else if (plot.type == "box"){
-    plot.box(data.n, data.p, label, indices=idx, col=col)
+    plot.box(data.n, data.p, siamcat@label, indices=idx, col=col)
   } else if (plot.type == "quantile.box"){
-    plot.quantile.box(data.p, data.n, label, indices=idx, col=col)
+    plot.quantile.box(data.p, data.n, siamcat@label, indices=idx, col=col)
   } else if (plot.type == "quantile.rect"){
-    plot.quantile.rect(data.p, data.n, label, indices=idx, col=col)
+    plot.quantile.rect(data.p, data.n, siamcat@label, indices=idx, col=col)
   }
 
   # plot title
@@ -216,8 +216,8 @@ plot.bean <- function(data1, data2, label, indices, col){
   # create data.frame in format for beanplot
   bean.data <- data.frame()
   for (i in 1:nrow(data2)){
-    temp      <- as.data.frame(rbind(cbind(data1[i, ], rep(paste(label$p.lab, rownames(data1)[i]), length(data1[i, ]))),
-                                     cbind(data2[i, ], rep(paste(label$n.lab, rownames(data2)[i]), length((data2[i, ]))))))
+    temp      <- as.data.frame(rbind(cbind(data1[i, ], rep(paste(label@p.lab, rownames(data1)[i]), length(data1[i, ]))),
+                                     cbind(data2[i, ], rep(paste(label@n.lab, rownames(data2)[i]), length((data2[i, ]))))))
     temp[,1]  <- as.numeric(as.character(temp[,1]))
     bean.data <- rbind(bean.data, temp)
   }
@@ -240,8 +240,8 @@ plot.bean <- function(data1, data2, label, indices, col){
   tick.labels <- formatC(10^ticks, format='E', digits=0)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   label.plot.horizontal(data1, data2, rownames(data2),
-      x.suff=paste(' (', label$p.lab, ')', sep=''),
-      y.suff=paste(' (', label$n.lab, ')', sep=''), outer.diff = 1,
+      x.suff=paste(' (', label@p.lab, ')', sep=''),
+      y.suff=paste(' (', label@n.lab, ')', sep=''), outer.diff = 1,
       inner.diff.x = 0.15, inner.diff.y = -0.15)
 }
 
@@ -252,8 +252,8 @@ plot.box <- function(data1, data2, label, indices, col){
 
   plot.data <- data.frame()
   for (i in 1:nrow(data1)){
-    temp <- as.data.frame(rbind(cbind(data2[i,],rep(paste(label$n.lab, rownames(data2)[i]), length(data2[i,]))),
-                          cbind(data1[i,], rep(paste(label$p.lab, rownames(data1)[i]), length((data1[i,]))))))
+    temp <- as.data.frame(rbind(cbind(data2[i,],rep(paste(label@n.lab, rownames(data2)[i]), length(data2[i,]))),
+                          cbind(data1[i,], rep(paste(label@p.lab, rownames(data1)[i]), length((data1[i,]))))))
     temp[,1] <- as.numeric(as.character(temp[,1]))
     plot.data <- rbind(plot.data, temp)
   }
@@ -277,8 +277,8 @@ plot.box <- function(data1, data2, label, indices, col){
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   ### function label.plot.horizontal has been written in utils.r.
   label.plot.horizontal(data1, data2, rownames(data1),
-      x.suff=paste(' (', label$p.lab, ')', sep=''),
-      y.suff=paste(' (', label$n.lab, ')', sep=''),
+      x.suff=paste(' (', label@p.lab, ')', sep=''),
+      y.suff=paste(' (', label@n.lab, ')', sep=''),
       outer.diff = 2, inner.diff.x = 0, inner.diff.y = -1)
 }
 
@@ -339,8 +339,8 @@ plot.quantile.box <- function(data1, data2, label, indices, col){
   }
 
   label.plot.horizontal(data1, data2, rownames(data1),
-      x.suff=paste(' (', label$p.lab, ')', sep=''),
-      y.suff=paste(' (', label$n.lab, ')', sep=''),
+      x.suff=paste(' (', label@p.lab, ')', sep=''),
+      y.suff=paste(' (', label@n.lab, ')', sep=''),
       outer.diff = 1, inner.diff.x = 0.15, inner.diff.y = -0.15)
 }
 
@@ -410,8 +410,8 @@ plot.quantile.rect <- function(data1, data2, label, indices, col){
   #          pch = 18, cex = 1, pt.cex = c(0,0,0,0, min(35/nrow(x), 2.25)))
   #
   label.plot.horizontal(data1, data2, rownames(data1),
-      x.suff=paste(' (', label$p.lab, ')', sep=''),
-      y.suff=paste(' (', label$n.lab, ')', sep=''),
+      x.suff=paste(' (', label@p.lab, ')', sep=''),
+      y.suff=paste(' (', label@n.lab, ')', sep=''),
       outer.diff = 1, inner.diff.x = -0.3, inner.diff.y = -0.6)
 }
 
