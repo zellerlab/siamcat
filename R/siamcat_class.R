@@ -64,7 +64,8 @@ siamcat <- function(...){
                                                            num.folds=0)
   if(is.null(arglist$norm.param)) arglist$norm.param <- list(NULL)
   
-  if(is.null(arglist$phyloseq)) ps <- phyloseq(arglist$otu_table, arglist$sample_data, arglist$phylo, 
+  ps <- arglist$phyloseq
+  if(is.null(ps)) ps <- phyloseq(arglist$otu_table, arglist$sample_data, arglist$phylo, 
                  arglist$taxonomyTable, arglist$XStringSet) 
   
   sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps, predMatrix = arglist$predMatrix,

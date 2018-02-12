@@ -35,7 +35,7 @@
 #'}
 interpretor.model.plot <- function(siamcat, fn.plot,
   color.scheme='BrBG', consens.thres=0.5,
-  heatmap.type='zscore', norm.models=FALSE,
+  heatmap.type=c('zscore',"fc"), norm.models=FALSE,
   limits=c(-3,3), detect.lim=1e-08, max.show=50){
   cat("+ interpretor.model.plot\n")
   # ############################################################################
@@ -119,7 +119,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
     lines(c(idx[1]-0.8, idx[1]-0.8), c(-0.2, 0))
     lines(c(idx[length(idx)]-0.2, idx[length(idx)]-0.2), c(-0.2, 0))
     h <- (idx[1] + idx[length(idx)]) / 2
-    t <- gsub('_', ' ', names(siamcat@label@class.descr)[siamcat@label@class.descr==ul[l]])
+    t <- gsub('_', ' ', names(siamcat@label@info$class.descr)[siamcat@label@info$class.descr==ul[l]])
     t <- paste(t, ' (n=', length(idx), ')', sep='')
     mtext(t, side=3, line=-0.5, at=h, cex=0.7, adj=0.5)
   }
@@ -159,7 +159,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
   # ############################################################################
   # Feature weights ( model sensitive)
   plot.feature.weights(rel.weights=rel.weights, sel.idx=sel.idx,
-                       mod.type=siamcat@modelList@model.type, label=label)
+                       mod.type=siamcat@modelList@model.type, label=siamcat@label)
 
   # ############################################################################
   # Heatmap
@@ -194,8 +194,8 @@ interpretor.model.plot <- function(siamcat, fn.plot,
   # ############################################################################
   # Metadata and prediction
   plot.pred.and.meta(prediction=mean.agg.pred[srt.idx],
-                     label=label,
-                     meta=meta[srt.idx,])
+                     label=siamcat@label,
+                     meta=siamcat@phyloseq@sam_data[srt.idx,])
 
   tmp <- dev.off()
 }
@@ -363,7 +363,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label,
   cat("+ prepare.heatmap.fc\n")
   if (!any(grepl('META', sel.feat))){
     img.data <- apply(heatmap.data[sel.feat,], 1, FUN=function(x, label, detect.lim){
-          log10(x + detect.lim) - log10(median(x[label@n.idx]) + detect.lim)
+          log10(x + detect.lim) - log10(median(as.numeric(x[label@n.idx])) + detect.lim)
     }, label=label, detect.lim=detect.lim)
   } else {
     img.data <- matrix(NA, nrow=length(sel.feat), ncol=ncol(heatmap.data))
@@ -371,17 +371,12 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label,
     for (f in sel.feat){
       print(f)
       if (!grepl('META', f)){
-        print(1)
-        curRow <- heatmap.data[f,]
-        print(length(curRow))
-        print(length(label@n.idx))
-        curRowCur <- curRow[label@n.idx]
-        print("ok2")
-        median.ctr   <- median(heatmap.data[f,label@n.idx])
+        median.ctr   <- median(as.numeric(heatmap.data[f,label@n.idx]))
         img.data[f,] <- log10(heatmap.data[f,] + detect.lim) - log10(median.ctr + detect.lim)
       } else {
         meta.data <- meta[,grep(strsplit(f, '_')[[1]][2], colnames(meta), ignore.case=TRUE, value=TRUE)]
         # transform metadata to zscores
+        meta.data <- apply(meta.data,c(1,2),as.numeric)
         meta.data <- (meta.data - mean(meta.data, na.rm=TRUE))/sd(meta.data, na.rm=TRUE)
         img.data[f,] <- meta.data[colnames(heatmap.data)]
       }
