@@ -4,23 +4,15 @@
 \alias{interpretor.model.plot}
 \title{Model Interpretation Plot}
 \usage{
-interpretor.model.plot(feat, label, fn.plot, model, pred, meta = NULL,
-  color.scheme = "BrBG", consens.thres = 0.5, heatmap.type = "zscore",
+interpretor.model.plot(siamcat, fn.plot, color.scheme = "BrBG",
+  consens.thres = 0.5, heatmap.type = c("zscore", "fc"),
   norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-08,
   max.show = 50)
 }
 \arguments{
-\item{feat}{the feature object containing the normalized features for the \code{"zscore"} heatmap and the features \emph{before} normalization and addition of the metadata for the \code{"fc"} heatmap}
-
-\item{label}{a label object}
+\item{siamcat}{object of class \link{siamcat-class}}
 
 \item{fn.plot}{string, filename for the pdf-plot}
-
-\item{model}{matrix containing the feature weights for every CV fold/repetition}
-
-\item{pred}{matrix containing the model predictions for every CV repetition}
-
-\item{meta}{a metadata object}
 
 \item{color.scheme}{color scheme for the heatmap, defaults to =\code{"BrBG"}}
 

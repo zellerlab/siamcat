@@ -94,36 +94,20 @@
     <p>This function takes the test set instances and the model trained by plm.trainer in order to predict the classes.</p>
     
 
-    <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='kw'>data.split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>models.list</span>)</pre>
+    <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>siamcat</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>features object</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
-      <th>label</th>
-      <td><p>label object</p></td>
-    </tr>
-    <tr>
-      <th>data.split</th>
-      <td><p>filename containing the test samples or list of test instances produced by data.splitter(), defaults to <code>NULL</code> leading to testing on the complete dataset</p></td>
-    </tr>
-    <tr>
-      <th>models.list</th>
-      <td><p>list of models trained by plm.trainer</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>list containing the precitions</p><ul>
-<li><p><code>$pred</code>;</p></li>
-<li><p><code>$mat</code></p></li>
-</ul>
-
     
 
   </div>
@@ -131,9 +115,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

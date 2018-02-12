@@ -2,25 +2,32 @@
 % Please edit documentation in R/select_samples.r
 \name{select.samples}
 \alias{select.samples}
-\title{Select samples based on siamcat@phyloseq@sam_datadata}
+\title{Select samples based on meta-data}
 \usage{
-select.samples(siamcat, filter, allowed.set = NULL, allowed.range = NULL)
+select.samples(siamcat, filter, allowed.set = NULL, allowed.range = NULL,
+  verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat}}
 
-\item{filter}{name of the column from siamcat@phyloseq@sam_datadata on which the selection should be done}
+\item{filter}{string, name of the meta variable on which the selection
+should be done}
 
 \item{allowed.set}{a vector of allowed values}
 
 \item{allowed.range}{a range of allowed values}
+
+\item{verbose, }{control output: \code{0} for no output at all, \code{1}
+for standard information, defaults to
+\code{1}}
 }
 \value{
 siamcat an object of class \link{siamcat}
 }
 \description{
-This functions filters features, labels, and siamcat@phyloseq@sam_datadata based on a specific column in the siamcat@phyloseq@sam_datadata.
-Provided with a column in the siamcat@phyloseq@sam_datadata and a range or a set of allowed values, the function will return the labels, siamcat@phyloseq@sam_datadata, and features for the samples matching the allowed range or set.
+This functions filters features, labels, and metadata based on
+       a specific column in the metadata. Provided with a column in the
+       metadata and a range or a set of allowed values, the function will
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}
