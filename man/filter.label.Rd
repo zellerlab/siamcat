@@ -4,7 +4,7 @@
 \alias{filter.label}
 \title{Filter samples from \code{siamcat@label}}
 \usage{
-filter.label(siamcat, ids)
+filter.label(siamcat, ids, verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat}}

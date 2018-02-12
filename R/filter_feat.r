@@ -75,16 +75,16 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
     rownames(siamcat@phyloseq@otu_table) == 'UNCLASSIFIED' | rownames(siamcat@phyloseq@otu_table) == 'unclassified' |
     rownames(siamcat@phyloseq@otu_table) == 'UNASSIGNED' | rownames(siamcat@phyloseq@otu_table) == 'unassigned'
     if (any(unm.idx)) {
-      f.idx <- union(f.idx,unm.idx)
+      f.idx <- f.idx[-which(f.idx%in%unm.idx)]
       if (verbose > 1) cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads\n', sep='')
     } else {
       if (verbose > 1) cat('tried to remove unmapped reads, but could not find them. Continue anyway.\n')
     }
   }
-  keep.idx <- which(!(1:nrow(siamcat@phyloseq@otu_table))%in%f.idx)
   if (verbose > 1) cat('Removed ', length(f.idx)-sum(unm.idx), ' features whose values did not exceed ',
     cutoff, ' in any sample (retaining ', length(keep.idx), ')\n', sep='')
-  f.names <- rownames(siamcat@phyloseq@otu_table)[keep.idx]
+  f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
   siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
+  print(siamcat@phyloseq)
   return(siamcat)
 }

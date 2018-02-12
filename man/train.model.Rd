@@ -9,6 +9,8 @@ train.model(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll",
   modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL)
 }
 \arguments{
+\item{siamcat}{object of class \link{siamcat-class}}
+
 \item{method}{string, specifies the type of model to be trained, may be one of these: \code{c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")}}
 
 \item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
@@ -20,17 +22,9 @@ train.model(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll",
 \item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that should be present in the model (only for \code{"lasso"}, \code{"ridge"}, and \code{"enet"}}
 
 \item{param.set}{a list of extra parameters for mlr run, may contain: \code{cost} - for lasso_ll and ridge_ll; \code{alpha} for enet and \code{ntree, mtry} for RandomForrest}
-
-\item{feat}{feature object}
-
-\item{label}{label object}
 }
 \value{
-list containing \itemize{
- \item \code{models.list} the list of trained models for each cross-validation fold
- \item \code{out.matrix} ?
- \item \code{W.mat} ?
-}
+object of class \link{siamcat-class}
 }
 \description{
 This function trains the a machine learning model on the training data

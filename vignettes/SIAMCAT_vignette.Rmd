@@ -55,16 +55,16 @@ siamcat <- filter.feat(siamcat,
 ### Association/Confounder Testing
 
 ```{r}
-# confounder.check(meta=meta, label=label, fn.plot=paste0(output.dir, 'conf_check.pdf'))
+confounder.check(siamcat, fn.plot='conf_check.pdf')
 ```
 
 ```{r}
-# check.associations(feat = feat.filtered,
-#                    label = label, sort.by='fc',
-#                    fn.plot = paste0(output.dir, '/assoc.pdf'), 
-#                    alpha = 0.05, mult.corr = "fdr",
-#                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
-#                    panels=c("fc", "prevalence", "auroc"))
+check.associations(siamcat,
+                   sort.by='fc',
+                   fn.plot = 'assoc.pdf',
+                   alpha = 0.05, mult.corr = "fdr",
+                   detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
+                   panels=c("fc", "prevalence", "auroc"))
 ```
 
 ### Data Normalization

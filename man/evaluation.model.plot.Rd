@@ -4,14 +4,10 @@
 \alias{evaluation.model.plot}
 \title{Model Evaluation Plot}
 \usage{
-evaluation.model.plot(label, pred, eval.data, fn.plot)
+evaluation.model.plot(siamcat, fn.plot)
 }
 \arguments{
-\item{label}{a label object}
-
-\item{pred}{matrix containing the model predictions for every CV repetition}
-
-\item{eval.data}{list of evaluation results produced by \link{eval.results}}
+\item{siamcat}{object of class \link{siamcat-class}}
 
 \item{fn.plot}{string, filename for the pdf-plot}
 }

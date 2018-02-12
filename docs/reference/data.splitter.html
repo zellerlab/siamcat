@@ -94,15 +94,15 @@
     <p>This function prepares the cross-validation by splitting the data into <code>num.folds</code> training and test folds for <code>num.resample</code> times.</p>
     
 
-    <pre class="usage"><span class='fu'>data.splitter</span>(<span class='no'>label</span>, <span class='kw'>num.folds</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>num.resample</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>inseparable</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>meta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>data.splitter</span>(<span class='no'>siamcat</span>, <span class='kw'>num.folds</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>num.resample</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>inseparable</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>label</th>
-      <td><p>label object</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>num.folds</th>
@@ -120,21 +120,11 @@
       <th>inseparable</th>
       <td><p>column index or column name of metadata variable, defaults to <code>NULL</code></p></td>
     </tr>
-    <tr>
-      <th>meta</th>
-      <td><p>metadata object, only needed when <code>inseparable</code> is given, defaults to <code>NULL</code></p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list containing the indices of the training and test folds and the parameters of the splits:</p><ul>
-<li><p><code>$training.folds</code> nested list, containing for <code>length(num.folds)</code> the sample names of the <code>length(num.resample)</code> training folds;</p></li>
-<li><p><code>$test.folds</code> nested list, containing for <code>length(num.folds)</code> the sample names of the <code>length(num.resample)</code> test folds;</p></li>
-<li><p><code>$num.resample</code> = number of repeated samplings;</p></li>
-<li><p><code>$num.folds</code> = number of folds</p></li>
-</ul>
-
+    <p>object of class <a href='siamcat-class.html'>siamcat-class</a></p>
     
 
   </div>
