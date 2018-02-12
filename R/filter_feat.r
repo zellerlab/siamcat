@@ -69,7 +69,7 @@ filter.feat <- function(siamcat, filter.method=abundance, cutoff=0.001, recomp.p
     rownames(siamcat@phyloseq@otu_table) == 'UNCLASSIFIED' | rownames(siamcat@phyloseq@otu_table) == 'unclassified' | 
     rownames(siamcat@phyloseq@otu_table) == 'UNASSIGNED' | rownames(siamcat@phyloseq@otu_table) == 'unassigned'
     if (any(unm.idx)) {
-      f.idx <- union(f.idx,unm.idx)
+      f.idx <- f.idx[-which(f.idx%in%unm.idx)]
       cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads\n', sep='')
     } else {
       cat('tried to remove unmapped reads, but could not find them. Continue anyway.\n')
