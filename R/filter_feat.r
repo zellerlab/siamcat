@@ -75,10 +75,10 @@ filter.feat <- function(siamcat, filter.method=abundance, cutoff=0.001, recomp.p
       cat('tried to remove unmapped reads, but could not find them. Continue anyway.\n')
     }
   }
-  keep.idx <- which(!(1:nrow(siamcat@phyloseq@otu_table))%in%f.idx)
-  cat('Removed ', length(f.idx)-sum(unm.idx), ' features whose values did not exceed ', cutoff,
-      ' in any sample (retaining ', length(keep.idx), ')\n', sep='')
-  f.names <- rownames(siamcat@phyloseq@otu_table)[keep.idx]
+  cat('Removed ', nrow(siamcat@phyloseq@otu_table)-length(f.idx)-sum(unm.idx), ' features whose values did not exceed ', cutoff,
+      ' in any sample (retaining ', length(f.idx), ')\n', sep='')
+  f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
   siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
+  print(siamcat@phyloseq)
   return(siamcat)
 }
