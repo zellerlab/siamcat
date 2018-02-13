@@ -40,7 +40,7 @@ siamcat <- validate.data(siamcat)
 siamcat <- select.samples(siamcat, 
                           filter='age', 
                           allowed.set=NULL, 
-                          allowed.range=c(0,120))
+                          allowed.range=c(0,120), verbose=1)
 
 ```
 
