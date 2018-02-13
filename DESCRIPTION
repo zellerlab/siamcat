@@ -19,7 +19,11 @@ Depends:
     pROC,
     mlr,
     PRROC,
-    phyloseq
+    phyloseq,
+    viridis,
+    gridExtra,
+    gridBase,
+    grid
 Imports:
     optparse,
     colorRamps,

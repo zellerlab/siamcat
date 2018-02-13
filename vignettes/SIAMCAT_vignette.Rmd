@@ -15,9 +15,9 @@ vignette: >
 
 ```{r message=FALSE, warning=FALSE}
 library(SIAMCAT)
-fn.in.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.feat  <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
 fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
-fn.in.meta <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
 ```
 
 ### Read/Validate/Filter Data
@@ -81,7 +81,7 @@ siamcat <- normalize.feat(siamcat,
 pred.names = strsplit(c('fobt'), ',', fixed=TRUE)[[1]]
 siamcat <- add.meta.pred(siamcat, 
                           pred.names = pred.names, 
-                          std.meta = TRUE)
+                          std.meta = TRUE,verbose=3)
 ```
 ### vignette for cv/holdout
 ### int verbose for each function (0,5) with def=1

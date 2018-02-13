@@ -20,13 +20,15 @@
 #' @export
 #' @return features object with added metadata
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
-
+  if(verbose>2) cat("+ starting add.meta.pred\n")
+  s.time <- proc.time()[3]
   ### add metadata as predictors to the feature matrix
   cnt <- 0
 
   if (pred.names != '' && !is.null(pred.names)) {
-
+    if(verbose>2) cat("+ starting to add metadata predictors\n")
     for (p in pred.names) {
+      if(verbose>2) cat("+++ adding metadata predictor:",p,"\n")
       if(!p%in%colnames(siamcat@phyloseq@sam_data)) stop("There is no metadata variable called ",p,"\n")
       idx <- which(colnames(siamcat@phyloseq@sam_data) == p)
       if(length(idx) != 1) stop(p, "matches multiple columns in the metada\n")
@@ -58,6 +60,7 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
       if (verbose > 0) cat('Not adding any of the meta-variables as predictor to the feature matrix\n')
   }
   stopifnot(all(!is.na(siamcat@phyloseq@otu_table)))
-
+  e.time <- proc.time()[3]
+  if(verbose>2) cat("+ finished add.meta.pred in",e.time-s.time,"s\n")
   return(siamcat)
 }
