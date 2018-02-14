@@ -21,7 +21,9 @@
 #' @param fn.in.feat name of the tsv file containing features
 #' @export
 #' @return matrix containing features from the file
-read.features <- function(fn.in.feat){
+read.features <- function(fn.in.feat, verbose=0){
+  if(verbose>1) cat("+ starting read.features\n")
+  s.time <- proc.time()[3]
   if(is.null(fn.in.feat))      stop("Filename for features file not provided!\n")
   if(!file.exists(fn.in.feat)) stop("Feature file ", fn.in.feat, " does not exist!\n")
 
@@ -33,6 +35,8 @@ read.features <- function(fn.in.feat){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
+  e.time <- proc.time()[3]
+  if(verbose>0) cat("+ finished read.features in",e.time-s.time,"s\n")
   invisible(otu_table(feat,taxa_are_rows=TRUE))
 }
 
