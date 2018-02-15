@@ -5,5 +5,5 @@
 # GNU GPL 3.0
 ###
 
-dependecies.list <- list.files("dependencies/",pattern = "*.gz")
+dependecies.list <- list.files("../dependencies/",pattern = "*.gz")
 sapply(dependecies.list, install.packages,repos=NULL, type="source")
