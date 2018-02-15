@@ -41,15 +41,14 @@ start.time  <- proc.time()[1]
 #### read features and metadata
 feat        <- read.features(opt$feat_in)
 meta        <- read.meta( opt$metadata_in)
-stopifnot(all(colnames(feat) == rownames(meta)))
+siamcat <- siamcat(feat,meta)
 
 pred.names <- strsplit(opt$pred_names, ',', fixed=TRUE)[[1]]
-feat       <- add.meta.pred(feat=feat, 
-	                        meta=meta,
+siamcat     <- add.meta.pred(siamcat,
 	                        pred.names=pred.names,
 	                        std.meta=opt$std_meta)
 
 ### write combined feature table
-write.table(feat, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@otu_table, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 cat('\nSuccessfully added metadata to features in ', proc.time()[1] - start.time, ' seconds\n', sep='')

@@ -35,13 +35,9 @@ filter.label <- function(siamcat,ids, verbose=1){
 #' @rdname show-methods
 setMethod("show", "siamcat", function(object){
   cat("siamcat-class object", fill=TRUE)
-  cat(paste("label()                label:           ",sum(object@label@n.idx),
+  if(!is.null(object@label)) cat(paste("label()                label:           ",sum(object@label@n.idx),
             object@label@n.lab,"and",sum(object@label@p.idx),object@label@p.lab,"samples", sep = " "), fill = TRUE)
-  if(object@modelList@model.type!="empty"){
-    cat(paste("modelList()            modelList:       ",length(object@modelList@models),
-              object@modelList@model.type,"models", sep = " "), fill = TRUE)
-  }
-  if(object@modelList@model.type!="empty"){
+  if(!is.null(object@modelList)){
     cat(paste("modelList()            modelList:       ",length(object@modelList@models),
               object@modelList@model.type,"models", sep = " "), fill = TRUE)
   }

@@ -103,31 +103,7 @@ get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL){
       fold.name <- as.list(rep('whole data set', length(model@models)))
       fold.exm.idx <- rep(list(names(label@label)), length(model@models))
     }
-  } else {
-    if (class(dataSplit) == 'character') {
-      # read in file containing the training instances
-      num.runs      <- 0
-      con           <- file(dataSplit, 'r')
-      input         <- readLines(con)
-      close(con)
-      #print(length(input))
-
-      num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
-      for (i in 1:length(input)) {
-        l               <- input[[i]]
-        if (substr(l, 1, 1) != '#') {
-          num.runs                 <- num.runs + 1
-          s                        <- unlist(strsplit(l, '\t'))
-          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
-          ### Note that the %in%-operation is order-dependend.
-          fold.exm.idx[[num.runs]] <- which(names(label@label) %in% as.vector(s[2:length(s)]))
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), paste0(mode, 'ing'), 'examples\n')
-          #      cat(fold.exm.idx[[num.runs]], '\n\n')
-          #    } else {
-          #      cat('Ignoring commented line:', l, '\n\n')
-        }
-      }
-    } else if (class(dataSplit) == 'dataSplit') {
+  } else if (class(dataSplit) == 'dataSplit') {
       # use training samples as specified in training.folds in the list
       num.folds <- dataSplit@num.folds
       num.runs <- 0
@@ -147,7 +123,6 @@ get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL){
     } else {
       stop('Wrong input for training samples!...')
     }
-  }
   fold.name  <- unlist(fold.name)
   stopifnot(length(fold.name) == num.runs)
   stopifnot(length(fold.exm.idx) == num.runs)

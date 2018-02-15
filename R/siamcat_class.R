@@ -48,7 +48,7 @@ siamcat <- function(...){
   names(arglist) <- NULL
   
   # ignore all but component data classes.
-  component_classes <- get.component.classes()
+  component_classes <- get.component.classes("both")
   
   for(argNr in 1:length(arglist)){
     classOfArg <- class(arglist[[argNr]])[1]
@@ -56,20 +56,16 @@ siamcat <- function(...){
       names(arglist)[argNr] <- classOfArg
     }
   }
-  if(is.null(arglist$predMatrix))  arglist$predMatrix <- matrix(0)
-  if(is.null(arglist$modelList))  arglist$modelList <- new("modelList",models=list(NULL), model.type="empty")
-  if(is.null(arglist$dataSplit))  arglist$dataSplit <- new("dataSplit",training.folds=list(NULL),
-                                                           test.folds=list(NULL),
-                                                           num.resample=0,
-                                                           num.folds=0)
-  if(is.null(arglist$norm.param)) arglist$norm.param <- list(NULL)
   
-  ps <- arglist$phyloseq
-  if(is.null(ps)) ps <- phyloseq(arglist$otu_table, arglist$sample_data, arglist$phylo, 
-                 arglist$taxonomyTable, arglist$XStringSet) 
+  if(is.null(arglist$phyloseq)){
+    arglistphyloseq <- arglist[sapply(arglist, is.component.class, "phyloseq")]
+    arglist$phyloseq <- do.call("new", c(list(Class="phyloseq"), arglistphyloseq))
+  }
   
-  sc <- new("siamcat", modelList = arglist$modelList, phyloseq = ps, predMatrix = arglist$predMatrix,
-                       orig_feat = arglist$otu_table, label = arglist$label, norm.param = arglist$norm.param)
+  arglist     <- arglist[sapply(arglist, is.component.class, "siamcat")]
+  sc          <- do.call("new", c(list(Class="siamcat"), arglist))
+    #new("siamcat", modelList = arglist$modelList, phyloseq = ps, predMatrix = arglist$predMatrix,
+     #                  orig_feat = arglist$otu_table, label = arglist$label, norm.param = arglist$norm.param)
   return(sc)
 }
 
@@ -77,12 +73,27 @@ siamcat <- function(...){
 #' Show the component objects classes and slot names.
 #' @usage get.component.classes()
 #' @keywords internal
-get.component.classes <- function(){
+get.component.classes <- function(class){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat
-  component.classes <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq", "modelList",
-                                "orig_feat", "label", "list", "dataSplit","phyloseq")	#slot names
-  names(component.classes) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet", "modelList",
-                                 "orig_feat", "label","norm.param", "dataSplit", "phyloseq") #class names
-  return(component.classes)
+  component.classes.siamcat <- c("modelList", "orig_feat", "label", "list", "dataSplit","phyloseq")	#slot names
+  names(component.classes.siamcat) <- c("modelList", "orig_feat", "label","norm.param", "dataSplit", "phyloseq") #class names
+  
+  component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")	#slot names
+  names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names
+  
+  if(class=="siamcat"){
+    return(component.classes.siamcat)
+  }else if(class=="phyloseq"){
+    return(component.classes.phyloseq)
+  }else if(class=="both"){
+    return(c(component.classes.siamcat,component.classes.phyloseq))
+  }
+}
+
+# Returns TRUE if x is a component class, FALSE otherwise.
+# This shows up over and over again in data infrastructure
+#' @keywords internal
+is.component.class = function(x,class){
+  inherits(x, get.component.classes(class))
 }

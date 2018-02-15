@@ -33,33 +33,29 @@ cat("=== Paramaters of the run:\n\n")
 cat('label_in           =', opt$label_in, '\n')
 cat('pred               =', opt$pred, '\n')
 cat('plot               =', opt$plot, '\n')
-cat('write_eval_results =', opt$write_eval_results, '\n')
 cat('output_results     =', opt$output_results, '\n')
 cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
 start.time <- proc.time()[1]
 label      <- read.labels(opt$label_in)
-
+siamcat <- siamcat(label)
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)
+siamcat@predMatrix <- pred
 
-eval.data <-  eval.predictions(label=label,
-                               pred=pred)
+siamcat <-  eval.predictions(siamcat)
 
-evaluation.model.plot(label=label,
-                      pred=pred, 
-                      eval.data=eval.data,
-                      fn.plot=opt$plot)
+evaluation.model.plot(siamcat, fn.plot=opt$plot)
 
 
 # The following code writes calculated auroc and aupr- values into a file for testing.
 if (opt$write_eval_results == TRUE){
   # Testing only makes sense if dim(pred)[2] > 1
   if(ncol(pred) == 1){
-    write.table(t(aucs), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=FALSE, row.names="auroc values")
-    write.table(t(aucspr), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=TRUE, row.names="auprc values")
+    if(!is.null(siamcat@evalData$auc.all)) write.table(t(aucs), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=FALSE, row.names="auroc values")
+    write.table(t(siamcat@evalData$auc.average), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=TRUE, row.names="auprc values")
   }else{
     cat("Only one prediction available, ignoring the write_eval_results option.\n")
   }

@@ -67,15 +67,33 @@ if (toupper(opt$train_sets)=='NULL' || toupper(opt$train_sets)=='NONE' || touppe
 start.time <- proc.time()[1]
 set.seed(r.seed)
 
-
-
 ### read training data
 # features
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
+siamcat      <- siamcat(feat,label)
+num.runs      <- 1
+con           <- file(opt$train_sets, 'r')
+input         <- readLines(con)
+close(con)
+num.folds    <- 2
+fold.name = list()
+fold.exm.idx = list()
+num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
+for (i in 1:length(input)) {
+        l               <- input[[i]]
+        if (substr(l, 1, 1) != '#') {
+          num.runs                 <- num.runs + 1
+          s                        <- unlist(strsplit(l, '\t'))
+          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
+          ### Note that the %in%-operation is order-dependend.
+          fold.exm.idx[[num.runs]] <- which(names(label@label) %in% as.vector(s[2:length(s)]))
+          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), paste0(mode, 'ing'), 'examples\n')
+        }
+}
+siamcat@dataSplit <- list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds)
 
-models.list  <- train.model(feat = feat,
-                       label = label,
+siamcat  <- train.model(siamcat
                        method = opt$method,
                        data.split=opt$train_sets,
                        stratify = opt$stratify,
@@ -83,7 +101,7 @@ models.list  <- train.model(feat = feat,
                        min.nonzero.coeff = opt$min_nonzero_coeff,
                        param.set = opt$param_set)
 
-
-save(models.list , file=opt$mlr_models_list)
+modelsList <- siamcat@modelList
+save(modelsList , file=opt$mlr_models_list)
 cat('\n++++++++++++++++++++\nSuccessfully trained models in ', proc.time()[1] - start.time,
     ' seconds\n++++++++++++++++++++\n', sep='')

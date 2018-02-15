@@ -43,30 +43,43 @@ if (is.null(opt$test_sets)) {
   cat('fn.test.sample not specified: applying model(s) on whole data set\n')
 }
 
-feat  <- read.features(opt$feat_in)
-
+feat       <- read.features(opt$feat_in)
 label      <- read.labels(opt$label_in, feat)
-
+siamcat    <- siamcat(feat,label)
 
 start.time   <- proc.time()[1]
 load(opt$mlr_models_list)
 
-pred <- make.predictions(feat=feat,
-                         label=label,
-                         data.split=opt$test_sets,
-                         models.list=models.list)
+num.runs      <- 1
+con           <- file(opt$test_sets, 'r')
+input         <- readLines(con)
+close(con)
+num.folds    <- 2
+fold.name = list()
+fold.exm.idx = list()
+num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
+for (i in 1:length(input)) {
+        l               <- input[[i]]
+        if (substr(l, 1, 1) != '#') {
+          num.runs                 <- num.runs + 1
+          s                        <- unlist(strsplit(l, '\t'))
+          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
+          ### Note that the %in%-operation is order-dependend.
+          fold.exm.idx[[num.runs]] <- which(names(label@label) %in% as.vector(s[2:length(s)]))
+          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), paste0(mode, 'ing'), 'examples\n')
+        }
+}
+siamcat@dataSplit <- list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds)
+
+siamcat <- make.predictions(siamcat)
 
 
 ### save prediction
-pred.header <- paste('#Predictions for ', label$positive.label, ':', label$p.lab,
-  ' [', label$header, ']', sep='')
+pred.header <- paste('#Predictions for ', label@positive.label, ':', label@p.lab,
+  ' [', label@header, ']', sep='')
 write(pred.header, file=opt$pred, append=FALSE)
 #print(pred$pred)
-if (length(unique(names(pred$pred))) < length(pred$pred)) {
-  suppressWarnings(write.table(pred$mat, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
-} else {
-  suppressWarnings(write.table(pred$pred, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
-}
+suppressWarnings(write.table(siamcat@predMatrix, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 cat('\nSaved all predictions\n')
 
 cat('\nSuccessfully made preictions with the model in ' , proc.time()[1] - start.time,
