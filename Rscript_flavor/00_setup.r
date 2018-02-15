@@ -30,5 +30,9 @@ package.path <- if(length(args)==0) "./SIAMCAT_0.4.0.tar.gz" else args[1]
 
 notInst      <- which(!package.list%in%installed.packages())
 if(length(notInst)>0) install.packages(package.list[notInst], repos="http://ftp.gwdg.de/pub/misc/cran/")
+if(!"phyloseq"%in%installed.packages()){
+      source('http://bioconductor.org/biocLite.R')
+      biocLite('phyloseq')
+}
 
 if(!"SIAMCAT"%in%installed.packages()) install.packages(package.path, repos=NULL, type="source")
