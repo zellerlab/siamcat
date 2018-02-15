@@ -2,6 +2,8 @@ image: r-base
 before_script:
   - R CMD build ./ --no-build-vignettes
   - mv SIAMCAT*.tar.gz dependencies/.
+  - cd dependencies
+  - Rscript ../Rscript_flavor/00_setup.r
   - cd Rscript_flavor
   - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz
   - tar -zxf siamcat_test_data.tar.gz && rm siamcat_test_data.tar.gz
@@ -9,7 +11,6 @@ before_script:
 test:
   stage: test
   script:
-    - Rscript 00_setup.r
     - Rscript 01_validate_data.r --metadata_in num_metadata_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_genus.tsv --metadata_out valMetaData.tsv --label_in label_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_genus.tsv --label_out valLabel.tsv --feat_in feat_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_genus.tsv --feat_out valFeat.tsv
     - Rscript 02_select_samples.r --metadata_in valMetaData.tsv --metadata_out valMetaData_sel.tsv --label_in valLabel.tsv --label_out valLabel_sel.tsv --feat_in valFeat.tsv --feat_out valFeat_sel.tsv --filter_var="age" --allowed_range="[0,120]"
     - Rscript 03_check_for_confounders.r --metadata_in valMetaData_sel.tsv --plot metaCheck.pdf --label_in valLabel_sel.tsv
