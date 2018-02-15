@@ -1,6 +1,6 @@
 image: r-base
 before_script:
-  - R CMD build ./
+  - R CMD build ./ --no-build-vignettes
   - mv SIAMCAT*.tar.gz dependencies/.
   - cd Rscript_flavor
   - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz
