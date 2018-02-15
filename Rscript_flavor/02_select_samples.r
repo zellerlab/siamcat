@@ -5,10 +5,7 @@
 #
 # written by Georg Zeller
 # with additions by Jakob Wirbel, Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 30.11.2017
+# EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
