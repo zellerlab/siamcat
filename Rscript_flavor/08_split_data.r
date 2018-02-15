@@ -56,9 +56,9 @@ set.seed(r.seed)
 
 
 label         <- read.labels(opt$label_in)
-
+siamcat <- siamcat(label)
 ### Core function sourced from the library
-training.data <- data.splitter(label = label,
+siamcat <- data.splitter(siamcat,
                                num.folds=opt$num_folds,
                                num.resample=opt$resample, 
                                stratify=opt$stratify, 
@@ -85,12 +85,10 @@ for (r in 1:training.data$num.resample) {
     test.file <- opt$test_sets
     
     fold.name = paste('>cv_fold', ifelse(opt$resample>1, paste(f, '_rep', r, sep=''), as.character(f)), sep='')
-    
-    # append training and test examples, one line per fold
-    write.table(t(c(fold.name, training.data$training.folds[[r]][[f]])), file=train.file, quote=FALSE, 
-              sep='\t', row.names=FALSE, col.names=FALSE, append=TRUE)
-    write.table(t(c(fold.name, training.data$test.folds[[r]][[f]])),     file=test.file,  quote=FALSE, 
+
+    write.table(t(c(fold.name, siamcat@dataSplit@training.folds[[r]][[f]])), file=opt$train_sets, quote=FALSE, 
                 sep='\t', row.names=FALSE, col.names=FALSE, append=TRUE)
+    write.table(t(c(fold.name, siamcat@dataSplit@test.folds[[r]][[f]])),     file=opt$test_sets,  quote=FALSE, 
   }
 }
 if (opt$stratify) {

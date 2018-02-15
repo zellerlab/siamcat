@@ -5,10 +5,7 @@
 #
 # written by Georg Zeller
 # with additions by Jakob Wirbel, Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 30.11.2017
+# EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
@@ -49,14 +46,12 @@ start.time  <- proc.time()[1]
 feat  <- read.features(opt$feat_in)
 label <- read.labels(opt$label_in, feat)
 meta  <- read.meta(opt$metadata_in)
-stopifnot(all(names(label$label) == rownames(meta)))
+siamcat <- siamcat(feat,label,meta)
 
 
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
-results     <-  select.samples(meta=meta, 
-                               feat=feat, 
-                               label=label$label, 
+siamcat     <-  select.samples(siamcat 
                                filter=opt$filter_var, 
                                allowed.range=opt$allowed_range, 
                                allowed.set=opt$allowed_set)
@@ -64,12 +59,12 @@ results     <-  select.samples(meta=meta,
 
 ### write label, feature and meta-data with selected sample set
 # labels
-write(label$header,        file=opt$label_out, append=FALSE)
-write.table(t(as.matrix(results$label)), file=opt$label_out, quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
+write(label@header,        file=opt$label_out, append=FALSE)
+write.table(t(as.matrix(siamcat@label@label)), file=opt$label_out, quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
 # features
-write.table(results$feat,  file=opt$feat_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@otu_table,  file=opt$feat_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 # meta-data
-write.table(results$meta,  file=opt$metadata_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@sam_data-,  file=opt$metadata_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 
 
 cat('\nSuccessfully selected samples in ', proc.time()[1] - start.time, ' seconds\n', sep='')

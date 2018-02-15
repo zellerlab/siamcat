@@ -4,12 +4,10 @@
 \alias{eval.predictions}
 \title{Evaluate prediction results}
 \usage{
-eval.predictions(label, pred)
+eval.predictions(siamcat)
 }
 \arguments{
-\item{label}{label object}
-
-\item{pred}{prediction for each sample by the model, should be a matrix with dimensions \code{length(label) x 1} or \code{length(label) x num.resample}}
+\item{siamcat}{object of class \link{siamcat-class}}
 }
 \value{
 list containing \itemize{

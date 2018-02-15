@@ -42,9 +42,9 @@ cat('\n')
 start.time    <- proc.time()[1]
 #### read feature data and preprocess
 feat          <- read.features(opt$feat_in)
-
+siamcat <- siamcat(feat)
 ### Start core function
-filtered.data <- filter.feat(feat = feat, 
+siamcat <- filter.feat(siamcat
 	                          filter.method = opt$method, 
 	                          cutoff = opt$cutoff, 
 	                          recomp.prop = opt$recomp_prop,
@@ -52,6 +52,6 @@ filtered.data <- filter.feat(feat = feat,
 ### End core function
 
 # write filtered feature table
-write.table(filtered.data, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@otu_table, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 cat('\nSuccessfully filtered feature data in ', proc.time()[1] - start.time, ' seconds\n', sep='')

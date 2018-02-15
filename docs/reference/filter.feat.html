@@ -94,15 +94,15 @@
     <p>This function may convert absolute abundances into relative abundances and then performs unsupervised feature filtering. Features can be filtered based on abundance or prevalence. Additionally, unmapped reads may be removed.</p>
     
 
-    <pre class="usage"><span class='fu'>filter.feat</span>(<span class='no'>feat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='no'>abundance</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
+    <pre class="usage"><span class='fu'>filter.feat</span>(<span class='no'>siamcat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='no'>abundance</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
   <span class='kw'>recomp.prop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rm.unmapped</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>feature object</p></td>
+      <th>siamcat</th>
+      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
     </tr>
     <tr>
       <th>filter.method</th>
@@ -124,15 +124,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns the filtered feature matrix</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Currently, there are three filtering methods implemented:</p><ul>
-<li><p><code>"abundance"</code> remove features for which the abundance is never above the threshold value (e.g. 0.5%) in any of the samples</p></li>
-<li><p><code>"cum.abundance"</code> remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up <code>(1-cutoff)</code> of the reads in any samples</p></li>
-<li><p><code>"prevalence"</code> remove features with low prevalence across samples, i.e. features that are undetected in more than <code>(1-cutoff)</code> proportion of samples</p></li>
-</ul>
+    <p>siamcat an object of class <a href='siamcat.html'>siamcat</a></p>
     
 
   </div>
@@ -142,8 +134,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

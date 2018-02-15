@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Select samples based on metadata <U+2014> select.samples <e2><80><a2> SIAMCAT</title>
+<title>Select samples based on meta-data <U+2014> select.samples <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -87,35 +87,29 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Select samples based on metadata</h1>
+    <h1>Select samples based on meta-data</h1>
     </div>
 
     
-    <p>This functions filters features, labels, and metadata based on a specific column in the metadata.
-Provided with a column in the metadata and a range or a set of allowed values, the function will return the labels, metadata, and features for the samples matching the allowed range or set.</p>
+    <p>This functions filters features, labels, and metadata based on
+       a specific column in the metadata. Provided with a column in the
+       metadata and a range or a set of allowed values, the function will</p>
     
 
-    <pre class="usage"><span class='fu'>select.samples</span>(<span class='no'>meta</span>, <span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>filter</span>, <span class='kw'>allowed.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>allowed.range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>select.samples</span>(<span class='no'>siamcat</span>, <span class='no'>filter</span>, <span class='kw'>allowed.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>allowed.range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>meta</th>
-      <td><p>metadata object</p></td>
-    </tr>
-    <tr>
-      <th>feat</th>
-      <td><p>features object</p></td>
-    </tr>
-    <tr>
-      <th>label</th>
-      <td><p>labels object</p></td>
+      <th>siamcat</th>
+      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
     </tr>
     <tr>
       <th>filter</th>
-      <td><p>name of the column from metadata on which the selection should be done</p></td>
+      <td><p>string, name of the meta variable on which the selection
+should be done</p></td>
     </tr>
     <tr>
       <th>allowed.set</th>
@@ -125,16 +119,17 @@ Provided with a column in the metadata and a range or a set of allowed values, t
       <th>allowed.range</th>
       <td><p>a range of allowed values</p></td>
     </tr>
+    <tr>
+      <th>verbose, </th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for standard information, defaults to
+<code>1</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list containing values after selection:</p><ul>
-<li><p><code>$feat</code> = features;</p></li>
-<li><p><code>$label</code> = labels;</p></li>
-<li><p><code>$meta</code> = metadata</p></li>
-</ul>
-
+    <p>siamcat an object of class <a href='siamcat.html'>siamcat</a></p>
     
 
   </div>

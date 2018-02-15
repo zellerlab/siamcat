@@ -48,27 +48,26 @@ start.time <- proc.time()[1]
 feat  <- read.features(opt$feat_in)
 label <- read.labels(opt$label_in,feat)
 meta  <- read.meta(opt$metadata_in)
-
+siamcat <- siamcat(feat,label,meta)
 
 
 ### Start Core function
-validated.files <- validate.data(feat = feat, 
-                                 label = label, 
-                                 meta = meta )
+siamcat <- validate.data(siamcat)
 ### End Core function
 
 ### write validated label, feature and meta-data
 # labels
+
 if (!is.null(opt$label_out)){
-  write.table(label$header,          file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE,
+  write.table(label@header,          file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE,
               col.names = FALSE, append = FALSE)
-  write.table(t(as.matrix(validated.files$label$label)), file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
+  write.table(t(as.matrix(siamcat@label@label)), file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
               col.names = TRUE, append = TRUE)
 }
-write.table(validated.files$feat,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
+write.table(siamcat@phyloseq@otu_table,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
             col.names = TRUE)
 if (!is.null(meta) && !is.null(opt$metadata_out)) {
-write.table(validated.files$meta,  file=opt$metadata_out, quote = FALSE, sep = '\t', row.names = TRUE,
+write.table(siamcat@phyloseq@sam_data  file=opt$metadata_out, quote = FALSE, sep = '\t', row.names = TRUE,
               col.names = NA)
 }
 

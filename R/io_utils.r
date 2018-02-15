@@ -21,7 +21,9 @@
 #' @param fn.in.feat name of the tsv file containing features
 #' @export
 #' @return matrix containing features from the file
-read.features <- function(fn.in.feat){
+read.features <- function(fn.in.feat, verbose=0){
+  if(verbose>1) cat("+ starting read.features\n")
+  s.time <- proc.time()[3]
   if(is.null(fn.in.feat))      stop("Filename for features file not provided!\n")
   if(!file.exists(fn.in.feat)) stop("Feature file ", fn.in.feat, " does not exist!\n")
 
@@ -33,8 +35,9 @@ read.features <- function(fn.in.feat){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
-
-  invisible(feat)
+  e.time <- proc.time()[3]
+  if(verbose>0) cat("+ finished read.features in",e.time-s.time,"s\n")
+  invisible(otu_table(feat,taxa_are_rows=TRUE))
 }
 
 #' @title Read labels file
@@ -107,7 +110,12 @@ read.labels <- function(fn.in.label,feat=NULL){
 
   label$p.idx <- label$label==label$positive.lab
   label$p.lab <- gsub('[_.-]', ' ', names(label$info$class.descr)[label$info$class.descr==label$positive.lab])
-  invisible(label)
+  
+  labelRes <- new("label", label = label$label, header = label$header, info=label$info, 
+                  positive.lab=label$positive.lab,
+                  negative.lab=label$negative.lab, n.idx=label$n.idx, p.idx=label$p.idx,
+                  n.lab=label$n.lab, p.lab=label$p.lab)
+  invisible(labelRes)
 }
 
 #' @title Read metadata file
@@ -126,9 +134,8 @@ read.meta <- function(fn.in.meta){
   }else{
     if(!file.exists(fn.in.meta)) stop("Metadata file ", fn.in.meta, " does not exist!\n")
     meta <- read.table(file=fn.in.meta, sep='\t', header=TRUE, row.names=1, check.names=FALSE, quote='')
-    meta <- as.matrix(meta)
   }
-  invisible(meta)
+  invisible(sample_data(meta))
 }
 
 

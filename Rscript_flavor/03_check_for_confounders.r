@@ -38,13 +38,9 @@ start.time   <- proc.time()[1]
 ### read label and meta- data
 label        <- read.labels(opt$label_in)
 meta         <- read.meta(opt$metadata_in)
-if(any(names(label$label) != rownames(meta))) stop("Label names do not match metadata names! Stopping.\n")
-
-m            <- match(names(label$label), rownames(meta))
-meta         <- meta[m,]
-
+siamcat <- siamcat(label,meta)
 ### Start core function
-confounder.check(meta = meta, label = label, fn.plot=opt$plot)
+confounder.check(siamcat, fn.plot=opt$plot)
 ### End core function
 
 

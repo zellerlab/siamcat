@@ -94,7 +94,7 @@
     <p>This function trains the a machine learning model on the training data</p>
     
 
-    <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
+    <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>siamcat</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
   <span class='st'>"ridge_ll"</span>, <span class='st'>"randomForest"</span>), <span class='kw'>data.split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='st'>"auc"</span>), <span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>param.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
@@ -102,12 +102,8 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>feature object</p></td>
-    </tr>
-    <tr>
-      <th>label</th>
-      <td><p>label object</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -137,12 +133,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list containing</p><ul>
-<li><p><code>models.list</code> the list of trained models for each cross-validation fold</p></li>
-<li><p><code>out.matrix</code> ?</p></li>
-<li><p><code>W.mat</code> ?</p></li>
-</ul>
-
+    <p>object of class <a href='siamcat-class.html'>siamcat-class</a></p>
     
 
   </div>
