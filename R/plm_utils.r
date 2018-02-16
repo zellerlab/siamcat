@@ -14,7 +14,7 @@
 ##### function to train a LASSO model for a single given C
 #' @export
 train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
-                      measure=list("acc"), min.nonzero.coeff=5, param.set=NULL, neg.lab){
+                      measure=list("acc"), min.nonzero.coeff=5, param.set=NULL, neg.lab, verbose=1){
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
@@ -122,7 +122,7 @@ get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL, 
           } else if (mode == "test"){
             fold.exm.idx[[num.runs]] <- match(dataSplit@test.folds[[res]][[cv]], names(label@label))
           }
-          if(verbose) cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
+          if(verbose>2) cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]),mode,'samples\n')
         }
       }
     } else {

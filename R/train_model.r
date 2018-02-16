@@ -36,7 +36,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
   s.time <- proc.time()[3]# TODO 1: modsel.criterion should be implemented
   # check modsel.crit
   if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))){
-    cat("Unkown model selection criterion... Defaulting to AU-ROC!\n")
+    warning("Unkown model selection criterion... Defaulting to AU-ROC!\n")
     measure <- list(mlr::auc)
   } else {
     measure <- list()
@@ -87,8 +87,6 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
     label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
     train.label       <- label.fac[fold.exm.idx[[r]]]
     data              <- as.data.frame(t(siamcat@phyloseq@otu_table)[fold.exm.idx[[r]],])
-    print(dim(data))
-    print(length(train.label))
     stopifnot(nrow(data)         == length(train.label))
     stopifnot(all(rownames(data) == names(train.label)))
     data$label                     <- train.label
@@ -100,7 +98,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
     }else{
       warning("Model without any features selected!\n")
     }
-    f(verbose==1 || verbose==2) setTxtProgressBar(pb, r)
+    if(verbose==1 || verbose==2) setTxtProgressBar(pb, r)
   }
   siamcat@modelList <- new("modelList",models=models.list,model.type=method)
   e.time <- proc.time()[3]
