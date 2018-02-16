@@ -531,7 +531,7 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
                                    pr.cutoff, mult.corr, alpha,
                                    max.show, sort.by, probs.fc=seq(.1, .9, .05),  verbose=1){
   if(verbose>1) cat("+ starting marker.analysis.binary\n")
-  is.time <- proc.time()[3]
+  s.time <- proc.time()[3]
   ##############################################################################
   ### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for each feature
   if(verbose>1) cat('+++ Calculating effect size for each feature.\n')
@@ -539,7 +539,7 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
     cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile.\n")
     detect.lim <- quantile(feat[feat!=0], 0.05)
   }
-  pb = txtProgressBar(max=nrow(feat))
+  if(verbose) pb = txtProgressBar(max=nrow(feat))
   effect.size <- t(apply(feat, 1, FUN=function(x){
     # pseudo-fold change as differential quantile area
     q.p <- quantile(log10(x[label@p.idx]+detect.lim), probs=probs.fc)
@@ -557,7 +557,7 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
     temp.n <- sum(x[label@n.idx] >= pr.cutoff)/sum(label@n.idx)
     temp.p <- sum(x[label@p.idx] >= pr.cutoff)/sum(label@p.idx)
     pr.shift <- c(temp.p-temp.n, temp.n, temp.p)
-    setTxtProgressBar(pb, (pb$getVal()+1))
+    if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
     return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2], 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
              'pr.shift' = pr.shift[1], 'pr.n'=pr.shift[2], 'pr.p'=pr.shift[3]))
   }))
