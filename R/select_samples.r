@@ -29,7 +29,10 @@
 #' @return siamcat an object of class \link{siamcat}
 #'
 select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range = NULL, verbose=1){
+  if(verbose>1) cat("+ starting select.samples\n")
+  s.time <- proc.time()[3]
 
+  if(verbose>2) cat("+++ checking allowed values\n")
   if(!is.null(allowed.range )) {
     allowed.range  <- gsub('\\[|\\]','', allowed.range)
     allowed.range  <- as.numeric(unlist(strsplit(allowed.range,',')))
@@ -45,30 +48,30 @@ select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range =
   }
 
   if (!xor(is.null(allowed.range ), is.null(allowed.set))) {
-    stop('Neither allowed.range  nor allowed.set (or both at the same time) have been provided, exiting!\n')
+    stop('Neither allowed.range nor allowed.set (or both at the same time) have been provided, exiting!\n')
   } else {
     if (!is.null(allowed.range )) {
-      if (verbose > 0) cat('allowed.range  = [', paste(allowed.range , collapse=','), ']\n', sep='')
+      if (verbose > 2) cat('+++ allowed.range  = [', paste(allowed.range , collapse=','), ']\n', sep='')
     } else {
-      if (verbose > 0) cat('allowed.set = {', paste(allowed.set, collapse=','), '}\n', sep='')
+      if (verbose > 2) cat('+++ allowed.set = {', paste(allowed.set, collapse=','), '}\n', sep='')
     }
   }
 
-  if(!filter %in% colnames(siamcat@phyloseq@sam_data)) stop("The filter name is not present in colnames of the siamcat@phyloseq@sam_data. Stopping.\n")
+  if(!filter %in% colnames(siamcat@phyloseq@sam_data)) stop("! The filter name is not present in colnames of the siamcat@phyloseq@sam_data. Stopping.\n")
   filter.var    <- siamcat@phyloseq@sam_data[,filter]
 
-  if (!is.null(allowed.range )) {
+  if (!is.null(allowed.range)) {
     s.idx <- !is.na(filter.var) & filter.var >= allowed.range [1] & filter.var <= allowed.range [2]
-    if (verbose > 0) {
-      cat('Removed ', sum(!s.idx), ' samples with ', filter, ' not in [',
+    if (verbose > 1) {
+      cat('+++ Removed ', sum(!s.idx), ' samples with ', filter, ' not in [',
       paste(allowed.range , collapse=', '), '] (retaining ', sum(s.idx), ')\n',
       sep='')
     }
 
   } else {
     s.idx <- !is.na(filter.var) & filter.var %in% allowed.set
-    if (verbose > 0){
-      cat('Removed ', sum(!s.idx), ' samples with ', filter, ' not in {',
+    if (verbose > 1){
+      cat('+++ Removed ', sum(!s.idx), ' samples with ', filter, ' not in {',
       paste(allowed.set, collapse=', '), '} (retaining ', sum(s.idx), ')\n',
       sep='')
     }
@@ -77,6 +80,8 @@ select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range =
   s.names <- rownames(siamcat@phyloseq@sam_data)[s.idx]
   siamcat@phyloseq <- prune_samples(x = siamcat@phyloseq, samples = s.names)
   siamcat          <- filter.label(siamcat, verbose=verbose)
-
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished select.samples in",e.time-s.time,"s\n")
+  if(verbose==1)cat("Selecting samples finished\n")
   return(siamcat)
 }

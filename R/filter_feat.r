@@ -31,6 +31,9 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
   ## TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?
   # Check filter methods
+  if(verbose>1) cat("+ starting filter.feat\n")
+  s.time <- proc.time()[3]
+
   if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")){
     stop('Unrecognized filter.method, exiting!...\n')
   }
@@ -45,6 +48,7 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
   }
 
   ### apply filters
+  if(verbose>2) cat("+++ applying",filter.method,"filter\n")
   if (filter.method == 'abundance') {
     # remove features whose abundance is never above the threshold value (e.g. 0.5%) in any of the samples
     f.max <- apply(ra.feat, 1, max)
@@ -68,6 +72,8 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
     f.idx <- which(rowSums(ra.feat > 0) / ncol(ra.feat) > cutoff)
   }
 
+
+  if(verbose>2) cat("+++ checking for unmapped reads\n")
   ### postprocessing and output generation
   if (rm.unmapped) {
     # remove 'unmapped' feature
@@ -75,16 +81,19 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
     unm.idx <- rownames(siamcat@phyloseq@otu_table) %in% names.unmapped
     if (any(unm.idx)) {
       f.idx <- f.idx[-which(f.idx%in%unm.idx)]
-      if (verbose > 1) cat("...removing row.name", rownames(siamcat@phyloseq@otu_table)[unm.idx], ' as unmapped read...\n')
-      if (verbose > 0) cat('Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads\n', sep='')
+      if (verbose > 2) cat("+++ removing ", rownames(siamcat@phyloseq@otu_table)[unm.idx], ' as unmapped reads\n')
+      if (verbose > 1) cat('+++ Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads\n', sep='')
     } else {
-      if (verbose > 0) cat('tried to remove unmapped reads, but could not find them. Continue anyway.\n')
+      if (verbose > 1) cat('+++ Tried to remove unmapped reads, but could not find them. Continue anyway.\n')
     }
   }
-  if (verbose > 0) cat('Removed ', nrow(siamcat@phyloseq@otu_table)-length(f.idx)-sum(unm.idx), ' features whose values did not exceed ',
+  if(verbose>2) cat("+++ applying prune_taxa\n")
+  if (verbose > 1) cat('+++ Removed ', nrow(siamcat@phyloseq@otu_table)-length(f.idx)-sum(unm.idx), ' features whose values did not exceed ',
     cutoff, ' in any sample (retaining ', length(f.idx), ')\n', sep='')
   f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
   siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
-  if(verbose > 1) print(siamcat@phyloseq)
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished filter.feat in",e.time-s.time,"s\n")
+  if(verbose==1)cat("Features successfully filtered\n")
   return(siamcat)
 }

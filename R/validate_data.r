@@ -11,7 +11,7 @@
 #' @export
 #' @return an object of class \link{siamcat}
 validate.data <- function(siamcat, verbose=1){
-  if(verbose>2) cat("+ starting validate.data\n")
+  if(verbose>1) cat("+ starting validate.data\n")
   s.time <- proc.time()[3]
   # Check if labels are available for all samples in features
   if(verbose>2) cat("+++ checking if labels are available for all samples in features\n")
