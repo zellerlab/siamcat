@@ -81,9 +81,11 @@ confounder.check <- function(siamcat, fn.plot){
       plot.new()
       vps <- baseViewports()
       pushViewport(vps$figure)
+      niceLabel <- rep(siamcat@label@p.lab,length(siamcat@label@label))
+      names(niceLabel) <- names(siamcat@label@label)
+      niceLabel[siamcat@label@n.idx] <- siamcat@label@n.lab
       vp1 <-plotViewport()
-      index <- match('diagnosis', colnames(siamcat@phyloseq@sam_data))
-      t <- addmargins(table(mvar, as.numeric(unlist(siamcat@phyloseq@sam_data[,index])), dnn=c(mname, 'Diagnosis')))
+      t <- addmargins(table(mvar, niceLabel, dnn=c(mname, 'Label')))
       grid.table(t, theme=ttheme_minimal())
       popViewport()
       par(mfrow=c(1,1), bty="o")
@@ -137,7 +139,7 @@ confounder.check <- function(siamcat, fn.plot){
   
   # transform heatmap values
   colnames(hmap) <- c(siamcat@label@n.lab, siamcat@label@p.lab)
-  hmap.ratios <- as.matrix(log(hmap[,2]/hmap[,1])) - log(sum(as.numeric(unlist(siamcat@phyloseq@sam_data[,index]))>1)/sum(siamcat@phyloseq@sam_data[,index]<=1))
+  hmap.ratios <- as.matrix(log(hmap[,2]/hmap[,1])) - log(sum(siamcat@label@p.idx)/sum(siamcat@label@p.idx))
   rownames(hmap.ratios) <- as.matrix(rownames(hmap))
   
   # plot as labeled barplot...

@@ -62,5 +62,6 @@ validate.data <- function(siamcat){
       stop('Metadata is not available for all samples!')
     }
   }
+siamcat@orig_feat <- otu_table(siamcat@phyloseq)
 return(siamcat)
 }

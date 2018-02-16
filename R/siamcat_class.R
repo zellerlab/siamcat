@@ -59,13 +59,10 @@ siamcat <- function(...){
   
   if(is.null(arglist$phyloseq)){
     arglistphyloseq <- arglist[sapply(names(arglist), is.component.class, "phyloseq")]
-    print(names(arglistphyloseq))
     arglist$phyloseq <- do.call("new", c(list(Class="phyloseq"), arglistphyloseq))
   }
   arglist     <- arglist[sapply(names(arglist), is.component.class, "siamcat")]
   sc          <- do.call("new", c(list(Class="siamcat"), arglist))
-    #new("siamcat", modelList = arglist$modelList, phyloseq = ps, predMatrix = arglist$predMatrix,
-     #                  orig_feat = arglist$otu_table, label = arglist$label, norm.param = arglist$norm.param)
   return(sc)
 }
 

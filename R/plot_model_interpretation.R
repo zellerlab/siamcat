@@ -67,7 +67,8 @@ interpretor.model.plot <- function(siamcat, fn.plot,
   mean.agg.pred <- rowMeans(siamcat@predMatrix)
   ### idx to sort samples according to their class membership and prediction score
   srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return=TRUE)$ix
-
+  feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
+                 dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
   # ############################################################################
   # prepare heatmap
   if (heatmap.type == 'zscore'){
@@ -78,7 +79,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
       cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
       detect.lim <- quantile(feat[feat!=0], 0.05)
     }
-    img.data <- prepare.heatmap.fc(heatmap.data=siamcat@phyloseq@otu_table[, srt.idx],
+    img.data <- prepare.heatmap.fc(heatmap.data=feat[, srt.idx],
                                    sel.feat=names(sel.idx),
                                    limits=limits, meta=siamcat@phyloseq@sam_data,
                                    label=siamcat@label, detect.lim=detect.lim)
