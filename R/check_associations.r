@@ -539,7 +539,7 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
     warning("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile.\n")
     detect.lim <- quantile(feat[feat!=0], 0.05)
   }
-  if(verbose) pb = txtProgressBar(max=nrow(feat))
+  if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
   effect.size <- t(apply(feat, 1, FUN=function(x){
     # pseudo-fold change as differential quantile area
     q.p <- quantile(log10(x[label@p.idx]+detect.lim), probs=probs.fc)

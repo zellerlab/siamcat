@@ -80,7 +80,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
   # Create List to save models.
   models.list     <- list()
   power           <- NULL
-  if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs)
+  if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
   for (r in 1:num.runs) {
     if(verbose>2) cat('+++ training on ', fold.name[r], ' (', r, ' of ', num.runs, ')\n', sep='')
     ### subselect examples for training
@@ -102,7 +102,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
   }
   siamcat@modelList <- new("modelList",models=models.list,model.type=method)
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished train.model in",e.time-s.time,"s\n")
+  if(verbose>1) cat("\n+ finished train.model in",e.time-s.time,"s\n")
   if(verbose==1) cat("Trained",method,"models successfully.\n")
   return(siamcat)
 }

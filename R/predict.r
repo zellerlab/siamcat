@@ -38,7 +38,7 @@ make.predictions <- function(siamcat, verbose=1){
 
   # Init hyperpar list
   opt.hp <- list(lambda = NULL, C = NULL, alpha = NULL, ntree = NULL)
-
+  if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
   for (r in 1:num.runs) {
     label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
     test.label        <- label.fac
@@ -48,7 +48,7 @@ make.predictions <- function(siamcat, verbose=1){
     stopifnot(all(rownames(data) == names(test.label)))
     data$label                     <- test.label
     model <- siamcat@modelList@models[[r]]
-    cat('Applying ', siamcat@modelList@model.type, ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
+    if(verbose>2) cat('Applying ', siamcat@modelList@model.type, ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     # subselect appropriate model
 
     # subselect test examples
@@ -61,6 +61,7 @@ make.predictions <- function(siamcat, verbose=1){
 
     pred     <- c(pred, p)
     fold.pred.idx[[r]] = (length(pred)-length(p)+1):length(pred)
+    if(verbose==1 || verbose==2) setTxtProgressBar(pb, r)
   }
 
   if(verbose) cat('\nTotal number of predictions made:', length(pred), '\n')
