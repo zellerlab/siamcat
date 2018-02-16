@@ -19,6 +19,9 @@
 #'  '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "clr")}
 #' @param norm.param list, specifying the parameters of the different
 #'  normalization methods, see details for more information
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for only information about progress and success, \code{2} for normal 
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @details There are five different normalization methods available:
 #' \itemize{
 #'  \item \code{"rank.unit"} converts features to ranks and normalizes each
@@ -66,19 +69,21 @@
 #' @return an object of class \link{siamcat}
 
 normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
-                           norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1)) {
+                           norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
 
+  if(verbose>1) cat("+ starting add.meta.pred\n")
+  s.time <- proc.time()[3]
   feat <- siamcat@phyloseq@otu_table
 
   if (is.null(norm.param$norm.method)){
     # de novo normalization
-    cat('Performing de novo normalization using the ', norm.method, ' method\n')
+    if(verbose>1) cat('+++ performing de novo normalization using the ', norm.method, ' method\n')
     ### remove features with missing values
     # TODO there may be better ways of dealing with NA features
     keep.idx <- rowSums(is.na(feat) == 0)
     if (any(!keep.idx)) {
       feat.red <- feat[keep.idx,]
-      cat('Removed ', nrow(feat.red)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red),' )\n', sep='')
+      if(verbose>1) cat('+++ removed ', nrow(feat.red)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red),' )\n', sep='')
     } else {
       feat.red <- feat
     }
@@ -92,13 +97,13 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
     par <- list()
     par$norm.method <- norm.method
     par$retained.feat <- rownames(feat.red)
-
+    if(verbose>2) cat("+++ checking is parameters are compatible with each other\n")
     ## check if the right set of normalization parameters have been supplied for the chosen norm.method
     if (norm.method == 'rank.std' && is.null(norm.param$sd.min.q)){
       stop("The rank.std method requires the parameter sd.min.q, which is not supplied. Exiting ...")
     }
     if (norm.method != 'rank.std' && is.null(norm.param$log.n0)){
-      cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
+      warning("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
       norm.param$log.n0 <- quantile(feat.red[feat.red!=0], 0.05)
     }
     if (norm.method == 'log.std' && (is.null(norm.param$sd.min.q))){
@@ -112,9 +117,10 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
     par$log.n0 <- norm.param$log.n0
     par$n.p <- norm.param$n.p
     par$norm.margin <- norm.param$norm.margin
-
-    cat('Feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
+   
+    if(verbose>1) cat('+ feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
     # normalization
+    if(verbose>2) cat("+++ performing normalization\n")
     if (norm.method == 'rank.unit'){
       feat.rank <- apply(feat.red, 2, rank, ties.method='average')
       stopifnot(!any(is.na(feat)))
@@ -166,19 +172,20 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
         stop('Unknown margin for normalization, must be either 1 (for features), 2 (for samples), or 3 (global). Exiting...')
       }
     }
-    cat('Feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
+    if(verbose>1) cat('+++ feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
 
   } else {
     # frozen normalization
-    cat('Performing frozen ', norm.param$norm.method, ' normalization using the supplied parameters\n')
+    if(verbose>1) cat('+ performing frozen ', norm.param$norm.method, ' normalization using the supplied parameters\n')
     # check if all retained.feat in norm.params are also found in features
     stopifnot(all(norm.param$retained.feat %in% row.names(feat)))
     feat.red <- feat[norm.param$retained.feat,]
 
-    cat('Feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
+    if(verbose>1) cat('+ feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
 
     # normalization
+    if(verbose>2) cat("+++ performing normalization\n")
     if (norm.param$norm.method == 'rank.unit'){
       feat.rank <- apply(feat.red, 2, rank, ties.method='average')
       feat.norm <- apply(feat.rank, 2, FUN=function(x){x/sqrt(sum(x^2))})
@@ -211,12 +218,15 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
         feat.norm <- feat.log/norm.param$global.norm
       }
     }
-    cat('Feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
+    if(verbose>1) cat('+ feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
     
   }
   siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
   siamcat@norm.param         <- norm.param
   siamcat@norm.param$norm.method <- norm.method
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished normalize.feat in",e.time-s.time,"s\n")
+  if(verbose==1)cat("Features normalized successfully.\n")
   return(siamcat)
 }
