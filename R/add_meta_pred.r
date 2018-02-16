@@ -33,7 +33,6 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
       idx <- which(colnames(siamcat@phyloseq@sam_data) == p)
       if(length(idx) != 1) stop(p, "matches multiple columns in the metada\n")
 
-      if (verbose > 0) cat('adding ', p, '\n', sep='')
       m   <-  unlist(siamcat@phyloseq@sam_data[,idx])
 
       if (!all(is.finite(m))) {
@@ -55,12 +54,13 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
       rownames(siamcat@phyloseq@otu_table)[nrow(siamcat@phyloseq@otu_table)] <- paste('META_', toupper(p), sep='')
       cnt <- cnt + 1
     }
-      if (verbose > 0) cat('added', cnt, 'meta-variables as predictors to the feature matrix\n')
+      if (verbose > 1) cat('+++ added', cnt, 'meta-variables as predictors to the feature matrix\n')
   } else {
-      if (verbose > 0) cat('Not adding any of the meta-variables as predictor to the feature matrix\n')
+      if (verbose > 0) cat('+++ Not adding any of the meta-variables as predictor to the feature matrix\n')
   }
   stopifnot(all(!is.na(siamcat@phyloseq@otu_table)))
   e.time <- proc.time()[3]
-  if(verbose>2) cat("+ finished add.meta.pred in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished add.meta.pred in",e.time-s.time,"s\n")
+  if(verbose==1)cat("Adding metadata as predictor finished\n")
   return(siamcat)
 }
