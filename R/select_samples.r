@@ -24,6 +24,9 @@
 #' @param verbose, control output: \code{0} for no output at all, \code{1}
 #'        for standard information, defaults to
 #'        \code{1}
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for only information about progress and success, \code{2} for normal 
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT select.samples
 #' @export
 #' @return siamcat an object of class \link{siamcat}

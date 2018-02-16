@@ -15,12 +15,13 @@
 #' @param std.meta boolean, should added metadata features be standardized?,
 #'        defaults to \code{TRUE}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for standard information, defaults to \code{1}
+#'        for only information about progress and success, \code{2} for normal 
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT add.meta.pred
 #' @export
 #' @return features object with added metadata
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
-  if(verbose>2) cat("+ starting add.meta.pred\n")
+  if(verbose>1) cat("+ starting add.meta.pred\n")
   s.time <- proc.time()[3]
   ### add metadata as predictors to the feature matrix
   cnt <- 0

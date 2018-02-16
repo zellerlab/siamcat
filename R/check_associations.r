@@ -39,23 +39,29 @@
 #' @param max.show integer, how many associated features should be shown, defaults to \code{50}
 #' @param plot.type string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"quantile.box"}
 #' @param panels vector, name of the panels to be plotted next to the log10-transformed abundances, possible entries are \code{c("fc", "auroc", "prevalence")}, defaults to \code{c("fc", "auroc")}
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for only information about progress and success, \code{2} for normal 
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
 check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
                                detect.lim=NULL, pr.cutoff=10^-6, max.show=50,
-                               plot.type="quantile.box", panels=c("fc", "auroc")){
+                               plot.type="quantile.box", panels=c("fc", "auroc"), verbose=1){
   # check panel and plot.type parameter
+  if(verbose>1) cat("+ starting check.associations\n")
+  s.time <- proc.time()[3]
+
   if (!all(panels %in% c("fc", "auroc", "prevalence"))){
-    stop("Unknown panel-type selected!...")
+    stop("Unknown panel-type selected!.")
   }
   if (length(panels) > 3){
-    warning("Plot layout is not suited for more than 3 panels. Continuing wiht first three panels...")
+    warning("Plot layout is not suited for more than 3 panels. Continuing wiht first three panels.")
     panels <- panels[1:3]
   }
   if ((!plot.type %in% c("bean", "box", "quantile.box", "quantile.rect")) || length(plot.type) != 1){
-    warning("Plot type has not been specified properly! Continue with quantile.box...")
+    warning("Plot type has not been specified properly! Continue with quantile.box.")
     plot.type <- "quantile.box"
   }
   # either give n_classes colors or color palette
@@ -64,9 +70,10 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table), 
                  dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
   ### Calculate different effect sizes
+  if(verbose>2) cat("+++ analysing features\n")
   result.list <- marker.analysis.binary(feat=feat, label=siamcat@label, detect.lim=detect.lim, colors=col,
                                         pr.cutoff=pr.cutoff, mult.corr=mult.corr, alpha=alpha,
-                                        max.show=max.show, sort.by=sort.by, probs.fc=seq(.1, .9, .05))
+                                        max.show=max.show, sort.by=sort.by, probs.fc=seq(.1, .9, .05),verbose=verbose)
   
   p.val     <- result.list$p.val
   p.adj     <- result.list$p.adj
@@ -82,6 +89,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   ### generate plots with significant associations between features and labels
   
   # make plot matrix dependent on panels parameters
+  if(verbose>2) cat("+++ preparing plotting layout\n")
   if (length(panels) == 3){
     layout.mat <- cbind(2,1, t(seq(3, length.out=length(panels))))
     widths <- c(0.5, 0.1, rep(0.4/3, length(panels)))
@@ -96,26 +104,26 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   ##############################################################################
   # PANEL 2: P-VALUES
   # print p-values in second panel of the plot
-  plot.pvals(p.vals=p.adj, alpha=alpha)
+  plot.pvals(p.vals=p.adj, alpha=alpha,verbose=verbose)
 
   ##############################################################################
   # PANEL 1: DATA
   # prepare margins
-  prepare.margins(species_names = row.names(feat.red))
+  prepare.margins(species_names = row.names(feat.red),verbose=verbose)
   
   # get data
   data.n <- log10(as.matrix(feat.red[, siamcat@label@n.idx, drop=FALSE]) + detect.lim)
   data.p <- log10(as.matrix(feat.red[, siamcat@label@p.idx, drop=FALSE]) + detect.lim)
   
-  
+  if(verbose>2) cat("+++ plotting results\n")
   if (plot.type == "bean"){
-    plot.bean(data.n, data.p, siamcat@label, col=col)
+    plot.bean(data.n, data.p, siamcat@label, col=col, verbose=verbose)
   } else if (plot.type == "box"){
-    plot.box(data.n, data.p, siamcat@label, col=col)
+    plot.box(data.n, data.p, siamcat@label, col=col, verbose=verbose)
   } else if (plot.type == "quantile.box"){
-    plot.quantile.box(data.p, data.n, siamcat@label, col=col)
+    plot.quantile.box(data.p, data.n, siamcat@label, col=col, verbose=verbose)
   } else if (plot.type == "quantile.rect"){
-    plot.quantile.rect(data.p, data.n, siamcat@label, col=col)
+    plot.quantile.rect(data.p, data.n, siamcat@label, col=col, verbose=verbose)
   }
   
   # plot title
@@ -131,24 +139,26 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   # OTHER PANELS
   for (p in panels){
     if (p == "fc"){
-      plot.fcs(fc.all=fc, binary.cols=bcols)
+      plot.fcs(fc.all=fc, binary.cols=bcols,verbose=verbose)
     } else if (p == "prevalence"){
-      plot.pr.shift(pr.shifts=pr.shift, col=col)
+      plot.pr.shift(pr.shifts=pr.shift, col=col,verbose=verbose)
     } else if (p == "auroc"){
-      plot.aucs(aucs=aucs, binary.cols=bcols)
+      plot.aucs(aucs=aucs, binary.cols=bcols,verbose=verbose)
     }
   }
   
   # close pdf device
   tmp <- dev.off()
-  cat('Successfully created association plot...\n')
-  
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished check.associations in",e.time-s.time,"s\n")
+  if(verbose==1) cat("Plotted associations between features and label successfully.\n")
 }
 
 
 ### one function for each type of plot
 # bean plot
-plot.bean <- function(data1, data2, label, col){
+plot.bean <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting plot.bean\n")
   # create data.frame in format for beanplot
   bean.data <- data.frame()
   for (i in 1:nrow(data2)){
@@ -176,12 +186,13 @@ plot.bean <- function(data1, data2, label, col){
   tick.labels <- formatC(10^ticks, format='E', digits=0)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
-  print.labels(row.names(data1), plot.type='bean')
+  print.labels(row.names(data1), plot.type='bean', verbose=verbose)
+  if(verbose>2) cat("+ finished plot.bean\n")
 }
 
 # box plot
-plot.box <- function(data1, data2, label, col){
-
+plot.box <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting plot.box\n")
   box.colors <- rep(c(col[1],col[2]),nrow(data1))
   
   plot.data <- data.frame()
@@ -210,11 +221,13 @@ plot.box <- function(data1, data2, label, col){
   tick.labels <- formatC(10^ticks, format='E', digits=0)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
-  print.labels(row.names(data1), plot.type='box')
+  print.labels(row.names(data1), plot.type='box', verbose=verbose)
+  if(verbose>2) cat("+ finished plot.box\n")
 }
 
 # quantile.box plot
-plot.quantile.box <- function(data1, data2, label, col){
+plot.quantile.box <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting plot.quantile.box\n")
   x.col <- col[2]
   y.col <- col[1]
   
@@ -269,12 +282,13 @@ plot.quantile.box <- function(data1, data2, label, col){
     points(data2[i,], rep(i-0.15, ncol(data2))+rnorm(ncol(data2),sd=0.03), pch=16, cex=0.6, col=y.col)
   }
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
-  print.labels(row.names(data1), plot.type='quantile.box')
+  print.labels(row.names(data1), plot.type='quantile.box',verbose=verbose)
+  if(verbose>2) cat("+ finished plot.quantile.box\n")
 }
 
 # quantile.rect plot
-plot.quantile.rect <- function(data1, data2, label, col){
-
+plot.quantile.rect <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting plot.quantile.rect\n")
   quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
   
   x.q = apply(data1, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
@@ -319,12 +333,14 @@ plot.quantile.rect <- function(data1, data2, label, col){
          bty='n', lty = c(0,0,0,0,0),
          # cap legend size for diamond (should look symmetric to other symbols)
          pch = 18, cex = 1, pt.cex = c(0,0,0,0, min(35/nrow(data1), 2.25)))
-  print.labels(row.names(data1), plot.type='quantile.rect')
+  print.labels(row.names(data1), plot.type='quantile.rect',verbose=verbose)
+  if(verbose>2) cat("+ finished plot.quantile.rect\n")
 }
 
 ### Prepare margins for the first plots
 #     make left margin as big as the longest label or maximally 20.1 lines
-prepare.margins <- function(species_names, p.label){
+prepare.margins <- function(species_names, p.label, verbose=1){
+  if(verbose>2) cat("+ starting prepare.margins\n")
   cex.org <- par()$cex
   par(mar=c(5.1, 18, 4.1, 1.1), cex=1)
   temp = par()$mai
@@ -332,10 +348,12 @@ prepare.margins <- function(species_names, p.label){
   max_name <- max(strwidth(species_names, units = 'inches', cex=cex.labels)) + temp[4]
   temp[2] <- min(temp[2], max_name)
   par(mai=temp, cex=cex.org)
+  if(verbose>2) cat("+ finished prepare.margins\n")
 }
 
 ### Plot single feature AUCs in single panel
-plot.aucs <- function(aucs, binary.cols){
+plot.aucs <- function(aucs, binary.cols,verbose=1){
+  if(verbose>2) cat("+ starting plot.aucs\n")
   # set margins
   par(mar=c(5.1, 0, 4.1, 1.6))
   # plot background
@@ -359,10 +377,12 @@ plot.aucs <- function(aucs, binary.cols){
   # Title and axis label
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Feature AUCs', xlab='AU-ROC')
+  if(verbose>2) cat("+ finished plot.aucs\n")
 }
 
 ### Plot fold changes in single panel
-plot.fcs <- function(fc.all, binary.cols){
+plot.fcs <- function(fc.all, binary.cols,  verbose=1){
+  if(verbose>2) cat("+ starting plot.fcs\n")
   # margins
   par(mar=c(5.1, 0, 4.1, 1.6))
   # get minimum and maximum fcs
@@ -380,10 +400,12 @@ plot.fcs <- function(fc.all, binary.cols){
   tick.labels <- formatC(ticks, digits=2)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Fold change', xlab='Pseudo Fold Change')
+  if(verbose>2) cat("+ finished plot.fcs\n")
 }
 
 ### Plot prevalence shifts in single panel
-plot.pr.shift <- function(pr.shifts, col){
+plot.pr.shift <- function(pr.shifts, col, verbose=1){
+  if(verbose>2) cat("+ starting plot.pr.shift\n")
   # margins
   par(mar=c(5.1, 0, 4.1, 1.6))
   
@@ -404,10 +426,12 @@ plot.pr.shift <- function(pr.shifts, col){
   tick.labels <- formatC(ticks*100, digits=3)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Prevalence shift', xlab='Prevalence [%]')
+  if(verbose>2) cat("+ finished plot.pr.shift\n")
 }
 
 # p-vals
-plot.pvals <- function(p.vals, alpha){
+plot.pvals <- function(p.vals, alpha,  verbose=1){
+  if(verbose>2) cat("+ starting plot.pvals\n")
   # margins
   par(mar=c(5.1, .0, 4.1, 1.6))
   p.vals.log <- -log10(p.vals)
@@ -428,6 +452,7 @@ plot.pvals <- function(p.vals, alpha){
   tick.labels <- formatC(ticks, digits=2)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Adj. P Value', xlab='-log10 Adj. P-Value')
+  if(verbose>2) cat("+ finished plot.pvals\n")
 }
 
 
@@ -441,29 +466,30 @@ is.color <- function(x){
 #     color scheme may either be a single RColorBrewer palette or a vector of
 #     the same length as the number of classes containing interpretable colors
 #     as strings
-check.color.scheme <- function(color.scheme, label, meta.studies=NULL){  
+check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=1){ 
+  if(verbose>2) cat("+ starting check.color.scheme\n") 
   n.classes = ifelse(label@info$type == 'BINARY', 2, length(unique(label@label)))
   
   if (length(color.scheme) == 1 && class(color.scheme) == 'character'){
     if (n.classes == 2){
       # if color scheme and binary label, make colors as before
       if (!color.scheme %in% row.names(brewer.pal.info)){
-        warning("Not a valid RColorBrewer palette name, defaulting to RdBu...\nSee brewer.pal.info for more information about RColorBrewer palettes...")
+        warning("Not a valid RColorBrewer palette name, defaulting to RdBu.\nSee brewer.pal.info for more information about RColorBrewer palettes.")
         color.scheme <- 'RdYlBu'
       }
       colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(2))
     } else {
       # if color scheme and multiclass label, make colors either directly out of the palette (if n.classes smaller than maxcolors) or like before
       if (!color.scheme %in% row.names(brewer.pal.info)){
-        warning("Not a valid RColorBrewer palette name, defaulting to Set3...\n  See brewer.pal.info for more information about RColorBrewer palettes...")
+        warning("Not a valid RColorBrewer palette name, defaulting to Set3.\n  See brewer.pal.info for more information about RColorBrewer palettes.")
         color.scheme <- 'Set3'
       }
-      # if color scheme and multiclass label, check that the palette is not divergent or sequential, but qualitative. Only issue warning...
-      if (brewer.pal.info[color.scheme,'category'] != 'qual'){warning("Using a divergent or sequential color palette for multiclass data...")}
+      # if color scheme and multiclass label, check that the palette is not divergent or sequential, but qualitative. Only issue warning.
+      if (brewer.pal.info[color.scheme,'category'] != 'qual'){warning("Using a divergent or sequential color palette for multiclass data.")}
       if (n.classes <= brewer.pal.info[color.scheme, 'maxcolors']){
         colors <- brewer.pal(n.classes, color.scheme)
       } else {
-        warning("The data contains more classes than the color.palette provides...")
+        warning("The data contains more classes than the color.palette provides.")
         colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(n.classes))
       }
     }
@@ -476,22 +502,23 @@ check.color.scheme <- function(color.scheme, label, meta.studies=NULL){
   }
   # add transparency
   colors <- sapply(colors, FUN=function(x){paste0(x, '85')}, USE.NAMES = FALSE)
-  
+  if(verbose>2) cat("+ finished check.color.scheme\n")
   return(colors)
 }
 
-print.labels <- function(labels, plot.type){
+print.labels <- function(labels, plot.type,  verbose=1){
+  if(verbose>2) cat("+ starting print.labels\n")
   adj <- rep(0, length(labels))
   if (plot.type == 'quantile.rect') adj <- rep(-0.5, length(labels))
   if (plot.type == 'box') adj <- -0.5 + 1:length(labels)
   cex.org <- par()$cex
-  print(labels)
   par(cex=1)
   cex.labels <- min(.7,(((par()$pin[2]/length(labels))*.6)/max(strheight(labels, units = 'inches'))))
   for (i in 1:length(labels)){
     mtext(labels[i], 2, line=0, at=i+adj[i], las=1, cex=cex.labels)
   }
   par(cex=cex.org)
+  if(verbose>2) cat("+ finished print.labels\n")
 }
 
 
@@ -502,13 +529,14 @@ print.labels <- function(labels, plot.type){
 #   single marker AUC
 marker.analysis.binary <- function(feat, label, detect.lim, colors,
                                    pr.cutoff, mult.corr, alpha,
-                                   max.show, sort.by, probs.fc=seq(.1, .9, .05)){
-
+                                   max.show, sort.by, probs.fc=seq(.1, .9, .05),  verbose=1){
+  if(verbose>1) cat("+ starting marker.analysis.binary\n")
+  is.time <- proc.time()[3]
   ##############################################################################
   ### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for each feature
-  cat("Calculating effect size for each feature...\n")
+  if(verbose>1) cat('+++ Calculating effect size for each feature.\n')
   if (is.null(detect.lim)){
-    cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
+    cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile.\n")
     detect.lim <- quantile(feat[feat!=0], 0.05)
   }
   pb = txtProgressBar(max=nrow(feat))
@@ -538,20 +566,20 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
   
   ### Apply multi-hypothesis testing correction
   if(!tolower(mult.corr) %in% c('none','bonferroni','holm','fdr','bhy')) {
-    stop("Unknown multiple testing correction method:', mult.corr,' Stopping!\n  Must of one of c('none','bonferroni', 'holm','fdr','bhy')")
+    stop("! Unknown multiple testing correction method:', mult.corr,' Stopping!\n  Must of one of c('none','bonferroni', 'holm','fdr','bhy')")
   }
   if (mult.corr == 'none') {
-    warning('No multiple hypothesis testing performed...')
+    warning('WARNING: No multiple hypothesis testing performed.')
     p.adj <- effect.size[,'p.val']
   } else {
     p.adj <- p.adjust(effect.size[,'p.val'], method=tolower(mult.corr))
   }
   
-  cat('Found', sum(p.adj < alpha, na.rm=TRUE), 'significant associations at a significance level <', alpha, '\n')
+  if(verbose>1) cat('+++ found', sum(p.adj < alpha, na.rm=TRUE), 'significant associations at a significance level <', alpha, '\n')
   idx <- which(p.adj < alpha)
   
   if (length(idx) == 0){
-    stop('No significant associations found. Stopping...\n')
+    stop('No significant associations found. Stopping.\n')
   }
   
   idx <- idx[order(p.adj[idx], decreasing=TRUE)]
@@ -561,10 +589,11 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
   if (length(idx) >= max.show) {
     truncated = TRUE
     idx <- idx[(length(idx)-max.show+1):length(idx)]
-    cat('Truncating the list of significant associations to the top', max.show, '\n')
+  if(verbose>1) cat('+++ truncating the list of significant associations to the top', max.show, '\n')
   }
   
   ### Sort features
+  if(verbose>2) cat('+++ sorting features\n')
   if (sort.by == 'fc') {
     fc.sign <- ifelse(effect.size[idx,'fc'] == 0, 1, sign(effect.size[idx,'fc']))
     p.adj.log <- -log10(p.adj[idx])
@@ -578,12 +607,14 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
     p.adj.log[pr.sign == -1] = -p.adj.log[pr.sign == -1]
     idx <- idx[order(p.adj.log, decreasing=FALSE)]
   } else {
-    cat('Unknown sorting option:', sort.by, '... Instead order by fold change...\n')
+    if(verbose>1) cat('+++ Unknown sorting option:', sort.by, '. Instead order by fold change.\n')
     fc.sign <- ifelse(effect.size[idx,'fc'] == 0, 1, sign(effect.size[idx,'fc']))
     p.adj.log <- -log10(p.adj[idx])
     p.adj.log[fc.sign == -1] = -p.adj.log[fc.sign == -1]
     idx <- idx[order(p.adj.log, decreasing=FALSE)]
   }
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished marker.analysis.binary in",e.time-s.time,"s\n")
   return(list("p.val" = effect.size[idx,'p.val'],
               "fc"=effect.size[idx,'fc'],
               "aucs"=effect.size[idx,c('auc', 'auc.ci.l', 'auc.ci.h')],
