@@ -63,7 +63,7 @@ select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range =
   if (!is.null(allowed.range)) {
     s.idx <- !is.na(filter.var) & filter.var >= allowed.range [1] & filter.var <= allowed.range [2]
     if (verbose > 1) {
-      cat('+++ Removed ', sum(!s.idx), ' samples with ', filter, ' not in [',
+      cat('+++ removed ', sum(!s.idx), ' samples with ', filter, ' not in [',
       paste(allowed.range , collapse=', '), '] (retaining ', sum(s.idx), ')\n',
       sep='')
     }
@@ -71,7 +71,7 @@ select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range =
   } else {
     s.idx <- !is.na(filter.var) & filter.var %in% allowed.set
     if (verbose > 1){
-      cat('+++ Removed ', sum(!s.idx), ' samples with ', filter, ' not in {',
+      cat('+++ removed ', sum(!s.idx), ' samples with ', filter, ' not in {',
       paste(allowed.set, collapse=', '), '} (retaining ', sum(s.idx), ')\n',
       sep='')
     }

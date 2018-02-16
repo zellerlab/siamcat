@@ -35,10 +35,10 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
   s.time <- proc.time()[3]
 
   if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")){
-    stop('Unrecognized filter.method, exiting!...\n')
+    stop('! Unrecognized filter.method, exiting!\n')
   }
 
-  if (verbose > 1) cat("Before filtering, the data has", nrow(siamcat@phyloseq@otu_table), "features...\n")
+  if (verbose > 1) cat("+++ Before filtering, the data has", nrow(siamcat@phyloseq@otu_table), "features\n")
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
     ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)

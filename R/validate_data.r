@@ -42,7 +42,7 @@ validate.data <- function(siamcat, verbose=1){
   }
 
   # Check for sample number in the different classes
-  if(verbose>2) cat("+++ Checking sample number per class\n")
+  if(verbose>2) cat("+++ checking sample number per class\n")
   for (i in siamcat@label@info$class.descr){
     if(sum(siamcat@label@label==i) <= 5) stop("Data set has only",sum(siamcat@label@label==i), "training examples of class",i," This is not enough for SIAMCAT to proceed")
     if (sum(siamcat@label@label==i) < 10){
@@ -52,7 +52,7 @@ validate.data <- function(siamcat, verbose=1){
 
   # if siamcat@phyloseq@sam_datadata is available, check for overlap in labels
   if (!is.null(siamcat@phyloseq@sam_data)) {
-    if(verbose>2) cat("+++ Check for overlap between labels and metadata\n")
+    if(verbose>2) cat("+++ check for overlap between labels and metadata\n")
     if (length(siamcat@label@label) == dim(siamcat@phyloseq@sam_data)[1]){
       stopifnot(all(names(siamcat@label@label) %in% rownames(siamcat@phyloseq@sam_data)) && all(rownames(siamcat@phyloseq@sam_data) %in% names(siamcat@label@label)))
       m    <- match(names(siamcat@label@label), rownames(siamcat@phyloseq@sam_data))
@@ -64,7 +64,7 @@ validate.data <- function(siamcat, verbose=1){
       cat('Warning: Removing siamcat@phyloseq@sam_datadata information for', dim(siamcat@phyloseq@sam_data)[1]-length(siamcat@label@label),'superfluous samples.\n')
       siamcat@phyloseq@sam_data <- siamcat@phyloseq@sam_data[m,]
     } else {
-      stop('Metadata is not available for all samples!')
+      stop('! Metadata is not available for all samples!')
     }
   }
 siamcat@orig_feat <- otu_table(siamcat@phyloseq)
