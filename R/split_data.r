@@ -105,7 +105,7 @@ data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, i
         stopifnot(all(sort(unique(labelNum[foldid != f])) == classes))
       }
       stopifnot(length(intersect(train.idx, test.idx)) == 0)
-      if(verbose>2) cat('+++ fold ', f, ' contains ', sum(foldid==f), ' examples\n', sep='')
+      if(verbose>2) cat('+++ fold ', f, ' contains ', sum(foldid==f), ' samples\n', sep='')
     }
     train.list[[r]] <- train.temp
     test.list[[r]]  <- test.temp
@@ -144,7 +144,7 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
   } else {
     # If stratify is not TRUE, make sure that num.sample is not bigger than number.folds
     if (length(label) <= num.folds){
-      cat("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
+      warning("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
       num.folds   <- length(label)-1
     }
     if (!is.null(inseparable)) {
