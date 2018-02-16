@@ -38,7 +38,7 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
     stop('! Unrecognized filter.method, exiting!\n')
   }
 
-  if (verbose > 1) cat("+++ Before filtering, the data has", nrow(siamcat@phyloseq@otu_table), "features\n")
+  if (verbose > 1) cat("+++ before filtering, the data has", nrow(siamcat@phyloseq@otu_table), "features\n")
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
     ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)
@@ -82,13 +82,13 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
     if (any(unm.idx)) {
       f.idx <- f.idx[-which(f.idx%in%unm.idx)]
       if (verbose > 2) cat("+++ removing ", rownames(siamcat@phyloseq@otu_table)[unm.idx], ' as unmapped reads\n')
-      if (verbose > 1) cat('+++ Removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads\n', sep='')
+      if (verbose > 1) cat('+++ removed ', sum(unm.idx), ' features corresponding to UNMAPPED reads\n', sep='')
     } else {
-      if (verbose > 1) cat('+++ Tried to remove unmapped reads, but could not find them. Continue anyway.\n')
+      if (verbose > 1) cat('+++ tried to remove unmapped reads, but could not find them. Continue anyway.\n')
     }
   }
   if(verbose>2) cat("+++ applying prune_taxa\n")
-  if (verbose > 1) cat('+++ Removed ', nrow(siamcat@phyloseq@otu_table)-length(f.idx)-sum(unm.idx), ' features whose values did not exceed ',
+  if (verbose > 1) cat('+++ removed ', nrow(siamcat@phyloseq@otu_table)-length(f.idx)-sum(unm.idx), ' features whose values did not exceed ',
     cutoff, ' in any sample (retaining ', length(f.idx), ')\n', sep='')
   f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
   siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
