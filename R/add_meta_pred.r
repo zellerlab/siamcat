@@ -38,13 +38,13 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
 
       if (!all(is.finite(m))) {
         na.cnt <- sum(!is.finite(m))
-        if (verbose > 0) cat('filling in', na.cnt, 'missing values by mean imputation\n')
+        if (verbose > 1) cat('++++ filling in', na.cnt, 'missing values by mean imputation\n')
         mn     <- mean(m, na.rm=TRUE)
         m[!is.finite(m)] <- mn
       }
 
       if (std.meta) {
-        if (verbose > 0) cat('standardize metadata feature', p, '\n')
+        if (verbose > 1) cat('++++ standardizing metadata feature', p, '\n')
         m.mean <- mean(m, na.rm = TRUE)
         m.sd   <- sd(m, na.rm = TRUE)
         stopifnot(!m.sd == 0)

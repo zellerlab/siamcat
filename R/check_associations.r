@@ -534,9 +534,9 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
   s.time <- proc.time()[3]
   ##############################################################################
   ### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for each feature
-  if(verbose>1) cat('+++ Calculating effect size for each feature.\n')
+  if(verbose>1) cat('+++ calculating effect size for each feature.\n')
   if (is.null(detect.lim)){
-    cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile.\n")
+    warning("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile.\n")
     detect.lim <- quantile(feat[feat!=0], 0.05)
   }
   if(verbose) pb = txtProgressBar(max=nrow(feat))
