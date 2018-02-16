@@ -4,27 +4,19 @@
 \alias{confounder.check}
 \title{Check for potential confounders in the metadata}
 \usage{
-confounder.check(siamcat, fn.plot, verbose = 1)
+confounder.check(siamcat, fn.plot)
 }
 \arguments{
-\item{siamcat}{object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat}}
 
-\item{fn.plot}{string, filename for the plot}
-
-\item{verbose, }{control output: \code{0} for no output at all, \code{1}
-for standard information, and \code{2} for debugging, defaults to
-\code{1}}
+\item{fn.plot}{string, filename for the pdf-plot}
 }
 \value{
-Does not return anything, but produces a single plot for each
-        metadata category
+Does not return anything, but produces a single plot for each metadata category
 }
 \description{
-This function checks for associations between class labels and
-   potential confounders (e.g. age, sex, or BMI) that are present in the
-   metadata. Statistical testing is performed with Fisher's exact test or
-   Wilcoxon test, while associations are visualized either as barplot or
-   Q-Q plot, depending on the type of metadata.
+This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata.
+Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
 }
 \keyword{SIAMCAT}
 \keyword{confounder.check}

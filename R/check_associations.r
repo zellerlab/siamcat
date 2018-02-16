@@ -428,6 +428,9 @@ plot.pvals <- function(p.vals, alpha){
   tick.labels <- formatC(ticks, digits=2)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Adj. P Value', xlab='-log10 Adj. P-Value')
+}
+
+
 # check if a string is a valid r color reprensentation
 # from stackoverflow: Check if character string is a valid color representation
 # https://stackoverflow.com/questions/13289009

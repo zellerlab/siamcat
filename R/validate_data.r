@@ -1,13 +1,6 @@
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# RScript flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
 # EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 26.06.2017
 # GNU GPL 3.0
 ###
 
@@ -17,7 +10,6 @@
 #' @keywords SIAMCAT validate.data
 #' @export
 #' @return an object of class \link{siamcat}
-
 validate.data <- function(siamcat){
   # Check if labels are available for all samples in features
   if (length(siamcat@label@label) == dim(siamcat@phyloseq@otu_table)[2]){
@@ -45,6 +37,7 @@ validate.data <- function(siamcat){
     siamcat@phyloseq@otu_table <- siamcat@phyloseq@otu_table[,m]
 
   }
+
   # Check for sample number in the different classes
   for (i in siamcat@label@info$class.descr){
     if(sum(siamcat@label@label==i) <= 5) stop("Data set has only",sum(siamcat@label@label==i), "training examples of class",i," This is not enough for SIAMCAT to proceed")
@@ -69,6 +62,5 @@ validate.data <- function(siamcat){
       stop('Metadata is not available for all samples!')
     }
   }
-  return(siamcat)
+return(siamcat)
 }
-

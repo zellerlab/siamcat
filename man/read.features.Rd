@@ -4,7 +4,7 @@
 \alias{read.features}
 \title{Read feature file}
 \usage{
-read.features(fn.in.feat)
+read.features(fn.in.feat, verbose = 0)
 }
 \arguments{
 \item{fn.in.feat}{name of the tsv file containing features}

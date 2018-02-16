@@ -53,16 +53,16 @@ siamcat <- function(...){
   for(argNr in 1:length(arglist)){
     classOfArg <- class(arglist[[argNr]])[1]
     if(classOfArg%in%names(component_classes)){
-      names(arglist)[argNr] <- classOfArg
+      names(arglist)[argNr] <- component_classes[classOfArg]
     }
   }
   
   if(is.null(arglist$phyloseq)){
-    arglistphyloseq <- arglist[sapply(arglist, is.component.class, "phyloseq")]
+    arglistphyloseq <- arglist[sapply(names(arglist), is.component.class, "phyloseq")]
+    print(names(arglistphyloseq))
     arglist$phyloseq <- do.call("new", c(list(Class="phyloseq"), arglistphyloseq))
   }
-  
-  arglist     <- arglist[sapply(arglist, is.component.class, "siamcat")]
+  arglist     <- arglist[sapply(names(arglist), is.component.class, "siamcat")]
   sc          <- do.call("new", c(list(Class="siamcat"), arglist))
     #new("siamcat", modelList = arglist$modelList, phyloseq = ps, predMatrix = arglist$predMatrix,
      #                  orig_feat = arglist$otu_table, label = arglist$label, norm.param = arglist$norm.param)
@@ -76,7 +76,7 @@ siamcat <- function(...){
 get.component.classes <- function(class){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat
-  component.classes.siamcat <- c("modelList", "orig_feat", "label", "list", "dataSplit","phyloseq")	#slot names
+  component.classes.siamcat <- c("modelList", "orig_feat", "label", "norm.param", "dataSplit","phyloseq")	#slot names
   names(component.classes.siamcat) <- c("modelList", "orig_feat", "label","norm.param", "dataSplit", "phyloseq") #class names
   
   component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")	#slot names
@@ -95,5 +95,5 @@ get.component.classes <- function(class){
 # This shows up over and over again in data infrastructure
 #' @keywords internal
 is.component.class = function(x,class){
-  inherits(x, get.component.classes(class))
+  x%in%get.component.classes(class)
 }

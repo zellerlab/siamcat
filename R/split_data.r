@@ -22,7 +22,7 @@
 #' @export
 #' @return object of class \link{siamcat-class}
 # TODO add detail section for this function
-data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL){
+data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
   ### read label and meta-data
   # (assuming the label file has 1 column)
   if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {

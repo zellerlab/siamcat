@@ -94,7 +94,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 
 #' @export
 
-get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL){
+get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL, verbose=1){
   num.runs     <- 1
   num.folds    <- 2
   fold.name = list()

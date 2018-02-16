@@ -6,7 +6,8 @@
 \usage{
 train.model(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll",
   "ridge_ll", "randomForest"), data.split = NULL, stratify = TRUE,
-  modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL)
+  modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL,
+  verbose = TRUE)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

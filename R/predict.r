@@ -18,7 +18,7 @@
 #' @keywords SIAMCAT plm.predictor
 #' @return object of class \link{siamcat-class}
 #'
-make.predictions <- function(siamcat){
+make.predictions <- function(siamcat, verbose=1){
 
 
   feat         <- t(siamcat@phyloseq@otu_table)

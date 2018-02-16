@@ -27,7 +27,7 @@
 # TODO add details section for this function
 train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                         data.split=NULL, stratify = TRUE,
-                        modsel.crit=list("auc"),  min.nonzero.coeff = 1, param.set=NULL, verbose=TRUE){
+                        modsel.crit=list("auc"),  min.nonzero.coeff = 1, param.set=NULL, verbose=1){
   # TODO 1: modsel.criterion should be implemented
   # check modsel.crit
   if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))){
@@ -59,7 +59,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
 
 
   ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(siamcat@dataSplit, siamcat@label, mode="train")
+  foldList     <- get.foldList(siamcat@dataSplit, siamcat@label, mode="train", verbose=verbose)
   fold.name    <- foldList$fold.name
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
@@ -88,7 +88,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
     data$label                     <- train.label
 
     ### internal cross-validation for model selection
-    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set, neg.lab=label$negative.lab)
+    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set, neg.lab=label@negative.lab)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
     }else{

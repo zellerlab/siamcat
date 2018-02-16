@@ -5,7 +5,7 @@
 \title{Check and visualize associations between features and classes}
 \usage{
 check.associations(siamcat, fn.plot, color.scheme = "RdYlBu", alpha = 0.05,
-  mult.corr = "fdr", sort.by = "fc", detect.lim = 10^-8,
+  mult.corr = "fdr", sort.by = "fc", detect.lim = NULL,
   pr.cutoff = 10^-6, max.show = 50, plot.type = "quantile.box",
   panels = c("fc", "auroc"))
 }

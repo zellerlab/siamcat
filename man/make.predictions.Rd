@@ -8,8 +8,9 @@ make.predictions(siamcat)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
-
-\item{siamcat}{object of class \link{siamcat-class}}
+}
+\value{
+object of class \link{siamcat-class}
 }
 \description{
 This function takes the test set instances and the model trained by \link{plm.trainer} in order to predict the classes.

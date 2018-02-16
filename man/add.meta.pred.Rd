@@ -4,20 +4,26 @@
 \alias{add.meta.pred}
 \title{Add metadata as predictors}
 \usage{
-add.meta.pred(siamcat, pred.names = NULL, std.meta)
+add.meta.pred(siamcat, pred.names = NULL, std.meta = TRUE, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
-\item{pred.names}{vector of names of the metavariables to be added to the feature matrix as predictors}
+\item{pred.names}{vector of names of the metavariables to be added to
+the feature matrix as predictors}
 
-\item{std.meta}{boolean, should added metadata features be standardized?}
+\item{std.meta}{boolean, should added metadata features be standardized?,
+defaults to \code{TRUE}}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for standard information, defaults to \code{1}}
 }
 \value{
 features object with added metadata
 }
 \description{
-This function adds metadata to the feature matrix to be later used as predictors
+This function adds metadata to the feature matrix to be
+       later used as predictors
 }
 \keyword{SIAMCAT}
 \keyword{add.meta.pred}

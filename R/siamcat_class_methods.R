@@ -37,9 +37,20 @@ setMethod("show", "siamcat", function(object){
   cat("siamcat-class object", fill=TRUE)
   if(!is.null(object@label)) cat(paste("label()                label:           ",sum(object@label@n.idx),
             object@label@n.lab,"and",sum(object@label@p.idx),object@label@p.lab,"samples", sep = " "), fill = TRUE)
-  if(!is.null(object@modelList)){
+  if(length(object@modelList@model.type)){
     cat(paste("modelList()            modelList:       ",length(object@modelList@models),
               object@modelList@model.type,"models", sep = " "), fill = TRUE)
+  }
+  if(length(object@modelList@model.type)){
+    cat(paste("modelList()            modelList:       ",length(object@modelList@models),
+              object@modelList@model.type,"models", sep = " "), fill = TRUE)
+  }
+  if(nrow(object@predMatrix)){
+    cat(paste("predMatrix()            predMatrix:      Predictions for",nrow(object@predMatrix),"samples from",
+              ncol(object@predMatrix),"cv rounds", sep = " "), fill = TRUE)
+  }
+  if(length(length(object@evalData))){
+    cat(paste("evalData()             evalData:         Average AUC:",round(object@evalData$auc.average[[1]],3), sep = " "), fill = TRUE)
   }
   
   # print otu_table (always there).
@@ -49,7 +60,7 @@ setMethod("show", "siamcat", function(object){
   
   # print Sample Data if there
   if(!is.null(sample_data(object@phyloseq, FALSE))){
-    cat(paste("phyloseq@sample_data() Sample Data:       [ ", dim(sample_data(object@phyloseq))[1], " samples by ", 
+    cat(paste("phyloseq@sam_data()    Sample Data:       [ ", dim(sample_data(object@phyloseq))[1], " samples by ", 
               dim(sample_data(object@phyloseq))[2], 
               " sample variables ]", sep = ""), fill = TRUE)
   }

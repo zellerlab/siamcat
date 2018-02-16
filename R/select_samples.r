@@ -54,7 +54,7 @@ select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range =
     }
   }
 
-  if(!filter %in% colnames(siamcat@phyloseq@sam_data)) stop("The filter name is not present in colnames of the siamcat@phyloseq@sam_datadata. Stopping.\n")
+  if(!filter %in% colnames(siamcat@phyloseq@sam_data)) stop("The filter name is not present in colnames of the siamcat@phyloseq@sam_data. Stopping.\n")
   filter.var    <- siamcat@phyloseq@sam_data[,filter]
 
   if (!is.null(allowed.range )) {
