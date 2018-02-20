@@ -1,5 +1,4 @@
-#!/bin/Rscript
-FROM r-base
+FROM bioconductor/release_core2
 
 # Download and install SIAMCAT
 WORKDIR /app

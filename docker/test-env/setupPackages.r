@@ -10,10 +10,8 @@ package.list <- c("RColorBrewer",
                   "PRROC",
                   "knitr",
                   "testthat",
-                  "rmarkdown")
+                  "rmarkdown","viridis", "gridExtra", "gridBase")
 
 notInst      <- which(!package.list%in%installed.packages())
 if(length(notInst)>0) install.packages(package.list[notInst], repos="http://cran.uni-muenster.de")
-
-source('http://bioconductor.org/biocLite.R')
 biocLite('phyloseq')
