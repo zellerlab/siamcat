@@ -32,7 +32,7 @@ preprocess_data:
     - Rscript 05_check_associations.r --feat_in valFeat_sel_filtered.tsv --label_in valLabel_sel.tsv --plot assoc.pdf --col_scheme="RdYlBu" --alpha="0.7" --min_fc="0" --mult_test="fdr" --max_show="50" --detect_limit="1e-06" --plot_type="bean"
     - Rscript 06_normalize_features.r --feat_in valFeat_sel_filtered.tsv --feat_out valFeat_sel_norm.tsv --param_out param_out.tsv --method="log.unit" --log_n0="1e-08" --sd_min_quantile="0.2" --vector_norm="2" --norm_margin="1"
     - Rscript 07_add_metadata_as_predictor.r --feat_in valFeat_sel_norm.tsv --feat_out valFeat_sel_norm.tsv --metadata_in valMetaData_sel.tsv --pred_names="fobt" --std_meta="TRUE"
-    - Rscript 08_split_data.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --train_sets trainSets.tsv --test_sets testSets.tsv --num_folds="10" --resample="5" --stratify="TRUE" --inseparable="NULL" --metadata_in valMetaData_sel.tsv
+    - Rscript 08_split_data.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --data_split dataSplit.Rdata --num_folds="10" --resample="5" --stratify="TRUE" --inseparable="NULL" --metadata_in valMetaData_sel.tsv
   artifacts:
     paths:
       - Rscript_flavor/*
@@ -47,7 +47,7 @@ train_model:
     - cd Rscript_flavor
     - R CMD INSTALL SIAMCAT_0.4.0.tar.gz
   script:
-    - Rscript 09_train_models.r --feat_in valFeat_sel_norm.tsv --label_in valLabel_sel.tsv --method="lasso" --train_sets trainSets.tsv --mlr_models_list models.RData --stratify="TRUE" --sel_criterion="auprc" --min_nonzero_coeff="2"
+    - Rscript 09_train_models.r --feat_in valFeat_sel_norm.tsv --label_in valLabel_sel.tsv --method="lasso" --data_split dataSplit.Rdata --mlr_models_list models.RData --stratify="TRUE" --sel_criterion="auprc" --min_nonzero_coeff="2"
 
   artifacts:
     paths:
@@ -63,7 +63,7 @@ make_predictions:
     - cd Rscript_flavor
     - R CMD INSTALL SIAMCAT_0.4.0.tar.gz
   script:
-    - Rscript 10_make_predictions.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --test_sets testSets.tsv --pred pred.tsv --mlr_models_list models.RData
+    - Rscript 10_make_predictions.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --data_split dataSplit.Rdata --pred pred.tsv --mlr_models_list models.RData
 
   artifacts:
     paths:
@@ -81,7 +81,7 @@ evaluate_interpret:
   script:
     - Rscript 11_evaluate_predictions.r --label_in valLabel_sel.tsv --plot evalPlot.pdf --pred pred.tsv
     - Rscript 12_interpret_model.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --origin_feat valFeat_sel.tsv --metadata_in valMetaData_sel.tsv --mlr_models_list models.RData --plot interpretation.pdf --pred pred.tsv --col_scheme="BrBG" --heatmap_type="zscore" --consens_thres="0.5"
-  
+      
   artifacts:
     paths:
       - Rscript_flavor/*
