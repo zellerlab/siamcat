@@ -10,10 +10,13 @@ build:
   stage: build
   script:
   - R CMD build ./ --no-build-vignettes
+  - mv SIAMCAT_* ./Rscript_flavor
   - cd Rscript_flavor
-  - Rscript 00_setup.r
   - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz
   - tar -zxf siamcat_test_data.tar.gz && rm siamcat_test_data.tar.gz
+  artifacts:
+    paths:
+      - Rscript_flavor/*
 
 preprocess_data:
   stage: preprocess_data
@@ -31,7 +34,7 @@ preprocess_data:
   artifacts:
     paths:
       - Rscript_flavor/*
-      
+
   only:
     - master
     - development
