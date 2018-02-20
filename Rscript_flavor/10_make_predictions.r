@@ -13,9 +13,8 @@
 ###
 
 ### parse commandline arguments
-suppressMessages(library('optparse'))
+load("../dependencies/testImage.RData")
 suppressMessages(library('SIAMCAT'))
-suppressMessages(library('methods'))
 
 # define arguments
   option_list = list(

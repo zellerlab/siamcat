@@ -13,7 +13,7 @@
 ###
 
 ### parse commandline arguments
-suppressMessages(library('optparse'))
+load("../dependencies/testImage.RData")
 
 # define arguments
 option_list <- list(

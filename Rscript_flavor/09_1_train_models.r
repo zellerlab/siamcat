@@ -13,8 +13,7 @@
 ###
 
 ### parse commandline arguments
-suppressMessages(library('optparse'))
-suppressMessages(library('methods'))
+load("../dependencies/testImage.RData")
 suppressMessages(library('SIAMCAT'))
 
 # parameters that cannot be configured externally # TODO

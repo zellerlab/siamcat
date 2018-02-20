@@ -11,8 +11,7 @@
 # file last updated: 30.11.2017
 # GNU GPL 3.0
 ###
-
-suppressMessages(library('optparse'))
+load("../dependencies/testImage.RData")
 suppressMessages(library('SIAMCAT'))
 
 # define arguments
