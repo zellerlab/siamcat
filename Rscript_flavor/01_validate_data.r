@@ -67,7 +67,7 @@ if (!is.null(opt$label_out)){
 write.table(siamcat@phyloseq@otu_table,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
             col.names = TRUE)
 if (!is.null(meta) && !is.null(opt$metadata_out)) {
-write.table(siamcat@phyloseq@sam_data  file=opt$metadata_out, quote = FALSE, sep = '\t', row.names = TRUE,
+write.table(siamcat@phyloseq@sam_data,  file=opt$metadata_out, quote = FALSE, sep = '\t', row.names = TRUE,
               col.names = NA)
 }
 

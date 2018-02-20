@@ -64,7 +64,7 @@ write.table(t(as.matrix(siamcat@label@label)), file=opt$label_out, quote=FALSE, 
 # features
 write.table(siamcat@phyloseq@otu_table,  file=opt$feat_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 # meta-data
-write.table(siamcat@phyloseq@sam_data-,  file=opt$metadata_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@sam_data,  file=opt$metadata_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 
 
 cat('\nSuccessfully selected samples in ', proc.time()[1] - start.time, ' seconds\n', sep='')
