@@ -21,8 +21,8 @@ r.seed          <- 223311
 # define arguments
 option_list     <- list(
   make_option('--label_in',        type='character',                 help='Input file containing labels'),
-  make_option('--train_sets',      type='character',                 help='Output file containing training sets'),
-  make_option('--test_sets',       type='character',                 help='Output file containing test sets'),
+  make_option('--feat_in',         type='character',                 help='Input file containing features'),
+  make_option('--data_split',      type='character',                 help='Output file containing dataSplit object'),
   make_option('--num_folds',       type='integer',   default=10,     help='Number of cross-validation folds (i.e. subsets, needs to be >= 2)'),
   make_option('--resample',        type='integer',   default=0,      help='Resampling rounds (values <= 1 deactivate resampling)'),
   make_option('--stratify',        type='logical',   default=TRUE,   help='Should cross-validation be stratified such that an approx. 
@@ -41,8 +41,8 @@ opt            <- parse_args(OptionParser(option_list=option_list))
 cat("=== 08_data_splitter.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('label_in    =', opt$label_in, '\n')
-cat('train_sets  =', opt$train_sets, '\n')
-cat('test_sets   =', opt$test_sets, '\n')
+cat('feat_in     =', opt$feat_in, '\n')
+cat('data_split  =', opt$data_split, '\n')
 cat('num_folds   =', opt$num_folds, '\n')
 cat('resample    =', opt$resample, '\n')
 cat('stratify    =', opt$stratify, '\n')
@@ -55,42 +55,25 @@ start.time  <- proc.time()[1]
 set.seed(r.seed)
 
 
-label         <- read.labels(opt$label_in)
-siamcat <- siamcat(label)
+feat  <- read.features(opt$feat_in)
+label <- read.labels(opt$label_in, feat)
+if(!is.null(opt$inseparable)){
+  meta  <- read.meta(opt$metadata_in)
+  siamcat <- siamcat(feat,label,meta)
+}else{
+  siamcat <- siamcat(feat,label)
+}
 ### Core function sourced from the library
 siamcat <- data.splitter(siamcat,
                                num.folds=opt$num_folds,
                                num.resample=opt$resample, 
                                stratify=opt$stratify, 
-                               inseparable=opt$inseparable,
-                               meta=opt$metadata_in)
+                               inseparable=opt$inseparable)
 # write headers:
-if( !(opt$subdivide_train_set) ){
-  write('#Cross-validation training folds', file=opt$train_sets, append=FALSE)
-  write(paste0('#num.folds:\n#',opt$num_folds), file=opt$train_sets, append=TRUE)
-}
-write('#Cross-validation test folds',     file=opt$test_sets, append=FALSE)
 
-for (r in 1:training.data$num.resample) {
-  for (f in 1:training.data$num.folds) {
-    if (opt$subdivide_train_set){
-      # train data is written to multiple files seperated by folds and resamplings
-      train.file <- paste0(opt$train_sets, "_", sprintf("%03d", r),"r_", sprintf("%03d", f), "f.tsv")
-      write('#Cross-validation training folds', file=train.file, append=FALSE)
-      write(paste0('#num.folds:\n#1'), file=train.file, append=TRUE)
-    } else{
-      # train data is written to one file
-      train.file <- opt$train_sets
-    }
-    test.file <- opt$test_sets
-    
-    fold.name = paste('>cv_fold', ifelse(opt$resample>1, paste(f, '_rep', r, sep=''), as.character(f)), sep='')
+dataSplit <- siamcat@dataSplit
+save(dataSplit,file=opt$data_split)
 
-    write.table(t(c(fold.name, siamcat@dataSplit@training.folds[[r]][[f]])), file=opt$train_sets, quote=FALSE, 
-                sep='\t', row.names=FALSE, col.names=FALSE, append=TRUE)
-    write.table(t(c(fold.name, siamcat@dataSplit@test.folds[[r]][[f]])),     file=opt$test_sets,  quote=FALSE, 
-  }
-}
 if (opt$stratify) {
   cat('\nSuccessfully created data split for ', opt$num_folds, '-fold stratified cross-validation', sep='')
 } else {

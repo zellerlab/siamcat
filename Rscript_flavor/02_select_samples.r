@@ -51,7 +51,7 @@ siamcat <- siamcat(feat,label,meta)
 
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
-siamcat     <-  select.samples(siamcat 
+siamcat     <-  select.samples(siamcat,
                                filter=opt$filter_var, 
                                allowed.range=opt$allowed_range, 
                                allowed.set=opt$allowed_set)

@@ -44,7 +44,7 @@ start.time    <- proc.time()[1]
 feat          <- read.features(opt$feat_in)
 siamcat <- siamcat(feat)
 ### Start core function
-siamcat <- filter.feat(siamcat
+siamcat <- filter.feat(siamcat,
 	                          filter.method = opt$method, 
 	                          cutoff = opt$cutoff, 
 	                          recomp.prop = opt$recomp_prop,

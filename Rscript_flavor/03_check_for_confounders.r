@@ -19,6 +19,7 @@ suppressMessages(library('SIAMCAT'))
 option_list    <- list(
   make_option('--metadata_in',     type='character', help='Input file containing meta-data'),
   make_option('--label_in',        type='character', help='Input file containing labels'),
+  make_option('--feat_in',         type='character',               help='Input file containing features'),
   make_option('--plot',            type='character', help='Output pdf file which will contain resulting plots')
   )
 
@@ -29,6 +30,7 @@ cat("=== 03_confounder_check.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('metadata_in  =', opt$metadata_in, '\n')
 cat('label_in     =', opt$label_in, '\n')
+cat('feat_in      =', opt$feat_in, '\n')
 cat('plot         =', opt$plot, '\n')
 cat('\n')
 
@@ -36,9 +38,10 @@ start.time   <- proc.time()[1]
 
 
 ### read label and meta- data
-label        <- read.labels(opt$label_in)
-meta         <- read.meta(opt$metadata_in)
-siamcat <- siamcat(label,meta)
+feat  <- read.features(opt$feat_in)
+label <- read.labels(opt$label_in, feat)
+meta  <- read.meta(opt$metadata_in)
+siamcat <- siamcat(feat,label,meta)
 ### Start core function
 confounder.check(siamcat, fn.plot=opt$plot)
 ### End core function
