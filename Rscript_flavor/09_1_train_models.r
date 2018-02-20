@@ -13,7 +13,8 @@
 ###
 
 ### parse commandline arguments
-load("../dependencies/testImage.RData")
+suppressMessages(library('session'))
+restore.session(file="../dependencies/testImage.RData")
 suppressMessages(library('SIAMCAT'))
 
 # parameters that cannot be configured externally # TODO

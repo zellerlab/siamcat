@@ -13,7 +13,9 @@
 ###
 
 ### parse commandline arguments
-load("../dependencies/testImage.RData")
+suppressMessages(library('session'))
+restore.session(file="../dependencies/testImage.RData")
+suppressMessages(library('SIAMCAT'))
 
 # define arguments
 option_list <- list(
