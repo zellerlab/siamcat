@@ -13,8 +13,8 @@
 ###
 
 ### parse commandline arguments
-suppressMessages(library('session'))
-restore.session(file="../dependencies/testImage.RData")
+suppressMessages(library('optparse'))
+suppressMessages(library('methods'))
 suppressMessages(library('SIAMCAT'))
 
 # parameters that cannot be configured externally # TODO

@@ -1,4 +1,4 @@
-image: r-base
+image: siamcat/test-env
 stages:
   - build
   - preprocess_data

@@ -11,10 +11,9 @@
 # file last updated: 30.11.2017
 # GNU GPL 3.0
 ###
-suppressMessages(library('session'))
-restore.session(file="../dependencies/testImage.RData")
-suppressMessages(library('SIAMCAT'))
 
+suppressMessages(library('optparse'))
+suppressMessages(library('SIAMCAT'))
 
 # define arguments
 option_list = list(

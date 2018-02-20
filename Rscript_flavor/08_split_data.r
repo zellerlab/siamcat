@@ -13,10 +13,8 @@
 ###
 
 ### parse commandline arguments
-suppressMessages(library('session'))
-restore.session(file="../dependencies/testImage.RData")
+suppressMessages(library('optparse'))
 suppressMessages(library('SIAMCAT'))
-
 
 r.seed          <- 223311
 
