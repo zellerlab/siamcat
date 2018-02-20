@@ -1,15 +1,17 @@
 image: r-base
 stages:
   - build
-  - 01_validate_data
-  - 02_select_samples
+  - preprocess_data
+  - train_model
+  - make_predictions
+  - eval_interpret
 
 build:
   stage: build
   script:
   - R CMD build ./ --no-build-vignettes
-  - R CMD INSTALL SIAMCAT_0.4.0.tar.gz 
   - cd Rscript_flavor
+  - Rscript 00_setup.r
   - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz
   - tar -zxf siamcat_test_data.tar.gz && rm siamcat_test_data.tar.gz
 
