@@ -14,7 +14,6 @@ build:
   - cd Rscript_flavor
   - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz
   - tar -zxf siamcat_test_data.tar.gz && rm siamcat_test_data.tar.gz
-  - Rscript 00_setup.r
   artifacts:
     paths:
       - Rscript_flavor/*
