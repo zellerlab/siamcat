@@ -5,5 +5,5 @@
 # GNU GPL 3.0
 ###
 
-load("../dependencies/testImage.Rdata")
+load("../dependencies/testImage.RData")
 if(!"SIAMCAT"%in%installed.packages()) install.packages("../SIAMCAT_0.4.0.tar.gz", repos=NULL, type="source")
