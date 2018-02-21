@@ -18,6 +18,7 @@ build:
   artifacts:
     paths:
       - Rscript_flavor/*
+    expire_in: 30 min
 
 preprocess_data:
   stage: preprocess_data
@@ -36,6 +37,7 @@ preprocess_data:
   artifacts:
     paths:
       - Rscript_flavor/*
+    expire_in: 30 min
 
   only:
     - master
@@ -52,6 +54,7 @@ train_model:
   artifacts:
     paths:
       - Rscript_flavor/*
+    expire_in: 30 min
 
   only:
     - master
@@ -81,10 +84,11 @@ evaluate_interpret:
   script:
     - Rscript 11_evaluate_predictions.r --label_in valLabel_sel.tsv --plot evalPlot.pdf --pred pred.tsv
     - Rscript 12_interpret_model.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --origin_feat valFeat_sel.tsv --metadata_in valMetaData_sel.tsv --mlr_models_list models.RData --plot interpretation.pdf --pred pred.tsv --col_scheme="BrBG" --heatmap_type="zscore" --consens_thres="0.5"
-      
+
   artifacts:
     paths:
       - Rscript_flavor/*
+    expire_in: 30 min
 
   only:
     - master
