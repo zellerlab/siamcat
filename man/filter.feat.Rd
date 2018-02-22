@@ -4,33 +4,36 @@
 \alias{filter.feat}
 \title{Perform unsupervised feature filtering.}
 \usage{
-filter.feat(feat, filter.method = abundance, cutoff = 0.001,
-  recomp.prop = FALSE, rm.unmapped = TRUE)
+filter.feat(siamcat, filter.method = "abundance", cutoff = 0.001,
+  recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)
 }
 \arguments{
-\item{feat}{feature object}
+\item{siamcat}{an object of class \link{siamcat}}
 
-\item{filter.method}{method used for filtering the features, can be one of these: \code{c("abundance", "cum.abundance", "prevalence")}}
+\item{filter.method}{method used for filtering the features, can be one of
+these: \code{c("abundance", "cum.abundance", "prevalence")}}
 
 \item{cutoff}{float, abundace or prevalence cutoff}
 
-\item{recomp.prop}{boolean, should absolute abundances be converted into relative abundances?}
+\item{recomp.prop}{boolean, should absolute abundances be
+converted into relative abundances?}
 
 \item{rm.unmapped}{boolean, should unmapped reads be discarded?}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for standard information, defaults to \code{1}}
 }
 \value{
-Returns the filtered feature matrix
+siamcat an object of class \link{siamcat}
 }
 \description{
-This function may convert absolute abundances into relative abundances and then performs unsupervised feature filtering. Features can be filtered based on abundance or prevalence. Additionally, unmapped reads may be removed.
+This function may convert absolute abundances into relative
+       abundances and then performs unsupervised feature filtering. Features
+       can be filtered based on abundance or prevalence. Additionally,
+       unmapped reads may be removed.
 }
 \details{
-Currently, there are three filtering methods implemented:
-\itemize{
- \item \code{"abundance"} remove features for which the abundance is never above the threshold value (e.g. 0.5\%) in any of the samples
- \item \code{"cum.abundance"} remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up \code{(1-cutoff)} of the reads in any samples
- \item \code{"prevalence"} remove features with low prevalence across samples, i.e. features that are undetected in more than \code{(1-cutoff)} proportion of samples
-}
+This function
 }
 \keyword{SIAMCAT}
 \keyword{filter.feat}

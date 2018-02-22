@@ -13,61 +13,60 @@
 
 #' @title Split a dataset into training and a test sets.
 #' @description This function prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
-#' @param label label object
+#' @param siamcat object of class \link{siamcat-class}
 #' @param num.folds number of cross-validation folds (needs to be \code{>=2}), defaults to \code{2}
 #' @param num.resample resampling rounds (values \code{<= 1} deactivate resampling), defaults to \code{1}
 #' @param stratify boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?, defaults to \code{TRUE}
 #' @param inseparable column index or column name of metadata variable, defaults to \code{NULL}
-#' @param meta metadata object, only needed when \code{inseparable} is given, defaults to \code{NULL}
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for only information about progress and success, \code{2} for normal 
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT data.splitter
 #' @export
-#' @return list containing the indices of the training and test folds and the parameters of the splits: \itemize{
-#'  \item \code{$training.folds} nested list, containing for \code{length(num.folds)} the sample names of the \code{length(num.resample)} training folds;
-#'  \item \code{$test.folds} nested list, containing for \code{length(num.folds)} the sample names of the \code{length(num.resample)} test folds;
-#'  \item \code{$num.resample} = number of repeated samplings;
-#'  \item \code{$num.folds} = number of folds
-#'}
+#' @return object of class \link{siamcat-class}
 # TODO add detail section for this function
-data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL, meta=NULL, verbose=TRUE){
+data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
+  if(verbose>1) cat("+ starting data.splitter\n")
+  s.time <- proc.time()[3]
   ### read label and meta-data
   # (assuming the label file has 1 column)
   if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {
     inseparable <- NULL
   #   cat('+++ Inseparable parameter not specified\n')
   }
-  labelNum        <- as.numeric(label$label)
-  names(labelNum) <- names(label$label)
+  labelNum        <- as.numeric(siamcat@label@label)
+  names(labelNum) <- names(siamcat@label@label)
   exm.ids         <- names(labelNum)
 
   # parse label description
-  classes      <- sort(label$info$class.descr)
+  classes      <- sort(c(siamcat@label@negative.lab,siamcat@label@positive.lab))
 
   ### check arguments
   if (num.resample < 1) {
-    cat('+++ Resetting num.resample = 1 (', num.resample, ' is an invalid number of resampling rounds)\n', sep='')
+    if(verbose>1) cat('+++ Resetting num.resample = 1 (', num.resample, ' is an invalid number of resampling rounds)\n', sep='')
     num.resample  <- 1
   }
   if (num.folds < 2) {
-    cat('+++ Resetting num.folds = 2 (', num.folds, ' is an invalid number of folds)\n', sep='')
+    if(verbose>1) cat('+++ Resetting num.folds = 2 (', num.folds, ' is an invalid number of folds)\n', sep='')
     num.folds     <- 2
   }
   if (!is.null(inseparable) && stratify) {
-    cat('+++ Resetting stratify to FALSE (Stratification is not supported when inseparable is given)\n')
+    if(verbose>1) cat('+++ Resetting stratify to FALSE (Stratification is not supported when inseparable is given)\n')
     stratify      <- FALSE
   }
   if (num.folds >= length(labelNum)) {
-    cat('+++ Performing un-stratified leave-one-out (LOO) cross-validation\n')
+    if(verbose>1) cat('+++ Performing un-stratified leave-one-out (LOO) cross-validation\n')
     stratify      <- FALSE
     num.folds     <- length(labelNum)-1
   }
-  if (!is.null(inseparable) && is.null(meta)){
+  if (!is.null(inseparable) && is.null(siamcat@phyloseq@sam_data)){
     stop('Meta-data must be provided if the inseparable parameter is not NULL')
   }
   if (!is.null(inseparable)){
     if (is.numeric(inseparable) && length(inseparable) == 1){
-      stopifnot(inseparable <= ncol(meta))
+      stopifnot(inseparable <= ncol(siamcat@phyloseq@sam_data))
     } else if (class(inseparable) == 'character' && length(inseparable == 1)){
-      stopifnot(inseparable %in% colnames(meta))
+      stopifnot(inseparable %in% colnames(siamcat@phyloseq@sam_data))
     } else {
       stop('Inseparable parameter must be either a single column index or a single column name of metadata matrix')
     }
@@ -79,7 +78,8 @@ data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, ins
 
   for (r in 1:num.resample) {
     labelNum      <- sample(labelNum)
-    foldid        <- assign.fold(label = labelNum, num.folds=num.folds, stratified = stratify, inseparable = inseparable, meta=meta)
+    foldid        <- assign.fold(label = labelNum, num.folds=num.folds, stratified = stratify, 
+                                 inseparable = inseparable, meta=siamcat@phyloseq@sam_data, verbose=verbose)
     names(foldid) <- names(labelNum)
     stopifnot(length(labelNum) == length(foldid))
     stopifnot(length(unique(foldid)) == num.folds)
@@ -87,7 +87,7 @@ data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, ins
     train.temp    <- list(NULL)
     test.temp     <- list(NULL)
 
-    if (verbose) cat('\n+++ Splitting the dataset:\n')
+    if(verbose>1) cat('+ resampling round',r,'\n')
     for (f in 1:num.folds) {
       # make sure each fold contains examples from all classes
       # for stratify==TRUE should be tested before assignment of test/training set
@@ -105,21 +105,28 @@ data.splitter <- function(label, num.folds=2, num.resample=1, stratify=TRUE, ins
         stopifnot(all(sort(unique(labelNum[foldid != f])) == classes))
       }
       stopifnot(length(intersect(train.idx, test.idx)) == 0)
-      if(verbose) cat('   + Fold ', f, ' contains ', sum(foldid==f), ' examples\n', sep='')
+      if(verbose>2) cat('+++ fold ', f, ' contains ', sum(foldid==f), ' samples\n', sep='')
     }
     train.list[[r]] <- train.temp
     test.list[[r]]  <- test.temp
   }
 
-
-  return(list("training.folds" = train.list, "test.folds" = test.list, "num.resample" = num.resample, "num.folds" = num.folds))
+  siamcat@dataSplit <- new("dataSplit",training.folds=train.list,
+                           test.folds=test.list,
+                           num.resample=num.resample,
+                           num.folds=num.folds)
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished data.splitter in",e.time-s.time,"s\n")
+  if(verbose==1)cat("Features splitted for cross-validation successfully.\n")
+  return(siamcat)
 }
 
 
 ##### function to partition training set into cross-validation folds for model selection
 ### Works analogous to the function used in data_splitter.r
 #' @export
-assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=NULL) {
+assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=NULL, verbose=1) {
+  if(verbose>2) cat("+++ starting assign.fold\n")
   foldid  <- rep(0, length(label))
   classes <- sort(unique(label))
   # Transform number of classes into vector of 1 to x for looping over.
@@ -137,7 +144,7 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
   } else {
     # If stratify is not TRUE, make sure that num.sample is not bigger than number.folds
     if (length(label) <= num.folds){
-      cat("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
+      warning("+++ num.samples is exceeding number of folds, setting CV to (k-1) unstratified CV\n")
       num.folds   <- length(label)-1
     }
     if (!is.null(inseparable)) {
@@ -168,6 +175,6 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
   }
 
   stopifnot(length(label) == length(foldid))
-
+  if(verbose>2) cat("+++ finished assign.fold\n")
   return(foldid)
 }

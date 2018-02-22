@@ -2,14 +2,14 @@
 % Please edit documentation in R/normalize_feat.r
 \name{normalize.feat}
 \alias{normalize.feat}
-\title{Perform feature normalization according to specified parameters.}
+\title{Perform feature normalization}
 \usage{
-normalize.feat(feat, norm.method = c("rank.unit", "rank.std", "log.std",
+normalize.feat(siamcat, norm.method = c("rank.unit", "rank.std", "log.std",
   "log.unit", "clr"), norm.param = list(log.n0 = 1e-08, sd.min.q = 0.1, n.p =
   2, norm.margin = 1))
 }
 \arguments{
-\item{feat}{feature object}
+\item{siamcat}{an object of class \link{siamcat}}
 
 \item{norm.method}{string, normalization method, can be one of these:
 '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "clr")}}
@@ -18,10 +18,7 @@ normalize.feat(feat, norm.method = c("rank.unit", "rank.std", "log.std",
 normalization methods, see details for more information}
 }
 \value{
-list containing the matrix of normalized features and a list of normalization parameters: \itemize{
- \item \code{$par} <- list of parameters utilized in the normalization;
- \item \code{$feat.norm} <- normalized features
-}
+an object of class \link{siamcat}
 }
 \description{
 This function performs feature normalization according to user-
@@ -51,7 +48,8 @@ which are dependant on the normalization method of choice:
        to the denominator during standardization in order to avoid
        underestimation of the standard deviation, defaults to 0.1
  \item \code{"clr"} requires \code{log.n0}, which is the pseudocount to be
-       added before log-transformation, defaults to \code{1e-08}
+       added before log-transformation, defaults to \code{NULL} leading to the
+       estimation of \code{log.n0} from the data
  \item \code{"log.std"} requires both \code{log.n0} and \code{sd.min.q}, using
        the same default values
  \item \code{"log.unit"} requires next to \code{log.n0} also the parameters

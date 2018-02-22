@@ -61,105 +61,119 @@
       
       </header><div class="row">
   <div class="contents col-md-9">
-    
-<div id="overview" class="section level3">
-<h3 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h3>
-<p>SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes. A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots). SIAMCAT is available as Galaxy web server or can be downloaded and run as a command line tool, as detailed below.</p>
+    <div id="siamcat---statistical-inference-of-associations-between-microbial-communities-and-host-phenotype" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#siamcat---statistical-inference-of-associations-between-microbial-communities-and-host-phenotype" class="anchor"></a>SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoType</h1></div>
+<div id="overview" class="section level2">
+<h2 class="hasAnchor">
+<a href="#overview" class="anchor"></a>Overview</h2>
+<p>SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes.<br>
+A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed.<br>
+SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots).<br>
+SIAMCAT is available in three different flavors:</p>
+<ul>
+<li>Galaxy web server</li>
+<li>command line tool</li>
+<li>R package</li>
+</ul>
+<p>Please see the Support Section if you run into problems when using SIAMCAT.</p>
 </div>
-<div id="input-data-format" class="section level3">
-<h3 class="hasAnchor">
-<a href="#input-data-format" class="anchor"></a>Input data format</h3>
-<p>All files are in tab-separated column format</p>
-<p><strong>Label data</strong>: First row is expected to be #BINARY:1=[label for cases];-1=[label for controls] Second row should contain the sample identifiers as tab-separated list (consistent with feature and metadata). Third row is expected to contain the actual class labels (tab-separated) 1 for each case and -1 for each control. Note: Labels can take other numeric values (but not characters or strings); importantly, the label for cases has to be greater than the one for controls.</p>
-<p><strong>Feature matrix</strong>: features (in rows) x samples (in columns) First row should contain sample labels (consistent with label data). First column should contain feature labels (e.g. taxonomic identifiers). The remaining entries are expected to be real values &gt;= 0 that quantify the abundance of each feature in each sample.</p>
-<p><strong>Metadata (optional)</strong>: samples (in rows) x metadata (in columns) Metadata needs to be converted to numerical values by the user (This is necessary for heatmap displays)!</p>
+<div id="input-data-format" class="section level2">
+<h2 class="hasAnchor">
+<a href="#input-data-format" class="anchor"></a>Input data format</h2>
+<p>The input data should be organized in the same way for every version of SIAMCAT. All files are in tab-separated column format</p>
+<ul>
+<li><p><strong>Label data</strong>: First row is expected to be <code>#BINARY:1=[label for cases];-1=[label for controls]</code><br>
+Second row should contain the sample identifiers as tab-separated list (consistent with feature and metadata). Third row is expected to contain the actual class labels (tab-separated), e.g. <code>1</code> for each case and <code>-1</code> for each control.<br>
+Note: Labels can take other numeric values (but not characters or strings); importantly, the label for cases has to be greater than the one for controls.</p></li>
+<li><p><strong>Feature matrix</strong>: <em>features</em> (in rows) <em>x samples</em> (in columns)<br>
+First row should contain sample labels (consistent with label data), while the first column should contain feature labels (e.g. taxonomic identifiers). The remaining entries are expected to be real values &gt;= 0 that quantify the abundance of each feature in each sample.</p></li>
+<li><p><strong>Metadata</strong> (optional): <em>samples</em> (in rows) <em>x metadata</em> (in columns)<br>
+Metadata needs to be converted to numerical values by the user (This is necessary for heatmap displays)!</p></li>
+</ul>
 </div>
-<div id="galaxy-interface" class="section level3">
+<div id="galaxy-interface" class="section level2">
+<h2 class="hasAnchor">
+<a href="#galaxy-interface" class="anchor"></a>Galaxy interface:</h2>
+<p>The Galaxy interface can be found here: <a href="http://siamcat.embl.de/" class="uri">http://siamcat.embl.de/</a></p>
+<div id="galaxy-in-brief" class="section level3">
 <h3 class="hasAnchor">
-<a href="#galaxy-interface" class="anchor"></a>Galaxy interface:</h3>
-<p><a href="http://congo.embl.de/galaxy/">SIAMCAT galaxy server</a></p>
-<div id="galaxy-in-brief" class="section level4">
-<h4 class="hasAnchor">
-<a href="#galaxy-in-brief" class="anchor"></a>Galaxy in brief</h4>
-<p>Left panel: TOOLS lists available analysis modules, click to choose which ones you’d like to run</p>
-<p>Right panel: HISTORY keeps track of every analysis step you’ve been performing click on the “eye” icon to view data, or click on the “floppy disk” icon to download results if something goes wrong the “i” icon can provide useful details the “circular arrows” icon allows to rerun a job you can delete analysis steps from your history using the “x” icon</p>
-<p>center panel: ANALYZE DATA allows to specify input data sets and parameters for each analysis module</p>
+<a href="#galaxy-in-brief" class="anchor"></a>Galaxy in brief</h3>
+<ul>
+<li>
+<strong>Left panel</strong>: <code>TOOLS</code> lists available analysis modules.<br>
+Click to choose which ones you’d like to run.</li>
+<li>
+<strong>Right panel</strong>: <code>HISTORY</code> keeps track of every analysis step you have perfomed.<br>
+</li>
+<li>Click on the “eye” icon to view data, or click on the “floppy disk” icon to download results<br>
+</li>
+<li>If something goes wrong the “i” icon can provide useful details</li>
+<li>the “circular arrows” icon allows to rerun a job</li>
+<li><p>you can delete analysis steps from your history using the “x” icon</p></li>
+<li><p><strong>Central panel</strong>: <code>ANALYZE DATA</code> allows to specify input data sets and parameters for each analysis module</p></li>
+</ul>
 <p>Additional info: <a href="https://usegalaxy.org/" class="uri">https://usegalaxy.org/</a> (in particular the Help menu) and <a href="https://wiki.galaxyproject.org/Learn" class="uri">https://wiki.galaxyproject.org/Learn</a></p>
 </div>
-<div id="getting-started" class="section level4">
-<h4 class="hasAnchor">
-<a href="#getting-started" class="anchor"></a>Getting started</h4>
-<p>Start by uploading your data (see above for input data formats) using the DATA IMPORT / Import Data module / Upload File</p>
+<div id="getting-started-with-galaxy" class="section level3">
+<h3 class="hasAnchor">
+<a href="#getting-started-with-galaxy" class="anchor"></a>Getting started with Galaxy</h3>
+<p>Start by uploading your data (see above for input data formats) using the <code>DATA IMPORT / Import Data module / Upload File</code></p>
 <p>Then procede by executing all SIAMCAT modules in order (from A to I). See example history / Workflow as well as each module’s description for specific information on input and output data</p>
 </div>
-<div id="stable-version" class="section level4">
-<h4 class="hasAnchor">
-<a href="#stable-version" class="anchor"></a>Stable version:</h4>
-<p><a href="https://git.embl.de/grp-zeller/SIAMCAT" class="uri">https://git.embl.de/grp-zeller/SIAMCAT</a></p>
 </div>
-<div id="development-version-the-most-up-to-date-but-not-always-stable" class="section level4">
-<h4 class="hasAnchor">
-<a href="#development-version-the-most-up-to-date-but-not-always-stable" class="anchor"></a>Development version (the most up to date but not always stable):</h4>
-<p><a href="https://git.embl.de/grp-zeller/SIAMCAT/tree/development" class="uri">https://git.embl.de/grp-zeller/SIAMCAT/tree/development</a></p>
+<div id="commandline-version" class="section level2">
+<h2 class="hasAnchor">
+<a href="#commandline-version" class="anchor"></a>Commandline version</h2>
+<p>The commandline version are a collection of modules implemented in R which are called via a bash script.</p>
+<ul>
+<li><p>Stable version: <a href="https://github.com/gezel/siamcat/" class="uri">https://github.com/gezel/siamcat/</a></p></li>
+<li><p>Developmental version (only available inside the EMBL intranet): <code>beta:/g/bork4/zeller/dev/siamcat</code></p></li>
+</ul>
+<pre><code># type
+git clone beta:/g/bork4/zeller/dev/siamcat
+# in the folder in which you'd like to clone the siamcat repository</code></pre>
 <p>R packages required to run SIAMCAT:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">"RColorBrewer"</span>,
-                   <span class="st">"beanplot"</span>,
-                   <span class="st">"glmnet"</span>,
-                   <span class="st">"LiblineaR"</span>,
-                   <span class="st">"pROC"</span>,
-                   <span class="st">"optparse"</span>,
-                   <span class="st">"colorRamps"</span>,
-                   <span class="st">"gelnet"</span>,
-                   <span class="st">"mlr"</span>))</code></pre></div>
-</div>
-</div>
-<div id="commandline-version-bash-script-calling-modules-implemented-in-r" class="section level3">
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">'optparse'</span>)
+<span class="kw">install.packages</span>(<span class="st">'LiblineaR'</span>)
+<span class="kw">install.packages</span>(<span class="st">'pROC'</span>)
+<span class="kw">install.packages</span>(<span class="st">'colorRamps'</span>)
+<span class="kw">install.packages</span>(<span class="st">'RColorBrewer'</span>)
+<span class="kw">install.packages</span>(<span class="st">'beanplot'</span>)</code></pre></div>
+<div id="using-the-commandline-version" class="section level3">
 <h3 class="hasAnchor">
-<a href="#commandline-version-bash-script-calling-modules-implemented-in-r" class="anchor"></a>Commandline version (bash script calling modules implemented in R)</h3>
-<p><a href="https://git.embl.de/grp-zeller/SIAMCAT/tree/master/Rscript_flavor" class="uri">https://git.embl.de/grp-zeller/SIAMCAT/tree/master/Rscript_flavor</a></p>
+<a href="#using-the-commandline-version" class="anchor"></a>Using the Commandline version</h3>
+<p>…COMING SOON…</p>
 </div>
-<div id="license" class="section level3">
-<h3 class="hasAnchor">
-<a href="#license" class="anchor"></a>License</h3>
-<p>Distributed under the GNU GPLv3 License. See accompanying file <a href="https://git.embl.de/grp-zeller/SIAMCAT/blob/development/LICENSE">LICENSE</a> or copy at <a href="http://www.gnu.org/licenses/gpl-3.0.html" class="uri">http://www.gnu.org/licenses/gpl-3.0.html</a>.</p>
 </div>
-<div id="support" class="section level3">
+<div id="r-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#r-package" class="anchor"></a>R package</h2>
+<p>The SIAMCAT R package …COMING SOON…</p>
+<div id="using-the-r-package" class="section level3">
 <h3 class="hasAnchor">
-<a href="#support" class="anchor"></a>Support</h3>
+<a href="#using-the-r-package" class="anchor"></a>Using the R package</h3>
+<p>…COMING SOON…</p>
+</div>
+</div>
+<div id="support" class="section level2">
+<h2 class="hasAnchor">
+<a href="#support" class="anchor"></a>Support</h2>
 <p>Google user group for support:</p>
-<p><a href="https://groups.google.com/d/forum/siamcat-users" class="uri">https://groups.google.com/d/forum/siamcat-users</a> <a href="mailto:zeller@embl.de">mailto:zeller@embl.de</a></p>
-</div>
-<div id="developer-guidelines" class="section level3">
+<p><a href="https://groups.google.com/d/forum/siamcat-users" class="uri">https://groups.google.com/d/forum/siamcat-users</a></p>
+<div id="known-issues" class="section level3">
 <h3 class="hasAnchor">
-<a href="#developer-guidelines" class="anchor"></a>Developer guidelines</h3>
-<p>We are thrilled to have other people help us develop SIAMCAT. To make it effcient here are some basic rules of cooperation we adapted internally:</p>
-<ol>
-<li>How can I help?
-<ul>
-<li>find an open issue in the <a href="https://git.embl.de/grp-zeller/SIAMCAT/issues" class="uri">https://git.embl.de/grp-zeller/SIAMCAT/issues</a> <strong>or</strong>
-</li>
-<li>if you have an idea that is not mentioned in the issues - create an new issue</li>
-</ul>
-</li>
-<li>How do I get started
-<ul>
-<li>create a new branch and call it “Issue X”</li>
-<li>add a feature to the code in that branch</li>
-<li>one branch = one feature rule should be kept unless there is a <strong>really</strong> good reason to add more features together</li>
-<li>feature = a functionality + needed documentation</li>
-</ul>
-</li>
-<li>Create a merge request with your branch once you are ready
-<ul>
-<li>make sure it is clear and the code is easy to read</li>
-<li>CI will run a test on the merge request - of it fails the request will be rejected</li>
-<li>if the request passes the CI we will review the code and merge!</li>
-</ul>
-</li>
-</ol>
+<a href="#known-issues" class="anchor"></a>Known issues</h3>
+<p>Examples are weighted differently between classes (a remnant of our colorectal cancer microbiome study). Fixed in Galaxy, will be pushed to GitHub soon.</p>
+<p>Class labels are somehow swapped in the LASSO module, so that prediction scores are 1 - p instead of p (posterior probability), consequently precision-recall curves are incorrect, but ROC-curves are unaffected. Appears to only occur in a recent version of R and/or the LiblineaR package; will be fixed with high priority.</p>
 </div>
-
+<div id="contact" class="section level3">
+<h3 class="hasAnchor">
+<a href="#contact" class="anchor"></a>Contact</h3>
+<p>Please let me know if you run into any issues (mailto: <a href="mailto:zeller@embl.de">zeller@embl.de</a>)</p>
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3" id="sidebar">

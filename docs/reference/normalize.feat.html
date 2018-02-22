@@ -95,7 +95,7 @@
  specified parameters.</p>
     
 
-    <pre class="usage"><span class='fu'>normalize.feat</span>(<span class='no'>feat</span>, <span class='kw'>norm.method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rank.unit"</span>, <span class='st'>"rank.std"</span>, <span class='st'>"log.std"</span>,
+    <pre class="usage"><span class='fu'>normalize.feat</span>(<span class='no'>siamcat</span>, <span class='kw'>norm.method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rank.unit"</span>, <span class='st'>"rank.std"</span>, <span class='st'>"log.std"</span>,
   <span class='st'>"log.unit"</span>, <span class='st'>"clr"</span>), <span class='kw'>norm.param</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>log.n0</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>sd.min.q</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>n.p</span> <span class='kw'>=</span>
   <span class='fl'>2</span>, <span class='kw'>norm.margin</span> <span class='kw'>=</span> <span class='fl'>1</span>))</pre>
     
@@ -103,8 +103,8 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>feature object</p></td>
+      <th>siamcat</th>
+      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
     </tr>
     <tr>
       <th>norm.method</th>
@@ -120,11 +120,7 @@ normalization methods, see details for more information</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list containing the matrix of normalized features and a list of normalization parameters:</p><ul>
-<li><p><code>$par</code> &lt;- list of parameters utilized in the normalization;</p></li>
-<li><p><code>$feat.norm</code> &lt;- normalized features</p></li>
-</ul>
-
+    <p>an object of class <a href='siamcat.html'>siamcat</a></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

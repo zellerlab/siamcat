@@ -33,10 +33,10 @@ eval.classifier <- function(predictions, test.label, label) {
     tn = vector('numeric', length(thr))
     fn = vector('numeric', length(thr))
     for (i in 1:length(thr)) {
-      tp[i] = sum(test.label==label$positive.lab & predictions>thr[i])
-      fp[i] = sum(test.label==label$negative.lab & predictions>thr[i])
-      tn[i] = sum(test.label==label$negative.lab & predictions<thr[i])
-      fn[i] = sum(test.label==label$positive.lab & predictions<thr[i])
+      tp[i] = sum(test.label==label@positive.lab & predictions>thr[i])
+      fp[i] = sum(test.label==label@negative.lab & predictions>thr[i])
+      tn[i] = sum(test.label==label@negative.lab & predictions<thr[i])
+      fn[i] = sum(test.label==label@positive.lab & predictions<thr[i])
     }
   } else {
     # assuming that several models were applied to predict the same data and predictions of each model occupy one column
@@ -47,10 +47,10 @@ eval.classifier <- function(predictions, test.label, label) {
     fn = matrix(0, nrow=length(thr), ncol=ncol(predictions))
     for (c in 1:ncol(predictions)) {
       for (r in 1:length(t)) {
-        tp[r,c] = sum(test.label==label$positive.lab  & predictions[,c] > thr[r])
-        fp[r,c] = sum(test.label==label$negative.lab  & predictions[,c] > thr[r])
-        tn[r,c] = sum(test.label==label$negative.lab  & predictions[,c] < thr[r])
-        fn[r,c] = sum(test.label==label$positive.lab  & predictions[,c] < thr[r])
+        tp[r,c] = sum(test.label==label@positive.lab  & predictions[,c] > thr[r])
+        fp[r,c] = sum(test.label==label@negative.lab  & predictions[,c] > thr[r])
+        tn[r,c] = sum(test.label==label@negative.lab  & predictions[,c] < thr[r])
+        fn[r,c] = sum(test.label==label@positive.lab  & predictions[,c] < thr[r])
       }
     }
   }

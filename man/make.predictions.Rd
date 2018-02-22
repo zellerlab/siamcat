@@ -4,22 +4,13 @@
 \alias{make.predictions}
 \title{Prediction on the test set}
 \usage{
-make.predictions(feat, label, data.split = NULL, models.list)
+make.predictions(siamcat)
 }
 \arguments{
-\item{feat}{features object}
-
-\item{label}{label object}
-
-\item{data.split}{filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset}
-
-\item{models.list}{list of models trained by \link{plm.trainer}}
+\item{siamcat}{object of class \link{siamcat-class}}
 }
 \value{
-list containing the precitions \itemize{
- \item \code{$pred};
- \item \code{$mat}
-}
+object of class \link{siamcat-class}
 }
 \description{
 This function takes the test set instances and the model trained by \link{plm.trainer} in order to predict the classes.

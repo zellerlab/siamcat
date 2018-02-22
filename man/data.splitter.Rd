@@ -4,11 +4,11 @@
 \alias{data.splitter}
 \title{Split a dataset into training and a test sets.}
 \usage{
-data.splitter(label, num.folds = 2, num.resample = 1, stratify = TRUE,
-  inseparable = NULL, meta = NULL)
+data.splitter(siamcat, num.folds = 2, num.resample = 1, stratify = TRUE,
+  inseparable = NULL)
 }
 \arguments{
-\item{label}{label object}
+\item{siamcat}{object of class \link{siamcat-class}}
 
 \item{num.folds}{number of cross-validation folds (needs to be \code{>=2}), defaults to \code{2}}
 
@@ -17,16 +17,9 @@ data.splitter(label, num.folds = 2, num.resample = 1, stratify = TRUE,
 \item{stratify}{boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?, defaults to \code{TRUE}}
 
 \item{inseparable}{column index or column name of metadata variable, defaults to \code{NULL}}
-
-\item{meta}{metadata object, only needed when \code{inseparable} is given, defaults to \code{NULL}}
 }
 \value{
-list containing the indices of the training and test folds and the parameters of the splits: \itemize{
- \item \code{$training.folds} nested list, containing for \code{length(num.folds)} the sample names of the \code{length(num.resample)} training folds;
- \item \code{$test.folds} nested list, containing for \code{length(num.folds)} the sample names of the \code{length(num.resample)} test folds;
- \item \code{$num.resample} = number of repeated samplings;
- \item \code{$num.folds} = number of folds
-}
+object of class \link{siamcat-class}
 }
 \description{
 This function prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.

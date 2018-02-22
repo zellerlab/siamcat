@@ -4,15 +4,13 @@
 \alias{check.associations}
 \title{Check and visualize associations between features and classes}
 \usage{
-check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
-  alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 10^-8,
+check.associations(siamcat, fn.plot, color.scheme = "RdYlBu", alpha = 0.05,
+  mult.corr = "fdr", sort.by = "fc", detect.lim = NULL,
   pr.cutoff = 10^-6, max.show = 50, plot.type = "quantile.box",
   panels = c("fc", "auroc"))
 }
 \arguments{
-\item{feat}{feature object}
-
-\item{label}{label object}
+\item{siamcat}{object of class \link{siamcat-class}}
 
 \item{fn.plot}{filename for the pdf-plot}
 

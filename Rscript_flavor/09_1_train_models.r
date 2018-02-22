@@ -28,7 +28,7 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
     make_option('--method',            type='character', default='lasso', help='class of learner, directly passed to mlr::makeLearner'),
-    make_option('--train_sets',        type='character', default='NULL',  help='Input file specifying which examples to use for training'),
+    make_option('--data_split',        type='character',                    help='Input file containing dataSplit object'),
     make_option('--mlr_models_list',   type='character',                  help='Output RData file to which the object with trained models will be written'),
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified
     	                                                                        such that an approx. equal proportion of positive examples
@@ -49,7 +49,7 @@ cat("=== Paramaters of the run:\n\n")
 cat('feat_in           =', opt$feat_in, '\n')
 cat('label_in          =', opt$label_in, '\n')
 cat('method            =', opt$method, '\n')
-cat('train_sets        =', opt$train_sets, '\n')
+cat('data_split        =', opt$data_split, '\n')
 cat('mlr_models_list   =', opt$mlr_models_list, '\n')
 cat('stratify          =', opt$stratify, '\n')
 cat('sel_criterion     =', opt$sel_criterion, '\n')
@@ -58,24 +58,20 @@ cat('param_set         =', opt$param_set, '\n')
 cat('\n')
 
 
-# optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
-if (toupper(opt$train_sets)=='NULL' || toupper(opt$train_sets)=='NONE' || toupper(opt$train_sets)=='UNKNOWN') {
-  opt$train_sets= NULL
-  cat('fn.train.sample not specified: using whole data set for training\n')
-}
-
 start.time <- proc.time()[1]
 set.seed(r.seed)
-
-
 
 ### read training data
 # features
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in, feat)
+siamcat      <- siamcat(feat,label)
 
-models.list  <- train.model(feat = feat,
-                       label = label,
+load(opt$data_split)
+siamcat@dataSplit <- dataSplit
+
+
+siamcat  <- train.model(siamcat
                        method = opt$method,
                        data.split=opt$train_sets,
                        stratify = opt$stratify,
@@ -83,7 +79,7 @@ models.list  <- train.model(feat = feat,
                        min.nonzero.coeff = opt$min_nonzero_coeff,
                        param.set = opt$param_set)
 
-
-save(models.list , file=opt$mlr_models_list)
+modelList <- siamcat@modelList
+save(modelList , file=opt$mlr_models_list)
 cat('\n++++++++++++++++++++\nSuccessfully trained models in ', proc.time()[1] - start.time,
     ' seconds\n++++++++++++++++++++\n', sep='')

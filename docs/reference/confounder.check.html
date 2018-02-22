@@ -91,32 +91,38 @@
     </div>
 
     
-    <p>This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata.
-Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.</p>
+    <p>This function checks for associations between class labels and
+   potential confounders (e.g. age, sex, or BMI) that are present in the
+   metadata. Statistical testing is performed with Fisher's exact test or
+   Wilcoxon test, while associations are visualized either as barplot or
+   Q-Q plot, depending on the type of metadata.</p>
     
 
-    <pre class="usage"><span class='fu'>confounder.check</span>(<span class='no'>meta</span>, <span class='no'>label</span>, <span class='no'>fn.plot</span>)</pre>
+    <pre class="usage"><span class='fu'>confounder.check</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>meta</th>
-      <td><p>metadata object</p></td>
-    </tr>
-    <tr>
-      <th>label</th>
-      <td><p>labels object</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat.html'>siamcat</a></p></td>
     </tr>
     <tr>
       <th>fn.plot</th>
-      <td><p>string, filename for the pdf-plot</p></td>
+      <td><p>string, filename for the plot</p></td>
+    </tr>
+    <tr>
+      <th>verbose, </th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for standard information, and <code>2</code> for debugging, defaults to
+<code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Does not return anything, but produces a single plot for each metadata category</p>
+    <p>Does not return anything, but produces a single plot for each
+        metadata category</p>
     
 
   </div>

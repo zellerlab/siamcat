@@ -4,12 +4,10 @@
 \alias{confounder.check}
 \title{Check for potential confounders in the metadata}
 \usage{
-confounder.check(meta, label, fn.plot)
+confounder.check(siamcat, fn.plot)
 }
 \arguments{
-\item{meta}{metadata object}
-
-\item{label}{labels object}
+\item{siamcat}{an object of class \link{siamcat}}
 
 \item{fn.plot}{string, filename for the pdf-plot}
 }

@@ -13,22 +13,18 @@
 
 #' @title Prediction on the test set
 #' @description This function takes the test set instances and the model trained by \link{plm.trainer} in order to predict the classes.
-#' @param feat features object
-#' @param label label object
-#' @param data.split filename containing the test samples or list of test instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to testing on the complete dataset
-#' @param models.list list of models trained by \link{plm.trainer}
+#' @param siamcat object of class \link{siamcat-class}
 #' @export
 #' @keywords SIAMCAT plm.predictor
-#' @return list containing the precitions \itemize{
-#'  \item \code{$pred};
-#'  \item \code{$mat}
-#'}
-make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=TRUE){
+#' @return object of class \link{siamcat-class}
+#'
+make.predictions <- function(siamcat, verbose=1){
 
-  feat         <- t(feat)
+
+  feat         <- t(siamcat@phyloseq@otu_table)
 
   ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(data.split, label, mode="test", model=models.list, verbose=verbose)
+  foldList     <- get.foldList(siamcat@dataSplit, siamcat@label, mode="test", model=siamcat@modelList)
   fold.name    <- foldList$fold.name
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
@@ -42,40 +38,41 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=
 
   # Init hyperpar list
   opt.hp <- list(lambda = NULL, C = NULL, alpha = NULL, ntree = NULL)
-
+  if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
   for (r in 1:num.runs) {
-    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
+    label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
     test.label        <- label.fac
     test.label        <- label.fac[fold.exm.idx[[r]]]
     data              <- as.data.frame(feat[fold.exm.idx[[r]],])
     stopifnot(nrow(data)         == length(test.label))
     stopifnot(all(rownames(data) == names(test.label)))
     data$label                     <- test.label
-    model <- models.list[[r]]
-    if(verbose) cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
+    model <- siamcat@modelList@models[[r]]
+    if(verbose>2) cat('Applying ', siamcat@modelList@model.type, ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     # subselect appropriate model
-    model$W = model$W[,r]
 
     # subselect test examples
     test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
     task      <- makeClassifTask(data = data, target = "label")
-    pdata     <- predict(model,  task = task)
-    p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
+    pdata    <- predict(model,  task = task)
+    # save(pdata,file="pdata.RData") # not very good, saves the data somewhere, depending on working directory
+    p        <- siamcat@label@negative.lab+abs(siamcat@label@positive.lab-siamcat@label@negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 
     pred     <- c(pred, p)
     fold.pred.idx[[r]] = (length(pred)-length(p)+1):length(pred)
+    if(verbose==1 || verbose==2) setTxtProgressBar(pb, r)
   }
 
   if(verbose) cat('\nTotal number of predictions made:', length(pred), '\n')
 
-  if (!is.null(data.split)) {
+  if (!is.null(siamcat@dataSplit)) {
     ### if test labels are given do some evaluation as well
     # get the appropriate labels for all test sets
     test.label = NULL
     aucs = vector('numeric', num.runs)
     for (r in 1:num.runs) {
-      lab        <- label$label[fold.exm.idx[[r]]]
+      lab        <- siamcat@label@label[fold.exm.idx[[r]]]
       test.label <- c(test.label, lab)
       lab.p.idx  <- (length(test.label)-length(lab)+1):length(test.label)
       # accuracy of individual test sets
@@ -89,11 +86,11 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=
 
     # in case of cross-validation there should be exactly one prediction per labeled example,
     # so we reorder them according to the order of label
-    if (length(label$label) == length(pred) && all(names(label$label) %in% names(pred)) && all(names(pred) %in% names(label$label))) {
-      m = match(names(label$label), names(pred))
+    if (length(siamcat@label@label) == length(pred) && all(names(siamcat@label@label) %in% names(pred)) && all(names(pred) %in% names(siamcat@label@label))) {
+      m = match(names(siamcat@label@label), names(pred))
       pred = pred[m]
       test.label = test.label[m]
-      stopifnot(all(names(label$label) == names(pred)))
+      stopifnot(all(names(siamcat@label@label) == names(pred)))
     }
 
     # test accuracy of combined test set
@@ -115,8 +112,8 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=
       r.idx = c(1:num.runs) #as.numeric(sapply(strsplit(fold.name, 'predicted by model '), '[[', 2))
       runs = sort(unique(r.idx))
       stopifnot(all(runs == 1:length(runs)))
-      if (!is.null(data.split)) {
-        ref.names = names(label$label)
+      if (!is.null(siamcat@dataSplit)) {
+        ref.names = names(siamcat@label@label)
       } else {
         ref.names = unique(names(pred))
       }
@@ -124,8 +121,8 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=
       r.idx = as.numeric(sapply(strsplit(fold.name, 'rep'), '[[', 2))
       runs = sort(unique(r.idx))
       stopifnot(all(runs == 1:length(runs)))
-      if (!is.null(data.split)) {
-        ref.names = names(label$label)
+      if (!is.null(siamcat@dataSplit)) {
+        ref.names = names(siamcat@label@label)
       } else {
         ref.names = names(pred)[unlist(fold.pred.idx[r.idx==1])]
       }
@@ -149,7 +146,7 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=
       #    cat(sort(m), '\n\n')
       #    cat(length(m), '\n\n')
       #    cat(length(label), '\n\n')
-      #if (!is.null(data.split)) {
+      #if (!is.null(siamcat@dataSplit)) {
       #   stopifnot(all(sort(m) == 1:length(label$label)))
       #}
       pred.mat[m,r] = pred[p]
@@ -162,5 +159,6 @@ make.predictions <- function(feat, label, data.split=NULL, models.list, verbose=
     pred.mat = as.matrix(pred,byrow=TRUE)
   }
   #print(pred.mat[1:3,1:3])
-  invisible(list(pred = pred, mat = pred.mat))
+  siamcat@predMatrix <- pred.mat
+  return(siamcat)
 }
