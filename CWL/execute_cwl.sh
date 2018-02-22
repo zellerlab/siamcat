@@ -18,16 +18,24 @@ cache_dir="${working_dir}/cache"
 mkdir $working_dir
 mkdir $output_dir $temp_dir $base_dir $cache_dir
 
-# Use the reference implementation cwltool (no parallelizing and no usage of batch systems possible)
+# cwltool:
+# --------
+# (no parallelization allowed)
+
+# ignore containers
 cwltool --no-container --debug --tmpdir-prefix=$temp_dir --basedir=$base_dir --outdir=$output_dir --cachedir=$cache_dir $cwl_workflow $yaml_job_file
 
-# Use toil as cwl runner (allows parallelization):
-#cwltoil --no-container --logDebug --jobStore=$working_dir/jobstore --workDir=$temp_dir --basedir=$base_dir --outdir=$output_dir  $cwl_workflow $yaml_job_file
+# use docker containers:
+cwltoil --logDebug --jobStore=$working_dir/jobstore --workDir=$temp_dir --basedir=$base_dir --outdir=$output_dir  $cwl_workflow $yaml_job_file
 
-# Apply cwltoil with a batch system, here for instance SLURM:
-#cwltoil --no-container --batchSystem=Slurm --disableCaching --logDebug --jobStore=$working_dir/jobstore --workDir=$temp_dir --basedir=$base_dir --outdir=$output_dir $cwl_workflow $yaml_job_file
+# use udocker containers:
+cwltoil --user-space-docker-cmd=/home/breuerk/udocker --logDebug --jobStore=$working_dir/jobstore --workDir=$temp_dir --basedir=$base_dir --outdir=$output_dir  $cwl_workflow $yaml_job_file
 
-# NOTE: If you wish to use docker, please just remove the "--no-container" flag from above command lines.
+# cwltoil:
+# --------
+# (parallelization possible)
 
-# The workflow is tested for both cwltool and toil, however it should work with any other cwl runner.
-# Please let us no if it doesn't work (and also if it does work).
+# Example using Slurm and udocker:
+cwltoil --user-space-docker-cmd=/home/breuerk/udocker --batchSystem=Slurm --disableCaching --logDebug --jobStore=$working_dir/jobstore --workDir=$temp_dir --basedir=$base_dir --outdir=$output_dir $cwl_workflow $yaml_job_file
+
+# The flag "--no-container" exists, too. Like for cwltool: if neither "--user-space-docker-cmd" nor "--no-container" is set, toil will try to run docker
