@@ -92,5 +92,5 @@ evaluation.model.plot <- function(siamcat, fn.plot, verbose=1){
   tmp <- dev.off()
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished evaluation.model.plot in",e.time-s.time,"s\n")
-  if(verbose==1) cat("Plotted evaluation of predictions successfully.\n")
+  if(verbose==1) cat("Plotted evaluation of predictions successfully in",fn.plot,".\n")
 }
