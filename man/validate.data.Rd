@@ -4,10 +4,14 @@
 \alias{validate.data}
 \title{Validate samples in siamcat@phyloseq@sam_datadata, labels, and features}
 \usage{
-validate.data(siamcat)
+validate.data(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat}}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal 
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 an object of class \link{siamcat}

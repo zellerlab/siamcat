@@ -4,12 +4,16 @@
 \alias{evaluation.model.plot}
 \title{Model Evaluation Plot}
 \usage{
-evaluation.model.plot(siamcat, fn.plot)
+evaluation.model.plot(siamcat, fn.plot, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
 \item{fn.plot}{string, filename for the pdf-plot}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal 
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 Does not return anything, but produces the model evaluation plot.

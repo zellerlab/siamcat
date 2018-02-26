@@ -7,7 +7,7 @@
 interpretor.model.plot(siamcat, fn.plot, color.scheme = "BrBG",
   consens.thres = 0.5, heatmap.type = c("zscore", "fc"),
   norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-08,
-  max.show = 50)
+  max.show = 50, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -28,6 +28,10 @@ Note that for \code{"randomForest"} models, this cutoff specifies the minimum me
 \item{detect.lim}{float, pseudocount to be added before log10-transformation of features, defaults to \code{1e-08}}
 
 \item{max.show}{integer, maximum number of features to be shown in the model interpretation plot, defaults to 50}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal 
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 Does not return anything, but produces the model interpretion plot.

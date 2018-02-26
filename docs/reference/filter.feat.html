@@ -91,11 +91,14 @@
     </div>
 
     
-    <p>This function may convert absolute abundances into relative abundances and then performs unsupervised feature filtering. Features can be filtered based on abundance or prevalence. Additionally, unmapped reads may be removed.</p>
+    <p>This function may convert absolute abundances into relative
+       abundances and then performs unsupervised feature filtering. Features
+       can be filtered based on abundance or prevalence. Additionally,
+       unmapped reads may be removed.</p>
     
 
-    <pre class="usage"><span class='fu'>filter.feat</span>(<span class='no'>siamcat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='no'>abundance</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
-  <span class='kw'>recomp.prop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rm.unmapped</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>filter.feat</span>(<span class='no'>siamcat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='st'>"abundance"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
+  <span class='kw'>recomp.prop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rm.unmapped</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -106,7 +109,8 @@
     </tr>
     <tr>
       <th>filter.method</th>
-      <td><p>method used for filtering the features, can be one of these: <code>c("abundance", "cum.abundance", "prevalence")</code></p></td>
+      <td><p>method used for filtering the features, can be one of
+these: <code>c("abundance", "cum.abundance", "prevalence")</code></p></td>
     </tr>
     <tr>
       <th>cutoff</th>
@@ -114,17 +118,33 @@
     </tr>
     <tr>
       <th>recomp.prop</th>
-      <td><p>boolean, should absolute abundances be converted into relative abundances?</p></td>
+      <td><p>boolean, should absolute abundances be
+converted into relative abundances?</p></td>
     </tr>
     <tr>
       <th>rm.unmapped</th>
       <td><p>boolean, should unmapped reads be discarded?</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for standard information, defaults to <code>1</code></p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>siamcat an object of class <a href='siamcat.html'>siamcat</a></p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function</p>
     
 
   </div>
@@ -134,6 +154,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

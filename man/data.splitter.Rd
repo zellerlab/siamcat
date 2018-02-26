@@ -5,7 +5,7 @@
 \title{Split a dataset into training and a test sets.}
 \usage{
 data.splitter(siamcat, num.folds = 2, num.resample = 1, stratify = TRUE,
-  inseparable = NULL)
+  inseparable = NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -17,6 +17,10 @@ data.splitter(siamcat, num.folds = 2, num.resample = 1, stratify = TRUE,
 \item{stratify}{boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?, defaults to \code{TRUE}}
 
 \item{inseparable}{column index or column name of metadata variable, defaults to \code{NULL}}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal 
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 object of class \link{siamcat-class}

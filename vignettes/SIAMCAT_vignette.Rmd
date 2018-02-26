@@ -121,5 +121,5 @@ interpretor.model.plot(siamcat,
                         consens.thres = 0.5,
                         norm.models = TRUE,
                         limits=c(-5,5),
-                        heatmap.type = 'fc')
+                        heatmap.type = 'zscore')
 ```
