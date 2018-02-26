@@ -152,7 +152,7 @@ make.predictions <- function(siamcat, verbose=1){
       stopifnot(all(names(pred)[p] == rownames(pred.mat)[m]))
     }
     correlation <- cor(pred.mat, method='spearman')
-    if(verbose>1)cat('\n+++ Correlation between predictions from repeated CV:\n')
+    if(verbose>1)cat('+++ Correlation between predictions from repeated CV:\n')
     if(verbose>1)cat('+++ Min: ', min(correlation), ', Median: ', median(correlation), ', Mean: ', mean(correlation), '\n', sep='')
   }else{
     if(verbose>2) cat('+ creating predictions matrixwithout reformatting\n')
