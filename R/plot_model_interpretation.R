@@ -74,15 +74,17 @@ interpretor.model.plot <- function(siamcat, fn.plot,
   mean.agg.pred <- rowMeans(siamcat@predMatrix)
   ### idx to sort samples according to their class membership and prediction score
   srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return=TRUE)$ix
-  feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
-                 dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
   # ############################################################################
   # prepare heatmap
   if(verbose>2) cat("+++ preparing heatmap\n")
   if (heatmap.type == 'zscore'){
+    feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
+                 dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
     img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
                                        limits=limits)
   } else if (heatmap.type == 'fc') {
+    feat <- matrix(siamcat@orig_feat,nrow=nrow(siamcat@orig_feat), ncol=ncol(siamcat@orig_feat),
+                 dimnames = list(rownames(siamcat@orig_feat), colnames(siamcat@orig_feat)))
     if (is.null(detect.lim)){
       warning("WARNING: Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
       detect.lim <- quantile(feat[feat!=0], 0.05)
