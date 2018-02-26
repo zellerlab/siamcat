@@ -160,6 +160,7 @@ make.predictions <- function(siamcat, verbose=1){
   }
 
   siamcat@predMatrix <- pred.mat
+  e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished make.predictions in",e.time-s.time,"s\n")
   if(verbose==1) cat("Made predictions successfully.\n")
   return(siamcat)
