@@ -81,7 +81,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
     feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
                  dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
     img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
-                                       limits=limits)
+                                       limits=limits, verbose=verbose)
   } else if (heatmap.type == 'fc') {
     feat <- matrix(siamcat@orig_feat,nrow=nrow(siamcat@orig_feat), ncol=ncol(siamcat@orig_feat),
                  dimnames = list(rownames(siamcat@orig_feat), colnames(siamcat@orig_feat)))
@@ -92,7 +92,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
     img.data <- prepare.heatmap.fc(heatmap.data=feat[, srt.idx],
                                    sel.feat=names(sel.idx),
                                    limits=limits, meta=siamcat@phyloseq@sam_data,
-                                   label=siamcat@label, detect.lim=detect.lim)
+                                   label=siamcat@label, detect.lim=detect.lim, verbose=verbose)
   } else {
     stop('! unknown heatmap.type: ', heatmap.type)
   }
@@ -221,7 +221,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
 
   tmp <- dev.off()
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished check.associations in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished interpretor.model.plot in",e.time-s.time,"s\n")
   if(verbose==1) cat("Plotted associations between features and label successfully to:",fn.plot,"\n")
 }
 
@@ -383,7 +383,6 @@ plot.heatmap <- function(image.data, limits, color.scheme, effect.size, verbose=
   if(verbose>2) cat('+ finished plot.heatmap\n')
 }
 
-#not really working atm
 prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label, detect.lim, verbose=0){
   if(verbose>2) cat("+ prepare.heatmap.fc\n")
   if (!any(grepl('META', sel.feat))){
@@ -393,10 +392,11 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label,
   } else {
     img.data <- matrix(NA, nrow=length(sel.feat), ncol=ncol(heatmap.data))
     row.names(img.data) <- sel.feat
+    if(verbose>2) cat("+ Selected features:\n")
     for (f in sel.feat){
-      print(f)
+      if(verbose>2) cat("+++",f,"\n")
       if (!grepl('META', f)){
-        median.ctr   <- median(as.numeric(heatmap.data[f,label@n.idx]))
+        median.ctr   <- suppressWarnings(median(as.numeric(heatmap.data[f,label@n.idx])))
         img.data[f,] <- log10(heatmap.data[f,] + detect.lim) - log10(median.ctr + detect.lim)
       } else {
         meta.data <- meta[,grep(strsplit(f, '_')[[1]][2], colnames(meta), ignore.case=TRUE, value=TRUE)]
@@ -415,7 +415,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label,
 }
 
 prepare.heatmap.zscore <- function(heatmap.data, limits, verbose=0){
-    cat("+ prepare.heatmap.zscore\n")
+    if(verbose>2) cat("+ prepare.heatmap.zscore\n")
     # data is transposed and transformed to feature z-scores for display
     img.data <- apply(heatmap.data, 1, FUN=function(x){(x-mean(x))/sd(x)})
     img.data[img.data < limits[1]] <- limits[1]
