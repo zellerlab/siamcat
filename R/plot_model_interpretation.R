@@ -80,11 +80,11 @@ interpretor.model.plot <- function(siamcat, fn.plot,
   # prepare heatmap
   if(verbose>2) cat("+++ preparing heatmap\n")
   if (heatmap.type == 'zscore'){
-    img.data <- prepare.heatmap.zscore(heatmap.data=siamcat@phyloseq@otu_table[sel.idx, srt.idx],
+    img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
                                        limits=limits)
   } else if (heatmap.type == 'fc') {
     if (is.null(detect.lim)){
-      cat("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
+      warning("WARNING: Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
       detect.lim <- quantile(feat[feat!=0], 0.05)
     }
     img.data <- prepare.heatmap.fc(heatmap.data=feat[, srt.idx],
@@ -92,7 +92,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
                                    limits=limits, meta=siamcat@phyloseq@sam_data,
                                    label=siamcat@label, detect.lim=detect.lim)
   } else {
-    stop('unknown heatmap.type: ', heatmap.type)
+    stop('! unknown heatmap.type: ', heatmap.type)
   }
 
   # ############################################################################

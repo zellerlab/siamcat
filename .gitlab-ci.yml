@@ -71,6 +71,7 @@ make_predictions:
   artifacts:
     paths:
       - Rscript_flavor/*
+    expire_in: 30 min
 
   only:
     - master
