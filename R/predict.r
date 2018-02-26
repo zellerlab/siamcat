@@ -19,12 +19,12 @@
 #' @return object of class \link{siamcat-class}
 #'
 make.predictions <- function(siamcat, verbose=1){
-
-
+  if(verbose>1) cat("+ starting make.predictions\n")
+  s.time <- proc.time()[3]
   feat         <- t(siamcat@phyloseq@otu_table)
 
   ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(siamcat@dataSplit, siamcat@label, mode="test", model=siamcat@modelList)
+  foldList     <- get.foldList(siamcat@dataSplit, siamcat@label, mode="test", model=siamcat@modelList, verbose=verbose)
   fold.name    <- foldList$fold.name
   fold.exm.idx <- foldList$fold.exm.idx
   num.runs     <- foldList$num.runs
@@ -48,7 +48,7 @@ make.predictions <- function(siamcat, verbose=1){
     stopifnot(all(rownames(data) == names(test.label)))
     data$label                     <- test.label
     model <- siamcat@modelList@models[[r]]
-    if(verbose>2) cat('Applying ', siamcat@modelList@model.type, ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
+    if(verbose>2) cat('+++ applying ', siamcat@modelList@model.type, ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
     # subselect appropriate model
 
     # subselect test examples
@@ -64,7 +64,7 @@ make.predictions <- function(siamcat, verbose=1){
     if(verbose==1 || verbose==2) setTxtProgressBar(pb, r)
   }
 
-  if(verbose) cat('\nTotal number of predictions made:', length(pred), '\n')
+  if(verbose>1) cat('\n+++ total number of predictions made:', length(pred), '\n')
 
   if (!is.null(siamcat@dataSplit)) {
     ### if test labels are given do some evaluation as well
@@ -99,7 +99,7 @@ make.predictions <- function(siamcat, verbose=1){
       ev = eval.classifier(pred, as.vector(test.label), label)
       c.auc = calc.auroc(ev)
     }
-    if(verbose)cat('Combined test AUC = ', format(c.auc, digits=3),
+    if(verbose>1)cat('+++ combined test AUC = ', format(c.auc, digits=3),
         ' (m=', format(mean(aucs, na.rm=TRUE), digits=3),
         ', s.d.=', format(sd(aucs, na.rm=TRUE), digits=3), ')\n', sep='')
   }
@@ -108,6 +108,7 @@ make.predictions <- function(siamcat, verbose=1){
   ### reformat predictions in case models were trained in repeated cross-validation
   if (length(unique(names(pred))) < length(pred)) {
     ref.names = NULL
+    if(verbose>2) cat('+ reformatting predictions\n')
     if (any(substr(fold.name,1,14) == 'whole data set')) {
       r.idx = c(1:num.runs) #as.numeric(sapply(strsplit(fold.name, 'predicted by model '), '[[', 2))
       runs = sort(unique(r.idx))
@@ -127,10 +128,8 @@ make.predictions <- function(siamcat, verbose=1){
         ref.names = names(pred)[unlist(fold.pred.idx[r.idx==1])]
       }
     }
-    #  cat(ref.names, '\n\n')
-    #  cat(names(label), '\n\n')
-    #  cat(names(pred), '\n\n')
-
+    
+    if(verbose>2) cat('+ creating predictions matrix\n')
     pred.mat = matrix(data=NA, nrow=length(ref.names), ncol=length(runs))
     rownames(pred.mat) = ref.names
     if (any(substr(fold.name,1,14) == 'whole data set')) {
@@ -153,12 +152,15 @@ make.predictions <- function(siamcat, verbose=1){
       stopifnot(all(names(pred)[p] == rownames(pred.mat)[m]))
     }
     correlation <- cor(pred.mat, method='spearman')
-    if(verbose)cat('\nCorrelation between predictions from repeated CV:\n')
-    if(verbose)cat('Min: ', min(correlation), ', Median: ', median(correlation), ', Mean: ', mean(correlation), '\n', sep='')
+    if(verbose>1)cat('\n+++ Correlation between predictions from repeated CV:\n')
+    if(verbose>1)cat('+++ Min: ', min(correlation), ', Median: ', median(correlation), ', Mean: ', mean(correlation), '\n', sep='')
   }else{
+    if(verbose>2) cat('+ creating predictions matrixwithout reformatting\n')
     pred.mat = as.matrix(pred,byrow=TRUE)
   }
-  #print(pred.mat[1:3,1:3])
+
   siamcat@predMatrix <- pred.mat
+  if(verbose>1) cat("+ finished make.predictions in",e.time-s.time,"s\n")
+  if(verbose==1) cat("Made predictions successfully.\n")
   return(siamcat)
 }

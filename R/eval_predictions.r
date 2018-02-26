@@ -32,8 +32,9 @@
 #'  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 #'}
-eval.predictions <- function(siamcat){
-
+eval.predictions <- function(siamcat,verbose=1){
+  if(verbose>1) cat("+ starting eval.predictions\n")
+  s.time <- proc.time()[3]
   # TODO compare header to label
   ### make sure that label and prediction are in the same order
   #stopifnot(all(names(label) %in% rownames(pred)) && all(rownames(pred) %in% names(label)))
@@ -43,6 +44,7 @@ eval.predictions <- function(siamcat){
   stopifnot(all(names(siamcat@label@label) == rownames(pred)))
 
   # ROC curve
+  if(verbose>2) cat("+ calculating ROC\n")
   auroc = 0
   if (ncol(pred) > 1) {
     rocc = list(NULL)
@@ -56,6 +58,7 @@ eval.predictions <- function(siamcat){
     l.vec = siamcat@label@label
   }
   # average data for plotting one mean prediction curve
+  if(verbose>2) cat("+ calculating mean ROC\n")
   summ.stat = 'mean'
   rocsumm = list(roc(response=siamcat@label@label, predictor=apply(pred, 1, summ.stat),
                  ci=TRUE, of="se", sp=seq(0, 1, 0.05)))
@@ -76,6 +79,7 @@ eval.predictions <- function(siamcat){
     pr[1] = list(get.pr(ev[[1]]))
   }
   if (ncol(pred) > 1) {
+    if(verbose>2) cat("+ evaluating multiple predictions\n")
     siamcat@evalData <- list("roc.all" = rocc,
                 "auc.all"=aucs,
                 "roc.average"=rocsumm,
@@ -84,10 +88,14 @@ eval.predictions <- function(siamcat){
                 "pr.list"=pr,
                 "aucspr"=aucspr)
   } else {
+    if(verbose>2) cat("+ evaluating single prediction\n")
     siamcat@evalData <- list("roc.average"=rocsumm,
                 "auc.average"=auroc,
                 "ev.list"=ev,
                 "pr.list"=pr)
   }
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished eval.predictions in",e.time-s.time,"s\n")
+  if(verbose==1) cat("Evaluated predictions successfully.\n")
   return(siamcat)
 }
