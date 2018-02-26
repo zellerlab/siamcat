@@ -168,5 +168,5 @@ confounder.check <- function(siamcat, fn.plot, verbose=1){
   tmp <- dev.off()
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished confounder.check in",e.time-s.time,"s\n")
-  if(verbose==1)cat("Checking metadata for confounders finished\n")
+  if(verbose==1)cat("Checking metadata for confounders finished, results plotted to:",fn.plot,"\n")
 }

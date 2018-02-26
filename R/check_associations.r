@@ -151,7 +151,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   tmp <- dev.off()
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished check.associations in",e.time-s.time,"s\n")
-  if(verbose==1) cat("Plotted associations between features and label successfully.\n")
+  if(verbose==1) cat("Plotted associations between features and label successfully to:",fn.plot,"\n")
 }
 
 
