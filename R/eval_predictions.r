@@ -20,6 +20,9 @@
 #'
 #' Prediction results are usually produced with the function \link{plm.predictor}.
 #' @param siamcat object of class \link{siamcat-class}
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for only information about progress and success, \code{2} for normal 
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT eval.result
 #' @export
 #' @return list containing \itemize{

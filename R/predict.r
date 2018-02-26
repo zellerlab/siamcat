@@ -14,6 +14,9 @@
 #' @title Prediction on the test set
 #' @description This function takes the test set instances and the model trained by \link{plm.trainer} in order to predict the classes.
 #' @param siamcat object of class \link{siamcat-class}
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for only information about progress and success, \code{2} for normal 
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @export
 #' @keywords SIAMCAT plm.predictor
 #' @return object of class \link{siamcat-class}
