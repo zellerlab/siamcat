@@ -18,10 +18,12 @@
 #' @keywords SIAMCAT evaluation.model.plot
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
-evaluation.model.plot <- function(siamcat, fn.plot){
-
+evaluation.model.plot <- function(siamcat, fn.plot, verbose=1){
+  if(verbose>1) cat("+ starting evaluation.model.plot\n")
+  s.time <- proc.time()[3]
   pdf(fn.plot, onefile=TRUE)
-
+  
+  if(verbose>2) cat("+ plotting ROC\n")
   plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='False positive rate', ylab='True positive rate', type='n')
   title(paste('ROC curve for the model', sep=' '))
   abline(a=0, b=1, lty=3)
@@ -31,7 +33,7 @@ evaluation.model.plot <- function(siamcat, fn.plot){
       roc.c = siamcat@evalData$roc.all[[c]]
       lines(1-roc.c$specificities, roc.c$sensitivities, col=gray(runif(1,0.2,0.8)))
       aucs[c] = siamcat@evalData$auc.all[c]
-      cat('AU-ROC (resampled run ', c, '): ', format(aucs[c], digits=3), '\n', sep='')
+      if(verbose>2) cat('+++ AU-ROC (resampled run ', c, '): ', format(aucs[c], digits=3), '\n', sep='')
     }
     l.vec = rep(siamcat@label@label, dim(siamcat@predMatrix)[2])
   } else {
@@ -47,15 +49,17 @@ evaluation.model.plot <- function(siamcat, fn.plot){
   polygon(1-c(x, rev(x)), c(yl, rev(yu)), col='#88888844' , border=NA)
 
   if (dim(siamcat@predMatrix)[2] > 1) {
-    cat('Mean-pred. AU-ROC:', format(auroc, digits=3), '\n')
-    cat('Averaged AU-ROC: ', format(mean(aucs), digits=3), ' (sd=', format(sd(aucs), digits=4), ')\n', sep='')
+    if(verbose>1) cat('+ AU-ROC:\n+++ mean-prediction:', format(auroc, digits=3), 
+                      '\n+++ averaged       :', format(mean(aucs), digits=3), 
+                      '\n+++ sd             :', format(sd(aucs), digits=4), '\n', sep='')
     text(0.7, 0.1, paste('Mean-prediction AUC:', format(auroc, digits=3)))
   } else {
-    cat('AU-ROC:', format(auroc, digits=3), '\n')
+    if(verbose>1) cat('+ AU-ROC:', format(auroc, digits=3), '\n')
     text(0.7, 0.1, paste('AUC:', format(auroc, digits=3)))
   }
 
   # precision recall curve
+  if(verbose>2) cat("+ plotting PRC\n")
   plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='Recall', ylab='Precision', type='n')
   title(paste('Precision-recall curve for the model', sep=' '))
   abline(h=mean(siamcat@label@label==siamcat@label@positive.lab), lty=3)
@@ -67,7 +71,7 @@ evaluation.model.plot <- function(siamcat, fn.plot){
       pr = siamcat@evalData$pr.list[[c]]
       lines(pr$x, pr$y, col=gray(runif(1,0.2,0.8)))
       aucspr[c] = siamcat@evalData$aucspr[c]
-      cat('AU-PRC (resampled run ', c, '): ', format(aucspr[c], digits=3), '\n', sep='')
+      if(verbose>2) cat('+++ AU-PRC (resampled run ', c, '): ', format(aucspr[c], digits=3), '\n', sep='')
     }
     ev = siamcat@evalData$ev.list[[length(siamcat@evalData$ev.list)]]
   } else {
@@ -77,12 +81,16 @@ evaluation.model.plot <- function(siamcat, fn.plot){
   lines(pr$x, pr$y, col='black', lwd=2)
   aupr = calc.aupr(ev)
   if (dim(siamcat@predMatrix)[2] > 1) {
-    cat('Mean-pred. AU-PRC:', format(aupr, digits=3), '\n')
-    cat('Averaged AU-PRC: ', format(mean(aucs), digits=3), ' (sd=', format(sd(aucs), digits=4), ')\n', sep='')
-    text(0.7, 0.1, paste('Mean-prediction AUC:', format(aupr, digits=3)))
+    if(verbose>1) cat('+ AU-PRC:\n+++ mean-prediction:', format(aupr, digits=3), 
+                      '\n+++ averaged       :', format(mean(aucspr), digits=3), 
+                      '\n+++ sd             :', format(sd(aucspr), digits=4), '\n', sep='')
+    text(0.7, 0.1, paste('Mean-prediction AU-PRC:', format(aupr, digits=3)))
   } else {
-    cat('AU-PRC:', format(aupr, digits=3), '\n')
+    if(verbose>1) cat('+ AU-PRC:', format(aupr, digits=3), '\n')
     text(0.7, 0.1, paste('AUC:', format(aupr, digits=3)))
   }
   tmp <- dev.off()
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished evaluation.model.plot in",e.time-s.time,"s\n")
+  if(verbose==1) cat("Plotted evaluation of predictions successfully.\n")
 }
