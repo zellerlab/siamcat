@@ -24,9 +24,10 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     data <- data[c(which(data$label == neg.lab)[1], c(1:nrow(data))[-which(data$label == neg.lab)[1]]),]
   }
   task      <- makeClassifTask(data = data, target = "label")
-
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
+  #cost      <- 10^seq(-2,3,length=6+5+10)
+  cost <- c(0.1,1,10,100)
   cl         <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
   parameters <- get.parameters.from.param.set(param.set=param.set, method=method, sqrt(nrow(data)))
 
@@ -42,6 +43,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     class.weights        <- c(5, 1)
     names(class.weights) <- c(label@negative.lab,label@positive.lab)
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
+    parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, type=0)
@@ -53,7 +55,8 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   } else {
     stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR, randomForest.\n")
   }
-
+  show.info <- FALSE
+  if(verbose>2) show.info <- TRUE
 
   ## 3) Fit the model
   ## Train the learner on the task using a random subset of the data as training set
@@ -63,7 +66,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
                          resampling =  makeResampleDesc('CV', iters=5L, stratify=TRUE),
                          par.set = parameters,
                          control = makeTuneControlGrid(resolution = 10L),
-                         measures=measure)
+                         measures=measure,show.info = show.info)
     lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
 
@@ -82,7 +85,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     bias.idx            <- which(rownames(coef) == '(Intercept)')
     coef                <- coef[-bias.idx,]
     model$feat.weights  <- (-1) *  as.numeric(coef) ### check!!!
-  } else if(cl == "classiflabel@.LiblineaRL1LogReg"){
+  } else if(cl == "classif.LiblineaRL1LogReg"){
     model$feat.weights  <-model$learner.model$W[-which(colnames(model$learner.model$W)=="Bias")]
   } else if(cl == "classif.randomForest"){
     model$feat.weights  <-model$learner.model$importance

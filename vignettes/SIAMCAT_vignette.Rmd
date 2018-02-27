@@ -95,7 +95,7 @@ siamcat <- data.splitter(siamcat,
 
 ```{r}
 siamcat <- train.model(siamcat, 
-                       method = "lasso",
+                       method = "lasso_ll",
                        data.split=data.split, #??
                        stratify = TRUE,
                        modsel.crit=list("pr"),  

@@ -103,7 +103,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
   siamcat@modelList <- new("modelList",models=models.list,model.type=method)
   e.time <- proc.time()[3]
   if(verbose>1) cat("\n+ finished train.model in",e.time-s.time,"s\n")
-  if(verbose==1) cat("Trained",method,"models successfully.\n")
+  if(verbose==1) cat("\nTrained",method,"models successfully.\n")
   return(siamcat)
 }
 
