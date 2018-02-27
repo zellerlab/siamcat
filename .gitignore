@@ -1,24 +1,14 @@
-<<<<<<< HEAD
 .Rproj.user
 .Rhistory
 .RData
-.DS_Store
 .history
 .Rapp.history
 .Rbuildignore
 *.Rproj
 *.tar.gz
 *.Rcheck*/
-=======
 .Rbuildignore
 SIAMCAT.RProj
-.Rproj.user
-.Rhistory
-.RData
 *.DS_Store*
-.history
-.Rapp.history
-*.tar.gz
-*.Rcheck*/
 inst/doc
->>>>>>> development
+*.pdf
