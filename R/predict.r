@@ -40,27 +40,17 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
   predList = list()
   fold.pred.idx = list()
 
-  # Init hyperpar list
-  opt.hp <- list(lambda = NULL, C = NULL, alpha = NULL, ntree = NULL)
-
   for (r in 1:num.runs) {
-    label.fac         <- factor(label$label, levels=c(label$negative.lab, label$positive.lab))
-    test.label        <- label.fac
-    test.label        <- label.fac[fold.exm.idx[[r]]]
-    data              <- as.data.frame(feat[fold.exm.idx[[r]],])
-    stopifnot(nrow(data)         == length(test.label))
-    stopifnot(all(rownames(data) == names(test.label)))
-    data$label                     <- test.label
+
+    data <- as.data.frame(feat[fold.exm.idx[[r]],])
+    data$label <- as.factor(1)
     model <- models.list[[r]]
     cat('Applying ', colnames(model$W)[r], ' on ', fold.name[r], ' (', r, ' of ', num.runs, ')...\n', sep='')
-    # subselect appropriate model
-    model$W = model$W[,r]
 
     # subselect test examples
-    test.feat = feat[fold.exm.idx[[r]],,drop=FALSE]
     task      <- makeClassifTask(data = data, target = "label")
     pdata    <- predict(model,  task = task)
-    # save(pdata,file="pdata.RData") # not very good, saves the data somewhere, depending on working directory
+
     p        <- label$negative.lab+abs(label$positive.lab-label$negative.lab)*pdata$data[,4]
     names(p) <- rownames(pdata$data)
 
@@ -69,44 +59,6 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
   }
 
   cat('\nTotal number of predictions made:', length(pred), '\n')
-
-  if (!is.null(data.split)) {
-    ### if test labels are given do some evaluation as well
-    # get the appropriate labels for all test sets
-    test.label = NULL
-    aucs = vector('numeric', num.runs)
-    for (r in 1:num.runs) {
-      lab        <- label$label[fold.exm.idx[[r]]]
-      test.label <- c(test.label, lab)
-      lab.p.idx  <- (length(test.label)-length(lab)+1):length(test.label)
-      # accuracy of individual test sets
-      if (length(unique(test.label[lab.p.idx])) == 2) {
-        ev = eval.classifier(pred[lab.p.idx], as.vector(test.label[lab.p.idx]), label)
-        aucs[r] = calc.auroc(ev)
-      }
-    }
-    stopifnot(length(test.label) == length(pred))
-    stopifnot(names(test.label) == names(pred))
-
-    # in case of cross-validation there should be exactly one prediction per labeled example,
-    # so we reorder them according to the order of label
-    if (length(label$label) == length(pred) && all(names(label$label) %in% names(pred)) && all(names(pred) %in% names(label$label))) {
-      m = match(names(label$label), names(pred))
-      pred = pred[m]
-      test.label = test.label[m]
-      stopifnot(all(names(label$label) == names(pred)))
-    }
-
-    # test accuracy of combined test set
-    c.auc = NA
-    if (length(unique(test.label)) == 2) {
-      ev = eval.classifier(pred, as.vector(test.label), label)
-      c.auc = calc.auroc(ev)
-    }
-    cat('Combined test AUC = ', format(c.auc, digits=3),
-        ' (m=', format(mean(aucs, na.rm=TRUE), digits=3),
-        ', s.d.=', format(sd(aucs, na.rm=TRUE), digits=3), ')\n', sep='')
-  }
 
 
   ### reformat predictions in case models were trained in repeated cross-validation
@@ -159,9 +111,9 @@ make.predictions <- function(feat, label, data.split=NULL, models.list){
     correlation <- cor(pred.mat, method='spearman')
     cat('\nCorrelation between predictions from repeated CV:\n')
     cat('Min: ', min(correlation), ', Median: ', median(correlation), ', Mean: ', mean(correlation), '\n', sep='')
-  }else{
+  } else {
     pred.mat = as.matrix(pred,byrow=TRUE)
   }
-  #print(pred.mat[1:3,1:3])
+
   invisible(list(pred = pred, mat = pred.mat))
 }
