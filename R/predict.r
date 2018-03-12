@@ -80,7 +80,7 @@ make.predictions <- function(siamcat, verbose=1){
       lab.p.idx  <- (length(test.label)-length(lab)+1):length(test.label)
       # accuracy of individual test sets
       if (length(unique(test.label[lab.p.idx])) == 2) {
-        ev = eval.classifier(pred[lab.p.idx], as.vector(test.label[lab.p.idx]), label)
+        ev = eval.classifier(pred[lab.p.idx], as.vector(test.label[lab.p.idx]), siamcat@label)
         aucs[r] = calc.auroc(ev)
       }
     }
@@ -99,7 +99,7 @@ make.predictions <- function(siamcat, verbose=1){
     # test accuracy of combined test set
     c.auc = NA
     if (length(unique(test.label)) == 2) {
-      ev = eval.classifier(pred, as.vector(test.label), label)
+      ev = eval.classifier(pred, as.vector(test.label), siamcat@label)
       c.auc = calc.auroc(ev)
     }
     if(verbose>1)cat('+++ combined test AUC = ', format(c.auc, digits=3),

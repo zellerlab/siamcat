@@ -26,8 +26,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   task      <- makeClassifTask(data = data, target = "label")
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
-  #cost      <- 10^seq(-2,3,length=6+5+10)
-  cost <- c(0.1,1,10,100)
+  cost      <- 10^seq(-2,3,length=6+5+10)
   cl         <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
   parameters <- get.parameters.from.param.set(param.set=param.set, method=method, sqrt(nrow(data)))
 
@@ -41,7 +40,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
     class.weights        <- c(5, 1)
-    names(class.weights) <- c(label@negative.lab,label@positive.lab)
+    names(class.weights) <- c(-1,1)
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
     parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
