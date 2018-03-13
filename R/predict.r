@@ -21,7 +21,7 @@
 #' @keywords SIAMCAT plm.predictor
 #' @return object of class \link{siamcat-class}
 #'
-make.predictions <- function(siamcat, siamcat.holdout=NULL, verbose=1){
+make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TRUE, verbose=1){
 
   s.time <- proc.time()[3]
 
@@ -79,6 +79,12 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, verbose=1){
 
     if(verbose>1) cat("+ starting make.predictions on external dataset\n")
 
+    if (normalize.holdout){
+      if(verbose>1) cat("+ Performing frozen normalization on holdout set\n")
+      siamcat.holdout <- normalize.feat(siamcat.holdout, norm.param=siamcat@norm.param, verbose=verbose)
+    } else {
+      cat("WARNING: holdout set is not being normalized!\n")
+    }
     feat.test <- t(siamcat.holdout@phyloseq@otu_table)
     feat.ref <- t(siamcat@phyloseq@otu_table)
 
@@ -100,7 +106,7 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, verbose=1){
      data$label <- as.factor(siamcat.holdout@label@label)
 
      if(verbose>2) cat('Applying ', siamcat@modelList@model.type, ' on complete external dataset',
-         ' (', i, ' of ', num.resample*num.folds, ')...\n', sep='')
+         ' (', i, ' of ', num.models, ')...\n', sep='')
 
      task <- makeClassifTask(data = data, target = "label")
      pdata <- predict(model,  task = task)
