@@ -99,7 +99,7 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
     if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.folds*num.resample, style=3)
     for (i in 1:num.models){
 
-     data <- as.data.frame(feat.ref)
+     data <- as.data.frame(feat.test)
      model <- siamcat@modelList@models[[i]]
 
      data <- data[,model$features]

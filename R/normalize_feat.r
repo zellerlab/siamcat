@@ -71,7 +71,7 @@
 normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
                            norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
 
-  if(verbose>1) cat("+ starting add.meta.pred\n")
+  if(verbose>1) cat("+ starting normalize.feat\n")
   s.time <- proc.time()[3]
   feat <- siamcat@phyloseq@otu_table
 
