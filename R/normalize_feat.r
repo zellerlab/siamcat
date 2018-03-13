@@ -20,7 +20,7 @@
 #' @param norm.param list, specifying the parameters of the different
 #'  normalization methods, see details for more information
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal 
+#'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @details There are five different normalization methods available:
 #' \itemize{
@@ -117,7 +117,7 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
     par$log.n0 <- norm.param$log.n0
     par$n.p <- norm.param$n.p
     par$norm.margin <- norm.param$norm.margin
-   
+
     if(verbose>1) cat('+ feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
     # normalization
     if(verbose>2) cat("+++ performing normalization\n")
@@ -174,7 +174,8 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
     }
     if(verbose>1) cat('+++ feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
-
+    siamcat@norm.param         <- par
+    siamcat@norm.param$norm.method <- norm.method
   } else {
     # frozen normalization
     if(verbose>1) cat('+ performing frozen ', norm.param$norm.method, ' normalization using the supplied parameters\n')
@@ -220,11 +221,9 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
     }
     if(verbose>1) cat('+ feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
-    
+
   }
   siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
-  siamcat@norm.param         <- norm.param
-  siamcat@norm.param$norm.method <- norm.method
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished normalize.feat in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features normalized successfully.\n")
