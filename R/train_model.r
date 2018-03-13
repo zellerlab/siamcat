@@ -92,7 +92,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
     data$label                     <- train.label
 
     ### internal cross-validation for model selection
-    model             <- train.plm(data=data, method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set, neg.lab=label@negative.lab)
+    model             <- train.plm(data=data,  method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set, neg.lab=siamcat@label@negative.lab)
     if(!all(model$feat.weights == 0)){
        models.list[[r]]  <- model
     }else{
