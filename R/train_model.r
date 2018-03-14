@@ -96,13 +96,14 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
       ### internal cross-validation for model selection
       model             <- train.plm(data=data,  method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,
                                      param.set=param.set, neg.lab=siamcat@label@negative.lab)
+      bar <- bar+1
 
       if(!all(model$feat.weights == 0)){
-        models.list[[r]]  <- model
+        models.list[[bar]]  <- model
       }else{
         warning("Model without any features selected!\n")
       }
-      bar <- bar+1
+
       if(verbose==1 || verbose==2) setTxtProgressBar(pb, bar)
     }
   }
