@@ -66,22 +66,22 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
   # Create List to save models.
   models.list     <- list()
   power           <- NULL
-  num.runs        <- data_split@num.folds * data_split@num.resample
+  num.runs        <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
   bar             <- 0
   if(verbose>1) cat('+ training', method,  'models on', num.runs, 'training sets\n')
 
   if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
 
-  for (fold in 1:data_split@num.folds) {
+  for (fold in 1:siamcat@data_split@num.folds) {
 
     if(verbose>2) cat('+++ training on cv fold:', fold, '\n')
 
-    for (resampling in 1:data_split@num.resample) {
+    for (resampling in 1:siamcat@data_split@num.resample) {
       
       if(verbose>2) cat('++++ repetition:', resampling, '\n')
 
       fold.name    <- paste0('cv_fold', as.character(fold), '_rep', as.character(resampling))
-      fold.exm.idx <- match(data_split@training.folds[[resampling]][[fold]], names(label@label))
+      fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(label@label))
 
       ### subselect examples for training
       label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
