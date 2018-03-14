@@ -88,7 +88,7 @@ siamcat <- add.meta.pred(siamcat,
 ### vignette for cv/holdout
 ### int verbose for each function (0,5) with def=1
 ```{r}
-siamcat <- split.data(siamcat, 
+siamcat <-  split.features(siamcat, 
                             num.folds = 10, ### holdout -> all train/ all test etc, cross-validation/holdout -> make rest defaults
                             num.resample = 10, 
                             stratify = TRUE, 

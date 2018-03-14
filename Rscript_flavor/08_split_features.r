@@ -64,7 +64,7 @@ if(!is.null(opt$inseparable)){
   siamcat <- siamcat(feat,label)
 }
 ### Core function sourced from the library
-siamcat <- split.data(siamcat,
+siamcat <- split.features(siamcat,
                                num.folds=opt$num_folds,
                                num.resample=opt$resample, 
                                stratify=opt$stratify, 

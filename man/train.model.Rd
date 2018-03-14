@@ -5,16 +5,13 @@
 \title{Model training}
 \usage{
 train.model(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll",
-  "ridge_ll", "randomForest"), data.split = NULL, stratify = TRUE,
-  modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL,
-  verbose = 1)
+  "ridge_ll", "randomForest"), stratify = TRUE, modsel.crit = list("auc"),
+  min.nonzero.coeff = 1, param.set = NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
 \item{method}{string, specifies the type of model to be trained, may be one of these: \code{c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")}}
-
-\item{data.split}{filename containing the training samples or list of training instances produced by \link{split.data()}, defaults to \code{NULL} leading to training on the complete dataset}
 
 \item{stratify}{boolean, should the folds in the internal cross-validation be stratified?}
 
