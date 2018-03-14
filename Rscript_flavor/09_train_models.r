@@ -71,7 +71,6 @@ siamcat@data_split <- data_split
 
 siamcat  <- train.model(siamcat,
                        method = opt$method,
-                       data.split=opt$train_sets,
                        stratify = opt$stratify,
                        modsel.crit  = opt$sel_criterion,
                        min.nonzero.coeff = opt$min_nonzero_coeff,
