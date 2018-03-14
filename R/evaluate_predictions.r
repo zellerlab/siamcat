@@ -106,6 +106,8 @@ evaluate.predictions <- function(siamcat,verbose=1){
 # evaluates the predictive performance of a classifier on a labeled data sets
 # returns a list with vectors containing TP, FP, TN, FN for each threshold value on the predictions
 # (where TP = true positives, FP = false positives, TN = true negatives, FN = false negatives)
+#' @keywords internal
+#' @export
 evaluate.classifier <- function(predictions, test.label, label) {
   stopifnot(dim(test.label) == NULL)
   stopifnot(length(unique(test.label)) == 2)
