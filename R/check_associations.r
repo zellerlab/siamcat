@@ -109,7 +109,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   ##############################################################################
   # PANEL 1: DATA
   # prepare margins
-  prepare.margins(species_names = row.names(feat.red),verbose=verbose)
+  associations.margins.plot(species_names = row.names(feat.red),verbose=verbose)
   
   # get data
   data.n <- log10(as.matrix(feat.red[, siamcat@label@n.idx, drop=FALSE]) + detect.lim)
@@ -117,13 +117,13 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   
   if(verbose>2) cat("+++ plotting results\n")
   if (plot.type == "bean"){
-    plot.bean(data.n, data.p, siamcat@label, col=col, verbose=verbose)
+    associations.bin.plot(data.n, data.p, siamcat@label, col=col, verbose=verbose)
   } else if (plot.type == "box"){
-    plot.box(data.n, data.p, siamcat@label, col=col, verbose=verbose)
+    associations.box.plot(data.n, data.p, siamcat@label, col=col, verbose=verbose)
   } else if (plot.type == "quantile.box"){
-    plot.quantile.box(data.p, data.n, siamcat@label, col=col, verbose=verbose)
+    associations.quantile.box.plot(data.p, data.n, siamcat@label, col=col, verbose=verbose)
   } else if (plot.type == "quantile.rect"){
-    plot.quantile.rect(data.p, data.n, siamcat@label, col=col, verbose=verbose)
+    associations.quantile.rect.plot(data.p, data.n, siamcat@label, col=col, verbose=verbose)
   }
   
   # plot title
@@ -143,7 +143,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     } else if (p == "prevalence"){
       plot.pr.shift(pr.shifts=pr.shift, col=col,verbose=verbose)
     } else if (p == "auroc"){
-      plot.aucs(aucs=aucs, binary.cols=bcols,verbose=verbose)
+      associations.aucs.plot(aucs=aucs, binary.cols=bcols,verbose=verbose)
     }
   }
   
@@ -157,8 +157,8 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
 
 ### one function for each type of plot
 # bean plot
-plot.bean <- function(data1, data2, label, col, verbose=1){
-  if(verbose>2) cat("+ starting plot.bean\n")
+associations.bin.plot <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting associations.bin.plot\n")
   # create data.frame in format for beanplot
   bean.data <- data.frame()
   for (i in 1:nrow(data2)){
@@ -187,12 +187,12 @@ plot.bean <- function(data1, data2, label, col, verbose=1){
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
   print.labels(row.names(data1), plot.type='bean', verbose=verbose)
-  if(verbose>2) cat("+ finished plot.bean\n")
+  if(verbose>2) cat("+ finished associations.bin.plot\n")
 }
 
 # box plot
-plot.box <- function(data1, data2, label, col, verbose=1){
-  if(verbose>2) cat("+ starting plot.box\n")
+associations.box.plot <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting associations.box.plot\n")
   box.colors <- rep(c(col[1],col[2]),nrow(data1))
   
   plot.data <- data.frame()
@@ -222,12 +222,12 @@ plot.box <- function(data1, data2, label, col, verbose=1){
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
   print.labels(row.names(data1), plot.type='box', verbose=verbose)
-  if(verbose>2) cat("+ finished plot.box\n")
+  if(verbose>2) cat("+ finished associations.box.plot\n")
 }
 
 # quantile.box plot
-plot.quantile.box <- function(data1, data2, label, col, verbose=1){
-  if(verbose>2) cat("+ starting plot.quantile.box\n")
+associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting associations.quantile.box.plot\n")
   x.col <- col[2]
   y.col <- col[1]
   
@@ -283,12 +283,12 @@ plot.quantile.box <- function(data1, data2, label, col, verbose=1){
   }
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
   print.labels(row.names(data1), plot.type='quantile.box',verbose=verbose)
-  if(verbose>2) cat("+ finished plot.quantile.box\n")
+  if(verbose>2) cat("+ finished associations.quantile.box.plot\n")
 }
 
 # quantile.rect plot
-plot.quantile.rect <- function(data1, data2, label, col, verbose=1){
-  if(verbose>2) cat("+ starting plot.quantile.rect\n")
+associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting associations.quantile.rect.plot\n")
   quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
   
   x.q = apply(data1, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
@@ -334,13 +334,13 @@ plot.quantile.rect <- function(data1, data2, label, col, verbose=1){
          # cap legend size for diamond (should look symmetric to other symbols)
          pch = 18, cex = 1, pt.cex = c(0,0,0,0, min(35/nrow(data1), 2.25)))
   print.labels(row.names(data1), plot.type='quantile.rect',verbose=verbose)
-  if(verbose>2) cat("+ finished plot.quantile.rect\n")
+  if(verbose>2) cat("+ finished associations.quantile.rect.plot\n")
 }
 
 ### Prepare margins for the first plots
 #     make left margin as big as the longest label or maximally 20.1 lines
-prepare.margins <- function(species_names, p.label, verbose=1){
-  if(verbose>2) cat("+ starting prepare.margins\n")
+associations.margins.plot <- function(species_names, p.label, verbose=1){
+  if(verbose>2) cat("+ starting associations.margins.plot\n")
   cex.org <- par()$cex
   par(mar=c(5.1, 18, 4.1, 1.1), cex=1)
   temp = par()$mai
@@ -348,12 +348,12 @@ prepare.margins <- function(species_names, p.label, verbose=1){
   max_name <- max(strwidth(species_names, units = 'inches', cex=cex.labels)) + temp[4]
   temp[2] <- min(temp[2], max_name)
   par(mai=temp, cex=cex.org)
-  if(verbose>2) cat("+ finished prepare.margins\n")
+  if(verbose>2) cat("+ finished associations.margins.plot\n")
 }
 
 ### Plot single feature AUCs in single panel
-plot.aucs <- function(aucs, binary.cols,verbose=1){
-  if(verbose>2) cat("+ starting plot.aucs\n")
+associations.aucs.plot <- function(aucs, binary.cols,verbose=1){
+  if(verbose>2) cat("+ starting associations.aucs.plot\n")
   # set margins
   par(mar=c(5.1, 0, 4.1, 1.6))
   # plot background
@@ -377,7 +377,7 @@ plot.aucs <- function(aucs, binary.cols,verbose=1){
   # Title and axis label
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Feature AUCs', xlab='AU-ROC')
-  if(verbose>2) cat("+ finished plot.aucs\n")
+  if(verbose>2) cat("+ finished associations.aucs.plot\n")
 }
 
 ### Plot fold changes in single panel
