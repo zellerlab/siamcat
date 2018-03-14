@@ -37,9 +37,9 @@ setMethod("show", "siamcat", function(object){
   cat("siamcat-class object", fill=TRUE)
   if(!is.null(object@label)) cat(paste("label()                label:           ",sum(object@label@n.idx),
             object@label@n.lab,"and",sum(object@label@p.idx),object@label@p.lab,"samples", sep = " "), fill = TRUE)
-  if(length(object@norm.param)){
-    cat(paste("norm.param()           norm.param:       Features normalized using",
-              object@norm.param$norm.method, sep = " "), fill = TRUE)
+  if(length(object@norm_param)){
+    cat(paste("norm_param()           norm_param:       Features normalized using",
+              object@norm_param$norm.method, sep = " "), fill = TRUE)
   }
   if(length(object@data_split@num.folds)){
     cat(paste("data_split()            data_split:       ",object@data_split@num.resample,"cv rounds with",
@@ -53,8 +53,8 @@ setMethod("show", "siamcat", function(object){
     cat(paste("predMatrix()           predMatrix:       Predictions for",nrow(object@predMatrix),"samples from",
               ncol(object@predMatrix),"cv rounds", sep = " "), fill = TRUE)
   }
-  if(length(object@evalData)){
-    cat(paste("evalData()             evalData:         Average AUC:",round(object@evalData$auc.average[[1]],3), sep = " "), fill = TRUE)
+  if(length(object@eval_data)){
+    cat(paste("eval_data()             eval_data:         Average AUC:",round(object@eval_data$auc.average[[1]],3), sep = " "), fill = TRUE)
   }
   
   # print otu_table (always there).

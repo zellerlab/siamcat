@@ -81,7 +81,7 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
 
     if (normalize.holdout){
       if(verbose>1) cat("+ Performing frozen normalization on holdout set\n")
-      siamcat.holdout <- normalize.features(siamcat.holdout, norm.param=siamcat@norm.param, verbose=verbose)
+      siamcat.holdout <- normalize.features(siamcat.holdout, norm_param=siamcat@norm_param, verbose=verbose)
     } else {
       cat("WARNING: holdout set is not being normalized!\n")
     }

@@ -35,8 +35,8 @@ setClass("label", representation(label = "vector", header = "character",
 #' @name siamcat-class
 #' @rdname siamcat-class
 #' @exportClass siamcat
-setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", evalData = "list", 
-                                   label="label", norm.param="list", data_split="data_split", predMatrix="matrix"))
+setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list", 
+                                   label="label", norm_param="list", data_split="data_split", predMatrix="matrix"))
 
 #' Build siamcat-class objects from their components.
 #' @name siamcat
@@ -73,8 +73,8 @@ siamcat <- function(...){
 get.component.classes <- function(class){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat
-  component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm.param", "data_split","phyloseq")	#slot names
-  names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm.param", "data_split", "phyloseq") #class names
+  component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split","phyloseq")	#slot names
+  names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm_param", "data_split", "phyloseq") #class names
   
   component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")	#slot names
   names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names
