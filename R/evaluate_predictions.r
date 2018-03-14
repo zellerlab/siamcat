@@ -102,3 +102,49 @@ evaluate.predictions <- function(siamcat,verbose=1){
   if(verbose==1) cat("Evaluated predictions successfully.\n")
   return(siamcat)
 }
+
+# evaluates the predictive performance of a classifier on a labeled data sets
+# returns a list with vectors containing TP, FP, TN, FN for each threshold value on the predictions
+# (where TP = true positives, FP = false positives, TN = true negatives, FN = false negatives)
+evaluate.classifier <- function(predictions, test.label, label) {
+  stopifnot(dim(test.label) == NULL)
+  stopifnot(length(unique(test.label)) == 2)
+  stopifnot(all(is.finite(predictions)))
+  # calculate thresholds, one between each subsequent pair of sorted prediction values
+  # this is ignorant to whether predictions is in matrix or vector format (see below)
+  thr      <- predictions
+  dim(thr) <- NULL
+  thr      <- sort(unique(thr))
+  thr      <- rev(c(min(thr)-1, (thr[-1]+thr[-length(thr)])/2, max(thr)+1))
+  if (is.null(dim(predictions))) {
+    # assuming that a single model was applied to predict the data set
+    stopifnot(length(test.label) == length(predictions))
+    # actual evaluations per threshold value
+    tp = vector('numeric', length(thr))
+    fp = vector('numeric', length(thr))
+    tn = vector('numeric', length(thr))
+    fn = vector('numeric', length(thr))
+    for (i in 1:length(thr)) {
+      tp[i] = sum(test.label==label@positive.lab & predictions>thr[i])
+      fp[i] = sum(test.label==label@negative.lab & predictions>thr[i])
+      tn[i] = sum(test.label==label@negative.lab & predictions<thr[i])
+      fn[i] = sum(test.label==label@positive.lab & predictions<thr[i])
+    }
+  } else {
+    # assuming that several models were applied to predict the same data and predictions of each model occupy one column
+    stopifnot(length(test.label) == nrow(predictions))
+    tp = matrix(0, nrow=length(thr), ncol=ncol(predictions))
+    fp = matrix(0, nrow=length(thr), ncol=ncol(predictions))
+    tn = matrix(0, nrow=length(thr), ncol=ncol(predictions))
+    fn = matrix(0, nrow=length(thr), ncol=ncol(predictions))
+    for (c in 1:ncol(predictions)) {
+      for (r in 1:length(t)) {
+        tp[r,c] = sum(test.label==label@positive.lab  & predictions[,c] > thr[r])
+        fp[r,c] = sum(test.label==label@negative.lab  & predictions[,c] > thr[r])
+        tn[r,c] = sum(test.label==label@negative.lab  & predictions[,c] < thr[r])
+        fn[r,c] = sum(test.label==label@positive.lab  & predictions[,c] < thr[r])
+      }
+    }
+  }
+  return(list(tp=tp, tn=tn, fp=fp, fn=fn, thresholds=thr))
+}

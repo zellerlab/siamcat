@@ -28,7 +28,7 @@ DEBUG.CHECKS <- FALSE                # performs additional checks (asserting tha
     make_option('--feat_in',           type='character',                  help='Input file containing features'),
     make_option('--label_in',          type='character',                  help='Input file containing labels'),
     make_option('--method',            type='character', default='lasso', help='class of learner, directly passed to mlr::makeLearner'),
-    make_option('--data_split',        type='character',                    help='Input file containing dataSplit object'),
+    make_option('--data_split',        type='character',                    help='Input file containing data_split object'),
     make_option('--mlr_models_list',   type='character',                  help='Output RData file to which the object with trained models will be written'),
     make_option('--stratify',          type='logical',   default=TRUE,    help='Should cross-validation for model selection be stratified
     	                                                                        such that an approx. equal proportion of positive examples
@@ -68,7 +68,7 @@ label        <- read.labels(opt$label_in, feat)
 siamcat      <- siamcat(feat,label)
 
 load(opt$data_split)
-siamcat@dataSplit <- dataSplit
+siamcat@data_split <- data_split
 
 
 siamcat  <- train.model(siamcat
@@ -79,7 +79,7 @@ siamcat  <- train.model(siamcat
                        min.nonzero.coeff = opt$min_nonzero_coeff,
                        param.set = opt$param_set)
 
-modelList <- siamcat@modelList
-save(modelList , file=opt$mlr_models_list)
+model_list <- siamcat@model_list
+save(model_list , file=opt$mlr_models_list)
 cat('\n++++++++++++++++++++\nSuccessfully trained models in ', proc.time()[1] - start.time,
     ' seconds\n++++++++++++++++++++\n', sep='')

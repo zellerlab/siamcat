@@ -22,7 +22,7 @@ r.seed          <- 223311
 option_list     <- list(
   make_option('--label_in',        type='character',                 help='Input file containing labels'),
   make_option('--feat_in',         type='character',                 help='Input file containing features'),
-  make_option('--data_split',      type='character',                 help='Output file containing dataSplit object'),
+  make_option('--data_split',      type='character',                 help='Output file containing data_split object'),
   make_option('--num_folds',       type='integer',   default=10,     help='Number of cross-validation folds (i.e. subsets, needs to be >= 2)'),
   make_option('--resample',        type='integer',   default=0,      help='Resampling rounds (values <= 1 deactivate resampling)'),
   make_option('--stratify',        type='logical',   default=TRUE,   help='Should cross-validation be stratified such that an approx. 
@@ -71,8 +71,8 @@ siamcat <- data.splitter(siamcat,
                                inseparable=opt$inseparable)
 # write headers:
 
-dataSplit <- siamcat@dataSplit
-save(dataSplit,file=opt$data_split)
+data_split <- siamcat@data_split
+save(data_split,file=opt$data_split)
 
 if (opt$stratify) {
   cat('\nSuccessfully created data split for ', opt$num_folds, '-fold stratified cross-validation', sep='')

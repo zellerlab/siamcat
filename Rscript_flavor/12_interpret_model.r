@@ -66,7 +66,7 @@ load(opt$mlr_models_list) ##loads plm.out
 # parse model header
 
 siamcat <- siamcat(feat,label)
-siamcat@modelList <- modelList
+siamcat@model_list <- model_list
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)

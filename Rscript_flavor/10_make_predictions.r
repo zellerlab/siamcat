@@ -22,7 +22,7 @@ suppressMessages(library('methods'))
     make_option('--feat_in',         type='character',                     help='Input file containing features'),
     make_option('--mlr_models_list', type='character',                     help='Input RData file containing the trained models'),
     make_option('--label_in',        type='character',                     help='Input file containing labels'),
-    make_option('--data_split',      type='character',                     help='Input file containing dataSplit object'),
+    make_option('--data_split',      type='character',                     help='Input file containing data_split object'),
     make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written')
 )
 # parse arguments
@@ -44,10 +44,10 @@ siamcat    <- siamcat(feat,label)
 
 start.time   <- proc.time()[1]
 load(opt$mlr_models_list)
-siamcat@modelList <- modelList
+siamcat@model_list <- model_list
 
 load(opt$data_split)
-siamcat@dataSplit <- dataSplit
+siamcat@data_split <- data_split
 
 
 siamcat <- make.predictions(siamcat)
