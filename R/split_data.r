@@ -33,6 +33,11 @@ data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, i
   names(labelNum) <- names(siamcat@label@label)
   exm.ids         <- names(labelNum)
 
+  if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {
+    inseparable <- NULL
+  #   cat('+++ Inseparable parameter not specified\n')
+  }
+  
   # parse label description
   classes      <- sort(c(siamcat@label@negative.lab,siamcat@label@positive.lab))
 
