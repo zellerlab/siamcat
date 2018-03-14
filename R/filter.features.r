@@ -28,7 +28,7 @@
 #' @export
 #' @return siamcat an object of class \link{siamcat}
 
-filter.featuresures <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
+filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
   ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
