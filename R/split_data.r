@@ -21,12 +21,12 @@
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal 
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
-#' @keywords SIAMCAT data.splitter
+#' @keywords SIAMCAT split.data
 #' @export
 #' @return object of class \link{siamcat-class}
 # TODO add detail section for this function
-data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
-  if(verbose>1) cat("+ starting data.splitter\n")
+split.data <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
+  if(verbose>1) cat("+ starting split.data\n")
   s.time <- proc.time()[3]
   
   labelNum        <- as.numeric(siamcat@label@label)
@@ -116,7 +116,7 @@ data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, i
                            num.resample=num.resample,
                            num.folds=num.folds)
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished data.splitter in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished split.data in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features splitted for cross-validation successfully.\n")
   return(siamcat)
 }
