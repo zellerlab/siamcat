@@ -74,11 +74,11 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
 
   if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
 
-  for (fold in 1:data_split@num.resample) {
+  for (fold in 1:data_split@num.folds) {
 
     if(verbose>2) cat('+++ training on cv fold:', fold, '\n')
 
-    for (resampling in 1:data_split@num.folds) {
+    for (resampling in 1:data_split@num.resample) {
       
       if(verbose>2) cat('++++ repetition:', resampling, '\n')
 
