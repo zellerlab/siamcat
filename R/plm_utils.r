@@ -94,48 +94,6 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   return(model)
 }
 
-#' @export
-
-get.foldList <- function(dataSplit, label, mode=c("train", "test"), model=NULL, verbose=1){
-  num.runs     <- 1
-  num.folds    <- 2
-  fold.name = list()
-  fold.exm.idx = list()
-  if (is.null(dataSplit)){
-    # train on whole data set
-    fold.name[[1]]    <- 'whole data set'
-    fold.exm.idx[[1]] <- names(label@label)
-    if (mode == "test" && !(all(is.null(model)))){
-      num.runs <- length(model@models)
-      fold.name <- as.list(rep('whole data set', length(model@models)))
-      fold.exm.idx <- rep(list(names(label@label)), length(model@models))
-    }
-  } else if (class(dataSplit) == 'dataSplit') {
-      # use training samples as specified in training.folds in the list
-      num.folds <- dataSplit@num.folds
-      num.runs <- 0
-      for (cv in 1:dataSplit@num.folds){
-        for (res in 1:dataSplit@num.resample){
-          num.runs <- num.runs + 1
-
-          fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
-          if (mode == "train"){
-            fold.exm.idx[[num.runs]] <- match(dataSplit@training.folds[[res]][[cv]], names(label@label))
-          } else if (mode == "test"){
-            fold.exm.idx[[num.runs]] <- match(dataSplit@test.folds[[res]][[cv]], names(label@label))
-          }
-          if(verbose>2) cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]),mode,'samples\n')
-        }
-      }
-    } else {
-      stop('Wrong input for training samples!...')
-    }
-  fold.name  <- unlist(fold.name)
-  stopifnot(length(fold.name) == num.runs)
-  stopifnot(length(fold.exm.idx) == num.runs)
-  invisible(list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds))
-}
-
 
 get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.measure, min.nonzero.coeff){
   # get lambdas that fullfill the minimum nonzero coefficients criterion

@@ -61,18 +61,6 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
       measure[[length(measure)+1]] <- auprc
     }
   }
-  # TODO 2: instead of filename containing the traning sample indices, provide the list from data.splitter
-
-  if(verbose>2) cat("+++ retreving dataSplit\n")
-  ### subselect training examples as specified in fn.train.sample (if given)
-  foldList     <- get.foldList(siamcat@dataSplit, siamcat@label, mode="train", verbose=verbose)
-  fold.name    <- foldList$fold.name
-  fold.exm.idx <- foldList$fold.exm.idx
-  num.runs     <- foldList$num.runs
-  num.folds    <- foldList$num.folds
-
-  if(verbose>1) cat('+ training', method,  'models on', num.runs, 'training sets\n')
-
 
   # Create matrix with hyper parameters.
   hyperpar.list   <- list()
@@ -80,30 +68,51 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
   # Create List to save models.
   models.list     <- list()
   power           <- NULL
-  if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
-  for (r in 1:num.runs) {
-    if(verbose>2) cat('+++ training on ', fold.name[r], ' (', r, ' of ', num.runs, ')\n', sep='')
-    ### subselect examples for training
-    label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
-    train.label       <- label.fac[fold.exm.idx[[r]]]
-    data              <- as.data.frame(t(siamcat@phyloseq@otu_table)[fold.exm.idx[[r]],])
-    stopifnot(nrow(data)         == length(train.label))
-    stopifnot(all(rownames(data) == names(train.label)))
-    data$label                     <- train.label
+  num.runs        <- dataSplit@num.folds * dataSplit@num.resample
+  bar             <- 0
+  if(verbose>1) cat('+ training', method,  'models on', num.runs, 'training sets\n')
 
-    ### internal cross-validation for model selection
-    model             <- train.plm(data=data,  method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,param.set=param.set, neg.lab=siamcat@label@negative.lab)
-    if(!all(model$feat.weights == 0)){
-       models.list[[r]]  <- model
-    }else{
-      warning("Model without any features selected!\n")
+  if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
+
+  for (fold in 1:dataSplit@num.folds) {
+
+    if(verbose>2) cat('+++ training on cv fold:', fold, '\n')
+
+    for (resampling in 1:dataSplit@num.folds) {
+      
+      if(verbose>2) cat('++++ repetition:', resampling, '\n')
+
+      fold.name    <- paste0('cv_fold', as.character(fold), '_rep', as.character(resampling))
+      fold.exm.idx <- match(dataSplit@training.folds[[res]][[cv]], names(label@label))
+
+      ### subselect examples for training
+      label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
+      train.label       <- label.fac[fold.exm.idx]
+      data              <- as.data.frame(t(siamcat@phyloseq@otu_table)[fold.exm.idx,])
+      stopifnot(nrow(data)         == length(train.label))
+      stopifnot(all(rownames(data) == names(train.label)))
+      data$label        <- train.label
+      
+      ### internal cross-validation for model selection
+      model             <- train.plm(data=data,  method = method, measure=measure, min.nonzero.coeff=min.nonzero.coeff,
+                                     param.set=param.set, neg.lab=siamcat@label@negative.lab)
+
+      if(!all(model$feat.weights == 0)){
+        models.list[[r]]  <- model
+      }else{
+        warning("Model without any features selected!\n")
+      }
+      bar <- bar+1
+      if(verbose==1 || verbose==2) setTxtProgressBar(pb, bar)
     }
-    if(verbose==1 || verbose==2) setTxtProgressBar(pb, r)
   }
+
   siamcat@modelList <- new("modelList",models=models.list,model.type=method)
-  e.time <- proc.time()[3]
-  if(verbose>1) cat("\n+ finished train.model in",e.time-s.time,"s\n")
+  e.time            <- proc.time()[3]
+
+  if(verbose>1)  cat("\n+ finished train.model in",e.time-s.time,"s\n")
   if(verbose==1) cat("\nTrained",method,"models successfully.\n")
+
   return(siamcat)
 }
 

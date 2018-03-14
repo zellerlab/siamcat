@@ -28,12 +28,7 @@
 data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
   if(verbose>1) cat("+ starting data.splitter\n")
   s.time <- proc.time()[3]
-  ### read label and meta-data
-  # (assuming the label file has 1 column)
-  if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {
-    inseparable <- NULL
-  #   cat('+++ Inseparable parameter not specified\n')
-  }
+  
   labelNum        <- as.numeric(siamcat@label@label)
   names(labelNum) <- names(siamcat@label@label)
   exm.ids         <- names(labelNum)
