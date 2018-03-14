@@ -80,7 +80,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   } else {
     ev = siamcat@evalData$ev.list[[1]]
   }
-  pr = get.pr(ev)
+
   lines(pr$x, pr$y, col='black', lwd=2)
   aupr = calc.aupr(ev)
   if (dim(siamcat@predMatrix)[2] > 1) {
