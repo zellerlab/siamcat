@@ -64,14 +64,14 @@
 #' will normalize the second dataset in a comparable way to the first dataset (e.g.
 #' by using the same mean for the features for z-score standardization)
 #'
-#' @keywords SIAMCAT normalize.feat
+#' @keywords SIAMCAT normalize.features
 #' @export
 #' @return an object of class \link{siamcat}
 
-normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
+normalize.featuresures <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
                            norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
 
-  if(verbose>1) cat("+ starting normalize.feat\n")
+  if(verbose>1) cat("+ starting normalize.features\n")
   s.time <- proc.time()[3]
   feat <- siamcat@phyloseq@otu_table
 
@@ -225,7 +225,7 @@ normalize.feat <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.
   }
   siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished normalize.feat in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished normalize.features in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features normalized successfully.\n")
   return(siamcat)
 }

@@ -48,7 +48,7 @@ start.time = proc.time()[1]
 feat  <- read.features(opt$feat_in)
 siamcat <- siamcat(feat)
 ### Start core function
-siamcat <- normalize.feat(siamcat,
+siamcat <- normalize.features(siamcat,
                       norm.method = opt$method,
                       norm.param = list(
                       log.n0      = opt$log_n0,
