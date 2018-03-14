@@ -12,6 +12,7 @@
 ###
 
 #' @title Split a dataset into training and a test sets.
+#' @name split.data
 #' @description This function prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
 #' @param siamcat object of class \link{siamcat-class}
 #' @param num.folds number of cross-validation folds (needs to be \code{>=2}), defaults to \code{2}
@@ -22,9 +23,9 @@
 #'        for only information about progress and success, \code{2} for normal 
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT split.data
-#' @export
 #' @return object of class \link{siamcat-class}
-# TODO add detail section for this function
+#' @export
+
 split.data <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
   if(verbose>1) cat("+ starting split.data\n")
   s.time <- proc.time()[3]

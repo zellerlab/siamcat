@@ -14,7 +14,7 @@ train.model(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll",
 
 \item{method}{string, specifies the type of model to be trained, may be one of these: \code{c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")}}
 
-\item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
+\item{data.split}{filename containing the training samples or list of training instances produced by \link{split.data()}, defaults to \code{NULL} leading to training on the complete dataset}
 
 \item{stratify}{boolean, should the folds in the internal cross-validation be stratified?}
 
