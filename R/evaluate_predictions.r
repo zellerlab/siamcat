@@ -72,13 +72,13 @@ evaluate.predictions <- function(siamcat,verbose=1){
   if (ncol(pred) > 1) {
     aucspr = vector('numeric', dim(pred)[2])
     for (c in 1:ncol(pred)) {
-      ev[c] = list(eval.classifier(pred[,c], siamcat@label@label, siamcat@label))
+      ev[c] = list(evaluate.classifier(pred[,c], siamcat@label@label, siamcat@label))
       pr[c] = list(get.pr(ev[[c]]))
       aucspr[c] = calc.aupr(ev[[c]])
     }
-    ev = append(ev,list(eval.classifier(apply(pred, 1, summ.stat), siamcat@label@label, siamcat@label)))
+    ev = append(ev,list(evaluate.classifier(apply(pred, 1, summ.stat), siamcat@label@label, siamcat@label)))
   } else {
-    ev[1] = list(eval.classifier(as.vector(pred), siamcat@label@label, siamcat@label))
+    ev[1] = list(evaluate.classifier(as.vector(pred), siamcat@label@label, siamcat@label))
     pr[1] = list(get.pr(ev[[1]]))
   }
   if (ncol(pred) > 1) {
