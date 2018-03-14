@@ -35,14 +35,15 @@ siamcat <- siamcat(feat, label, meta)
 #check dtaa consistency function
 #CI low abudandt accuracy
 ```{r}
-siamcat <- validate.data(siamcat)
+siamcat <- validate.data(siamcat, verbose=2)
 ```
 
 ```{r}
 siamcat <- select.samples(siamcat, 
                           filter='age', 
                           allowed.set=NULL, 
-                          allowed.range=c(0,120), verbose=1)
+                          allowed.range=c(0,120),
+                          verbose=2)
 
 ```
 
@@ -51,13 +52,16 @@ siamcat <- filter.features(siamcat,
                        filter.method = 'abundance', 
                        cutoff =0.001, 
                        recomp.prop = FALSE, 
-                       rm.unmapped = TRUE)
+                       rm.unmapped = TRUE,
+                       verbose=2)
 ```
 
 ### Association/Confounder Testing
 
 ```{r}
-check.confounders(siamcat, fn.plot='conf_check.pdf')
+check.confounders(siamcat, 
+                  fn.plot='conf_check.pdf',
+                  verbose=2)
 ```
 
 ```{r}
@@ -66,7 +70,8 @@ check.associations(siamcat,
                    fn.plot = 'assoc.pdf',
                    alpha = 0.05, mult.corr = "fdr",
                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
-                   panels=c("fc", "prevalence", "auroc"))
+                   panels=c("fc", "prevalence", "auroc"),
+                   verbose=2)
 ```
 
 ### Data Normalization
@@ -74,16 +79,17 @@ check.associations(siamcat,
 ```{r}
 siamcat <- normalize.features(siamcat, 
                           norm.method = "log.unit", 
-                          norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1))
+                          norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1),
+                          verbose=2)
 ```
 
 ### Model building and Prediction
 
 ```{r}
-pred.names = strsplit(c('fobt'), ',', fixed=TRUE)[[1]]
 siamcat <- add.meta.pred(siamcat, 
-                          pred.names = pred.names, 
-                          std.meta = TRUE,verbose=3)
+                          pred.names = "fobt", 
+                          std.meta = TRUE,
+                          verbose=2)
 ```
 ### vignette for cv/holdout
 ### int verbose for each function (0,5) with def=1
@@ -102,21 +108,22 @@ siamcat <- train.model(siamcat,
                        stratify = TRUE,
                        modsel.crit=list("pr"),  
                        min.nonzero.coeff = 5,
-                       param.set=NULL)
+                       param.set=NULL,
+                       verbose=2)
 ```
 
 ```{r}
-siamcat <- make.predictions(siamcat)
+siamcat <- make.predictions(siamcat, verbose=2)
 ```
 
 ### Model Evaluation and Interpretation
 
 ```{r}
-siamcat <-  evaluate.predictions(siamcat, verbose=3)
+siamcat <-  evaluate.predictions(siamcat, verbose=2)
 ```
 
 ```{r}
-model.evaluation.plot(siamcat,'eval_plot.pdf')
+model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
 ```
 
 ```{r}
@@ -126,5 +133,5 @@ model.interpretation.plot(siamcat,
                         norm.models = TRUE,
                         limits=c(-5,5),
                         heatmap.type = 'fc',
-                       verbose=3)
+                        verbose=2)
 ```

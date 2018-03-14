@@ -93,7 +93,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   return(model)
 }
 
-
+#' @keywords internal
 get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.measure, min.nonzero.coeff){
   # get lambdas that fullfill the minimum nonzero coefficients criterion
   lambdas <- trained.model$learner.model$glmnet.fit$lambda[which(trained.model$learner.model$nzero >= min.nonzero.coeff)]
@@ -130,6 +130,7 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
   return(opt.lambda)
 }
 
+#' @keywords internal
 get.parameters.from.param.set <- function(param.set, method, sqrt.mdim){
   cost      <- 10^seq(-2,3,length=6+5+10)
   ntree     <- c(100,1000)

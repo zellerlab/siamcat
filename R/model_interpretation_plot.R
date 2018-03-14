@@ -1,14 +1,9 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# R package flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 26.06.2017
-# GNU GPL-3.0
+# R flavor
+# EMBL Heidelberg 2012-2018
+# GNU GPL 3.0
 ###
 
 #' @title Model Interpretation Plot
@@ -71,7 +66,7 @@ model.interpretation.plot <- function(siamcat, fn.plot,
   # ############################################################################
   # aggreate predictions and sort patients by score
   ### aggregate predictions of several models if more than one is given
-  mean.agg.pred <- rowMeans(siamcat@predMatrix)
+  mean.agg.pred <- rowMeans(siamcat@pred_matrix)
   ### idx to sort samples according to their class membership and prediction score
   srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return=TRUE)$ix
   # ############################################################################

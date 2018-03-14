@@ -1,14 +1,9 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# R package flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 26.06.2017
-# GNU GPL-3.0
+# R flavor
+# EMBL Heidelberg 2012-2018
+# GNU GPL 3.0
 ###
 
 #' @title Model Evaluation Plot
@@ -30,15 +25,15 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='False positive rate', ylab='True positive rate', type='n')
   title(paste('ROC curve for the model', sep=' '))
   abline(a=0, b=1, lty=3)
-  if (dim(siamcat@predMatrix)[2] > 1) {
-    aucs = vector('numeric', dim(siamcat@predMatrix)[2])
-    for (c in 1:dim(siamcat@predMatrix)[2]) {
+  if (dim(siamcat@pred_matrix)[2] > 1) {
+    aucs = vector('numeric', dim(siamcat@pred_matrix)[2])
+    for (c in 1:dim(siamcat@pred_matrix)[2]) {
       roc.c = siamcat@eval_data$roc.all[[c]]
       lines(1-roc.c$specificities, roc.c$sensitivities, col=gray(runif(1,0.2,0.8)))
       aucs[c] = siamcat@eval_data$auc.all[c]
       if(verbose>2) cat('+++ AU-ROC (resampled run ', c, '): ', format(aucs[c], digits=3), '\n', sep='')
     }
-    l.vec = rep(siamcat@label@label, dim(siamcat@predMatrix)[2])
+    l.vec = rep(siamcat@label@label, dim(siamcat@pred_matrix)[2])
   } else {
     l.vec = siamcat@label@label
   }
@@ -51,7 +46,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   yu = roc.summ$ci[,3]
   polygon(1-c(x, rev(x)), c(yl, rev(yu)), col='#88888844' , border=NA)
 
-  if (dim(siamcat@predMatrix)[2] > 1) {
+  if (dim(siamcat@pred_matrix)[2] > 1) {
     if(verbose>1) cat('+ AU-ROC:\n+++ mean-prediction:', format(auroc, digits=3), 
                       '\n+++ averaged       :', format(mean(aucs), digits=3), 
                       '\n+++ sd             :', format(sd(aucs), digits=4), '\n', sep='')
@@ -67,9 +62,9 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   title(paste('Precision-recall curve for the model', sep=' '))
   abline(h=mean(siamcat@label@label==siamcat@label@positive.lab), lty=3)
 
-  if (dim(siamcat@predMatrix)[2] > 1) {
-    aucspr = vector('numeric', dim(siamcat@predMatrix)[2])
-    for (c in 1:dim(siamcat@predMatrix)[2]) {
+  if (dim(siamcat@pred_matrix)[2] > 1) {
+    aucspr = vector('numeric', dim(siamcat@pred_matrix)[2])
+    for (c in 1:dim(siamcat@pred_matrix)[2]) {
       ev = siamcat@eval_data$ev.list[[c]]
       pr = siamcat@eval_data$pr.list[[c]]
       lines(pr$x, pr$y, col=gray(runif(1,0.2,0.8)))
@@ -83,7 +78,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   pr = evaluate.get.pr(ev,verbose=verbose)
   lines(pr$x, pr$y, col='black', lwd=2)
   aupr = evaluate.calc.aupr(ev,verbose=verbose)
-  if (dim(siamcat@predMatrix)[2] > 1) {
+  if (dim(siamcat@pred_matrix)[2] > 1) {
     if(verbose>1) cat('+ AU-PRC:\n+++ mean-prediction:', format(aupr, digits=3), 
                       '\n+++ averaged       :', format(mean(aucspr), digits=3), 
                       '\n+++ sd             :', format(sd(aucspr), digits=4), '\n', sep='')

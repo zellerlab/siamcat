@@ -49,9 +49,9 @@ setMethod("show", "siamcat", function(object){
     cat(paste("model_list()            model_list:       ",length(object@model_list@models),
               object@model_list@model.type,"models", sep = " "), fill = TRUE)
   }
-  if(nrow(object@predMatrix)){
-    cat(paste("predMatrix()           predMatrix:       Predictions for",nrow(object@predMatrix),"samples from",
-              ncol(object@predMatrix),"cv rounds", sep = " "), fill = TRUE)
+  if(nrow(object@pred_matrix)){
+    cat(paste("pred_matrix()           pred_matrix:       Predictions for",nrow(object@pred_matrix),"samples from",
+              ncol(object@pred_matrix),"cv rounds", sep = " "), fill = TRUE)
   }
   if(length(object@eval_data)){
     cat(paste("eval_data()             eval_data:         Average AUC:",round(object@eval_data$auc.average[[1]],3), sep = " "), fill = TRUE)

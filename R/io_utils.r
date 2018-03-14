@@ -1,14 +1,9 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# R package flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 12.06.2017
-# GNU GPL-3.0
+# R flavor
+# EMBL Heidelberg 2012-2018
+# GNU GPL 3.0
 ###
 
 #' @title Read feature file
@@ -141,6 +136,7 @@ read.meta <- function(fn.in.meta){
 
 ##### auxiliary function to trim whitespace from string
 # returns string without leading or trailing whitespace
+#' @keywords internal
 trim <- function (x) {
   gsub("^\\s+|\\s+$", "", x)
 }
@@ -150,7 +146,7 @@ trim <- function (x) {
 ###   where <TYPE> is a string specifying the type of label variable such as
 ###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
 ###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
-#' @export
+#' @keywords internal
 parse.label.header <- function(label.header) {
   s    <- strsplit(label.header, ':')[[1]]
   type <- trim(s[1])
@@ -168,7 +164,7 @@ parse.label.header <- function(label.header) {
 }
 
 # ##### function to parse the header of a model file
-#' @export
+#' @keywords internal
 parse.model.header <- function(model.header) {
   s <- strsplit(model.header, ':')[[1]]
   type <- trim(s[1])
