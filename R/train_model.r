@@ -15,7 +15,7 @@
 #' @description This function trains the a machine learning model on the training data
 #' @param siamcat object of class \link{siamcat-class}
 #' @param method string, specifies the type of model to be trained, may be one of these: \code{c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")}
-#' @param data.split filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset
+#' @param data.split filename containing the training samples or list of training instances produced by \link{split.data()}, defaults to \code{NULL} leading to training on the complete dataset
 #' @param stratify boolean, should the folds in the internal cross-validation be stratified?
 #' @param modsel.crit list, specifies the model selection criterion during internal cross-validation, may contain these: \code{c("auc", "f1", "acc", "pr")}
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that should be present in the model (only for \code{"lasso"}, \code{"ridge"}, and \code{"enet"}
