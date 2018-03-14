@@ -72,7 +72,7 @@ pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.name
 pred <- as.matrix(pred)
 siamcat@predMatrix <- pred
 
-interpretor.model.plot(siamcat,
+model.interpretation.plot(siamcat,
                        color.scheme=opt$col_scheme,
                        consens.thres=opt$consens_thres,
                        heatmap.type=opt$heatmap_type,

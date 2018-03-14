@@ -47,7 +47,7 @@ siamcat@predMatrix <- pred
 
 siamcat <-  evaluate.predictions(siamcat)
 
-evaluation.model.plot(siamcat, fn.plot=opt$plot)
+model.evaluation.plot(siamcat, fn.plot=opt$plot)
 
 
 # The following code writes calculated auroc and aupr- values into a file for testing.

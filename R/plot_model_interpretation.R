@@ -26,7 +26,7 @@
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal 
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
-#' @keywords SIAMCAT interpretor.model.plot
+#' @keywords SIAMCAT model.interpretation.plot
 #' @return Does not return anything, but produces the model interpretion plot.
 #' @export
 #' @details Produces a plot consisting of \itemize{
@@ -36,11 +36,11 @@
 #'  \item a boxplot displaying the poportion of weight per model that is actually shown
 #' for the features that are incorporated into more than \code{consens.thres} percent of the models.
 #'}
-interpretor.model.plot <- function(siamcat, fn.plot,
+model.interpretation.plot <- function(siamcat, fn.plot,
   color.scheme='BrBG', consens.thres=0.5,
   heatmap.type=c('zscore',"fc"), norm.models=FALSE,
   limits=c(-3,3), detect.lim=1e-08, max.show=50, verbose=1){
-  if(verbose>1) cat("+ starting evaluation.model.plot\n")
+  if(verbose>1) cat("+ starting model.evaluation.plot\n")
   s.time <- proc.time()[3]
   # ############################################################################
   ### some color pre-processing
@@ -221,7 +221,7 @@ interpretor.model.plot <- function(siamcat, fn.plot,
 
   tmp <- dev.off()
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished interpretor.model.plot in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished model.interpretation.plot in",e.time-s.time,"s\n")
   if(verbose==1) cat("Plotted associations between features and label successfully to:",fn.plot,"\n")
 }
 

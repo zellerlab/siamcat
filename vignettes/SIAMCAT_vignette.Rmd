@@ -114,11 +114,11 @@ siamcat <- make.predictions(siamcat)
 ```{r}
 siamcat <-  evaluate.predictions(siamcat)
 
-evaluation.model.plot(siamcat,'eval_plot.pdf')
+model.evaluation.plot(siamcat,'eval_plot.pdf')
 ```
 
 ```{r}
-interpretor.model.plot(siamcat,
+model.interpretation.plot(siamcat,
                         fn.plot='interpretation.pdf',
                         consens.thres = 0.5,
                         norm.models = TRUE,

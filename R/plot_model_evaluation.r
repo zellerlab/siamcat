@@ -18,11 +18,11 @@
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal 
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
-#' @keywords SIAMCAT evaluation.model.plot
+#' @keywords SIAMCAT model.evaluation.plot
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
-evaluation.model.plot <- function(siamcat, fn.plot, verbose=1){
-  if(verbose>1) cat("+ starting evaluation.model.plot\n")
+model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
+  if(verbose>1) cat("+ starting model.evaluation.plot\n")
   s.time <- proc.time()[3]
   pdf(fn.plot, onefile=TRUE)
   
@@ -94,6 +94,6 @@ evaluation.model.plot <- function(siamcat, fn.plot, verbose=1){
   }
   tmp <- dev.off()
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished evaluation.model.plot in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished model.evaluation.plot in",e.time-s.time,"s\n")
   if(verbose==1) cat("Plotted evaluation of predictions successfully to:",fn.plot,"\n")
 }
