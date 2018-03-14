@@ -18,7 +18,7 @@ normalize.feat(siamcat, norm.method = c("rank.unit", "rank.std", "log.std",
 normalization methods, see details for more information}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal 
+for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
