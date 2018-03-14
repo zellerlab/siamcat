@@ -1,4 +1,4 @@
-###
+w###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
 # R package flavor
 #
@@ -396,7 +396,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta=NULL, label,
     for (f in sel.feat){
       if(verbose>2) cat("+++",f,"\n")
       if (!grepl('META', f)){
-        median.ctr   <- suppressWarnings(median(as.numeric(heatmap.data[f,label@n.idx])))
+        median.ctr   <- suppressMessages(median(as.numeric(heatmap.data[f,label@n.idx])))
         img.data[f,] <- log10(heatmap.data[f,] + detect.lim) - log10(median.ctr + detect.lim)
       } else {
         meta.data <- meta[,grep(strsplit(f, '_')[[1]][2], colnames(meta), ignore.case=TRUE, value=TRUE)]

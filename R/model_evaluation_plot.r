@@ -80,9 +80,9 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   } else {
     ev = siamcat@evalData$ev.list[[1]]
   }
-
+  pr = evaluate.get.pr(ev,verbose=verbose)
   lines(pr$x, pr$y, col='black', lwd=2)
-  aupr = calc.aupr(ev)
+  aupr = evaluate.calc.aupr(ev,verbose=verbose)
   if (dim(siamcat@predMatrix)[2] > 1) {
     if(verbose>1) cat('+ AU-PRC:\n+++ mean-prediction:', format(aupr, digits=3), 
                       '\n+++ averaged       :', format(mean(aucspr), digits=3), 
