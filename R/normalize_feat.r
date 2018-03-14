@@ -174,8 +174,8 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     }
     if(verbose>1) cat('+++ feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
-    siamcat@norm.param         <- par
-    siamcat@norm.param$norm.method <- norm.method
+    siamcat@norm_param         <- par
+    siamcat@norm_param$norm.method <- norm.method
   } else {
     # frozen normalization
     if(verbose>1) cat('+ performing frozen ', norm.param$norm.method, ' normalization using the supplied parameters\n')

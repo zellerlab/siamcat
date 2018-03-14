@@ -1,13 +1,8 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# RScript flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 26.06.2017
+# R flavor
+# EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
@@ -83,7 +78,7 @@ evaluate.predictions <- function(siamcat,verbose=1){
   }
   if (ncol(pred) > 1) {
     if(verbose>2) cat("+ evaluating multiple predictions\n")
-    siamcat@evalData <- list("roc.all" = rocc,
+    siamcat@eval_data <- list("roc.all" = rocc,
                 "auc.all"=aucs,
                 "roc.average"=rocsumm,
                 "auc.average"=auroc,
@@ -92,7 +87,7 @@ evaluate.predictions <- function(siamcat,verbose=1){
                 "aucspr"=aucspr)
   } else {
     if(verbose>2) cat("+ evaluating single prediction\n")
-    siamcat@evalData <- list("roc.average"=rocsumm,
+    siamcat@eval_data <- list("roc.average"=rocsumm,
                 "auc.average"=auroc,
                 "ev.list"=ev,
                 "pr.list"=pr)

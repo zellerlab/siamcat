@@ -6,8 +6,9 @@
 ###
 
 #' @title Check for potential confounders in the metadata
-#' @description This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata.
-#' Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
+#' @description This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) 
+#' that are present in the metadata. Statistical testing is performed with Fisher's exact test or Wilcoxon test, 
+#' while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
 #' @param siamcat an object of class \link{siamcat}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param verbose control output: \code{0} for no output at all, \code{1}
@@ -15,7 +16,7 @@
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT check.confounders
 #' @export
-#' @return Does not return anything, but produces a single plot for each metadata category
+#' @return Does not return anything, but produces a single plot for each metadata category.
 check.confounders <- function(siamcat, fn.plot, verbose=1){
   if(verbose>1) cat("+ starting check.confounders\n")
   s.time <- proc.time()[3]

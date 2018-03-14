@@ -33,18 +33,18 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   if (dim(siamcat@predMatrix)[2] > 1) {
     aucs = vector('numeric', dim(siamcat@predMatrix)[2])
     for (c in 1:dim(siamcat@predMatrix)[2]) {
-      roc.c = siamcat@evalData$roc.all[[c]]
+      roc.c = siamcat@eval_data$roc.all[[c]]
       lines(1-roc.c$specificities, roc.c$sensitivities, col=gray(runif(1,0.2,0.8)))
-      aucs[c] = siamcat@evalData$auc.all[c]
+      aucs[c] = siamcat@eval_data$auc.all[c]
       if(verbose>2) cat('+++ AU-ROC (resampled run ', c, '): ', format(aucs[c], digits=3), '\n', sep='')
     }
     l.vec = rep(siamcat@label@label, dim(siamcat@predMatrix)[2])
   } else {
     l.vec = siamcat@label@label
   }
-  roc.summ = siamcat@evalData$roc.average[[1]]
+  roc.summ = siamcat@eval_data$roc.average[[1]]
   lines(1-roc.summ$specificities, roc.summ$sensitivities, col='black', lwd=2)
-  auroc = siamcat@evalData$auc.average[1]
+  auroc = siamcat@eval_data$auc.average[1]
   # plot CI
   x = as.numeric(rownames(roc.summ$ci))
   yl = roc.summ$ci[,1]
@@ -70,15 +70,15 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   if (dim(siamcat@predMatrix)[2] > 1) {
     aucspr = vector('numeric', dim(siamcat@predMatrix)[2])
     for (c in 1:dim(siamcat@predMatrix)[2]) {
-      ev = siamcat@evalData$ev.list[[c]]
-      pr = siamcat@evalData$pr.list[[c]]
+      ev = siamcat@eval_data$ev.list[[c]]
+      pr = siamcat@eval_data$pr.list[[c]]
       lines(pr$x, pr$y, col=gray(runif(1,0.2,0.8)))
-      aucspr[c] = siamcat@evalData$aucspr[c]
+      aucspr[c] = siamcat@eval_data$aucspr[c]
       if(verbose>2) cat('+++ AU-PRC (resampled run ', c, '): ', format(aucspr[c], digits=3), '\n', sep='')
     }
-    ev = siamcat@evalData$ev.list[[length(siamcat@evalData$ev.list)]]
+    ev = siamcat@eval_data$ev.list[[length(siamcat@eval_data$ev.list)]]
   } else {
-    ev = siamcat@evalData$ev.list[[1]]
+    ev = siamcat@eval_data$ev.list[[1]]
   }
   pr = evaluate.get.pr(ev,verbose=verbose)
   lines(pr$x, pr$y, col='black', lwd=2)
