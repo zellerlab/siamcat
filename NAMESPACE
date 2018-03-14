@@ -3,7 +3,7 @@
 export(add.meta.pred)
 export(assign.fold)
 export(check.associations)
-export(confounder.check)
+export(check.confounders)
 export(data.splitter)
 export(eval.predictions)
 export(evaluation.model.plot)

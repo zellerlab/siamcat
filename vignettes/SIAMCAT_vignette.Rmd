@@ -57,7 +57,7 @@ siamcat <- filter.feat(siamcat,
 ### Association/Confounder Testing
 
 ```{r}
-confounder.check(siamcat, fn.plot='conf_check.pdf')
+check.confounders(siamcat, fn.plot='conf_check.pdf')
 ```
 
 ```{r}

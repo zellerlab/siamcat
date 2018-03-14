@@ -28,7 +28,7 @@ option_list     <- list(
   make_option('--stratify',        type='logical',   default=TRUE,   help='Should cross-validation be stratified such that an approx. 
                                                                            equal proportion of positive examples are contained in each subset 
                                                                            (only for binary labels)?'),
-  make_option('--inseparable',     type='character', default='NULL', help=''),
+  make_option('--inseparable',     type='character', default=NULL,   help=''),
   make_option('--metadata_in',     type='character',                 help='Input file containing metadata (only required if argument 
                                                                            \'inseparable\' is specified)'),
   make_option('--subdivide_train_set', type='logical',   default=FALSE,  help='The train data will be subdevided into different files by folds and resamplings.
@@ -58,7 +58,7 @@ set.seed(r.seed)
 feat  <- read.features(opt$feat_in)
 label <- read.labels(opt$label_in, feat)
 if(!is.null(opt$inseparable)){
-  meta  <- read.meta(opt$metadata_in)
+  meta    <- read.meta(opt$metadata_in)
   siamcat <- siamcat(feat,label,meta)
 }else{
   siamcat <- siamcat(feat,label)

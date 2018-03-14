@@ -13,11 +13,11 @@
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal 
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
-#' @keywords SIAMCAT confounder.check
+#' @keywords SIAMCAT check.confounders
 #' @export
 #' @return Does not return anything, but produces a single plot for each metadata category
-confounder.check <- function(siamcat, fn.plot, verbose=1){
-  if(verbose>1) cat("+ starting confounder.check\n")
+check.confounders <- function(siamcat, fn.plot, verbose=1){
+  if(verbose>1) cat("+ starting check.confounders\n")
   s.time <- proc.time()[3]
   # TODO: implement color.scheme selection as function parameter
   pdf(fn.plot, onefile = TRUE)
@@ -167,6 +167,6 @@ confounder.check <- function(siamcat, fn.plot, verbose=1){
   }
   tmp <- dev.off()
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished confounder.check in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished check.confounders in",e.time-s.time,"s\n")
   if(verbose==1)cat("Checking metadata for confounders finished, results plotted to:",fn.plot,"\n")
 }

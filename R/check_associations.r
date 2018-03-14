@@ -75,6 +75,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                                         pr.cutoff=pr.cutoff, mult.corr=mult.corr, alpha=alpha,
                                         max.show=max.show, sort.by=sort.by, probs.fc=seq(.1, .9, .05),verbose=verbose)
   
+  ### TODO: remove at some point
   p.val     <- result.list$p.val
   p.adj     <- result.list$p.adj
   fc        <- result.list$fc
