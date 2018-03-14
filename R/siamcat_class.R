@@ -45,7 +45,11 @@ setClass("label", representation(label = "vector", header = "character",
 #'  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 #'}
+#' @slot label an object of class \link{label-class}
+#' @slot model_list an object of class \link{model_list-class}
+#' @slot norm_param an object of class \link{norm_param-class}
 #' @slot phyloseq object of class \link{phyloseq::phyloseq-class}
+#' @slot pred_matrix a matrix with predictions made by \link{make.predictions} function
 #' @exportClass siamcat
 setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list", 
                                    label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))

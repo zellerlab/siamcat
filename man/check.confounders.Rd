@@ -16,11 +16,12 @@ for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-Does not return anything, but produces a single plot for each metadata category
+Does not return anything, but produces a single plot for each metadata category.
 }
 \description{
-This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) that are present in the metadata.
-Statistical testing is performed with Fisher's exact test or Wilcoxon test, while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
+This function checks for associations between class labels and potential confounders (e.g. age, sex, or BMI) 
+that are present in the metadata. Statistical testing is performed with Fisher's exact test or Wilcoxon test, 
+while associations are visualized either as barplot or Q-Q plot, depending on the type of metadata.
 }
 \keyword{SIAMCAT}
 \keyword{check.confounders}
