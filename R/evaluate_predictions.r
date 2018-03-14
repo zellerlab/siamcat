@@ -35,8 +35,8 @@
 #'  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 #'}
-eval.predictions <- function(siamcat,verbose=1){
-  if(verbose>1) cat("+ starting eval.predictions\n")
+evaluate.predictions <- function(siamcat,verbose=1){
+  if(verbose>1) cat("+ starting evaluate.predictions\n")
   s.time <- proc.time()[3]
   # TODO compare header to label
   ### make sure that label and prediction are in the same order
@@ -98,7 +98,7 @@ eval.predictions <- function(siamcat,verbose=1){
                 "pr.list"=pr)
   }
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished eval.predictions in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished evaluate.predictions in",e.time-s.time,"s\n")
   if(verbose==1) cat("Evaluated predictions successfully.\n")
   return(siamcat)
 }

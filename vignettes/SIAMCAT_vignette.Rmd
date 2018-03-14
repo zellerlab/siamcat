@@ -112,7 +112,7 @@ siamcat <- make.predictions(siamcat)
 ### Model Evaluation and Interpretation
 
 ```{r}
-siamcat <-  eval.predictions(siamcat)
+siamcat <-  evaluate.predictions(siamcat)
 
 evaluation.model.plot(siamcat,'eval_plot.pdf')
 ```

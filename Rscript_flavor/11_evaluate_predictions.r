@@ -45,7 +45,7 @@ pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.name
 pred <- as.matrix(pred)
 siamcat@predMatrix <- pred
 
-siamcat <-  eval.predictions(siamcat)
+siamcat <-  evaluate.predictions(siamcat)
 
 evaluation.model.plot(siamcat, fn.plot=opt$plot)
 
