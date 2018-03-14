@@ -43,7 +43,7 @@ label <- read.labels(opt$label_in, feat)
 meta  <- read.meta(opt$metadata_in)
 siamcat <- siamcat(feat,label,meta)
 ### Start core function
-confounder.check(siamcat, fn.plot=opt$plot)
+check.confounders(siamcat, fn.plot=opt$plot)
 ### End core function
 
 
