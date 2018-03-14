@@ -71,7 +71,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                  dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
   ### Calculate different effect sizes
   if(verbose>2) cat("+++ analysing features\n")
-  result.list <- marker.analysis.binary(feat=feat, label=siamcat@label, detect.lim=detect.lim, colors=col,
+  result.list <- analyse.binary.marker(feat=feat, label=siamcat@label, detect.lim=detect.lim, colors=col,
                                         pr.cutoff=pr.cutoff, mult.corr=mult.corr, alpha=alpha,
                                         max.show=max.show, sort.by=sort.by, probs.fc=seq(.1, .9, .05),verbose=verbose)
   
@@ -105,7 +105,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   ##############################################################################
   # PANEL 2: P-VALUES
   # print p-values in second panel of the plot
-  plot.pvals(p.vals=p.adj, alpha=alpha,verbose=verbose)
+  associations.pvals.plot(p.vals=p.adj, alpha=alpha,verbose=verbose)
 
   ##############################################################################
   # PANEL 1: DATA
@@ -140,9 +140,9 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   # OTHER PANELS
   for (p in panels){
     if (p == "fc"){
-      plot.fcs(fc.all=fc, binary.cols=bcols,verbose=verbose)
+      associations.fcs.plot(fc.all=fc, binary.cols=bcols,verbose=verbose)
     } else if (p == "prevalence"){
-      plot.pr.shift(pr.shifts=pr.shift, col=col,verbose=verbose)
+      associations.pr.shift.plot(pr.shifts=pr.shift, col=col,verbose=verbose)
     } else if (p == "auroc"){
       associations.aucs.plot(aucs=aucs, binary.cols=bcols,verbose=verbose)
     }
@@ -187,7 +187,7 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
   tick.labels <- formatC(10^ticks, format='E', digits=0)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
-  print.labels(row.names(data1), plot.type='bean', verbose=verbose)
+  associations.labels.plot(row.names(data1), plot.type='bean', verbose=verbose)
   if(verbose>2) cat("+ finished associations.bin.plot\n")
 }
 
@@ -222,7 +222,7 @@ associations.box.plot <- function(data1, data2, label, col, verbose=1){
   tick.labels <- formatC(10^ticks, format='E', digits=0)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
-  print.labels(row.names(data1), plot.type='box', verbose=verbose)
+  associations.labels.plot(row.names(data1), plot.type='box', verbose=verbose)
   if(verbose>2) cat("+ finished associations.box.plot\n")
 }
 
@@ -283,7 +283,7 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
     points(data2[i,], rep(i-0.15, ncol(data2))+rnorm(ncol(data2),sd=0.03), pch=16, cex=0.6, col=y.col)
   }
   legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
-  print.labels(row.names(data1), plot.type='quantile.box',verbose=verbose)
+  associations.labels.plot(row.names(data1), plot.type='quantile.box',verbose=verbose)
   if(verbose>2) cat("+ finished associations.quantile.box.plot\n")
 }
 
@@ -334,7 +334,7 @@ associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1)
          bty='n', lty = c(0,0,0,0,0),
          # cap legend size for diamond (should look symmetric to other symbols)
          pch = 18, cex = 1, pt.cex = c(0,0,0,0, min(35/nrow(data1), 2.25)))
-  print.labels(row.names(data1), plot.type='quantile.rect',verbose=verbose)
+  associations.labels.plot(row.names(data1), plot.type='quantile.rect',verbose=verbose)
   if(verbose>2) cat("+ finished associations.quantile.rect.plot\n")
 }
 
@@ -382,8 +382,8 @@ associations.aucs.plot <- function(aucs, binary.cols,verbose=1){
 }
 
 ### Plot fold changes in single panel
-plot.fcs <- function(fc.all, binary.cols,  verbose=1){
-  if(verbose>2) cat("+ starting plot.fcs\n")
+associations.fcs.plot <- function(fc.all, binary.cols,  verbose=1){
+  if(verbose>2) cat("+ starting associations.fcs.plot\n")
   # margins
   par(mar=c(5.1, 0, 4.1, 1.6))
   # get minimum and maximum fcs
@@ -401,12 +401,12 @@ plot.fcs <- function(fc.all, binary.cols,  verbose=1){
   tick.labels <- formatC(ticks, digits=2)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Fold change', xlab='Pseudo Fold Change')
-  if(verbose>2) cat("+ finished plot.fcs\n")
+  if(verbose>2) cat("+ finished associations.fcs.plot\n")
 }
 
 ### Plot prevalence shifts in single panel
-plot.pr.shift <- function(pr.shifts, col, verbose=1){
-  if(verbose>2) cat("+ starting plot.pr.shift\n")
+associations.pr.shift.plot <- function(pr.shifts, col, verbose=1){
+  if(verbose>2) cat("+ starting associations.pr.shift.plot\n")
   # margins
   par(mar=c(5.1, 0, 4.1, 1.6))
   
@@ -427,12 +427,12 @@ plot.pr.shift <- function(pr.shifts, col, verbose=1){
   tick.labels <- formatC(ticks*100, digits=3)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Prevalence shift', xlab='Prevalence [%]')
-  if(verbose>2) cat("+ finished plot.pr.shift\n")
+  if(verbose>2) cat("+ finished associations.pr.shift.plot\n")
 }
 
 # p-vals
-plot.pvals <- function(p.vals, alpha,  verbose=1){
-  if(verbose>2) cat("+ starting plot.pvals\n")
+associations.pvals.plot <- function(p.vals, alpha,  verbose=1){
+  if(verbose>2) cat("+ starting associations.pvals.plot\n")
   # margins
   par(mar=c(5.1, .0, 4.1, 1.6))
   p.vals.log <- -log10(p.vals)
@@ -453,7 +453,7 @@ plot.pvals <- function(p.vals, alpha,  verbose=1){
   tick.labels <- formatC(ticks, digits=2)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Adj. P Value', xlab='-log10 Adj. P-Value')
-  if(verbose>2) cat("+ finished plot.pvals\n")
+  if(verbose>2) cat("+ finished associations.pvals.plot\n")
 }
 
 
@@ -507,8 +507,8 @@ check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=
   return(colors)
 }
 
-print.labels <- function(labels, plot.type,  verbose=1){
-  if(verbose>2) cat("+ starting print.labels\n")
+associations.labels.plot <- function(labels, plot.type,  verbose=1){
+  if(verbose>2) cat("+ starting associations.labels.plot\n")
   adj <- rep(0, length(labels))
   if (plot.type == 'quantile.rect') adj <- rep(-0.5, length(labels))
   if (plot.type == 'box') adj <- -0.5 + 1:length(labels)
@@ -519,7 +519,7 @@ print.labels <- function(labels, plot.type,  verbose=1){
     mtext(labels[i], 2, line=0, at=i+adj[i], las=1, cex=cex.labels)
   }
   par(cex=cex.org)
-  if(verbose>2) cat("+ finished print.labels\n")
+  if(verbose>2) cat("+ finished associations.labels.plot\n")
 }
 
 
@@ -528,10 +528,10 @@ print.labels <- function(labels, plot.type,  verbose=1){
 #   fold change as normalized absolute difference between quantiles
 #   prevalence shift
 #   single marker AUC
-marker.analysis.binary <- function(feat, label, detect.lim, colors,
+analyse.binary.marker<- function(feat, label, detect.lim, colors,
                                    pr.cutoff, mult.corr, alpha,
                                    max.show, sort.by, probs.fc=seq(.1, .9, .05),  verbose=1){
-  if(verbose>1) cat("+ starting marker.analysis.binary\n")
+  if(verbose>1) cat("+ starting analyse.binary.marker\n")
   s.time <- proc.time()[3]
   ##############################################################################
   ### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for each feature
@@ -615,7 +615,7 @@ marker.analysis.binary <- function(feat, label, detect.lim, colors,
     idx <- idx[order(p.adj.log, decreasing=FALSE)]
   }
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished marker.analysis.binary in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished analyse.binary.markerin",e.time-s.time,"s\n")
   return(list("p.val" = effect.size[idx,'p.val'],
               "fc"=effect.size[idx,'fc'],
               "aucs"=effect.size[idx,c('auc', 'auc.ci.l', 'auc.ci.h')],
