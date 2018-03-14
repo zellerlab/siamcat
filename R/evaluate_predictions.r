@@ -72,14 +72,14 @@ evaluate.predictions <- function(siamcat,verbose=1){
   if (ncol(pred) > 1) {
     aucspr = vector('numeric', dim(pred)[2])
     for (c in 1:ncol(pred)) {
-      ev[c] = list(evaluate.classifier(pred[,c], siamcat@label@label, siamcat@label))
-      pr[c] = list(get.pr(ev[[c]]))
-      aucspr[c] = calc.aupr(ev[[c]])
+      ev[c] = list(evaluate.classifier(pred[,c], siamcat@label@label, siamcat@label, verbose=verbose))
+      pr[c] = list(evaluate.get.pr(ev[[c]], verbose=verbose))
+      aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose=verbose)
     }
     ev = append(ev,list(evaluate.classifier(apply(pred, 1, summ.stat), siamcat@label@label, siamcat@label)))
   } else {
-    ev[1] = list(evaluate.classifier(as.vector(pred), siamcat@label@label, siamcat@label))
-    pr[1] = list(get.pr(ev[[1]]))
+    ev[1] = list(evaluate.classifier(as.vector(pred), siamcat@label@label, siamcat@label, verbose=verbose))
+    pr[1] = list(evaluate.get.pr(ev[[1]]), verbose=verbose)
   }
   if (ncol(pred) > 1) {
     if(verbose>2) cat("+ evaluating multiple predictions\n")
@@ -108,7 +108,8 @@ evaluate.predictions <- function(siamcat,verbose=1){
 # (where TP = true positives, FP = false positives, TN = true negatives, FN = false negatives)
 #' @keywords internal
 #' @export
-evaluate.classifier <- function(predictions, test.label, label) {
+evaluate.classifier <- function(predictions, test.label, label, verbose=0) {
+  if(verbose>2) cat("+ starting evaluate.classifier\n")
   stopifnot(dim(test.label) == NULL)
   stopifnot(length(unique(test.label)) == 2)
   stopifnot(all(is.finite(predictions)))
@@ -148,5 +149,40 @@ evaluate.classifier <- function(predictions, test.label, label) {
       }
     }
   }
+  if(verbose>2) cat("+ finished evaluate.classifier\n")
   return(list(tp=tp, tn=tn, fp=fp, fn=fn, thresholds=thr))
+}
+
+# calculates the area under a curve using a trapezoid approximation
+evaluate.area.trapez = function(x, y, verbose=0) {
+  if(verbose>2) cat("+ starting evaluate.area.trapez\n")
+  if (x[1] > x[length(x)]) {
+    x = rev(x)
+    y = rev(y)
+  }
+  xd = x[-1] - x[-length(x)]
+  ym = 0.5 * (y[-1] + y[-length(y)])
+  if(verbose>2) cat("+ finished evaluate.area.trapez\n")
+  return(xd %*% ym)
+}
+
+# returns a vector of x and y values for plotting a precision-recall curve
+evaluate.get.pr = function(eval,verbose=0) {
+  if(verbose>2) cat("+ starting evaluate.get.pr\n")
+  tpr = eval$tp / (eval$tp + eval$fn)
+  ppv = eval$tp / (eval$tp + eval$fp)
+  # at thresholds where the classifier makes no positive predictions at all,
+  # we (somewhat arbitrarily) set its precision to 1
+  ppv[is.na(ppv)] = 1.0
+  if(verbose>2) cat("+ finished evaluate.get.pr\n")
+  return(list(x=tpr, y=ppv))
+}
+
+# calculates the area under the precision-recall curve (over the interval [0, max.tpr], if specified)
+evaluate.calc.aupr = function(eval, max.tpr=1.0,verbose=0) {
+  if(verbose>2) cat("+ starting evaluate.calc.aupr\n")
+  pr = evaluate.get.pr(eval, verbose=verbose)
+  idx = pr$x <= max.tpr
+  if(verbose>2) cat("+ finished evaluate.calc.aupr\n")
+  return(evaluate.area.trapez(pr$x[idx], pr$y[idx]))
 }

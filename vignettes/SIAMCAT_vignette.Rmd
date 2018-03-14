@@ -89,16 +89,16 @@ siamcat <- add.meta.pred(siamcat,
 ### int verbose for each function (0,5) with def=1
 ```{r}
 siamcat <-  create.data.split(siamcat, 
-                            num.folds = 10, ### holdout -> all train/ all test etc, cross-validation/holdout -> make rest defaults
-                            num.resample = 10, 
+                            num.folds = 5, ### holdout -> all train/ all test etc, cross-validation/holdout -> make rest defaults
+                            num.resample = 2, 
                             stratify = TRUE, 
-                            inseparable = NULL)
+                            inseparable = NULL,
+                            verbose=2)
 ```
 
 ```{r}
 siamcat <- train.model(siamcat, 
                        method = "lasso_ll",
-                       data.split=data.split, #??
                        stratify = TRUE,
                        modsel.crit=list("pr"),  
                        min.nonzero.coeff = 5,
@@ -112,8 +112,10 @@ siamcat <- make.predictions(siamcat)
 ### Model Evaluation and Interpretation
 
 ```{r}
-siamcat <-  evaluate.predictions(siamcat)
+siamcat <-  evaluate.predictions(siamcat, verbose=3)
+```
 
+```{r}
 model.evaluation.plot(siamcat,'eval_plot.pdf')
 ```
 
