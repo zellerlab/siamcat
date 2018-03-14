@@ -47,7 +47,7 @@ siamcat <- select.samples(siamcat,
 ```
 
 ```{r}
-siamcat <- filter.feat(siamcat,  
+siamcat <- filter.features(siamcat,  
                        filter.method = 'abundance', 
                        cutoff =0.001, 
                        recomp.prop = FALSE, 

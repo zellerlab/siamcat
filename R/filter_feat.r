@@ -23,18 +23,18 @@
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal 
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
-#' @keywords SIAMCAT filter.feat
+#' @keywords SIAMCAT filter.features
 #' @details This function
 #' @export
 #' @return siamcat an object of class \link{siamcat}
 
-filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
+filter.featuresures <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
   ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
   ## TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?
   # Check filter methods
-  if(verbose>1) cat("+ starting filter.feat\n")
+  if(verbose>1) cat("+ starting filter.features\n")
   s.time <- proc.time()[3]
 
   if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")){
@@ -96,7 +96,7 @@ filter.feat <- function(siamcat, filter.method="abundance", cutoff=0.001, recomp
   f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
   siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished filter.feat in",e.time-s.time,"s\n")
+  if(verbose>1) cat("+ finished filter.features in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features successfully filtered\n")
   return(siamcat)
 }
