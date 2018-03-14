@@ -1,13 +1,8 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# RScript flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 26.06.2017
+# R flavor
+# EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
