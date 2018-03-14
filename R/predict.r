@@ -34,10 +34,10 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
     label.fac <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
 
     # assert that there is a split
-    stopifnot(!is.null(siamcat@dataSplit))
+    stopifnot(!is.null(siamcat@data_split))
 
-    num.folds <- siamcat@dataSplit@num.folds
-    num.resample <- siamcat@dataSplit@num.resample
+    num.folds <- siamcat@data_split@num.folds
+    num.resample <- siamcat@data_split@num.resample
 
     pred <- matrix(NA, ncol=num.resample, nrow=length(label.fac),
                    dimnames=list(names(label.fac), paste0('CV_rep', 1:num.resample)))
@@ -46,18 +46,18 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
     for (f in 1:num.folds){
       for (r in 1:num.resample){
 
-        test.label <- label.fac[siamcat@dataSplit@test.folds[[r]][[f]]]
-        data       <- as.data.frame(feat[siamcat@dataSplit@test.folds[[r]][[f]],])
+        test.label <- label.fac[siamcat@data_split@test.folds[[r]][[f]]]
+        data       <- as.data.frame(feat[siamcat@data_split@test.folds[[r]][[f]],])
 
         # assert stuff
         stopifnot(nrow(data) == length(test.label))
         stopifnot(all(rownames(data) == names(test.label)))
 
         data$label <- test.label
-        model <- siamcat@modelList@models[[i]]
+        model <- siamcat@model_list@models[[i]]
 
         stopifnot(!any(rownames(model$task$env$data) %in% rownames(data)))
-        if(verbose>2) cat('Applying ', siamcat@modelList@model.type, ' on cv_fold', f, '_rep', r,
+        if(verbose>2) cat('Applying ', siamcat@model_list@model.type, ' on cv_fold', f, '_rep', r,
             ' (', i, ' of ', num.resample*num.folds, ')...\n', sep='')
 
         task <- makeClassifTask(data = data, target = "label")
@@ -92,7 +92,7 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
     stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
 
     # prediction
-    num.models <- siamcat@dataSplit@num.folds * siamcat@dataSplit@num.resample
+    num.models <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
 
     pred <- matrix(NA, ncol=num.models, nrow=nrow(feat.test),
                    dimnames=list(rownames(feat.test), paste0('Model_', 1:num.models)))
@@ -100,12 +100,12 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
     for (i in 1:num.models){
 
      data <- as.data.frame(feat.test)
-     model <- siamcat@modelList@models[[i]]
+     model <- siamcat@model_list@models[[i]]
 
      data <- data[,model$features]
      data$label <- as.factor(siamcat.holdout@label@label)
 
-     if(verbose>2) cat('Applying ', siamcat@modelList@model.type, ' on complete external dataset',
+     if(verbose>2) cat('Applying ', siamcat@model_list@model.type, ' on complete external dataset',
          ' (', i, ' of ', num.models, ')...\n', sep='')
 
      task <- makeClassifTask(data = data, target = "label")

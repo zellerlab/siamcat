@@ -106,7 +106,7 @@ data.splitter <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, i
     test.list[[r]]  <- test.temp
   }
 
-  siamcat@dataSplit <- new("dataSplit",training.folds=train.list,
+  siamcat@data_split <- new("data_split",training.folds=train.list,
                            test.folds=test.list,
                            num.resample=num.resample,
                            num.folds=num.folds)

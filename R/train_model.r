@@ -68,22 +68,22 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
   # Create List to save models.
   models.list     <- list()
   power           <- NULL
-  num.runs        <- dataSplit@num.folds * dataSplit@num.resample
+  num.runs        <- data_split@num.folds * data_split@num.resample
   bar             <- 0
   if(verbose>1) cat('+ training', method,  'models on', num.runs, 'training sets\n')
 
   if(verbose==1 || verbose==2) pb <- txtProgressBar(max=num.runs, style=3)
 
-  for (fold in 1:dataSplit@num.folds) {
+  for (fold in 1:data_split@num.folds) {
 
     if(verbose>2) cat('+++ training on cv fold:', fold, '\n')
 
-    for (resampling in 1:dataSplit@num.folds) {
+    for (resampling in 1:data_split@num.folds) {
       
       if(verbose>2) cat('++++ repetition:', resampling, '\n')
 
       fold.name    <- paste0('cv_fold', as.character(fold), '_rep', as.character(resampling))
-      fold.exm.idx <- match(dataSplit@training.folds[[res]][[cv]], names(label@label))
+      fold.exm.idx <- match(data_split@training.folds[[res]][[cv]], names(label@label))
 
       ### subselect examples for training
       label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
@@ -107,7 +107,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
     }
   }
 
-  siamcat@modelList <- new("modelList",models=models.list,model.type=method)
+  siamcat@model_list <- new("model_list",models=models.list,model.type=method)
   e.time            <- proc.time()[3]
 
   if(verbose>1)  cat("\n+ finished train.model in",e.time-s.time,"s\n")

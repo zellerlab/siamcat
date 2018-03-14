@@ -7,16 +7,16 @@
 ###
 
 #' The S4 class for storing models.
-#' @name modelList-class
-#' @rdname modelList-class
-#' @exportClass modelList
-setClass("modelList", representation(models = "list", model.type = "character"))
+#' @name model_list-class
+#' @rdname model_list-class
+#' @exportClass model_list
+setClass("model_list", representation(models = "list", model.type = "character"))
 
 #' The S4 class for storing data splits
-#' @name dataSplit-class
-#' @rdname dataSplit-class
-#' @exportClass dataSplit
-setClass("dataSplit", representation(training.folds = "list", 
+#' @name data_split-class
+#' @rdname data_split-class
+#' @exportClass data_split
+setClass("data_split", representation(training.folds = "list", 
                                      test.folds = "list", 
                                      num.resample = "numeric", 
                                      num.folds = "numeric"))
@@ -35,8 +35,8 @@ setClass("label", representation(label = "vector", header = "character",
 #' @name siamcat-class
 #' @rdname siamcat-class
 #' @exportClass siamcat
-setClass("siamcat", representation(modelList = "modelList", phyloseq = "phyloseq", orig_feat="otu_table", evalData = "list", 
-                                   label="label", norm.param="list", dataSplit="dataSplit", predMatrix="matrix"))
+setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", evalData = "list", 
+                                   label="label", norm.param="list", data_split="data_split", predMatrix="matrix"))
 
 #' Build siamcat-class objects from their components.
 #' @name siamcat
@@ -73,8 +73,8 @@ siamcat <- function(...){
 get.component.classes <- function(class){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat
-  component.classes.siamcat <- c("modelList", "orig_feat", "label", "norm.param", "dataSplit","phyloseq")	#slot names
-  names(component.classes.siamcat) <- c("modelList", "orig_feat", "label","norm.param", "dataSplit", "phyloseq") #class names
+  component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm.param", "data_split","phyloseq")	#slot names
+  names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm.param", "data_split", "phyloseq") #class names
   
   component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")	#slot names
   names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names

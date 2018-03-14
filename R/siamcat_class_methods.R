@@ -41,13 +41,13 @@ setMethod("show", "siamcat", function(object){
     cat(paste("norm.param()           norm.param:       Features normalized using",
               object@norm.param$norm.method, sep = " "), fill = TRUE)
   }
-  if(length(object@dataSplit@num.folds)){
-    cat(paste("dataSplit()            dataSplit:       ",object@dataSplit@num.resample,"cv rounds with",
-              object@dataSplit@num.folds,"folds", sep = " "), fill = TRUE)
+  if(length(object@data_split@num.folds)){
+    cat(paste("data_split()            data_split:       ",object@data_split@num.resample,"cv rounds with",
+              object@data_split@num.folds,"folds", sep = " "), fill = TRUE)
   }
-  if(length(object@modelList@model.type)){
-    cat(paste("modelList()            modelList:       ",length(object@modelList@models),
-              object@modelList@model.type,"models", sep = " "), fill = TRUE)
+  if(length(object@model_list@model.type)){
+    cat(paste("model_list()            model_list:       ",length(object@model_list@models),
+              object@model_list@model.type,"models", sep = " "), fill = TRUE)
   }
   if(nrow(object@predMatrix)){
     cat(paste("predMatrix()           predMatrix:       Predictions for",nrow(object@predMatrix),"samples from",

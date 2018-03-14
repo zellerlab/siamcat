@@ -55,14 +55,14 @@ interpretor.model.plot <- function(siamcat, fn.plot,
   # ############################################################################
   # get model type from model
   if(verbose>2) cat("+++ retrieving model type\n")
-  W.mat       <- get.weights.matrix(siamcat@modelList@models, verbose=verbose)
+  W.mat       <- get.weights.matrix(siamcat@model_list@models, verbose=verbose)
   all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep('META', row.names(W.mat), value = TRUE)),] # remove possible intercept parameters, but keep possible meta data included in the model
   rel.weights <- apply(all.weights, 2, function(x){x/sum(abs(x))})
   # ############################################################################
   ### preprocess models
   if(verbose>2) cat("+++ preprocessing models\n")
   sel.idx <- select.features(weights=all.weights,
-                             model.type=siamcat@modelList@model.type,
+                             model.type=siamcat@model_list@model.type,
                              consens.thres=consens.thres,
                              label=siamcat@label,
                              norm.models=norm.models,
@@ -171,19 +171,19 @@ interpretor.model.plot <- function(siamcat, fn.plot,
   par(mar=c(0, 6.1, 3.1, 1.1))
   plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
        ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
-  mtext(paste0(siamcat@modelList@model.type, ' model'), side=3, line=2, at=0.04, cex=.7, adj=0.5)
+  mtext(paste0(siamcat@model_list@model.type, ' model'), side=3, line=2, at=0.04, cex=.7, adj=0.5)
   mtext(paste('(|W| = ', num.sel.f, ')', sep=''), side=3, line=1, at=0.04, cex=0.7, adj=0.5)
 
   # ############################################################################
   # Feature weights ( model sensitive)
   if(verbose>2) cat("+++ plotting feature weights \n")
   plot.feature.weights(rel.weights=rel.weights, sel.idx=sel.idx,
-                       mod.type=siamcat@modelList@model.type, label=siamcat@label)
+                       mod.type=siamcat@model_list@model.type, label=siamcat@label)
 
   # ############################################################################
   # Heatmap
   if(verbose>2) cat("+++ plotting heatmap \n")
-  if (siamcat@modelList@model.type!='RandomForest'){
+  if (siamcat@model_list@model.type!='RandomForest'){
     plot.heatmap(image.data=img.data,
                  limits=limits,
                  color.scheme=color.scheme,
