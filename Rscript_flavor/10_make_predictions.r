@@ -58,7 +58,7 @@ pred.header <- paste('#Predictions for ', label@positive.lab, ':', label@p.lab,
   ' [', label@header, ']', sep='')
 write(pred.header, file=opt$pred, append=FALSE)
 #print(pred$pred)
-suppressWarnings(write.table(siamcat@predMatrix, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
+suppressWarnings(write.table(siamcat@pred_matrix, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 cat('\nSaved all predictions\n')
 
 cat('\nSuccessfully made preictions with the model in ' , proc.time()[1] - start.time,

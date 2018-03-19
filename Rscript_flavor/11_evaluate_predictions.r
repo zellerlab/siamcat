@@ -54,8 +54,8 @@ model.evaluation.plot(siamcat, fn.plot=opt$plot)
 if (opt$write_eval_results == TRUE){
   # Testing only makes sense if dim(pred)[2] > 1
   if(ncol(pred) == 1){
-    if(!is.null(siamcat@evalData$auc.all)) write.table(t(aucs), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=FALSE, row.names="auroc values")
-    write.table(t(siamcat@evalData$auc.average), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=TRUE, row.names="auprc values")
+    if(!is.null(siamcat@eval_data$auc.all)) write.table(t(aucs), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=FALSE, row.names="auroc values")
+    write.table(t(siamcat@eval_data$auc.average), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=TRUE, row.names="auprc values")
   }else{
     cat("Only one prediction available, ignoring the write_eval_results option.\n")
   }

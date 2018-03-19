@@ -47,8 +47,8 @@ setClass("label", representation(label = "vector", header = "character",
 #'}
 #' @slot label an object of class \link{label-class}
 #' @slot model_list an object of class \link{model_list-class}
-#' @slot norm_param an object of class \link{norm_param-class}
-#' @slot phyloseq object of class \link{phyloseq::phyloseq-class}
+#' @slot norm_param a list
+#' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
 #' @slot pred_matrix a matrix with predictions made by \link{make.predictions} function
 #' @exportClass siamcat
 setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list", 

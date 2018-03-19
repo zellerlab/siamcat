@@ -27,9 +27,9 @@ The S4 class for storing taxa-abundance information and models.
 
 \item{\code{model_list}}{an object of class \link{model_list-class}}
 
-\item{\code{norm_param}}{an object of class \link{norm_param-class}}
+\item{\code{norm_param}}{a list}
 
-\item{\code{phyloseq}}{object of class \link{phyloseq::phyloseq-class}}
+\item{\code{phyloseq}}{object of class \link[phyloseq]{phyloseq-class}}
 
 \item{\code{pred_matrix}}{a matrix with predictions made by \link{make.predictions} function}
 }}
