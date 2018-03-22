@@ -21,8 +21,12 @@
 #' @export
 #' @return an object of class \link{siamcat} with metadata added to the features
 #' @examples
-#'        siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('Age'))
-#'        siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('Age', 'BMI', 'Gender'), std.meta=FALSE)
+#'  # Add the Age of the patients as potential predictor
+#'  siamcat.age.added <- add.meta.pred(siamcat, pred.names=c('Age'))
+#'
+#'  # Add Age, BMI, and Gender as potential predictors
+#'  # Additionally, prevent standardization of the added features
+#'  siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('Age', 'BMI', 'Gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
   if(verbose>1) cat("+ starting add.meta.pred\n")
   s.time <- proc.time()[3]

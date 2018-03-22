@@ -8,13 +8,13 @@
 
 #' @title Check and visualize associations between features and classes
 #' @description This function calculates for each feature a pseudo-fold change
-#' (geometrical mean of the difference between quantiles)
-#' between the different classes found in labels.
+#' (geometrical mean of the difference between quantiles) between the different
+#' classes found in labels.
 #'
-#' Significance of the differences is computed for each feature using a wilcoxon
+#' Significance of the differences is computed for each feature using a Wilcoxon
 #' test followed by multiple hypothesis testing correction.
 #'
-#' Additionally, the Area under the Receiver Operating Characteristic Curve
+#' Additionally, the Area Under the Receiver Operating Characteristic Curve
 #' (AU-ROC) and a prevalence shift are computed for the features found to be
 #' associated with the two different classes at a user-specified
 #' significance level \code{alpha}.
@@ -25,21 +25,45 @@
 #' Shift, and Fold Change)
 #' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot filename for the pdf-plot
-#' @param color.scheme valid R color scheme, defaults to \code{'RdYlBu'}
+#' @param color.scheme valid R color scheme or vector of valid R colors (must
+#'        be of the same length as the number of classes), defaults to \code{'RdYlBu'}
 #' @param alpha float, significance level, defaults to \code{0.05}
-#' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
-#' @param sort.by string, sort features by p-value (\code{"pv"}), by fold change (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to \code{"pv"}
-#' @param detect.lim float, pseudocount to be added before log-transormation of the data, defaults to \code{1e-08}
-#' @param pr.cutoff float, cutoff for the prevalence computation, defaults to \code{1e-06}
-#' @param max.show integer, how many associated features should be shown, defaults to \code{50}
-#' @param plot.type string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"quantile.box"}
-#' @param panels vector, name of the panels to be plotted next to the log10-transformed abundances, possible entries are \code{c("fc", "auroc", "prevalence")}, defaults to \code{c("fc", "auroc")}
+#' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}},
+#'        defaults to \code{"fdr"}
+#' @param sort.by string, sort features by p-value (\code{"p.val"}), by fold change
+#'        (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
+#'        \code{"fc"}
+#' @param detect.lim float, pseudocount to be added before log-transormation of
+#'        the data, defaults to \code{NULL}
+#' @param pr.cutoff float, cutoff for the prevalence computation, defaults to
+#'        \code{1e-06}
+#' @param max.show integer, how many associated features should be shown,
+#'        defaults to \code{50}
+#' @param plot.type string, specify how the abundance should be plotted, must be
+#'        one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")},
+#'        defaults to \code{"quantile.box"}
+#' @param panels vector, name of the panels to be plotted next to the log10-
+#'        transformed abundances, possible entries are \code{c("fc", "auroc",
+#'        "prevalence")}, defaults to \code{c("fc", "auroc")}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal 
+#'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
+#' @examples
+#'  # Simple working example
+#'  check.associations(siamcat, './assoc_plot.pdf')
+#'
+#'  # Plot associations as bean plot
+#'  check.associations(siamcat, './assoc_plot_bean.pdf', plot.type='bean')
+#'
+#'  # Plot assocations as box plot
+#'  # Additionally, sort by p-value instead of by fold change
+#'  check.associations(siamcat, './assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
+#'
+#'  # Custom colors
+#'  check.associations(siamcat, './assoc_plot_blue_yellow.pdf', plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
 check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
                                detect.lim=NULL, pr.cutoff=10^-6, max.show=50,
@@ -49,10 +73,10 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   s.time <- proc.time()[3]
 
   if (!all(panels %in% c("fc", "auroc", "prevalence"))){
-    stop("Unknown panel-type selected!.")
+    stop("Unknown panel-type selected!")
   }
   if (length(panels) > 3){
-    warning("Plot layout is not suited for more than 3 panels. Continuing wiht first three panels.")
+    warning("Plot layout is not suited for more than 3 panels. Continuing with first three panels.")
     panels <- panels[1:3]
   }
   if ((!plot.type %in% c("bean", "box", "quantile.box", "quantile.rect")) || length(plot.type) != 1){
@@ -61,15 +85,15 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   }
   # either give n_classes colors or color palette
   col <- check.color.scheme(color.scheme, siamcat@label)
-  
-  feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table), 
+
+  feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
                  dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
   ### Calculate different effect sizes
   if(verbose>2) cat("+++ analysing features\n")
   result.list <- analyse.binary.marker(feat=feat, label=siamcat@label, detect.lim=detect.lim, colors=col,
                                         pr.cutoff=pr.cutoff, mult.corr=mult.corr, alpha=alpha,
                                         max.show=max.show, sort.by=sort.by, probs.fc=seq(.1, .9, .05),verbose=verbose)
-  
+
   ### TODO: remove at some point
   p.val     <- result.list$p.val
   p.adj     <- result.list$p.adj
@@ -83,7 +107,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
 
   ##############################################################################
   ### generate plots with significant associations between features and labels
-  
+
   # make plot matrix dependent on panels parameters
   if(verbose>2) cat("+++ preparing plotting layout\n")
   if (length(panels) == 3){
@@ -94,9 +118,9 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     widths <- c(0.5, 0.1, rep(0.2, length(panels)))
   }
   pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
-  
+
   layout(mat=layout.mat, widths=widths)
-  
+
   ##############################################################################
   # PANEL 2: P-VALUES
   # print p-values in second panel of the plot
@@ -106,11 +130,11 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   # PANEL 1: DATA
   # prepare margins
   associations.margins.plot(species_names = row.names(feat.red),verbose=verbose)
-  
+
   # get data
   data.n <- log10(as.matrix(feat.red[, siamcat@label@n.idx, drop=FALSE]) + detect.lim)
   data.p <- log10(as.matrix(feat.red[, siamcat@label@p.idx, drop=FALSE]) + detect.lim)
-  
+
   if(verbose>2) cat("+++ plotting results\n")
   if (plot.type == "bean"){
     associations.bin.plot(data.n, data.p, siamcat@label, col=col, verbose=verbose)
@@ -121,7 +145,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   } else if (plot.type == "quantile.rect"){
     associations.quantile.rect.plot(data.p, data.n, siamcat@label, col=col, verbose=verbose)
   }
-  
+
   # plot title
   if (!truncated) {
     title(main='Differentially abundant features',
@@ -130,7 +154,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     title(main=paste('Differentially abundant features\nshowing top', max.show, 'features'),
           xlab='Abundance (log10-scale)')
   }
-  
+
   ##############################################################################
   # OTHER PANELS
   for (p in panels){
@@ -142,7 +166,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
       associations.aucs.plot(aucs=aucs, binary.cols=bcols,verbose=verbose)
     }
   }
-  
+
   # close pdf device
   tmp <- dev.off()
   e.time <- proc.time()[3]
@@ -163,11 +187,11 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
     temp[,1]  <- as.numeric(as.character(temp[,1]))
     bean.data <- rbind(bean.data, temp)
   }
-  
+
   plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim = c(as.integer(min(data2))-1.5,as.integer(max(data2))+1),
        ylim=c(0.45, nrow(data1)+0.6), type='n')
-  
+
   beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
            side = "both", bw="nrd0", col = list(col[1], col[2]),
            horizontal = TRUE, names = c(""), show.names = FALSE,
@@ -190,7 +214,7 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
 associations.box.plot <- function(data1, data2, label, col, verbose=1){
   if(verbose>2) cat("+ starting associations.box.plot\n")
   box.colors <- rep(c(col[1],col[2]),nrow(data1))
-  
+
   plot.data <- data.frame()
   for (i in 1:nrow(data1)){
     temp <- as.data.frame(rbind(cbind(data2[i,],rep(paste(label@n.lab, rownames(data2)[i]), length(data2[i,]))),
@@ -198,7 +222,7 @@ associations.box.plot <- function(data1, data2, label, col, verbose=1){
     temp[,1] <- as.numeric(as.character(temp[,1]))
     plot.data <- rbind(plot.data, temp)
   }
-  
+
   plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(min(plot.data[,1]-0.2), max(plot.data[,1]) + 1),
        ylim=c(+0.5, nrow(data1)*2+0.5), type='n')
@@ -207,7 +231,7 @@ associations.box.plot <- function(data1, data2, label, col, verbose=1){
           horizontal=TRUE, names = c(""), show.names = FALSE,
           col = box.colors, axes = FALSE,
           outcol = c(col[1], col[2]), add = TRUE)
-  
+
   mn          <- as.integer(c(min(plot.data[,1])))
   mx          <- as.integer(c(max(plot.data[,1])))
   ticks       <- mn:mx
@@ -226,7 +250,7 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
   if(verbose>2) cat("+ starting associations.quantile.box.plot\n")
   x.col <- col[2]
   y.col <- col[1]
-  
+
   p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
   plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
        xlab='', ylab='', yaxs='i', axes=FALSE,
@@ -234,19 +258,19 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
   for (v in seq(p.m,-1,1)) {
     abline(v=v, lty=3, col='lightgrey')
   }
-  
+
   tck = floor(p.m):0
   axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
-  
+
   x.q = apply(data1, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
                                               na.rm=TRUE, names=FALSE))
   y.q = apply(data2, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
                                               na.rm=TRUE, names=FALSE))
-  
+
   # inter-quartile range
   rect(x.q[2,], 1:dim(data1)[1], x.q[4,], (1:dim(data1)[1])+0.3, col=x.col)
   rect(y.q[2,], (1:dim(data2)[1])-0.3, y.q[4,], 1:dim(data2)[1], col=y.col)
-  
+
   # 90% interval
   segments(x.q[1,], 1:dim(data1)[1], x.q[5,], 1:dim(data1)[1])#, col=x.col)
   segments(y.q[1,], 1:dim(data1)[1], y.q[5,], 1:dim(data1)[1])#, col=x.col)
@@ -254,11 +278,11 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
   segments(y.q[1,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
   segments(x.q[5,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
   segments(y.q[5,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
-  
+
   # median
   segments(x.q[3,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.3, lwd=3)#, col=x.col)
   segments(y.q[3,], y0=(1:dim(data1)[1])-0.3, y1=1:dim(data1)[1], lwd=3)#, col=y.col)
-  
+
   # scatter plot on top
   for (i in 1:dim(data1)[1]) {
     if (nchar(x.col) > 7) {
@@ -273,7 +297,7 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
       a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
       y.col = gsub('..$', toupper(as.hexmode(round(a*255))), y.col)
     }
-    
+
     points(data1[i,], rep(i+0.15, ncol(data1))+rnorm(ncol(data1),sd=0.03), pch=16, cex=0.6, col=x.col)
     points(data2[i,], rep(i-0.15, ncol(data2))+rnorm(ncol(data2),sd=0.03), pch=16, cex=0.6, col=y.col)
   }
@@ -286,15 +310,15 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
 associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1){
   if(verbose>2) cat("+ starting associations.quantile.rect.plot\n")
   quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
-  
+
   x.q = apply(data1, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
   x.medians = apply(data1, 1, function (x) median(x))
-  
+
   y.q = apply(data2, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
   y.medians = apply(data2, 1, function (x) median(x))
-  
+
   p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
-  
+
   plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
        xlab='', ylab='', yaxs='i', axes=FALSE,
        xlim=c(min(data1,data2), max(data1,data2+2)),
@@ -302,7 +326,7 @@ associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1)
   for (v in seq(p.m,0,1)) {
     abline(v=v, lty=3, col='lightgrey')
   }
-  
+
   tck = floor(p.m):0
   axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
   # create different tints of the colours
@@ -317,10 +341,10 @@ associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1)
       rect(y.q[i,], 0.5:dim(data2)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(data2)[1])-0.3, col = colors.n[i], border = c("black"), lwd = 0.9)
     }
   }
-  
+
   points(x.medians, y=(0.5:dim(data1)[1])+0.15, pch=18, cex = min(35/nrow(data1),4))
   points(y.medians, y=(0.5:dim(data2)[1])-0.15, pch=18, cex = min(35/nrow(data2),4))
-  
+
   mtext('Quantiles', 3, line=0, at=1, adj = 1.675, padj = 0.45, las=1, cex=0.7)
   legend(-1.75, nrow(data1), legend = c("40%-60%","30%-70%", "20%-80%","10%-90%","median","","","","",""), bty='n', cex=1,
          fill=c(rev(colors.p), 'white', rev(colors.n), 'white'), lwd <- 1.3, ncol = 2,
@@ -369,7 +393,7 @@ associations.aucs.plot <- function(aucs, binary.cols,verbose=1){
     points(aucs[i, 1], i, pch=18, col=binary.cols[i])
     points(aucs[i, 1], i, pch=5, col='black', cex=0.9)
   }
-  
+
   # Title and axis label
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
   title(main='Feature AUCs', xlab='AU-ROC')
@@ -404,11 +428,11 @@ associations.pr.shift.plot <- function(pr.shifts, col, verbose=1){
   if(verbose>2) cat("+ starting associations.pr.shift.plot\n")
   # margins
   par(mar=c(5.1, 0, 4.1, 1.6))
-  
+
   # plot background
   plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(0, 1), ylim=c(0.2, nrow(pr.shifts)+0.2), type='n')
-  
+
   # plot bars
   row.names(pr.shifts) <- NULL
   barplot(t(pr.shifts[, c(2,3)]),
@@ -462,10 +486,10 @@ is.color <- function(x){
 #     color scheme may either be a single RColorBrewer palette or a vector of
 #     the same length as the number of classes containing interpretable colors
 #     as strings
-check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=1){ 
-  if(verbose>2) cat("+ starting check.color.scheme\n") 
+check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=1){
+  if(verbose>2) cat("+ starting check.color.scheme\n")
   n.classes = ifelse(label@info$type == 'BINARY', 2, length(unique(label@label)))
-  
+
   if (length(color.scheme) == 1 && class(color.scheme) == 'character'){
     if (n.classes == 2){
       # if color scheme and binary label, make colors as before
@@ -541,14 +565,14 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     q.p <- quantile(log10(x[label@p.idx]+detect.lim), probs=probs.fc)
     q.n <- quantile(log10(x[label@n.idx]+detect.lim), probs=probs.fc)
     fc <- sum(q.p - q.n)/length(q.p)
-    
+
     # wilcoxon
     p.val <- wilcox.test(x[label@n.idx], x[label@p.idx], exact = FALSE)$p.value
-    
+
     # AU-ROC
     temp  <- roc(predictor=x, response=label@label, ci=TRUE, direction='<')
     aucs <- c(temp$ci)
-    
+
     # prevalence shift
     temp.n <- sum(x[label@n.idx] >= pr.cutoff)/sum(label@n.idx)
     temp.p <- sum(x[label@p.idx] >= pr.cutoff)/sum(label@p.idx)
@@ -559,7 +583,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
   }))
   cat('\n')
   bcol <- ifelse(effect.size[,'auc'] >= 0.5, colors[2], colors[1])
-  
+
   ### Apply multi-hypothesis testing correction
   if(!tolower(mult.corr) %in% c('none','bonferroni','holm','fdr','bhy')) {
     stop("! Unknown multiple testing correction method:', mult.corr,' Stopping!\n  Must of one of c('none','bonferroni', 'holm','fdr','bhy')")
@@ -570,16 +594,16 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
   } else {
     p.adj <- p.adjust(effect.size[,'p.val'], method=tolower(mult.corr))
   }
-  
+
   if(verbose>1) cat('+++ found', sum(p.adj < alpha, na.rm=TRUE), 'significant associations at a significance level <', alpha, '\n')
   idx <- which(p.adj < alpha)
-  
+
   if (length(idx) == 0){
     stop('No significant associations found. Stopping.\n')
   }
-  
+
   idx <- idx[order(p.adj[idx], decreasing=TRUE)]
-  
+
   # # truncated the list for the following plots
   truncated = FALSE
   if (length(idx) >= max.show) {
@@ -587,7 +611,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     idx <- idx[(length(idx)-max.show+1):length(idx)]
   if(verbose>1) cat('+++ truncating the list of significant associations to the top', max.show, '\n')
   }
-  
+
   ### Sort features
   if(verbose>2) cat('+++ sorting features\n')
   if (sort.by == 'fc') {
@@ -595,7 +619,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     p.adj.log <- -log10(p.adj[idx])
     p.adj.log[fc.sign == -1] = -p.adj.log[fc.sign == -1]
     idx <- idx[order(p.adj.log, decreasing=FALSE)]
-  } else if (sort.by == 'pval') {
+  } else if (sort.by == 'p.val') {
     idx <- idx[order(p.adj[idx], decreasing=TRUE)]
   } else if (sort.by == 'pr.shift') {
     pr.sign <- ifelse(effect.size[idx,'pr.shift'] == 0, 1, sign(effect.size[idx,'pr.shift']))
