@@ -2,7 +2,7 @@
 % Please edit documentation in R/select_samples.r
 \name{select.samples}
 \alias{select.samples}
-\title{Select samples based on meta-data}
+\title{Select samples based on metadata}
 \usage{
 select.samples(siamcat, filter, allowed.set = NULL, allowed.range = NULL,
   verbose = 1)
@@ -17,21 +17,26 @@ should be done}
 
 \item{allowed.range}{a range of allowed values}
 
-\item{verbose, }{control output: \code{0} for no output at all, \code{1}
-for standard information, defaults to
-\code{1}}
-
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal 
+for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-siamcat an object of class \link{siamcat}
+an object of class \link{siamcat} with labels and metadata filtered
+       in order to contain only allowed values
 }
 \description{
-This functions filters features, labels, and metadata based on
-       a specific column in the metadata. Provided with a column in the
+This functions selects labels and metadata based on
+       a specific column in the metadata. Provided with a column-name in the
        metadata and a range or a set of allowed values, the function will
+}
+\examples{
+ # Select all samples that fall into an Age-range between 20 and 80 years
+ siamcat.selected <- select.samples(siamcat, 'Age', allowed.range=c(20, 80))
+
+ # Select all samples for which information about the gender is given
+ # Provide additional information with verbose
+ siamcat.selected <- select.samples(siamcat, 'Gender', allowed.set=c('M', 'F'), verbose=2)
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}
