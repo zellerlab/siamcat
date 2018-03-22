@@ -6,7 +6,7 @@
 # GNU GPL 3.0
 ###
 
-#' @title Select samples based on meta-data
+#' @title Select samples based on metadata
 #' @description This functions filters features, labels, and metadata based on
 #'        a specific column in the metadata. Provided with a column in the
 #'        metadata and a range or a set of allowed values, the function will
@@ -16,16 +16,15 @@
 #'        should be done
 #' @param allowed.set a vector of allowed values
 #' @param allowed.range a range of allowed values
-#' @param verbose, control output: \code{0} for no output at all, \code{1}
-#'        for standard information, defaults to
-#'        \code{1}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal 
+#'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT select.samples
 #' @export
 #' @return siamcat an object of class \link{siamcat}
-#'
+#' @examples
+#' siamcat.sel <- select.samples(siamcat, 'Age', allowed.range=c(20,80))
+#' siamcat.sel <- select.samples(siamcat, 'Gender', allowed.set=c('M', 'F'), verbose=2)
 select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range = NULL, verbose=1){
   if(verbose>1) cat("+ starting select.samples\n")
   s.time <- proc.time()[3]
