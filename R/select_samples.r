@@ -7,8 +7,8 @@
 ###
 
 #' @title Select samples based on metadata
-#' @description This functions filters features, labels, and metadata based on
-#'        a specific column in the metadata. Provided with a column in the
+#' @description This functions selects labels and metadata based on
+#'        a specific column in the metadata. Provided with a column-name in the
 #'        metadata and a range or a set of allowed values, the function will
 #"        filter the \link{siamcat} object accordingly.
 #' @param siamcat an object of class \link{siamcat}
@@ -21,10 +21,11 @@
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT select.samples
 #' @export
-#' @return siamcat an object of class \link{siamcat}
+#' @return an object of class \link{siamcat} with labels and metadata filtered
+#'        in order to contain only allowed values
 #' @examples
-#' siamcat.sel <- select.samples(siamcat, 'Age', allowed.range=c(20,80))
-#' siamcat.sel <- select.samples(siamcat, 'Gender', allowed.set=c('M', 'F'), verbose=2)
+#'        siamcat.sel <- select.samples(siamcat, 'Age', allowed.range=c(20, 80))
+#'        siamcat.sel <- select.samples(siamcat, 'Gender', allowed.set=c('M', 'F'), verbose=2)
 select.samples  <- function(siamcat, filter, allowed.set = NULL, allowed.range = NULL, verbose=1){
   if(verbose>1) cat("+ starting select.samples\n")
   s.time <- proc.time()[3]

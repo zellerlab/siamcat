@@ -10,16 +10,19 @@
 #' @description This function adds metadata to the feature matrix to be
 #'        later used as predictors
 #' @param siamcat object of class \link{siamcat-class}
-#' @param pred.names vector of names of the metavariables to be added to
-#'        the feature matrix as predictors
+#' @param pred.names vector of names of the variables within the metadata to be
+#'        added to the feature matrix as predictors
 #' @param std.meta boolean, should added metadata features be standardized?,
 #'        defaults to \code{TRUE}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal 
+#'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT add.meta.pred
 #' @export
-#' @return features object with added metadata
+#' @return an object of class \link{siamcat} with metadata added to the features
+#' @examples
+#'        siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('Age'))
+#'        siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('Age', 'BMI', 'Gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
   if(verbose>1) cat("+ starting add.meta.pred\n")
   s.time <- proc.time()[3]
