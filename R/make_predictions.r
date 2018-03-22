@@ -25,7 +25,8 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
 
     if(verbose>1) cat("+ starting make.predictions on siamcat object\n")
 
-    feat <- t(siamcat@phyloseq@otu_table)
+    feat <- t(matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
+                 dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table))))
     label.fac <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
 
     # assert that there is a split
