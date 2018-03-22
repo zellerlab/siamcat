@@ -2,34 +2,36 @@
 % Please edit documentation in R/select_samples.r
 \name{select.samples}
 \alias{select.samples}
-\title{Select samples based on metadata}
+\title{Select samples based on meta-data}
 \usage{
-select.samples(meta, feat, label, filter, allowed.set = NULL,
-  allowed.range = NULL)
+select.samples(siamcat, filter, allowed.set = NULL, allowed.range = NULL,
+  verbose = 1)
 }
 \arguments{
-\item{meta}{metadata object}
+\item{siamcat}{an object of class \link{siamcat}}
 
-\item{feat}{features object}
-
-\item{label}{labels object}
-
-\item{filter}{name of the column from metadata on which the selection should be done}
+\item{filter}{string, name of the meta variable on which the selection
+should be done}
 
 \item{allowed.set}{a vector of allowed values}
 
 \item{allowed.range}{a range of allowed values}
+
+\item{verbose, }{control output: \code{0} for no output at all, \code{1}
+for standard information, defaults to
+\code{1}}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal 
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-list containing values after selection: \itemize{
- \item \code{$feat} = features;
- \item \code{$label} = labels;
- \item \code{$meta} = metadata
-}
+siamcat an object of class \link{siamcat}
 }
 \description{
-This functions filters features, labels, and metadata based on a specific column in the metadata.
-Provided with a column in the metadata and a range or a set of allowed values, the function will return the labels, metadata, and features for the samples matching the allowed range or set.
+This functions filters features, labels, and metadata based on
+       a specific column in the metadata. Provided with a column in the
+       metadata and a range or a set of allowed values, the function will
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Validate samples in metadata, labels, and features <U+2014> validate.data <e2><80><a2> SIAMCAT</title>
+<title>Validate samples in siamcat@phyloseq@sam_datadata, labels, and features <U+2014> validate.data <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -87,40 +87,33 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Validate samples in metadata, labels, and features</h1>
+    <h1>Validate samples in siamcat@phyloseq@sam_datadata, labels, and features</h1>
     </div>
 
     
-    <p>This function checks if labels are available for all samples in features. Additionally validates metadata, if given</p>
+    <p>This function checks if labels are available for all samples in features. Additionally validates siamcat@phyloseq@sam_datadata, if given</p>
     
 
-    <pre class="usage"><span class='fu'>validate.data</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='kw'>meta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>validate.data</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>features object</p></td>
+      <th>siamcat</th>
+      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
     </tr>
     <tr>
-      <th>label</th>
-      <td><p>labels object</p></td>
-    </tr>
-    <tr>
-      <th>meta</th>
-      <td><p>metadata object</p></td>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list containing values after validation:</p><ul>
-<li><p><code>$feat</code> = features;</p></li>
-<li><p><code>$label</code> = labels;</p></li>
-<li><p><code>$meta</code> = metadata</p></li>
-</ul>
-
+    <p>an object of class <a href='siamcat.html'>siamcat</a></p>
     
 
   </div>

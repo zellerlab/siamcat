@@ -11,13 +11,15 @@ vignette: >
 
 ## Introduction
 
+Tjos 
+
 ## SIAMCAT Workflow
 
 ```{r message=FALSE, warning=FALSE}
 library(SIAMCAT)
-fn.in.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.feat  <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
 fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
-fn.in.meta <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
 ```
 
 ### Read/Validate/Filter Data
@@ -26,116 +28,110 @@ fn.in.meta <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_prof
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
 meta  <- read.meta(fn.in.meta)
+siamcat <- siamcat(feat, label, meta)
+```
+#add workflow from a disk
+#keep in mind holdout prediction
+#check dtaa consistency function
+#CI low abudandt accuracy
+```{r}
+siamcat <- validate.data(siamcat, verbose=2)
 ```
 
 ```{r}
-validated.files <- validate.data(feat = feat, 
-                                 label = label, 
-                                 meta = meta )
-```
-
-```{r}
-results <- select.samples(meta=meta, 
-                          feat=feat, 
-                          label=label$label, 
+siamcat <- select.samples(siamcat, 
                           filter='age', 
                           allowed.set=NULL, 
-                          allowed.range=c(0,120))
+                          allowed.range=c(0,120),
+                          verbose=2)
 
-feat = results$feat
-label$label = results$label
-meta = results$meta
 ```
 
 ```{r}
-feat.filtered <- filter.feat(feat = feat,  
-                             filter.method = 'abundance', 
-                             cutoff =0.001, 
-                             recomp.prop = FALSE, 
-                             rm.unmapped = TRUE)
+siamcat <- filter.features(siamcat,  
+                       filter.method = 'abundance', 
+                       cutoff =0.001, 
+                       recomp.prop = FALSE, 
+                       rm.unmapped = TRUE,
+                       verbose=2)
 ```
 
 ### Association/Confounder Testing
 
 ```{r}
-# confounder.check(meta=meta, label=label, fn.plot=paste0(output.dir, 'conf_check.pdf'))
+check.confounders(siamcat, 
+                  fn.plot='conf_check.pdf',
+                  verbose=2)
 ```
 
 ```{r}
-# check.associations(feat = feat.filtered,
-#                    label = label, sort.by='fc',
-#                    fn.plot = paste0(output.dir, '/assoc.pdf'), 
-#                    alpha = 0.05, mult.corr = "fdr",
-#                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
-#                    panels=c("fc", "prevalence", "auroc"))
+check.associations(siamcat,
+                   sort.by='fc',
+                   fn.plot = 'assoc.pdf',
+                   alpha = 0.05, mult.corr = "fdr",
+                   detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
+                   panels=c("fc", "prevalence", "auroc"),
+                   verbose=2)
 ```
 
 ### Data Normalization
 
 ```{r}
-normalized.data <- normalize.feat(feat = feat.filtered, 
-                                  norm.method = "log.unit", 
-                                  norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1))
-feat.norm = normalized.data$feat.norm
+siamcat <- normalize.features(siamcat, 
+                          norm.method = "log.unit", 
+                          norm.param=list(log.n0 = 1e-06, n.p=2, norm.margin=1),
+                          verbose=2)
 ```
 
 ### Model building and Prediction
 
 ```{r}
-pred.names = strsplit(c('fobt'), ',', fixed=TRUE)[[1]]
-feat.fobt = add.meta.pred(feat = feat.norm, 
-                          meta = meta, 
-                          pred.names = pred.names, 
-                          std.meta = TRUE)
+siamcat <- add.meta.pred(siamcat, 
+                          pred.names = "fobt", 
+                          std.meta = TRUE,
+                          verbose=2)
 ```
-
+### vignette for cv/holdout
+### int verbose for each function (0,5) with def=1
 ```{r}
-data.split <- data.splitter(label = label, 
-                            num.folds = 5, 
+siamcat <-  create.data.split(siamcat, 
+                            num.folds = 5, ### holdout -> all train/ all test etc, cross-validation/holdout -> make rest defaults
                             num.resample = 2, 
                             stratify = TRUE, 
-                            inseparable = NULL, 
-                            meta = NULL)
+                            inseparable = NULL,
+                            verbose=2)
 ```
 
 ```{r}
-plm.out <- train.model(feat=feat.fobt, 
-                       label=label,  
-                       method = "lasso",
-                       data.split=data.split, 
+siamcat <- train.model(siamcat, 
+                       method = "lasso_ll",
                        stratify = TRUE,
                        modsel.crit=list("pr"),  
                        min.nonzero.coeff = 5,
-                       param.set=NULL)
+                       param.set=NULL,
+                       verbose=2)
 ```
 
 ```{r}
-prediction = make.predictions(feat=feat.fobt, 
-                              label=label, 
-                              data.split=data.split,
-                              models.list=plm.out)
+siamcat <- make.predictions(siamcat, verbose=2)
 ```
 
 ### Model Evaluation and Interpretation
 
 ```{r}
-eval.data <-  eval.predictions(label = label, pred = prediction$mat)
-
-# evaluation.model.plot(label = label, 
-#                       pred = prediction$mat, 
-#                       eval.data = eval.data, 
-#                       fn.plot = paste0(output.dir, '/eval_plot.pdf'))
+siamcat <-  evaluate.predictions(siamcat, verbose=2)
 ```
 
 ```{r}
-# interpretor.model.plot(feat = feat.filtered, 
-#                        label = label, 
-#                        meta = meta, 
-#                        fn.plot=paste0(output.dir, 'interpretation.pdf'),
-#                        model = plm.out,
-#                        pred = prediction$mat,
-#                        consens.thres = 0.5,
-#                        norm.models = TRUE,
-#                        limits=c(-5,5),
-#                        heatmap.type = 'fc')
+model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
+```
+
+```{r}
+model.interpretation.plot(siamcat,
+                        fn.plot='interpretation.pdf',
+                        consens.thres = 0.5,
+                        norm.models = TRUE,
+                        limits=c(-5,5),
+                        heatmap.type = 'fc',
+                        verbose=2)
 ```

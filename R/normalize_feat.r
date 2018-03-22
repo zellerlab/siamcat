@@ -1,24 +1,22 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# RScript flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 26.06.2017
+# R flavor
+# EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
-#' @title Perform feature normalization according to specified parameters.
+#' @title Perform feature normalization
 #' @description This function performs feature normalization according to user-
 #'  specified parameters.
-#' @param feat feature object
+#' @param siamcat an object of class \link{siamcat}
 #' @param norm.method string, normalization method, can be one of these:
 #'  '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "clr")}
 #' @param norm.param list, specifying the parameters of the different
 #'  normalization methods, see details for more information
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for only information about progress and success, \code{2} for normal
+#'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @details There are five different normalization methods available:
 #' \itemize{
 #'  \item \code{"rank.unit"} converts features to ranks and normalizes each
@@ -42,7 +40,8 @@
 #'        to the denominator during standardization in order to avoid
 #'        underestimation of the standard deviation, defaults to 0.1
 #'  \item \code{"clr"} requires \code{log.n0}, which is the pseudocount to be
-#'        added before log-transformation, defaults to \code{1e-08}
+#'        added before log-transformation, defaults to \code{NULL} leading to the
+#'        estimation of \code{log.n0} from the data
 #'  \item \code{"log.std"} requires both \code{log.n0} and \code{sd.min.q}, using
 #'        the same default values
 #'  \item \code{"log.unit"} requires next to \code{log.n0} also the parameters
@@ -60,24 +59,26 @@
 #' will normalize the second dataset in a comparable way to the first dataset (e.g.
 #' by using the same mean for the features for z-score standardization)
 #'
-#' @keywords SIAMCAT normalize.feat
+#' @keywords SIAMCAT normalize.features
 #' @export
-#' @return list containing the matrix of normalized features and a list of normalization parameters: \itemize{
-#'  \item \code{$par} <- list of parameters utilized in the normalization;
-#'  \item \code{$feat.norm} <- normalized features
-#'}
-normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
-                           norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1)) {
+#' @return an object of class \link{siamcat}
+
+normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
+                           norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
+
+  if(verbose>1) cat("+ starting normalize.features\n")
+  s.time <- proc.time()[3]
+  feat <- siamcat@phyloseq@otu_table
 
   if (is.null(norm.param$norm.method)){
     # de novo normalization
-    cat('Performing de novo normalization using the ', norm.method, ' method\n')
+    if(verbose>1) cat('+++ performing de novo normalization using the ', norm.method, ' method\n')
     ### remove features with missing values
     # TODO there may be better ways of dealing with NA features
     keep.idx <- rowSums(is.na(feat) == 0)
     if (any(!keep.idx)) {
       feat.red <- feat[keep.idx,]
-      cat('Removed ', nrow(feat.red)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red),' )\n', sep='')
+      if(verbose>1) cat('+++ removed ', nrow(feat.red)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red),' )\n', sep='')
     } else {
       feat.red <- feat
     }
@@ -91,19 +92,20 @@ normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std
     par <- list()
     par$norm.method <- norm.method
     par$retained.feat <- rownames(feat.red)
-
+    if(verbose>2) cat("+++ checking is parameters are compatible with each other\n")
     ## check if the right set of normalization parameters have been supplied for the chosen norm.method
-    if (norm.method == 'clr' && is.null(norm.param$log.n0)){
-      stop("The log.clr method requires the parameter log.n0, which is not supplied. Exiting ...")
-    }
     if (norm.method == 'rank.std' && is.null(norm.param$sd.min.q)){
       stop("The rank.std method requires the parameter sd.min.q, which is not supplied. Exiting ...")
     }
-    if (norm.method == 'log.std' && (is.null(norm.param$sd.min.q) || is.null(norm.param$log.n0))){
-      stop("The log.std method requires the parameters sd.min.q and log.n0, which are not supplied. Exiting ...")
+    if (norm.method != 'rank.std' && is.null(norm.param$log.n0)){
+      warning("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
+      norm.param$log.n0 <- quantile(feat.red[feat.red!=0], 0.05)
     }
-    if (norm.method == 'log.unit' && (is.null(norm.param$n.p) || is.null(norm.param$log.n0) || is.null(norm.param$norm.margin))){
-      stop("The log.std method requires the parameters n.p, norm.margin, and log.n0, which are not supplied. Exiting ...")
+    if (norm.method == 'log.std' && (is.null(norm.param$sd.min.q))){
+      stop("The log.std method requires the parameters sd.min.q, which is not supplied. Exiting ...")
+    }
+    if (norm.method == 'log.unit' && (is.null(norm.param$n.p) || is.null(norm.param$norm.margin))){
+      stop("The log.std method requires the parameters n.p and norm.margin, which are not supplied. Exiting ...")
     }
 
     ### keep track of normalization parameters
@@ -111,8 +113,9 @@ normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std
     par$n.p <- norm.param$n.p
     par$norm.margin <- norm.param$norm.margin
 
-    cat('Feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
+    if(verbose>1) cat('+ feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
     # normalization
+    if(verbose>2) cat("+++ performing normalization\n")
     if (norm.method == 'rank.unit'){
       feat.rank <- apply(feat.red, 2, rank, ties.method='average')
       stopifnot(!any(is.na(feat)))
@@ -164,21 +167,21 @@ normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std
         stop('Unknown margin for normalization, must be either 1 (for features), 2 (for samples), or 3 (global). Exiting...')
       }
     }
-    cat('Feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
+    if(verbose>1) cat('+++ feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
-
-    return(list("par" = par, "feat.norm" = feat.norm))
-
+    siamcat@norm_param         <- par
+    siamcat@norm_param$norm.method <- norm.method
   } else {
     # frozen normalization
-    cat('Performing frozen ', norm.param$norm.method, ' normalization using the supplied parameters\n')
+    if(verbose>1) cat('+ performing frozen ', norm.param$norm.method, ' normalization using the supplied parameters\n')
     # check if all retained.feat in norm.params are also found in features
     stopifnot(all(norm.param$retained.feat %in% row.names(feat)))
     feat.red <- feat[norm.param$retained.feat,]
 
-    cat('Feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
+    if(verbose>1) cat('+ feature sparsity before normalization: ', 100*mean(feat.red == 0), '%\n', sep='')
 
     # normalization
+    if(verbose>2) cat("+++ performing normalization\n")
     if (norm.param$norm.method == 'rank.unit'){
       feat.rank <- apply(feat.red, 2, rank, ties.method='average')
       feat.norm <- apply(feat.rank, 2, FUN=function(x){x/sqrt(sum(x^2))})
@@ -211,9 +214,13 @@ normalize.feat <- function(feat, norm.method=c("rank.unit", "rank.std", "log.std
         feat.norm <- feat.log/norm.param$global.norm
       }
     }
-    cat('Feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
+    if(verbose>1) cat('+ feature sparsity after normalization: ', 100*mean(feat.norm == 0), '%\n', sep='')
     stopifnot(!any(is.na(feat.norm)))
 
-    return(list("par" = norm.param, "feat.norm" = feat.norm))
   }
+  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished normalize.features in",e.time-s.time,"s\n")
+  if(verbose==1)cat("Features normalized successfully.\n")
+  return(siamcat)
 }

@@ -22,7 +22,7 @@ suppressMessages(library('methods'))
     make_option('--feat_in',         type='character',                     help='Input file containing features'),
     make_option('--mlr_models_list', type='character',                     help='Input RData file containing the trained models'),
     make_option('--label_in',        type='character',                     help='Input file containing labels'),
-    make_option('--test_sets',       type='character', default='NULL',     help='Input file specifying which examples to use for testing'),
+    make_option('--data_split',      type='character',                     help='Input file containing data_split object'),
     make_option('--pred',            type='character', default="pred.tsv", help='Output file to which predictions will be written')
 )
 # parse arguments
@@ -33,40 +33,32 @@ cat("=== Paramaters of the run:\n\n")
 cat('feat_in         =', opt$feat_in,      '\n')
 cat('mlr_models_list =', opt$mlr_models_list,'\n')
 cat('label_in        =', opt$label_in,     '\n')
-cat('test_sets       =', opt$test_sets,    '\n')
+cat('data_split        =', opt$data_split, '\n')
 cat('pred            =', opt$pred,           '\n')
 cat('\n')
 
-# optional parameters will be reset to NULL if specified as 'NULL', 'NONE' or 'UNKNOWN'
-if (is.null(opt$test_sets)) {
-  opt$test_sets = NULL
-  cat('fn.test.sample not specified: applying model(s) on whole data set\n')
-}
 
-feat  <- read.features(opt$feat_in)
-
+feat       <- read.features(opt$feat_in)
 label      <- read.labels(opt$label_in, feat)
-
+siamcat    <- siamcat(feat,label)
 
 start.time   <- proc.time()[1]
 load(opt$mlr_models_list)
+siamcat@model_list <- model_list
 
-pred <- make.predictions(feat=feat,
-                         label=label,
-                         data.split=opt$test_sets,
-                         models.list=models.list)
+load(opt$data_split)
+siamcat@data_split <- data_split
+
+
+siamcat <- make.predictions(siamcat)
 
 
 ### save prediction
-pred.header <- paste('#Predictions for ', label$positive.label, ':', label$p.lab,
-  ' [', label$header, ']', sep='')
+pred.header <- paste('#Predictions for ', label@positive.lab, ':', label@p.lab,
+  ' [', label@header, ']', sep='')
 write(pred.header, file=opt$pred, append=FALSE)
 #print(pred$pred)
-if (length(unique(names(pred$pred))) < length(pred$pred)) {
-  suppressWarnings(write.table(pred$mat, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
-} else {
-  suppressWarnings(write.table(pred$pred, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
-}
+suppressWarnings(write.table(siamcat@pred_matrix, file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 cat('\nSaved all predictions\n')
 
 cat('\nSuccessfully made preictions with the model in ' , proc.time()[1] - start.time,

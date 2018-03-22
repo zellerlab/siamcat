@@ -46,8 +46,9 @@ start.time = proc.time()[1]
 
 ### read feature data
 feat  <- read.features(opt$feat_in)
+siamcat <- siamcat(feat)
 ### Start core function
-normalized.data <- normalize.feat(feat = feat,
+siamcat <- normalize.features(siamcat,
                       norm.method = opt$method,
                       norm.param = list(
                       log.n0      = opt$log_n0,
@@ -59,7 +60,7 @@ normalized.data <- normalize.feat(feat = feat,
 
 
 ### write output
-write.table(normalized.data$feat.norm, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@otu_table, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 ### write parameters
 # write('#normalization parameters', opt$param_out, append=FALSE, sep='')

@@ -1,16 +1,10 @@
 #!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# RScript flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 09.11.2017
+# EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
+<<<<<<< HEAD
 
 package.list <- c("RColorBrewer",
                   "beanplot",
@@ -35,3 +29,9 @@ notInst      <- which(!package.list%in%installed.packages())
 if(length(notInst)>0) install.packages(package.list[notInst], repos="http://cran.uni-muenster.de")
 
 if(!"SIAMCAT"%in%installed.packages()) install.packages(package.path, repos=NULL, type="source")
+=======
+install.packages('session')
+library(session)
+restore.session(file="../dependencies/testImage.RData")
+if(!"SIAMCAT"%in%installed.packages()) install.packages("./SIAMCAT_0.4.0.tar.gz", repos=NULL, type="source")
+>>>>>>> development

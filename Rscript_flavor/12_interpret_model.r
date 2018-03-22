@@ -54,12 +54,6 @@ start.time <- proc.time()[1]
 feat        <- read.features(opt$feat)
 label       <- read.labels(opt$label,feat)
 origin.feat <- read.features(opt$origin_feat)
-if (is.null(opt$metadata_in)) {
-  cat('meta not given: no metadata to display\n')
-} else {
-  meta         <- read.meta(opt$metadata_in)
-  stopifnot(all(names(label$label) == rownames(meta)))
-}
 
 
 
@@ -71,21 +65,14 @@ load(opt$mlr_models_list) ##loads plm.out
 # stopifnot(nrow(model$W) == nrow(feat))
 # parse model header
 
-pred         <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
-pred         <- as.matrix(pred)
+siamcat <- siamcat(feat,label)
+siamcat@model_list <- model_list
 
-### make sure that label and prediction are in the same order
-stopifnot(all(names(label$label) %in% rownames(pred)) && all(rownames(pred) %in% names(label$label)))
-m            <- match(names(label$label), rownames(pred))
-pred         <- pred[m,,drop=FALSE]
-stopifnot(all(names(label$label) == rownames(pred)))
+pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
+pred <- as.matrix(pred)
+siamcat@pred_matrix <- pred
 
-
-interpretor.model.plot(feat=feat,
-                       label=label,
-                       meta=meta,
-                       model=models.list,
-                       pred=pred,
+model.interpretation.plot(siamcat,
                        color.scheme=opt$col_scheme,
                        consens.thres=opt$consens_thres,
                        heatmap.type=opt$heatmap_type,

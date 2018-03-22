@@ -4,18 +4,14 @@
 \alias{train.model}
 \title{Model training}
 \usage{
-train.model(feat, label, method = c("lasso", "enet", "ridge", "lasso_ll",
-  "ridge_ll", "randomForest"), data.split = NULL, stratify = TRUE,
-  modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL)
+train.model(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll",
+  "ridge_ll", "randomForest"), stratify = TRUE, modsel.crit = list("auc"),
+  min.nonzero.coeff = 1, param.set = NULL, verbose = 1)
 }
 \arguments{
-\item{feat}{feature object}
-
-\item{label}{label object}
+\item{siamcat}{object of class \link{siamcat-class}}
 
 \item{method}{string, specifies the type of model to be trained, may be one of these: \code{c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest")}}
-
-\item{data.split}{filename containing the training samples or list of training instances produced by \link{data.splitter()}, defaults to \code{NULL} leading to training on the complete dataset}
 
 \item{stratify}{boolean, should the folds in the internal cross-validation be stratified?}
 
@@ -24,13 +20,13 @@ train.model(feat, label, method = c("lasso", "enet", "ridge", "lasso_ll",
 \item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that should be present in the model (only for \code{"lasso"}, \code{"ridge"}, and \code{"enet"}}
 
 \item{param.set}{a list of extra parameters for mlr run, may contain: \code{cost} - for lasso_ll and ridge_ll; \code{alpha} for enet and \code{ntree, mtry} for RandomForrest}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal 
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-list containing \itemize{
- \item \code{models.list} the list of trained models for each cross-validation fold
- \item \code{out.matrix} ?
- \item \code{W.mat} ?
-}
+object of class \link{siamcat-class}
 }
 \description{
 This function trains the a machine learning model on the training data

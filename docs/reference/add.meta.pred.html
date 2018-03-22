@@ -91,29 +91,34 @@
     </div>
 
     
-    <p>This function adds metadata to the feature matrix to be later used as predictors</p>
+    <p>This function adds metadata to the feature matrix to be
+       later used as predictors</p>
     
 
-    <pre class="usage"><span class='fu'>add.meta.pred</span>(<span class='no'>feat</span>, <span class='no'>meta</span>, <span class='kw'>pred.names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>std.meta</span>)</pre>
+    <pre class="usage"><span class='fu'>add.meta.pred</span>(<span class='no'>siamcat</span>, <span class='kw'>pred.names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>std.meta</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>features object</p></td>
-    </tr>
-    <tr>
-      <th>meta</th>
-      <td><p>metadata object</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>pred.names</th>
-      <td><p>vector of names of the metavariables to be added to the feature matrix as predictors</p></td>
+      <td><p>vector of names of the metavariables to be added to
+the feature matrix as predictors</p></td>
     </tr>
     <tr>
       <th>std.meta</th>
-      <td><p>boolean, should added metadata features be standardized?</p></td>
+      <td><p>boolean, should added metadata features be standardized?,
+defaults to <code>TRUE</code></p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     

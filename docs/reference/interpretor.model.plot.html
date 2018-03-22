@@ -94,37 +94,21 @@
     <p>Produces a plot for model interpretation, displaying feature weights, robustness of feature weights, and features scores across patients.</p>
     
 
-    <pre class="usage"><span class='fu'>interpretor.model.plot</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='no'>fn.plot</span>, <span class='no'>model</span>, <span class='no'>pred</span>, <span class='kw'>meta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>, <span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='st'>"zscore"</span>,
+    <pre class="usage"><span class='fu'>interpretor.model.plot</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>,
+  <span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"zscore"</span>, <span class='st'>"fc"</span>),
   <span class='kw'>norm.models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>3</span>, <span class='fl'>3</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>,
-  <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>)</pre>
+  <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>the feature object containing the normalized features for the <code>"zscore"</code> heatmap and the features <em>before</em> normalization and addition of the metadata for the <code>"fc"</code> heatmap</p></td>
-    </tr>
-    <tr>
-      <th>label</th>
-      <td><p>a label object</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>fn.plot</th>
       <td><p>string, filename for the pdf-plot</p></td>
-    </tr>
-    <tr>
-      <th>model</th>
-      <td><p>matrix containing the feature weights for every CV fold/repetition</p></td>
-    </tr>
-    <tr>
-      <th>pred</th>
-      <td><p>matrix containing the model predictions for every CV repetition</p></td>
-    </tr>
-    <tr>
-      <th>meta</th>
-      <td><p>a metadata object</p></td>
     </tr>
     <tr>
       <th>color.scheme</th>
@@ -154,6 +138,12 @@ Note that for <code>"randomForest"</code> models, this cutoff specifies the mini
     <tr>
       <th>max.show</th>
       <td><p>integer, maximum number of features to be shown in the model interpretation plot, defaults to 50</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     

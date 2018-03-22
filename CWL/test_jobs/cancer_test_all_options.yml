@@ -1,0 +1,65 @@
+# test yaml job file for ../workflows/siamcal_cwl_workflow.cwl
+
+###################################################################################################
+# Main input (required):
+
+label_in:
+  class: File
+  path: /home/kbreuer/test_data_siamcat/label_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv
+feat_in:
+  class: File
+  path: /home/kbreuer/test_data_siamcat/feat_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv
+metadata_in:
+  class: File
+  path: /home/kbreuer/test_data_siamcat/num_metadata_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv
+
+#####################################################################################################
+# Additional parameters: 
+# - can be changed or deleted
+# - if they are deleted, the tool's defaults will be used
+# - if you are unsure you can use the following example values
+
+# Please note: boolean values as well as NULL should be provided as string to prevent interpretation
+#              by the CWL runner - use "TRUE" / "FALSE" and "NULL"
+
+# for step check_associations:
+alpha: 0.05
+min_fc: 0.0
+mult_test: fdr
+sort_by: fc
+detect_limit: 1e-06
+plot_type: bean
+max_show: 50
+
+# for step filter_features:
+filter_method: abundance
+filter_cutoff: 0.001
+recomp_prop: "FALSE"
+rm_unmapped: "TRUE"
+
+# for step normalize_features:
+norm_method: log.unit
+sd_min_quantile: 0.1
+vector_norm: 2
+norm_margin: 1
+
+# for step split_data:
+num_folds: 5
+resample: 2
+inseparable: "NULL"
+
+# for step train_models:
+train_method: lasso
+min_nonzero_coeff: 5
+sel_criterion: pr
+
+# for step evaluate_predictions
+write_eval_results: "TRUE"
+
+# for step interprete_model:
+heatmap_type: zscore
+consensus_threshold: 0.5
+
+# for steps split_data and train_models:
+stratify: "TRUE"
+

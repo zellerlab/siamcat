@@ -79,225 +79,430 @@
 <h2 class="hasAnchor">
 <a href="#siamcat-workflow" class="anchor"></a>SIAMCAT Workflow</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SIAMCAT)
-fn.in.feat &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
+fn.in.feat  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
 fn.in.label &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
-fn.in.meta &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)</code></pre></div>
+fn.in.meta  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)</code></pre></div>
 <div id="readvalidatefilter-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#readvalidatefilter-data" class="anchor"></a>Read/Validate/Filter Data</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.features.html">read.features</a></span>(fn.in.feat)</code></pre></div>
 <pre><code>## The provided feature names were not semantically correct for use in R, they were updated.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.labels.html">read.labels</a></span>(fn.in.label)
-meta  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.meta.html">read.meta</a></span>(fn.in.meta)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">validated.files &lt;-<span class="st"> </span><span class="kw"><a href="../reference/validate.data.html">validate.data</a></span>(<span class="dt">feat =</span> feat, 
-                                 <span class="dt">label =</span> label, 
-                                 <span class="dt">meta =</span> meta )</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/select.samples.html">select.samples</a></span>(<span class="dt">meta=</span>meta, 
-                          <span class="dt">feat=</span>feat, 
-                          <span class="dt">label=</span>label<span class="op">$</span>label, 
+meta  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.meta.html">read.meta</a></span>(fn.in.meta)
+siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(feat, label, meta)</code></pre></div>
+</div>
+</div>
+<div id="add-workflow-from-a-disk" class="section level1">
+<h1 class="hasAnchor">
+<a href="#add-workflow-from-a-disk" class="anchor"></a>add workflow from a disk</h1>
+</div>
+<div id="keep-in-mind-holdout-prediction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#keep-in-mind-holdout-prediction" class="anchor"></a>keep in mind holdout prediction</h1>
+</div>
+<div id="check-dtaa-consistency-function" class="section level1">
+<h1 class="hasAnchor">
+<a href="#check-dtaa-consistency-function" class="anchor"></a>check dtaa consistency function</h1>
+</div>
+<div id="ci-low-abudandt-accuracy" class="section level1">
+<h1 class="hasAnchor">
+<a href="#ci-low-abudandt-accuracy" class="anchor"></a>CI low abudandt accuracy</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/validate.data.html">validate.data</a></span>(siamcat)</code></pre></div>
+<pre><code>## Data succesfully validated</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/select.samples.html">select.samples</a></span>(siamcat, 
                           <span class="dt">filter=</span><span class="st">'age'</span>, 
                           <span class="dt">allowed.set=</span><span class="ot">NULL</span>, 
-                          <span class="dt">allowed.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">120</span>))</code></pre></div>
-<pre><code>## allowed.range  = [0,120]
-## 
-## Removed 0 samples with age not in [0, 120] (retaining 141)</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat =<span class="st"> </span>results<span class="op">$</span>feat
-label<span class="op">$</span>label =<span class="st"> </span>results<span class="op">$</span>label
-meta =<span class="st"> </span>results<span class="op">$</span>meta</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat.filtered &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.feat.html">filter.feat</a></span>(<span class="dt">feat =</span> feat,  
-                             <span class="dt">filter.method =</span> <span class="st">'abundance'</span>, 
-                             <span class="dt">cutoff =</span><span class="fl">0.001</span>, 
-                             <span class="dt">recomp.prop =</span> <span class="ot">FALSE</span>, 
-                             <span class="dt">rm.unmapped =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## Removed 1546 features whose values did not exceed 0.001 in any sample (retaining 208)
-## Removed 1 features corresponding to UNMAPPED reads (retaining 207)</code></pre>
-</div>
+                          <span class="dt">allowed.range=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">120</span>), <span class="dt">verbose=</span><span class="dv">1</span>)</code></pre></div>
+<pre><code>## Keeping labels of 141 sample(s).
+## Selecting samples finished</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.feat.html">filter.feat</a></span>(siamcat,  
+                       <span class="dt">filter.method =</span> <span class="st">'abundance'</span>, 
+                       <span class="dt">cutoff =</span><span class="fl">0.001</span>, 
+                       <span class="dt">recomp.prop =</span> <span class="ot">FALSE</span>, 
+                       <span class="dt">rm.unmapped =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## Features successfully filtered</code></pre>
 <div id="associationconfounder-testing" class="section level3">
 <h3 class="hasAnchor">
 <a href="#associationconfounder-testing" class="anchor"></a>Association/Confounder Testing</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># confounder.check(meta=meta, label=label, fn.plot=paste0(output.dir, 'conf_check.pdf'))</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># check.associations(feat = feat.filtered,</span>
-<span class="co">#                    label = label, sort.by='fc',</span>
-<span class="co">#                    fn.plot = paste0(output.dir, '/assoc.pdf'), </span>
-<span class="co">#                    alpha = 0.05, mult.corr = "fdr",</span>
-<span class="co">#                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",</span>
-<span class="co">#                    panels=c("fc", "prevalence", "auroc"))</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/confounder.check.html">confounder.check</a></span>(siamcat, <span class="dt">fn.plot=</span><span class="st">'conf_check.pdf'</span>)</code></pre></div>
+<pre><code>## Checking metadata for confounders finished, results plotted to: conf_check.pdf</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/check.associations.html">check.associations</a></span>(siamcat,
+                   <span class="dt">sort.by=</span><span class="st">'fc'</span>,
+                   <span class="dt">fn.plot =</span> <span class="st">'assoc.pdf'</span>,
+                   <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="dt">mult.corr =</span> <span class="st">"fdr"</span>,
+                   <span class="dt">detect.lim =</span> <span class="dv">10</span><span class="op">^-</span><span class="dv">6</span>, <span class="dt">max.show =</span> <span class="dv">50</span>, <span class="dt">plot.type =</span> <span class="st">"quantile.box"</span>,
+                   <span class="dt">panels=</span><span class="kw">c</span>(<span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span>))</code></pre></div>
+<pre><code>## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=                                                                |   1%
+  |                                                                       
+  |=                                                                |   2%
+  |                                                                       
+  |==                                                               |   2%
+  |                                                                       
+  |==                                                               |   3%
+  |                                                                       
+  |===                                                              |   4%
+  |                                                                       
+  |===                                                              |   5%
+  |                                                                       
+  |====                                                             |   6%
+  |                                                                       
+  |====                                                             |   7%
+  |                                                                       
+  |=====                                                            |   7%
+  |                                                                       
+  |=====                                                            |   8%
+  |                                                                       
+  |======                                                           |   9%
+  |                                                                       
+  |======                                                           |  10%
+  |                                                                       
+  |=======                                                          |  10%
+  |                                                                       
+  |=======                                                          |  11%
+  |                                                                       
+  |========                                                         |  12%
+  |                                                                       
+  |========                                                         |  13%
+  |                                                                       
+  |=========                                                        |  14%
+  |                                                                       
+  |==========                                                       |  15%
+  |                                                                       
+  |==========                                                       |  16%
+  |                                                                       
+  |===========                                                      |  16%
+  |                                                                       
+  |===========                                                      |  17%
+  |                                                                       
+  |============                                                     |  18%
+  |                                                                       
+  |============                                                     |  19%
+  |                                                                       
+  |=============                                                    |  19%
+  |                                                                       
+  |=============                                                    |  20%
+  |                                                                       
+  |==============                                                   |  21%
+  |                                                                       
+  |==============                                                   |  22%
+  |                                                                       
+  |===============                                                  |  23%
+  |                                                                       
+  |===============                                                  |  24%
+  |                                                                       
+  |================                                                 |  24%
+  |                                                                       
+  |================                                                 |  25%
+  |                                                                       
+  |=================                                                |  26%
+  |                                                                       
+  |=================                                                |  27%
+  |                                                                       
+  |==================                                               |  27%
+  |                                                                       
+  |==================                                               |  28%
+  |                                                                       
+  |===================                                              |  29%
+  |                                                                       
+  |===================                                              |  30%
+  |                                                                       
+  |====================                                             |  30%
+  |                                                                       
+  |====================                                             |  31%
+  |                                                                       
+  |=====================                                            |  32%
+  |                                                                       
+  |=====================                                            |  33%
+  |                                                                       
+  |======================                                           |  33%
+  |                                                                       
+  |======================                                           |  34%
+  |                                                                       
+  |=======================                                          |  35%
+  |                                                                       
+  |=======================                                          |  36%
+  |                                                                       
+  |========================                                         |  36%
+  |                                                                       
+  |========================                                         |  37%
+  |                                                                       
+  |========================                                         |  38%
+  |                                                                       
+  |=========================                                        |  38%
+  |                                                                       
+  |=========================                                        |  39%
+  |                                                                       
+  |==========================                                       |  40%
+  |                                                                       
+  |==========================                                       |  41%
+  |                                                                       
+  |===========================                                      |  41%
+  |                                                                       
+  |===========================                                      |  42%
+  |                                                                       
+  |============================                                     |  43%
+  |                                                                       
+  |=============================                                    |  44%
+  |                                                                       
+  |=============================                                    |  45%
+  |                                                                       
+  |==============================                                   |  45%
+  |                                                                       
+  |==============================                                   |  46%
+  |                                                                       
+  |==============================                                   |  47%
+  |                                                                       
+  |===============================                                  |  47%
+  |                                                                       
+  |===============================                                  |  48%
+  |                                                                       
+  |================================                                 |  49%
+  |                                                                       
+  |================================                                 |  50%
+  |                                                                       
+  |=================================                                |  50%
+  |                                                                       
+  |=================================                                |  51%
+  |                                                                       
+  |==================================                               |  52%
+  |                                                                       
+  |==================================                               |  53%
+  |                                                                       
+  |===================================                              |  53%
+  |                                                                       
+  |===================================                              |  54%
+  |                                                                       
+  |===================================                              |  55%
+  |                                                                       
+  |====================================                             |  55%
+  |                                                                       
+  |====================================                             |  56%
+  |                                                                       
+  |=====================================                            |  57%
+  |                                                                       
+  |======================================                           |  58%
+  |                                                                       
+  |======================================                           |  59%
+  |                                                                       
+  |=======================================                          |  59%
+  |                                                                       
+  |=======================================                          |  60%
+  |                                                                       
+  |========================================                         |  61%
+  |                                                                       
+  |========================================                         |  62%
+  |                                                                       
+  |=========================================                        |  62%
+  |                                                                       
+  |=========================================                        |  63%
+  |                                                                       
+  |=========================================                        |  64%
+  |                                                                       
+  |==========================================                       |  64%
+  |                                                                       
+  |==========================================                       |  65%
+  |                                                                       
+  |===========================================                      |  66%
+  |                                                                       
+  |===========================================                      |  67%
+  |                                                                       
+  |============================================                     |  67%
+  |                                                                       
+  |============================================                     |  68%
+  |                                                                       
+  |=============================================                    |  69%
+  |                                                                       
+  |=============================================                    |  70%
+  |                                                                       
+  |==============================================                   |  70%
+  |                                                                       
+  |==============================================                   |  71%
+  |                                                                       
+  |===============================================                  |  72%
+  |                                                                       
+  |===============================================                  |  73%
+  |                                                                       
+  |================================================                 |  73%
+  |                                                                       
+  |================================================                 |  74%
+  |                                                                       
+  |=================================================                |  75%
+  |                                                                       
+  |=================================================                |  76%
+  |                                                                       
+  |==================================================               |  76%
+  |                                                                       
+  |==================================================               |  77%
+  |                                                                       
+  |===================================================              |  78%
+  |                                                                       
+  |===================================================              |  79%
+  |                                                                       
+  |====================================================             |  80%
+  |                                                                       
+  |====================================================             |  81%
+  |                                                                       
+  |=====================================================            |  81%
+  |                                                                       
+  |=====================================================            |  82%
+  |                                                                       
+  |======================================================           |  83%
+  |                                                                       
+  |======================================================           |  84%
+  |                                                                       
+  |=======================================================          |  84%
+  |                                                                       
+  |=======================================================          |  85%
+  |                                                                       
+  |========================================================         |  86%
+  |                                                                       
+  |=========================================================        |  87%
+  |                                                                       
+  |=========================================================        |  88%
+  |                                                                       
+  |==========================================================       |  89%
+  |                                                                       
+  |==========================================================       |  90%
+  |                                                                       
+  |===========================================================      |  90%
+  |                                                                       
+  |===========================================================      |  91%
+  |                                                                       
+  |============================================================     |  92%
+  |                                                                       
+  |============================================================     |  93%
+  |                                                                       
+  |=============================================================    |  93%
+  |                                                                       
+  |=============================================================    |  94%
+  |                                                                       
+  |==============================================================   |  95%
+  |                                                                       
+  |==============================================================   |  96%
+  |                                                                       
+  |===============================================================  |  97%
+  |                                                                       
+  |===============================================================  |  98%
+  |                                                                       
+  |================================================================ |  98%
+  |                                                                       
+  |================================================================ |  99%
+  |                                                                       
+  |=================================================================| 100%</code></pre>
+<pre><code>## Plotted associations between features and label successfully to: assoc.pdf</code></pre>
 </div>
 <div id="data-normalization" class="section level3">
 <h3 class="hasAnchor">
 <a href="#data-normalization" class="anchor"></a>Data Normalization</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">normalized.data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.feat.html">normalize.feat</a></span>(<span class="dt">feat =</span> feat.filtered, 
-                                  <span class="dt">norm.method =</span> <span class="st">"log.unit"</span>, 
-                                  <span class="dt">norm.param=</span><span class="kw">list</span>(<span class="dt">log.n0 =</span> <span class="fl">1e-06</span>, <span class="dt">n.p=</span><span class="dv">2</span>, <span class="dt">norm.margin=</span><span class="dv">1</span>))</code></pre></div>
-<pre><code>## Performing de novo normalization using the  log.unit  method
-## Feature sparsity before normalization: 45.11598%
-## Feature sparsity after normalization: 0%</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat.norm =<span class="st"> </span>normalized.data<span class="op">$</span>feat.norm</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.feat.html">normalize.feat</a></span>(siamcat, 
+                          <span class="dt">norm.method =</span> <span class="st">"log.unit"</span>, 
+                          <span class="dt">norm.param=</span><span class="kw">list</span>(<span class="dt">log.n0 =</span> <span class="fl">1e-06</span>, <span class="dt">n.p=</span><span class="dv">2</span>, <span class="dt">norm.margin=</span><span class="dv">1</span>))</code></pre></div>
+<pre><code>## Features normalized successfully.</code></pre>
 </div>
 <div id="model-building-and-prediction" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model-building-and-prediction" class="anchor"></a>Model building and Prediction</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred.names =<span class="st"> </span><span class="kw">strsplit</span>(<span class="kw">c</span>(<span class="st">'fobt'</span>), <span class="st">','</span>, <span class="dt">fixed=</span><span class="ot">TRUE</span>)[[<span class="dv">1</span>]]
-feat.fobt =<span class="st"> </span><span class="kw"><a href="../reference/add.meta.pred.html">add.meta.pred</a></span>(<span class="dt">feat =</span> feat.norm, 
-                          <span class="dt">meta =</span> meta, 
+siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/add.meta.pred.html">add.meta.pred</a></span>(siamcat, 
                           <span class="dt">pred.names =</span> pred.names, 
-                          <span class="dt">std.meta =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## adding fobt
-## filling in 1 missing values by mean imputation
-## standardize metadata feature fobt 
-## added 1 meta-variables as predictors to the feature matrix</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data.split &lt;-<span class="st"> </span><span class="kw"><a href="../reference/data.splitter.html">data.splitter</a></span>(<span class="dt">label =</span> label, 
-                            <span class="dt">num.folds =</span> <span class="dv">5</span>, 
+                          <span class="dt">std.meta =</span> <span class="ot">TRUE</span>,<span class="dt">verbose=</span><span class="dv">3</span>)</code></pre></div>
+<pre><code>## + starting add.meta.pred
+## + starting to add metadata predictors
+## +++ adding metadata predictor: fobt 
+## ++++ filling in 1 missing values by mean imputation
+## ++++ standardizing metadata feature fobt 
+## +++ added 1 meta-variables as predictors to the feature matrix
+## + finished add.meta.pred in 0.013 s</code></pre>
+</div>
+<div id="vignette-for-cvholdout" class="section level3">
+<h3 class="hasAnchor">
+<a href="#vignette-for-cvholdout" class="anchor"></a>vignette for cv/holdout</h3>
+</div>
+<div id="int-verbose-for-each-function-05-with-def1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#int-verbose-for-each-function-05-with-def1" class="anchor"></a>int verbose for each function (0,5) with def=1</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/data.splitter.html">data.splitter</a></span>(siamcat, 
+                            <span class="dt">num.folds =</span> <span class="dv">5</span>, ### holdout -&gt; all train/ all test etc, cross-validation/holdout -&gt; make rest defaults
                             <span class="dt">num.resample =</span> <span class="dv">2</span>, 
                             <span class="dt">stratify =</span> <span class="ot">TRUE</span>, 
-                            <span class="dt">inseparable =</span> <span class="ot">NULL</span>, 
-                            <span class="dt">meta =</span> <span class="ot">NULL</span>)</code></pre></div>
-<pre><code>## [1] 5
-## 
-## +++ Splitting the dataset:
-##    + Fold 1 contains 29 examples
-##    + Fold 2 contains 29 examples
-##    + Fold 3 contains 29 examples
-##    + Fold 4 contains 27 examples
-##    + Fold 5 contains 27 examples
-## [1] 5
-## 
-## +++ Splitting the dataset:
-##    + Fold 1 contains 29 examples
-##    + Fold 2 contains 29 examples
-##    + Fold 3 contains 29 examples
-##    + Fold 4 contains 27 examples
-##    + Fold 5 contains 27 examples</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plm.out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(<span class="dt">feat=</span>feat.fobt, 
-                       <span class="dt">label=</span>label,  
+                            <span class="dt">inseparable =</span> <span class="ot">NULL</span>)</code></pre></div>
+<pre><code>## Features splitted for cross-validation successfully.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(siamcat, 
                        <span class="dt">method =</span> <span class="st">"lasso"</span>,
-                       <span class="dt">data.split=</span>data.split, 
+                       <span class="dt">data.split=</span>data.split, <span class="co">#??</span>
                        <span class="dt">stratify =</span> <span class="ot">TRUE</span>,
                        <span class="dt">modsel.crit=</span><span class="kw">list</span>(<span class="st">"pr"</span>),  
-                       <span class="dt">min.nonzero.coeff =</span> <span class="dv">5</span>)</code></pre></div>
-<pre><code>## cv_fold1_rep1 contains 112 training examples
-## cv_fold1_rep2 contains 112 training examples
-## cv_fold2_rep1 contains 112 training examples
-## cv_fold2_rep2 contains 112 training examples
-## cv_fold3_rep1 contains 112 training examples
-## cv_fold3_rep2 contains 112 training examples
-## cv_fold4_rep1 contains 114 training examples
-## cv_fold4_rep2 contains 114 training examples
-## cv_fold5_rep1 contains 114 training examples
-## cv_fold5_rep2 contains 114 training examples
-## 
-## Preparing to train lasso models on 10 training set samples...
-## 
-## Training on cv_fold1_rep1 (1 of 10)
-## 
-## Training on cv_fold1_rep2 (2 of 10)
-## 
-## Training on cv_fold2_rep1 (3 of 10)
-## 
-## Training on cv_fold2_rep2 (4 of 10)
-## 
-## Training on cv_fold3_rep1 (5 of 10)
-## 
-## Training on cv_fold3_rep2 (6 of 10)
-## 
-## Training on cv_fold4_rep1 (7 of 10)
-## 
-## Training on cv_fold4_rep2 (8 of 10)
-## 
-## Training on cv_fold5_rep1 (9 of 10)
-## 
-## Training on cv_fold5_rep2 (10 of 10)</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<pre><code>## Warning in vec[2] &lt;- beta: number of items to replace is not a multiple of
-## replacement length</code></pre>
-<pre><code>## Warning in vec[3:length(vec)] &lt;- as.numeric(beta): number of items to
-## replace is not a multiple of replacement length</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prediction =<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(<span class="dt">feat=</span>feat.fobt, 
-                              <span class="dt">label=</span>label, 
-                              <span class="dt">data.split=</span>data.split,
-                              <span class="dt">models.list=</span>plm.out)</code></pre></div>
-<pre><code>## cv_fold1_rep1 contains 112 training examples
-## cv_fold1_rep2 contains 112 training examples
-## cv_fold2_rep1 contains 112 training examples
-## cv_fold2_rep2 contains 112 training examples
-## cv_fold3_rep1 contains 112 training examples
-## cv_fold3_rep2 contains 112 training examples
-## cv_fold4_rep1 contains 114 training examples
-## cv_fold4_rep2 contains 114 training examples
-## cv_fold5_rep1 contains 114 training examples
-## cv_fold5_rep2 contains 114 training examples
-## Applying  on cv_fold1_rep1 (1 of 10)...
-## Applying  on cv_fold1_rep2 (2 of 10)...
-## Applying  on cv_fold2_rep1 (3 of 10)...
-## Applying  on cv_fold2_rep2 (4 of 10)...
-## Applying  on cv_fold3_rep1 (5 of 10)...
-## Applying  on cv_fold3_rep2 (6 of 10)...
-## Applying  on cv_fold4_rep1 (7 of 10)...
-## Applying  on cv_fold4_rep2 (8 of 10)...
-## Applying  on cv_fold5_rep1 (9 of 10)...
-## Applying  on cv_fold5_rep2 (10 of 10)...
-## 
-## Total number of predictions made: 1128 
-## Combined test AUC = 1 (m=1, s.d.=0)
-## 
-## Correlation between predictions from repeated CV:
-## Min: 0.9483925, Median: 0.9741962, Mean: 0.9741962</code></pre>
+                       <span class="dt">min.nonzero.coeff =</span> <span class="dv">5</span>,
+                       <span class="dt">param.set=</span><span class="ot">NULL</span>)</code></pre></div>
+<pre><code>## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |======                                                           |  10%
+  |                                                                       
+  |=============                                                    |  20%
+  |                                                                       
+  |====================                                             |  30%
+  |                                                                       
+  |==========================                                       |  40%
+  |                                                                       
+  |================================                                 |  50%
+  |                                                                       
+  |=======================================                          |  60%
+  |                                                                       
+  |==============================================                   |  70%
+  |                                                                       
+  |====================================================             |  80%
+  |                                                                       
+  |==========================================================       |  90%
+  |                                                                       
+  |=================================================================| 100%Trained lasso models successfully.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat)</code></pre></div>
+<pre><code>## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |======                                                           |  10%
+  |                                                                       
+  |=============                                                    |  20%
+  |                                                                       
+  |====================                                             |  30%
+  |                                                                       
+  |==========================                                       |  40%
+  |                                                                       
+  |================================                                 |  50%
+  |                                                                       
+  |=======================================                          |  60%
+  |                                                                       
+  |==============================================                   |  70%
+  |                                                                       
+  |====================================================             |  80%
+  |                                                                       
+  |==========================================================       |  90%
+  |                                                                       
+  |=================================================================| 100%Made predictions successfully.</code></pre>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model-evaluation-and-interpretation" class="anchor"></a>Model Evaluation and Interpretation</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">eval.data &lt;-<span class="st">  </span><span class="kw"><a href="../reference/eval.predictions.html">eval.predictions</a></span>(<span class="dt">label =</span> label, <span class="dt">pred =</span> prediction<span class="op">$</span>mat)</code></pre></div>
-<pre><code>## Warning in ci.se.roc(roc, ...): ci.se() of a ROC curve with AUC == 1 is
-## always a null interval and can be misleading.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># evaluation.model.plot(label = label, </span>
-<span class="co">#                       pred = prediction$mat, </span>
-<span class="co">#                       eval.data = eval.data, </span>
-<span class="co">#                       fn.plot = paste0(output.dir, '/eval_plot.pdf'))</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># interpretor.model.plot(feat = feat.filtered, </span>
-<span class="co">#                        label = label, </span>
-<span class="co">#                        meta = meta, </span>
-<span class="co">#                        fn.plot=paste0(output.dir, 'interpretation.pdf'),</span>
-<span class="co">#                        model = plm.out,</span>
-<span class="co">#                        pred = prediction$mat,</span>
-<span class="co">#                        consens.thres = 0.5,</span>
-<span class="co">#                        norm.models = TRUE,</span>
-<span class="co">#                        limits=c(-5,5),</span>
-<span class="co">#                        heatmap.type = 'fc')</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/eval.predictions.html">eval.predictions</a></span>(siamcat)</code></pre></div>
+<pre><code>## Evaluated predictions successfully.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/evaluation.model.plot.html">evaluation.model.plot</a></span>(siamcat,<span class="st">'eval_plot.pdf'</span>)</code></pre></div>
+<pre><code>## Plotted evaluation of predictions successfully to: eval_plot.pdf</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/interpretor.model.plot.html">interpretor.model.plot</a></span>(siamcat,
+                        <span class="dt">fn.plot=</span><span class="st">'interpretation.pdf'</span>,
+                        <span class="dt">consens.thres =</span> <span class="fl">0.5</span>,
+                        <span class="dt">norm.models =</span> <span class="ot">TRUE</span>,
+                        <span class="dt">limits=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>),
+                        <span class="dt">heatmap.type =</span> <span class="st">'zscore'</span>)</code></pre></div>
+<pre><code>## + select.features
+## + prepare.heatmap.zscore
+## Layout height values: 0.1, 0.62, 0.28</code></pre>
+<pre><code>## Plotted associations between features and label successfully to: interpretation.pdf</code></pre>
 </div>
 </div>
 </div>
@@ -310,6 +515,10 @@ feat.fobt =<span class="st"> </span><span class="kw"><a href="../reference/add.m
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
       <li><a href="#siamcat-workflow">SIAMCAT Workflow</a></li>
+      <li><a href="#add-workflow-from-a-disk">add workflow from a disk</a></li>
+      <li><a href="#keep-in-mind-holdout-prediction">keep in mind holdout prediction</a></li>
+      <li><a href="#check-dtaa-consistency-function">check dtaa consistency function</a></li>
+      <li><a href="#ci-low-abudandt-accuracy">CI low abudandt accuracy</a></li>
       </ul>
 </div>
       </div>

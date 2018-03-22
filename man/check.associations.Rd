@@ -4,15 +4,13 @@
 \alias{check.associations}
 \title{Check and visualize associations between features and classes}
 \usage{
-check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
-  alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 10^-8,
+check.associations(siamcat, fn.plot, color.scheme = "RdYlBu", alpha = 0.05,
+  mult.corr = "fdr", sort.by = "fc", detect.lim = NULL,
   pr.cutoff = 10^-6, max.show = 50, plot.type = "quantile.box",
-  panels = c("fc", "auroc"))
+  panels = c("fc", "auroc"), verbose = 1)
 }
 \arguments{
-\item{feat}{feature object}
-
-\item{label}{label object}
+\item{siamcat}{object of class \link{siamcat-class}}
 
 \item{fn.plot}{filename for the pdf-plot}
 
@@ -33,6 +31,10 @@ check.associations(feat, label, fn.plot, color.scheme = "RdYlBu",
 \item{plot.type}{string, specify how the abundance should be plotted, must be one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")}, defaults to \code{"quantile.box"}}
 
 \item{panels}{vector, name of the panels to be plotted next to the log10-transformed abundances, possible entries are \code{c("fc", "auroc", "prevalence")}, defaults to \code{c("fc", "auroc")}}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal 
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 Does not return anything, but produces an association plot

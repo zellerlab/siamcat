@@ -94,20 +94,17 @@
     <p>This function trains the a machine learning model on the training data</p>
     
 
-    <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>feat</span>, <span class='no'>label</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
+    <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>siamcat</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
   <span class='st'>"ridge_ll"</span>, <span class='st'>"randomForest"</span>), <span class='kw'>data.split</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='st'>"auc"</span>), <span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>param.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='st'>"auc"</span>), <span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>param.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>feature object</p></td>
-    </tr>
-    <tr>
-      <th>label</th>
-      <td><p>label object</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -133,16 +130,17 @@
       <th>param.set</th>
       <td><p>a list of extra parameters for mlr run, may contain: <code>cost</code> - for lasso_ll and ridge_ll; <code>alpha</code> for enet and <code>ntree, mtry</code> for RandomForrest</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list containing</p><ul>
-<li><p><code>models.list</code> the list of trained models for each cross-validation fold</p></li>
-<li><p><code>out.matrix</code> ?</p></li>
-<li><p><code>W.mat</code> ?</p></li>
-</ul>
-
+    <p>object of class <a href='siamcat-class.html'>siamcat-class</a></p>
     
 
   </div>

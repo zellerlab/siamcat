@@ -1,28 +1,31 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# RScript flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 25.06.2017
+# R flavor
+# EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
-##### function to train a LASSO model for a single given C
-#' @export
+##### Internal function to train a  model for a single CV fold
+#' @title Perform feature normalization
+#' @description This function performs feature normalization according to user-
+#'  specified parameters.
+#' @param data a dataframe created from features and lable as last column
+#' @keywords internal
 train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
-                      measure=list("acc"), min.nonzero.coeff=5, param.set=NULL){
+                      measure=list("acc"), min.nonzero.coeff=5, param.set=NULL, neg.lab, verbose=1){
   #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
   ## Specify the type of analysis (e.g. classification) and provide data and response variable
+  # assert that the label for the first patient is always the same in order for lasso_ll to work correctly
+  if (data$label[1] != neg.lab){
+    data <- data[c(which(data$label == neg.lab)[1], c(1:nrow(data))[-which(data$label == neg.lab)[1]]),]
+  }
   task      <- makeClassifTask(data = data, target = "label")
-
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
+  cost      <- 10^seq(-2,3,length=6+5+10)
   cl         <- "classif.cvglmnet" ### the most common learner defined here to remove redundancy
   parameters <- get.parameters.from.param.set(param.set=param.set, method=method, sqrt(nrow(data)))
 
@@ -32,12 +35,13 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=0)
   } else if(method == "enet"){
     lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
-    
+
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
     class.weights        <- c(5, 1)
-    names(class.weights) <- c(label$negative.lab,label$positive.lab)
+    names(class.weights) <- c(-1,1)
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
+    parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
     lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, type=0)
@@ -49,7 +53,8 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   } else {
     stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR, randomForest.\n")
   }
-
+  show.info <- FALSE
+  if(verbose>2) show.info <- TRUE
 
   ## 3) Fit the model
   ## Train the learner on the task using a random subset of the data as training set
@@ -59,8 +64,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
                          resampling =  makeResampleDesc('CV', iters=5L, stratify=TRUE),
                          par.set = parameters,
                          control = makeTuneControlGrid(resolution = 10L),
-                         measures=measure)
-    print(hyperPars)
+                         measures=measure,show.info = show.info)
     lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
 
@@ -84,81 +88,12 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   } else if(cl == "classif.randomForest"){
     model$feat.weights  <-model$learner.model$importance
   }
-
-  model$lrn          <- lrn ### ???
   model$task         <- task
 
   return(model)
 }
 
-#' @export
-get.foldList <- function(data.split, label, mode=c("train", "test"), model=NULL){
-  num.runs     <- 1
-  num.folds    <- 2
-  fold.name = list()
-  fold.exm.idx = list()
-  if (is.null(data.split)){
-    # train on whole data set
-    fold.name[[1]]    <- 'whole data set'
-    fold.exm.idx[[1]] <- names(label$label)
-    if (mode == "test" && !is.null(model)){
-      model$model.type <- NULL
-      num.runs <- length(model)
-      fold.name <- as.list(rep('whole data set', length(model)))
-      fold.exm.idx <- rep(list(names(label$label)), length(model))
-    }
-  } else {
-    if (class(data.split) == 'character') {
-      # read in file containing the training instances
-      num.runs      <- 0
-      con           <- file(data.split, 'r')
-      input         <- readLines(con)
-      close(con)
-      #print(length(input))
-
-      num.folds     <- as.numeric(strsplit(input[[3]],"#")[[1]][2])
-      for (i in 1:length(input)) {
-        l               <- input[[i]]
-        if (substr(l, 1, 1) != '#') {
-          num.runs                 <- num.runs + 1
-          s                        <- unlist(strsplit(l, '\t'))
-          fold.name[[num.runs]]    <- substr(s[1], 2, nchar(s[1]))
-          ### Note that the %in%-operation is order-dependend.
-          fold.exm.idx[[num.runs]] <- which(names(label$label) %in% as.vector(s[2:length(s)]))
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), paste0(mode, 'ing'), 'examples\n')
-          #      cat(fold.exm.idx[[num.runs]], '\n\n')
-          #    } else {
-          #      cat('Ignoring commented line:', l, '\n\n')
-        }
-      }
-    } else if (class(data.split) == 'list') {
-      # use training samples as specified in training.folds in the list
-      num.folds <- data.split$num.folds
-      num.runs <- 0
-      for (cv in 1:data.split$num.folds){
-        for (res in 1:data.split$num.resample){
-          num.runs <- num.runs + 1
-
-          fold.name[[num.runs]] = paste0('cv_fold', as.character(cv), '_rep', as.character(res))
-          if (mode == "train"){
-            fold.exm.idx[[num.runs]] <- match(data.split$training.folds[[res]][[cv]], names(label$label))
-          } else if (mode == "test"){
-            fold.exm.idx[[num.runs]] <- match(data.split$test.folds[[res]][[cv]], names(label$label))
-          }
-          cat(fold.name[[num.runs]], 'contains', length(fold.exm.idx[[num.runs]]), 'training examples\n')
-        }
-      }
-    } else {
-      stop('Wrong input for training samples!...')
-    }
-  }
-  fold.name  <- unlist(fold.name)
-  stopifnot(length(fold.name) == num.runs)
-  stopifnot(length(fold.exm.idx) == num.runs)
-  invisible(list(fold.name = fold.name,fold.exm.idx = fold.exm.idx, num.runs = num.runs, num.folds = num.folds))
-}
-
-
+#' @keywords internal
 get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.measure, min.nonzero.coeff){
   # get lambdas that fullfill the minimum nonzero coefficients criterion
   lambdas <- trained.model$learner.model$glmnet.fit$lambda[which(trained.model$learner.model$nzero >= min.nonzero.coeff)]
@@ -195,6 +130,7 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
   return(opt.lambda)
 }
 
+#' @keywords internal
 get.parameters.from.param.set <- function(param.set, method, sqrt.mdim){
   cost      <- 10^seq(-2,3,length=6+5+10)
   ntree     <- c(100,1000)

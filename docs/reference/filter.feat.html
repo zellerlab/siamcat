@@ -91,22 +91,26 @@
     </div>
 
     
-    <p>This function may convert absolute abundances into relative abundances and then performs unsupervised feature filtering. Features can be filtered based on abundance or prevalence. Additionally, unmapped reads may be removed.</p>
+    <p>This function may convert absolute abundances into relative
+       abundances and then performs unsupervised feature filtering. Features
+       can be filtered based on abundance or prevalence. Additionally,
+       unmapped reads may be removed.</p>
     
 
-    <pre class="usage"><span class='fu'>filter.feat</span>(<span class='no'>feat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='no'>abundance</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
-  <span class='kw'>recomp.prop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rm.unmapped</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>filter.feat</span>(<span class='no'>siamcat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='st'>"abundance"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
+  <span class='kw'>recomp.prop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rm.unmapped</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>feature object</p></td>
+      <th>siamcat</th>
+      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
     </tr>
     <tr>
       <th>filter.method</th>
-      <td><p>method used for filtering the features, can be one of these: <code>c("abundance", "cum.abundance", "prevalence")</code></p></td>
+      <td><p>method used for filtering the features, can be one of
+these: <code>c("abundance", "cum.abundance", "prevalence")</code></p></td>
     </tr>
     <tr>
       <th>cutoff</th>
@@ -114,25 +118,33 @@
     </tr>
     <tr>
       <th>recomp.prop</th>
-      <td><p>boolean, should absolute abundances be converted into relative abundances?</p></td>
+      <td><p>boolean, should absolute abundances be
+converted into relative abundances?</p></td>
     </tr>
     <tr>
       <th>rm.unmapped</th>
       <td><p>boolean, should unmapped reads be discarded?</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for standard information, defaults to <code>1</code></p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns the filtered feature matrix</p>
+    <p>siamcat an object of class <a href='siamcat.html'>siamcat</a></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Currently, there are three filtering methods implemented:</p><ul>
-<li><p><code>"abundance"</code> remove features for which the abundance is never above the threshold value (e.g. 0.5%) in any of the samples</p></li>
-<li><p><code>"cum.abundance"</code> remove features with very low abundance in all samples, i.e. features that are never among the most abundant entities that collectively make up <code>(1-cutoff)</code> of the reads in any samples</p></li>
-<li><p><code>"prevalence"</code> remove features with low prevalence across samples, i.e. features that are undetected in more than <code>(1-cutoff)</code> proportion of samples</p></li>
-</ul>
+    <p>This function</p>
     
 
   </div>

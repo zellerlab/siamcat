@@ -94,26 +94,24 @@
     <p>Produces two plots for model evaluation. The first plot shows the Receiver Operating Receiver (ROC)-curves, the other the Precision-recall (PR)-curves for the different CV repetitions.</p>
     
 
-    <pre class="usage"><span class='fu'>evaluation.model.plot</span>(<span class='no'>label</span>, <span class='no'>pred</span>, <span class='no'>eval.data</span>, <span class='no'>fn.plot</span>)</pre>
+    <pre class="usage"><span class='fu'>evaluation.model.plot</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>label</th>
-      <td><p>a label object</p></td>
-    </tr>
-    <tr>
-      <th>pred</th>
-      <td><p>matrix containing the model predictions for every CV repetition</p></td>
-    </tr>
-    <tr>
-      <th>eval.data</th>
-      <td><p>list of evaluation results produced by eval.results</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>fn.plot</th>
       <td><p>string, filename for the pdf-plot</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     

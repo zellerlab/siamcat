@@ -5,7 +5,6 @@
 .Rapp.history
 .Rbuildignore
 *.Rproj
-*.tar.gz
 *.Rcheck*/
 .Rbuildignore
 SIAMCAT.RProj

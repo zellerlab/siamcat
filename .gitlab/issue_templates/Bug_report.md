@@ -3,6 +3,7 @@
 (Summarize the bug encountered concisely)
 
 
+
 ###Relevant logs and/or screenshots
 
 (Paste any relevant logs - please use code blocks (```) to format console output,

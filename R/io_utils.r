@@ -1,14 +1,9 @@
+#!/usr/bin/Rscript
 ###
 # SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
-# R package flavor
-#
-# written by Georg Zeller
-# with additions by Nicolai Karcher and Konrad Zych
-# EMBL Heidelberg 2012-2017
-#
-# version 0.2.0
-# file last updated: 12.06.2017
-# GNU GPL-3.0
+# R flavor
+# EMBL Heidelberg 2012-2018
+# GNU GPL 3.0
 ###
 
 #' @title Read feature file
@@ -21,7 +16,9 @@
 #' @param fn.in.feat name of the tsv file containing features
 #' @export
 #' @return matrix containing features from the file
-read.features <- function(fn.in.feat){
+read.features <- function(fn.in.feat, verbose=0){
+  if(verbose>1) cat("+ starting read.features\n")
+  s.time <- proc.time()[3]
   if(is.null(fn.in.feat))      stop("Filename for features file not provided!\n")
   if(!file.exists(fn.in.feat)) stop("Feature file ", fn.in.feat, " does not exist!\n")
 
@@ -33,8 +30,9 @@ read.features <- function(fn.in.feat){
   	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
   	rownames(feat) <- featNames
   }
-
-  invisible(feat)
+  e.time <- proc.time()[3]
+  if(verbose>0) cat("+ finished read.features in",e.time-s.time,"s\n")
+  invisible(otu_table(feat,taxa_are_rows=TRUE))
 }
 
 #' @title Read labels file
@@ -107,7 +105,12 @@ read.labels <- function(fn.in.label,feat=NULL){
 
   label$p.idx <- label$label==label$positive.lab
   label$p.lab <- gsub('[_.-]', ' ', names(label$info$class.descr)[label$info$class.descr==label$positive.lab])
-  invisible(label)
+  
+  labelRes <- new("label", label = label$label, header = label$header, info=label$info, 
+                  positive.lab=label$positive.lab,
+                  negative.lab=label$negative.lab, n.idx=label$n.idx, p.idx=label$p.idx,
+                  n.lab=label$n.lab, p.lab=label$p.lab)
+  invisible(labelRes)
 }
 
 #' @title Read metadata file
@@ -126,14 +129,14 @@ read.meta <- function(fn.in.meta){
   }else{
     if(!file.exists(fn.in.meta)) stop("Metadata file ", fn.in.meta, " does not exist!\n")
     meta <- read.table(file=fn.in.meta, sep='\t', header=TRUE, row.names=1, check.names=FALSE, quote='')
-    meta <- as.matrix(meta)
   }
-  invisible(meta)
+  invisible(sample_data(meta))
 }
 
 
 ##### auxiliary function to trim whitespace from string
 # returns string without leading or trailing whitespace
+#' @keywords internal
 trim <- function (x) {
   gsub("^\\s+|\\s+$", "", x)
 }
@@ -143,7 +146,7 @@ trim <- function (x) {
 ###   where <TYPE> is a string specifying the type of label variable such as
 ###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
 ###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
-#' @export
+#' @keywords internal
 parse.label.header <- function(label.header) {
   s    <- strsplit(label.header, ':')[[1]]
   type <- trim(s[1])
@@ -161,7 +164,7 @@ parse.label.header <- function(label.header) {
 }
 
 # ##### function to parse the header of a model file
-#' @export
+#' @keywords internal
 parse.model.header <- function(model.header) {
   s <- strsplit(model.header, ':')[[1]]
   type <- trim(s[1])

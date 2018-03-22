@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Perform feature normalization according to specified parameters. <U+2014> normalize.feat <e2><80><a2> SIAMCAT</title>
+<title>Perform feature normalization <U+2014> normalize.feat <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -87,7 +87,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Perform feature normalization according to specified parameters.</h1>
+    <h1>Perform feature normalization</h1>
     </div>
 
     
@@ -95,16 +95,16 @@
  specified parameters.</p>
     
 
-    <pre class="usage"><span class='fu'>normalize.feat</span>(<span class='no'>feat</span>, <span class='kw'>norm.method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rank.unit"</span>, <span class='st'>"rank.std"</span>, <span class='st'>"log.std"</span>,
+    <pre class="usage"><span class='fu'>normalize.feat</span>(<span class='no'>siamcat</span>, <span class='kw'>norm.method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rank.unit"</span>, <span class='st'>"rank.std"</span>, <span class='st'>"log.std"</span>,
   <span class='st'>"log.unit"</span>, <span class='st'>"clr"</span>), <span class='kw'>norm.param</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>log.n0</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>sd.min.q</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>n.p</span> <span class='kw'>=</span>
-  <span class='fl'>2</span>, <span class='kw'>norm.margin</span> <span class='kw'>=</span> <span class='fl'>1</span>))</pre>
+  <span class='fl'>2</span>, <span class='kw'>norm.margin</span> <span class='kw'>=</span> <span class='fl'>1</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>feat</th>
-      <td><p>feature object</p></td>
+      <th>siamcat</th>
+      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
     </tr>
     <tr>
       <th>norm.method</th>
@@ -116,15 +116,17 @@
       <td><p>list, specifying the parameters of the different
 normalization methods, see details for more information</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal 
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list containing the matrix of normalized features and a list of normalization parameters:</p><ul>
-<li><p><code>$par</code> &lt;- list of parameters utilized in the normalization;</p></li>
-<li><p><code>$feat.norm</code> &lt;- normalized features</p></li>
-</ul>
-
+    <p>an object of class <a href='siamcat.html'>siamcat</a></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -148,7 +150,8 @@ which are dependant on the normalization method of choice:</p><ul>
        to the denominator during standardization in order to avoid
        underestimation of the standard deviation, defaults to 0.1</p></li>
 <li><p><code>"clr"</code> requires <code>log.n0</code>, which is the pseudocount to be
-       added before log-transformation, defaults to <code>1e-08</code></p></li>
+       added before log-transformation, defaults to <code>NULL</code> leading to the
+       estimation of <code>log.n0</code> from the data</p></li>
 <li><p><code>"log.std"</code> requires both <code>log.n0</code> and <code>sd.min.q</code>, using
        the same default values</p></li>
 <li><p><code>"log.unit"</code> requires next to <code>log.n0</code> also the parameters
