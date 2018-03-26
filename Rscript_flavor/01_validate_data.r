@@ -46,7 +46,7 @@ start.time <- proc.time()[1]
 
 # reading in the files
 feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in,feat)
+label <- read.labels(opt$label_in)
 meta  <- read.meta(opt$metadata_in)
 siamcat <- siamcat(feat,label,meta)
 
