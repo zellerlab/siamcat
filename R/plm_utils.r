@@ -7,10 +7,6 @@
 ###
 
 ##### Internal function to train a  model for a single CV fold
-#' @title Perform feature normalization
-#' @description This function performs feature normalization according to user-
-#'  specified parameters.
-#' @param data a dataframe created from features and lable as last column
 #' @keywords internal
 train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                       measure=list("acc"), min.nonzero.coeff=5, param.set=NULL, neg.lab, verbose=1){
