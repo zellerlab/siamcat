@@ -33,8 +33,8 @@
 #' @param sort.by string, sort features by p-value (\code{"p.val"}), by fold change
 #'        (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
 #'        \code{"fc"}
-#' @param detect.lim float, pseudocount to be added before log-transormation of
-#'        the data, defaults to \code{NULL}
+#' @param detect.lim float, pseudocount to be added before log-transformation of
+#'        the data, defaults to \code{NULL} (estimated as the 5% quantile)
 #' @param pr.cutoff float, cutoff for the prevalence computation, defaults to
 #'        \code{1e-06}
 #' @param max.show integer, how many associated features should be shown,
@@ -63,7 +63,8 @@
 #'  check.associations(siamcat, './assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
 #'
 #'  # Custom colors
-#'  check.associations(siamcat, './assoc_plot_blue_yellow.pdf', plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
+#'  check.associations(siamcat, './assoc_plot_blue_yellow.pdf', plot.type='box',
+#'    color.scheme=c('cornflowerblue', '#ffc125'))
 check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
                                detect.lim=NULL, pr.cutoff=10^-6, max.show=50,
