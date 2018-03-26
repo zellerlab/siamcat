@@ -4,15 +4,20 @@
 # GNU GPL 3.0
 ###
 
-#' @title Validate samples in siamcat@phyloseq@sam_datadata, labels, and features
-#' @description This function checks if labels are available for all samples in features. Additionally validates siamcat@phyloseq@sam_datadata, if given
+#' @title Validate samples in labels, features, and metadata
+#' @description This function checks if labels are available for all samples in
+#'        features. Additionally validates metadata, if available.
 #' @param siamcat an object of class \link{siamcat}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal 
+#'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT validate.data
 #' @export
-#' @return an object of class \link{siamcat}
+#' @details This function validates the data by checking that labels are available
+#'        for all samples in the feature matrix. Furthermore, the number of samples
+#'        per class is checked to ensure a minimum number. If metadata is available,
+#'        the overlap between labels and metadata is checked as well.
+#' @return an object of class \link{siamcat} with validated data
 validate.data <- function(siamcat, verbose=1){
   if(verbose>1) cat("+ starting validate.data\n")
   s.time <- proc.time()[3]
@@ -49,7 +54,7 @@ validate.data <- function(siamcat, verbose=1){
   for (i in siamcat@label@info$class.descr){
     if(sum(siamcat@label@label==i) <= 5) stop("Data set has only",sum(siamcat@label@label==i), "training examples of class",i," This is not enough for SIAMCAT to proceed")
     if (sum(siamcat@label@label==i) < 10){
-      cat("Data set has only",sum(siamcat@label@label==i), "training examples of class",i," . Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipe line." )
+      cat("Data set has only",sum(siamcat@label@label==i), "training examples of class",i," . Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipeline." )
     }
   }
 
@@ -64,7 +69,7 @@ validate.data <- function(siamcat, verbose=1){
     } else if (length(siamcat@label@label) <= dim(siamcat@phyloseq@sam_data)[1]) {
       stopifnot(all(names(siamcat@label@label) %in% rownames(siamcat@phyloseq@sam_data)))
       m <- match(names(siamcat@label@label), rownames(siamcat@phyloseq@sam_data))
-      cat('Warning: Removing siamcat@phyloseq@sam_datadata information for', dim(siamcat@phyloseq@sam_data)[1]-length(siamcat@label@label),'superfluous samples.\n')
+      cat('Warning: Removing metadata information for', dim(siamcat@phyloseq@sam_data)[1]-length(siamcat@label@label),'superfluous samples.\n')
       siamcat@phyloseq@sam_data <- siamcat@phyloseq@sam_data[m,]
     } else {
       stop('! Metadata is not available for all samples!')
