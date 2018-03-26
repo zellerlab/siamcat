@@ -12,14 +12,16 @@ model.evaluation.plot(siamcat, fn.plot, verbose = 1)
 \item{fn.plot}{string, filename for the pdf-plot}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal 
+for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 Does not return anything, but produces the model evaluation plot.
 }
 \description{
-Produces two plots for model evaluation. The first plot shows the Receiver Operating Receiver (ROC)-curves, the other the Precision-recall (PR)-curves for the different CV repetitions.
+Produces two plots for model evaluation. The first plot shows
+       the Receiver Operating Characteristic (ROC)-curves, the other the
+       Precision-recall (PR)-curves for the different cross-validation repetitions.
 }
 \keyword{SIAMCAT}
 \keyword{model.evaluation.plot}

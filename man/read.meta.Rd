@@ -10,13 +10,16 @@ read.meta(fn.in.meta)
 \item{fn.in.meta}{name of the tsv file containing metadata}
 }
 \value{
-matrix containing metadata from the file
+\code{sample_data} object
 }
 \description{
-This file reads in the tsv file with numerical metadata and converts it into a matrix.
+This file reads in the tsv file with numerical metadata and
+converts it into a matrix.
 
 The file should be organized as follows:
-samples (in rows) x metadata (in columns). Metadata needs to be converted to numerical values by the user.
+samples (in rows) x metadata (in columns). Metadata needs to be converted to
+numerical values by the user.
 
-Metadata may be optional for the SIAMCAT workflow, but are necessary for heatmap displays, see \link{interpretor.model.plot}
+Metadata may be optional for the SIAMCAT workflow, but are necessary for
+heatmap displays, see \link{model.interpretation.plot}
 }

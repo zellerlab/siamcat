@@ -10,7 +10,7 @@ read.features(fn.in.feat, verbose = 0)
 \item{fn.in.feat}{name of the tsv file containing features}
 }
 \value{
-matrix containing features from the file
+\code{otu_table} containing features from the file
 }
 \description{
 This file reads in the tsv file with features and converts it into a matrix.
@@ -18,5 +18,8 @@ This file reads in the tsv file with features and converts it into a matrix.
 The file should be oragnized as follows:
 features (in rows) x samples (in columns).
 
-First row should contain sample labels (consistent with label data), while the first column should contain feature labels (e.g. taxonomic identifiers). The remaining entries are expected to be real values \code{>= 0} that quantify the abundance of each feature in each sample.
+First row should contain sample labels (consistent with label data), while
+the first column should contain feature labels (e.g. taxonomic identifiers).
+The remaining entries are expected to be real values \code{>= 0} that quantify
+the abundance of each feature in each sample.
 }

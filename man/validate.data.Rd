@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_data.r
 \name{validate.data}
 \alias{validate.data}
-\title{Validate samples in siamcat@phyloseq@sam_datadata, labels, and features}
+\title{Validate samples in labels, features, and metadata}
 \usage{
 validate.data(siamcat, verbose = 1)
 }
@@ -10,14 +10,21 @@ validate.data(siamcat, verbose = 1)
 \item{siamcat}{an object of class \link{siamcat}}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal 
+for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat}
+an object of class \link{siamcat} with validated data
 }
 \description{
-This function checks if labels are available for all samples in features. Additionally validates siamcat@phyloseq@sam_datadata, if given
+This function checks if labels are available for all samples in
+       features. Additionally validates metadata, if available.
+}
+\details{
+This function validates the data by checking that labels are available
+       for all samples in the feature matrix. Furthermore, the number of samples
+       per class is checked to ensure a minimum number. If metadata is available,
+       the overlap between labels and metadata is checked as well.
 }
 \keyword{SIAMCAT}
 \keyword{validate.data}

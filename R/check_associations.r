@@ -34,7 +34,7 @@
 #'        (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
 #'        \code{"fc"}
 #' @param detect.lim float, pseudocount to be added before log-transformation of
-#'        the data, defaults to \code{NULL} (estimated as the 5% quantile)
+#'        the data, defaults to \code{NULL} (estimated as the 5\% quantile)
 #' @param pr.cutoff float, cutoff for the prevalence computation, defaults to
 #'        \code{1e-06}
 #' @param max.show integer, how many associated features should be shown,
