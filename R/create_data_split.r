@@ -8,23 +8,46 @@
 
 #' @title Split a dataset into training and a test sets.
 #' @name create.data.split
-#' @description This function prepares the cross-validation by splitting the data into \code{num.folds} training and test folds for \code{num.resample} times.
+#' @description This function prepares the cross-validation by splitting the
+#'        data into \code{num.folds} training and test folds for
+#'        \code{num.resample} times.
 #' @param siamcat object of class \link{siamcat-class}
-#' @param num.folds number of cross-validation folds (needs to be \code{>=2}), defaults to \code{2}
-#' @param num.resample resampling rounds (values \code{<= 1} deactivate resampling), defaults to \code{1}
-#' @param stratify boolean, should the splits be stratified s. t. an equal proportion of classes are present in each fold?, defaults to \code{TRUE}
-#' @param inseparable column index or column name of metadata variable, defaults to \code{NULL}
+#' @param num.folds number of cross-validation folds (needs to be \code{>=2}),
+#'        defaults to \code{2}
+#' @param num.resample resampling rounds (values \code{<= 1} deactivate
+#'        resampling), defaults to \code{1}
+#' @param stratify boolean, should the splits be stratified so that an equal
+#'        proportion of classes are present in each fold?, defaults to \code{TRUE}
+#' @param inseparable column name of metadata variable, defaults to \code{NULL}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal 
+#'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT create.data.split
-#' @return object of class \link{siamcat-class}
+#' @return object of class \link{siamcat-class} with the \code{data_split}-slot filled
+#' @details This function splits the labels within a \link{siamcat} object and
+#'        prepares the internal cross-validation for the model training (see
+#'        \link{train.model}).
+#'
+#'        The function saves the training and test instances for the different
+#'        cross-validation folds within a list in the \code{data_split}-slot
+#'        of the \link{siamcat} object, which is a list with four entries: \itemize{
+#'          \item \code{num.folds} the number of cross-validation folds
+#'          \item \code{num.resample} the number of repetitions for the cross-validation
+#'          \item \code{training.folds} a list containing the indices for the training instances
+#'          \item \code{test.folds} a list containing the indices for the test instances
+#'        }
 #' @export
-
+#' @examples
+#'
+#'  # simple working example
+#'  siamcat.split <- create.data.split(siamcat, num.folds=10, num.resample=5, stratify=TRUE)
+#'
+#'  ## # example with a variable which is to be inseparable
+#'  ## siamcat.split <- create.data.split(siamcat, num.folds=10, num.resample=5, stratify=FALSE, inseparable='Gender')
 create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
   if(verbose>1) cat("+ starting create.data.split\n")
   s.time <- proc.time()[3]
-  
+
   labelNum        <- as.numeric(siamcat@label@label)
   names(labelNum) <- names(siamcat@label@label)
   exm.ids         <- names(labelNum)
@@ -33,7 +56,7 @@ create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRU
     inseparable <- NULL
   #   cat('+++ Inseparable parameter not specified\n')
   }
-  
+
   # parse label description
   classes      <- sort(c(siamcat@label@negative.lab,siamcat@label@positive.lab))
 
@@ -74,7 +97,7 @@ create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRU
 
   for (r in 1:num.resample) {
     labelNum      <- sample(labelNum)
-    foldid        <- assign.fold(label = labelNum, num.folds=num.folds, stratified = stratify, 
+    foldid        <- assign.fold(label = labelNum, num.folds=num.folds, stratified = stratify,
                                  inseparable = inseparable, meta=siamcat@phyloseq@sam_data, verbose=verbose)
     names(foldid) <- names(labelNum)
     stopifnot(length(labelNum) == length(foldid))
