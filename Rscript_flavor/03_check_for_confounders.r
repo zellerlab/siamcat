@@ -39,7 +39,7 @@ start.time   <- proc.time()[1]
 
 ### read label and meta- data
 feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in, feat)
+label <- read.labels(opt$label_in)
 meta  <- read.meta(opt$metadata_in)
 siamcat <- siamcat(feat,label,meta)
 ### Start core function

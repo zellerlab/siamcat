@@ -25,11 +25,11 @@ option_list     <- list(
   make_option('--data_split',      type='character',                 help='Output file containing data_split object'),
   make_option('--num_folds',       type='integer',   default=10,     help='Number of cross-validation folds (i.e. subsets, needs to be >= 2)'),
   make_option('--resample',        type='integer',   default=0,      help='Resampling rounds (values <= 1 deactivate resampling)'),
-  make_option('--stratify',        type='logical',   default=TRUE,   help='Should cross-validation be stratified such that an approx. 
-                                                                           equal proportion of positive examples are contained in each subset 
+  make_option('--stratify',        type='logical',   default=TRUE,   help='Should cross-validation be stratified such that an approx.
+                                                                           equal proportion of positive examples are contained in each subset
                                                                            (only for binary labels)?'),
   make_option('--inseparable',     type='character', default=NULL,   help=''),
-  make_option('--metadata_in',     type='character',                 help='Input file containing metadata (only required if argument 
+  make_option('--metadata_in',     type='character',                 help='Input file containing metadata (only required if argument
                                                                            \'inseparable\' is specified)'),
   make_option('--subdivide_train_set', type='logical',   default=FALSE,  help='The train data will be subdevided into different files by folds and resamplings.
                                                                               This enables to parallelization of the model training.')
@@ -56,7 +56,7 @@ set.seed(r.seed)
 
 
 feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in, feat)
+label <- read.labels(opt$label_in)
 if(!is.null(opt$inseparable)){
   meta    <- read.meta(opt$metadata_in)
   siamcat <- siamcat(feat,label,meta)
@@ -66,8 +66,8 @@ if(!is.null(opt$inseparable)){
 ### Core function sourced from the library
 siamcat <- create.data.split(siamcat,
                                num.folds=opt$num_folds,
-                               num.resample=opt$resample, 
-                               stratify=opt$stratify, 
+                               num.resample=opt$resample,
+                               stratify=opt$stratify,
                                inseparable=opt$inseparable)
 # write headers:
 
