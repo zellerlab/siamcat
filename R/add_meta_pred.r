@@ -21,12 +21,21 @@
 #' @export
 #' @return an object of class \link{siamcat} with metadata added to the features
 #' @examples
+#'  \dontshow{
+#'    fn.in.feat  <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+#'    fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+#'    fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+#'    feat  <- read.features(fn.in.feat)
+#'    label <- read.labels(fn.in.label)
+#'    meta  <- read.meta(fn.in.meta)
+#'    siamcat <- siamcat(feat, label, meta)
+#'  }
 #'  # Add the Age of the patients as potential predictor
-#'  siamcat.age.added <- add.meta.pred(siamcat, pred.names=c('Age'))
+#'  siamcat.age.added <- add.meta.pred(siamcat, pred.names=c('age'))
 #'
 #'  # Add Age, BMI, and Gender as potential predictors
 #'  # Additionally, prevent standardization of the added features
-#'  siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('Age', 'BMI', 'Gender'), std.meta=FALSE)
+#'  siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('age', 'bmi', 'gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
   if(verbose>1) cat("+ starting add.meta.pred\n")
   s.time <- proc.time()[3]
