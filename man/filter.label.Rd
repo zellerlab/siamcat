@@ -10,6 +10,9 @@ filter.label(siamcat, ids, verbose = 1)
 \item{siamcat}{an object of class \link{siamcat}}
 
 \item{ids}{names of samples to be left in the \code{siamcat@label}}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1} for more
+information about progress and success, defaults to \code{1}}
 }
 \value{
 siamcat an object of class \link{siamcat}
