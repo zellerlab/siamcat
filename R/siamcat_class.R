@@ -110,3 +110,12 @@ get.component.classes <- function(class){
 is.component.class = function(x,class){
   x%in%get.component.classes(class)
 }
+
+
+
+#' Documentation for the example siamcat object in the data folder
+#'
+#' @name siamcat_example
+#' @docType data
+#' @keywords data
+NULL
