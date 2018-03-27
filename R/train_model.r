@@ -137,7 +137,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
 }
 
 measureAUPRC <- function(probs, truth, negative, positive){
-  pr <- pr.curve(scores.class0 = probs[which(truth == positive)],
+  pr <- PRROC::pr.curve(scores.class0 = probs[which(truth == positive)],
                  scores.class1 = probs[which(truth == negative)])
   return(pr$auc.integral)
 }
