@@ -17,6 +17,8 @@
 #' The remaining entries are expected to be real values \code{>= 0} that quantify
 #' the abundance of each feature in each sample.
 #' @param fn.in.feat name of the tsv file containing features
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'        for information about progress and time, defaults to \code{0}
 #' @export
 #' @return \code{otu_table} containing features from the file
 read.features <- function(fn.in.feat, verbose=0){

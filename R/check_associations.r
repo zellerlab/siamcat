@@ -194,7 +194,7 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
        xlim = c(as.integer(min(data2))-1.5,as.integer(max(data2))+1),
        ylim=c(0.45, nrow(data1)+0.6), type='n')
 
-  beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
+  beanplot::beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
            side = "both", bw="nrd0", col = list(col[1], col[2]),
            horizontal = TRUE, names = c(""), show.names = FALSE,
            beanlines = "median", maxstripline = 0.2,
