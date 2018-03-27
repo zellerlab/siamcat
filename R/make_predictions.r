@@ -30,7 +30,7 @@
 #'        or a completely external feature set, given in the form of another
 #'        \code{siamcat} object (\code{siamcat.holdout}).
 #' @examples
-#'
+#'  data(siamcat_example)
 #'  # Simple example
 #'  siamcat.pred <- make.predictions(siamcat)
 #'

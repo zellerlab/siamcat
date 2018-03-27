@@ -20,6 +20,7 @@
 #' @export
 #' @return Does not return anything, but produces a single plot for each metadata category.
 #' @examples
+#'  data(siamcat_example)
 #'  # Simple working example
 #'  check.confounders(siamcat, './conf_plot.pdf')
 #'

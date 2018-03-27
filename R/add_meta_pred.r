@@ -21,6 +21,7 @@
 #' @export
 #' @return an object of class \link{siamcat} with metadata added to the features
 #' @examples
+#'  data(siamcat_example)
 #'  # Add the Age of the patients as potential predictor
 #'  siamcat.age.added <- add.meta.pred(siamcat, pred.names=c('Age'))
 #'

@@ -53,6 +53,7 @@
 #' @export
 #' @examples
 #'  # Simple working example
+#'  data(siamcat_example)
 #'  check.associations(siamcat, './assoc_plot.pdf')
 #'
 #'  # Plot associations as bean plot

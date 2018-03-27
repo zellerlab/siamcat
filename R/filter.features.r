@@ -40,6 +40,7 @@
 #' @return siamcat an object of class \link{siamcat}
 #' @examples
 #'
+#'  data(siamcat_example)
 #' # Simple examples
 #' siamcat.filtered <- filter.features(siamcat, filter.method='abundance', cutoff=1e-03)
 filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,

@@ -65,6 +65,7 @@
 #' @return an object of class \link{siamcat} with normalized features
 #' @examples
 #'
+#'  data(siamcat_example)
 #'  # Simple example
 #'  siamcat.norm <- normalize.features(siamcat, norm.method='rank.unit')
 #'

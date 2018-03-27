@@ -39,6 +39,7 @@
 #' @export
 #' @examples
 #'
+#'  data(siamcat_example)
 #'  # simple working example
 #'  siamcat.split <- create.data.split(siamcat, num.folds=10, num.resample=5, stratify=TRUE)
 #'

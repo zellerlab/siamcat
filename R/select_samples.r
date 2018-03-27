@@ -24,6 +24,7 @@
 #' @return an object of class \link{siamcat} with labels and metadata filtered
 #'        in order to contain only allowed values
 #' @examples
+#'  data(siamcat_example)
 #'  # Select all samples that fall into an Age-range between 20 and 80 years
 #'  siamcat.selected <- select.samples(siamcat, 'Age', allowed.range=c(20, 80))
 #'
