@@ -16,9 +16,9 @@ setClass("model_list", representation(models = "list", model.type = "character")
 #' @name data_split-class
 #' @rdname data_split-class
 #' @exportClass data_split
-setClass("data_split", representation(training.folds = "list", 
-                                     test.folds = "list", 
-                                     num.resample = "numeric", 
+setClass("data_split", representation(training.folds = "list",
+                                     test.folds = "list",
+                                     num.resample = "numeric",
                                      num.folds = "numeric"))
 
 #' The S4 class for storing label info.
@@ -27,7 +27,7 @@ setClass("data_split", representation(training.folds = "list",
 #' @exportClass label
 setClass("label", representation(label = "vector", header = "character",
                                  info="list", positive.lab="numeric",
-                                 negative.lab="numeric", 
+                                 negative.lab="numeric",
                                  n.idx="vector", p.idx="vector",
                                  n.lab="character", p.lab="character"))
 
@@ -51,28 +51,29 @@ setClass("label", representation(label = "vector", header = "character",
 #' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
 #' @slot pred_matrix a matrix with predictions made by \link{make.predictions} function
 #' @exportClass siamcat
-setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list", 
+setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list",
                                    label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))
 
 #' Build siamcat-class objects from their components.
 #' @name siamcat
+#' @param ... list of arguments needed in order to construct a SIAMCAT object
 #' @export
 siamcat <- function(...){
   arglist   <- list(...)
-  
+
   # Remove names from arglist. Will replace them based on their class
   names(arglist) <- NULL
-  
+
   # ignore all but component data classes.
   component_classes <- get.component.classes("both")
-  
+
   for(argNr in 1:length(arglist)){
     classOfArg <- class(arglist[[argNr]])[1]
     if(classOfArg%in%names(component_classes)){
       names(arglist)[argNr] <- component_classes[classOfArg]
     }
   }
-  
+
   if(is.null(arglist$phyloseq)){
     arglistphyloseq <- arglist[sapply(names(arglist), is.component.class, "phyloseq")]
     arglist$phyloseq <- do.call("new", c(list(Class="phyloseq"), arglistphyloseq))
@@ -91,10 +92,10 @@ get.component.classes <- function(class){
   # the names of component.classes needs to be the slot names to match getSlots / splat
   component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split","phyloseq")	#slot names
   names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm_param", "data_split", "phyloseq") #class names
-  
+
   component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")	#slot names
   names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names
-  
+
   if(class=="siamcat"){
     return(component.classes.siamcat)
   }else if(class=="phyloseq"){
