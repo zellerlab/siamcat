@@ -26,6 +26,7 @@ This function checks for associations between class labels and
        or Q-Q plot, depending on the type of metadata.
 }
 \examples{
+ data(siamcat_example)
  # Simple working example
  check.confounders(siamcat, './conf_plot.pdf')
 

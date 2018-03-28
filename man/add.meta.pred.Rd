@@ -27,15 +27,7 @@ This function adds metadata to the feature matrix to be
        later used as predictors
 }
 \examples{
- \dontshow{
- fn.in.feat  <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
- fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
- fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
- feat  <- read.features(fn.in.feat)
- label <- read.labels(fn.in.label)
- meta  <- read.meta(fn.in.meta)
- siamcat <- siamcat(feat, label, meta)
- }
+ data(siamcat_example)
  # Add the Age of the patients as potential predictor
  siamcat.age.added <- add.meta.pred(siamcat, pred.names=c('age'))
 

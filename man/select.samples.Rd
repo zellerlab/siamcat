@@ -31,6 +31,7 @@ This functions selects labels and metadata based on
        metadata and a range or a set of allowed values, the function will
 }
 \examples{
+ data(siamcat_example)
  # Select all samples that fall into an Age-range between 20 and 80 years
  siamcat.selected <- select.samples(siamcat, 'Age', allowed.range=c(20, 80))
 

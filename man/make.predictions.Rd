@@ -39,7 +39,7 @@ This functions uses the model in the \code{model_list}-slot of the
        \code{siamcat} object (\code{siamcat.holdout}).
 }
 \examples{
-
+ data(siamcat_example)
  # Simple example
  siamcat.pred <- make.predictions(siamcat)
 

@@ -7,7 +7,7 @@
 siamcat(...)
 }
 \arguments{
-\item{...}{list of arguments in order to construct a SIAMCAT object}
+\item{...}{list of arguments needed in order to construct a SIAMCAT object}
 }
 \description{
 Build siamcat-class objects from their components.

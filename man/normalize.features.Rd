@@ -74,6 +74,7 @@ z-score standardization)
 }
 \examples{
 
+ data(siamcat_example)
  # Simple example
  siamcat.norm <- normalize.features(siamcat, norm.method='rank.unit')
 

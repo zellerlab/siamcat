@@ -51,6 +51,7 @@ This function filters the features in a \link{siamcat} object in a
 }
 \examples{
 
+ data(siamcat_example)
 # Simple examples
 siamcat.filtered <- filter.features(siamcat, filter.method='abundance', cutoff=1e-03)
 }
