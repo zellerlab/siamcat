@@ -13,10 +13,12 @@ check.confounders(siamcat, fn.plot, verbose = 1)
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information, defaults to \code{1}}
+level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
-Does not return anything, but produces a single plot for each metadata category.
+Does not return anything, but produces a single plot for each
+       metadata category.
 }
 \description{
 This function checks for associations between class labels and
