@@ -14,18 +14,14 @@ Depends:
     mlr,
     phyloseq
 Imports:
-    PRROC,
     beanplot,
-    RColorBrewer,
     glmnet,
-    LiblineaR,
-    pROC,
-    graphics,
-    grDevices,
     gridBase,
     grid,
-    methods,
-    stats
+    LiblineaR,
+    pROC,
+    PRROC,
+    RColorBrewer
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
