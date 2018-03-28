@@ -16,8 +16,9 @@ Depends:
 Imports:
     beanplot,
     glmnet,
-    gridBase,
     grid,
+    gridBase,
+    gridExtra,
     LiblineaR,
     pROC,
     PRROC,
