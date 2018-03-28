@@ -9,7 +9,7 @@
 #' @title Perform feature normalization
 #' @description This function performs feature normalization according to user-
 #'  specified parameters.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param norm.method string, normalization method, can be one of these:
 #'  '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")}
 #' @param norm.param list, specifying the parameters of the different
@@ -62,7 +62,7 @@
 #'
 #' @keywords SIAMCAT normalize.features
 #' @export
-#' @return an object of class \link{siamcat} with normalized features
+#' @return an object of class \link{siamcat-class} with normalized features
 #' @examples
 #'
 #'  data(siamcat_example)

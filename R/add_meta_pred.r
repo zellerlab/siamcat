@@ -19,7 +19,7 @@
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT add.meta.pred
 #' @export
-#' @return an object of class \link{siamcat} with metadata added to the features
+#' @return an object of class \link{siamcat-class} with metadata added to the features
 #' @examples
 #'  data(siamcat_example)
 #'  # Add the Age of the patients as potential predictor

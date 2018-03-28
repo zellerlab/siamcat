@@ -7,7 +7,7 @@
 ###
 
 #' @title Make predictions on a test set
-#' @description This function takes a \link{siamcat}-object containing a model
+#' @description This function takes a \link{siamcat-class}-object containing a model
 #'        trained by \link{train.model} and performs predictions on a given
 #'        test-set.
 #' @param siamcat object of class \link{siamcat-class}

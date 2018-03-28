@@ -10,8 +10,8 @@
 #' @description This functions selects labels and metadata based on
 #'        a specific column in the metadata. Provided with a column-name in the
 #'        metadata and a range or a set of allowed values, the function will
-#"        filter the \link{siamcat} object accordingly.
-#' @param siamcat an object of class \link{siamcat}
+#"        filter the \link{siamcat-class} object accordingly.
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param filter string, name of the meta variable on which the selection
 #'        should be done
 #' @param allowed.set a vector of allowed values
@@ -21,7 +21,7 @@
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT select.samples
 #' @export
-#' @return an object of class \link{siamcat} with labels and metadata filtered
+#' @return an object of class \link{siamcat-class} with labels and metadata filtered
 #'        in order to contain only allowed values
 #' @examples
 #'  data(siamcat_example)

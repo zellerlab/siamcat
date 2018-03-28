@@ -10,7 +10,7 @@
 #' @description This function performs unsupervised feature filtering. Features
 #'        can be filtered based on abundance or prevalence. Additionally,
 #'        unmapped reads may be removed.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param filter.method method used for filtering the features, can be one of
 #'        these: \code{c("abundance", "cum.abundance", "prevalence")},
 #'        defaults to \code{"abundance"}
@@ -23,7 +23,7 @@
 #'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT filter.features
-#' @details This function filters the features in a \link{siamcat} object in a
+#' @details This function filters the features in a \link{siamcat-class} object in a
 #'        unsupervised manner.
 #'
 #'        The different filter methods work in the following way: \itemize{
@@ -37,7 +37,7 @@
 #'          of samples.
 #'        }
 #' @export
-#' @return siamcat an object of class \link{siamcat}
+#' @return siamcat an object of class \link{siamcat-class}
 #' @examples
 #'
 #'  data(siamcat_example)

@@ -11,7 +11,7 @@
 #'        metadata. Statistical testing is performed with Fisher's exact test
 #'        or Wilcoxon test, while associations are visualized either as barplot
 #'        or Q-Q plot, depending on the type of metadata.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
