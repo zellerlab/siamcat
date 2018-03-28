@@ -49,5 +49,12 @@ This functions calculates for the predictions in the \code{pred_matrix}
          \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat.
 }
 }
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ siamcat_evaluated <- evaluate.predictions(siamcat_example)
+
+}
 \keyword{SIAMCAT}
 \keyword{evaluate.predictions}

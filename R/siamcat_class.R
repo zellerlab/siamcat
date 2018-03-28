@@ -59,6 +59,7 @@ setClass("siamcat", representation(model_list = "model_list", phyloseq = "phylos
 # source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
 #' Show the component objects classes and slot names.
 #' @keywords internal
+#' @return list of component classes
 get.component.classes <- function(class){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat

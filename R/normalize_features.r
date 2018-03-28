@@ -74,7 +74,7 @@
 #'  siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 #'
 #'  # log.std example
-#'  \dontrun{siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))}
+#'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1), verbose=3)
 #'
 #'  # log.unit example
 #'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
@@ -90,15 +90,21 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     # de novo normalization
     if(verbose>1) cat('+++ performing de novo normalization using the ', norm.method, ' method\n')
     ### remove features with missing values
-    # TODO there may be better ways of dealing with NA features
     keep.idx <- rowSums(is.na(feat) == 0)
     if (any(!keep.idx)) {
-      feat.red <- feat[keep.idx,]
-      if(verbose>1) cat('+++ removed ', nrow(feat.red)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red),' )\n', sep='')
+      feat.red.na <- feat[keep.idx,]
+      if(verbose>1) cat('+++ removed ', nrow(feat.red.na)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red.na),' )\n', sep='')
     } else {
-      feat.red <- feat
+      feat.red.na <- feat
     }
-
+    ### remove features with zero sd
+    keep.idx.sd <- (apply(feat.red.na, 1, sd) == 0)
+    if (any(keep.idx.sd)){
+      feat.red <- feat.red.na[keep.idx.sd,]
+      if(verbose>1) cat('+++ removed ', nrow(feat.red)-nrow(feat.red.na), ' features with no variation across samples (retaining ', nrow(feat.red),' )\n', sep='')
+    } else {
+      feat.red <- feat.red.na
+    }
     ## check if one of the allowed norm.methods have been supplied
     if (!norm.method %in% c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")){
       stop("Unknown normalization method! Exiting...")
@@ -234,7 +240,7 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     stopifnot(!any(is.na(feat.norm)))
 
   }
-  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
+  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = TRUE)
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished normalize.features in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features normalized successfully.\n")

@@ -59,7 +59,7 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
         m      <- (m - m.mean)/m.sd
       }
 
-      siamcat@phyloseq@otu_table <- otu_table(rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=T)
+      siamcat@phyloseq@otu_table <- otu_table(rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=TRUE)
       rownames(siamcat@phyloseq@otu_table)[nrow(siamcat@phyloseq@otu_table)] <- paste('META_', toupper(p), sep='')
       cnt <- cnt + 1
     }

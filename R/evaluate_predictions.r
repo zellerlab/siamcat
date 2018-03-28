@@ -43,6 +43,12 @@
 #'}
 #' @export
 #' @return object of class \link{siamcat-class} with the slot \code{eval_data} filled
+#' @examples
+#'
+#'  data(siamcat_example)
+#'  # simple working example
+#'  siamcat_evaluated <- evaluate.predictions(siamcat_example)
+#'
 evaluate.predictions <- function(siamcat,verbose=1){
   if(verbose>1) cat("+ starting evaluate.predictions\n")
   s.time <- proc.time()[3]

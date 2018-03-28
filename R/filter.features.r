@@ -65,7 +65,7 @@ filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
     ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)
-    siamcat@phyloseq@otu_table <- otu_table(ra.feat,taxa_are_rows = T )
+    siamcat@phyloseq@otu_table <- otu_table(ra.feat,taxa_are_rows = TRUE )
   } else {
     ra.feat <- siamcat@phyloseq@otu_table
   }

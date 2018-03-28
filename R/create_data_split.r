@@ -145,6 +145,7 @@ create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRU
 
 #' @title Assign folds
 #' @description Create data split from label
+#' @return vector with fold assignments
 #' @keywords internal
 assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=NULL, verbose=1) {
   if(verbose>2) cat("+++ starting assign.fold\n")

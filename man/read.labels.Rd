@@ -36,3 +36,9 @@ Third row is expected to contain the actual class labels (tab-separated):
 Note: Labels can take other numeric values (but not characters or strings);
 importantly, the label for cases has to be greater than the one for controls.
 }
+\examples{
+ # run with example data
+fn.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+ package = "SIAMCAT")
+labels <- read.labels(fn.label)
+}

@@ -1,6 +1,6 @@
 ---
 title: "SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes"
-author: 
+author:
 - name: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
   affiliation: "EMBL Heidelberg"
   email: "georg.zeller@embl.de"
@@ -12,7 +12,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette aims to be a short tutorial for the functionality of SIAMCAT. More detailed tutorials or examples of additional workflows can be found on the web under [EMBL-microbiome tools](http://microbiome-tools.embl.de/).
+This vignette aims to be a short tutorial for the functionality of SIAMCAT. More
+detailed tutorials or examples of additional workflows can be found on the web
+under [EMBL-microbiome tools](http://microbiome-tools.embl.de/).
 
 # Introduction
 
@@ -22,16 +24,24 @@ Associations between microbiome and host phenotypes are ideally described by qua
 
 # First Steps: Read/Validate/Filter the Data
 
-First, let's load the SIAMCAT package and use the files included in SIAMCAT. The data are the same as used in the publication of [Zeller et al.](http://europepmc.org/abstract/MED/25432777), which demonstrated the potential of microbial markers in feacal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.
+First, let's load the SIAMCAT package and use the files included in SIAMCAT. The
+data are the same as used in the publication of [Zeller et al.](http://europepmc.org/abstract/MED/25432777), which demonstrated the
+potential of microbial markers in feacal samples to distinguish patients with
+colorectal cancer (CRC) from healthy controls.
 
 ```{r message=FALSE, warning=FALSE}
 library(SIAMCAT)
-fn.in.feat  <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
-fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
-fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv", package = "SIAMCAT")
+fn.in.feat  <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+  package = "SIAMCAT")
+fn.in.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+  package = "SIAMCAT")
+fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+  package = "SIAMCAT")
 ```
 
-We can access the files with the dedicated SIAMCAT functions and directly construct a SIAMCAT object containing the microbial features, the patient's labels, and metadata for the patients
+We can access the files with the dedicated SIAMCAT functions and directly
+construct a SIAMCAT object containing the microbial features, the patient's
+labels, and metadata for the patients
 ```{r results="hide"}
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
@@ -39,19 +49,23 @@ meta  <- read.meta(fn.in.meta)
 siamcat <- siamcat(feat, label, meta)
 ```
 
-A few information about the `siamcat` object can be accessed with the `show` function from `phyloseq`:
+A few information about the `siamcat` object can be accessed with the `show`
+function from `phyloseq`:
 
 ```{r}
 show(siamcat)
 ```
 
-The `validate.data` function ensures that we have labels for all the samples in features and vice versa.
+The `validate.data` function ensures that we have labels for all the samples in
+features and vice versa.
 
 ```{r}
 siamcat <- validate.data(siamcat, verbose=1)
 ```
 
-The data can also be sub-selected based on the available meta-data. For example, if we want to exclude patients that are too young or too old for the question of interest, we can do so easily with:
+The data can also be sub-selected based on the available meta-data. For example,
+if we want to exclude patients that are too young or too old for the question
+of interest, we can do so easily with:
 
 ```{r}
 siamcat <- select.samples(siamcat,
@@ -61,7 +75,10 @@ siamcat <- select.samples(siamcat,
                           verbose=2)
 ```
 
-Since we have quite a lot of microbial markers in the dataset at the moment, we perform unsupervised feature selection using the function `filter.features`. Here, we filter based on overall abundance, but could also do so based on prevalence or cumulative abundance.
+Since we have quite a lot of microbial markers in the dataset at the moment, we
+perform unsupervised feature selection using the function `filter.features`.
+Here, we filter based on overall abundance, but could also do so based on
+prevalence or cumulative abundance.
 
 
 ```{r}
@@ -75,7 +92,10 @@ siamcat <- filter.features(siamcat,
 
 # Association/Confounder Testing
 
-Another functionality of SIAMCAT are the modules for testing of confounders and associations. Confounders are checked with the function `check.confounders`, which produces a plot for each possible confounder in the metadata and diverts the output into a pdf-file. The function can be used like that:
+Another functionality of SIAMCAT are the modules for testing of confounders
+and associations. Confounders are checked with the function `check.confounders`,
+which produces a plot for each possible confounder in the metadata and diverts
+the output into a pdf-file. The function can be used like that:
 
 ```{r}
 ## Not run here, since the function produces a pdf-file as output
@@ -143,7 +163,12 @@ mtext(paste('N =', length(mvar[siamcat@label@p.idx])), cex=0.6, side=3, adj=1, l
 par(mfrow=c(1,1))
 ```
 
-Similarly, associations between microbial markers and the label can be tested with the `check.associations` function. The function computes a generalized fold change for the marker, the prevalence shift, a single feature AUC, and the significance of the associations. The significance is tested with a Wilcoxon test. The function again produces a pdf-file as output and is thus not run here, but can be used as follows:
+Similarly, associations between microbial markers and the label can be tested
+ with the `check.associations` function. The function computes a generalized
+ fold change for the marker, the prevalence shift, a single feature AUC, and
+ the significance of the associations. The significance is tested with a
+ Wilcoxon test. The function again produces a pdf-file as output and is thus
+ not run here, but can be used as follows:
 
 ```{r}
 ## Not run here, since the function produces a pdf-file as output
@@ -158,11 +183,18 @@ Similarly, associations between microbial markers and the label can be tested wi
 
 # Model Building
 
-Another feature of SIAMCAT is the versatile but easy-to-use interface for the construction of machine learning models on the basis of microbial markers. SIAMCAT contains functions for data normalization, splitting the data into cross-validation folds, training the model, and making predictions based on cross-valdiation instances and the trained models.
+Another feature of SIAMCAT is the versatile but easy-to-use interface for the
+construction of machine learning models on the basis of microbial markers.
+SIAMCAT contains functions for data normalization, splitting the data into
+cross-validation folds, training the model, and making predictions based on
+cross-validation instances and the trained models.
 
 ## Data Normalization
 
-Data normalization is performed with the `normalize.features` function. Several control options are available, i.e. the normalization method (`log.unit`, `log.std`, `rank.unit`, `rank.std`, `log.clr`) or additional parameters. Here, we use the `log.unit` method:
+Data normalization is performed with the `normalize.features` function.
+Several control options are available, i.e. the normalization method
+(`log.unit`, `log.std`, `rank.unit`, `rank.std`, `log.clr`) or additional
+parameters. Here, we use the `log.unit` method:
 
 ```{r}
 siamcat <- normalize.features(siamcat,
@@ -173,7 +205,12 @@ siamcat <- normalize.features(siamcat,
 
 ## Prepare Cross-Validation
 
-Preparation of the cross-validation fold is a crucial step in machine learning. SIAMCAT greatly simplifies the set-up of cross-validation schemes, including stratification of samples or keeping samples inseperable based on metadata. For this small example, we choose a twice-repeated 5-fold cross-validation scheme. The data-split will be saved in the `data_split` slot of the `siamcat` object.
+Preparation of the cross-validation fold is a crucial step in machine learning.
+SIAMCAT greatly simplifies the set-up of cross-validation schemes, including
+stratification of samples or keeping samples inseperable based on metadata.
+For this small example, we choose a twice-repeated 5-fold cross-validation
+scheme. The data-split will be saved in the `data_split` slot of the `siamcat`
+object.
 
 ```{r}
 siamcat <-  create.data.split(siamcat,
@@ -186,7 +223,11 @@ siamcat <-  create.data.split(siamcat,
 
 ## Model Training
 
-The actual model training is performed using the function `train.model`. Again, multiple options for customization are available, ranging from the machine learning method to the measure for model selection or customizable parameter set for hyperparameter tuning. Here, we train a Lasso model and enforce at least 5 non-zero coefficients.
+The actual model training is performed using the function `train.model`.
+Again, multiple options for customization are available, ranging from the
+machine learning method to the measure for model selection or customizable
+parameter set for hyperparameter tuning. Here, we train a Lasso model and
+enforce at least 5 non-zero coefficients.
 
 ```{r}
 siamcat <- train.model(siamcat,
@@ -198,7 +239,9 @@ siamcat <- train.model(siamcat,
                        verbose=3)
 ```
 
-The models are saved in the `model_list` slot of the `siamcat` object. For example, the model trained on the first fold in the first repetition could be accessed like that:
+The models are saved in the `model_list` slot of the `siamcat` object. For
+example, the model trained on the first fold in the first repetition could
+be accessed like that:
 
 ```{r}
 siamcat@model_list@models[[1]]
@@ -206,7 +249,10 @@ siamcat@model_list@models[[1]]
 
 ## Make Predictions
 
-Using the data-split and the models trained in previous step, we can use the function `make.predictions` in order to apply the models on the test instances in the data-split. The predictions will be saved in the `pred_matrix` slot of the `siamcat` object.
+Using the data-split and the models trained in previous step, we can use the
+function `make.predictions` in order to apply the models on the test instances
+in the data-split. The predictions will be saved in the `pred_matrix` slot of
+the `siamcat` object.
 
 ```{r}
 siamcat <- make.predictions(siamcat, verbose=0)
@@ -216,7 +262,13 @@ head(siamcat@pred_matrix)
 
 # Model Evaluation and Interpretation
 
-In the final part, we want to find out how well the model performed and which microbial markers had been selected in the model. In order to do so, we first calculate how well the predictions fit the real data using the function `evaluate.predictions`. This function calculates the Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR) Curve for each resampled cross-validation run. The results of the evaluation will be stored in the `eval_data` slot of the `siamcat` object.
+In the final part, we want to find out how well the model performed and which
+microbial markers had been selected in the model. In order to do so, we first
+calculate how well the predictions fit the real data using the function
+`evaluate.predictions`. This function calculates the Area Under the Receiver
+Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR)
+Curve for each resampled cross-validation run. The results of the evaluation
+will be stored in the `eval_data` slot of the `siamcat` object.
 
 ```{r}
 siamcat <-  evaluate.predictions(siamcat, verbose=2)
@@ -224,14 +276,17 @@ siamcat <-  evaluate.predictions(siamcat, verbose=2)
 
 ## Evaluation plot
 
-To plot the results of the evaluation, we can use the function `model.evaluation.plot`, which produces a pdf-file showing the ROC and PR Curves for the different resamples runs as well as the mean ROC and PR Curve.
+To plot the results of the evaluation, we can use the function
+`model.evaluation.plot`, which produces a pdf-file showing the ROC and PR
+Curves for the different resamples runs as well as the mean ROC and PR Curve.
 
 ```{r}
 ## Not run here, since the function produces a pdf-file as output
 # model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
 ```
 
-Instead of the pdf-output, we can also access the evaluation data in the `siamcat` object directly and plot e.g. the ROC-Curves:
+Instead of the pdf-output, we can also access the evaluation data in the
+`siamcat` object directly and plot e.g. the ROC-Curves:
 
 ```{r fig.width = 6, fig.asp=1, fig.align="center"}
 # plot ROC Curves
@@ -256,15 +311,19 @@ polygon(1-c(x, rev(x)), c(yl, rev(yu)), col='#88888844' , border=NA)
 
 ## Interpretation plot
 
-The final plot produced by SIAMCAT is the model interpretation plot, created by the `model.interpretation.plot` function. The plot shows for the top selected features the
+The final plot produced by SIAMCAT is the model interpretation plot, created
+by the `model.interpretation.plot` function. The plot shows for the top
+selected features the
 
 + model weights (and how robust they are) as a barplot,
 
 + a heatmap with the z-scores or fold changes for the top selected features, and
 
-+ a boxplot showing the proportions of weight per model which is captured by the top selected features.
++ a boxplot showing the proportions of weight per model which is captured by the
+  top selected features.
 
-The function again produces a pdf-file as output and is thus not run here. An example of how it can be used can be found below:
+The function again produces a pdf-file as output and is thus not run here. An
+example of how it can be used can be found below:
 
 ```{r}
 ## Not run here, since the function produces a pdf-file as output
@@ -292,7 +351,8 @@ get.weights.matrix <- function(models.list, verbose=0){
   return(W.mat)
 }
 
-select.features <- function(weights, model.type, consens.thres, norm.models, label, max.show, verbose=0){
+select.features <- function(weights, model.type, consens.thres, norm.models,
+  label, max.show, verbose=0){
   # for linear models, select those that have been selected more than consens.thres percent of the models
   if (model.type != 'RandomForest'){
     # normalize by overall model size

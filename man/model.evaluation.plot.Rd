@@ -23,5 +23,12 @@ Produces two plots for model evaluation. The first plot shows
        the Receiver Operating Characteristic (ROC)-curves, the other the
        Precision-recall (PR)-curves for the different cross-validation repetitions.
 }
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
+
+}
 \keyword{SIAMCAT}
 \keyword{model.evaluation.plot}

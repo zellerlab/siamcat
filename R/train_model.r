@@ -48,6 +48,12 @@
 #'        the \code{"classif.LiblineaRL2LogReg"} Learners respectively. The
 #'        \code{"randomForest"} method is implemented via the \code{"classif.randomForest"}
 #'        Learner.
+#' @examples
+#'
+#'  data(siamcat_example)
+#'  # simple working example
+#'  siamcat_validated <- train.model(siamcat_example, method='lasso')
+#'
 train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                         stratify = TRUE, modsel.crit=list("auc"),  min.nonzero.coeff = 1, param.set=NULL, verbose=1){
 
