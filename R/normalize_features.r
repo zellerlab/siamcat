@@ -234,7 +234,7 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     stopifnot(!any(is.na(feat.norm)))
 
   }
-  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
+  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = TRUE)
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished normalize.features in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features normalized successfully.\n")
