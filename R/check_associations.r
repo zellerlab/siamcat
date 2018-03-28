@@ -124,9 +124,9 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     layout.mat <- cbind(2,1, t(seq(3, length.out=length(panels))))
     widths <- c(0.5, 0.1, rep(0.2, length(panels)))
   }
-  pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
+  grDevices::pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
 
-  layout(mat=layout.mat, widths=widths)
+  graphics::layout(mat=layout.mat, widths=widths)
 
   ##############################################################################
   # PANEL 2: P-VALUES
@@ -155,10 +155,10 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
 
   # plot title
   if (!truncated) {
-    title(main='Differentially abundant features',
+    graphics::title(main='Differentially abundant features',
           xlab='Abundance (log10-scale)')
   } else {
-    title(main=paste('Differentially abundant features\nshowing top', max.show, 'features'),
+    graphics::title(main=paste('Differentially abundant features\nshowing top', max.show, 'features'),
           xlab='Abundance (log10-scale)')
   }
 
@@ -175,7 +175,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   }
 
   # close pdf device
-  tmp <- dev.off()
+  tmp <- grDevices::dev.off()
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished check.associations in",e.time-s.time,"s\n")
   if(verbose==1) cat("Plotted associations between features and label successfully to:",fn.plot,"\n")
@@ -195,7 +195,7 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
     bean.data <- rbind(bean.data, temp)
   }
 
-  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+ graphics::plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim = c(as.integer(min(data2))-1.5,as.integer(max(data2))+1),
        ylim=c(0.45, nrow(data1)+0.6), type='n')
 
@@ -208,11 +208,11 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
   mx    <- as.integer(c(max(bean.data[,1])+1))
   ticks <- mn:mx
   for (v in ticks) {
-    abline(v=v, lty=3, col='lightgrey')
+    graphics::abline(v=v, lty=3, col='lightgrey')
   }
   tick.labels <- formatC(10^ticks, format='E', digits=0)
-  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
+  graphics::axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  graphics::legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
   associations.labels.plot(row.names(data1), plot.type='bean', verbose=verbose)
   if(verbose>2) cat("+ finished associations.bin.plot\n")
 }
@@ -230,11 +230,11 @@ associations.box.plot <- function(data1, data2, label, col, verbose=1){
     plot.data <- rbind(plot.data, temp)
   }
 
-  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+ graphics::plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(min(plot.data[,1]-0.2), max(plot.data[,1]) + 1),
        ylim=c(+0.5, nrow(data1)*2+0.5), type='n')
 
-  boxplot(plot.data[,1] ~ plot.data[,ncol(plot.data)],
+  graphics::boxplot(plot.data[,1] ~ plot.data[,ncol(plot.data)],
           horizontal=TRUE, names = c(""), show.names = FALSE,
           col = box.colors, axes = FALSE,
           outcol = c(col[1], col[2]), add = TRUE)
@@ -243,11 +243,11 @@ associations.box.plot <- function(data1, data2, label, col, verbose=1){
   mx          <- as.integer(c(max(plot.data[,1])))
   ticks       <- mn:mx
   for (v in ticks) {
-    abline(v=v, lty=3, col='lightgrey')
+    graphics::abline(v=v, lty=3, col='lightgrey')
   }
   tick.labels <- formatC(10^ticks, format='E', digits=0)
-  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
+  graphics::axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  graphics::legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
   associations.labels.plot(row.names(data1), plot.type='box', verbose=verbose)
   if(verbose>2) cat("+ finished associations.box.plot\n")
 }
@@ -259,36 +259,36 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
   y.col <- col[1]
 
   p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
-  plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
+  graphics::plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
        xlab='', ylab='', yaxs='i', axes=FALSE,
        xlim=c(p.m, 0), ylim=c(0.5, dim(data1)[1]+0.5), frame.plot=FALSE, type='n')
   for (v in seq(p.m,-1,1)) {
-    abline(v=v, lty=3, col='lightgrey')
+    graphics::abline(v=v, lty=3, col='lightgrey')
   }
 
   tck = floor(p.m):0
-  axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
+  graphics::axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
 
-  x.q = apply(data1, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+  x.q = apply(data1, 1, function (x)stats::quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
                                               na.rm=TRUE, names=FALSE))
-  y.q = apply(data2, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+  y.q = apply(data2, 1, function (x)stats::quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
                                               na.rm=TRUE, names=FALSE))
 
   # inter-quartile range
-  rect(x.q[2,], 1:dim(data1)[1], x.q[4,], (1:dim(data1)[1])+0.3, col=x.col)
-  rect(y.q[2,], (1:dim(data2)[1])-0.3, y.q[4,], 1:dim(data2)[1], col=y.col)
+  graphics::rect(x.q[2,], 1:dim(data1)[1], x.q[4,], (1:dim(data1)[1])+0.3, col=x.col)
+  graphics::rect(y.q[2,], (1:dim(data2)[1])-0.3, y.q[4,], 1:dim(data2)[1], col=y.col)
 
   # 90% interval
-  segments(x.q[1,], 1:dim(data1)[1], x.q[5,], 1:dim(data1)[1])#, col=x.col)
-  segments(y.q[1,], 1:dim(data1)[1], y.q[5,], 1:dim(data1)[1])#, col=x.col)
-  segments(x.q[1,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
-  segments(y.q[1,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
-  segments(x.q[5,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
-  segments(y.q[5,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
+  graphics::segments(x.q[1,], 1:dim(data1)[1], x.q[5,], 1:dim(data1)[1])#, col=x.col)
+  graphics::segments(y.q[1,], 1:dim(data1)[1], y.q[5,], 1:dim(data1)[1])#, col=x.col)
+  graphics::segments(x.q[1,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
+  graphics::segments(y.q[1,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
+  graphics::segments(x.q[5,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
+  graphics::segments(y.q[5,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
 
   # median
-  segments(x.q[3,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.3, lwd=3)#, col=x.col)
-  segments(y.q[3,], y0=(1:dim(data1)[1])-0.3, y1=1:dim(data1)[1], lwd=3)#, col=y.col)
+  graphics::segments(x.q[3,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.3, lwd=3)#, col=x.col)
+  graphics::segments(y.q[3,], y0=(1:dim(data1)[1])-0.3, y1=1:dim(data1)[1], lwd=3)#, col=y.col)
 
   # scatter plot on top
   for (i in 1:dim(data1)[1]) {
@@ -305,10 +305,10 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
       y.col = gsub('..$', toupper(as.hexmode(round(a*255))), y.col)
     }
 
-    points(data1[i,], rep(i+0.15, ncol(data1))+rnorm(ncol(data1),sd=0.03), pch=16, cex=0.6, col=x.col)
-    points(data2[i,], rep(i-0.15, ncol(data2))+rnorm(ncol(data2),sd=0.03), pch=16, cex=0.6, col=y.col)
+    graphics::points(data1[i,], rep(i+0.15, ncol(data1))+stats::rnorm(ncol(data1),sd=0.03), pch=16, cex=0.6, col=x.col)
+    graphics::points(data2[i,], rep(i-0.15, ncol(data2))+stats::rnorm(ncol(data2),sd=0.03), pch=16, cex=0.6, col=y.col)
   }
-  legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
+  graphics::legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
   associations.labels.plot(row.names(data1), plot.type='quantile.box',verbose=verbose)
   if(verbose>2) cat("+ finished associations.quantile.box.plot\n")
 }
@@ -318,45 +318,45 @@ associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1)
   if(verbose>2) cat("+ starting associations.quantile.rect.plot\n")
   quantiles.vector <- c(0.1,0.2,0.3,0.4,0.6,0.7,0.8,0.9)
 
-  x.q = apply(data1, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
-  x.medians = apply(data1, 1, function (x) median(x))
+  x.q = apply(data1, 1, function (x) stats::quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
+  x.medians = apply(data1, 1, function (x) stats::median(x))
 
-  y.q = apply(data2, 1, function (x) quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
-  y.medians = apply(data2, 1, function (x) median(x))
+  y.q = apply(data2, 1, function (x) stats::quantile(x, quantiles.vector, na.rm=TRUE, names=FALSE))
+  y.medians = apply(data2, 1, function (x) stats::median(x))
 
   p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
 
-  plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
+ graphics::plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
        xlab='', ylab='', yaxs='i', axes=FALSE,
        xlim=c(min(data1,data2), max(data1,data2+2)),
        ylim=c(0, dim(data1)[1]), frame.plot=FALSE, type='n')
   for (v in seq(p.m,0,1)) {
-    abline(v=v, lty=3, col='lightgrey')
+    graphics::abline(v=v, lty=3, col='lightgrey')
   }
 
   tck = floor(p.m):0
-  axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
+  graphics::axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
   # create different tints of the colours
-  colors.p <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){rgb(matrix(col2rgb(col[2])/255 + (1 - col2rgb(col[2])/255)*x, ncol=3))}))
-  colors.n <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){rgb(matrix(col2rgb(col[1])/255 + (1 - col2rgb(col[1])/255)*x, ncol=3))}))
+  colors.p <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){grDevices::rgb(matrix(grDevices::col2rgb(col[2])/255 + (1 - grDevices::col2rgb(col[2])/255)*x, ncol=3))}))
+  colors.n <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){grDevices::rgb(matrix(grDevices::col2rgb(col[1])/255 + (1 - grDevices::col2rgb(col[1])/255)*x, ncol=3))}))
   for (i in 1:(nrow(x.q)/2)){
     if (i == 1) {
-      rect(x.q[i,], 0.5:dim(data1)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(data1)[1])+0.3, col = c("white"), border = c("black"), lwd = 0.9)
-      rect(y.q[i,], 0.5:dim(data2)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(data2)[1])-0.3, col = c("white"), border = c("black"), lwd = 0.9)
+      graphics::rect(x.q[i,], 0.5:dim(data1)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(data1)[1])+0.3, col = c("white"), border = c("black"), lwd = 0.9)
+      graphics::rect(y.q[i,], 0.5:dim(data2)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(data2)[1])-0.3, col = c("white"), border = c("black"), lwd = 0.9)
     } else {
-      rect(x.q[i,], 0.5:dim(data1)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(data1)[1])+0.3, col = colors.p[i], border = c("black"), lwd = 0.9)
-      rect(y.q[i,], 0.5:dim(data2)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(data2)[1])-0.3, col = colors.n[i], border = c("black"), lwd = 0.9)
+      graphics::rect(x.q[i,], 0.5:dim(data1)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(data1)[1])+0.3, col = colors.p[i], border = c("black"), lwd = 0.9)
+      graphics::rect(y.q[i,], 0.5:dim(data2)[1], y.q[nrow(y.q)+1-i,], (0.5:dim(data2)[1])-0.3, col = colors.n[i], border = c("black"), lwd = 0.9)
     }
   }
 
-  points(x.medians, y=(0.5:dim(data1)[1])+0.15, pch=18, cex = min(35/nrow(data1),4))
-  points(y.medians, y=(0.5:dim(data2)[1])-0.15, pch=18, cex = min(35/nrow(data2),4))
+  graphics::points(x.medians, y=(0.5:dim(data1)[1])+0.15, pch=18, cex = min(35/nrow(data1),4))
+  graphics::points(y.medians, y=(0.5:dim(data2)[1])-0.15, pch=18, cex = min(35/nrow(data2),4))
 
-  mtext('Quantiles', 3, line=0, at=1, adj = 1.675, padj = 0.45, las=1, cex=0.7)
-  legend(-1.75, nrow(data1), legend = c("40%-60%","30%-70%", "20%-80%","10%-90%","median","","","","",""), bty='n', cex=1,
+  graphics::mtext('Quantiles', 3, line=0, at=1, adj = 1.675, padj = 0.45, las=1, cex=0.7)
+  graphics::legend(-1.75, nrow(data1), legend = c("40%-60%","30%-70%", "20%-80%","10%-90%","median","","","","",""), bty='n', cex=1,
          fill=c(rev(colors.p), 'white', rev(colors.n), 'white'), lwd <- 1.3, ncol = 2,
          border = c("black", "black", "black", "black", "white","black","black","black","black", "white"))
-  legend(-1.675, nrow(data1), legend = c("","","","",""),
+  graphics::legend(-1.675, nrow(data1), legend = c("","","","",""),
          bty='n', lty = c(0,0,0,0,0),
          # cap legend size for diamond (should look symmetric to other symbols)
          pch = 18, cex = 1, pt.cex = c(0,0,0,0, min(35/nrow(data1), 2.25)))
@@ -368,13 +368,13 @@ associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1)
 #     make left margin as big as the longest label or maximally 20.1 lines
 associations.margins.plot <- function(species_names, p.label, verbose=1){
   if(verbose>2) cat("+ starting associations.margins.plot\n")
-  cex.org <- par()$cex
-  par(mar=c(5.1, 18, 4.1, 1.1), cex=1)
-  temp = par()$mai
-  cex.labels <- min(.7,(((par()$pin[2]/length(species_names))*.6)/max(strheight(species_names, units = 'inches'))))
-  max_name <- max(strwidth(species_names, units = 'inches', cex=cex.labels)) + temp[4]
+  cex.org <- graphics::par()$cex
+  graphics::par(mar=c(5.1, 18, 4.1, 1.1), cex=1)
+  temp = graphics::par()$mai
+  cex.labels <- min(.7,(((graphics::par()$pin[2]/length(species_names))*.6)/max( graphics::strheight(species_names, units = 'inches'))))
+  max_name <- max(graphics::strwidth(species_names, units = 'inches', cex=cex.labels)) + temp[4]
   temp[2] <- min(temp[2], max_name)
-  par(mai=temp, cex=cex.org)
+  graphics::par(mai=temp, cex=cex.org)
   if(verbose>2) cat("+ finished associations.margins.plot\n")
 }
 
@@ -382,28 +382,28 @@ associations.margins.plot <- function(species_names, p.label, verbose=1){
 associations.aucs.plot <- function(aucs, binary.cols,verbose=1){
   if(verbose>2) cat("+ starting associations.aucs.plot\n")
   # set margins
-  par(mar=c(5.1, 0, 4.1, 1.6))
+  graphics::par(mar=c(5.1, 0, 4.1, 1.6))
   # plot background
-  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+ graphics::plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(0,1), ylim=c(0.5, nrow(aucs)+0.5), type='n')
   ticks       <- seq(0, 1.0, length.out=5)
   tick.labels <- formatC(ticks, digits=2)
   # plot gridlines
   for (v in ticks) {
-    abline(v=v, lty=3, col='lightgrey')
+    graphics::abline(v=v, lty=3, col='lightgrey')
   }
   # make thicker line at .5
-  abline(v=.5, lty=1, col='lightgrey')
+  graphics::abline(v=.5, lty=1, col='lightgrey')
   # plot single feature aucs
   for (i in 1:nrow(aucs)) {
-    segments(x0=aucs[i, 2], x1=aucs[i, 3], y0=i, col='lightgrey', lwd=1.5)
-    points(aucs[i, 1], i, pch=18, col=binary.cols[i])
-    points(aucs[i, 1], i, pch=5, col='black', cex=0.9)
+    graphics::segments(x0=aucs[i, 2], x1=aucs[i, 3], y0=i, col='lightgrey', lwd=1.5)
+    graphics::points(aucs[i, 1], i, pch=18, col=binary.cols[i])
+    graphics::points(aucs[i, 1], i, pch=5, col='black', cex=0.9)
   }
 
   # Title and axis label
-  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  title(main='Feature AUCs', xlab='AU-ROC')
+  graphics::axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  graphics::title(main='Feature AUCs', xlab='AU-ROC')
   if(verbose>2) cat("+ finished associations.aucs.plot\n")
 }
 
@@ -411,22 +411,22 @@ associations.aucs.plot <- function(aucs, binary.cols,verbose=1){
 associations.fcs.plot <- function(fc.all, binary.cols,  verbose=1){
   if(verbose>2) cat("+ starting associations.fcs.plot\n")
   # margins
-  par(mar=c(5.1, 0, 4.1, 1.6))
+  graphics::par(mar=c(5.1, 0, 4.1, 1.6))
   # get minimum and maximum fcs
   mx <- max(ceiling(abs(range(fc.all, na.rm=TRUE, finite=TRUE))))
   mn    <- -mx
   # plot background
-  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+ graphics::plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(mn, mx), ylim=c(0.2, length(fc.all)+0.2), type='n')
-  grid(NULL, NA, lty=3, col='lightgrey')
+  graphics::grid(NULL, NA, lty=3, col='lightgrey')
   # plot bars
-  barplot(fc.all, horiz=TRUE, width=0.6, space=2/3,
+  graphics::barplot(fc.all, horiz=TRUE, width=0.6, space=2/3,
     col=binary.cols, axes=FALSE, add=TRUE, names.arg=FALSE)
   # gridlines and axes labels
   ticks <- seq(from=mn, to=mx, length.out=5)
   tick.labels <- formatC(ticks, digits=2)
-  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  title(main='Fold change', xlab='Pseudo Fold Change')
+  graphics::axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  graphics::title(main='Fold change', xlab='Pseudo Fold Change')
   if(verbose>2) cat("+ finished associations.fcs.plot\n")
 }
 
@@ -434,25 +434,25 @@ associations.fcs.plot <- function(fc.all, binary.cols,  verbose=1){
 associations.pr.shift.plot <- function(pr.shifts, col, verbose=1){
   if(verbose>2) cat("+ starting associations.pr.shift.plot\n")
   # margins
-  par(mar=c(5.1, 0, 4.1, 1.6))
+  graphics::par(mar=c(5.1, 0, 4.1, 1.6))
 
   # plot background
-  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+ graphics::plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(0, 1), ylim=c(0.2, nrow(pr.shifts)+0.2), type='n')
 
   # plot bars
   row.names(pr.shifts) <- NULL
-  barplot(t(pr.shifts[, c(2,3)]),
+  graphics::barplot(t(pr.shifts[, c(2,3)]),
           horiz=TRUE, axes=FALSE, add=TRUE, space=c(0, 4/3),
           beside=TRUE, width=.3, col=c(col[1], col[2]))
   # gridlines and axes labels
   ticks <- seq(from=0, to=1, length.out=5)
   for (v in ticks) {
-    abline(v=v, lty=3, col='lightgrey')
+    graphics::abline(v=v, lty=3, col='lightgrey')
   }
   tick.labels <- formatC(ticks*100, digits=3)
-  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  title(main='Prevalence shift', xlab='Prevalence [%]')
+  graphics::axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  graphics::title(main='Prevalence shift', xlab='Prevalence [%]')
   if(verbose>2) cat("+ finished associations.pr.shift.plot\n")
 }
 
@@ -460,25 +460,25 @@ associations.pr.shift.plot <- function(pr.shifts, col, verbose=1){
 associations.pvals.plot <- function(p.vals, alpha,  verbose=1){
   if(verbose>2) cat("+ starting associations.pvals.plot\n")
   # margins
-  par(mar=c(5.1, .0, 4.1, 1.6))
+  graphics::par(mar=c(5.1, .0, 4.1, 1.6))
   p.vals.log <- -log10(p.vals)
   # get minimum and maximum
   mx    <- max(ceiling(abs(range(p.vals.log, na.rm=TRUE, finite=TRUE))))
   mn    <- 0
   p.vals.log[is.infinite(p.vals.log)] <- mx
   # plot background
-  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+ graphics::plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(mn, mx), ylim=c(0.2, length(p.vals)+0.2), type='n')
-  grid(NULL, NA, lty=3, col='lightgrey')
+  graphics::grid(NULL, NA, lty=3, col='lightgrey')
   # plot bars
-  barplot(p.vals.log, horiz=TRUE, width=0.6, space=2/3,
+  graphics::barplot(p.vals.log, horiz=TRUE, width=0.6, space=2/3,
           col='lightgrey', axes=FALSE, add=TRUE, names.arg=FALSE)
   # gridlines and axes labels
   ticks <- seq(from=mn, to=mx)
-  abline(v=-log10(alpha), lty=1, col='red')
+  graphics::abline(v=-log10(alpha), lty=1, col='red')
   tick.labels <- formatC(ticks, digits=2)
-  axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  title(main='Adj. P Value', xlab='-log10 Adj. P-Value')
+  graphics::axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
+  graphics::title(main='Adj. P Value', xlab='-log10 Adj. P-Value')
   if(verbose>2) cat("+ finished associations.pvals.plot\n")
 }
 
@@ -487,7 +487,7 @@ associations.pvals.plot <- function(p.vals, alpha,  verbose=1){
 # from stackoverflow: Check if character string is a valid color representation
 # https://stackoverflow.com/questions/13289009
 is.color <- function(x){
-  sapply(x, function(z) {tryCatch(is.matrix(col2rgb(z)), error = function(e) FALSE)})
+  sapply(x, function(z) {tryCatch(is.matrix(grDevices::col2rgb(z)), error = function(e) FALSE)})
 }
 ### check the user-supplied color scheme for validity
 #     color scheme may either be a single RColorBrewer palette or a vector of
@@ -500,30 +500,30 @@ check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=
   if (length(color.scheme) == 1 && class(color.scheme) == 'character'){
     if (n.classes == 2){
       # if color scheme and binary label, make colors as before
-      if (!color.scheme %in% row.names(brewer.pal.info)){
+      if (!color.scheme %in% row.names(RColorBrewer::brewer.pal.info)){
         warning("Not a valid RColorBrewer palette name, defaulting to RdBu.\nSee brewer.pal.info for more information about RColorBrewer palettes.")
         color.scheme <- 'RdYlBu'
       }
-      colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(2))
+      colors <- rev(colorRampPalette(RColorBrewer::brewer.pal(RColorBrewer::brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(2))
     } else {
       # if color scheme and multiclass label, make colors either directly out of the palette (if n.classes smaller than maxcolors) or like before
-      if (!color.scheme %in% row.names(brewer.pal.info)){
+      if (!color.scheme %in% row.names(RColorBrewer::brewer.pal.info)){
         warning("Not a valid RColorBrewer palette name, defaulting to Set3.\n  See brewer.pal.info for more information about RColorBrewer palettes.")
         color.scheme <- 'Set3'
       }
       # if color scheme and multiclass label, check that the palette is not divergent or sequential, but qualitative. Only issue warning.
-      if (brewer.pal.info[color.scheme,'category'] != 'qual'){warning("Using a divergent or sequential color palette for multiclass data.")}
-      if (n.classes <= brewer.pal.info[color.scheme, 'maxcolors']){
-        colors <- brewer.pal(n.classes, color.scheme)
+      if (RColorBrewer::brewer.pal.info[color.scheme,'category'] != 'qual'){warning("Using a divergent or sequential color palette for multiclass data.")}
+      if (n.classes <= RColorBrewer::brewer.pal.info[color.scheme, 'maxcolors']){
+        colors <- RColorBrewer::brewer.pal(n.classes, color.scheme)
       } else {
         warning("The data contains more classes than the color.palette provides.")
-        colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(n.classes))
+        colors <- rev(colorRampPalette(RColorBrewer::brewer.pal(RColorBrewer::brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(n.classes))
       }
     }
   } else if (length(color.scheme == n.classes) && all(is.color(color.scheme))){
     # if colors, check that all strings are real colors and check that the same length as n classes
     # convert color names to hex representation
-    colors <- sapply(color.scheme, FUN=function(x){rgb(t(col2rgb(x)), maxColorValue = 255)}, USE.NAMES = FALSE)
+    colors <- sapply(color.scheme, FUN=function(x){grDevices::rgb(t(grDevices::col2rgb(x)), maxColorValue = 255)}, USE.NAMES = FALSE)
   } else {
     stop("Supplied colors do not match the number of classes or are no valid colors")
   }
@@ -538,13 +538,13 @@ associations.labels.plot <- function(labels, plot.type,  verbose=1){
   adj <- rep(0, length(labels))
   if (plot.type == 'quantile.rect') adj <- rep(-0.5, length(labels))
   if (plot.type == 'box') adj <- -0.5 + 1:length(labels)
-  cex.org <- par()$cex
-  par(cex=1)
-  cex.labels <- min(.7,(((par()$pin[2]/length(labels))*.6)/max(strheight(labels, units = 'inches'))))
+  cex.org <- graphics::par()$cex
+  graphics::par(cex=1)
+  cex.labels <- min(.7,(((graphics::par()$pin[2]/length(labels))*.6)/max( graphics::strheight(labels, units = 'inches'))))
   for (i in 1:length(labels)){
-    mtext(labels[i], 2, line=0, at=i+adj[i], las=1, cex=cex.labels)
+    graphics::mtext(labels[i], 2, line=0, at=i+adj[i], las=1, cex=cex.labels)
   }
-  par(cex=cex.org)
+  graphics::par(cex=cex.org)
   if(verbose>2) cat("+ finished associations.labels.plot\n")
 }
 
@@ -564,27 +564,27 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
   if(verbose>1) cat('+++ calculating effect size for each feature.\n')
   if (is.null(detect.lim)){
     warning("Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile.\n")
-    detect.lim <- quantile(feat[feat!=0], 0.05)
+    detect.lim <- stats::quantile(feat[feat!=0], 0.05)
   }
-  if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
+  if(verbose) pb = utils::txtProgressBar(max=nrow(feat), style=3)
   effect.size <- t(apply(feat, 1, FUN=function(x){
     # pseudo-fold change as differential quantile area
-    q.p <- quantile(log10(x[label@p.idx]+detect.lim), probs=probs.fc)
-    q.n <- quantile(log10(x[label@n.idx]+detect.lim), probs=probs.fc)
+    q.p <- stats::quantile(log10(x[label@p.idx]+detect.lim), probs=probs.fc)
+    q.n <- stats::quantile(log10(x[label@n.idx]+detect.lim), probs=probs.fc)
     fc <- sum(q.p - q.n)/length(q.p)
 
     # wilcoxon
-    p.val <- wilcox.test(x[label@n.idx], x[label@p.idx], exact = FALSE)$p.value
+    p.val <- stats::wilcox.test(x[label@n.idx], x[label@p.idx], exact = FALSE)$p.value
 
     # AU-ROC
-    temp  <- roc(predictor=x, response=label@label, ci=TRUE, direction='<')
+    temp  <- pROC::roc(predictor=x, response=label@label, ci=TRUE, direction='<')
     aucs <- c(temp$ci)
 
     # prevalence shift
     temp.n <- sum(x[label@n.idx] >= pr.cutoff)/sum(label@n.idx)
     temp.p <- sum(x[label@p.idx] >= pr.cutoff)/sum(label@p.idx)
     pr.shift <- c(temp.p-temp.n, temp.n, temp.p)
-    if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
+    if(verbose) utils::setTxtProgressBar(pb, (pb$getVal()+1))
     return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2], 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
              'pr.shift' = pr.shift[1], 'pr.n'=pr.shift[2], 'pr.p'=pr.shift[3]))
   }))
@@ -599,7 +599,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     warning('WARNING: No multiple hypothesis testing performed.')
     p.adj <- effect.size[,'p.val']
   } else {
-    p.adj <- p.adjust(effect.size[,'p.val'], method=tolower(mult.corr))
+    p.adj <- stats::p.adjust(effect.size[,'p.val'], method=tolower(mult.corr))
   }
 
   if(verbose>1) cat('+++ found', sum(p.adj < alpha, na.rm=TRUE), 'significant associations at a significance level <', alpha, '\n')
