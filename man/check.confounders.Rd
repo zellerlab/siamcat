@@ -30,13 +30,13 @@ This function checks for associations between class labels and
  data(siamcat_example)
  # since the whole pipeline has been run in the example data, exchange the
  # normalized features with the original features
- siamcat.example@phyloseq@otu_table <- siamcat.example@orig_feat
+ siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
 
  # Simple working example
- check.confounders(siamcat.example, './conf_plot.pdf')
+ check.confounders(siamcat_example, './conf_plot.pdf')
 
  # Additional information with verbose
- check.confounders(siamcat.example, './conf_plot.pdf', verbose=2)
+ check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)
 }
 \keyword{SIAMCAT}
 \keyword{check.confounders}

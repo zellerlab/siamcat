@@ -50,10 +50,14 @@ This function filters the features in a \link{siamcat-class} object in a
        }
 }
 \examples{
-
+ # Example dataset
  data(siamcat_example)
+ # since the whole pipeline has been run in the example data, the feature were
+ # filtered already. Remove...
+ siamcat_example@phyloseq@otu_table <- NULL
+
 # Simple examples
-siamcat.filtered <- filter.features(siamcat.example, filter.method='abundance', cutoff=1e-03)
+siamcat.filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)
 }
 \keyword{SIAMCAT}
 \keyword{filter.features}
