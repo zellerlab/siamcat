@@ -32,10 +32,10 @@
 #' @examples
 #'  data(siamcat_example)
 #'  # Simple example
-#'  siamcat.pred <- make.predictions(siamcat)
+#'  siamcat.pred <- make.predictions(siamcat.example)
 #'
 #'  # Predictions on a holdout-set
-#'  pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)
+#'  \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)}
 make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TRUE, verbose=1){
 
   s.time <- proc.time()[3]

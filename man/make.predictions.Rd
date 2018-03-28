@@ -41,10 +41,10 @@ This functions uses the model in the \code{model_list}-slot of the
 \examples{
  data(siamcat_example)
  # Simple example
- siamcat.pred <- make.predictions(siamcat)
+ siamcat.pred <- make.predictions(siamcat.example)
 
  # Predictions on a holdout-set
- pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)
+ \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)}
 }
 \keyword{SIAMCAT}
 \keyword{make.predictions}

@@ -69,19 +69,24 @@ both classes, and user-selected panels for the effect (AU-ROC, Prevalence
 Shift, and Fold Change)
 }
 \examples{
- # Simple working example
- data(siamcat_simple)
- check.associations(siamcat, './assoc_plot.pdf')
+ # Example data
+ data(siamcat_example)
+ # since the whole pipeline has been run in the example data, exchange the
+ # normalized features with the original features
+ siamcat.example@phyloseq@otu_table <- siamcat.example@orig_feat
+
+ # Simple example
+ check.associations(siamcat.example, './assoc_plot.pdf')
 
  # Plot associations as bean plot
- check.associations(siamcat, './assoc_plot_bean.pdf', plot.type='bean')
+ check.associations(siamcat.example, './assoc_plot_bean.pdf', plot.type='bean')
 
  # Plot assocations as box plot
  # Additionally, sort by p-value instead of by fold change
- check.associations(siamcat, './assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
+ check.associations(siamcat.example, './assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
 
  # Custom colors
- check.associations(siamcat, './assoc_plot_blue_yellow.pdf', plot.type='box',
+ check.associations(siamcat.example, './assoc_plot_blue_yellow.pdf', plot.type='box',
    color.scheme=c('cornflowerblue', '#ffc125'))
 }
 \keyword{SIAMCAT}
