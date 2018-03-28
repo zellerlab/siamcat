@@ -16,6 +16,9 @@ check.associations.conf <- function(siamcat, fn.plot, color.scheme="RdYlBu",
 }
 
 
+### performs pairwise association tests while blocking for metadata;
+### additionally performs other differential abundance methods from standard 
+### association testing module
 marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
                                           pr.cutoff, mult.corr, alpha,
                                           max.show, sort.by, probs.fc, verbose) {
@@ -38,7 +41,7 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
   for (f in 1:nrow(feat)) {
     
     # loop over metadata columns
-    for (c in meta.colnames) { # c=character
+    for (c in meta.colnames) { 
       meta.curr <- meta[,c]
       continuous <- FALSE
       
@@ -49,11 +52,11 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
         meta.curr.disc <- cut(meta.curr, breaks=quartiles, labels=1:4, include.lowest=TRUE)}
       
       # set up blocking variable
-      if (continuous==TRUE) {
+      if (continuous == TRUE) {
         block <- as.factor(meta.curr.disc)} else {
           block <- as.factor(meta.curr)}
       
-      # keep track of NA values to remove later
+      # keep track of NA values to exclude later
       na.samples <- vector('character')
       for (n in 1:length(block)) {
         if (is.na(block[n])) {
@@ -119,6 +122,61 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
                  "aucs"=aucs[idx],
                  "pr.shift"=pr.shift[idx],
                  "p.adj"=p.adj[idx,]))
+}
+
+
+### anova on ranks for each feature to partition variance between label and metadata
+feature.wise.anova.with.metadata <- function(feat, label, meta, colors, pr.cutoff,
+                                             alpha, sort.by, verbose) {
+  
+  anova.heatmap <- matrix(NA, nrow=nrow(feat), ncol=length(meta.colnames)+1, 
+                          dimnames=list(row.names(feat), c("disease status", meta.colnames)))
+  
+  # total sum of squares
+  ss.total <- data.frame(cbind(apply(feat, 1, FUN=function(x) {
+    rank.x <- rank(x)/length(x)
+    return(sum((rank.x - mean(rank.x))^2)/length(rank.x))})))
+  
+  # label sum of squares - add this in with other groups later!
+  ss.label <- data.frame(cbind(apply(feat, 1, FUN=function(x, label) {
+    rank.p <- rank(x[label@p.idx])/length(label@p.idx)
+    rank.n <- rank(x[label@n.idx])/length(label@n.idx)
+    return(sum(sum((rank.p - mean(rank.p))^2), sum((rank.n - mean(rank.n))^2))/
+      length(c(label@p.idx, label@n.idx)))
+    }, label=label)))
+  
+  # metadata sum of squares - fix this
+  if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
+  ss.groups <- data.frame(cbind(apply(feat, 1, FUN=function(x, meta, label) {
+    group.means <- list();
+    
+    for (c in unique(colnames(meta))) {
+      if (length(unique(meta[,c][!is.na(meta[,c])])) > 5) {
+        quartiles <- quantile(meta[,c], probs=seq(0,1,0.25), na.rm=TRUE) 
+        meta.disc <- cut(meta[,c], breaks=quartiles, labels=1:4, include.lowest=TRUE)} else {
+          meta.disc <- as.factor(meta[,c])}
+      for (m in meta.disc) {
+        if (is.na(m)) {next} else{
+          idx.m <- which(meta.disc == m)
+          rank.m <- rank(x[idx.m])/length(idx.m)
+          index <- paste(c,m)
+          group.means[[index]] <- mean(rank.m)}}}
+    
+    # need to do this for each metadata category... not all at once
+    # to be continued
+    
+    # rank.p <- rank(x[label@p.idx])/length(label@p.idx)
+    # rank.n <- rank(x[label@n.idx])/length(label@n.idx)
+    # group.means[['cases']] <- mean(rank.p)
+    # group.means[['controls']] <- mean(rank.n)
+    grand.mean <- mean(rank(x)/length(x))
+    if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
+    squares <- lapply(group.means, FUN=function(y, grand.mean) {
+      (y-grand.mean)^2}, grand.mean=grand.mean)
+    return(do.call(sum, squares)/length(squares))
+  }, meta=meta, label=label)))
+
+
 }
 
 check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=1){
