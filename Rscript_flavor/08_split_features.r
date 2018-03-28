@@ -59,9 +59,9 @@ feat  <- read.features(opt$feat_in)
 label <- read.labels(opt$label_in)
 if(!is.null(opt$inseparable)){
   meta    <- read.meta(opt$metadata_in)
-  siamcat <- siamcat(feat,label,meta)
+  siamcat <- construct.siamcat(feat,label,meta)
 }else{
-  siamcat <- siamcat(feat,label)
+  siamcat <- construct.siamcat(feat,label)
 }
 ### Core function sourced from the library
 siamcat <- create.data.split(siamcat,

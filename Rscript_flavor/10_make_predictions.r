@@ -40,7 +40,7 @@ cat('\n')
 
 feat       <- read.features(opt$feat_in)
 label      <- read.labels(opt$label_in)
-siamcat    <- siamcat(feat,label)
+siamcat    <- construct.siamcat(feat,label)
 
 start.time   <- proc.time()[1]
 load(opt$mlr_models_list)

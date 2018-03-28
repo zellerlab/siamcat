@@ -52,7 +52,7 @@ start.time <- proc.time()[1]
 
 feat  <- read.features(opt$feat_in)
 label <- read.labels(opt$label_in)
-siamcat <- siamcat(feat, label)
+siamcat <- construct.siamcat(feat, label)
 
 check.associations(siamcat,
                    fn.plot = opt$plot,

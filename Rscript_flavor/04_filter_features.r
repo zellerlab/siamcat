@@ -42,11 +42,11 @@ cat('\n')
 start.time    <- proc.time()[1]
 #### read feature data and preprocess
 feat          <- read.features(opt$feat_in)
-siamcat <- siamcat(feat)
+siamcat <- construct.siamcat(feat)
 ### Start core function
 siamcat <- filter.features(siamcat,
-	                          filter.method = opt$method, 
-	                          cutoff = opt$cutoff, 
+	                          filter.method = opt$method,
+	                          cutoff = opt$cutoff,
 	                          recomp.prop = opt$recomp_prop,
                             rm.unmapped = opt$rm_unmapped)
 ### End core function
