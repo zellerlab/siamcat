@@ -8,13 +8,13 @@
 
 #' @title Filter samples from \code{siamcat@label}
 #' @description This functions filters \code{siamcat@label}.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param ids names of samples to be left in the \code{siamcat@label}
 #' @param verbose control output: \code{0} for no output at all, \code{1} for more
 #'  information about progress and success, defaults to \code{1}
 #' @keywords filter.label
 #' @export
-#' @return siamcat an object of class \link{siamcat}
+#' @return siamcat an object of class \link{siamcat-class}
 #'
 filter.label <- function(siamcat,ids, verbose=1){
   labels_new      <- new("label", label = siamcat@label@label[ids],
