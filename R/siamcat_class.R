@@ -57,6 +57,7 @@ setClass("siamcat", representation(model_list = "model_list", phyloseq = "phylos
 
 #' Build siamcat-class objects from their components.
 #' @title siamcat
+#' @name siamcat
 #' @description Function to construct an object of class \link{siamcat-class}
 #' @param ... list of arguments needed in order to construct a SIAMCAT object
 #' @export
