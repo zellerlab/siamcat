@@ -63,7 +63,8 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
                          measures=measure,show.info = show.info)
     lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
-
+  print(lrn)
+  print(task)
   model     <- train(lrn, task)
 
   if(cl == "classif.cvglmnet"){
