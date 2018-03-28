@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read labels file <U+2014> read.labels <e2><80><a2> SIAMCAT</title>
+<title>Model Evaluation Plot <U+2014> model.evaluation.plot <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -87,46 +87,39 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read labels file</h1>
+    <h1>Model Evaluation Plot</h1>
     </div>
 
     
-    <p>This file reads in the tsv file with labels and converts it into
- a label object.</p>
-<p>First row is expected to be <code>#BINARY:1=[label for cases];-1=[label for controls]</code>.
-Second row should contain the sample identifiers as tab-separated list
-(consistent with feature and metadata).</p>
-<p>Third row is expected to contain the actual class labels (tab-separated):
-<code>1</code> for each case and <code>-1</code> for each control.</p>
-<p>Note: Labels can take other numeric values (but not characters or strings);
-importantly, the label for cases has to be greater than the one for controls.</p>
+    <p>Produces two plots for model evaluation. The first plot shows
+       the Receiver Operating Characteristic (ROC)-curves, the other the
+       Precision-recall (PR)-curves for the different cross-validation repetitions.</p>
     
 
-    <pre class="usage"><span class='fu'>read.labels</span>(<span class='no'>fn.in.label</span>)</pre>
+    <pre class="usage"><span class='fu'>model.evaluation.plot</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>fn.in.label</th>
-      <td><p>name of the tsv file containing labels</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
+    </tr>
+    <tr>
+      <th>fn.plot</th>
+      <td><p>string, filename for the pdf-plot</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>label object containing several entries:</p><ul>
-<li><p><code>$label</code> named vector containing the numerical labels from the file;</p></li>
-<li><p><code>$header</code> first row of the label file;</p></li>
-<li><p><code>$info</code> information about the type of label (e.g. <code>BINARY</code>);</p></li>
-<li><p><code>$positive.lab</code> numerical label for controls, e.g. <code>-1</code>;</p></li>
-<li><p><code>$negative.lab</code> numerical label for cases, e.g. <code>1</code>;</p></li>
-<li><p><code>$n.idx</code> logical vector of labels (<code>TRUE</code> for controls, <code>FALSE</code> otherwise);</p></li>
-<li><p><code>$n.lab</code> label for controls, e.g. <code>healthy</code>;</p></li>
-<li><p><code>$p.idx</code> logical vector of labels (<code>TRUE</code> for cases, <code>FALSE</code> otherwise);</p></li>
-<li><p><code>$p.lab</code> label for cases, e.g. <code>cancer</code></p></li>
-</ul>
-
+    <p>Does not return anything, but produces the model evaluation plot.</p>
     
 
   </div>

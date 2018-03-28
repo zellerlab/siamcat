@@ -106,8 +106,8 @@
     </tr>
     <tr>
       <th>pred.names</th>
-      <td><p>vector of names of the metavariables to be added to
-the feature matrix as predictors</p></td>
+      <td><p>vector of names of the variables within the metadata to be
+added to the feature matrix as predictors</p></td>
     </tr>
     <tr>
       <th>std.meta</th>
@@ -117,16 +117,23 @@ defaults to <code>TRUE</code></p></td>
     <tr>
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
-for only information about progress and success, <code>2</code> for normal 
+for only information about progress and success, <code>2</code> for normal
 level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>features object with added metadata</p>
+    <p>an object of class <a href='siamcat-class.html'>siamcat-class</a> with metadata added to the features</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'> <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+ <span class='co'># Add the Age of the patients as potential predictor</span>
+ <span class='no'>siamcat_age_added</span> <span class='kw'>&lt;-</span> <span class='fu'>add.meta.pred</span>(<span class='no'>siamcat_example</span>, <span class='kw'>pred.names</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>'age'</span>))</div><div class='output co'>#&gt; Adding metadata as predictor finished</div><div class='input'>
+ <span class='co'># Add Age, BMI, and Gender as potential predictors</span>
+ <span class='co'># Additionally, prevent standardization of the added features</span>
+ <span class='no'>siamcat_meta_added</span> <span class='kw'>&lt;-</span> <span class='fu'>add.meta.pred</span>(<span class='no'>siamcat_example</span>, <span class='kw'>pred.names</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='st'>'age'</span>, <span class='st'>'bmi'</span>, <span class='st'>'gender'</span>), <span class='kw'>std.meta</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; Adding metadata as predictor finished</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -134,14 +141,16 @@ level of information and <code>3</code> for full debug information, defaults to 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Georg Zeller, Konrad Zych, Nicolai Karcher, Jakob Wirbel.</p>
+  <p>Developed by Georg Zeller, Konrad Zych, Jakob Wirbel.</p>
 </div>
 
 <div class="pkgdown">

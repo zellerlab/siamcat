@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make predictions on a test set <U+2014> make.predictions <e2><80><a2> SIAMCAT</title>
+<title>Perform unsupervised feature filtering. <U+2014> filter.features <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -87,35 +87,44 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make predictions on a test set</h1>
+    <h1>Perform unsupervised feature filtering.</h1>
     </div>
 
     
-    <p>This function takes a <a href='siamcat-class.html'>siamcat-class</a>-object containing a model
-       trained by <a href='train.model.html'>train.model</a> and performs predictions on a given
-       test-set.</p>
+    <p>This function performs unsupervised feature filtering. Features
+       can be filtered based on abundance or prevalence. Additionally,
+       unmapped reads may be removed.</p>
     
 
-    <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>siamcat</span>, <span class='kw'>siamcat.holdout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>normalize.holdout</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>filter.features</span>(<span class='no'>siamcat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='st'>"abundance"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
+  <span class='kw'>recomp.prop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rm.unmapped</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>siamcat</th>
-      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
+      <td><p>an object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
-      <th>siamcat.holdout</th>
-      <td><p>optional, object of class <a href='siamcat-class.html'>siamcat-class</a> on which
-to make predictions, defaults to <code>NULL</code></p></td>
+      <th>filter.method</th>
+      <td><p>method used for filtering the features, can be one of
+these: <code>c("abundance", "cum.abundance", "prevalence")</code>,
+defaults to <code>"abundance"</code></p></td>
     </tr>
     <tr>
-      <th>normalize.holdout</th>
-      <td><p>boolean, should the holdout features be normalized
-with a frozen normalization (see <a href='normalize.features.html'>normalize.features</a>) using the
-normalization parameters in <code>siamcat</code>?, defaults to <code>TRUE</code></p></td>
+      <th>cutoff</th>
+      <td><p>float, abundace or prevalence cutoff, default to <code>0.001</code></p></td>
+    </tr>
+    <tr>
+      <th>recomp.prop</th>
+      <td><p>boolean, should relative abundances be recomputed?,
+defaults to <code>FALSE</code></p></td>
+    </tr>
+    <tr>
+      <th>rm.unmapped</th>
+      <td><p>boolean, should unmapped reads be discarded?, defaults to
+<code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -127,28 +136,33 @@ level of information and <code>3</code> for full debug information, defaults to 
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the slot <code>pred_matrix</code>
-       filled or a matrix containing the predictions for the holdout set</p>
+    <p>siamcat an object of class <a href='siamcat-class.html'>siamcat-class</a></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This functions uses the model in the <code>model_list</code>-slot of the
-       <code>siamcat</code> object to make predictions on a given test set. The test
-       set can either consist of the test instances in the cross-validation,
-       saved in the <code>data_split</code>-slot of the same <code>siamcat</code> object,
-       or a completely external feature set, given in the form of another
-       <code>siamcat</code> object (<code>siamcat.holdout</code>).</p>
+    <p>This function filters the features in a <a href='siamcat-class.html'>siamcat-class</a> object in a
+       unsupervised manner.</p>
+<p>The different filter methods work in the following way:</p><ul>
+<li><p><code>"abundace"</code> remove features whose abundance is never above
+         the threshold value in any of the samples</p></li>
+<li><p><code>"cum.abundance"</code> remove features with very low abundance
+         in all samples i.e. ones that are never among the most abundant
+         entities that collectively make up (1-cutoff) of the reads in any sample</p></li>
+<li><p><code>"prevalence"</code> remove features with low prevalence across samples
+         i.e. ones that are 0 (undetected) in more than (1-cutoff) proportion
+         of samples.</p></li>
+</ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># Simple example</span>
- <span class='no'>siamcat.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
-#&gt; Made predictions successfully.</div><div class='input'>
- # Predictions on a holdout-set
- </div><span class='co'># NOT RUN {</span>
-<span class='no'>pred.mat</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat.trained</span>, <span class='no'>siamcat.holdout</span>, <span class='kw'>normalize.holdout</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='co'># }</span></pre>
+    <pre class="examples"><div class='input'> <span class='co'># Example dataset</span>
+ <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+ <span class='co'># since the whole pipeline has been run in the example data, the feature were</span>
+ <span class='co'># filtered already.</span>
+ <span class='no'>siamcat_example</span>@<span class='kw'>phyloseq</span>@<span class='kw'>otu_table</span> <span class='kw'>&lt;-</span> <span class='no'>siamcat_example</span>@<span class='kw'>orig_feat</span>
+
+<span class='co'># Simple examples</span>
+<span class='no'>siamcat_filtered</span> <span class='kw'>&lt;-</span> <span class='fu'>filter.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>filter.method</span><span class='kw'>=</span><span class='st'>'abundance'</span>, <span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>1e-03</span>)</div><div class='output co'>#&gt; Features successfully filtered</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

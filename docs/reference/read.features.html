@@ -94,7 +94,10 @@
     <p>This file reads in the tsv file with features and converts it into a matrix.</p>
 <p>The file should be oragnized as follows:
 features (in rows) x samples (in columns).</p>
-<p>First row should contain sample labels (consistent with label data), while the first column should contain feature labels (e.g. taxonomic identifiers). The remaining entries are expected to be real values <code>&gt;= 0</code> that quantify the abundance of each feature in each sample.</p>
+<p>First row should contain sample labels (consistent with label data), while
+the first column should contain feature labels (e.g. taxonomic identifiers).
+The remaining entries are expected to be real values <code>&gt;= 0</code> that quantify
+the abundance of each feature in each sample.</p>
     
 
     <pre class="usage"><span class='fu'>read.features</span>(<span class='no'>fn.in.feat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
@@ -106,11 +109,16 @@ features (in rows) x samples (in columns).</p>
       <th>fn.in.feat</th>
       <td><p>name of the tsv file containing features</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for information about progress and time, defaults to <code>0</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix containing features from the file</p>
+    <p><code>otu_table</code> containing features from the file</p>
     
 
   </div>
@@ -127,7 +135,7 @@ features (in rows) x samples (in columns).</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Georg Zeller, Konrad Zych, Nicolai Karcher, Jakob Wirbel.</p>
+  <p>Developed by Georg Zeller, Konrad Zych, Jakob Wirbel.</p>
 </div>
 
 <div class="pkgdown">

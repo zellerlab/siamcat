@@ -16,7 +16,9 @@ This vignette aims to be a short tutorial for the functionality of SIAMCAT. More
 
 # Introduction
 
-SIAMCAT is a package for the analysis of microbiome data  TODO TODO TODO
+The promise of elucidating associations between the microbiota and their host, with diagnostic and therapeutic potential, is fueling metagenomics research. However, there is a lack of user-friendly software tools implementing robust statistical testing and machine learning methods suitable for microbiome data. Here, we describe SIAMCAT, a solution to this problem implemented as R package.
+
+Associations between microbiome and host phenotypes are ideally described by quantitative models able to predict host status from microbiome composition. SIAMCAT can do so for data from hundreds of thousands of microbial taxa, gene families, or metabolic pathways over hundreds of samples. It supports multiple machine learning algorithms through the mlr R meta-package. SIAMCAT produces graphical output for convenient assessment of the quality of the input data and statistical associations, for model diagnostics and inference revealing the most predictive microbial biomarkers.
 
 # First Steps: Read/Validate/Filter the Data
 

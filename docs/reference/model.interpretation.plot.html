@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read labels file <U+2014> read.labels <e2><80><a2> SIAMCAT</title>
+<title>Model Interpretation Plot <U+2014> model.interpretation.plot <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -87,46 +87,90 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read labels file</h1>
+    <h1>Model Interpretation Plot</h1>
     </div>
 
     
-    <p>This file reads in the tsv file with labels and converts it into
- a label object.</p>
-<p>First row is expected to be <code>#BINARY:1=[label for cases];-1=[label for controls]</code>.
-Second row should contain the sample identifiers as tab-separated list
-(consistent with feature and metadata).</p>
-<p>Third row is expected to contain the actual class labels (tab-separated):
-<code>1</code> for each case and <code>-1</code> for each control.</p>
-<p>Note: Labels can take other numeric values (but not characters or strings);
-importantly, the label for cases has to be greater than the one for controls.</p>
+    <p>Produces a plot for model interpretation, displaying feature weights,
+       robustness of feature weights, and features scores across patients.</p>
     
 
-    <pre class="usage"><span class='fu'>read.labels</span>(<span class='no'>fn.in.label</span>)</pre>
+    <pre class="usage"><span class='fu'>model.interpretation.plot</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>,
+  <span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"zscore"</span>, <span class='st'>"fc"</span>),
+  <span class='kw'>norm.models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>3</span>, <span class='fl'>3</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
+  <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>fn.in.label</th>
-      <td><p>name of the tsv file containing labels</p></td>
+      <th>siamcat</th>
+      <td><p>object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
+    </tr>
+    <tr>
+      <th>fn.plot</th>
+      <td><p>string, filename for the pdf-plot</p></td>
+    </tr>
+    <tr>
+      <th>color.scheme</th>
+      <td><p>color scheme for the heatmap, defaults to <code>"BrBG"</code></p></td>
+    </tr>
+    <tr>
+      <th>consens.thres</th>
+      <td><p>minimal ratio of models incorporating a feature in order
+to include it into the heatmap, defaults to <code>0.5</code>
+Note that for <code>"randomForest"</code> models, this cutoff specifies the
+minimum median Gini coefficient for a feature to be included and
+should therefore be much lower, e.g. <code>0.01</code></p></td>
+    </tr>
+    <tr>
+      <th>heatmap.type</th>
+      <td><p>type of the heatmap, can be either <code>"fc"</code> or
+<code>"zscore"</code>, defaults to <code>"zscore"</code></p></td>
+    </tr>
+    <tr>
+      <th>norm.models</th>
+      <td><p>boolean, should the feature weights be normalized across
+models?, defaults to <code>FALSE</code></p></td>
+    </tr>
+    <tr>
+      <th>limits</th>
+      <td><p>vector, cutoff for extreme values in the heatmap,
+defaults to <code>c(-3, 3)</code></p></td>
+    </tr>
+    <tr>
+      <th>detect.lim</th>
+      <td><p>float, pseudocount to be added before log-transformation
+of features, defaults to <code>1e-06</code></p></td>
+    </tr>
+    <tr>
+      <th>max.show</th>
+      <td><p>integer, maximum number of features to be shown in the model
+interpretation plot, defaults to 50</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for only information about progress and success, <code>2</code> for normal
+level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>label object containing several entries:</p><ul>
-<li><p><code>$label</code> named vector containing the numerical labels from the file;</p></li>
-<li><p><code>$header</code> first row of the label file;</p></li>
-<li><p><code>$info</code> information about the type of label (e.g. <code>BINARY</code>);</p></li>
-<li><p><code>$positive.lab</code> numerical label for controls, e.g. <code>-1</code>;</p></li>
-<li><p><code>$negative.lab</code> numerical label for cases, e.g. <code>1</code>;</p></li>
-<li><p><code>$n.idx</code> logical vector of labels (<code>TRUE</code> for controls, <code>FALSE</code> otherwise);</p></li>
-<li><p><code>$n.lab</code> label for controls, e.g. <code>healthy</code>;</p></li>
-<li><p><code>$p.idx</code> logical vector of labels (<code>TRUE</code> for cases, <code>FALSE</code> otherwise);</p></li>
-<li><p><code>$p.lab</code> label for cases, e.g. <code>cancer</code></p></li>
-</ul>
+    <p>Does not return anything, but produces the model interpretion plot.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>Produces a plot consisting of</p><ul>
+<li><p>a barplot showing the feature weights and their robustness (i.e. in
+   what proportion of models have they been incorporated)</p></li>
+<li><p>a heatmap showing the z-scores of the metagenomic features across patients</p></li>
+<li><p>another heatmap displaying the metadata categories (if applicable)</p></li>
+<li><p>a boxplot displaying the poportion of weight per model that is actually shown
+   for the features that are incorporated into more than <code>consens.thres</code>
+   percent of the models.</p></li>
+</ul>
     
 
   </div>
@@ -136,6 +180,8 @@ importantly, the label for cases has to be greater than the one for controls.</p
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>
