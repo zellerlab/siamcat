@@ -1,18 +1,18 @@
 ---
 title: "SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes"
 author:
-- name: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
+- name: "Konrad Zych, Jakob Wirbel and Georg Zeller"
   affiliation: "EMBL Heidelberg"
   email: "georg.zeller@embl.de"
-date: "2018-03-27"
+date: "2018-03-28"
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{SIAMCAT}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-This vignette aims to be a short tutorial for the functionality of SIAMCAT. More
+# About this vignette
+This vignette aims to be a short tutorial for the main functionalities of SIAMCAT. More
 detailed tutorials or examples of additional workflows can be found on the web
 under [EMBL-microbiome tools](http://microbiome-tools.embl.de/).
 
@@ -20,7 +20,7 @@ under [EMBL-microbiome tools](http://microbiome-tools.embl.de/).
 
 The promise of elucidating associations between the microbiota and their host, with diagnostic and therapeutic potential, is fueling metagenomics research. However, there is a lack of user-friendly software tools implementing robust statistical testing and machine learning methods suitable for microbiome data. Here, we describe SIAMCAT, a solution to this problem implemented as R package.
 
-Associations between microbiome and host phenotypes are ideally described by quantitative models able to predict host status from microbiome composition. SIAMCAT can do so for data from hundreds of thousands of microbial taxa, gene families, or metabolic pathways over hundreds of samples. It supports multiple machine learning algorithms through the mlr R meta-package. SIAMCAT produces graphical output for convenient assessment of the quality of the input data and statistical associations, for model diagnostics and inference revealing the most predictive microbial biomarkers.
+Associations between microbiome and host phenotypes are ideally described by quantitative models able to predict host status from microbiome composition. SIAMCAT can do so for data from hundreds of thousands of microbial taxa, gene families, or metabolic pathways over hundreds of samples. SIAMCAT produces graphical output for convenient assessment of the quality of the input data and statistical associations, for model diagnostics and inference revealing the most predictive microbial biomarkers.
 
 # First Steps: Read/Validate/Filter the Data
 
@@ -41,7 +41,7 @@ fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_pro
 
 We can access the files with the dedicated SIAMCAT functions and directly
 construct a SIAMCAT object containing the microbial features, the patient's
-labels, and metadata for the patients
+labels, and metadata for the patients. 
 ```{r results="hide"}
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
@@ -54,6 +54,12 @@ function from `phyloseq`:
 
 ```{r}
 show(siamcat)
+```
+
+In fact, `siamcat-class` object extends `phyloseq-class` object:
+```{r}
+phyloseq <- siamcat@phyloseq
+show(phyloseq)
 ```
 
 The `validate.data` function ensures that we have labels for all the samples in

@@ -22,7 +22,11 @@ Imports:
     LiblineaR,
     pROC,
     PRROC,
-    RColorBrewer
+    RColorBrewer,
+    grDevices, 
+    graphics, 
+    stats, 
+    utils
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

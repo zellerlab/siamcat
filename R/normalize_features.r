@@ -71,7 +71,7 @@
 #'  siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
 #'
 #'  # Simple example
-#'  siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
+#'  siamcat_norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 #'
 #'  # log.std example
 #'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1), verbose=3)
