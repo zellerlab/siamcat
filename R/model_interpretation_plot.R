@@ -46,7 +46,7 @@
 #'
 #'  data(siamcat_example)
 #'  # simple working example
-#'  model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf', 
+#'  model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf',
 #'    heatmap.type='zscore')
 #'
 model.interpretation.plot <- function(siamcat, fn.plot,
@@ -203,7 +203,7 @@ model.interpretation.plot <- function(siamcat, fn.plot,
                  effect.size=apply(rel.weights[sel.idx,], 1, median),verbose=verbose)
   } else {
     auroc.effect <-  sapply(colnames(img.data),
-        FUN=function(f){roc(predictor=img.data[,f],
+        FUN=function(f){pROC::roc(predictor=img.data[,f],
                         response=label@label, direction='<')$auc})
     bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
     plot.heatmap(image.data=img.data,

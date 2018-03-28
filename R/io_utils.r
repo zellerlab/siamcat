@@ -37,8 +37,8 @@ read.features <- function(fn.in.feat, verbose=0){
   featNames <- make.names(rownames(feat)) ### making the names semantically correct
 
   if(any(rownames(feat)!=featNames)){
-  	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
-  	rownames(feat) <- featNames
+    cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
+    rownames(feat) <- featNames
   }
   e.time <- proc.time()[3]
   if(verbose>0) cat("+ finished read.features in",e.time-s.time,"s\n")

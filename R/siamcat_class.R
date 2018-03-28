@@ -63,10 +63,10 @@ setClass("siamcat", representation(model_list = "model_list", phyloseq = "phylos
 get.component.classes <- function(class){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat
-  component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split","phyloseq")	#slot names
+  component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split","phyloseq") #slot names
   names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm_param", "data_split", "phyloseq") #class names
 
-  component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")	#slot names
+  component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq") #slot names
   names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names
 
   if(class=="siamcat"){
