@@ -1,6 +1,9 @@
 ---
 title: "SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes"
-author: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
+author: 
+- name: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
+  affiliation: "EMBL Heidelberg"
+  email: "georg.zeller@embl.de"
 date: "2018-03-27"
 output: BiocStyle::html_document
 vignette: >
