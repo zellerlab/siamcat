@@ -42,7 +42,7 @@
 #'
 #'  data(siamcat_example)
 #' # Simple examples
-#' siamcat.filtered <- filter.features(siamcat, filter.method='abundance', cutoff=1e-03)
+#' siamcat.filtered <- filter.features(siamcat.example, filter.method='abundance', cutoff=1e-03)
 filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,
                             recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.

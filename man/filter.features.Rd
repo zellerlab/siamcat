@@ -53,7 +53,7 @@ This function filters the features in a \link{siamcat-class} object in a
 
  data(siamcat_example)
 # Simple examples
-siamcat.filtered <- filter.features(siamcat, filter.method='abundance', cutoff=1e-03)
+siamcat.filtered <- filter.features(siamcat.example, filter.method='abundance', cutoff=1e-03)
 }
 \keyword{SIAMCAT}
 \keyword{filter.features}
