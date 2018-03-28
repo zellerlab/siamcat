@@ -6,6 +6,37 @@
 # GNU GPL 3.0
 ###
 
+#' Build siamcat-class objects from their components.
+#' @title siamcat
+#' @name siamcat
+#' @description Function to construct an object of class \link{siamcat-class}
+#' @param ... list of arguments needed in order to construct a SIAMCAT object
+#' @export
+siamcat <- function(...){
+  arglist   <- list(...)
+
+  # Remove names from arglist. Will replace them based on their class
+  names(arglist) <- NULL
+
+  # ignore all but component data classes.
+  component_classes <- get.component.classes("both")
+
+  for(argNr in 1:length(arglist)){
+    classOfArg <- class(arglist[[argNr]])[1]
+    if(classOfArg%in%names(component_classes)){
+      names(arglist)[argNr] <- component_classes[classOfArg]
+    }
+  }
+
+  if(is.null(arglist$phyloseq)){
+    arglistphyloseq <- arglist[sapply(names(arglist), is.component.class, "phyloseq")]
+    arglist$phyloseq <- do.call("new", c(list(Class="phyloseq"), arglistphyloseq))
+  }
+  arglist     <- arglist[sapply(names(arglist), is.component.class, "siamcat")]
+  sc          <- do.call("new", c(list(Class="siamcat"), arglist))
+  return(sc)
+}
+
 #' @title Filter samples from \code{siamcat@label}
 #' @description This functions filters \code{siamcat@label}.
 #' @param siamcat an object of class \link{siamcat-class}
