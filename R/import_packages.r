@@ -1,3 +1,3 @@
-#' @import   LiblineaR RColorBrewer glmnet grid gridBase gridExtra
-#' @import   pROC utils PRROC beanplot phyloseq
+#' @import   LiblineaR RColorBrewer glmnet grid gridBase
+#' @import   pROC PRROC beanplot phyloseq
 NULL
