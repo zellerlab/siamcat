@@ -87,7 +87,7 @@ validate.data <- function(siamcat, verbose=1){
         suitable for analysis in this pipeline." )
       }
     }
-  }
+  
 
   # if siamcat@phyloseq@sam_datadata is available, check for overlap in labels
   if (!is.null(siamcat@phyloseq@sam_data)) {
