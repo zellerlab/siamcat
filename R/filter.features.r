@@ -42,11 +42,11 @@
 #'  # Example dataset
 #'  data(siamcat_example)
 #'  # since the whole pipeline has been run in the example data, the feature were
-#'  # filtered already. Remove...
-#'  siamcat_example@phyloseq@otu_table <- NULL
+#'  # filtered already.
+#'  siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
 #'
 #' # Simple examples
-#' siamcat.filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)
+#' siamcat_filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)
 filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,
                             recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
