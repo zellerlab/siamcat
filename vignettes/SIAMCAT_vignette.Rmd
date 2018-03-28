@@ -25,8 +25,8 @@ Associations between microbiome and host phenotypes are ideally described by qua
 # First Steps: Read/Validate/Filter the Data
 
 First, let's load the SIAMCAT package and use the files included in SIAMCAT. The
-data are the same as used in the publication of [Zeller et al.](http://europepmc.org/abstract/MED/25432777), which demonstrated the
-potential of microbial markers in feacal samples to distinguish patients with
+data are the same as used in the publication of [Zeller et al.](http://europepmc.org/abstract/MED/25432777),
+which demonstrated the potential of microbial markers in feacal samples to distinguish patients with
 colorectal cancer (CRC) from healthy controls.
 
 ```{r message=FALSE, warning=FALSE}
