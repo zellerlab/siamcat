@@ -34,7 +34,12 @@ setClass("label", representation(label = "vector", header = "character",
 #' The S4 class for storing taxa-abundance information and models.
 #' @name siamcat-class
 #' @rdname siamcat-class
+#' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
+#' @slot label an object of class \link{label-class}
+#' @slot orig_feat an object of class \link[phyloseq]{otu_table}
 #' @slot data_split a list
+#' @slot norm_param a list
+#' @slot model_list an object of class \link{model_list-class}
 #' @slot eval_data list containing \itemize{
 #'  \item \code{$roc.average} average ROC-curve across repeats or a single ROC-curve on complete dataset;
 #'  \item \code{$auc.average} AUC value for the average ROC-curve;
@@ -45,20 +50,17 @@ setClass("label", representation(label = "vector", header = "character",
 #'  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 #'}
-#' @slot label an object of class \link{label-class}
-#' @slot model_list an object of class \link{model_list-class}
-#' @slot norm_param a list
-#' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
 #' @slot pred_matrix a matrix with predictions made by \link{make.predictions} function
 #' @exportClass siamcat
 setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list",
                                    label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))
 
 #' Build siamcat-class objects from their components.
-#' @name siamcat
+#' @title construct.siamcat
+#' @description Function to construct an object of class \link{siamcat-class}
 #' @param ... list of arguments needed in order to construct a SIAMCAT object
 #' @export
-siamcat <- function(...){
+construct.siamcat <- function(...){
   arglist   <- list(...)
 
   # Remove names from arglist. Will replace them based on their class
@@ -85,7 +87,6 @@ siamcat <- function(...){
 
 # source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
 #' Show the component objects classes and slot names.
-#' @usage get.component.classes()
 #' @keywords internal
 get.component.classes <- function(class){
   # define classes vector
