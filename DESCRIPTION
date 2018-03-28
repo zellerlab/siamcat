@@ -19,7 +19,8 @@ Depends:
     phyloseq,
     gridExtra,
     gridBase,
-    grid
+    grid,
+    methods
 Imports:
     PRROC,
     beanplot,

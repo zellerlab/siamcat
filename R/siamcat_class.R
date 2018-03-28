@@ -56,11 +56,11 @@ setClass("siamcat", representation(model_list = "model_list", phyloseq = "phylos
                                    label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))
 
 #' Build siamcat-class objects from their components.
-#' @title construct.siamcat
+#' @title siamcat
 #' @description Function to construct an object of class \link{siamcat-class}
 #' @param ... list of arguments needed in order to construct a SIAMCAT object
 #' @export
-construct.siamcat <- function(...){
+siamcat <- function(...){
   arglist   <- list(...)
 
   # Remove names from arglist. Will replace them based on their class

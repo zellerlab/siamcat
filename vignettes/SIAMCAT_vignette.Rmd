@@ -34,7 +34,7 @@ We can access the files with the dedicated SIAMCAT functions and directly constr
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
 meta  <- read.meta(fn.in.meta)
-siamcat <- construct.siamcat(feat, label, meta)
+siamcat <- siamcat(feat, label, meta)
 ```
 
 A few information about the `siamcat` object can be accessed with the `show` function from `phyloseq`:
