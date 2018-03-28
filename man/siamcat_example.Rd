@@ -5,6 +5,10 @@
 \alias{siamcat_example}
 \title{Documentation for the example siamcat object in the data folder}
 \description{
-Documentation for the example siamcat object in the data folder
+Reduced version of the CRC dataset in inst/extdata, containing 100 features
+ and 80 samples, saved after the complete SIAMCAT pipeline has been run.
+ Therefore, contains entries in every siamcat-object slot, e.g, \code{eval_data}
+ or \code{data_split}. Mainly used for running the examples in the function
+ documentation
 }
 \keyword{data}
