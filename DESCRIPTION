@@ -2,7 +2,7 @@ Package: SIAMCAT
 Type: Package
 Title: Statistical Inference of Associations between Microbial Communities And host phenoTypes
 Version: 0.4.0
-Author: Georg Zeller [aut,cre], Jakob Wirbel[aut], Konrad Zych [aut] with contributions from Nicolai Karcher and Kersten Breuer 
+Author: Georg Zeller [aut,cre], Jakob Wirbel[aut], Konrad Zych [aut] with contributions from Nicolai Karcher and Kersten Breuer
 Authors@R: c(person("Georg", "Zeller", role = c("aut", "cre"), email = "zeller@embl.de"),
              person("Konrad", "Zych", role = c("aut", "cre"), email = "konrad.zych@embl.de", comment = c(ORCID = "0000-0001-7426-0516")),
              person("Jakob", "Wirbel", role = c("aut", "cre"), email = "jakob.wirbel@embl.de", comment = c(ORCID = "0000-0002-4073-3562"))
@@ -11,7 +11,8 @@ Maintainer: Konrad Zych <konrad.zych@embl.de>, Georg Zeller <eller@embl.de>, Jak
 Description: SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes. A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots).
 Depends:
     R (>= 3.4.0),
-    mlr
+    mlr,
+    phyloseq
 Imports:
     PRROC,
     beanplot,
@@ -19,15 +20,17 @@ Imports:
     glmnet,
     LiblineaR,
     pROC,
-    phyloseq,
-    gridExtra,
+    graphics,
+    grDevices,
     gridBase,
     grid,
-    methods
+    methods,
+    stats
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+biocViews: Metagenomics, Classification, Microbiome
 Suggests:
     BiocStyle,
     optparse,
