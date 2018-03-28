@@ -117,7 +117,6 @@ evaluate.predictions <- function(siamcat,verbose=1){
 # returns a list with vectors containing TP, FP, TN, FN for each threshold value on the predictions
 # (where TP = true positives, FP = false positives, TN = true negatives, FN = false negatives)
 #' @keywords internal
-#' @export
 evaluate.classifier <- function(predictions, test.label, label, verbose=0) {
   if(verbose>2) cat("+ starting evaluate.classifier\n")
   stopifnot(dim(test.label) == NULL)
