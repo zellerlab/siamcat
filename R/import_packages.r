@@ -1,5 +1,5 @@
 #' @import   LiblineaR RColorBrewer grid gridBase gridExtra
-#' @import   PRROC beanplot phyloseq mlr
+#' @import   PRROC beanplot glmnet phyloseq mlr
 #' @importFrom grDevices col2rgb colorRampPalette dev.off gray pdf rgb
 #' @importFrom graphics abline arrows axis barplot box
 #'             boxplot grid image layout lines mtext
@@ -9,5 +9,6 @@
 #' @importFrom utils head read.table setTxtProgressBar tail
 #'             txtProgressBar
 #' @importFrom pROC roc
+#' @importFrom ParamHelpers makeParamSet
 
 NULL

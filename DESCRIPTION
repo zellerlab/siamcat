@@ -26,7 +26,8 @@ Imports:
     grDevices, 
     graphics, 
     stats, 
-    utils
+    utils,
+    ParamHelpers
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
