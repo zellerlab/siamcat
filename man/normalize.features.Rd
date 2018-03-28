@@ -73,16 +73,20 @@ way to the first dataset (e.g. by using the same mean for the features for
 z-score standardization)
 }
 \examples{
-
+ # Example data
  data(siamcat_example)
+ # since the whole pipeline has been run in the example data, exchange the
+ # normalized features with the original features
+ siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
+
  # Simple example
  siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 
  # log.std example
- siamcat.norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))
+ \dontrun{siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))}
 
  # log.unit example
- siamcat.norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+ siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
 }
 \keyword{SIAMCAT}
 \keyword{normalize.features}
