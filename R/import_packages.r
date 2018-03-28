@@ -1,5 +1,5 @@
-#' @import   LiblineaR RColorBrewer glmnet grid gridBase gridExtra
-#' @import   pROC PRROC beanplot phyloseq mlr
+#' @import   LiblineaR RColorBrewer grid gridBase gridExtra
+#' @import   PRROC beanplot phyloseq mlr
 #' @importFrom grDevices col2rgb colorRampPalette dev.off gray pdf rgb
 #' @importFrom graphics abline arrows axis barplot box
 #'             boxplot grid image layout lines mtext
@@ -8,5 +8,6 @@
 #'             predict quantile runif sd wilcox.test
 #' @importFrom utils head read.table setTxtProgressBar tail
 #'             txtProgressBar
+#' @importFrom pROC roc
 
 NULL

@@ -108,7 +108,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
       if(verbose>2) cat('++++ repetition:', resampling, '\n')
 
       fold.name    <- paste0('cv_fold', as.character(fold), '_rep', as.character(resampling))
-      fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(label@label))
+      fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(siamcat@label@label))
 
       ### subselect examples for training
       label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
