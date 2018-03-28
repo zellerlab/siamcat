@@ -18,6 +18,12 @@
 #'        per class is checked to ensure a minimum number. If metadata is available,
 #'        the overlap between labels and metadata is checked as well.
 #' @return an object of class \link{siamcat-class} with validated data
+#' @examples
+#'
+#'  data(siamcat_example)
+#'  # simple working example
+#'  siamcat_validated <- validate.data(siamcat_example)
+#'
 validate.data <- function(siamcat, verbose=1){
   if(verbose>1) cat("+ starting validate.data\n")
   s.time <- proc.time()[3]

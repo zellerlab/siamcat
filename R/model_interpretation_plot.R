@@ -42,6 +42,13 @@
 #'    for the features that are incorporated into more than \code{consens.thres}
 #'    percent of the models.
 #'}
+#' @examples
+#'
+#'  data(siamcat_example)
+#'  # simple working example
+#'  model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf', 
+#'    heatmap.type='zscore')
+#'
 model.interpretation.plot <- function(siamcat, fn.plot,
   color.scheme='BrBG', consens.thres=0.5,
   heatmap.type=c('zscore',"fc"), norm.models=FALSE,
