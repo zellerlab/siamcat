@@ -7,7 +7,7 @@
 filter.label(siamcat, ids, verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{ids}{names of samples to be left in the \code{siamcat@label}}
 
@@ -15,7 +15,7 @@ filter.label(siamcat, ids, verbose = 1)
 information about progress and success, defaults to \code{1}}
 }
 \value{
-siamcat an object of class \link{siamcat}
+siamcat an object of class \link{siamcat-class}
 }
 \description{
 This functions filters \code{siamcat@label}.

@@ -8,7 +8,7 @@ filter.features(siamcat, filter.method = "abundance", cutoff = 0.001,
   recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{filter.method}{method used for filtering the features, can be one of
 these: \code{c("abundance", "cum.abundance", "prevalence")},
@@ -27,7 +27,7 @@ for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-siamcat an object of class \link{siamcat}
+siamcat an object of class \link{siamcat-class}
 }
 \description{
 This function performs unsupervised feature filtering. Features
@@ -35,7 +35,7 @@ This function performs unsupervised feature filtering. Features
        unmapped reads may be removed.
 }
 \details{
-This function filters the features in a \link{siamcat} object in a
+This function filters the features in a \link{siamcat-class} object in a
        unsupervised manner.
 
        The different filter methods work in the following way: \itemize{

@@ -8,7 +8,7 @@ select.samples(siamcat, filter, allowed.set = NULL, allowed.range = NULL,
   verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{filter}{string, name of the meta variable on which the selection
 should be done}
@@ -22,7 +22,7 @@ for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat} with labels and metadata filtered
+an object of class \link{siamcat-class} with labels and metadata filtered
        in order to contain only allowed values
 }
 \description{

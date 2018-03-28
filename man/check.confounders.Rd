@@ -7,7 +7,7 @@
 check.confounders(siamcat, fn.plot, verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{fn.plot}{string, filename for the pdf-plot}
 

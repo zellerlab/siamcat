@@ -7,14 +7,14 @@
 validate.data(siamcat, verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat} with validated data
+an object of class \link{siamcat-class} with validated data
 }
 \description{
 This function checks if labels are available for all samples in

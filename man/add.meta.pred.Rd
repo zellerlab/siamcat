@@ -20,7 +20,7 @@ for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat} with metadata added to the features
+an object of class \link{siamcat-class} with metadata added to the features
 }
 \description{
 This function adds metadata to the feature matrix to be

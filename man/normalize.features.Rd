@@ -9,7 +9,7 @@ normalize.features(siamcat, norm.method = c("rank.unit", "rank.std",
   sd.min.q = 0.1, n.p = 2, norm.margin = 1), verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{norm.method}{string, normalization method, can be one of these:
 '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")}}
@@ -22,7 +22,7 @@ for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat} with normalized features
+an object of class \link{siamcat-class} with normalized features
 }
 \description{
 This function performs feature normalization according to user-
