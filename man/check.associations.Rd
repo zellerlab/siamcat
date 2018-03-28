@@ -5,7 +5,7 @@
 \title{Check and visualize associations between features and classes}
 \usage{
 check.associations(siamcat, fn.plot, color.scheme = "RdYlBu", alpha = 0.05,
-  mult.corr = "fdr", sort.by = "fc", detect.lim = NULL,
+  mult.corr = "fdr", sort.by = "fc", detect.lim = 1e-06,
   pr.cutoff = 10^-6, max.show = 50, plot.type = "quantile.box",
   panels = c("fc", "auroc"), verbose = 1)
 }
@@ -27,7 +27,7 @@ defaults to \code{"fdr"}}
 \code{"fc"}}
 
 \item{detect.lim}{float, pseudocount to be added before log-transformation of
-the data, defaults to \code{NULL} (estimated as the 5\% quantile)}
+the data, defaults to \code{1e-06}}
 
 \item{pr.cutoff}{float, cutoff for the prevalence computation, defaults to
 \code{1e-06}}
