@@ -32,7 +32,7 @@
 #' @examples
 #'  data(siamcat_example)
 #'  # Simple example
-#'  siamcat.pred <- make.predictions(siamcat.example)
+#'  siamcat.pred <- make.predictions(siamcat_example)
 #'
 #'  # Predictions on a holdout-set
 #'  \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)}

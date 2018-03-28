@@ -76,13 +76,13 @@ z-score standardization)
 
  data(siamcat_example)
  # Simple example
- siamcat.norm <- normalize.features(siamcat, norm.method='rank.unit')
+ siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 
  # log.std example
- siamcat.norm <- normalize.features(siamcat, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))
+ siamcat.norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))
 
  # log.unit example
- siamcat.norm <- normalize.features(siamcat, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+ siamcat.norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
 }
 \keyword{SIAMCAT}
 \keyword{normalize.features}

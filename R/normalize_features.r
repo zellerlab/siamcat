@@ -67,13 +67,13 @@
 #'
 #'  data(siamcat_example)
 #'  # Simple example
-#'  siamcat.norm <- normalize.features(siamcat, norm.method='rank.unit')
+#'  siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 #'
 #'  # log.std example
-#'  siamcat.norm <- normalize.features(siamcat, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))
+#'  siamcat.norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))
 #'
 #'  # log.unit example
-#'  siamcat.norm <- normalize.features(siamcat, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+#'  siamcat.norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
 
 normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
                            norm.param=list(log.n0=1e-06, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {

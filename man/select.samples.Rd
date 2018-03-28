@@ -33,11 +33,11 @@ This functions selects labels and metadata based on
 \examples{
  data(siamcat_example)
  # Select all samples that fall into an Age-range between 20 and 80 years
- siamcat.selected <- select.samples(siamcat, 'Age', allowed.range=c(20, 80))
+ siamcat.selected <- select.samples(siamcat_example, 'age', allowed.range=c(20, 80))
 
  # Select all samples for which information about the gender is given
  # Provide additional information with verbose
- siamcat.selected <- select.samples(siamcat, 'Gender', allowed.set=c('M', 'F'), verbose=2)
+ siamcat.selected <- select.samples(siamcat_example, 'gender', allowed.set=c(1, 2), verbose=2)
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}

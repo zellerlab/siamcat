@@ -29,11 +29,11 @@ This function adds metadata to the feature matrix to be
 \examples{
  data(siamcat_example)
  # Add the Age of the patients as potential predictor
- siamcat.age.added <- add.meta.pred(siamcat.example, pred.names=c('age'))
+ siamcat.age.added <- add.meta.pred(siamcat_example, pred.names=c('age'))
 
  # Add Age, BMI, and Gender as potential predictors
  # Additionally, prevent standardization of the added features
- siamcat.meta.added <- add.meta.pred(siamcat.example, pred.names=c('age', 'bmi', 'gender'), std.meta=FALSE)
+ siamcat.meta.added <- add.meta.pred(siamcat_example, pred.names=c('age', 'bmi', 'gender'), std.meta=FALSE)
 }
 \keyword{SIAMCAT}
 \keyword{add.meta.pred}
