@@ -42,7 +42,7 @@ cat('\n')
 start.time    <- proc.time()[1]
 #### read feature data and preprocess
 feat          <- read.features(opt$feat_in)
-siamcat <- construct.siamcat(feat)
+siamcat <- siamcat(feat)
 ### Start core function
 siamcat <- filter.features(siamcat,
 	                          filter.method = opt$method,

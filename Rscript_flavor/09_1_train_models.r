@@ -65,7 +65,7 @@ set.seed(r.seed)
 # features
 feat         <- read.features(opt$feat_in)
 label        <- read.labels(opt$label_in)
-siamcat      <- construct.siamcat(feat,label)
+siamcat      <- siamcat(feat,label)
 
 load(opt$data_split)
 siamcat@data_split <- data_split

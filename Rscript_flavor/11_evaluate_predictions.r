@@ -39,7 +39,7 @@ cat('\n')
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
 start.time <- proc.time()[1]
 label      <- read.labels(opt$label_in)
-siamcat <- construct.siamcat(label)
+siamcat <- siamcat(label)
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)

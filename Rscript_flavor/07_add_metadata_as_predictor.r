@@ -41,7 +41,7 @@ start.time  <- proc.time()[1]
 #### read features and metadata
 feat        <- read.features(opt$feat_in)
 meta        <- read.meta( opt$metadata_in)
-siamcat <- construct.siamcat(feat,meta)
+siamcat <- siamcat(feat,meta)
 
 pred.names <- strsplit(opt$pred_names, ',', fixed=TRUE)[[1]]
 siamcat     <- add.meta.pred(siamcat,

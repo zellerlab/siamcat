@@ -65,7 +65,7 @@ load(opt$mlr_models_list) ##loads plm.out
 # stopifnot(nrow(model$W) == nrow(feat))
 # parse model header
 
-siamcat <- construct.siamcat(feat,label)
+siamcat <- siamcat(feat,label)
 siamcat@model_list <- model_list
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
