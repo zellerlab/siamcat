@@ -144,7 +144,7 @@ create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRU
 
 ##### function to partition training set into cross-validation folds for model selection
 ### Works analogous to the function used in data_splitter.r
-#' @export
+#' @keywords internal
 assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=NULL, verbose=1) {
   if(verbose>2) cat("+++ starting assign.fold\n")
   foldid  <- rep(0, length(label))
