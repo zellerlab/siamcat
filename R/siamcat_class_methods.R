@@ -66,7 +66,7 @@ siamcat <- function(...){
 #'
 #'  data(siamcat_example)
 #'  # simple working example
-#'  siamcat_filtered <- validate.data(siamcat_example, ids=c(1:10))
+#'  siamcat_filtered <- filter.label(siamcat_example, ids=c(1:10))
 #'
 filter.label <- function(siamcat,ids, verbose=1){
   labels_new      <- new("label", label = siamcat@label@label[ids],
