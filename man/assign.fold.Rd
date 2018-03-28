@@ -7,6 +7,9 @@
 assign.fold(label, num.folds, stratified, inseparable = NULL, meta = NULL,
   verbose = 1)
 }
+\value{
+vector with fold assignments
+}
 \description{
 Create data split from label
 }

@@ -6,6 +6,9 @@
 \usage{
 get.component.classes(class)
 }
+\value{
+list of component classes
+}
 \description{
 Show the component objects classes and slot names.
 }

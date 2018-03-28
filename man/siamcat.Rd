@@ -9,6 +9,9 @@ siamcat(...)
 \arguments{
 \item{...}{list of arguments needed in order to construct a SIAMCAT object}
 }
+\value{
+A new \link{siamcat-class} object
+}
 \description{
 Function to construct an object of class \link{siamcat-class}
 }

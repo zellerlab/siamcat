@@ -11,6 +11,7 @@
 #' @name siamcat
 #' @description Function to construct an object of class \link{siamcat-class}
 #' @param ... list of arguments needed in order to construct a SIAMCAT object
+#' @return A new \link{siamcat-class} object
 #' @export
 siamcat <- function(...){
   arglist   <- list(...)
