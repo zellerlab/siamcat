@@ -61,5 +61,12 @@ This functions performs the training of the machine learning model
        \code{"randomForest"} method is implemented via the \code{"classif.randomForest"}
        Learner.
 }
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ siamcat_validated <- train.model(siamcat_example, method='lasso')
+
+}
 \keyword{SIAMCAT}
 \keyword{plm.trainer}

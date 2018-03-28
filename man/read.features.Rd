@@ -26,3 +26,9 @@ the first column should contain feature labels (e.g. taxonomic identifiers).
 The remaining entries are expected to be real values \code{>= 0} that quantify
 the abundance of each feature in each sample.
 }
+\examples{
+ # run with example data
+ fn.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+   package = "SIAMCAT")
+ features <- read.features(fn.feat)
+}

@@ -26,5 +26,12 @@ This function validates the data by checking that labels are available
        per class is checked to ensure a minimum number. If metadata is available,
        the overlap between labels and metadata is checked as well.
 }
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ siamcat_validated <- validate.data(siamcat_example)
+
+}
 \keyword{SIAMCAT}
 \keyword{validate.data}
