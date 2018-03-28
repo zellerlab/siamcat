@@ -83,7 +83,7 @@ z-score standardization)
  siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 
  # log.std example
- \dontrun{siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))}
+ siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1), verbose=3)
 
  # log.unit example
  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
