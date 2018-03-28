@@ -20,12 +20,12 @@
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
-#' @keywords SIAMCAT eval.result
+#' @keywords SIAMCAT evaluate.predictions
 #' @details This functions calculates for the predictions in the \code{pred_matrix}
-#'        -slot of the \link{siamcat}-object several metrices. The Area Under the
+#'        -slot of the \link{siamcat-class}-object several metrices. The Area Under the
 #'        Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision-
 #'        Recall Curve will be evaluated and the results will be saved in the
-#'        \code{eval_data}-slot of the supplied \link{siamcat}-object. The
+#'        \code{eval_data}-slot of the supplied \link{siamcat-class}-object. The
 #'        \code{eval_data}-slot contains a list with several entries: \itemize{
 #'          \item \code{$roc.average} average ROC-curve across repeats or a
 #'                single ROC-curve on complete dataset;
@@ -117,7 +117,6 @@ evaluate.predictions <- function(siamcat,verbose=1){
 # returns a list with vectors containing TP, FP, TN, FN for each threshold value on the predictions
 # (where TP = true positives, FP = false positives, TN = true negatives, FN = false negatives)
 #' @keywords internal
-#' @export
 evaluate.classifier <- function(predictions, test.label, label, verbose=0) {
   if(verbose>2) cat("+ starting evaluate.classifier\n")
   stopifnot(dim(test.label) == NULL)

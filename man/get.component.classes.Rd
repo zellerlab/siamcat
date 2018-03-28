@@ -4,7 +4,7 @@
 \alias{get.component.classes}
 \title{Show the component objects classes and slot names.}
 \usage{
-get.component.classes()
+get.component.classes(class)
 }
 \description{
 Show the component objects classes and slot names.

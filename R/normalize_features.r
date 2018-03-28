@@ -9,7 +9,7 @@
 #' @title Perform feature normalization
 #' @description This function performs feature normalization according to user-
 #'  specified parameters.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param norm.method string, normalization method, can be one of these:
 #'  '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")}
 #' @param norm.param list, specifying the parameters of the different
@@ -62,17 +62,22 @@
 #'
 #' @keywords SIAMCAT normalize.features
 #' @export
-#' @return an object of class \link{siamcat} with normalized features
+#' @return an object of class \link{siamcat-class} with normalized features
 #' @examples
+#'  # Example data
+#'  data(siamcat_example)
+#'  # since the whole pipeline has been run in the example data, exchange the
+#'  # normalized features with the original features
+#'  siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
 #'
 #'  # Simple example
-#'  siamcat.norm <- normalize.features(siamcat, norm.method='rank.unit')
+#'  siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 #'
 #'  # log.std example
-#'  siamcat.norm <- normalize.features(siamcat, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))
+#'  \dontrun{siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))}
 #'
 #'  # log.unit example
-#'  siamcat.norm <- normalize.features(siamcat, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+#'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
 
 normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
                            norm.param=list(log.n0=1e-06, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
@@ -229,7 +234,7 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     stopifnot(!any(is.na(feat.norm)))
 
   }
-  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
+  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = TRUE)
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished normalize.features in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features normalized successfully.\n")

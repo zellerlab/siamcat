@@ -7,7 +7,7 @@
 check.confounders(siamcat, fn.plot, verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{fn.plot}{string, filename for the pdf-plot}
 
@@ -26,11 +26,17 @@ This function checks for associations between class labels and
        or Q-Q plot, depending on the type of metadata.
 }
 \examples{
+ # Example data
+ data(siamcat_example)
+ # since the whole pipeline has been run in the example data, exchange the
+ # normalized features with the original features
+ siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
+
  # Simple working example
- check.confounders(siamcat, './conf_plot.pdf')
+ check.confounders(siamcat_example, './conf_plot.pdf')
 
  # Additional information with verbose
- check.confounders(siamcat, './conf_plot.pdf', verbose=2)
+ \dontrun{check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)}
 }
 \keyword{SIAMCAT}
 \keyword{check.confounders}

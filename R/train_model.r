@@ -34,7 +34,7 @@
 #' @details This functions performs the training of the machine learning model
 #'        and functions as an interface to the \code{mlr}-package.
 #'
-#'        The function expects a \link{siamcat}-object with a prepared
+#'        The function expects a \link{siamcat-class}-object with a prepared
 #'        cross-validation (see \link{create.data.split}) in the \code{data_split}-
 #'        slot of the object. It then trains a model for each fold of the datasplit.
 #'
@@ -137,7 +137,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
 }
 
 measureAUPRC <- function(probs, truth, negative, positive){
-  pr <- pr.curve(scores.class0 = probs[which(truth == positive)],
+  pr <- PRROC::pr.curve(scores.class0 = probs[which(truth == positive)],
                  scores.class1 = probs[which(truth == negative)])
   return(pr$auc.integral)
 }

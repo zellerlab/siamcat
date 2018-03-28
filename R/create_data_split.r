@@ -24,13 +24,13 @@
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT create.data.split
 #' @return object of class \link{siamcat-class} with the \code{data_split}-slot filled
-#' @details This function splits the labels within a \link{siamcat} object and
+#' @details This function splits the labels within a \link{siamcat-class} object and
 #'        prepares the internal cross-validation for the model training (see
 #'        \link{train.model}).
 #'
 #'        The function saves the training and test instances for the different
 #'        cross-validation folds within a list in the \code{data_split}-slot
-#'        of the \link{siamcat} object, which is a list with four entries: \itemize{
+#'        of the \link{siamcat-class} object, which is a list with four entries: \itemize{
 #'          \item \code{num.folds} the number of cross-validation folds
 #'          \item \code{num.resample} the number of repetitions for the cross-validation
 #'          \item \code{training.folds} a list containing the indices for the training instances
@@ -39,11 +39,12 @@
 #' @export
 #' @examples
 #'
+#'  data(siamcat_example)
 #'  # simple working example
-#'  siamcat.split <- create.data.split(siamcat, num.folds=10, num.resample=5, stratify=TRUE)
+#'  siamcat_split <- create.data.split(siamcat_example, num.folds=10, num.resample=5, stratify=TRUE)
 #'
 #'  ## # example with a variable which is to be inseparable
-#'  ## siamcat.split <- create.data.split(siamcat, num.folds=10, num.resample=5, stratify=FALSE, inseparable='Gender')
+#'  ## siamcat_split <- create.data.split(siamcat_example, num.folds=10, num.resample=5, stratify=FALSE, inseparable='Gender')
 create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
   if(verbose>1) cat("+ starting create.data.split\n")
   s.time <- proc.time()[3]
@@ -141,9 +142,10 @@ create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRU
 }
 
 
-##### function to partition training set into cross-validation folds for model selection
-### Works analogous to the function used in data_splitter.r
-#' @export
+
+#' @title Assign folds
+#' @description Create data split from label
+#' @keywords internal
 assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=NULL, verbose=1) {
   if(verbose>2) cat("+++ starting assign.fold\n")
   foldid  <- rep(0, length(label))

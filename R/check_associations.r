@@ -34,7 +34,7 @@
 #'        (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
 #'        \code{"fc"}
 #' @param detect.lim float, pseudocount to be added before log-transformation of
-#'        the data, defaults to \code{NULL} (estimated as the 5\% quantile)
+#'        the data, defaults to \code{1e-06}
 #' @param pr.cutoff float, cutoff for the prevalence computation, defaults to
 #'        \code{1e-06}
 #' @param max.show integer, how many associated features should be shown,
@@ -52,22 +52,28 @@
 #' @keywords SIAMCAT check.associations
 #' @export
 #' @examples
-#'  # Simple working example
-#'  check.associations(siamcat, './assoc_plot.pdf')
+#'  # Example data
+#'  data(siamcat_example)
+#'  # since the whole pipeline has been run in the example data, exchange the
+#'  # normalized features with the original features
+#'  siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
+#'
+#'  # Simple example
+#'  check.associations(siamcat_example, './assoc_plot.pdf')
 #'
 #'  # Plot associations as bean plot
-#'  check.associations(siamcat, './assoc_plot_bean.pdf', plot.type='bean')
+#'  check.associations(siamcat_example, './assoc_plot_bean.pdf', plot.type='bean')
 #'
 #'  # Plot assocations as box plot
 #'  # Additionally, sort by p-value instead of by fold change
-#'  check.associations(siamcat, './assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
+#'  check.associations(siamcat_example, './assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
 #'
 #'  # Custom colors
-#'  check.associations(siamcat, './assoc_plot_blue_yellow.pdf', plot.type='box',
+#'  check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf', plot.type='box',
 #'    color.scheme=c('cornflowerblue', '#ffc125'))
 check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
-                               detect.lim=NULL, pr.cutoff=10^-6, max.show=50,
+                               detect.lim=1e-06, pr.cutoff=10^-6, max.show=50,
                                plot.type="quantile.box", panels=c("fc", "auroc"), verbose=1){
   # check panel and plot.type parameter
   if(verbose>1) cat("+ starting check.associations\n")
@@ -193,7 +199,7 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
        xlim = c(as.integer(min(data2))-1.5,as.integer(max(data2))+1),
        ylim=c(0.45, nrow(data1)+0.6), type='n')
 
-  beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
+  beanplot::beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
            side = "both", bw="nrd0", col = list(col[1], col[2]),
            horizontal = TRUE, names = c(""), show.names = FALSE,
            beanlines = "median", maxstripline = 0.2,
@@ -636,13 +642,13 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
   }
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished analyse.binary.markerin",e.time-s.time,"s\n")
-  return(list("p.val" = effect.size[idx,'p.val'],
-              "fc"=effect.size[idx,'fc'],
-              "aucs"=effect.size[idx,c('auc', 'auc.ci.l', 'auc.ci.h')],
-              "pr.shift"=effect.size[idx,c('pr.shift', 'pr.n', 'pr.p')],
+  return(list("p.val" = effect.size[idx,'p.val', drop=FALSE],
+              "fc"=effect.size[idx,'fc', drop=FALSE],
+              "aucs"=effect.size[idx,c('auc', 'auc.ci.l', 'auc.ci.h'),drop=FALSE],
+              "pr.shift"=effect.size[idx,c('pr.shift', 'pr.n', 'pr.p'),drop=FALSE],
               "bcol"=bcol[idx],
               "p.adj"=p.adj[idx],
-              "feat.red"=feat[idx,],
+              "feat.red"=feat[idx,,drop=FALSE],
               "truncated"=truncated,
               "detect.lim"=detect.lim))
 }

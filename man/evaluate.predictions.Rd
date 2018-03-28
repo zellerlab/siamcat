@@ -29,10 +29,10 @@ This function takes the correct labels and predictions for all
 }
 \details{
 This functions calculates for the predictions in the \code{pred_matrix}
-       -slot of the \link{siamcat}-object several metrices. The Area Under the
+       -slot of the \link{siamcat-class}-object several metrices. The Area Under the
        Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision-
        Recall Curve will be evaluated and the results will be saved in the
-       \code{eval_data}-slot of the supplied \link{siamcat}-object. The
+       \code{eval_data}-slot of the supplied \link{siamcat-class}-object. The
        \code{eval_data}-slot contains a list with several entries: \itemize{
          \item \code{$roc.average} average ROC-curve across repeats or a
                single ROC-curve on complete dataset;
@@ -50,4 +50,4 @@ This functions calculates for the predictions in the \code{pred_matrix}
 }
 }
 \keyword{SIAMCAT}
-\keyword{eval.result}
+\keyword{evaluate.predictions}

@@ -34,13 +34,13 @@ This function prepares the cross-validation by splitting the
        \code{num.resample} times.
 }
 \details{
-This function splits the labels within a \link{siamcat} object and
+This function splits the labels within a \link{siamcat-class} object and
        prepares the internal cross-validation for the model training (see
        \link{train.model}).
 
        The function saves the training and test instances for the different
        cross-validation folds within a list in the \code{data_split}-slot
-       of the \link{siamcat} object, which is a list with four entries: \itemize{
+       of the \link{siamcat-class} object, which is a list with four entries: \itemize{
          \item \code{num.folds} the number of cross-validation folds
          \item \code{num.resample} the number of repetitions for the cross-validation
          \item \code{training.folds} a list containing the indices for the training instances
@@ -49,11 +49,12 @@ This function splits the labels within a \link{siamcat} object and
 }
 \examples{
 
+ data(siamcat_example)
  # simple working example
- siamcat.split <- create.data.split(siamcat, num.folds=10, num.resample=5, stratify=TRUE)
+ siamcat_split <- create.data.split(siamcat_example, num.folds=10, num.resample=5, stratify=TRUE)
 
  ## # example with a variable which is to be inseparable
- ## siamcat.split <- create.data.split(siamcat, num.folds=10, num.resample=5, stratify=FALSE, inseparable='Gender')
+ ## siamcat_split <- create.data.split(siamcat_example, num.folds=10, num.resample=5, stratify=FALSE, inseparable='Gender')
 }
 \keyword{SIAMCAT}
 \keyword{create.data.split}

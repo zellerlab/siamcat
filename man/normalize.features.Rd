@@ -9,7 +9,7 @@ normalize.features(siamcat, norm.method = c("rank.unit", "rank.std",
   sd.min.q = 0.1, n.p = 2, norm.margin = 1), verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{norm.method}{string, normalization method, can be one of these:
 '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")}}
@@ -22,7 +22,7 @@ for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat} with normalized features
+an object of class \link{siamcat-class} with normalized features
 }
 \description{
 This function performs feature normalization according to user-
@@ -73,15 +73,20 @@ way to the first dataset (e.g. by using the same mean for the features for
 z-score standardization)
 }
 \examples{
+ # Example data
+ data(siamcat_example)
+ # since the whole pipeline has been run in the example data, exchange the
+ # normalized features with the original features
+ siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
 
  # Simple example
- siamcat.norm <- normalize.features(siamcat, norm.method='rank.unit')
+ siamcat.norm <- normalize.features(siamcat_example, norm.method='rank.unit')
 
  # log.std example
- siamcat.norm <- normalize.features(siamcat, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))
+ \dontrun{siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=0.1))}
 
  # log.unit example
- siamcat.norm <- normalize.features(siamcat, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+ siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
 }
 \keyword{SIAMCAT}
 \keyword{normalize.features}

@@ -7,7 +7,7 @@
 ###
 
 #' @title Make predictions on a test set
-#' @description This function takes a \link{siamcat}-object containing a model
+#' @description This function takes a \link{siamcat-class}-object containing a model
 #'        trained by \link{train.model} and performs predictions on a given
 #'        test-set.
 #' @param siamcat object of class \link{siamcat-class}
@@ -30,12 +30,12 @@
 #'        or a completely external feature set, given in the form of another
 #'        \code{siamcat} object (\code{siamcat.holdout}).
 #' @examples
-#'
+#'  data(siamcat_example)
 #'  # Simple example
-#'  siamcat.pred <- make.predictions(siamcat)
+#'  siamcat.pred <- make.predictions(siamcat_example)
 #'
 #'  # Predictions on a holdout-set
-#'  pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)
+#'  \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)}
 make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TRUE, verbose=1){
 
   s.time <- proc.time()[3]

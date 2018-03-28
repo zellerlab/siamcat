@@ -1,23 +1,24 @@
 ---
 title: "SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes"
-author: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
-date: "2018-03-26"
-output: rmarkdown::html_vignette
+author: 
+- name: "Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller"
+  affiliation: "EMBL Heidelberg"
+  email: "georg.zeller@embl.de"
+date: "2018-03-27"
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{SIAMCAT}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## Preface
-
 This vignette aims to be a short tutorial for the functionality of SIAMCAT. More detailed tutorials or examples of additional workflows can be found on the web under [EMBL-microbiome tools](http://microbiome-tools.embl.de/).
 
-## Introduction
+# Introduction
 
 SIAMCAT is a package for the analysis of microbiome data  TODO TODO TODO
 
-## First Steps: Read/Validate/Filter the Data
+# First Steps: Read/Validate/Filter the Data
 
 First, let's load the SIAMCAT package and use the files included in SIAMCAT. The data are the same as used in the publication of [Zeller et al.](http://europepmc.org/abstract/MED/25432777), which demonstrated the potential of microbial markers in feacal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.
 
@@ -51,9 +52,9 @@ siamcat <- validate.data(siamcat, verbose=1)
 The data can also be sub-selected based on the available meta-data. For example, if we want to exclude patients that are too young or too old for the question of interest, we can do so easily with:
 
 ```{r}
-siamcat <- select.samples(siamcat, 
-                          filter='age', 
-                          allowed.set=NULL, 
+siamcat <- select.samples(siamcat,
+                          filter='age',
+                          allowed.set=NULL,
                           allowed.range=c(20,90),
                           verbose=2)
 ```
@@ -63,23 +64,23 @@ Since we have quite a lot of microbial markers in the dataset at the moment, we 
 
 ```{r}
 siamcat <- filter.features(siamcat,  
-                       filter.method = 'abundance', 
-                       cutoff =0.001, 
-                       recomp.prop = FALSE, 
+                       filter.method = 'abundance',
+                       cutoff =0.001,
+                       recomp.prop = FALSE,
                        rm.unmapped = TRUE,
                        verbose=2)
 ```
 
-## Association/Confounder Testing
+# Association/Confounder Testing
 
 Another functionality of SIAMCAT are the modules for testing of confounders and associations. Confounders are checked with the function `check.confounders`, which produces a plot for each possible confounder in the metadata and diverts the output into a pdf-file. The function can be used like that:
 
 ```{r}
 ## Not run here, since the function produces a pdf-file as output
-# check.confounders(siamcat, 
+# check.confounders(siamcat,
 #                   fn.plot='conf_check.pdf')
 ```
- 
+
 Here would be an example output for `Age` as potential confounder:
 
 ```{r fig.height = 6, fig.width = 6, fig.align="center", echo=FALSE}
@@ -99,12 +100,12 @@ hmap <- data.frame()
 m = 1
 mname <- gsub('[_.-]', ' ', colnames(siamcat@phyloseq@sam_data)[m])
 mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep="")
-    
+
 mvar  <- as.numeric(unlist(siamcat@phyloseq@sam_data[,m]))
 u.val <- unique(mvar)
 u.val <- u.val[!is.na(u.val)]
-colors <- brewer.pal(5, "Spectral")
-histcolors <- brewer.pal(9, "YlGnBu")
+colors <- RColorBrewer::brewer.pal(5, "Spectral")
+histcolors <- RColorBrewer::brewer.pal(9, "YlGnBu")
 
 dct <- matrix(NA, nrow = 2, ncol = 2)
 dct[1,] <- c(sum(mvar[siamcat@label@n.idx] <= median(mvar, na.rm=TRUE), na.rm=TRUE), sum(mvar[siamcat@label@p.idx] <= median(mvar, na.rm=TRUE), na.rm=TRUE))
@@ -153,11 +154,11 @@ Similarly, associations between microbial markers and the label can be tested wi
 #                    verbose=2)
 ```
 
-## Model Building
+# Model Building
 
 Another feature of SIAMCAT is the versatile but easy-to-use interface for the construction of machine learning models on the basis of microbial markers. SIAMCAT contains functions for data normalization, splitting the data into cross-validation folds, training the model, and making predictions based on cross-valdiation instances and the trained models.
 
-#### Data Normalization
+## Data Normalization
 
 Data normalization is performed with the `normalize.features` function. Several control options are available, i.e. the normalization method (`log.unit`, `log.std`, `rank.unit`, `rank.std`, `log.clr`) or additional parameters. Here, we use the `log.unit` method:
 
@@ -168,7 +169,7 @@ siamcat <- normalize.features(siamcat,
                           verbose=2)
 ```
 
-#### Prepare Cross-Validation
+## Prepare Cross-Validation
 
 Preparation of the cross-validation fold is a crucial step in machine learning. SIAMCAT greatly simplifies the set-up of cross-validation schemes, including stratification of samples or keeping samples inseperable based on metadata. For this small example, we choose a twice-repeated 5-fold cross-validation scheme. The data-split will be saved in the `data_split` slot of the `siamcat` object.
 
@@ -181,7 +182,7 @@ siamcat <-  create.data.split(siamcat,
                               verbose=2)
 ```
 
-#### Model Training
+## Model Training
 
 The actual model training is performed using the function `train.model`. Again, multiple options for customization are available, ranging from the machine learning method to the measure for model selection or customizable parameter set for hyperparameter tuning. Here, we train a Lasso model and enforce at least 5 non-zero coefficients.
 
@@ -201,7 +202,7 @@ The models are saved in the `model_list` slot of the `siamcat` object. For examp
 siamcat@model_list@models[[1]]
 ```
 
-#### Make Predictions
+## Make Predictions
 
 Using the data-split and the models trained in previous step, we can use the function `make.predictions` in order to apply the models on the test instances in the data-split. The predictions will be saved in the `pred_matrix` slot of the `siamcat` object.
 
@@ -211,18 +212,18 @@ head(siamcat@pred_matrix)
 ```
 
 
-## Model Evaluation and Interpretation
- 
+# Model Evaluation and Interpretation
+
 In the final part, we want to find out how well the model performed and which microbial markers had been selected in the model. In order to do so, we first calculate how well the predictions fit the real data using the function `evaluate.predictions`. This function calculates the Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR) Curve for each resampled cross-validation run. The results of the evaluation will be stored in the `eval_data` slot of the `siamcat` object.
 
 ```{r}
 siamcat <-  evaluate.predictions(siamcat, verbose=2)
 ```
 
-#### Evaluation plot
+## Evaluation plot
 
 To plot the results of the evaluation, we can use the function `model.evaluation.plot`, which produces a pdf-file showing the ROC and PR Curves for the different resamples runs as well as the mean ROC and PR Curve.
- 
+
 ```{r}
 ## Not run here, since the function produces a pdf-file as output
 # model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
@@ -232,7 +233,7 @@ Instead of the pdf-output, we can also access the evaluation data in the `siamca
 
 ```{r fig.width = 6, fig.asp=1, fig.align="center"}
 # plot ROC Curves
-plot(NULL, xlim=c(0,1), ylim=c(0,1), 
+plot(NULL, xlim=c(0,1), ylim=c(0,1),
      xlab='False positive rate', ylab='True positive rate', type='n')
 title('ROC curve for the model')
 abline(a=0, b=1, lty=3)
@@ -250,19 +251,19 @@ yl = roc.summ$ci[,1]
 yu = roc.summ$ci[,3]
 polygon(1-c(x, rev(x)), c(yl, rev(yu)), col='#88888844' , border=NA)
 ```
- 
-#### Interpretation plot 
 
-The final plot produced by SIAMCAT is the model interpretation plot, created by the `model.interpretation.plot` function. The plot shows for the top selected features the 
+## Interpretation plot
 
-+ model weights (and how robust they are) as a barplot, 
+The final plot produced by SIAMCAT is the model interpretation plot, created by the `model.interpretation.plot` function. The plot shows for the top selected features the
 
-+ a heatmap with the z-scores or fold changes for the top selected features, and 
++ model weights (and how robust they are) as a barplot,
 
-+ a boxplot showing the proportions of weight per model which is captured by the top selected features. 
++ a heatmap with the z-scores or fold changes for the top selected features, and
+
++ a boxplot showing the proportions of weight per model which is captured by the top selected features.
 
 The function again produces a pdf-file as output and is thus not run here. An example of how it can be used can be found below:
- 
+
 ```{r}
 ## Not run here, since the function produces a pdf-file as output
 # model.interpretation.plot(siamcat,
@@ -341,7 +342,7 @@ prepare.heatmap.zscore <- function(heatmap.data, limits, verbose=0){
 
 plot.heatmap <- function(image.data, limits, color.scheme, effect.size, verbose=0){
   par(mar=c(2, 2, 1, 10))
-  
+
   image(image.data, zlim=limits, col=color.scheme,
         xaxt='n', yaxt='n', xlab='', ylab='', bty='n')
   if (!is.null(effect.size)){
@@ -363,7 +364,7 @@ plot.heatmap <- function(image.data, limits, color.scheme, effect.size, verbose=
   if(verbose>2) cat('+ finished plot.heatmap\n')
 }
 
-color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info['BrBG','maxcolors'], 'BrBG'))(100))
+color.scheme <- rev(colorRampPalette(RColorBrewer::brewer.pal(RColorBrewer::brewer.pal.info['BrBG','maxcolors'], 'BrBG'))(100))
 
 W.mat       <- get.weights.matrix(siamcat@model_list@models, verbose=0)
 all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep('META', row.names(W.mat), value = TRUE)),]
@@ -412,7 +413,7 @@ plot.heatmap(image.data=img.data,
 ```
 
 
-## Session Info
+# Session Info
 
 ```{r}
 sessionInfo()

@@ -10,7 +10,7 @@
 #' @description This function performs unsupervised feature filtering. Features
 #'        can be filtered based on abundance or prevalence. Additionally,
 #'        unmapped reads may be removed.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param filter.method method used for filtering the features, can be one of
 #'        these: \code{c("abundance", "cum.abundance", "prevalence")},
 #'        defaults to \code{"abundance"}
@@ -23,7 +23,7 @@
 #'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT filter.features
-#' @details This function filters the features in a \link{siamcat} object in a
+#' @details This function filters the features in a \link{siamcat-class} object in a
 #'        unsupervised manner.
 #'
 #'        The different filter methods work in the following way: \itemize{
@@ -37,11 +37,16 @@
 #'          of samples.
 #'        }
 #' @export
-#' @return siamcat an object of class \link{siamcat}
+#' @return siamcat an object of class \link{siamcat-class}
 #' @examples
+#'  # Example dataset
+#'  data(siamcat_example)
+#'  # since the whole pipeline has been run in the example data, the feature were
+#'  # filtered already.
+#'  siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
 #'
 #' # Simple examples
-#' siamcat.filtered <- filter.features(siamcat, filter.method='abundance', cutoff=1e-03)
+#' siamcat_filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)
 filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,
                             recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
@@ -60,7 +65,7 @@ filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,
   if (recomp.prop) {
     # recompute relative abundance values (proportions)
     ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)
-    siamcat@phyloseq@otu_table <- otu_table(ra.feat,taxa_are_rows = T )
+    siamcat@phyloseq@otu_table <- otu_table(ra.feat,taxa_are_rows = TRUE )
   } else {
     ra.feat <- siamcat@phyloseq@otu_table
   }

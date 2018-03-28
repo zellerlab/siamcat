@@ -11,7 +11,7 @@
 #'        metadata. Statistical testing is performed with Fisher's exact test
 #'        or Wilcoxon test, while associations are visualized either as barplot
 #'        or Q-Q plot, depending on the type of metadata.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
@@ -20,11 +20,17 @@
 #' @export
 #' @return Does not return anything, but produces a single plot for each metadata category.
 #' @examples
+#'  # Example data
+#'  data(siamcat_example)
+#'  # since the whole pipeline has been run in the example data, exchange the
+#'  # normalized features with the original features
+#'  siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
+#'
 #'  # Simple working example
-#'  check.confounders(siamcat, './conf_plot.pdf')
+#'  check.confounders(siamcat_example, './conf_plot.pdf')
 #'
 #'  # Additional information with verbose
-#'  check.confounders(siamcat, './conf_plot.pdf', verbose=2)
+#'  \dontrun{check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)}
 check.confounders <- function(siamcat, fn.plot, verbose=1){
   if(verbose>1) cat("+ starting check.confounders\n")
   s.time <- proc.time()[3]
@@ -153,29 +159,29 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
     }
   }
 
-  ## HEATMAP / SPECTRAL PLOT... TBD
-  if(0){
-    # transform heatmap values
-    colnames(hmap) <- c(siamcat@label@n.lab, siamcat@label@p.lab)
-    hmap.ratios <- as.matrix(log(hmap[,2]/hmap[,1])) - log(sum(siamcat@label@p.idx)/sum(siamcat@label@p.idx))
-    rownames(hmap.ratios) <- as.matrix(rownames(hmap))
-
-    # plot as labeled barplot...
-    par(mar=c(20, 5, 10, 5))
-    grad.len <- 1000
-    barplot(as.matrix(rep(1,grad.len)), col = viridis(grad.len), horiz=TRUE, border=0, ylab='', axes=FALSE)
-    bp.bound <- max(abs(range(hmap.ratios[is.finite(hmap.ratios)])))
-    bp.ticks <- seq(-round(bp.bound), round(bp.bound), length.out=7)
-    bp.label <- paste('Relative ratios for metadata,', siamcat@label@p.lab,':',siamcat@label@n.lab)
-    axis(1, at=seq(0,grad.len,length.out=7), labels=bp.ticks, cex.axis=0.7)
-
-    # draw lines to represent each metadata category
-    for (val in hmap.ratios) {
-      abline(v=(val*grad.len/6) + (grad.len/2))
-  }
-  }
+  # ## HEATMAP / SPECTRAL PLOT... TBD
+  # if(0){
+  #   # transform heatmap values
+  #   colnames(hmap) <- c(siamcat@label@n.lab, siamcat@label@p.lab)
+  #   hmap.ratios <- as.matrix(log(hmap[,2]/hmap[,1])) - log(sum(siamcat@label@p.idx)/sum(siamcat@label@p.idx))
+  #   rownames(hmap.ratios) <- as.matrix(rownames(hmap))
+  #
+  #   # plot as labeled barplot...
+  #   par(mar=c(20, 5, 10, 5))
+  #   grad.len <- 1000
+  #   barplot(as.matrix(rep(1,grad.len)), col = viridisLite::viridis(grad.len), horiz=TRUE, border=0, ylab='', axes=FALSE) # make sure to add this to the Description file once it is needed
+  #   bp.bound <- max(abs(range(hmap.ratios[is.finite(hmap.ratios)])))
+  #   bp.ticks <- seq(-round(bp.bound), round(bp.bound), length.out=7)
+  #   bp.label <- paste('Relative ratios for metadata,', siamcat@label@p.lab,':',siamcat@label@n.lab)
+  #   axis(1, at=seq(0,grad.len,length.out=7), labels=bp.ticks, cex.axis=0.7)
+  #
+  #   # draw lines to represent each metadata category
+  #   for (val in hmap.ratios) {
+  #     abline(v=(val*grad.len/6) + (grad.len/2))
+  # }
+  # }
   tmp <- dev.off()
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished check.confounders in",e.time-s.time,"s\n")
-  if(verbose==1)cat("Checking metadata for confounders finished, results plotted to:",fn.plot,"\n")
+  if(verbose==1) cat("Checking metadata for confounders finished, results plotted to:",fn.plot,"\n")
 }

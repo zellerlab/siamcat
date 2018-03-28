@@ -26,7 +26,7 @@ object of class \link{siamcat-class} with the slot \code{pred_matrix}
        filled or a matrix containing the predictions for the holdout set
 }
 \description{
-This function takes a \link{siamcat}-object containing a model
+This function takes a \link{siamcat-class}-object containing a model
        trained by \link{train.model} and performs predictions on a given
        test-set.
 }
@@ -39,12 +39,12 @@ This functions uses the model in the \code{model_list}-slot of the
        \code{siamcat} object (\code{siamcat.holdout}).
 }
 \examples{
-
+ data(siamcat_example)
  # Simple example
- siamcat.pred <- make.predictions(siamcat)
+ siamcat.pred <- make.predictions(siamcat_example)
 
  # Predictions on a holdout-set
- pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)
+ \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)}
 }
 \keyword{SIAMCAT}
 \keyword{make.predictions}

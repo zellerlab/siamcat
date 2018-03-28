@@ -16,9 +16,9 @@ setClass("model_list", representation(models = "list", model.type = "character")
 #' @name data_split-class
 #' @rdname data_split-class
 #' @exportClass data_split
-setClass("data_split", representation(training.folds = "list", 
-                                     test.folds = "list", 
-                                     num.resample = "numeric", 
+setClass("data_split", representation(training.folds = "list",
+                                     test.folds = "list",
+                                     num.resample = "numeric",
                                      num.folds = "numeric"))
 
 #' The S4 class for storing label info.
@@ -27,14 +27,19 @@ setClass("data_split", representation(training.folds = "list",
 #' @exportClass label
 setClass("label", representation(label = "vector", header = "character",
                                  info="list", positive.lab="numeric",
-                                 negative.lab="numeric", 
+                                 negative.lab="numeric",
                                  n.idx="vector", p.idx="vector",
                                  n.lab="character", p.lab="character"))
 
 #' The S4 class for storing taxa-abundance information and models.
 #' @name siamcat-class
 #' @rdname siamcat-class
+#' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
+#' @slot label an object of class \link{label-class}
+#' @slot orig_feat an object of class \link[phyloseq]{otu_table}
 #' @slot data_split a list
+#' @slot norm_param a list
+#' @slot model_list an object of class \link{model_list-class}
 #' @slot eval_data list containing \itemize{
 #'  \item \code{$roc.average} average ROC-curve across repeats or a single ROC-curve on complete dataset;
 #'  \item \code{$auc.average} AUC value for the average ROC-curve;
@@ -45,56 +50,24 @@ setClass("label", representation(label = "vector", header = "character",
 #'  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 #'}
-#' @slot label an object of class \link{label-class}
-#' @slot model_list an object of class \link{model_list-class}
-#' @slot norm_param a list
-#' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
 #' @slot pred_matrix a matrix with predictions made by \link{make.predictions} function
 #' @exportClass siamcat
-setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list", 
+setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list",
                                    label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))
 
-#' Build siamcat-class objects from their components.
-#' @name siamcat
-#' @export
-siamcat <- function(...){
-  arglist   <- list(...)
-  
-  # Remove names from arglist. Will replace them based on their class
-  names(arglist) <- NULL
-  
-  # ignore all but component data classes.
-  component_classes <- get.component.classes("both")
-  
-  for(argNr in 1:length(arglist)){
-    classOfArg <- class(arglist[[argNr]])[1]
-    if(classOfArg%in%names(component_classes)){
-      names(arglist)[argNr] <- component_classes[classOfArg]
-    }
-  }
-  
-  if(is.null(arglist$phyloseq)){
-    arglistphyloseq <- arglist[sapply(names(arglist), is.component.class, "phyloseq")]
-    arglist$phyloseq <- do.call("new", c(list(Class="phyloseq"), arglistphyloseq))
-  }
-  arglist     <- arglist[sapply(names(arglist), is.component.class, "siamcat")]
-  sc          <- do.call("new", c(list(Class="siamcat"), arglist))
-  return(sc)
-}
 
 # source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
 #' Show the component objects classes and slot names.
-#' @usage get.component.classes()
 #' @keywords internal
 get.component.classes <- function(class){
   # define classes vector
   # the names of component.classes needs to be the slot names to match getSlots / splat
   component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split","phyloseq")	#slot names
   names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm_param", "data_split", "phyloseq") #class names
-  
+
   component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")	#slot names
   names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names
-  
+
   if(class=="siamcat"){
     return(component.classes.siamcat)
   }else if(class=="phyloseq"){
@@ -110,12 +83,3 @@ get.component.classes <- function(class){
 is.component.class = function(x,class){
   x%in%get.component.classes(class)
 }
-
-
-
-#' Documentation for the example siamcat object in the data folder
-#'
-#' @name siamcat_example
-#' @docType data
-#' @keywords data
-NULL

@@ -19,14 +19,15 @@
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT add.meta.pred
 #' @export
-#' @return an object of class \link{siamcat} with metadata added to the features
+#' @return an object of class \link{siamcat-class} with metadata added to the features
 #' @examples
+#'  data(siamcat_example)
 #'  # Add the Age of the patients as potential predictor
-#'  siamcat.age.added <- add.meta.pred(siamcat, pred.names=c('Age'))
+#'  siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('age'))
 #'
 #'  # Add Age, BMI, and Gender as potential predictors
 #'  # Additionally, prevent standardization of the added features
-#'  siamcat.meta.added <- add.meta.pred(siamcat, pred.names=c('Age', 'BMI', 'Gender'), std.meta=FALSE)
+#'  siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age', 'bmi', 'gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
   if(verbose>1) cat("+ starting add.meta.pred\n")
   s.time <- proc.time()[3]
@@ -58,7 +59,7 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
         m      <- (m - m.mean)/m.sd
       }
 
-      siamcat@phyloseq@otu_table <- otu_table(rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=T)
+      siamcat@phyloseq@otu_table <- otu_table(rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=TRUE)
       rownames(siamcat@phyloseq@otu_table)[nrow(siamcat@phyloseq@otu_table)] <- paste('META_', toupper(p), sep='')
       cnt <- cnt + 1
     }
