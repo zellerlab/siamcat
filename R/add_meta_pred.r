@@ -23,11 +23,11 @@
 #' @examples
 #'  data(siamcat_example)
 #'  # Add the Age of the patients as potential predictor
-#'  siamcat.age.added <- add.meta.pred(siamcat_example, pred.names=c('age'))
+#'  siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('age'))
 #'
 #'  # Add Age, BMI, and Gender as potential predictors
 #'  # Additionally, prevent standardization of the added features
-#'  siamcat.meta.added <- add.meta.pred(siamcat_example, pred.names=c('age', 'bmi', 'gender'), std.meta=FALSE)
+#'  siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age', 'bmi', 'gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
   if(verbose>1) cat("+ starting add.meta.pred\n")
   s.time <- proc.time()[3]

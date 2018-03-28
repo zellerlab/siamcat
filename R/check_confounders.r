@@ -30,7 +30,7 @@
 #'  check.confounders(siamcat_example, './conf_plot.pdf')
 #'
 #'  # Additional information with verbose
-#'  check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)
+#'  \dontrun{check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)}
 check.confounders <- function(siamcat, fn.plot, verbose=1){
   if(verbose>1) cat("+ starting check.confounders\n")
   s.time <- proc.time()[3]
