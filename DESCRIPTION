@@ -19,8 +19,7 @@ Depends:
     phyloseq,
     gridExtra,
     gridBase,
-    grid,
-    methods
+    grid
 Imports:
     PRROC,
     beanplot,
@@ -30,6 +29,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Suggests:
+    BiocStyle,
     optparse,
     testthat,
     knitr,
