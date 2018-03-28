@@ -204,7 +204,7 @@ model.interpretation.plot <- function(siamcat, fn.plot,
   } else {
     auroc.effect <-  sapply(colnames(img.data),
         FUN=function(f){pROC::roc(predictor=img.data[,f],
-                        response=label@label, direction='<')$auc})
+                        response=siamcat@label, direction='<')$auc})
     bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
     plot.heatmap(image.data=img.data,
                  limits=limits,

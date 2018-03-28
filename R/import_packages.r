@@ -9,6 +9,6 @@
 #' @importFrom utils head read.table setTxtProgressBar tail
 #'             txtProgressBar
 #' @importFrom pROC roc
-#' @importFrom ParamHelpers makeParamSet
+#' @importFrom ParamHelpers makeParamSet makeDiscreteParam makeNumericParam
 
 NULL

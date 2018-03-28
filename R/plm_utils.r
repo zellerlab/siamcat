@@ -37,11 +37,11 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     class.weights        <- c(5, 1)
     names(class.weights) <- c(-1,1)
     lrn       <- mlr::makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
-    parameters  <- mlr::makeParamSet(makeDiscreteParam("cost", values=cost))
+    parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
     lrn       <- mlr::makeLearner(cl, predict.type="prob", epsilon=1e-8, type=0)
-    parameters  <- mlr::makeParamSet(makeDiscreteParam("cost", values=cost))
+    parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "randomForest"){
     cl        <- "classif.randomForest"
     lrn       <- mlr::makeLearner(cl, predict.type = "prob", fix.factors.prediction = TRUE)
@@ -142,10 +142,10 @@ get.parameters.from.param.set <- function(param.set, method, sqrt.mdim){
       if("ntree"%in%names(param.set)) ntree <- param.set$ntree
       if("mtry"%in%names(param.set))  mtry  <- param.set$mtry
     }
-    parameters  <- mlr::makeParamSet(makeNumericParam('ntree', lower=ntree[1], upper=ntree[2]),
+    parameters  <- makeParamSet(makeNumericParam('ntree', lower=ntree[1], upper=ntree[2]),
                                makeDiscreteParam('mtry', values=mtry))
   }else if(method == "enet"){
-    parameters <- mlr::makeParamSet(makeNumericParam('alpha', lower=alpha[1], upper=alpha[2]))
+    parameters <- makeParamSet(makeNumericParam('alpha', lower=alpha[1], upper=alpha[2]))
   }
   return(parameters)
 }
