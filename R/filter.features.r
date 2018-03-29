@@ -43,7 +43,7 @@
 #'  data(siamcat_example)
 #'  # since the whole pipeline has been run in the example data, the feature were
 #'  # filtered already.
-#'  siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
+#'  siamcat_example <- reset.features(siamcat_example)
 #'
 #' # Simple examples
 #' siamcat_filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)

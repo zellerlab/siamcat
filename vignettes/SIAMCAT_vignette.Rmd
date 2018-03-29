@@ -58,7 +58,7 @@ show(siamcat)
 
 In fact, `siamcat-class` object extends `phyloseq-class` object:
 ```{r}
-phyloseq <- siamcat@phyloseq
+phyloseq <- get.phyloseq(siamcat)
 show(phyloseq)
 ```
 
@@ -448,8 +448,7 @@ sel.idx <- select.features(weights=all.weights,
 mean.agg.pred <- rowMeans(siamcat@pred_matrix)
 srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return=TRUE)$ix
 
-feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
-               dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
+feat <- get.features.matrix(siamcat)
 img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
                                    limits=c(-3,3), verbose=0)
 
