@@ -24,6 +24,7 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
                                           max.show, sort.by, probs.fc, verbose) {
   
   if(verbose>1) cat("+ starting marker analysis with metadata\n")
+  suppressPackageStartupMessages(require("coin"))
   s.time <- proc.time()[3]
   meta.colnames <- colnames(meta)
 
@@ -129,54 +130,78 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
 feature.wise.anova.with.metadata <- function(feat, label, meta, colors, pr.cutoff,
                                              alpha, sort.by, verbose) {
   
+  if(verbose>2) cat("+ starting anova on ranks analysis\n")
   anova.heatmap <- matrix(NA, nrow=nrow(feat), ncol=length(meta.colnames)+1, 
                           dimnames=list(row.names(feat), c("disease status", meta.colnames)))
   
-  # total sum of squares
-  ss.total <- data.frame(cbind(apply(feat, 1, FUN=function(x) {
+  # total sum of squares - 1 value per feature
+  if(verbose>2) cat("+++ calculating total sum of squares\n")
+  ss.total <- as.vector(apply(feat, 1, FUN=function(x) {
     rank.x <- rank(x)/length(x)
-    return(sum((rank.x - mean(rank.x))^2)/length(rank.x))})))
-  
-  # label sum of squares - add this in with other groups later!
-  ss.label <- data.frame(cbind(apply(feat, 1, FUN=function(x, label) {
+    return(sum((rank.x - mean(rank.x))^2)/length(rank.x))}))
+  names(ss.total) <- rownames(feat)
+
+  # between group sum of squares - 1 value per feature per metadata col (1 vector per feature)
+  if(verbose>2) cat("+++ calculating between group sum of squares for metadata\n")
+  if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
+  ss.groups <- t(data.frame(rbind(apply(feat, 1, FUN=function(x, meta, label) {
+    vals <- vector('numeric', length=ncol(meta)+1);
+    
+    # disease status labels
+    grand.mean <- mean(rank(x)/length(x))
     rank.p <- rank(x[label@p.idx])/length(label@p.idx)
     rank.n <- rank(x[label@n.idx])/length(label@n.idx)
-    return(sum(sum((rank.p - mean(rank.p))^2), sum((rank.n - mean(rank.n))^2))/
-      length(c(label@p.idx, label@n.idx)))
-    }, label=label)))
-  
-  # metadata sum of squares - fix this
-  if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
-  ss.groups <- data.frame(cbind(apply(feat, 1, FUN=function(x, meta, label) {
-    group.means <- list();
+    vals[1] <- sum(sum((rank.p - mean(rank.p))^2), 
+                   sum((rank.n - mean(rank.n))^2))/length(c(label@p.idx, label@n.idx))
     
-    for (c in unique(colnames(meta))) {
+    # ss for each metadata column
+    for (c in 1:ncol(meta)) {
       if (length(unique(meta[,c][!is.na(meta[,c])])) > 5) {
         quartiles <- quantile(meta[,c], probs=seq(0,1,0.25), na.rm=TRUE) 
         meta.disc <- cut(meta[,c], breaks=quartiles, labels=1:4, include.lowest=TRUE)} else {
           meta.disc <- as.factor(meta[,c])}
-      for (m in meta.disc) {
-        if (is.na(m)) {next} else{
-          idx.m <- which(meta.disc == m)
-          rank.m <- rank(x[idx.m])/length(idx.m)
-          index <- paste(c,m)
-          group.means[[index]] <- mean(rank.m)}}}
-    
-    # need to do this for each metadata category... not all at once
-    # to be continued
-    
-    # rank.p <- rank(x[label@p.idx])/length(label@p.idx)
-    # rank.n <- rank(x[label@n.idx])/length(label@n.idx)
-    # group.means[['cases']] <- mean(rank.p)
-    # group.means[['controls']] <- mean(rank.n)
-    grand.mean <- mean(rank(x)/length(x))
+      subgroup.means <- vector('numeric', length=length(levels(meta.disc)))
+      for (m in 1:length(levels(meta.disc))) {
+        idx.m <- which(meta.disc == m)
+        rank.m <- rank(x[idx.m])/length(idx.m)
+        subgroup.means[m] <- mean(rank.m)}
+      vals[c+1] <- sum(sapply(subgroup.means, FUN=function(s){(s-grand.mean)^2}))}
+
     if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
-    squares <- lapply(group.means, FUN=function(y, grand.mean) {
-      (y-grand.mean)^2}, grand.mean=grand.mean)
-    return(do.call(sum, squares)/length(squares))
-  }, meta=meta, label=label)))
+    names(vals) <- c('label', colnames(meta))
+    return(vals)
+  }, meta=meta, label=label))))
 
-
+  # within group sum of squares - 1 vector per feature
+  if(verbose>2) cat("+++ calculating withing group sum of squares\n")
+  ss.error <- matrix(NA, nrow=nrow(ss.groups), ncol=ncol(ss.groups), 
+                     dimnames=list(row.names(ss.groups), colnames(ss.groups)))
+  for (i in 1:nrow(ss.groups)) {ss.error[i,] <- ss.total[i] - ss.groups[i,]}
+  
+  # quick get sample size & group parameters - can't do inside apply??? REDUNDANT :(
+  params <- matrix(NA, nrow=2, ncol=ncol(meta)+1, dimnames=list(c('N','K'), colnames(ss.groups)))
+  params[,'label'] <- c(length(label@label), 2) 
+  for (c in colnames(meta)) {
+    if (length(unique(meta[,c][!is.na(meta[,c])])) > 5) {
+      quartiles <- quantile(meta[,c], probs=seq(0,1,0.25), na.rm=TRUE) 
+      meta.disc <- cut(meta[,c], breaks=quartiles, labels=1:4, include.lowest=TRUE)} else {
+        meta.disc <- as.factor(meta[,c])}
+    params[,c] <- c(length(meta[,c][!is.na(meta[,c])]), length(levels(meta.disc)))}
+  
+  # variance estimates & F ratios
+  if(verbose>2) cat("+++ calculating F ratios\n")
+  f.ratios <- matrix(NA, nrow=nrow(ss.error), ncol=ncol(ss.error),
+                     dimnames=list(row.names(ss.error), colnames(ss.error)))
+  for (i in 1:length(ss.total)) {
+    msb <- ss.groups[i,]/(params[2,]-1)
+    msw <- ss.error[i,]/(params[1,]-params[2,])
+    f.ratios[i,] <- msb/msw}
+  
+  # # generate heatmap
+  # if(verbose>2) cat("+ generating heatmap\n")
+  # suppressPackageStartupMessages(require("heatmap3"))
+  # suppressPackageStartupMessages(require("viridis"))
+  # heatmap3(f.ratios[rownames(result.list$p.val),], col=viridis(100), showColDendro=FALSE, showRowDendro=FALSE)
 }
 
 check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=1){
