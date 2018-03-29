@@ -75,6 +75,9 @@
 #'
 #'  # log.unit example
 #'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+#'
+#'  # log.std example
+#'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=.1))
 
 normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
                            norm.param=list(log.n0=1e-06, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
@@ -87,18 +90,26 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     # de novo normalization
     if(verbose>1) cat('+++ performing de novo normalization using the ', norm.method, ' method\n')
     ### remove features with missing values
-    keep.idx <- rowSums(is.na(feat) == 0)
+    keep.idx <- rowSums(is.na(feat)) == 0
     if (any(!keep.idx)) {
       feat.red.na <- feat[keep.idx,]
-      if(verbose>1) cat('+++ removed ', nrow(feat.red.na)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red.na),' )\n', sep='')
+      if(verbose>1) {
+        cat('+++ removed ', nrow(feat.red.na)-nrow(feat),
+          ' features with missing values (retaining ',
+          nrow(feat.red.na),')\n', sep='')
+        }
     } else {
       feat.red.na <- feat
     }
     ### remove features with zero sd
     keep.idx.sd <- (apply(feat.red.na, 1, sd) == 0)
     if (any(keep.idx.sd)){
-      feat.red <- feat.red.na[keep.idx.sd,]
-      if(verbose>1) cat('+++ removed ', nrow(feat.red)-nrow(feat.red.na), ' features with no variation across samples (retaining ', nrow(feat.red),' )\n', sep='')
+      feat.red <- feat.red.na[!keep.idx.sd,]
+      if(verbose>1) {
+        cat('+++ removed ', nrow(feat.red.na)-nrow(feat.red),
+          ' features with no variation across samples (retaining ',
+          nrow(feat.red),')\n', sep='')
+      }
     } else {
       feat.red <- feat.red.na
     }
