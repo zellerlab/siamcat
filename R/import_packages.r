@@ -10,6 +10,7 @@
 #'             txtProgressBar
 #' @importFrom PRROC pr.curve
 #' @importFrom pROC roc
+#' @importFrom beanplot beanplot
 #' @importFrom ParamHelpers makeParamSet makeDiscreteParam makeNumericParam
 
 NULL
