@@ -124,7 +124,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     layout.mat <- cbind(2,1, t(seq(3, length.out=length(panels))))
     widths <- c(0.5, 0.1, rep(0.2, length(panels)))
   }
-  grDevices::pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
+  pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
 
   graphics::layout(mat=layout.mat, widths=widths)
 
@@ -175,7 +175,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   }
 
   # close pdf device
-  tmp <- grDevices::dev.off()
+  tmp <- dev.off()
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished check.associations in",e.time-s.time,"s\n")
   if(verbose==1) cat("Plotted associations between features and label successfully to:",fn.plot,"\n")
@@ -337,8 +337,8 @@ associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1)
   tck = floor(p.m):0
   graphics::axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
   # create different tints of the colours
-  colors.p <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){grDevices::rgb(matrix(grDevices::col2rgb(col[2])/255 + (1 - grDevices::col2rgb(col[2])/255)*x, ncol=3))}))
-  colors.n <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){grDevices::rgb(matrix(grDevices::col2rgb(col[1])/255 + (1 - grDevices::col2rgb(col[1])/255)*x, ncol=3))}))
+  colors.p <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){rgb(matrix(col2rgb(col[2])/255 + (1 - col2rgb(col[2])/255)*x, ncol=3))}))
+  colors.n <- rev(sapply(seq(0,1, length.out = 4), FUN=function(x){rgb(matrix(col2rgb(col[1])/255 + (1 - col2rgb(col[1])/255)*x, ncol=3))}))
   for (i in 1:(nrow(x.q)/2)){
     if (i == 1) {
       graphics::rect(x.q[i,], 0.5:dim(data1)[1], x.q[nrow(x.q)+1-i,], (0.5:dim(data1)[1])+0.3, col = c("white"), border = c("black"), lwd = 0.9)
@@ -487,7 +487,7 @@ associations.pvals.plot <- function(p.vals, alpha,  verbose=1){
 # from stackoverflow: Check if character string is a valid color representation
 # https://stackoverflow.com/questions/13289009
 is.color <- function(x){
-  sapply(x, function(z) {tryCatch(is.matrix(grDevices::col2rgb(z)), error = function(e) FALSE)})
+  sapply(x, function(z) {tryCatch(is.matrix(col2rgb(z)), error = function(e) FALSE)})
 }
 ### check the user-supplied color scheme for validity
 #     color scheme may either be a single RColorBrewer palette or a vector of
@@ -523,7 +523,7 @@ check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=
   } else if (length(color.scheme == n.classes) && all(is.color(color.scheme))){
     # if colors, check that all strings are real colors and check that the same length as n classes
     # convert color names to hex representation
-    colors <- sapply(color.scheme, FUN=function(x){grDevices::rgb(t(grDevices::col2rgb(x)), maxColorValue = 255)}, USE.NAMES = FALSE)
+    colors <- sapply(color.scheme, FUN=function(x){rgb(t(col2rgb(x)), maxColorValue = 255)}, USE.NAMES = FALSE)
   } else {
     stop("Supplied colors do not match the number of classes or are no valid colors")
   }

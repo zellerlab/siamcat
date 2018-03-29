@@ -38,7 +38,7 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
   if(verbose>1) cat("+ starting check.confounders\n")
   s.time <- proc.time()[3]
   # TODO: implement color.scheme selection as function parameter
-  grDevices::pdf(fn.plot, onefile = TRUE)
+  pdf(fn.plot, onefile = TRUE)
   case.count <- length(siamcat@label@label[siamcat@label@p.idx])
   ctrl.count <- length(siamcat@label@label[siamcat@label@n.idx])
 
@@ -56,9 +56,9 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
   if(verbose>2) cat("+++ setting up color scheme\n")
   len.diff <- abs(case.count - ctrl.count)
   hmap <- data.frame()
-  hmapcolors <- grDevices::colorRampPalette(
+  hmapcolors <- colorRampPalette(
     brewer.pal(10, "RdYlGn"))
-  color.scheme <- rev(grDevices::colorRampPalette(
+  color.scheme <- rev(colorRampPalette(
     brewer.pal(
       brewer.pal.info["BrBG",'maxcolors'], "BrBG"))(100))
 
