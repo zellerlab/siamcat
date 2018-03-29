@@ -8,7 +8,7 @@ Authors@R: c(person("Georg", "Zeller", role = c("aut", "cre"), email = "zeller@e
              person("Jakob", "Wirbel", role = c("aut", "cre"), email = "jakob.wirbel@embl.de", comment = c(ORCID = "0000-0002-4073-3562"))
               )
 Maintainer: Konrad Zych <konrad.zych@embl.de>, Georg Zeller <eller@embl.de>, Jakob Wirbel <jakob.wirbel@embl.de>
-Description: SIAMCAT is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes. A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots).
+Description: Pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes (SIAMCAT). A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. SIAMCAT provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots).
 Depends:
     R (>= 3.4.0),
     mlr,
@@ -16,18 +16,18 @@ Depends:
 Imports:
     beanplot,
     glmnet,
+    graphics,
+    grDevices,
     grid,
     gridBase,
     gridExtra,
     LiblineaR,
+    ParamHelpers,
     pROC,
     PRROC,
     RColorBrewer,
-    grDevices, 
-    graphics, 
-    stats, 
-    utils,
-    ParamHelpers
+    stats,
+    utils
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
