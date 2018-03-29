@@ -18,6 +18,12 @@
 #' @keywords SIAMCAT model.evaluation.plot
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
+#' @examples
+#'
+#'  data(siamcat_example)
+#'  # simple working example
+#'  model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
+#'
 model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
   if(verbose>1) cat("+ starting model.evaluation.plot\n")
   s.time <- proc.time()[3]

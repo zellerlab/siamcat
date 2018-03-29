@@ -48,6 +48,12 @@
 #'        the \code{"classif.LiblineaRL2LogReg"} Learners respectively. The
 #'        \code{"randomForest"} method is implemented via the \code{"classif.randomForest"}
 #'        Learner.
+#' @examples
+#'
+#'  data(siamcat_example)
+#'  # simple working example
+#'  siamcat_validated <- train.model(siamcat_example, method='lasso')
+#'
 train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                         stratify = TRUE, modsel.crit=list("auc"),  min.nonzero.coeff = 1, param.set=NULL, verbose=1){
 
@@ -102,7 +108,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
       if(verbose>2) cat('++++ repetition:', resampling, '\n')
 
       fold.name    <- paste0('cv_fold', as.character(fold), '_rep', as.character(resampling))
-      fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(label@label))
+      fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(siamcat@label@label))
 
       ### subselect examples for training
       label.fac         <- factor(siamcat@label@label, levels=c(siamcat@label@negative.lab, siamcat@label@positive.lab))
@@ -137,7 +143,7 @@ train.model <- function(siamcat,  method = c("lasso", "enet", "ridge", "lasso_ll
 }
 
 measureAUPRC <- function(probs, truth, negative, positive){
-  pr <- PRROC::pr.curve(scores.class0 = probs[which(truth == positive)],
+  pr <- pr.curve(scores.class0 = probs[which(truth == positive)],
                  scores.class1 = probs[which(truth == negative)])
   return(pr$auc.integral)
 }

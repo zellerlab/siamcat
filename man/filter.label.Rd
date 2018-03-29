@@ -20,4 +20,11 @@ siamcat an object of class \link{siamcat-class}
 \description{
 This functions filters \code{siamcat@label}.
 }
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ siamcat_filtered <- filter.label(siamcat_example, ids=c(1:10))
+
+}
 \keyword{filter.label}

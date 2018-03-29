@@ -11,7 +11,8 @@ validate.data(siamcat, verbose = 1)
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information, defaults to \code{1}}
+level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 an object of class \link{siamcat-class} with validated data
@@ -21,10 +22,18 @@ This function checks if labels are available for all samples in
        features. Additionally validates metadata, if available.
 }
 \details{
-This function validates the data by checking that labels are available
-       for all samples in the feature matrix. Furthermore, the number of samples
-       per class is checked to ensure a minimum number. If metadata is available,
-       the overlap between labels and metadata is checked as well.
+This function validates the data by checking that labels are
+       available for all samples in the feature matrix. Furthermore,
+       the number of samples per class is checked to ensure a minimum
+       number. If metadata is available, the overlap between labels and
+       metadata is checked as well.
+}
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ siamcat_validated <- validate.data(siamcat_example)
+
 }
 \keyword{SIAMCAT}
 \keyword{validate.data}

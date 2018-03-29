@@ -91,13 +91,18 @@
     </div>
 
     
-    <p>This file reads in the tsv file with labels and converts it into a matrix.</p>
-<p>First row is expected to be <code>#BINARY:1=[label for cases];-1=[label for controls]</code>. Second row should contain the sample identifiers as tab-separated list (consistent with feature and metadata).</p>
-<p>Third row is expected to contain the actual class labels (tab-separated): <code>1</code> for each case and <code>-1</code> for each control.</p>
-<p>Note: Labels can take other numeric values (but not characters or strings); importantly, the label for cases has to be greater than the one for controls.</p>
+    <p>This file reads in the tsv file with labels and converts it into
+ a label object.</p>
+<p>First row is expected to be <code>#BINARY:1=[label for cases];-1=[label for controls]</code>.
+Second row should contain the sample identifiers as tab-separated list
+(consistent with feature and metadata).</p>
+<p>Third row is expected to contain the actual class labels (tab-separated):
+<code>1</code> for each case and <code>-1</code> for each control.</p>
+<p>Note: Labels can take other numeric values (but not characters or strings);
+importantly, the label for cases has to be greater than the one for controls.</p>
     
 
-    <pre class="usage"><span class='fu'>read.labels</span>(<span class='no'>fn.in.label</span>, <span class='kw'>feat</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>read.labels</span>(<span class='no'>fn.in.label</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -110,7 +115,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list with nine values:</p><ul>
+    <p>label object containing several entries:</p><ul>
 <li><p><code>$label</code> named vector containing the numerical labels from the file;</p></li>
 <li><p><code>$header</code> first row of the label file;</p></li>
 <li><p><code>$info</code> information about the type of label (e.g. <code>BINARY</code>);</p></li>
@@ -138,7 +143,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Georg Zeller, Konrad Zych, Nicolai Karcher, Jakob Wirbel.</p>
+  <p>Developed by Georg Zeller, Konrad Zych, Jakob Wirbel.</p>
 </div>
 
 <div class="pkgdown">

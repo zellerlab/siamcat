@@ -195,11 +195,11 @@ associations.bin.plot <- function(data1, data2, label, col, verbose=1){
     bean.data <- rbind(bean.data, temp)
   }
 
-  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+ plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim = c(as.integer(min(data2))-1.5,as.integer(max(data2))+1),
        ylim=c(0.45, nrow(data1)+0.6), type='n')
 
-  beanplot::beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
+  beanplot(bean.data[, 1] ~ bean.data[, ncol(bean.data)],
            side = "both", bw="nrd0", col = list(col[1], col[2]),
            horizontal = TRUE, names = c(""), show.names = FALSE,
            beanlines = "median", maxstripline = 0.2,
@@ -230,7 +230,7 @@ associations.box.plot <- function(data1, data2, label, col, verbose=1){
     plot.data <- rbind(plot.data, temp)
   }
 
-  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+ plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(min(plot.data[,1]-0.2), max(plot.data[,1]) + 1),
        ylim=c(+0.5, nrow(data1)*2+0.5), type='n')
 
@@ -269,9 +269,9 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
   tck = floor(p.m):0
   axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
 
-  x.q = apply(data1, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+  x.q = apply(data1, 1, function (x)quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
                                               na.rm=TRUE, names=FALSE))
-  y.q = apply(data2, 1, function (x) quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+  y.q = apply(data2, 1, function (x)quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
                                               na.rm=TRUE, names=FALSE))
 
   # inter-quartile range
@@ -326,7 +326,7 @@ associations.quantile.rect.plot <- function(data1, data2, label, col, verbose=1)
 
   p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
 
-  plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
+ plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
        xlab='', ylab='', yaxs='i', axes=FALSE,
        xlim=c(min(data1,data2), max(data1,data2+2)),
        ylim=c(0, dim(data1)[1]), frame.plot=FALSE, type='n')
@@ -371,7 +371,7 @@ associations.margins.plot <- function(species_names, p.label, verbose=1){
   cex.org <- par()$cex
   par(mar=c(5.1, 18, 4.1, 1.1), cex=1)
   temp = par()$mai
-  cex.labels <- min(.7,(((par()$pin[2]/length(species_names))*.6)/max(strheight(species_names, units = 'inches'))))
+  cex.labels <- min(.7,(((par()$pin[2]/length(species_names))*.6)/max( strheight(species_names, units = 'inches'))))
   max_name <- max(strwidth(species_names, units = 'inches', cex=cex.labels)) + temp[4]
   temp[2] <- min(temp[2], max_name)
   par(mai=temp, cex=cex.org)
@@ -384,7 +384,7 @@ associations.aucs.plot <- function(aucs, binary.cols,verbose=1){
   # set margins
   par(mar=c(5.1, 0, 4.1, 1.6))
   # plot background
-  plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
+ plot(NULL, xlab='', ylab='',xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(0,1), ylim=c(0.5, nrow(aucs)+0.5), type='n')
   ticks       <- seq(0, 1.0, length.out=5)
   tick.labels <- formatC(ticks, digits=2)
@@ -416,7 +416,7 @@ associations.fcs.plot <- function(fc.all, binary.cols,  verbose=1){
   mx <- max(ceiling(abs(range(fc.all, na.rm=TRUE, finite=TRUE))))
   mn    <- -mx
   # plot background
-  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+ plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(mn, mx), ylim=c(0.2, length(fc.all)+0.2), type='n')
   grid(NULL, NA, lty=3, col='lightgrey')
   # plot bars
@@ -437,7 +437,7 @@ associations.pr.shift.plot <- function(pr.shifts, col, verbose=1){
   par(mar=c(5.1, 0, 4.1, 1.6))
 
   # plot background
-  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+ plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(0, 1), ylim=c(0.2, nrow(pr.shifts)+0.2), type='n')
 
   # plot bars
@@ -467,7 +467,7 @@ associations.pvals.plot <- function(p.vals, alpha,  verbose=1){
   mn    <- 0
   p.vals.log[is.infinite(p.vals.log)] <- mx
   # plot background
-  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
+ plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
        xlim=c(mn, mx), ylim=c(0.2, length(p.vals)+0.2), type='n')
   grid(NULL, NA, lty=3, col='lightgrey')
   # plot bars
@@ -540,7 +540,7 @@ associations.labels.plot <- function(labels, plot.type,  verbose=1){
   if (plot.type == 'box') adj <- -0.5 + 1:length(labels)
   cex.org <- par()$cex
   par(cex=1)
-  cex.labels <- min(.7,(((par()$pin[2]/length(labels))*.6)/max(strheight(labels, units = 'inches'))))
+  cex.labels <- min(.7,(((par()$pin[2]/length(labels))*.6)/max( strheight(labels, units = 'inches'))))
   for (i in 1:length(labels)){
     mtext(labels[i], 2, line=0, at=i+adj[i], las=1, cex=cex.labels)
   }
@@ -642,8 +642,8 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
   }
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished analyse.binary.markerin",e.time-s.time,"s\n")
-  return(list("p.val" = effect.size[idx,'p.val', drop=FALSE],
-              "fc"=effect.size[idx,'fc', drop=FALSE],
+  return(list("p.val" = effect.size[idx,'p.val'],
+              "fc"=effect.size[idx,'fc'],
               "aucs"=effect.size[idx,c('auc', 'auc.ci.l', 'auc.ci.h'),drop=FALSE],
               "pr.shift"=effect.size[idx,c('pr.shift', 'pr.n', 'pr.p'),drop=FALSE],
               "bcol"=bcol[idx],

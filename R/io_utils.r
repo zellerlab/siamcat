@@ -21,6 +21,11 @@
 #'        for information about progress and time, defaults to \code{0}
 #' @export
 #' @return \code{otu_table} containing features from the file
+#' @examples
+#'  # run with example data
+#'  fn.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+#'    package = "SIAMCAT")
+#'  features <- read.features(fn.feat)
 read.features <- function(fn.in.feat, verbose=0){
   if(verbose>1) cat("+ starting read.features\n")
   s.time <- proc.time()[3]
@@ -32,8 +37,8 @@ read.features <- function(fn.in.feat, verbose=0){
   featNames <- make.names(rownames(feat)) ### making the names semantically correct
 
   if(any(rownames(feat)!=featNames)){
-  	cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
-  	rownames(feat) <- featNames
+    cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
+    rownames(feat) <- featNames
   }
   e.time <- proc.time()[3]
   if(verbose>0) cat("+ finished read.features in",e.time-s.time,"s\n")
@@ -66,6 +71,11 @@ read.features <- function(fn.in.feat, verbose=0){
 #' \item \code{$p.idx} logical vector of labels (\code{TRUE} for cases, \code{FALSE} otherwise);
 #' \item \code{$p.lab} label for cases, e.g. \code{cancer}
 #'}
+#' @examples
+#'  # run with example data
+#' fn.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+#'  package = "SIAMCAT")
+#' labels <- read.labels(fn.label)
 read.labels <- function(fn.in.label){
   if (is.null(fn.in.label)) stop("Filename for labels file not provided!\n")
   if(!file.exists(fn.in.label)) stop("Label file ", fn.in.label, " does not exist!\n")
@@ -132,6 +142,12 @@ read.labels <- function(fn.in.label){
 #' @param fn.in.meta name of the tsv file containing metadata
 #' @export
 #' @return \code{sample_data} object
+#' @examples
+#'  # run with example data
+#' fn.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+#'  package = "SIAMCAT")
+#' meta_data <- read.meta(fn.meta)
+
 read.meta <- function(fn.in.meta){
   if (is.null(fn.in.meta) || toupper(fn.in.meta)=='NULL' || toupper(fn.in.meta)=='NONE' || toupper(fn.in.meta)=='UNKNOWN') {
     warning("Filename for metadata file not provided, continuing without it.\n")

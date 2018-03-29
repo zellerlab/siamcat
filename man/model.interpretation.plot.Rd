@@ -59,5 +59,13 @@ Produces a plot consisting of \itemize{
    percent of the models.
 }
 }
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf',
+   heatmap.type='zscore')
+
+}
 \keyword{SIAMCAT}
 \keyword{model.interpretation.plot}
