@@ -67,7 +67,7 @@ evaluate.predictions <- function(siamcat,verbose=1){
     rocc = list(NULL)
     aucs = vector('numeric', ncol(pred))
     for (c in 1:ncol(pred)) {
-      rocc[c] = list(pROC::roc(response=siamcat@label@label, predictor=pred[,c], ci=FALSE))
+      rocc[c] = list(roc(response=siamcat@label@label, predictor=pred[,c], ci=FALSE))
       aucs[c] = rocc[[c]]$auc
     }
     l.vec = rep(siamcat@label@label, ncol(pred))
@@ -77,7 +77,7 @@ evaluate.predictions <- function(siamcat,verbose=1){
   # average data for plotting one mean prediction curve
   if(verbose>2) cat("+ calculating mean ROC\n")
   summ.stat = 'mean'
-  rocsumm = list(pROC::roc(response=siamcat@label@label, predictor=apply(pred, 1, summ.stat),
+  rocsumm = list(roc(response=siamcat@label@label, predictor=apply(pred, 1, summ.stat),
                  ci=TRUE, of="se", sp=seq(0, 1, 0.05)))
   auroc = list(rocsumm[[1]]$auc)
   # precision recall curve
