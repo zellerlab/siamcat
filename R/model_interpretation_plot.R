@@ -203,7 +203,7 @@ model.interpretation.plot <- function(siamcat, fn.plot,
                  effect.size=apply(rel.weights[sel.idx,], 1, median),verbose=verbose)
   } else {
     auroc.effect <-  sapply(colnames(img.data),
-        FUN=function(f){pROC::roc(predictor=img.data[,f],
+        FUN=function(f){roc(predictor=img.data[,f],
                         response=siamcat@label, direction='<')$auc})
     bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
     plot.heatmap(image.data=img.data,
