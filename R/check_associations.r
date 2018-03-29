@@ -500,24 +500,24 @@ check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=
   if (length(color.scheme) == 1 && class(color.scheme) == 'character'){
     if (n.classes == 2){
       # if color scheme and binary label, make colors as before
-      if (!color.scheme %in% row.names(RColorBrewer::brewer.pal.info)){
+      if (!color.scheme %in% row.names(brewer.pal.info)){
         warning("Not a valid RColorBrewer palette name, defaulting to RdBu.\nSee brewer.pal.info for more information about RColorBrewer palettes.")
         color.scheme <- 'RdYlBu'
       }
-      colors <- rev(colorRampPalette(RColorBrewer::brewer.pal(RColorBrewer::brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(2))
+      colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(2))
     } else {
       # if color scheme and multiclass label, make colors either directly out of the palette (if n.classes smaller than maxcolors) or like before
-      if (!color.scheme %in% row.names(RColorBrewer::brewer.pal.info)){
+      if (!color.scheme %in% row.names(brewer.pal.info)){
         warning("Not a valid RColorBrewer palette name, defaulting to Set3.\n  See brewer.pal.info for more information about RColorBrewer palettes.")
         color.scheme <- 'Set3'
       }
       # if color scheme and multiclass label, check that the palette is not divergent or sequential, but qualitative. Only issue warning.
-      if (RColorBrewer::brewer.pal.info[color.scheme,'category'] != 'qual'){warning("Using a divergent or sequential color palette for multiclass data.")}
-      if (n.classes <= RColorBrewer::brewer.pal.info[color.scheme, 'maxcolors']){
-        colors <- RColorBrewer::brewer.pal(n.classes, color.scheme)
+      if (brewer.pal.info[color.scheme,'category'] != 'qual'){warning("Using a divergent or sequential color palette for multiclass data.")}
+      if (n.classes <= brewer.pal.info[color.scheme, 'maxcolors']){
+        colors <- brewer.pal(n.classes, color.scheme)
       } else {
         warning("The data contains more classes than the color.palette provides.")
-        colors <- rev(colorRampPalette(RColorBrewer::brewer.pal(RColorBrewer::brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(n.classes))
+        colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(n.classes))
       }
     }
   } else if (length(color.scheme == n.classes) && all(is.color(color.scheme))){

@@ -57,10 +57,10 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
   len.diff <- abs(case.count - ctrl.count)
   hmap <- data.frame()
   hmapcolors <- grDevices::colorRampPalette(
-    RColorBrewer::brewer.pal(10, "RdYlGn"))
+    brewer.pal(10, "RdYlGn"))
   color.scheme <- rev(grDevices::colorRampPalette(
-    RColorBrewer::brewer.pal(
-      RColorBrewer::brewer.pal.info["BrBG",'maxcolors'], "BrBG"))(100))
+    brewer.pal(
+      brewer.pal.info["BrBG",'maxcolors'], "BrBG"))(100))
 
   for (m in 1:ncol(siamcat@phyloseq@sam_data)) {
     mname <- gsub('[_.-]', ' ', colnames(siamcat@phyloseq@sam_data)[m])

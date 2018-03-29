@@ -1,5 +1,5 @@
-#' @import   LiblineaR RColorBrewer grid gridBase gridExtra
-#' @import   beanplot glmnet phyloseq mlr
+#' @import   LiblineaR grid gridBase gridExtra
+#' @import   glmnet phyloseq mlr
 #' @importFrom grDevices col2rgb colorRampPalette dev.off gray pdf rgb
 #' @importFrom graphics abline arrows axis barplot box
 #'             boxplot grid image layout lines mtext
@@ -11,6 +11,7 @@
 #' @importFrom PRROC pr.curve
 #' @importFrom pROC roc
 #' @importFrom beanplot beanplot
+#' @importFrom RColorBrewer brewer.pal brewer.pal.info
 #' @importFrom ParamHelpers makeParamSet makeDiscreteParam makeNumericParam
 
 NULL
