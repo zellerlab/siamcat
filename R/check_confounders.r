@@ -96,99 +96,99 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
 
       if(verbose>2) cat('++++ plotting barplot\n')
       # packages required for grid + base
-      graphics::layout(matrix(c(1,1,2)))
+      layout(matrix(c(1,1,2)))
       # barplot
-      graphics::par(mar=c(4.1, 9.1, 4.1, 9.1))
-      vps <- gridBase::baseViewports()
-       grid::pushViewport(vps$figure)
-      vp1 <- grid::plotViewport()
-      bar.plot <- graphics::barplot(freq, ylim=c(0,1),
+      par(mar=c(4.1, 9.1, 4.1, 9.1))
+      vps <- baseViewports()
+       pushViewport(vps$figure)
+      vp1 <- plotViewport()
+      bar.plot <- barplot(freq, ylim=c(0,1),
         main=mname,
         names.arg=c(siamcat@label@n.lab, siamcat@label@p.lab),
         col=colors)
-      graphics::legend(2.5, 1, legend=u.val,
+      legend(2.5, 1, legend=u.val,
         xpd=NA, lwd=2, col=colors,
         inset=0.5, bg="grey96", cex=0.8)
-      p.val  <- stats::fisher.test(ct)$p.value
-      graphics::mtext(paste('Fisher test p-value:',
+      p.val  <- fisher.test(ct)$p.value
+      mtext(paste('Fisher test p-value:',
         format(p.val, digits=4)), cex=0.6, side=1, line=2)
-      grid::popViewport()
+      popViewport()
 
       if(verbose>2) cat('++++ drawing contingency table\n')
       # contingency table
-      graphics::plot.new()
-      vps <- gridBase::baseViewports()
-      grid::pushViewport(vps$figure)
+      plot.new()
+      vps <- baseViewports()
+      pushViewport(vps$figure)
       niceLabel <- rep(siamcat@label@p.lab,length(siamcat@label@label))
       names(niceLabel) <- names(siamcat@label@label)
       niceLabel[siamcat@label@n.idx] <- siamcat@label@n.lab
-      vp1 <-grid::plotViewport()
-      t <- stats::addmargins(table(mvar, niceLabel, dnn=c(mname, 'Label')))
-      gridExtra::grid.table(t, theme=gridExtra::ttheme_minimal())
-      grid::popViewport()
-      graphics::par(mfrow=c(1,1), bty="o")
+      vp1 <-plotViewport()
+      t <- addmargins(table(mvar, niceLabel, dnn=c(mname, 'Label')))
+      grid.table(t, theme=ttheme_minimal())
+      popViewport()
+      par(mfrow=c(1,1), bty="o")
     } else {
       if(verbose>1) cat('++++ continuous variable, using a Q-Q plot\n')
       # discretize continuous variable; split at median for now
       dct <- matrix(NA, nrow = 2, ncol = 2)
       dct[1,] <- c(sum(mvar[siamcat@label@n.idx] <=
-          stats::median(mvar, na.rm=TRUE), na.rm=TRUE),
+          median(mvar, na.rm=TRUE), na.rm=TRUE),
           sum(mvar[siamcat@label@p.idx] <=
-            stats::median(mvar, na.rm=TRUE), na.rm=TRUE))
+            median(mvar, na.rm=TRUE), na.rm=TRUE))
       dct[2,] <- c(sum(mvar[siamcat@label@n.idx] >
-          stats::median(mvar, na.rm=TRUE), na.rm=TRUE),
+          median(mvar, na.rm=TRUE), na.rm=TRUE),
           sum(mvar[siamcat@label@p.idx] >
-            stats::median(mvar, na.rm=TRUE), na.rm=TRUE))
+            median(mvar, na.rm=TRUE), na.rm=TRUE))
       rownames(dct) <- c(paste(mname, "<= med"), paste(mname, "> med"))
       hmap <- rbind(hmap, dct)
-      graphics::layout(rbind(c(1,2), c(3,4)))
+      layout(rbind(c(1,2), c(3,4)))
 
       if(verbose>2) cat('++++ panel 1/4: Q-Q plot\n')
-      graphics::par(mar=c(4.5, 4.5, 2.5, 1.5),mgp=c(2.5,1,0))
+      par(mar=c(4.5, 4.5, 2.5, 1.5),mgp=c(2.5,1,0))
       ax.int <- c(min(mvar, na.rm=TRUE), max(mvar, na.rm=TRUE))
-      stats::qqplot(mvar[siamcat@label@n.idx],
+      qqplot(mvar[siamcat@label@n.idx],
             mvar[siamcat@label@p.idx],
             xlim=ax.int, ylim=ax.int, pch=16, cex=0.6,
             xlab=siamcat@label@n.lab,
             ylab=siamcat@label@p.lab, main=paste('Q-Q plot for', mname))
-      graphics::abline(0, 1, lty=3)
-      p.val  <- stats::wilcox.test(mvar[siamcat@label@n.idx],
+      abline(0, 1, lty=3)
+      p.val  <- wilcox.test(mvar[siamcat@label@n.idx],
         mvar[siamcat@label@p.idx], exact=FALSE)$p.value
-      graphics::text(ax.int[1]+0.9*(ax.int[2]-ax.int[1]),
+      text(ax.int[1]+0.9*(ax.int[2]-ax.int[1]),
         ax.int[1]+0.1*(ax.int[2]-ax.int[1]), cex = 0.8,
         paste('MWW test p-value:', format(p.val, digits=4)), pos=2)
 
       if(verbose>2) cat('++++ panel 2/4: X histogram\n')
-      graphics::par(mar=c(4, 2.5, 3.5, 1.5))
-      graphics::hist(mvar[siamcat@label@n.idx],
+      par(mar=c(4, 2.5, 3.5, 1.5))
+      hist(mvar[siamcat@label@n.idx],
         main = siamcat@label@n.lab, xlab = mname, col = histcolors,
         breaks = seq(min(mvar, na.rm=TRUE),
           max(mvar, na.rm=TRUE), length.out=10))
-      graphics::mtext(paste('N =', length(mvar[siamcat@label@n.idx])),
+      mtext(paste('N =', length(mvar[siamcat@label@n.idx])),
         cex=0.6,side=3,adj=1,line=1)
 
       if(verbose>2) cat('++++ panel 3/4: X boxplot\n')
-      graphics::par(mar=c(2.5, 4.5, 2.5, 1.5))
+      par(mar=c(2.5, 4.5, 2.5, 1.5))
       #combine <- list(mvar[siamcat@label@n.idx], mvar[siamcat@label@p.idx])
       combine <- data.frame(mvar[lgr], c(mvar[smlr], rep(NA, len.diff)))
 
 
-      graphics::boxplot(combine[,1], stats::na.omit(combine[,2]), use.cols=TRUE,
+      boxplot(combine[,1], na.omit(combine[,2]), use.cols=TRUE,
               names=bp.labs,
               ylab = mname, main=paste('Boxplot for', mname),col=histcolors)
-      graphics::stripchart(combine, vertical=TRUE, add=TRUE, method="jitter",
+      stripchart(combine, vertical=TRUE, add=TRUE, method="jitter",
         pch=20)
 
       if(verbose>2) cat('++++ panel 4/4: Y histogram\n')
-      graphics::par(mar=c(4.5, 2.5, 3.5, 1.5))
-      graphics::hist(mvar[siamcat@label@p.idx],
+      par(mar=c(4.5, 2.5, 3.5, 1.5))
+      hist(mvar[siamcat@label@p.idx],
           main = siamcat@label@p.lab, xlab = mname,
           col = histcolors,
           breaks = seq(min(mvar, na.rm=TRUE), max(mvar, na.rm=TRUE),
           length.out=10))
-      graphics::mtext(paste('N =', length(mvar[siamcat@label@p.idx])),
+      mtext(paste('N =', length(mvar[siamcat@label@p.idx])),
         cex=0.6, side=3, adj=1, line=1)
-      graphics::par(mfrow=c(1,1))
+      par(mfrow=c(1,1))
     }
   }
 
@@ -201,9 +201,9 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
   #   rownames(hmap.ratios) <- as.matrix(rownames(hmap))
   #
   #   # plot as labeled barplot...
-  #   graphics::par(mar=c(20, 5, 10, 5))
+  #   par(mar=c(20, 5, 10, 5))
   #   grad.len <- 1000
-  #   graphics::barplot(as.matrix(rep(1,grad.len)),
+  #   barplot(as.matrix(rep(1,grad.len)),
   #     col = viridisLite::viridis(grad.len), horiz=TRUE,
   #     border=0, ylab='', axes=FALSE)
   #     # make sure to add this to the Description file once it is needed
@@ -215,7 +215,7 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
   #
   #   # draw lines to represent each metadata category
   #   for (val in hmap.ratios) {
-  #     graphics::abline(v=(val*grad.len/6) + (grad.len/2))
+  #     abline(v=(val*grad.len/6) + (grad.len/2))
   # }
   # }
 #       tmp <- dev.off()

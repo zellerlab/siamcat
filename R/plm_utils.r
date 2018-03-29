@@ -18,7 +18,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   if (data$label[1] != neg.lab){
     data <- data[c(which(data$label == neg.lab)[1], c(1:nrow(data))[-which(data$label == neg.lab)[1]]),]
   }
-  task      <- mlr::makeClassifTask(data = data, target = "label")
+  task      <- makeClassifTask(data = data, target = "label")
   ## 2) Define the learner
   ## Choose a specific algorithm (e.g. linear discriminant analysis)
   cost      <- 10^seq(-2,3,length=6+5+10)
@@ -26,25 +26,25 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   parameters <- get.parameters.from.param.set(param.set=param.set, method=method, sqrt(nrow(data)))
 
   if(method == "lasso"){
-    lrn       <- mlr::makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=1)
   } else if(method == "ridge"){
-    lrn       <- mlr::makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=0)
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=100, 'alpha'=0)
   } else if(method == "enet"){
-    lrn       <- mlr::makeLearner(cl, predict.type="prob", 'nlambda'=10)
+    lrn       <- makeLearner(cl, predict.type="prob", 'nlambda'=10)
 
   } else if(method == "lasso_ll"){
     cl        <- "classif.LiblineaRL1LogReg"
     class.weights        <- c(5, 1)
     names(class.weights) <- c(-1,1)
-    lrn       <- mlr::makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, wi=class.weights)
     parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "ridge_ll"){
     cl        <- "classif.LiblineaRL2LogReg"
-    lrn       <- mlr::makeLearner(cl, predict.type="prob", epsilon=1e-8, type=0)
+    lrn       <- makeLearner(cl, predict.type="prob", epsilon=1e-8, type=0)
     parameters  <- makeParamSet(makeDiscreteParam("cost", values=cost))
   } else if(method == "randomForest"){
     cl        <- "classif.randomForest"
-    lrn       <- mlr::makeLearner(cl, predict.type = "prob", fix.factors.prediction = TRUE)
+    lrn       <- makeLearner(cl, predict.type = "prob", fix.factors.prediction = TRUE)
 
   } else {
     stop(method, " is not a valid method, currently supported: lasso, enet, ridge, libLineaR, randomForest.\n")
@@ -55,15 +55,15 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
   ## 3) Fit the model
   ## Train the learner on the task using a random subset of the data as training set
   if(!all(is.null(parameters))){
-    hyperPars <- mlr::tuneParams(learner = lrn,
+    hyperPars <- tuneParams(learner = lrn,
                          task = task,
                          resampling =  makeResampleDesc('CV', iters=5L, stratify=TRUE),
                          par.set = parameters,
                          control = makeTuneControlGrid(resolution = 10L),
                          measures=measure,show.info = show.info)
-    lrn       <- mlr::setHyperPars(lrn, par.vals=hyperPars$x)
+    lrn       <- setHyperPars(lrn, par.vals=hyperPars$x)
   }
-  model     <- mlr::train(lrn, task)
+  model     <- train(lrn, task)
 
   if(cl == "classif.cvglmnet"){
     opt.lambda           <- get.optimal.lambda.for.glmnet(model, task, measure, min.nonzero.coeff)
@@ -102,7 +102,7 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
       model.transformed$learner.model[[model.transformed$learner$par.vals$s]] <- lambda
     }
     pred.temp <- predict(model.transformed, task)
-    mlr::performance(pred.temp, measures = measure)
+    performance(pred.temp, measures = measure)
   }, model=trained.model, task=training.task, measure=perf.measure)
   # get optimal lambda in depence of the performance measure
   if (length(perf.measure) == 1){

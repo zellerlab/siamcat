@@ -62,12 +62,12 @@ add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
       if (std.meta) {
         if (verbose > 1) cat('++++ standardizing metadata feature', p, '\n')
         m.mean <- mean(m, na.rm = TRUE)
-        m.sd   <- stats::sd(m, na.rm = TRUE)
+        m.sd   <- sd(m, na.rm = TRUE)
         stopifnot(!m.sd == 0)
         m      <- (m - m.mean)/m.sd
       }
 
-      siamcat@phyloseq@otu_table <- phyloseq::otu_table(
+      siamcat@phyloseq@otu_table <- otu_table(
         rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=TRUE)
       rownames(siamcat@phyloseq@otu_table)[nrow(
         siamcat@phyloseq@otu_table)] <- paste('META_', toupper(p), sep='')

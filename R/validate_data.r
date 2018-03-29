@@ -87,7 +87,7 @@ validate.data <- function(siamcat, verbose=1){
         suitable for analysis in this pipeline." )
       }
     }
-  
+
 
   # if siamcat@phyloseq@sam_datadata is available, check for overlap in labels
   if (!is.null(siamcat@phyloseq@sam_data)) {
@@ -116,7 +116,7 @@ validate.data <- function(siamcat, verbose=1){
       stop('! Metadata is not available for all samples!')
     }
   }
-siamcat@orig_feat <- phyloseq::otu_table(siamcat@phyloseq)
+siamcat@orig_feat <- otu_table(siamcat@phyloseq)
  e.time <- proc.time()[3]
 if(verbose>1) cat("+ finished validate.data in",e.time-s.time,"s\n")
 if(verbose==1) cat("Data succesfully validated\n")
