@@ -642,8 +642,8 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
   }
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished analyse.binary.markerin",e.time-s.time,"s\n")
-  return(list("p.val" = effect.size[idx,'p.val', drop=FALSE],
-              "fc"=effect.size[idx,'fc', drop=FALSE],
+  return(list("p.val" = effect.size[idx,'p.val'],
+              "fc"=effect.size[idx,'fc'],
               "aucs"=effect.size[idx,c('auc', 'auc.ci.l', 'auc.ci.h'),drop=FALSE],
               "pr.shift"=effect.size[idx,c('pr.shift', 'pr.n', 'pr.p'),drop=FALSE],
               "bcol"=bcol[idx],
