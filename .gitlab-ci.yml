@@ -24,7 +24,7 @@ preprocess_data:
   stage: preprocess_data
   before_script:
     - cd Rscript_flavor
-    - R CMD INSTALL SIAMCAT_0.4.0.tar.gz
+    - R CMD INSTALL SIAMCAT_0.99.0.tar.gz
   script:
     - Rscript 01_validate_data.r --metadata_in num_metadata_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_genus.tsv --metadata_out valMetaData.tsv --label_in label_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_genus.tsv --label_out valLabel.tsv --feat_in feat_cancer-vs-healthy_study-pop-I_N141_tax_profile_mocat_bn_genus.tsv --feat_out valFeat.tsv
     - Rscript 02_select_samples.r --metadata_in valMetaData.tsv --metadata_out valMetaData_sel.tsv --label_in valLabel.tsv --label_out valLabel_sel.tsv --feat_in valFeat.tsv --feat_out valFeat_sel.tsv --filter_var="age" --allowed_range="[0,120]"
