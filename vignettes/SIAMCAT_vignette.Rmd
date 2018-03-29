@@ -41,7 +41,7 @@ fn.in.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_pro
 
 We can access the files with the dedicated SIAMCAT functions and directly
 construct a SIAMCAT object containing the microbial features, the patient's
-labels, and metadata for the patients. 
+labels, and metadata for the patients.
 ```{r results="hide"}
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
@@ -103,10 +103,10 @@ and associations. Confounders are checked with the function `check.confounders`,
 which produces a plot for each possible confounder in the metadata and diverts
 the output into a pdf-file. The function can be used like that:
 
-```{r}
+```{r eval=FALSE}
 ## Not run here, since the function produces a pdf-file as output
-# check.confounders(siamcat,
-#                   fn.plot='conf_check.pdf')
+check.confounders(siamcat,
+                  fn.plot='conf_check.pdf')
 ```
 
 Here would be an example output for `Age` as potential confounder:
@@ -176,15 +176,15 @@ Similarly, associations between microbial markers and the label can be tested
  Wilcoxon test. The function again produces a pdf-file as output and is thus
  not run here, but can be used as follows:
 
-```{r}
+```{r eval=FALSE}
 ## Not run here, since the function produces a pdf-file as output
-# check.associations(siamcat,
-#                    sort.by='fc',
-#                    fn.plot = 'assoc.pdf',
-#                    alpha = 0.05, mult.corr = "fdr",
-#                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
-#                    panels=c("fc", "prevalence", "auroc"),
-#                    verbose=2)
+check.associations(siamcat,
+                   sort.by='fc',
+                   fn.plot = 'assoc.pdf',
+                   alpha = 0.05, mult.corr = "fdr",
+                   detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",
+                   panels=c("fc", "prevalence", "auroc"),
+                   verbose=2)
 ```
 
 # Model Building
@@ -286,9 +286,9 @@ To plot the results of the evaluation, we can use the function
 `model.evaluation.plot`, which produces a pdf-file showing the ROC and PR
 Curves for the different resamples runs as well as the mean ROC and PR Curve.
 
-```{r}
+```{r eval=FALSE}
 ## Not run here, since the function produces a pdf-file as output
-# model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
+model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
 ```
 
 Instead of the pdf-output, we can also access the evaluation data in the
@@ -331,15 +331,15 @@ selected features the
 The function again produces a pdf-file as output and is thus not run here. An
 example of how it can be used can be found below:
 
-```{r}
+```{r eval=FALSE}
 ## Not run here, since the function produces a pdf-file as output
-# model.interpretation.plot(siamcat,
-#                         fn.plot='interpretation.pdf',
-#                         consens.thres = 0.5,
-#                         norm.models = TRUE,
-#                         limits=c(-3,3),
-#                         heatmap.type = 'zscore',
-#                         verbose=2)
+model.interpretation.plot(siamcat,
+                        fn.plot='interpretation.pdf',
+                        consens.thres = 0.5,
+                        norm.models = TRUE,
+                        limits=c(-3,3),
+                        heatmap.type = 'zscore',
+                        verbose=2)
 ```
 
 Alternatively, we show here only the z-score heatmap for the top selected features:
