@@ -10,7 +10,7 @@ build:
   stage: build
   script:
   - R CMD build ./ --no-build-vignettes
-  - R CMD INSTALL SIAMCAT_0.4.0.tar.gz
+  - R CMD INSTALL SIAMCAT_0.99.0.tar.gz
   - mv SIAMCAT_* ./Rscript_flavor
   - cd Rscript_flavor
   - wget http://congo.embl.de/downloads/siamcat_test_data.tar.gz
