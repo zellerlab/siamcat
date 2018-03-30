@@ -63,32 +63,40 @@
   <div class="col-md-9">
     <div class="page-header toc-ignore">
       <h1>SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</h1>
-                        <h4 class="author">Konrad Zych, Jakob Wirbel, Nicolai Karcher, and Georg Zeller</h4>
+                        <h4 class="author">Konrad Zych, Jakob Wirbel and Georg Zeller</h4>
             <address class="author_afil">
       EMBL Heidelberg<br><a class="author_email" href="mailto:#"></a><a href="mailto:georg.zeller@embl.de">georg.zeller@embl.de</a>
       </address>
                   
-            <h4 class="date">2018-03-27</h4>
+            <h4 class="date">2018-03-28</h4>
           </div>
 
     
     
 <div class="contents">
-<p>This vignette aims to be a short tutorial for the functionality of SIAMCAT. More detailed tutorials or examples of additional workflows can be found on the web under <a href="http://microbiome-tools.embl.de/">EMBL-microbiome tools</a>.</p>
+<div id="about-this-vignette" class="section level1">
+<h1 class="hasAnchor">
+<a href="#about-this-vignette" class="anchor"></a>About this vignette</h1>
+<p>This vignette aims to be a short tutorial for the main functionalities of SIAMCAT. More detailed tutorials or examples of additional workflows can be found on the web under <a href="http://microbiome-tools.embl.de/">EMBL-microbiome tools</a>.</p>
+</div>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>SIAMCAT is a package for the analysis of microbiome data TODO TODO TODO</p>
+<p>The promise of elucidating associations between the microbiota and their host, with diagnostic and therapeutic potential, is fueling metagenomics research. However, there is a lack of user-friendly software tools implementing robust statistical testing and machine learning methods suitable for microbiome data. Here, we describe SIAMCAT, a solution to this problem implemented as R package.</p>
+<p>Associations between microbiome and host phenotypes are ideally described by quantitative models able to predict host status from microbiome composition. SIAMCAT can do so for data from hundreds of thousands of microbial taxa, gene families, or metabolic pathways over hundreds of samples. SIAMCAT produces graphical output for convenient assessment of the quality of the input data and statistical associations, for model diagnostics and inference revealing the most predictive microbial biomarkers.</p>
 </div>
 <div id="first-steps-readvalidatefilter-the-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#first-steps-readvalidatefilter-the-data" class="anchor"></a>First Steps: Read/Validate/Filter the Data</h1>
 <p>First, let’s load the SIAMCAT package and use the files included in SIAMCAT. The data are the same as used in the publication of <a href="http://europepmc.org/abstract/MED/25432777">Zeller et al.</a>, which demonstrated the potential of microbial markers in feacal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SIAMCAT)
-fn.in.feat  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
-fn.in.label &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
-fn.in.meta  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>, <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)</code></pre></div>
-<p>We can access the files with the dedicated SIAMCAT functions and directly construct a SIAMCAT object containing the microbial features, the patient’s labels, and metadata for the patients</p>
+fn.in.feat  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+  <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
+fn.in.label &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+  <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
+fn.in.meta  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+  <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)</code></pre></div>
+<p>We can access the files with the dedicated SIAMCAT functions and directly construct a SIAMCAT object containing the microbial features, the patient’s labels, and metadata for the patients.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.features.html">read.features</a></span>(fn.in.feat)
 label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.labels.html">read.labels</a></span>(fn.in.label)
 meta  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.meta.html">read.meta</a></span>(fn.in.meta)
@@ -101,6 +109,12 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## contains phyloseq-class experiment-level object @phyloseq:
 ## phyloseq@otu_table()   OTU Table:         [ 1754 taxa and 141 samples ]
 ## phyloseq@sam_data()    Sample Data:       [ 141 samples by 8 sample variables ]</code></pre>
+<p>In fact, <code>siamcat-class</code> object extends <code>phyloseq-class</code> object:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phyloseq &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.phyloseq.html">get.phyloseq</a></span>(siamcat)
+<span class="kw">show</span>(phyloseq)</code></pre></div>
+<pre><code>## phyloseq-class experiment-level object
+## otu_table()   OTU Table:         [ 1754 taxa and 141 samples ]
+## sample_data() Sample Data:       [ 141 samples by 8 sample variables ]</code></pre>
 <p>The <code>validate.data</code> function ensures that we have labels for all the samples in features and vice versa.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/validate.data.html">validate.data</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## Data succesfully validated</code></pre>
@@ -113,7 +127,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <pre><code>## + starting select.samples
 ## +++ removed 0 samples with age not in [20, 90] (retaining 141)
 ## Keeping labels of 141 sample(s).
-## + finished select.samples in 0.007 s</code></pre>
+## + finished select.samples in 0.009 s</code></pre>
 <p>Since we have quite a lot of microbial markers in the dataset at the moment, we perform unsupervised feature selection using the function <code>filter.features</code>. Here, we filter based on overall abundance, but could also do so based on prevalence or cumulative abundance.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.features.html">filter.features</a></span>(siamcat,  
                        <span class="dt">filter.method =</span> <span class="st">'abundance'</span>,
@@ -125,31 +139,31 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## +++ before filtering, the data has 1754 features
 ## +++ removed 1 features corresponding to UNMAPPED reads
 ## +++ removed 1546 features whose values did not exceed 0.001 in any sample (retaining 207)
-## + finished filter.features in 0.041 s</code></pre>
+## + finished filter.features in 0.045 s</code></pre>
 </div>
 <div id="associationconfounder-testing" class="section level1">
 <h1 class="hasAnchor">
 <a href="#associationconfounder-testing" class="anchor"></a>Association/Confounder Testing</h1>
 <p>Another functionality of SIAMCAT are the modules for testing of confounders and associations. Confounders are checked with the function <code>check.confounders</code>, which produces a plot for each possible confounder in the metadata and diverts the output into a pdf-file. The function can be used like that:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run here, since the function produces a pdf-file as output
-<span class="co"># check.confounders(siamcat,</span>
-<span class="co">#                   fn.plot='conf_check.pdf')</span></code></pre></div>
+<span class="kw"><a href="../reference/check.confounders.html">check.confounders</a></span>(siamcat,
+                  <span class="dt">fn.plot=</span><span class="st">'conf_check.pdf'</span>)</code></pre></div>
 <p>Here would be an example output for <code>Age</code> as potential confounder:</p>
-<p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Similarly, associations between microbial markers and the label can be tested with the <code>check.associations</code> function. The function computes a generalized fold change for the marker, the prevalence shift, a single feature AUC, and the significance of the associations. The significance is tested with a Wilcoxon test. The function again produces a pdf-file as output and is thus not run here, but can be used as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run here, since the function produces a pdf-file as output
-<span class="co"># check.associations(siamcat,</span>
-<span class="co">#                    sort.by='fc',</span>
-<span class="co">#                    fn.plot = 'assoc.pdf',</span>
-<span class="co">#                    alpha = 0.05, mult.corr = "fdr",</span>
-<span class="co">#                    detect.lim = 10^-6, max.show = 50, plot.type = "quantile.box",</span>
-<span class="co">#                    panels=c("fc", "prevalence", "auroc"),</span>
-<span class="co">#                    verbose=2)</span></code></pre></div>
+<span class="kw"><a href="../reference/check.associations.html">check.associations</a></span>(siamcat,
+                   <span class="dt">sort.by=</span><span class="st">'fc'</span>,
+                   <span class="dt">fn.plot =</span> <span class="st">'assoc.pdf'</span>,
+                   <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="dt">mult.corr =</span> <span class="st">"fdr"</span>,
+                   <span class="dt">detect.lim =</span> <span class="dv">10</span><span class="op">^-</span><span class="dv">6</span>, <span class="dt">max.show =</span> <span class="dv">50</span>, <span class="dt">plot.type =</span> <span class="st">"quantile.box"</span>,
+                   <span class="dt">panels=</span><span class="kw">c</span>(<span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span>),
+                   <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
 </div>
 <div id="model-building" class="section level1">
 <h1 class="hasAnchor">
 <a href="#model-building" class="anchor"></a>Model Building</h1>
-<p>Another feature of SIAMCAT is the versatile but easy-to-use interface for the construction of machine learning models on the basis of microbial markers. SIAMCAT contains functions for data normalization, splitting the data into cross-validation folds, training the model, and making predictions based on cross-valdiation instances and the trained models.</p>
+<p>Another feature of SIAMCAT is the versatile but easy-to-use interface for the construction of machine learning models on the basis of microbial markers. SIAMCAT contains functions for data normalization, splitting the data into cross-validation folds, training the model, and making predictions based on cross-validation instances and the trained models.</p>
 <div id="data-normalization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-normalization" class="anchor"></a>Data Normalization</h2>
@@ -162,7 +176,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## +++ performing de novo normalization using the  log.unit  method
 ## + feature sparsity before normalization: 45.11598%
 ## +++ feature sparsity after normalization: 0%
-## + finished normalize.features in 0.02 s</code></pre>
+## + finished normalize.features in 0.03 s</code></pre>
 </div>
 <div id="prepare-cross-validation" class="section level2">
 <h2 class="hasAnchor">
@@ -177,7 +191,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <pre><code>## + starting create.data.split
 ## + resampling round 1 
 ## + resampling round 2 
-## + finished create.data.split in 0.024 s</code></pre>
+## + finished create.data.split in 0.057 s</code></pre>
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">
@@ -195,243 +209,29 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## + training lasso models on 10 training sets
 ## +++ training on cv fold: 1 
 ## ++++ repetition: 1 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 112
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 70 42 
-## Positive class: -1
 ## ++++ repetition: 2 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 112
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 70 42 
-## Positive class: -1
 ## +++ training on cv fold: 2 
 ## ++++ repetition: 1 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 112
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 70 42 
-## Positive class: -1
 ## ++++ repetition: 2 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 112
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 70 42 
-## Positive class: -1
 ## +++ training on cv fold: 3 
 ## ++++ repetition: 1 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 112
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 70 42 
-## Positive class: -1
 ## ++++ repetition: 2 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 112
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 70 42 
-## Positive class: -1
 ## +++ training on cv fold: 4 
 ## ++++ repetition: 1 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 114
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 71 43 
-## Positive class: -1
 ## ++++ repetition: 2 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 114
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 71 43 
-## Positive class: -1
 ## +++ training on cv fold: 5 
 ## ++++ repetition: 1 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
-## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 114
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 71 43 
-## Positive class: -1
 ## ++++ repetition: 2 
-## Learner classif.cvglmnet from package glmnet
-## Type: classif
-## Name: GLM with Lasso or Elasticnet Regularization (Cross Validated Lambda); Short name: cvglmnet
-## Class: classif.cvglmnet
-## Properties: numerics,factors,prob,twoclass,multiclass,weights
-## Predict-Type: prob
-## Hyperparameters: nlambda=100,alpha=1
 ## 
-## Supervised task: data
-## Type: classif
-## Target: label
-## Observations: 114
-## Features:
-## numerics  factors  ordered 
-##      207        0        0 
-## Missings: FALSE
-## Has weights: FALSE
-## Has blocking: FALSE
-## Classes: 2
-## -1  1 
-## 71 43 
-## Positive class: -1
-## 
-## + finished train.model in 14.92 s</code></pre>
-<p>The models are saved in the <code>model_list</code> slot of the <code>siamcat</code> object. For example, the model trained on the first fold in the first repetition could be accessed like that:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat<span class="op">@</span>model_list<span class="op">@</span>models[[<span class="dv">1</span>]]</code></pre></div>
+## + finished train.model in 17.321 s</code></pre>
+<p>The models are saved in the <code>model_list</code> slot of the <code>siamcat</code> object. This slot stores objects of <code>model_list-class</code>. To get the complete list out of the SIAMCAT object:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.model_list.html">get.model_list</a></span>(siamcat)</code></pre></div>
+<p>This slot also stores information on which method was used to construct the model:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/get.model.type.html">get.model.type</a></span>(siamcat)</code></pre></div>
+<pre><code>## [1] "lasso"</code></pre>
+<p>Models can also be easily accessed:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.models.html">get.models</a></span>(siamcat)
+models[[<span class="dv">1</span>]]</code></pre></div>
 <pre><code>## Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
 ## Trained on: task.id = data; obs = 112; features = 207
 ## Hyperparameters: nlambda=100,alpha=1</code></pre>
@@ -441,14 +241,15 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <a href="#make-predictions" class="anchor"></a>Make Predictions</h2>
 <p>Using the data-split and the models trained in previous step, we can use the function <code>make.predictions</code> in order to apply the models on the test instances in the data-split. The predictions will be saved in the <code>pred_matrix</code> slot of the <code>siamcat</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">0</span>)
-<span class="kw">head</span>(siamcat<span class="op">@</span>pred_matrix)</code></pre></div>
-<pre><code>##                       CV_rep1     CV_rep2
-## CCIS27304052ST-3-0 -0.6852448 -0.79058426
-## CCIS15794887ST-4-0 -0.7589159 -0.69248791
-## CCIS74726977ST-3-0 -0.1828486  0.05903933
-## CCIS16561622ST-4-0 -0.4605813 -0.04851215
-## CCIS79210440ST-3-0 -0.5672577 -0.83323937
-## CCIS82507866ST-3-0 -0.8206232 -0.90129204</code></pre>
+pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.pred_matrix.html">get.pred_matrix</a></span>(siamcat)
+<span class="kw">head</span>(pred_matrix)</code></pre></div>
+<pre><code>##                       CV_rep1    CV_rep2
+## CCIS27304052ST-3-0 -0.6550778 -0.7945604
+## CCIS15794887ST-4-0 -0.6731294 -0.4455925
+## CCIS74726977ST-3-0 -0.4542887 -0.1998039
+## CCIS16561622ST-4-0 -0.6990310 -0.2787479
+## CCIS79210440ST-3-0 -0.2068696 -0.3048015
+## CCIS82507866ST-3-0 -0.8425932 -0.7692176</code></pre>
 </div>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level1">
@@ -457,13 +258,13 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <p>In the final part, we want to find out how well the model performed and which microbial markers had been selected in the model. In order to do so, we first calculate how well the predictions fit the real data using the function <code>evaluate.predictions</code>. This function calculates the Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR) Curve for each resampled cross-validation run. The results of the evaluation will be stored in the <code>eval_data</code> slot of the <code>siamcat</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
 <pre><code>## + starting evaluate.predictions
-## + finished evaluate.predictions in 6.595 s</code></pre>
+## + finished evaluate.predictions in 7.43 s</code></pre>
 <div id="evaluation-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#evaluation-plot" class="anchor"></a>Evaluation plot</h2>
 <p>To plot the results of the evaluation, we can use the function <code>model.evaluation.plot</code>, which produces a pdf-file showing the ROC and PR Curves for the different resamples runs as well as the mean ROC and PR Curve.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run here, since the function produces a pdf-file as output
-<span class="co"># model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)</span></code></pre></div>
+<span class="kw"><a href="../reference/model.evaluation.plot.html">model.evaluation.plot</a></span>(siamcat,<span class="st">'eval_plot.pdf'</span>,<span class="dt">verbose =</span> <span class="dv">2</span>)</code></pre></div>
 <p>Instead of the pdf-output, we can also access the evaluation data in the <code>siamcat</code> object directly and plot e.g. the ROC-Curves:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plot ROC Curves</span>
 <span class="kw">plot</span>(<span class="ot">NULL</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),
@@ -471,19 +272,20 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <span class="kw">title</span>(<span class="st">'ROC curve for the model'</span>)
 <span class="kw">abline</span>(<span class="dt">a=</span><span class="dv">0</span>, <span class="dt">b=</span><span class="dv">1</span>, <span class="dt">lty=</span><span class="dv">3</span>)
 <span class="co"># for each resampled CV run</span>
-<span class="cf">for</span> (r <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(siamcat<span class="op">@</span>eval_data<span class="op">$</span>roc.all)) {
-  roc.c =<span class="st"> </span>siamcat<span class="op">@</span>eval_data<span class="op">$</span>roc.all[[r]]
+eval_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.eval_data.html">get.eval_data</a></span>(siamcat)
+<span class="cf">for</span> (r <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(eval_data<span class="op">$</span>roc.all)) {
+  roc.c =<span class="st"> </span>eval_data<span class="op">$</span>roc.all[[r]]
   <span class="kw">lines</span>(<span class="dv">1</span><span class="op">-</span>roc.c<span class="op">$</span>specificities, roc.c<span class="op">$</span>sensitivities, <span class="dt">col=</span><span class="kw">gray</span>(<span class="kw">runif</span>(<span class="dv">1</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>)))
 }
 <span class="co"># mean ROC curve</span>
-roc.summ =<span class="st"> </span>siamcat<span class="op">@</span>eval_data<span class="op">$</span>roc.average[[<span class="dv">1</span>]]
+roc.summ =<span class="st"> </span>eval_data<span class="op">$</span>roc.average[[<span class="dv">1</span>]]
 <span class="kw">lines</span>(<span class="dv">1</span><span class="op">-</span>roc.summ<span class="op">$</span>specificities, roc.summ<span class="op">$</span>sensitivities, <span class="dt">col=</span><span class="st">'black'</span>, <span class="dt">lwd=</span><span class="dv">2</span>)
 <span class="co"># plot CI</span>
 x =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">rownames</span>(roc.summ<span class="op">$</span>ci))
 yl =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="dv">1</span>]
 yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="dv">3</span>]
 <span class="kw">polygon</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">c</span>(x, <span class="kw">rev</span>(x)), <span class="kw">c</span>(yl, <span class="kw">rev</span>(yu)), <span class="dt">col=</span><span class="st">'#88888844'</span> , <span class="dt">border=</span><span class="ot">NA</span>)</code></pre></div>
-<p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-17-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="interpretation-plot" class="section level2">
 <h2 class="hasAnchor">
@@ -496,22 +298,22 @@ yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="d
 </ul>
 <p>The function again produces a pdf-file as output and is thus not run here. An example of how it can be used can be found below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run here, since the function produces a pdf-file as output
-<span class="co"># model.interpretation.plot(siamcat,</span>
-<span class="co">#                         fn.plot='interpretation.pdf',</span>
-<span class="co">#                         consens.thres = 0.5,</span>
-<span class="co">#                         norm.models = TRUE,</span>
-<span class="co">#                         limits=c(-3,3),</span>
-<span class="co">#                         heatmap.type = 'zscore',</span>
-<span class="co">#                         verbose=2)</span></code></pre></div>
+<span class="kw"><a href="../reference/model.interpretation.plot.html">model.interpretation.plot</a></span>(siamcat,
+                        <span class="dt">fn.plot=</span><span class="st">'interpretation.pdf'</span>,
+                        <span class="dt">consens.thres =</span> <span class="fl">0.5</span>,
+                        <span class="dt">norm.models =</span> <span class="ot">TRUE</span>,
+                        <span class="dt">limits=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>,<span class="dv">3</span>),
+                        <span class="dt">heatmap.type =</span> <span class="st">'zscore'</span>,
+                        <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
 <p>Alternatively, we show here only the z-score heatmap for the top selected features:</p>
-<p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
-<pre><code>## R version 3.4.3 (2017-11-30)
+<pre><code>## R version 3.4.4 (2018-03-15)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
 ## Running under: macOS High Sierra 10.13.3
 ## 
@@ -526,32 +328,32 @@ yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="d
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_0.4.0     mlr_2.11          ParamHelpers_1.10
+## [1] SIAMCAT_0.99.0    phyloseq_1.22.3   mlr_2.12          ParamHelpers_1.10
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reshape2_1.4.3      splines_3.4.3       lattice_0.20-35    
-##  [4] rhdf5_2.20.0        colorspace_1.3-2    htmltools_0.3.6    
-##  [7] stats4_3.4.3        mgcv_1.8-23         beanplot_1.2       
-## [10] LiblineaR_2.10-8    yaml_2.1.16         survival_2.41-3    
-## [13] rlang_0.2.0         pillar_1.1.0        BiocGenerics_0.22.1
-## [16] RColorBrewer_1.1-2  foreach_1.4.4       plyr_1.8.4         
-## [19] stringr_1.3.0       zlibbioc_1.22.0     Biostrings_2.44.2  
-## [22] munsell_0.4.3       gtable_0.2.0        codetools_0.2-15   
-## [25] phyloseq_1.20.0     evaluate_0.10.1     Biobase_2.36.2     
+##  [1] reshape2_1.4.3      splines_3.4.4       lattice_0.20-35    
+##  [4] rhdf5_2.22.0        colorspace_1.3-2    htmltools_0.3.6    
+##  [7] stats4_3.4.4        beanplot_1.2        LiblineaR_2.10-8   
+## [10] yaml_2.1.18         mgcv_1.8-23         XML_3.98-1.10      
+## [13] survival_2.41-3     rlang_0.2.0         pillar_1.2.1       
+## [16] RColorBrewer_1.1-2  BiocGenerics_0.24.0 foreach_1.4.4      
+## [19] plyr_1.8.4          stringr_1.3.0       zlibbioc_1.24.0    
+## [22] Biostrings_2.46.0   munsell_0.4.3       gtable_0.2.0       
+## [25] codetools_0.2-15    evaluate_0.10.1     Biobase_2.38.0     
 ## [28] knitr_1.20          parallelMap_1.3     permute_0.9-4      
-## [31] IRanges_2.10.5      biomformat_1.4.0    parallel_3.4.3     
-## [34] PRROC_1.3           Rcpp_0.12.15        scales_0.5.0       
+## [31] IRanges_2.12.0      PRROC_1.3           biomformat_1.6.0   
+## [34] parallel_3.4.4      Rcpp_0.12.16        scales_0.5.0       
 ## [37] backports_1.1.2     checkmate_1.8.5     vegan_2.4-6        
-## [40] S4Vectors_0.14.7    jsonlite_1.5        XVector_0.16.0     
+## [40] S4Vectors_0.16.0    jsonlite_1.5        XVector_0.18.0     
 ## [43] gridExtra_2.3       ggplot2_2.2.1       digest_0.6.15      
-## [46] stringi_1.1.6       BBmisc_1.11         grid_3.4.3         
-## [49] rprojroot_1.3-2     ade4_1.7-10         tools_3.4.3        
-## [52] magrittr_1.5        lazyeval_0.2.1      glmnet_2.0-13      
-## [55] tibble_1.4.2        cluster_2.0.6       pkgconfig_2.0.1    
-## [58] ape_5.0             MASS_7.3-48         Matrix_1.2-12      
-## [61] gridBase_0.4-7      data.table_1.10.4-3 pROC_1.10.0        
-## [64] rmarkdown_1.8       iterators_1.0.9     multtest_2.32.0    
-## [67] igraph_1.1.2        nlme_3.1-131.1      compiler_3.4.3</code></pre>
+## [46] stringi_1.1.7       BBmisc_1.11         grid_3.4.4         
+## [49] rprojroot_1.3-2     ade4_1.7-10         tools_3.4.4        
+## [52] magrittr_1.5        glmnet_2.0-13       lazyeval_0.2.1     
+## [55] tibble_1.4.2        cluster_2.0.6       ape_5.0            
+## [58] pkgconfig_2.0.1     gridBase_0.4-7      MASS_7.3-49        
+## [61] Matrix_1.2-12       data.table_1.10.4-3 pROC_1.11.0        
+## [64] rmarkdown_1.9       iterators_1.0.9     multtest_2.34.0    
+## [67] igraph_1.2.1        nlme_3.1-131.1      compiler_3.4.4</code></pre>
 </div>
 </div>
   </div>
@@ -561,7 +363,8 @@ yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="d
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
+<li><a href="#about-this-vignette">About this vignette</a></li>
+      <li><a href="#introduction">Introduction</a></li>
       <li><a href="#first-steps-readvalidatefilter-the-data">First Steps: Read/Validate/Filter the Data</a></li>
       <li><a href="#associationconfounder-testing">Association/Confounder Testing</a></li>
       <li>
