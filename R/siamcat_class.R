@@ -56,7 +56,7 @@ setClass("label", representation(label = "vector", header = "character",
 #' @rdname siamcat-class
 #' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
 #' @slot label an object of class \link{label-class}
-#' @slot orig_feat an object of class \link[phyloseq]{otu_table}
+#' @slot orig_feat an object of class \link[phyloseq]{otu_table-class}
 #' @slot data_split an object of class \link{data_split-class}
 #' @slot norm_param a list of normalzation parameters, see \link{normalize.features} for more details
 #' @slot model_list an object of class \link{model_list-class}
