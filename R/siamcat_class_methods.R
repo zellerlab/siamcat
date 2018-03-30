@@ -112,7 +112,7 @@ get.features <- function(siamcat){
     return(siamcat@phyloseq@otu_table)
 }
 
-#' Access phyloseq object in siamcat@phylose
+#' Access phyloseq object in siamcat@phyloseq
 #' @title get.phyloseq
 #' @name get.phyloseq 
 #' @description Function to access phyloseq object in siamcat@phylose
@@ -123,7 +123,7 @@ get.features <- function(siamcat){
 #'  data(siamcat_example)
 #'  phyloseq <- get.phyloseq(siamcat)
 get.phyloseq <- function(siamcat){
-    return(siamcat@phyloseq@otu_table)
+    return(siamcat@phyloseq)
 }
 
 #' Access features in siamcat@phylose@otu_table
