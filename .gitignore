@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.history
+.Rapp.history
+.Rbuildignore
+*.Rproj
+*.Rcheck*/
+SIAMCAT.RProj
+*.DS_Store*
+inst/doc
+*.pdf
+
