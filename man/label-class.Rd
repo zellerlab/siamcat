@@ -7,3 +7,28 @@
 \description{
 The S4 class for storing label info.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{label}}{numeric vector, specifying to which category samples belong,
+usualy made of 1s and -1s}
+
+\item{\code{header}}{contains information from the header of the label file}
+
+\item{\code{info}}{list with additional informations about the dataset}
+
+\item{\code{positive.lab}}{specifies which of two numbers in label is a positive label}
+
+\item{\code{negative.lab}}{specifies which of two numbers in label is a negative label}
+
+\item{\code{n.idx}}{numeric vector - on which positions in the label there are samples
+withc negative label}
+
+\item{\code{p.idx}}{numeric vector - on which positions in the label there are samples
+withc positive label}
+
+\item{\code{n.lab}}{character string with a name for the negative label (e.g. "healthy")}
+
+\item{\code{p.lab}}{character string with a name for the positive label (e.g. "cancer")}
+}}
+
