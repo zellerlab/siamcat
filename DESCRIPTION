@@ -1,7 +1,7 @@
 Package: SIAMCAT
 Type: Package
 Title: Statistical Inference of Associations between Microbial Communities And host phenoTypes
-Version: 0.99.0
+Version: 0.99.1
 Author: Georg Zeller [aut,cre], Jakob Wirbel[aut], Konrad Zych [aut], Nicolai Karcher[ctb] and Kersten Breuer[ctb]
 Authors@R: c(person("Georg", "Zeller", role = c("aut", "cre"), email = "zeller@embl.de", comment = c(ORCID = "0000-0003-1429-7485")),
              person("Konrad", "Zych", role = c("aut", "cre"), email = "konrad.zych@embl.de", comment = c(ORCID = "0000-0001-7426-0516")),
@@ -27,7 +27,8 @@ Imports:
     PRROC,
     RColorBrewer,
     stats,
-    utils
+    utils,
+    methods
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

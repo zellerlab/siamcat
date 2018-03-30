@@ -10,7 +10,7 @@ get.features(siamcat)
 \item{siamcat}{an object of class \link{siamcat-class}}
 }
 \value{
-Features as \link[phyloseq]{otu_table} object
+Features as \link[phyloseq]{otu_table-class} object
 }
 \description{
 Function to access features in siamcat@phylose@otu_table
@@ -20,5 +20,5 @@ Access features in siamcat@phylose@otu_table
 }
 \examples{
  data(siamcat_example)
- feat <- get.features(siamcat)
+ feat <- get.features(siamcat_example)
 }

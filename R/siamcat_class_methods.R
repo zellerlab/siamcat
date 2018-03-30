@@ -92,7 +92,7 @@ is.component.class = function(x,class){
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  siamcat_example <- reset.features(siamcat)
+#'  siamcat_example <- reset.features(siamcat_example)
 reset.features <- function(siamcat){
     siamcat@phyloseq@otu_table <- siamcat@orig_feat
     return(siamcat)
@@ -103,11 +103,11 @@ reset.features <- function(siamcat){
 #' @name get.features 
 #' @description Function to access features in siamcat@phylose@otu_table
 #' @param siamcat an object of class \link{siamcat-class}
-#' @return Features as \link[phyloseq]{otu_table} object
+#' @return Features as \link[phyloseq]{otu_table-class} object
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  feat <- get.features(siamcat)
+#'  feat <- get.features(siamcat_example)
 get.features <- function(siamcat){
     return(siamcat@phyloseq@otu_table)
 }
@@ -121,7 +121,7 @@ get.features <- function(siamcat){
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  phyloseq <- get.phyloseq(siamcat)
+#'  phyloseq <- get.phyloseq(siamcat_example)
 get.phyloseq <- function(siamcat){
     return(siamcat@phyloseq)
 }
@@ -135,7 +135,7 @@ get.phyloseq <- function(siamcat){
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  feat <- get.features.matrix(siamcat)
+#'  feat <- get.features.matrix(siamcat_example)
 get.features.matrix <- function(siamcat){
     return(matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
                dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table))))
@@ -150,7 +150,7 @@ get.features.matrix <- function(siamcat){
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  model_list <- get.model_list(siamcat)
+#'  model_list <- get.model_list(siamcat_example)
 get.model_list <- function(siamcat){
     return(siamcat@model_list)
 }
@@ -158,12 +158,12 @@ get.model_list <- function(siamcat){
 #' @title get.model.type
 #' @name get.model.type 
 #' @description Function to access features in siamcat@model_list@model.type
-#' @param siamcat an object of class \link{siamcat-class}t
+#' @param siamcat an object of class \link{siamcat-class}
 #' @return Character string specifing the name of the method used to construct the model.
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  get.model.type(siamcat)
+#'  get.model.type(siamcat_example)
 get.model.type <- function(siamcat){
     return(model.type=siamcat@model_list@model.type)
 }
@@ -172,12 +172,12 @@ get.model.type <- function(siamcat){
 #' @title get.models 
 #' @name get.models 
 #' @description Function to access models in siamcat@model_list@models
-#' @param siamcat an object of class \link{siamcat-class}t
+#' @param siamcat an object of class \link{siamcat-class}
 #' @return List of models
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  models <- get.models(siamcat)
+#'  models <- get.models(siamcat_example)
 get.models <- function(siamcat){
     return(siamcat@model_list@models)
 }
@@ -190,7 +190,7 @@ get.models <- function(siamcat){
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  eval_data <- get.eval_data(siamcat)
+#'  eval_data <- get.eval_data(siamcat_example)
 get.eval_data <- function(siamcat){
     return(siamcat@eval_data)
 }
@@ -200,11 +200,11 @@ get.eval_data <- function(siamcat){
 #' @description Function to access prediction matrix  in siamcat@pred_matrix 
 #' siamcat@orig_feat in an object of class \link{siamcat-class}
 #' @param siamcat an object of class \link{siamcat-class}t
-#' @return Prediction matrix as \link{pred_matrix-class} object
+#' @return Prediction matrix
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  pred_matrix <- get.pred_matrix(siamcat)
+#'  pred_matrix <- get.pred_matrix(siamcat_example)
 get.pred_matrix <- function(siamcat){
     return(siamcat@pred_matrix)
 }
@@ -218,7 +218,7 @@ get.pred_matrix <- function(siamcat){
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  label <- get.label.label(siamcat)
+#'  label <- get.label.label(siamcat_example)
 get.label.label <- function(siamcat){
     return(siamcat@label@label)
 }
@@ -232,21 +232,21 @@ get.label.label <- function(siamcat){
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  label <- get.label(siamcat)
+#'  label <- get.label(siamcat_example)
 get.label <- function(siamcat){
     return(siamcat@label)
 }
 
 #' Access labels in siamcat@label
-#' @title get.label 
-#' @name get.label 
+#' @title get.label.list
+#' @name get.label.list
 #' @description Function to access labels in siamcat@label
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return Label object converted to a list
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  label <- get.label.list(siamcat)
+#'  label <- get.label.list(siamcat_example)
 get.label.list <- function(siamcat){
     return(list(label = siamcat@label@label, header = siamcat@label@header,
                 info=siamcat@label@info, positive.lab=siamcat@label@positive.lab,
@@ -256,15 +256,15 @@ get.label.list <- function(siamcat){
 }
 
 #' Access label info in siamcat@label@info
-#' @title get.label 
-#' @name get.label 
+#' @title get.label.info 
+#' @name get.label.info 
 #' @description Function to access label info in siamcat@label@info
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return List of label informations
 #' @export
 #' @examples
 #'  data(siamcat_example)
-#'  label_info <- get.label.info(siamcat)
+#'  label_info <- get.label.info(siamcat_example)
 get.label.info <- function(siamcat){
     return(siamcat@label@info)
 }
