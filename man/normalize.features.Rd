@@ -5,14 +5,14 @@
 \title{Perform feature normalization}
 \usage{
 normalize.features(siamcat, norm.method = c("rank.unit", "rank.std",
-  "log.std", "log.unit", "clr"), norm.param = list(log.n0 = 1e-08, sd.min.q =
-  0.1, n.p = 2, norm.margin = 1), verbose = 1)
+  "log.std", "log.unit", "log.clr"), norm.param = list(log.n0 = 1e-06,
+  sd.min.q = 0.1, n.p = 2, norm.margin = 1), verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{norm.method}{string, normalization method, can be one of these:
-'\code{c("rank.unit", "rank.std", "log.std", "log.unit", "clr")}}
+'\code{c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")}}
 
 \item{norm.param}{list, specifying the parameters of the different
 normalization methods, see details for more information}
@@ -22,7 +22,7 @@ for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat}
+an object of class \link{siamcat-class} with normalized features
 }
 \description{
 This function performs feature normalization according to user-
@@ -35,7 +35,7 @@ There are five different normalization methods available:
        column (=sample) by the square root of the sum of ranks
  \item \code{"rank.std"} converts features to ranks and applies z-score
        standardization
- \item \code{"clr"} centered log-ratio transformation (with the addition of
+ \item \code{"log.clr"} centered log-ratio transformation (with the addition of
        pseudocounts)
  \item \code{"log.std"} log-transforms features (after addition of
        pseudocounts) and applies z-score standardization
@@ -65,11 +65,28 @@ which are dependant on the normalization method of choice:
        over samples, and \code{3} for normalization by the global maximum.
 }
 
-The function allows to perform a frozen normalization on a different dataset.
-After normalizing the first dataset, the output list \code{$par} contains all
-parameters of the normalization. Supplying this list together with a new dataset
-will normalize the second dataset in a comparable way to the first dataset (e.g.
-by using the same mean for the features for z-score standardization)
+The function additionally allows to perform a frozen normalization on a
+different dataset. After normalizing the first dataset, the output list
+\code{$par} contains all parameters of the normalization. Supplying this list
+together with a new dataset will normalize the second dataset in a comparable
+way to the first dataset (e.g. by using the same mean for the features for
+z-score standardization)
+}
+\examples{
+ # Example data
+ data(siamcat_example)
+ # since the whole pipeline has been run in the example data, exchange the
+ # normalized features with the original features
+ siamcat_example <- reset.features(siamcat_example)
+
+ # Simple example
+ siamcat_norm <- normalize.features(siamcat_example, norm.method='rank.unit')
+
+ # log.unit example
+ siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+
+ # log.std example
+ siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=.1))
 }
 \keyword{SIAMCAT}
 \keyword{normalize.features}

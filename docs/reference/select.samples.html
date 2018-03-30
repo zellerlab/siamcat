@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Select samples based on meta-data <U+2014> select.samples <e2><80><a2> SIAMCAT</title>
+<title>Select samples based on metadata <U+2014> select.samples <e2><80><a2> SIAMCAT</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -87,12 +87,12 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Select samples based on meta-data</h1>
+    <h1>Select samples based on metadata</h1>
     </div>
 
     
-    <p>This functions filters features, labels, and metadata based on
-       a specific column in the metadata. Provided with a column in the
+    <p>This functions selects labels and metadata based on
+       a specific column in the metadata. Provided with a column-name in the
        metadata and a range or a set of allowed values, the function will</p>
     
 
@@ -104,7 +104,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>siamcat</th>
-      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
+      <td><p>an object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>filter</th>
@@ -120,24 +120,29 @@ should be done</p></td>
       <td><p>a range of allowed values</p></td>
     </tr>
     <tr>
-      <th>verbose, </th>
-      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
-for standard information, defaults to
-<code>1</code></p></td>
-    </tr>
-    <tr>
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
-for only information about progress and success, <code>2</code> for normal 
+for only information about progress and success, <code>2</code> for normal
 level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>siamcat an object of class <a href='siamcat.html'>siamcat</a></p>
+    <p>an object of class <a href='siamcat-class.html'>siamcat-class</a> with labels and metadata filtered
+       in order to contain only allowed values</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'> <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+ <span class='co'># Select all samples that fall into an Age-range between 20 and 80 years</span>
+ <span class='no'>siamcat_selected</span> <span class='kw'>&lt;-</span> <span class='fu'>select.samples</span>(<span class='no'>siamcat_example</span>, <span class='st'>'age'</span>, <span class='kw'>allowed.range</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>20</span>, <span class='fl'>80</span>))</div><div class='output co'>#&gt; Keeping labels of 141 sample(s).
+#&gt; Selecting samples finished</div><div class='input'>
+ # Select all samples for which information about the gender is given
+ # Provide additional information with verbose
+ </div><span class='co'># NOT RUN {</span>
+<span class='no'>siamcat_selected</span> <span class='kw'>&lt;-</span> <span class='fu'>select.samples</span>(<span class='no'>siamcat_example</span>, <span class='st'>'gender'</span>, <span class='kw'>allowed.set</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>2</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -145,14 +150,16 @@ level of information and <code>3</code> for full debug information, defaults to 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Georg Zeller, Konrad Zych, Nicolai Karcher, Jakob Wirbel.</p>
+  <p>Developed by Georg Zeller, Konrad Zych, Jakob Wirbel.</p>
 </div>
 
 <div class="pkgdown">

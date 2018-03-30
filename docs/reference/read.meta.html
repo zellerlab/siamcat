@@ -91,10 +91,13 @@
     </div>
 
     
-    <p>This file reads in the tsv file with numerical metadata and converts it into a matrix.</p>
+    <p>This file reads in the tsv file with numerical metadata and
+converts it into a matrix.</p>
 <p>The file should be organized as follows:
-samples (in rows) x metadata (in columns). Metadata needs to be converted to numerical values by the user.</p>
-<p>Metadata may be optional for the SIAMCAT workflow, but are necessary for heatmap displays, see <a href='interpretor.model.plot.html'>interpretor.model.plot</a></p>
+samples (in rows) x metadata (in columns). Metadata needs to be converted to
+numerical values by the user.</p>
+<p>Metadata may be optional for the SIAMCAT workflow, but are necessary for
+heatmap displays, see <a href='model.interpretation.plot.html'>model.interpretation.plot</a></p>
     
 
     <pre class="usage"><span class='fu'>read.meta</span>(<span class='no'>fn.in.meta</span>)</pre>
@@ -110,9 +113,14 @@ samples (in rows) x metadata (in columns). Metadata needs to be converted to num
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix containing metadata from the file</p>
+    <p><code>sample_data</code> object</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'> <span class='co'># run with example data</span>
+<span class='no'>fn.meta</span>  <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+ <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"SIAMCAT"</span>)
+<span class='no'>meta_data</span> <span class='kw'>&lt;-</span> <span class='fu'>read.meta</span>(<span class='no'>fn.meta</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -120,14 +128,16 @@ samples (in rows) x metadata (in columns). Metadata needs to be converted to num
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Georg Zeller, Konrad Zych, Nicolai Karcher, Jakob Wirbel.</p>
+  <p>Developed by Georg Zeller, Konrad Zych, Jakob Wirbel.</p>
 </div>
 
 <div class="pkgdown">

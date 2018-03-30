@@ -94,7 +94,10 @@
     <p>This file reads in the tsv file with features and converts it into a matrix.</p>
 <p>The file should be oragnized as follows:
 features (in rows) x samples (in columns).</p>
-<p>First row should contain sample labels (consistent with label data), while the first column should contain feature labels (e.g. taxonomic identifiers). The remaining entries are expected to be real values <code>&gt;= 0</code> that quantify the abundance of each feature in each sample.</p>
+<p>First row should contain sample labels (consistent with label data), while
+the first column should contain feature labels (e.g. taxonomic identifiers).
+The remaining entries are expected to be real values <code>&gt;= 0</code> that quantify
+the abundance of each feature in each sample.</p>
     
 
     <pre class="usage"><span class='fu'>read.features</span>(<span class='no'>fn.in.feat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
@@ -106,13 +109,23 @@ features (in rows) x samples (in columns).</p>
       <th>fn.in.feat</th>
       <td><p>name of the tsv file containing features</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
+for information about progress and time, defaults to <code>0</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix containing features from the file</p>
+    <p><code>otu_table</code> containing features from the file</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'> <span class='co'># run with example data</span>
+ <span class='no'>fn.feat</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"SIAMCAT"</span>)
+ <span class='no'>features</span> <span class='kw'>&lt;-</span> <span class='fu'>read.features</span>(<span class='no'>fn.feat</span>)</div><div class='output co'>#&gt; The provided feature names were not semantically correct for use in R, they were updated.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -120,14 +133,16 @@ features (in rows) x samples (in columns).</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Georg Zeller, Konrad Zych, Nicolai Karcher, Jakob Wirbel.</p>
+  <p>Developed by Georg Zeller, Konrad Zych, Jakob Wirbel.</p>
 </div>
 
 <div class="pkgdown">

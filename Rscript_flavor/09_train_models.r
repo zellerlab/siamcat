@@ -63,7 +63,7 @@ set.seed(r.seed)
 ### read training data
 # features
 feat         <- read.features(opt$feat_in)
-label        <- read.labels(opt$label_in, feat)
+label        <- read.labels(opt$label_in)
 siamcat      <- siamcat(feat,label)
 
 load(opt$data_split)

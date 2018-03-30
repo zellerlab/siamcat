@@ -10,7 +10,17 @@ The S4 class for storing taxa-abundance information and models.
 \section{Slots}{
 
 \describe{
-\item{\code{data_split}}{a list}
+\item{\code{phyloseq}}{object of class \link[phyloseq]{phyloseq-class}}
+
+\item{\code{label}}{an object of class \link{label-class}}
+
+\item{\code{orig_feat}}{an object of class \link[phyloseq]{otu_table-class}}
+
+\item{\code{data_split}}{an object of class \link{data_split-class}}
+
+\item{\code{norm_param}}{a list of normalzation parameters, see \link{normalize.features} for more details}
+
+\item{\code{model_list}}{an object of class \link{model_list-class}}
 
 \item{\code{eval_data}}{list containing \itemize{
  \item \code{$roc.average} average ROC-curve across repeats or a single ROC-curve on complete dataset;
@@ -22,14 +32,6 @@ The S4 class for storing taxa-abundance information and models.
  \item \code{$aucspr} vector of AUC values for the PR curves for every repeat;
  \item \code{$auc.all} vector of AUC values for the ROC curves for every repeat
 }}
-
-\item{\code{label}}{an object of class \link{label-class}}
-
-\item{\code{model_list}}{an object of class \link{model_list-class}}
-
-\item{\code{norm_param}}{a list}
-
-\item{\code{phyloseq}}{object of class \link[phyloseq]{phyloseq-class}}
 
 \item{\code{pred_matrix}}{a matrix with predictions made by \link{make.predictions} function}
 }}

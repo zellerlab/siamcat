@@ -101,19 +101,30 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>siamcat</th>
-      <td><p>an object of class <a href='siamcat.html'>siamcat</a></p></td>
+      <td><p>an object of class <a href='siamcat-class.html'>siamcat-class</a></p></td>
     </tr>
     <tr>
       <th>ids</th>
       <td><p>names of samples to be left in the <code>siamcat@label</code></p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code> for more
+information about progress and success, defaults to <code>1</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>siamcat an object of class <a href='siamcat.html'>siamcat</a></p>
+    <p>siamcat an object of class <a href='siamcat-class.html'>siamcat-class</a></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+ <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+ <span class='co'># simple working example</span>
+ <span class='no'>siamcat_filtered</span> <span class='kw'>&lt;-</span> <span class='fu'>filter.label</span>(<span class='no'>siamcat_example</span>, <span class='kw'>ids</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>:<span class='fl'>10</span>))</div><div class='output co'>#&gt; Keeping labels of 10 sample(s).</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -121,14 +132,16 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Georg Zeller, Konrad Zych, Nicolai Karcher, Jakob Wirbel.</p>
+  <p>Developed by Georg Zeller, Konrad Zych, Jakob Wirbel.</p>
 </div>
 
 <div class="pkgdown">

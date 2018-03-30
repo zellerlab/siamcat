@@ -6,16 +6,36 @@
 # GNU GPL 3.0
 ###
 
-#' @title Prediction on the test set
-#' @description This function takes the test set instances and the model trained by \link{plm.trainer} in order to predict the classes.
+#' @title Make predictions on a test set
+#' @description This function takes a \link{siamcat-class}-object containing a model
+#'        trained by \link{train.model} and performs predictions on a given
+#'        test-set.
 #' @param siamcat object of class \link{siamcat-class}
+#' @param siamcat.holdout optional, object of class \link{siamcat-class} on which
+#'        to make predictions, defaults to \code{NULL}
+#' @param normalize.holdout boolean, should the holdout features be normalized
+#'        with a frozen normalization (see \link{normalize.features}) using the
+#'        normalization parameters in \code{siamcat}?, defaults to \code{TRUE}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
 #'        level of information and \code{3} for full debug information, defaults to \code{1}
 #' @export
-#' @keywords SIAMCAT plm.predictor
-#' @return object of class \link{siamcat-class}
+#' @keywords SIAMCAT make.predictions
+#' @return object of class \link{siamcat-class} with the slot \code{pred_matrix}
+#'        filled or a matrix containing the predictions for the holdout set
+#' @details This functions uses the model in the \code{model_list}-slot of the
+#'        \code{siamcat} object to make predictions on a given test set. The test
+#'        set can either consist of the test instances in the cross-validation,
+#'        saved in the \code{data_split}-slot of the same \code{siamcat} object,
+#'        or a completely external feature set, given in the form of another
+#'        \code{siamcat} object (\code{siamcat.holdout}).
+#' @examples
+#'  data(siamcat_example)
+#'  # Simple example
+#'  siamcat.pred <- make.predictions(siamcat_example)
 #'
+#'  # Predictions on a holdout-set
+#'  \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)}
 make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TRUE, verbose=1){
 
   s.time <- proc.time()[3]
@@ -76,7 +96,7 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
 
     if (normalize.holdout){
       if(verbose>1) cat("+ Performing frozen normalization on holdout set\n")
-      siamcat.holdout <- normalize.features(siamcat.holdout, norm_param=siamcat@norm_param, verbose=verbose)
+      siamcat.holdout <- normalize.features(siamcat.holdout, norm.param=siamcat@norm_param, verbose=verbose)
     } else {
       cat("WARNING: holdout set is not being normalized!\n")
     }
@@ -115,7 +135,7 @@ make.predictions <- function(siamcat, siamcat.holdout=NULL, normalize.holdout=TR
   }
 
   # print correlation matrix
-  if(verbose>1) cat('Total number of predictions made:', length(pred), '\n')
+  if(verbose>1) cat('\nTotal number of predictions made:', length(pred), '\n')
   correlation <- cor(pred, method='spearman')
   if(verbose>1) cat('Correlation between predictions from repeated CV:\n')
   if(verbose>1) cat('Min: ', min(correlation), ', Median: ', median(correlation), ', Mean: ', mean(correlation), '\n', sep='')

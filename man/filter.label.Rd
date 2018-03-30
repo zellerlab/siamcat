@@ -7,14 +7,24 @@
 filter.label(siamcat, ids, verbose = 1)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat}}
+\item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{ids}{names of samples to be left in the \code{siamcat@label}}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1} for more
+information about progress and success, defaults to \code{1}}
 }
 \value{
-siamcat an object of class \link{siamcat}
+siamcat an object of class \link{siamcat-class}
 }
 \description{
 This functions filters \code{siamcat@label}.
+}
+\examples{
+
+ data(siamcat_example)
+ # simple working example
+ siamcat_filtered <- filter.label(siamcat_example, ids=c(1:10))
+
 }
 \keyword{filter.label}

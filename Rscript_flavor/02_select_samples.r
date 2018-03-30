@@ -44,7 +44,7 @@ start.time  <- proc.time()[1]
 
 ### read label, feature and meta- data
 feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in, feat)
+label <- read.labels(opt$label_in)
 meta  <- read.meta(opt$metadata_in)
 siamcat <- siamcat(feat,label,meta)
 
@@ -52,8 +52,8 @@ siamcat <- siamcat(feat,label,meta)
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
 siamcat     <-  select.samples(siamcat,
-                               filter=opt$filter_var, 
-                               allowed.range=opt$allowed_range, 
+                               filter=opt$filter_var,
+                               allowed.range=opt$allowed_range,
                                allowed.set=opt$allowed_set)
 
 

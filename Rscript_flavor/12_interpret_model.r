@@ -52,7 +52,7 @@ cat('\n')
 ### read features and labels
 start.time <- proc.time()[1]
 feat        <- read.features(opt$feat)
-label       <- read.labels(opt$label,feat)
+label       <- read.labels(opt$label)
 origin.feat <- read.features(opt$origin_feat)
 
 

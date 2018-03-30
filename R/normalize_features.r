@@ -9,9 +9,9 @@
 #' @title Perform feature normalization
 #' @description This function performs feature normalization according to user-
 #'  specified parameters.
-#' @param siamcat an object of class \link{siamcat}
+#' @param siamcat an object of class \link{siamcat-class}
 #' @param norm.method string, normalization method, can be one of these:
-#'  '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "clr")}
+#'  '\code{c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")}
 #' @param norm.param list, specifying the parameters of the different
 #'  normalization methods, see details for more information
 #' @param verbose control output: \code{0} for no output at all, \code{1}
@@ -23,7 +23,7 @@
 #'        column (=sample) by the square root of the sum of ranks
 #'  \item \code{"rank.std"} converts features to ranks and applies z-score
 #'        standardization
-#'  \item \code{"clr"} centered log-ratio transformation (with the addition of
+#'  \item \code{"log.clr"} centered log-ratio transformation (with the addition of
 #'        pseudocounts)
 #'  \item \code{"log.std"} log-transforms features (after addition of
 #'        pseudocounts) and applies z-score standardization
@@ -53,18 +53,34 @@
 #'        over samples, and \code{3} for normalization by the global maximum.
 #'}
 #'
-#' The function allows to perform a frozen normalization on a different dataset.
-#' After normalizing the first dataset, the output list \code{$par} contains all
-#' parameters of the normalization. Supplying this list together with a new dataset
-#' will normalize the second dataset in a comparable way to the first dataset (e.g.
-#' by using the same mean for the features for z-score standardization)
+#' The function additionally allows to perform a frozen normalization on a
+#' different dataset. After normalizing the first dataset, the output list
+#' \code{$par} contains all parameters of the normalization. Supplying this list
+#' together with a new dataset will normalize the second dataset in a comparable
+#' way to the first dataset (e.g. by using the same mean for the features for
+#' z-score standardization)
 #'
 #' @keywords SIAMCAT normalize.features
 #' @export
-#' @return an object of class \link{siamcat}
+#' @return an object of class \link{siamcat-class} with normalized features
+#' @examples
+#'  # Example data
+#'  data(siamcat_example)
+#'  # since the whole pipeline has been run in the example data, exchange the
+#'  # normalized features with the original features
+#'  siamcat_example <- reset.features(siamcat_example)
+#'
+#'  # Simple example
+#'  siamcat_norm <- normalize.features(siamcat_example, norm.method='rank.unit')
+#'
+#'  # log.unit example
+#'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+#'
+#'  # log.std example
+#'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=.1))
 
-normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "clr"),
-                           norm.param=list(log.n0=1e-08, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
+normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
+                           norm.param=list(log.n0=1e-06, sd.min.q=0.1, n.p=2, norm.margin=1), verbose=1) {
 
   if(verbose>1) cat("+ starting normalize.features\n")
   s.time <- proc.time()[3]
@@ -74,17 +90,31 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     # de novo normalization
     if(verbose>1) cat('+++ performing de novo normalization using the ', norm.method, ' method\n')
     ### remove features with missing values
-    # TODO there may be better ways of dealing with NA features
-    keep.idx <- rowSums(is.na(feat) == 0)
+    keep.idx <- rowSums(is.na(feat)) == 0
     if (any(!keep.idx)) {
-      feat.red <- feat[keep.idx,]
-      if(verbose>1) cat('+++ removed ', nrow(feat.red)-nrow(feat), ' features with missing values (retaining ', nrow(feat.red),' )\n', sep='')
+      feat.red.na <- feat[keep.idx,]
+      if(verbose>1) {
+        cat('+++ removed ', nrow(feat.red.na)-nrow(feat),
+          ' features with missing values (retaining ',
+          nrow(feat.red.na),')\n', sep='')
+        }
     } else {
-      feat.red <- feat
+      feat.red.na <- feat
     }
-
+    ### remove features with zero sd
+    keep.idx.sd <- (apply(feat.red.na, 1, sd) == 0)
+    if (any(keep.idx.sd)){
+      feat.red <- feat.red.na[!keep.idx.sd,]
+      if(verbose>1) {
+        cat('+++ removed ', nrow(feat.red.na)-nrow(feat.red),
+          ' features with no variation across samples (retaining ',
+          nrow(feat.red),')\n', sep='')
+      }
+    } else {
+      feat.red <- feat.red.na
+    }
     ## check if one of the allowed norm.methods have been supplied
-    if (!norm.method %in% c("rank.unit", "rank.std", "log.std", "log.unit", "clr")){
+    if (!norm.method %in% c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")){
       stop("Unknown normalization method! Exiting...")
     }
 
@@ -120,7 +150,7 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
       feat.rank <- apply(feat.red, 2, rank, ties.method='average')
       stopifnot(!any(is.na(feat)))
       feat.norm <- apply(feat.rank, 2, FUN=function(x){x/sqrt(sum(x^2))})
-    } else if (norm.method == 'clr'){
+    } else if (norm.method == 'log.clr'){
       feat.log <- feat.red + norm.param$log.n0
       gm <- apply(feat.log, 1, FUN=function(x){exp(mean(log(x)))})
       feat.norm <- t(apply(feat.log, 1, FUN=function(x){log(x/exp(mean(log(x))))}))
@@ -185,7 +215,7 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     if (norm.param$norm.method == 'rank.unit'){
       feat.rank <- apply(feat.red, 2, rank, ties.method='average')
       feat.norm <- apply(feat.rank, 2, FUN=function(x){x/sqrt(sum(x^2))})
-    } else if (norm.param$norm.method == 'clr'){
+    } else if (norm.param$norm.method == 'log.clr'){
       stopifnot(!is.null(norm.param$log.n0) && !is.null(norm.param$geometric.mean) && all(names(norm.param$geometric.mean) == row.names(feat.red)))
       feat.log <- feat.red + norm.param$log.n0
       feat.norm <- log(feat.log/norm.param$geometric.mean)
@@ -218,7 +248,7 @@ normalize.features   <- function(siamcat, norm.method=c("rank.unit", "rank.std",
     stopifnot(!any(is.na(feat.norm)))
 
   }
-  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = T)
+  siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = TRUE)
   e.time <- proc.time()[3]
   if(verbose>1) cat("+ finished normalize.features in",e.time-s.time,"s\n")
   if(verbose==1)cat("Features normalized successfully.\n")

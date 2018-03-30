@@ -51,7 +51,7 @@ cat('\n')
 start.time <- proc.time()[1]
 
 feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in, feat)
+label <- read.labels(opt$label_in)
 siamcat <- siamcat(feat, label)
 
 check.associations(siamcat,

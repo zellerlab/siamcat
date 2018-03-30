@@ -4,13 +4,13 @@
 \alias{read.labels}
 \title{Read labels file}
 \usage{
-read.labels(fn.in.label, feat = NULL)
+read.labels(fn.in.label)
 }
 \arguments{
 \item{fn.in.label}{name of the tsv file containing labels}
 }
 \value{
-list with nine values:\itemize{
+label object containing several entries:\itemize{
 \item \code{$label} named vector containing the numerical labels from the file;
 \item \code{$header} first row of the label file;
 \item \code{$info} information about the type of label (e.g. \code{BINARY});
@@ -23,11 +23,22 @@ list with nine values:\itemize{
 }
 }
 \description{
-This file reads in the tsv file with labels and converts it into a matrix.
+This file reads in the tsv file with labels and converts it into
+ a label object.
 
-First row is expected to be \code{#BINARY:1=[label for cases];-1=[label for controls]}. Second row should contain the sample identifiers as tab-separated list (consistent with feature and metadata).
+First row is expected to be \code{#BINARY:1=[label for cases];-1=[label for controls]}.
+Second row should contain the sample identifiers as tab-separated list
+(consistent with feature and metadata).
 
-Third row is expected to contain the actual class labels (tab-separated): \code{1} for each case and \code{-1} for each control.
+Third row is expected to contain the actual class labels (tab-separated):
+\code{1} for each case and \code{-1} for each control.
 
-Note: Labels can take other numeric values (but not characters or strings); importantly, the label for cases has to be greater than the one for controls.
+Note: Labels can take other numeric values (but not characters or strings);
+importantly, the label for cases has to be greater than the one for controls.
+}
+\examples{
+ # run with example data
+fn.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+ package = "SIAMCAT")
+labels <- read.labels(fn.label)
 }
