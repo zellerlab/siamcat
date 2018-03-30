@@ -20,5 +20,5 @@ Access features in siamcat@phylose@otu_table
 }
 \examples{
  data(siamcat_example)
- feat <- get.features.matrix(siamcat)
+ feat <- get.features.matrix(siamcat_example)
 }

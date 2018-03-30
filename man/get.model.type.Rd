@@ -7,7 +7,7 @@
 get.model.type(siamcat)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat-class}t}
+\item{siamcat}{an object of class \link{siamcat-class}}
 }
 \value{
 Character string specifing the name of the method used to construct the model.
@@ -20,5 +20,5 @@ Access model type in siamcat@model_list@model.type
 }
 \examples{
  data(siamcat_example)
- get.model.type(siamcat)
+ get.model.type(siamcat_example)
 }

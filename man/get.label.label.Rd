@@ -20,5 +20,5 @@ Access labels in siamcat@label@label
 }
 \examples{
  data(siamcat_example)
- label <- get.label.label(siamcat)
+ label <- get.label.label(siamcat_example)
 }

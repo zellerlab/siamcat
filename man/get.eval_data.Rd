@@ -20,5 +20,5 @@ Access evaluation data in siamcat@eval_data
 }
 \examples{
  data(siamcat_example)
- eval_data <- get.eval_data(siamcat)
+ eval_data <- get.eval_data(siamcat_example)
 }

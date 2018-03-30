@@ -16,9 +16,9 @@ Object of class \link[phyloseq]{phyloseq-class}
 Function to access phyloseq object in siamcat@phylose
 }
 \details{
-Access phyloseq object in siamcat@phylose
+Access phyloseq object in siamcat@phyloseq
 }
 \examples{
  data(siamcat_example)
- phyloseq <- get.phyloseq(siamcat)
+ phyloseq <- get.phyloseq(siamcat_example)
 }

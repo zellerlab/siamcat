@@ -21,5 +21,5 @@ Reset features in siamcat@phylose@otu_table to those in siamcat@orig_feat
 }
 \examples{
  data(siamcat_example)
- siamcat_example <- reset.features(siamcat)
+ siamcat_example <- reset.features(siamcat_example)
 }

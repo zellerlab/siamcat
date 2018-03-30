@@ -20,5 +20,5 @@ Access features in siamcat@phylose@otu_table
 }
 \examples{
  data(siamcat_example)
- model_list <- get.model_list(siamcat)
+ model_list <- get.model_list(siamcat_example)
 }

@@ -7,7 +7,7 @@
 get.models(siamcat)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat-class}t}
+\item{siamcat}{an object of class \link{siamcat-class}}
 }
 \value{
 List of models
@@ -20,5 +20,5 @@ Access models in siamcat@model_list@models
 }
 \examples{
  data(siamcat_example)
- models <- get.models(siamcat)
+ models <- get.models(siamcat_example)
 }

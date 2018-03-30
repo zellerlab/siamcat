@@ -10,7 +10,7 @@ get.pred_matrix(siamcat)
 \item{siamcat}{an object of class \link{siamcat-class}t}
 }
 \value{
-Prediction matrix as \link{pred_matrix-class} object
+Prediction matrix
 }
 \description{
 Function to access prediction matrix  in siamcat@pred_matrix 
@@ -21,5 +21,5 @@ Access Prediction matrix  in siamcat@pred_matrix
 }
 \examples{
  data(siamcat_example)
- pred_matrix <- get.pred_matrix(siamcat)
+ pred_matrix <- get.pred_matrix(siamcat_example)
 }
