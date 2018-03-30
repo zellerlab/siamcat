@@ -22,21 +22,21 @@ get.label.info(siamcat)
 \item{siamcat}{an object of class \link{siamcat-class}}
 }
 \value{
-Labels as a vector
+an object of class \link{label-class}
 
 Label object converted to a list
 
 List of label informations
 }
 \description{
-Function to access labels in siamcat@label@label
+Function to access labels in siamcat@label
 
 Function to access labels in siamcat@label
 
 Function to access label info in siamcat@label@info
 }
 \details{
-Access labels in siamcat@label@label
+Access label object in siamcat@label
 
 Access labels in siamcat@label
 

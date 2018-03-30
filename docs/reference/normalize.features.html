@@ -175,16 +175,14 @@ z-score standardization)</p>
  <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
  <span class='co'># since the whole pipeline has been run in the example data, exchange the</span>
  <span class='co'># normalized features with the original features</span>
- <span class='no'>siamcat_example</span>@<span class='kw'>phyloseq</span>@<span class='kw'>otu_table</span> <span class='kw'>&lt;-</span> <span class='no'>siamcat_example</span>@<span class='kw'>orig_feat</span>
+ <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reset.features.html'>reset.features</a></span>(<span class='no'>siamcat_example</span>)
 
  <span class='co'># Simple example</span>
- <span class='no'>siamcat.norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'rank.unit'</span>)</div><div class='output co'>#&gt; Features normalized successfully.</div><div class='input'>
- # log.std example
- </div><span class='co'># NOT RUN {</span>
-<span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'log.std'</span>, <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>sd.min.q</span><span class='kw'>=</span><span class='fl'>0.1</span>))
-<span class='co'># }</span><div class='input'>
+ <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'rank.unit'</span>)</div><div class='output co'>#&gt; Features normalized successfully.</div><div class='input'>
  <span class='co'># log.unit example</span>
- <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'log.unit'</span>, <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>n.p</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>norm.margin</span><span class='kw'>=</span><span class='fl'>1</span>))</div><div class='output co'>#&gt; Features normalized successfully.</div></pre>
+ <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'log.unit'</span>, <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>n.p</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>norm.margin</span><span class='kw'>=</span><span class='fl'>1</span>))</div><div class='output co'>#&gt; Features normalized successfully.</div><div class='input'>
+ <span class='co'># log.std example</span>
+ <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'log.std'</span>, <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'>list</span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>sd.min.q</span><span class='kw'>=</span><span class='fl'>.1</span>))</div><div class='output co'>#&gt; Features normalized successfully.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

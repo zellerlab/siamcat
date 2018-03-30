@@ -53,6 +53,35 @@ siamcat <- function(...){
   return(sc)
 }
 
+# source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
+#' Show the component objects classes and slot names.
+#' @keywords internal
+#' @return list of component classes
+get.component.classes <- function(class){
+  # define classes vector
+  # the names of component.classes needs to be the slot names to match getSlots / splat
+  component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split","phyloseq") #slot names
+  names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm_param", "data_split", "phyloseq") #class names
+
+  component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq") #slot names
+  names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names
+
+  if(class=="siamcat"){
+    return(component.classes.siamcat)
+  }else if(class=="phyloseq"){
+    return(component.classes.phyloseq)
+  }else if(class=="both"){
+    return(c(component.classes.siamcat,component.classes.phyloseq))
+  }
+}
+
+# Returns TRUE if x is a component class, FALSE otherwise.
+# This shows up over and over again in data infrastructure
+#' @keywords internal
+is.component.class = function(x,class){
+  x%in%get.component.classes(class)
+}
+
 #' Reset features in siamcat@phylose@otu_table to those in siamcat@orig_feat
 #' @title reset.features
 #' @name reset.features
@@ -84,8 +113,8 @@ get.features <- function(siamcat){
 }
 
 #' Access phyloseq object in siamcat@phylose
-#' @title get.features 
-#' @name get.features 
+#' @title get.phyloseq
+#' @name get.phyloseq 
 #' @description Function to access phyloseq object in siamcat@phylose
 #' @param siamcat an object of class \link{siamcat-class}t
 #' @return Object of class \link[phyloseq]{phyloseq-class}
@@ -181,17 +210,31 @@ get.pred_matrix <- function(siamcat){
 }
 
 #' Access labels in siamcat@label@label
-#' @title get.label 
-#' @name get.label 
+#' @title get.label.label 
+#' @name get.label.label 
 #' @description Function to access labels in siamcat@label@label
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return Labels as a vector
 #' @export
 #' @examples
 #'  data(siamcat_example)
+#'  label <- get.label.label(siamcat)
+get.label.label <- function(siamcat){
+    return(siamcat@label@label)
+}
+
+#' Access label object in siamcat@label
+#' @title get.label 
+#' @name get.label 
+#' @description Function to access labels in siamcat@label
+#' @param siamcat an object of class \link{siamcat-class}
+#' @return an object of class \link{label-class}
+#' @export
+#' @examples
+#'  data(siamcat_example)
 #'  label <- get.label(siamcat)
 get.label <- function(siamcat){
-    return(siamcat@label@label)
+    return(siamcat@label)
 }
 
 #' Access labels in siamcat@label
