@@ -47,7 +47,7 @@ train_model:
   stage: train_model
   before_script:
     - cd Rscript_flavor
-    - R CMD INSTALL SIAMCAT_0.4.0.tar.gz
+    - R CMD INSTALL SIAMCAT_0.99.0.tar.gz
   script:
     - Rscript 09_train_models.r --feat_in valFeat_sel_norm.tsv --label_in valLabel_sel.tsv --method="lasso" --data_split dataSplit.Rdata --mlr_models_list models.RData --stratify="TRUE" --sel_criterion="auprc" --min_nonzero_coeff="2"
 
@@ -64,7 +64,7 @@ make_predictions:
   stage: make_predictions
   before_script:
     - cd Rscript_flavor
-    - R CMD INSTALL SIAMCAT_0.4.0.tar.gz
+    - R CMD INSTALL SIAMCAT_0.99.0.tar.gz
   script:
     - Rscript 10_make_predictions.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --data_split dataSplit.Rdata --pred pred.tsv --mlr_models_list models.RData
 
@@ -81,7 +81,7 @@ evaluate_interpret:
   stage: evaluate_interpret
   before_script:
     - cd Rscript_flavor
-    - R CMD INSTALL SIAMCAT_0.4.0.tar.gz
+    - R CMD INSTALL SIAMCAT_0.99.0.tar.gz
   script:
     - Rscript 11_evaluate_predictions.r --label_in valLabel_sel.tsv --plot evalPlot.pdf --pred pred.tsv
     - Rscript 12_interpret_model.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --origin_feat valFeat_sel.tsv --metadata_in valMetaData_sel.tsv --mlr_models_list models.RData --plot interpretation.pdf --pred pred.tsv --col_scheme="BrBG" --heatmap_type="zscore" --consens_thres="0.5"

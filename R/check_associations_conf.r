@@ -7,12 +7,16 @@ check.associations.conf <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
                  dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
   col <- check.color.scheme(color.scheme, siamcat@label)
+  pdf(fn.plot, paper='special', height=8.27, width=11.69) # one for each function below?
   
-  
-  if(verbose>2) cat("+++ analysing features\n")
+  if(verbose>1) cat("+ starting marker analysis with metadata\n")
   result.list <- marker.analysis.with.metadata(feat=feat, label=siamcat@label, meta=meta.mat, detect.lim=detect.lim, colors=col,
                                        pr.cutoff=pr.cutoff, mult.corr=mult.corr, alpha=alpha,
                                        max.show=max.show, sort.by=sort.by, probs.fc=probs.fc,verbose=verbose)
+  
+  if(verbose>1) cat("+ starting anova on ranks analysis\n")
+  feature.wise.anova.with.metadata(feat=feat, label=siamcat@label, meta=meta.mat, marker.results=result.list, verbose=verbose)
+  
 }
 
 
@@ -23,7 +27,6 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
                                           pr.cutoff, mult.corr, alpha,
                                           max.show, sort.by, probs.fc, verbose) {
   
-  if(verbose>1) cat("+ starting marker analysis with metadata\n")
   suppressPackageStartupMessages(require("coin"))
   s.time <- proc.time()[3]
   meta.colnames <- colnames(meta)
@@ -38,39 +41,28 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
   if(verbose>1) cat('+++ calculating effect size for each feature.\n')
   if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
 
-  # loop over features
   for (f in 1:nrow(feat)) {
-    
-    # loop over metadata columns
     for (c in meta.colnames) { 
-      meta.curr <- meta[,c]
-      continuous <- FALSE
+
+      # split continuous metadata
+      if (length(unique(meta[,c][!is.na(meta[,c])])) > 5) {
+        quartiles <- quantile(meta[,c], probs=seq(0,1,0.25), na.rm=TRUE) 
+        block <- cut(meta[,c], breaks=quartiles, labels=1:4, include.lowest=TRUE)} else {
+          block <- as.factor(meta[,c])}
       
-      # split continuous metadata - matrix
-      if (length(unique(meta.curr[!is.na(meta.curr)])) > 5) {
-        continuous <- TRUE
-        quartiles <- quantile(meta.curr, probs=seq(0,1,0.25), na.rm=TRUE) 
-        meta.curr.disc <- cut(meta.curr, breaks=quartiles, labels=1:4, include.lowest=TRUE)}
-      
-      # set up blocking variable
-      if (continuous == TRUE) {
-        block <- as.factor(meta.curr.disc)} else {
-          block <- as.factor(meta.curr)}
-      
-      # keep track of NA values to exclude later
+      # keep track of NA values to exclude in calcs later
       na.samples <- vector('character')
       for (n in 1:length(block)) {
         if (is.na(block[n])) {
-          na.samples <- c(na.samples, rownames(meta.curr[n]))}
-      }
+          na.samples <- c(na.samples, rownames(meta)[n])}}
       block <- block[!names(label@label) %in% na.samples]
       
       # wilcoxon test blocking for this metadata category
+      # if 'object 'y' not found' error - check that feat is matrix not otu table object
       d <- data.frame(y=feat[f, which(!names(label@label) %in% na.samples)], 
                       x=as.factor(label@label[!(names(label@label) %in% na.samples)]), 
                       block, row.names=names(label@label[!(names(label@label) %in% na.samples)]))
-      p.val.mat[f,c] <- pvalue(wilcox_test(y ~ x | block, data=d))
-    }
+      p.val.mat[f,c] <- pvalue(wilcox_test(y ~ x | block, data=d))}
     
     # redefine x & y for unstratified differential abundance methods
     x <- feat[f, label@p.idx] #cases
@@ -93,8 +85,7 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
     q.p <- quantile(log10(x+detect.lim), probs.fc)
     q.n <- quantile(log10(y+detect.lim), probs.fc)
     fc[f] <- sum(q.p - q.n)/length(q.p)
-    if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
-  } 
+    if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))} 
   if(verbose>1) cat('+++ finished looping over features\n')
   
   # apply multi-hypothesis testing correction
@@ -127,22 +118,17 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
 
 
 ### anova on ranks for each feature to partition variance between label and metadata
-feature.wise.anova.with.metadata <- function(feat, label, meta, colors, pr.cutoff,
-                                             alpha, sort.by, verbose) {
-  
-  if(verbose>2) cat("+ starting anova on ranks analysis\n")
-  anova.heatmap <- matrix(NA, nrow=nrow(feat), ncol=length(meta.colnames)+1, 
-                          dimnames=list(row.names(feat), c("disease status", meta.colnames)))
+feature.wise.anova.with.metadata <- function(feat, label, meta, pr.cutoff, marker.results, verbose) {
   
   # total sum of squares - 1 value per feature
-  if(verbose>2) cat("+++ calculating total sum of squares\n")
+  if(verbose>1) cat("+++ calculating total sum of squares\n")
   ss.total <- as.vector(apply(feat, 1, FUN=function(x) {
     rank.x <- rank(x)/length(x)
     return(sum((rank.x - mean(rank.x))^2)/length(rank.x))}))
   names(ss.total) <- rownames(feat)
 
   # between group sum of squares - 1 value per feature per metadata col (1 vector per feature)
-  if(verbose>2) cat("+++ calculating between group sum of squares for metadata\n")
+  if(verbose>1) cat("+++ calculating between group sum of squares for all metadata\n")
   if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
   ss.groups <- t(data.frame(rbind(apply(feat, 1, FUN=function(x, meta, label) {
     vals <- vector('numeric', length=ncol(meta)+1);
@@ -162,18 +148,19 @@ feature.wise.anova.with.metadata <- function(feat, label, meta, colors, pr.cutof
           meta.disc <- as.factor(meta[,c])}
       subgroup.means <- vector('numeric', length=length(levels(meta.disc)))
       for (m in 1:length(levels(meta.disc))) {
-        idx.m <- which(meta.disc == m)
+        idx.m <- which(meta.disc == levels(meta.disc)[m])
         rank.m <- rank(x[idx.m])/length(idx.m)
         subgroup.means[m] <- mean(rank.m)}
-      vals[c+1] <- sum(sapply(subgroup.means, FUN=function(s){(s-grand.mean)^2}))}
+      vals[c+1] <- sum((subgroup.means-grand.mean)^2)}
 
     if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
     names(vals) <- c('label', colnames(meta))
     return(vals)
   }, meta=meta, label=label))))
+  cat('\n')
 
   # within group sum of squares - 1 vector per feature
-  if(verbose>2) cat("+++ calculating withing group sum of squares\n")
+  if(verbose>1) cat("+++ calculating withing group sum of squares\n")
   ss.error <- matrix(NA, nrow=nrow(ss.groups), ncol=ncol(ss.groups), 
                      dimnames=list(row.names(ss.groups), colnames(ss.groups)))
   for (i in 1:nrow(ss.groups)) {ss.error[i,] <- ss.total[i] - ss.groups[i,]}
@@ -189,7 +176,7 @@ feature.wise.anova.with.metadata <- function(feat, label, meta, colors, pr.cutof
     params[,c] <- c(length(meta[,c][!is.na(meta[,c])]), length(levels(meta.disc)))}
   
   # variance estimates & F ratios
-  if(verbose>2) cat("+++ calculating F ratios\n")
+  if(verbose>1) cat("+++ calculating F ratios\n")
   f.ratios <- matrix(NA, nrow=nrow(ss.error), ncol=ncol(ss.error),
                      dimnames=list(row.names(ss.error), colnames(ss.error)))
   for (i in 1:length(ss.total)) {
@@ -203,6 +190,7 @@ feature.wise.anova.with.metadata <- function(feat, label, meta, colors, pr.cutof
   # suppressPackageStartupMessages(require("viridis"))
   # heatmap3(f.ratios[rownames(result.list$p.val),], col=viridis(100), showColDendro=FALSE, showRowDendro=FALSE)
 }
+
 
 check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=1){
   if(verbose>2) cat("+ starting check.color.scheme\n")
