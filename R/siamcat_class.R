@@ -9,12 +9,20 @@
 #' The S4 class for storing models.
 #' @name model_list-class
 #' @rdname model_list-class
+#' @slot models a list with models obtained from \link{train.model}
+#' @slot model.type name of the method used by \link{train.model}
 #' @exportClass model_list
 setClass("model_list", representation(models = "list", model.type = "character"))
 
 #' The S4 class for storing data splits
 #' @name data_split-class
 #' @rdname data_split-class
+#' @slot training.folds a list - for each cv fold contains ids of 
+#' samples used for training
+#' @slot test.folds a list - for each cv fold contains ids of 
+#' samples used for testing
+#' @slot num.resample number of repetition rounds for cv
+#' @slot num.folds number of folds for cv
 #' @exportClass data_split
 setClass("data_split", representation(training.folds = "list",
                                      test.folds = "list",
@@ -24,6 +32,18 @@ setClass("data_split", representation(training.folds = "list",
 #' The S4 class for storing label info.
 #' @name label-class
 #' @rdname label-class
+#' @slot label numeric vector, specifying to which category samples belong,
+#' usualy made of 1s and -1s
+#' @slot header contains information from the header of the label file
+#' @slot info list with additional informations about the dataset
+#' @slot positive.lab specifies which of two numbers in label is a positive label
+#' @slot negative.lab specifies which of two numbers in label is a negative label
+#' @slot n.idx numeric vector - on which positions in the label there are samples
+#' withc negative label
+#' @slot p.idx numeric vector - on which positions in the label there are samples
+#' withc positive label
+#' @slot n.lab character string with a name for the negative label (e.g. "healthy")
+#' @slot p.lab character string with a name for the positive label (e.g. "cancer")
 #' @exportClass label
 setClass("label", representation(label = "vector", header = "character",
                                  info="list", positive.lab="numeric",
@@ -36,9 +56,9 @@ setClass("label", representation(label = "vector", header = "character",
 #' @rdname siamcat-class
 #' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
 #' @slot label an object of class \link{label-class}
-#' @slot orig_feat an object of class \link[phyloseq]{otu_table}
-#' @slot data_split a list
-#' @slot norm_param a list
+#' @slot orig_feat an object of class \link[phyloseq]{otu_table-class}
+#' @slot data_split an object of class \link{data_split-class}
+#' @slot norm_param a list of normalzation parameters, see \link{normalize.features} for more details
 #' @slot model_list an object of class \link{model_list-class}
 #' @slot eval_data list containing \itemize{
 #'  \item \code{$roc.average} average ROC-curve across repeats or a single ROC-curve on complete dataset;
@@ -55,32 +75,3 @@ setClass("label", representation(label = "vector", header = "character",
 setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list",
                                    label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))
 
-
-# source: https://github.com/joey711/phyloseq/blob/master/R/phyloseq-class.R
-#' Show the component objects classes and slot names.
-#' @keywords internal
-#' @return list of component classes
-get.component.classes <- function(class){
-  # define classes vector
-  # the names of component.classes needs to be the slot names to match getSlots / splat
-  component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split","phyloseq") #slot names
-  names(component.classes.siamcat) <- c("model_list", "orig_feat", "label","norm_param", "data_split", "phyloseq") #class names
-
-  component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq") #slot names
-  names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet") #class names
-
-  if(class=="siamcat"){
-    return(component.classes.siamcat)
-  }else if(class=="phyloseq"){
-    return(component.classes.phyloseq)
-  }else if(class=="both"){
-    return(c(component.classes.siamcat,component.classes.phyloseq))
-  }
-}
-
-# Returns TRUE if x is a component class, FALSE otherwise.
-# This shows up over and over again in data infrastructure
-#' @keywords internal
-is.component.class = function(x,class){
-  x%in%get.component.classes(class)
-}

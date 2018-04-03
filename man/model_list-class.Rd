@@ -7,3 +7,11 @@
 \description{
 The S4 class for storing models.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{models}}{a list with models obtained from \link{train.model}}
+
+\item{\code{model.type}}{name of the method used by \link{train.model}}
+}}
+

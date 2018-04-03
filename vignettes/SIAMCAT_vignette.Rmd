@@ -58,7 +58,7 @@ show(siamcat)
 
 In fact, `siamcat-class` object extends `phyloseq-class` object:
 ```{r}
-phyloseq <- siamcat@phyloseq
+phyloseq <- get.phyloseq(siamcat)
 show(phyloseq)
 ```
 
@@ -112,49 +112,52 @@ check.confounders(siamcat,
 Here would be an example output for `Age` as potential confounder:
 
 ```{r fig.height = 6, fig.width = 6, fig.align="center", echo=FALSE}
-case.count <- length(siamcat@label@label[siamcat@label@p.idx])
-ctrl.count <- length(siamcat@label@label[siamcat@label@n.idx])
+label      <- get.label.list(siamcat)
+case.count <- length(label$label[label$p.idx])
+ctrl.count <- length(label$label[label$n.idx])
 if (case.count > ctrl.count) {
-  lgr <- siamcat@label@p.idx
-  smlr <- siamcat@label@n.idx
-  bp.labs <- c(siamcat@label@p.lab, siamcat@label@n.lab)
+  lgr <- label$p.idx
+  smlr <- label$n.idx
+  bp.labs <- c(label$p.lab, label$n.lab)
 } else {
-  lgr <- siamcat@label@n.idx
-  smlr <-siamcat@label@p.idx
-  bp.labs <- c(siamcat@label@n.lab, siamcat@label@p.lab)
+  lgr <- label$n.idx
+  smlr <-label$p.idx
+  bp.labs <- c(label$n.lab, label$p.lab)
 }
 len.diff <- abs(case.count - ctrl.count)
 hmap <- data.frame()
 m = 1
-mname <- gsub('[_.-]', ' ', colnames(siamcat@phyloseq@sam_data)[m])
+phyloseq <- get.phyloseq(siamcat)
+sam_data <- sample_data(phyloseq)
+mname <- gsub('[_.-]', ' ', colnames(sam_data)[m])
 mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep="")
 
-mvar  <- as.numeric(unlist(siamcat@phyloseq@sam_data[,m]))
+mvar  <- as.numeric(unlist(sam_data[,m]))
 u.val <- unique(mvar)
 u.val <- u.val[!is.na(u.val)]
 colors <- RColorBrewer::brewer.pal(5, "Spectral")
 histcolors <- RColorBrewer::brewer.pal(9, "YlGnBu")
 
 dct <- matrix(NA, nrow = 2, ncol = 2)
-dct[1,] <- c(sum(mvar[siamcat@label@n.idx] <= median(mvar, na.rm=TRUE), na.rm=TRUE), sum(mvar[siamcat@label@p.idx] <= median(mvar, na.rm=TRUE), na.rm=TRUE))
-dct[2,] <- c(sum(mvar[siamcat@label@n.idx] > median(mvar, na.rm=TRUE), na.rm=TRUE), sum(mvar[siamcat@label@p.idx] > median(mvar, na.rm=TRUE), na.rm=TRUE))
+dct[1,] <- c(sum(mvar[label$n.idx] <= median(mvar, na.rm=TRUE), na.rm=TRUE), sum(mvar[label$p.idx] <= median(mvar, na.rm=TRUE), na.rm=TRUE))
+dct[2,] <- c(sum(mvar[label$n.idx] > median(mvar, na.rm=TRUE), na.rm=TRUE), sum(mvar[label$p.idx] > median(mvar, na.rm=TRUE), na.rm=TRUE))
 rownames(dct) <- c(paste(mname, "<= med"), paste(mname, "> med"))
 hmap <- rbind(hmap, dct)
 layout(rbind(c(1,2), c(3,4)))
 
 # par(mar=c(4.5, 4.5, 2.5, 1.5),mgp=c(2.5,1,0))
 ax.int <- c(min(mvar, na.rm=TRUE), max(mvar, na.rm=TRUE))
-qqplot(mvar[siamcat@label@n.idx], mvar[siamcat@label@p.idx], xlim=ax.int, ylim=ax.int, pch=16, cex=0.6,
-xlab=siamcat@label@n.lab, ylab=siamcat@label@p.lab, main=paste('Q-Q plot for', mname))
+qqplot(mvar[label$n.idx], mvar[label$p.idx], xlim=ax.int, ylim=ax.int, pch=16, cex=0.6,
+xlab=label$n.lab, ylab=label$p.lab, main=paste('Q-Q plot for', mname))
 abline(0, 1, lty=3)
-p.val  <- wilcox.test(mvar[siamcat@label@n.idx], mvar[siamcat@label@p.idx], exact=FALSE)$p.value
+p.val  <- wilcox.test(mvar[label$n.idx], mvar[label$p.idx], exact=FALSE)$p.value
 text(ax.int[1]+0.9*(ax.int[2]-ax.int[1]), ax.int[1]+0.1*(ax.int[2]-ax.int[1]), cex = 0.8,
 paste('MWW test p-value:', format(p.val, digits=4)), pos=2)
 
 # par(mar=c(4, 2.5, 3.5, 1.5))
-hist(mvar[siamcat@label@n.idx], main = siamcat@label@n.lab, xlab = mname, col = histcolors,
+hist(mvar[label$n.idx], main = label$n.lab, xlab = mname, col = histcolors,
 breaks = seq(min(mvar, na.rm=TRUE), max(mvar, na.rm=TRUE), length.out=10))
-mtext(paste('N =', length(mvar[siamcat@label@n.idx])),cex=0.6,side=3,adj=1,line=1)
+mtext(paste('N =', length(mvar[label$n.idx])),cex=0.6,side=3,adj=1,line=1)
 
 par(mar=c(2.5, 4.5, 2.5, 1.5))
 combine <- data.frame(mvar[lgr], c(mvar[smlr], rep(NA, len.diff)))
@@ -163,9 +166,9 @@ boxplot(combine[,1], na.omit(combine[,2]), use.cols=TRUE, names=bp.labs,
 stripchart(combine, vertical=TRUE, add=TRUE, method="jitter", pch=20)
 
 par(mar=c(4.5, 2.5, 3.5, 1.5))
-hist(mvar[siamcat@label@p.idx], main = siamcat@label@p.lab, xlab = mname, col = histcolors,
+hist(mvar[label$p.idx], main = label$p.lab, xlab = mname, col = histcolors,
   breaks = seq(min(mvar, na.rm=TRUE), max(mvar, na.rm=TRUE), length.out=10))
-mtext(paste('N =', length(mvar[siamcat@label@p.idx])), cex=0.6, side=3, adj=1, line=1)
+mtext(paste('N =', length(mvar[label$p.idx])), cex=0.6, side=3, adj=1, line=1)
 par(mfrow=c(1,1))
 ```
 
@@ -245,12 +248,26 @@ siamcat <- train.model(siamcat,
                        verbose=3)
 ```
 
-The models are saved in the `model_list` slot of the `siamcat` object. For
-example, the model trained on the first fold in the first repetition could
-be accessed like that:
+The models are saved in the `model_list` slot of the `siamcat` object. This
+slot stores objects of `model_list-class`. To get the complete list out of the
+SIAMCAT object:
 
 ```{r}
-siamcat@model_list@models[[1]]
+model_list <- get.model_list(siamcat)
+```
+
+This slot also stores information on which method was used to construct the
+model:
+
+```{r}
+get.model.type(siamcat)
+```
+
+Models can also be easily accessed:
+
+```{r}
+models <- get.models(siamcat)
+models[[1]]
 ```
 
 ## Make Predictions
@@ -262,7 +279,8 @@ the `siamcat` object.
 
 ```{r}
 siamcat <- make.predictions(siamcat, verbose=0)
-head(siamcat@pred_matrix)
+pred_matrix <- get.pred_matrix(siamcat)
+head(pred_matrix)
 ```
 
 
@@ -301,12 +319,13 @@ plot(NULL, xlim=c(0,1), ylim=c(0,1),
 title('ROC curve for the model')
 abline(a=0, b=1, lty=3)
 # for each resampled CV run
-for (r in 1:length(siamcat@eval_data$roc.all)) {
-  roc.c = siamcat@eval_data$roc.all[[r]]
+eval_data <- get.eval_data(siamcat)
+for (r in 1:length(eval_data$roc.all)) {
+  roc.c = eval_data$roc.all[[r]]
   lines(1-roc.c$specificities, roc.c$sensitivities, col=gray(runif(1,0.2,0.8)))
 }
 # mean ROC curve
-roc.summ = siamcat@eval_data$roc.average[[1]]
+roc.summ = eval_data$roc.average[[1]]
 lines(1-roc.summ$specificities, roc.summ$sensitivities, col='black', lwd=2)
 # plot CI
 x = as.numeric(rownames(roc.summ$ci))
@@ -434,22 +453,21 @@ plot.heatmap <- function(image.data, limits, color.scheme, effect.size, verbose=
 
 color.scheme <- rev(colorRampPalette(RColorBrewer::brewer.pal(RColorBrewer::brewer.pal.info['BrBG','maxcolors'], 'BrBG'))(100))
 
-W.mat       <- get.weights.matrix(siamcat@model_list@models, verbose=0)
-all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep('META', row.names(W.mat), value = TRUE)),]
+W.mat       <- get.weights.matrix(get.models(siamcat), verbose=0)
+feat        <- get.features.matrix(siamcat)
+all.weights <- W.mat[union(row.names(feat), grep('META', row.names(W.mat), value = TRUE)),]
 rel.weights <- apply(all.weights, 2, function(x){x/sum(abs(x))})
 
 sel.idx <- select.features(weights=all.weights,
-                             model.type=siamcat@model_list@model.type,
+                             model.type=get.model.type(siamcat),
                              consens.thres=0.5,
-                             label=siamcat@label,
+                             label=get.label(siamcat),
                              norm.models=TRUE,
                              max.show=50, verbose=0)
 
-mean.agg.pred <- rowMeans(siamcat@pred_matrix)
-srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return=TRUE)$ix
+mean.agg.pred <- rowMeans(pred_matrix)
+srt.idx <- sort(label$label + mean.agg.pred, index.return=TRUE)$ix
 
-feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
-               dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
 img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
                                    limits=c(-3,3), verbose=0)
 
@@ -457,7 +475,7 @@ img.data <- prepare.heatmap.zscore(heatmap.data=feat[sel.idx, srt.idx],
 # plot stuff
 layout(c(1,2), heights = c(0.1, 0.9))
 par(mar=c(0, 2, 1, 10))
-  hm.label <- siamcat@label@label[srt.idx]
+  hm.label <- label$label[srt.idx]
   plot(NULL, type='n', xlim=c(0,length(hm.label)), xaxs='i', xaxt='n',
        ylim=c(-0.5,0.5), yaxs='i', yaxt='n', xlab='', ylab='', bty='n')
   ul <- unique(hm.label)
@@ -467,7 +485,7 @@ par(mar=c(0, 2, 1, 10))
     lines(c(idx[1]-0.8, idx[1]-0.8), c(-0.2, 0))
     lines(c(idx[length(idx)]-0.2, idx[length(idx)]-0.2), c(-0.2, 0))
     h <- (idx[1] + idx[length(idx)]) / 2
-    t <- gsub('_', ' ', names(siamcat@label@info$class.descr)[siamcat@label@info$class.descr==ul[l]])
+    t <- gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[l]])
     t <- paste(t, ' (n=', length(idx), ')', sep='')
     mtext(t, side=3, line=-0.5, at=h, cex=0.7, adj=0.5)
   }

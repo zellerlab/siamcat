@@ -108,7 +108,8 @@
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
@@ -118,12 +119,19 @@ level of information and <code>3</code> for full debug information, defaults to 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function validates the data by checking that labels are available
-       for all samples in the feature matrix. Furthermore, the number of samples
-       per class is checked to ensure a minimum number. If metadata is available,
-       the overlap between labels and metadata is checked as well.</p>
+    <p>This function validates the data by checking that labels are
+       available for all samples in the feature matrix. Furthermore,
+       the number of samples per class is checked to ensure a minimum
+       number. If metadata is available, the overlap between labels and
+       metadata is checked as well.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+ <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+ <span class='co'># simple working example</span>
+ <span class='no'>siamcat_validated</span> <span class='kw'>&lt;-</span> <span class='fu'>validate.data</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt; Data succesfully validated</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -133,7 +141,9 @@ level of information and <code>3</code> for full debug information, defaults to 
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

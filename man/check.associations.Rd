@@ -73,7 +73,7 @@ Shift, and Fold Change)
  data(siamcat_example)
  # since the whole pipeline has been run in the example data, exchange the
  # normalized features with the original features
- siamcat_example@phyloseq@otu_table <- siamcat_example@orig_feat
+ siamcat_example <- reset.features(siamcat_example)
 
  # Simple example
  check.associations(siamcat_example, './assoc_plot.pdf')

@@ -159,7 +159,7 @@ level of information and <code>3</code> for full debug information, defaults to 
  <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
  <span class='co'># since the whole pipeline has been run in the example data, the feature were</span>
  <span class='co'># filtered already.</span>
- <span class='no'>siamcat_example</span>@<span class='kw'>phyloseq</span>@<span class='kw'>otu_table</span> <span class='kw'>&lt;-</span> <span class='no'>siamcat_example</span>@<span class='kw'>orig_feat</span>
+ <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reset.features.html'>reset.features</a></span>(<span class='no'>siamcat_example</span>)
 
 <span class='co'># Simple examples</span>
 <span class='no'>siamcat_filtered</span> <span class='kw'>&lt;-</span> <span class='fu'>filter.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>filter.method</span><span class='kw'>=</span><span class='st'>'abundance'</span>, <span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>1e-03</span>)</div><div class='output co'>#&gt; Features successfully filtered</div></pre>
