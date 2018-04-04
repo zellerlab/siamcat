@@ -166,11 +166,12 @@ trim <- function (x) {
   gsub("^\\s+|\\s+$", "", x)
 }
 
-##### function to parse the header of a label file
-### label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
-###   where <TYPE> is a string specifying the type of label variable such as
-###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
-###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
+#' @title Parse label header 
+#' @description This function parses the header of a label file
+#' @param  label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
+#' where <TYPE> is a string specifying the type of label variable such as
+#' BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
+#' <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
 #' @keywords internal
 parse.label.header <- function(label.header) {
   s    <- strsplit(label.header, ':')[[1]]
@@ -186,4 +187,36 @@ parse.label.header <- function(label.header) {
   label.info$type <- type
   label.info$class.descr <- class.descr
   return(label.info)
+}
+
+#' @title create a label object from metadata
+#' @description This function creates a label object from metadata
+#' @param meta metadata as read by \link{read.meta}
+#' of \link[phyloseq]{sample_data-class}
+#' @param column name of column that will be used
+#' to create the label
+#'#' @keywords internal
+create.label <- function(meta, column) {
+  if(!column%in%colnames(meta)) stop("ERROR: Column",column,"not found in the metadata\n")
+  metaColumn <- sapply(meta[,column], as.character)
+  if(!length(unique(metaColumn))==2) stop("ERROR: Column",column,"does not contain binary label\n")
+  label <- list(label=rep(-1,length(metaColumn)), positive.lab=1, negative.lab=(-1))
+  label$n.lab <- gsub('[_.-]', ' ', unique(metaColumn)[1])
+  label$p.lab <- gsub('[_.-]', ' ', unique(metaColumn)[2])
+  class.descr <- c(-1,1)
+  names(class.descr) <- c(label$n.lab,label$p.lab)
+  
+  label$header <- paste0("#BINARY:1=",label$p.lab,";-1=",label$n.lab)
+  label$label[which(metaColumn==unique(metaColumn)[2])] <- 1
+  
+  label$n.idx <- label$label==label$negative.lab
+  label$p.idx <- label$label==label$positive.lab
+  
+  label$info  <- list(type="BINARY", class.descr=class.descr)
+  
+  labelRes <- new("label", label = label$label, header = label$header, info=label$info,
+                  positive.lab=label$positive.lab,
+                  negative.lab=label$negative.lab, n.idx=label$n.idx, p.idx=label$p.idx,
+                  n.lab=label$n.lab, p.lab=label$p.lab)
+  return(labelRes)
 }
