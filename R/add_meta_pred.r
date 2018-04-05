@@ -33,55 +33,49 @@
 #'  siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
 #'      'bmi', 'gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names=NULL, std.meta=TRUE, verbose=1){
-  if(verbose>1) cat("+ starting add.meta.pred\n")
+  if(verbose>1) message("+ starting add.meta.pred")
   s.time <- proc.time()[3]
   ### add metadata as predictors to the feature matrix
   cnt <- 0
 
   if (pred.names != '' && !is.null(pred.names)) {
-    if(verbose>2) cat("+ starting to add metadata predictors\n")
+    if(verbose>2) message("+ starting to add metadata predictors")
     for (p in pred.names) {
-      if(verbose>2) cat("+++ adding metadata predictor:",p,"\n")
+      if(verbose>2) message("+++ adding metadata predictor:",p)
       if(!p%in%colnames(siamcat@phyloseq@sam_data)) {
-        stop("There is no metadata variable called ",p,"\n")
+        stop("There is no metadata variable called ",p)
       }
       idx <- which(colnames(siamcat@phyloseq@sam_data) == p)
-      if(length(idx) != 1) stop(p, "matches multiple columns in the metada\n")
+      if(length(idx) != 1) stop(p, "matches multiple columns in the metada")
 
-      m   <-  unlist(siamcat@phyloseq@sam_data[,idx])
+      m <- unlist(siamcat@phyloseq@sam_data[,idx])
 
       if (!all(is.finite(m))) {
         na.cnt <- sum(!is.finite(m))
-        if (verbose > 1) {
-          cat('++++ filling in', na.cnt, 'missing values by mean imputation\n')
-        }
-        mn     <- mean(m, na.rm=TRUE)
+        if (verbose > 1) message(paste('++++ filling in', na.cnt, 'missing values by mean imputation'))
+        mn <- mean(m, na.rm=TRUE)
         m[!is.finite(m)] <- mn
       }
 
       if (std.meta) {
-        if (verbose > 1) cat('++++ standardizing metadata feature', p, '\n')
+        if (verbose > 1) message(paste('++++ standardizing metadata feature', p))
         m.mean <- mean(m, na.rm = TRUE)
-        m.sd   <- sd(m, na.rm = TRUE)
+        m.sd <- sd(m, na.rm = TRUE)
         stopifnot(!m.sd == 0)
-        m      <- (m - m.mean)/m.sd
+        m <- (m - m.mean)/m.sd
       }
 
-      siamcat@phyloseq@otu_table <- otu_table(
-        rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=TRUE)
-      rownames(siamcat@phyloseq@otu_table)[nrow(
-        siamcat@phyloseq@otu_table)] <- paste('META_', toupper(p), sep='')
+      siamcat@phyloseq@otu_table <- otu_table(rbind(siamcat@phyloseq@otu_table, m),taxa_are_rows=TRUE)
+      rownames(siamcat@phyloseq@otu_table)[nrow(siamcat@phyloseq@otu_table)] <- paste('META_', toupper(p), sep='')
       cnt <- cnt + 1
     }
-      if (verbose > 1) cat('+++ added', cnt, 'meta-variables as predictor',
-        'to the feature matrix\n')
+      if (verbose > 1) message(paste('+++ added', cnt, 'meta-variables as predictor to the feature matrix'))
   } else {
-      if (verbose > 0) cat('+++ Not adding any of the meta-variables as',
-      'predictor to the feature matrix\n')
+      if (verbose > 0) message('+++ Not adding any of the meta-variables as predictor to the feature matrix')
   }
   stopifnot(all(!is.na(siamcat@phyloseq@otu_table)))
   e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished add.meta.pred in",e.time-s.time,"s\n")
-  if(verbose==1)cat("Adding metadata as predictor finished\n")
+  if(verbose>1) message(paste("+ finished add.meta.pred in", formatC(e.time-s.time, digits=3) ,"s"))
+  if(verbose==1) message("Adding metadata as predictor finished")
   return(siamcat)
 }
