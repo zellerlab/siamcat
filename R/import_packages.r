@@ -1,5 +1,5 @@
 #' @import     phyloseq mlr LiblineaR methods
-#' @rawNamespace import(glmnet, except = "auc")
+#' @rawNamespace import(glmnet, except = 'auc')
 #' @importFrom grDevices col2rgb colorRampPalette dev.off gray pdf rgb
 #' @importFrom graphics abline arrows axis barplot box strheight strwidth
 #'             boxplot grid image layout lines mtext hist points stripchart
