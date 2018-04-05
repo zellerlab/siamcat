@@ -1,21 +1,23 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
 #' @title Read feature file
-#' @description This file reads in the tsv file with features and converts it into a matrix.
+#' @description This file reads in the tsv file with features and
+#' converts it into a matrix.
 #'
 #' The file should be oragnized as follows:
 #' features (in rows) x samples (in columns).
 #'
 #' First row should contain sample labels (consistent with label data), while
 #' the first column should contain feature labels (e.g. taxonomic identifiers).
-#' The remaining entries are expected to be real values \code{>= 0} that quantify
-#' the abundance of each feature in each sample.
+#' The remaining entries are expected to be real values \code{>= 0} that
+#' quantify the abundance of each feature in each sample.
 #' @param fn.in.feat name of the tsv file containing features
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for information about progress and time, defaults to \code{0}

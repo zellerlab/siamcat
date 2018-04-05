@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
@@ -17,24 +18,31 @@
 #' @param num.resample resampling rounds (values \code{<= 1} deactivate
 #'        resampling), defaults to \code{1}
 #' @param stratify boolean, should the splits be stratified so that an equal
-#'        proportion of classes are present in each fold?, defaults to \code{TRUE}
+#'        proportion of classes are present in each fold?,
+#'        defaults to \code{TRUE}
 #' @param inseparable column name of metadata variable, defaults to \code{NULL}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @keywords SIAMCAT create.data.split
-#' @return object of class \link{siamcat-class} with the \code{data_split}-slot filled
-#' @details This function splits the labels within a \link{siamcat-class} object and
-#'        prepares the internal cross-validation for the model training (see
-#'        \link{train.model}).
+#' @return object of class \link{siamcat-class} with the \code{data_split}-slot
+#'        filled
+#' @details This function splits the labels within a \link{siamcat-class}
+#'        object and prepares the internal cross-validation for the model
+#'        training (see \link{train.model}).
 #'
 #'        The function saves the training and test instances for the different
 #'        cross-validation folds within a list in the \code{data_split}-slot
-#'        of the \link{siamcat-class} object, which is a list with four entries: \itemize{
+#'        of the \link{siamcat-class} object, which is a list with four
+#'        entries: \itemize{
 #'          \item \code{num.folds} the number of cross-validation folds
-#'          \item \code{num.resample} the number of repetitions for the cross-validation
-#'          \item \code{training.folds} a list containing the indices for the training instances
-#'          \item \code{test.folds} a list containing the indices for the test instances
+#'          \item \code{num.resample} the number of repetitions for the
+#'                cross-validation
+#'          \item \code{training.folds} a list containing the indices for the
+#'                training instances
+#'          \item \code{test.folds} a list containing the indices for the test
+#'                instances
 #'        }
 #' @export
 #' @examples
@@ -45,7 +53,9 @@
 #'
 #'  ## # example with a variable which is to be inseparable
 #'  ## siamcat_split <- create.data.split(siamcat_example, num.folds=10, num.resample=5, stratify=FALSE, inseparable='Gender')
-create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRUE, inseparable=NULL,verbose=1){
+create.data.split <- function(siamcat, num.folds=2,
+                              num.resample=1, stratify=TRUE,
+                              inseparable=NULL,verbose=1){
   if(verbose>1) cat("+ starting create.data.split\n")
   s.time <- proc.time()[3]
 
@@ -55,7 +65,6 @@ create.data.split <- function(siamcat, num.folds=2, num.resample=1, stratify=TRU
 
   if (is.null(inseparable) || inseparable=='' || toupper(inseparable)=='NULL' || toupper(inseparable)=='NONE' || toupper(inseparable)=='UNKNOWN') {
     inseparable <- NULL
-  #   cat('+++ Inseparable parameter not specified\n')
   }
 
   # parse label description
@@ -157,7 +166,6 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL, meta=N
     # If stratify is TRUE, make sure that num.folds does not exceed the maximum number of examples for the class with the fewest training examples.
     if (any(as.data.frame(table(label))[,2] < num.folds)) {
       stop("+++ Number of CV folds is too large for this data set to maintain stratification. Reduce num.folds or turn stratification off. Exiting.\n")
-      # q(status = 1)
     }
     for (c in 1:length(classes)) {
       idx         <- which(label==classes[c])

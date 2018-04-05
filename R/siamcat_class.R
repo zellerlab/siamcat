@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
@@ -17,9 +18,9 @@ setClass("model_list", representation(models = "list", model.type = "character")
 #' The S4 class for storing data splits
 #' @name data_split-class
 #' @rdname data_split-class
-#' @slot training.folds a list - for each cv fold contains ids of 
+#' @slot training.folds a list - for each cv fold contains ids of
 #' samples used for training
-#' @slot test.folds a list - for each cv fold contains ids of 
+#' @slot test.folds a list - for each cv fold contains ids of
 #' samples used for testing
 #' @slot num.resample number of repetition rounds for cv
 #' @slot num.folds number of folds for cv
@@ -74,4 +75,3 @@ setClass("label", representation(label = "vector", header = "character",
 #' @exportClass siamcat
 setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list",
                                    label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))
-

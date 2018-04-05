@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
@@ -99,8 +100,8 @@ reset.features <- function(siamcat){
 }
 
 #' Access features in siamcat@phylose@otu_table
-#' @title get.features 
-#' @name get.features 
+#' @title get.features
+#' @name get.features
 #' @description Function to access features in siamcat@phylose@otu_table
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return Features as \link[phyloseq]{otu_table-class} object
@@ -114,7 +115,7 @@ get.features <- function(siamcat){
 
 #' Access phyloseq object in siamcat@phyloseq
 #' @title get.phyloseq
-#' @name get.phyloseq 
+#' @name get.phyloseq
 #' @description Function to access phyloseq object in siamcat@phylose
 #' @param siamcat an object of class \link{siamcat-class}t
 #' @return Object of class \link[phyloseq]{phyloseq-class}
@@ -127,8 +128,8 @@ get.phyloseq <- function(siamcat){
 }
 
 #' Access features in siamcat@phylose@otu_table
-#' @title get.features.matrix 
-#' @name get.features.matrix 
+#' @title get.features.matrix
+#' @name get.features.matrix
 #' @description Function to access features in siamcat@phylose@otu_table
 #' @param siamcat an object of class \link{siamcat-class}t
 #' @return Features as a matrix
@@ -143,7 +144,7 @@ get.features.matrix <- function(siamcat){
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.model_list
-#' @name get.model_list 
+#' @name get.model_list
 #' @description Function to access model_list in siamcat@get.model_list
 #' @param siamcat an object of class \link{siamcat-class}t
 #' @return List of models in a \link{model_list-class} object
@@ -156,7 +157,7 @@ get.model_list <- function(siamcat){
 }
 #' Access model type in siamcat@model_list@model.type
 #' @title get.model.type
-#' @name get.model.type 
+#' @name get.model.type
 #' @description Function to access features in siamcat@model_list@model.type
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return Character string specifing the name of the method used to construct the model.
@@ -169,8 +170,8 @@ get.model.type <- function(siamcat){
 }
 
 #' Access models in siamcat@model_list@models
-#' @title get.models 
-#' @name get.models 
+#' @title get.models
+#' @name get.models
 #' @description Function to access models in siamcat@model_list@models
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return List of models
@@ -182,8 +183,8 @@ get.models <- function(siamcat){
     return(siamcat@model_list@models)
 }
 #' Access evaluation data in siamcat@eval_data
-#' @title get.eval_data 
-#' @name get.eval_data 
+#' @title get.eval_data
+#' @name get.eval_data
 #' @description Function to access evaluation data in siamcat@eval_data
 #' @param siamcat an object of class \link{siamcat-class}t
 #' @return Evaluation data
@@ -194,10 +195,10 @@ get.models <- function(siamcat){
 get.eval_data <- function(siamcat){
     return(siamcat@eval_data)
 }
-#' Access Prediction matrix  in siamcat@pred_matrix 
-#' @title get.pred_matrix 
-#' @name get.pred_matrix 
-#' @description Function to access prediction matrix  in siamcat@pred_matrix 
+#' Access Prediction matrix  in siamcat@pred_matrix
+#' @title get.pred_matrix
+#' @name get.pred_matrix
+#' @description Function to access prediction matrix  in siamcat@pred_matrix
 #' siamcat@orig_feat in an object of class \link{siamcat-class}
 #' @param siamcat an object of class \link{siamcat-class}t
 #' @return Prediction matrix
@@ -210,8 +211,8 @@ get.pred_matrix <- function(siamcat){
 }
 
 #' Access labels in siamcat@label@label
-#' @title get.label.label 
-#' @name get.label.label 
+#' @title get.label.label
+#' @name get.label.label
 #' @description Function to access labels in siamcat@label@label
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return Labels as a vector
@@ -224,8 +225,8 @@ get.label.label <- function(siamcat){
 }
 
 #' Access label object in siamcat@label
-#' @title get.label 
-#' @name get.label 
+#' @title get.label
+#' @name get.label
 #' @description Function to access labels in siamcat@label
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return an object of class \link{label-class}
@@ -256,8 +257,8 @@ get.label.list <- function(siamcat){
 }
 
 #' Access label info in siamcat@label@info
-#' @title get.label.info 
-#' @name get.label.info 
+#' @title get.label.info
+#' @name get.label.info
 #' @description Function to access label info in siamcat@label@info
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return List of label informations

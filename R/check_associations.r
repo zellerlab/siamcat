@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
@@ -26,13 +27,14 @@
 #' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot filename for the pdf-plot
 #' @param color.scheme valid R color scheme or vector of valid R colors (must
-#'        be of the same length as the number of classes), defaults to \code{'RdYlBu'}
+#'        be of the same length as the number of classes),
+#'        defaults to \code{'RdYlBu'}
 #' @param alpha float, significance level, defaults to \code{0.05}
-#' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}},
-#'        defaults to \code{"fdr"}
-#' @param sort.by string, sort features by p-value (\code{"p.val"}), by fold change
-#'        (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
-#'        \code{"fc"}
+#' @param mult.corr multiple hypothesis correction method, see
+#'        \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
+#' @param sort.by string, sort features by p-value (\code{"p.val"}),
+#'        by fold change (\code{"fc"}) or by prevalence shift
+#'        (\code{"pr.shift"}), defaults to \code{"fc"}
 #' @param detect.lim float, pseudocount to be added before log-transformation of
 #'        the data, defaults to \code{1e-06}
 #' @param pr.cutoff float, cutoff for the prevalence computation, defaults to
@@ -47,7 +49,8 @@
 #'        "prevalence")}, defaults to \code{c("fc", "auroc")}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
@@ -74,7 +77,8 @@
 check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
                                alpha=0.05, mult.corr="fdr", sort.by="fc",
                                detect.lim=1e-06, pr.cutoff=10^-6, max.show=50,
-                               plot.type="quantile.box", panels=c("fc", "auroc"), verbose=1){
+                               plot.type="quantile.box",
+                               panels=c("fc", "auroc"), verbose=1){
   # check panel and plot.type parameter
   if(verbose>1) cat("+ starting check.associations\n")
   s.time <- proc.time()[3]
@@ -279,16 +283,16 @@ associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
   rect(y.q[2,], (1:dim(data2)[1])-0.3, y.q[4,], 1:dim(data2)[1], col=y.col)
 
   # 90% interval
-  segments(x.q[1,], 1:dim(data1)[1], x.q[5,], 1:dim(data1)[1])#, col=x.col)
-  segments(y.q[1,], 1:dim(data1)[1], y.q[5,], 1:dim(data1)[1])#, col=x.col)
+  segments(x.q[1,], 1:dim(data1)[1], x.q[5,], 1:dim(data1)[1])
+  segments(y.q[1,], 1:dim(data1)[1], y.q[5,], 1:dim(data1)[1])
   segments(x.q[1,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
   segments(y.q[1,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
   segments(x.q[5,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
   segments(y.q[5,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
 
   # median
-  segments(x.q[3,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.3, lwd=3)#, col=x.col)
-  segments(y.q[3,], y0=(1:dim(data1)[1])-0.3, y1=1:dim(data1)[1], lwd=3)#, col=y.col)
+  segments(x.q[3,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.3, lwd=3)
+  segments(y.q[3,], y0=(1:dim(data1)[1])-0.3, y1=1:dim(data1)[1], lwd=3)
 
   # scatter plot on top
   for (i in 1:dim(data1)[1]) {

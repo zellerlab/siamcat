@@ -169,7 +169,6 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
 
       if(verbose>2) cat('++++ panel 3/4: X boxplot\n')
       par(mar=c(2.5, 4.5, 2.5, 1.5))
-      #combine <- list(mvar[siamcat@label@n.idx], mvar[siamcat@label@p.idx])
       combine <- data.frame(mvar[lgr], c(mvar[smlr], rep(NA, len.diff)))
 
 
@@ -192,33 +191,6 @@ check.confounders <- function(siamcat, fn.plot, verbose=1){
     }
   }
 
-  # ## HEATMAP / SPECTRAL PLOT... TBD
-  # if(0){
-  #   # transform heatmap values
-  #   colnames(hmap) <- c(siamcat@label@n.lab, siamcat@label@p.lab)
-  #   hmap.ratios <- as.matrix(log(hmap[,2]/hmap[,1])) -
-  #       log(sum(siamcat@label@p.idx)/sum(siamcat@label@p.idx))
-  #   rownames(hmap.ratios) <- as.matrix(rownames(hmap))
-  #
-  #   # plot as labeled barplot...
-  #   par(mar=c(20, 5, 10, 5))
-  #   grad.len <- 1000
-  #   barplot(as.matrix(rep(1,grad.len)),
-  #     col = viridisLite::viridis(grad.len), horiz=TRUE,
-  #     border=0, ylab='', axes=FALSE)
-  #     # make sure to add this to the Description file once it is needed
-  #   bp.bound <- max(abs(range(hmap.ratios[is.finite(hmap.ratios)])))
-  #   bp.ticks <- seq(-round(bp.bound), round(bp.bound), length.out=7)
-  #   bp.label <- paste('Relative ratios for metadata,',
-  #     siamcat@label@p.lab,':',siamcat@label@n.lab)
-  #   axis(1, at=seq(0,grad.len,length.out=7), labels=bp.ticks, cex.axis=0.7)
-  #
-  #   # draw lines to represent each metadata category
-  #   for (val in hmap.ratios) {
-  #     abline(v=(val*grad.len/6) + (grad.len/2))
-  # }
-  # }
-#       tmp <- dev.off()
   e.time <- proc.time()[3]
   if(verbose>1){
     cat("+ finished check.confounders in",e.time-s.time,"s\n")

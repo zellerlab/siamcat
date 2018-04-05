@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
@@ -10,7 +11,6 @@
 #' @keywords internal
 train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
                       measure=list("acc"), min.nonzero.coeff=5, param.set=NULL, neg.lab, verbose=1){
-  #model <- list(original.model=NULL, feat.weights=NULL)
 
   ## 1) Define the task
   ## Specify the type of analysis (e.g. classification) and provide data and response variable
@@ -67,7 +67,6 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
 
   if(cl == "classif.cvglmnet"){
     opt.lambda           <- get.optimal.lambda.for.glmnet(model, task, measure, min.nonzero.coeff)
-    # cat(opt.lambda, '\n')
     # transform model
     if (is.null(model$learner$par.vals$s)){
       model$learner.model$lambda.1se <- opt.lambda

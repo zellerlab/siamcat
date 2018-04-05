@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
@@ -18,11 +19,12 @@
 #' @param allowed.range a range of allowed values
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @keywords SIAMCAT select.samples
 #' @export
-#' @return an object of class \link{siamcat-class} with labels and metadata filtered
-#'        in order to contain only allowed values
+#' @return an object of class \link{siamcat-class} with labels and metadata
+#'        filtered in order to contain only allowed values
 #' @examples
 #'  data(siamcat_example)
 #'  # Select all samples that fall into an Age-range between 20 and 80 years

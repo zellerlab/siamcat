@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
@@ -21,20 +22,22 @@
 #'        \code{TRUE}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @keywords SIAMCAT filter.features
-#' @details This function filters the features in a \link{siamcat-class} object in a
-#'        unsupervised manner.
+#' @details This function filters the features in a \link{siamcat-class}
+#'        object in a unsupervised manner.
 #'
 #'        The different filter methods work in the following way: \itemize{
 #'        \item \code{"abundace"} remove features whose abundance is never above
 #'          the threshold value in any of the samples
 #'        \item \code{"cum.abundance"} remove features with very low abundance
 #'          in all samples i.e. ones that are never among the most abundant
-#'          entities that collectively make up (1-cutoff) of the reads in any sample
-#'        \item \code{"prevalence"} remove features with low prevalence across samples
-#'          i.e. ones that are 0 (undetected) in more than (1-cutoff) proportion
-#'          of samples.
+#'          entities that collectively make up (1-cutoff) of the reads in
+#'          any sample
+#'        \item \code{"prevalence"} remove features with low prevalence across
+#'          samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
+#'          proportion of samples.
 #'        }
 #' @export
 #' @return siamcat an object of class \link{siamcat-class}
@@ -52,8 +55,7 @@ filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,
   ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
   ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
   ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
-  ## TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?
-  # Check filter methods
+
   if(verbose>1) cat("+ starting filter.features\n")
   s.time <- proc.time()[3]
 

@@ -1,14 +1,16 @@
 #!/usr/bin/Rscript
 ###
-# SIAMCAT -  Statistical Inference of Associations between Microbial Communities And host phenoTypes
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
 # R flavor
 # EMBL Heidelberg 2012-2018
 # GNU GPL 3.0
 ###
 
 #' @title Model Interpretation Plot
-#' @description Produces a plot for model interpretation, displaying feature weights,
-#'        robustness of feature weights, and features scores across patients.
+#' @description Produces a plot for model interpretation, displaying feature
+#'        weights, robustness of feature weights, and features scores across
+#'        patients.
 #' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param color.scheme color scheme for the heatmap, defaults to \code{"BrBG"}
@@ -29,18 +31,20 @@
 #'        interpretation plot, defaults to 50
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @keywords SIAMCAT model.interpretation.plot
 #' @return Does not return anything, but produces the model interpretion plot.
 #' @export
 #' @details Produces a plot consisting of \itemize{
 #'  \item a barplot showing the feature weights and their robustness (i.e. in
 #'    what proportion of models have they been incorporated)
-#'  \item a heatmap showing the z-scores of the metagenomic features across patients
+#'  \item a heatmap showing the z-scores of the metagenomic features across
+#'    patients
 #'  \item another heatmap displaying the metadata categories (if applicable)
-#'  \item a boxplot displaying the poportion of weight per model that is actually shown
-#'    for the features that are incorporated into more than \code{consens.thres}
-#'    percent of the models.
+#'  \item a boxplot displaying the poportion of weight per model that is
+#'    actually shown for the features that are incorporated into more than
+#'    \code{consens.thres} percent of the models.
 #'}
 #' @examples
 #'
@@ -122,7 +126,7 @@ model.interpretation.plot <- function(siamcat, fn.plot,
                c(0, 8, 0, 0))
   h_t <- 0.10
   h_m <- ifelse(is.null(siamcat@phyloseq@sam_data), 0.8, max(0.5, 0.7-0.01*dim(siamcat@phyloseq@sam_data)[2]))
-  h_b <- 1 - h_t - h_m # ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
+  h_b <- 1 - h_t - h_m
   cat('Layout height values: ', h_t, ', ', h_m, ', ', h_b, '\n', sep='')
   layout(lmat, widths=c(0.14, 0.58, 0.1, 0.14), heights=c(h_t, h_m, h_b))
   par(oma=c(3, 4, 3, 4))
@@ -157,13 +161,6 @@ model.interpretation.plot <- function(siamcat, fn.plot,
 
   # ############################################################################
   # Heatmap legend
-  # LOW PRIORITY #
-  # TODO would be nice to overplot a histogram
-  #h = as.vector(img.data)
-  #h = h[h > z.score.lim[1] & h < z.score.lim[2]]
-  #h = hist(h, 100, plot=FALSE)$counts
-  # end TODO
-  # LOW PRIORITY #
   if(verbose>2) cat("+++ plotting legend\n")
   par(mar=c(3.1, 1.1, 1.1, 1.1))
   barplot(as.matrix(rep(1,100)), col = color.scheme,
@@ -214,16 +211,9 @@ model.interpretation.plot <- function(siamcat, fn.plot,
 
   # ############################################################################
   # Proportion of weights shown
-  # if (model.type != 'RandomForest'){
   if(verbose>2) cat("+++ plotting proportion of weights shown \n")
     plot.proportion.of.weights(selected.weights=all.weights[sel.idx,],
                                all.weights=all.weights,verbose=verbose)
-  # } else {
-    # cat(dim(all.weights[sel.idx,]), '\n')
-    # cat(dim(all.weights), '\n')
-    # plot.percentage.of.features(selected.weights=all.weights[sel.idx,],
-                               # all.weights=all.weights)
-  # }
 
   # ############################################################################
   # Metadata and prediction
@@ -472,19 +462,6 @@ select.features <- function(weights, model.type, consens.thres, norm.models, lab
     if (length(sel.idx) > max.show){
       sel.idx <- tail(sel.idx, n=max.show)
     }
-    # sort again by auroc
-    # auroc.effect <-  sapply(row.names(feat)[sel.idx],
-    #    FUN=function(f, feat, label){roc(predictor=feat[f,],
-    #                    response=label@label, direction='<')$auc}, feat=feat, label=label)
-    #
-    # if (length(sel.idx) > 50){
-    #   cat("Restricting amount of features to be plotted to 50\n")
-    #   auroc.transformed <- auroc.effect
-    #   auroc.transformed[auroc.transformed <= .5] <- 1 - auroc.transformed[auroc.transformed <= .5]
-    #   idx <- head(sort(auroc.transformed, decreasing=TRUE, index.return=TRUE)$ix, n=50)
-    #   auroc.effect <- auroc.effect[idx]
-    # }
-    # sel.idx <- sel.idx[sort(auroc.effect, decreasing=TRUE, index.return=TRUE)$ix]
   }
 
   if(verbose>2) cat('+++ generating plot for a model with', length(sel.idx), 'selected features\n')
