@@ -318,12 +318,14 @@ plot.pred.and.meta <- function(prediction, label, meta=NULL, verbose=0){
   img.data = as.matrix(prediction)
   colnames(img.data) = 'Classification result'
   if (!is.null(meta)) {
-    img.data = cbind(meta[,dim(meta)[2]:1], img.data)
+    img.data = cbind(meta[,ncol(meta):1], img.data)
     ### transform any categorial column into a numeric one
-    for (m in 1:dim(img.data)[2]) {
-      img.data[,m] = (img.data[,m] - min(img.data[,m], na.rm=TRUE))
-      if (max(img.data[,m], na.rm=TRUE) != 0) {
-        img.data[,m] = img.data[,m] / max(img.data[,m], na.rm=TRUE)
+    for (m in 1:ncol(img.data)) {
+      if(all(is.numeric(img.data[,m]))){
+          img.data[,m] = (img.data[,m] - min(img.data[,m], na.rm=TRUE))
+          if (max(img.data[,m], na.rm=TRUE) != 0) {
+              img.data[,m] = img.data[,m] / max(img.data[,m], na.rm=TRUE)
+          }
       }
     }
   }

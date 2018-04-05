@@ -195,7 +195,8 @@ parse.label.header <- function(label.header) {
 #' of \link[phyloseq]{sample_data-class}
 #' @param column name of column that will be used
 #' to create the label
-#'#' @keywords internal
+#' @keywords internal
+#' @export 
 create.label <- function(meta, column) {
   if(!column%in%colnames(meta)) stop("ERROR: Column",column,"not found in the metadata\n")
   metaColumn <- sapply(meta[,column], as.character)
@@ -206,6 +207,7 @@ create.label <- function(meta, column) {
   class.descr <- c(-1,1)
   names(class.descr) <- c(label$n.lab,label$p.lab)
   
+  names(label$label) <- rownames(meta)
   label$header <- paste0("#BINARY:1=",label$p.lab,";-1=",label$n.lab)
   label$label[which(metaColumn==unique(metaColumn)[2])] <- 1
   
