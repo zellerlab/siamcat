@@ -6,21 +6,21 @@
 ################################################################################
 #' Assign a new phyloseq object to \code{x}
 #'
-#' @usage phyloseq(x) <- value
+#' @usage physeq(x) <- value
 #'
 #' @param x an object of class \link{siamcat-class}
 #' @param value an object of class \link[phyloseq]{phyloseq-class}
 #' @export
 #' @docType methods
-#' @rdname assign-phyloseq
-#' @aliases assign-phyloseq
+#' @rdname assign-physeq
+#' @aliases assign-physeq
 #'
 #' @examples
 #' # data(siamcat_example)
-setGeneric("phyloseq<-", function(x, value) standardGeneric("phyloseq<-"))
-#' @rdname assign-phyloseq
-#' @aliases phyloseq<-
-setMethod("phyloseq<-", c("siamcat","phyloseq"), function(x, value){
+setGeneric("physeq<-", function(x, value) standardGeneric("physeq<-"))
+#' @rdname assign-physeq
+#' @aliases physeq<-
+setMethod("physeq<-", c("siamcat","phyloseq"), function(x, value){
   siamcat(value, x@model_list, x@eval_data, x@label, x@norm_param, x@data_split, x@pred_matrix)
 })
 
