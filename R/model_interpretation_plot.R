@@ -273,7 +273,7 @@ plot.pred.and.meta <- function(prediction, label, meta = NULL, verbose = 0) {
                 }
             } else if (all(is.factor(img.data[, m]))) {
               if (length(levels(img.data[, m])) < 10){
-                cur.processed.data <- img.data[, m]
+                cur.processed.data <- as.numeric(img.data[, m])
               } else {
                 message("Metadata ",colnames(img.data)[m]," contains too many levels and will not be shown!")
               }
