@@ -102,30 +102,31 @@ setMethod("eval_data", "ANY", function(siamcat){
 })
 
 ################################################################################
-#' Retrieve eval_data from object.
+#' Retrieve norm_param from object.
 #'
 #'
-#' @usage eval_data(siamcat, errorIfNULL=TRUE)
+#' @usage norm_param(siamcat, errorIfNULL=TRUE)
 #' 
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a eval_data.
+#'  that contains a norm_param
 #'
 #'
-#' @return The eval_data list or NULL.
+#' @return The norm_param list or NULL.
 #' 
 #' @export
-#' @rdname eval_data-methods
+#' @rdname norm_param-methods
 #' @docType methods
 #'
 #' @examples
 #'  data(siamcat_example)
-#'  eval_data(siamcat_example)
-setGeneric("eval_data", function(siamcat) standardGeneric("eval_data"))
-#' @rdname eval_data-methods
-#' @aliases eval_data,ANY-method
-setMethod("eval_data", "ANY", function(siamcat){
-  accessSlot(siamcat, "eval_data")
+#'  norm_param(siamcat_example)
+setGeneric("norm_param", function(siamcat) standardGeneric("norm_param"))
+#' @rdname norm_param-methods
+#' @aliases norm_param,ANY-method
+setMethod("norm_param", "ANY", function(siamcat){
+  accessSlot(siamcat, "norm_param")
 })
+
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features

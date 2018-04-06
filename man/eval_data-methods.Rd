@@ -4,14 +4,8 @@
 \name{eval_data}
 \alias{eval_data}
 \alias{eval_data,ANY-method}
-\alias{eval_data}
-\alias{eval_data,ANY-method}
 \title{Retrieve eval_data from object.}
 \usage{
-eval_data(siamcat, errorIfNULL=TRUE)
-
-\S4method{eval_data}{ANY}(siamcat)
-
 eval_data(siamcat, errorIfNULL=TRUE)
 
 \S4method{eval_data}{ANY}(siamcat)
@@ -19,23 +13,14 @@ eval_data(siamcat, errorIfNULL=TRUE)
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a eval_data..}
-
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a eval_data.}
 }
 \value{
-The eval_data list or NULL.
-
 The eval_data list or NULL.
 }
 \description{
 Retrieve eval_data from object.
-
-Retrieve eval_data from object.
 }
 \examples{
- data(siamcat_example)
- eval_data(siamcat_example)
  data(siamcat_example)
  eval_data(siamcat_example)
 }
