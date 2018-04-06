@@ -127,6 +127,35 @@ setMethod("norm_param", "ANY", function(siamcat){
   accessSlot(siamcat, "norm_param")
 })
 
+################################################################################
+#' Retrieve a \link{label-class} object from object.
+#'
+#'
+#' @usage label(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a label or instance of \link{label-class}.
+#'
+#'
+#' @return The \link{label-class} object or NULL.
+#' 
+#' @export
+#' @rdname label-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  label(siamcat_example)
+setGeneric("label", function(siamcat) standardGeneric("label"))
+#' @rdname label-methods
+#' @aliases label,ANY-method
+setMethod("label", "ANY", function(siamcat){
+  accessSlot(siamcat, "label")
+})
+# Return as-is if already a label object
+#' @rdname label-methods
+setMethod("label", "label", function(siamcat){ return(siamcat) })
+
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features
