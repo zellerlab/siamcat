@@ -214,6 +214,35 @@ setMethod("orig_feat", "ANY", function(siamcat){
 #' @rdname orig_feat-methods
 setMethod("orig_feat", "otu_table", function(siamcat){ return(siamcat) })
 
+################################################################################
+#' Retrieve a \link[phyloseq]{phyloseq-class} object from object.
+#'
+#'
+#' @usage physeq(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a label or instance of \link{data_split-class}.
+#'
+#'
+#' @return The \link[phyloseq]{phyloseq-class} object or NULL.
+#' 
+#' @export
+#' @rdname physeq-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  physeq(siamcat_example)
+setGeneric("physeq", function(siamcat) standardGeneric("physeq"))
+#' @rdname physeq-methods
+#' @aliases physeq,ANY-method
+setMethod("physeq", "ANY", function(siamcat){
+  accessSlot(siamcat, "phyloseq")
+})
+# Return as-is if already a otu_table object
+#' @rdname physeq-methods
+setMethod("physeq", "phyloseq", function(siamcat){ return(siamcat) })
+
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features
 #' @name get.features
