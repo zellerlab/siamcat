@@ -15,10 +15,10 @@ features(siamcat, errorIfNULL=TRUE)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a label or instance of \link{data_split-class}.}
+that contains a label or instance of \link[phyloseq]{otu_table-class} .}
 }
 \value{
-The \link[phyloseq]{phyloseq-class} object or NULL.
+The \link[phyloseq]{otu_table-class} object or NULL.
 }
 \description{
 Retrieve a \link[phyloseq]{otu_table-class} object from object.

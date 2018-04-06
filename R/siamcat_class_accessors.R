@@ -250,10 +250,10 @@ setMethod("physeq", "phyloseq", function(siamcat){ return(siamcat) })
 #' @usage features(siamcat, errorIfNULL=TRUE)
 #' 
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link{data_split-class}.
+#'  that contains a label or instance of \link[phyloseq]{otu_table-class} .
 #'
 #'
-#' @return The \link[phyloseq]{phyloseq-class} object or NULL.
+#' @return The \link[phyloseq]{otu_table-class} object or NULL.
 #' 
 #' @export
 #' @rdname features-methods
@@ -271,6 +271,35 @@ setMethod("features", "ANY", function(siamcat){
 # Return as-is if already a otu_table object
 #' @rdname features-methods
 setMethod("features", "otu_table", function(siamcat){ return(siamcat) })
+
+################################################################################
+#' Retrieve a \link[phyloseq]{sample_data-class} object from object.
+#'
+#'
+#' @usage meta(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a label or instance of \link[phyloseq]{sample_data-class}.
+#'
+#'
+#' @return The \link[phyloseq]{sample_data-class} object or NULL.
+#' 
+#' @export
+#' @rdname meta-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  meta(siamcat_example)
+setGeneric("meta", function(siamcat) standardGeneric("meta"))
+#' @rdname meta-methods
+#' @aliases meta,ANY-method
+setMethod("meta", "ANY", function(siamcat){
+  sample_data(physeq(siamcat))
+})
+# Return as-is if already a sample_data object
+#' @rdname meta-methods
+setMethod("meta", "sample_data", function(siamcat){ return(siamcat) })
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features
