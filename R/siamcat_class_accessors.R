@@ -160,7 +160,7 @@ setMethod("label", "label", function(siamcat){ return(siamcat) })
 #' Retrieve a \link{data_split-class} object from object.
 #'
 #'
-#' @usage label(siamcat, errorIfNULL=TRUE)
+#' @usage data_split(siamcat, errorIfNULL=TRUE)
 #' 
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a label or instance of \link{data_split-class}.
@@ -184,6 +184,35 @@ setMethod("data_split", "ANY", function(siamcat){
 # Return as-is if already a data_split object
 #' @rdname data_split-methods
 setMethod("data_split", "data_split", function(siamcat){ return(siamcat) })
+
+################################################################################
+#' Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.
+#'
+#'
+#' @usage orig_feat(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a label or instance of \link{data_split-class}.
+#'
+#'
+#' @return The \link[phyloseq]{otu_table-class} object or NULL.
+#' 
+#' @export
+#' @rdname orig_feat-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  data_split(siamcat_example)
+setGeneric("orig_feat", function(siamcat) standardGeneric("orig_feat"))
+#' @rdname orig_feat-methods
+#' @aliases orig_feat,ANY-method
+setMethod("orig_feat", "ANY", function(siamcat){
+  accessSlot(siamcat, "orig_feat")
+})
+# Return as-is if already a otu_table object
+#' @rdname orig_feat-methods
+setMethod("orig_feat", "otu_table", function(siamcat){ return(siamcat) })
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features
