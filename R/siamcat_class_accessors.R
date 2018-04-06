@@ -3,6 +3,38 @@
 ### Communities And host phenoTypes
 ### EMBL Heidelberg 2012-2018 GNU GPL 3.0
 
+################################################################################
+#' Retrieve model_list from object.
+#'
+#'
+#' @usage model_list(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a model_list or instance of \link{model_list-class}.
+#'
+#' @param errorIfNULL Should the accessor stop with 
+#'  an error if the slot is empty (\code{NULL})? Default \code{TRUE}.
+#'
+#' @return The \link{model_list-class} object or NULL.
+#'  By default this method stops with an error in the latter case.
+#' 
+#' @export
+#' @rdname model_list-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  model_list(siamcat_example)
+setGeneric("model_list", function(siamcat, errorIfNULL=TRUE) standardGeneric("model_list"))
+#' @rdname model_list-methods
+#' @aliases model_list,ANY-method
+setMethod("model_list", "ANY", function(siamcat, errorIfNULL=TRUE){
+  access(siamcat, "model_list", errorIfNULL)
+})
+# Return as-is if already a model_list object
+#' @rdname model_list-methods
+setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
+
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features
 #' @name get.features
@@ -45,6 +77,8 @@ get.features.matrix <- function(siamcat) {
     return(matrix(siamcat@phyloseq@otu_table, nrow = nrow(siamcat@phyloseq@otu_table), ncol = ncol(siamcat@phyloseq@otu_table), 
         dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table))))
 }
+
+
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.model_list
