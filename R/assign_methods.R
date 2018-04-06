@@ -134,3 +134,25 @@ setMethod("pred_matrix<-", c("siamcat","matrix"), function(x, value){
   siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
           x@eval_data, x@data_split, x@norm_param)
 })
+
+################################################################################
+#' Assign a new data_split object to \code{x}
+#'
+#' @usage data_split(x) <- value
+#'
+#' @param x an object of class \link{siamcat-class}
+#' @param value an object of class \link{data_split-class}
+#' @export
+#' @docType methods
+#' @rdname assign-data_split
+#' @aliases assign-data_split
+#'
+#' @examples
+#' # data(siamcat_example)
+setGeneric("data_split<-", function(x, value) standardGeneric("data_split<-"))
+#' @rdname assign-data_split
+#' @aliases data_split<-
+setMethod("data_split<-", c("siamcat","data_split"), function(x, value){
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
+          x@eval_data, x@pred_matrix, x@norm_param)
+})
