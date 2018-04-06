@@ -1,5 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
+### SIAMCAT - Statistical Inference of Associations between Microbial 
+### Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Model Interpretation Plot
@@ -287,13 +288,22 @@ plot.pred.and.meta <- function(prediction, label, meta = NULL, verbose = 0) {
     if (!is.null(meta)) {
         img.data = cbind(meta[, ncol(meta):1], img.data)
         ### transform any categorial column into a numeric one
+        img.data.processed <- NULL
         for (m in 1:ncol(img.data)) {
+            cur.processed.data <- NULL
             if (all(is.numeric(img.data[, m]))) {
-                img.data[, m] = (img.data[, m] - min(img.data[, m], na.rm = TRUE))
+                cur.processed.data = (img.data[, m] - min(img.data[, m], na.rm = TRUE))
                 if (max(img.data[, m], na.rm = TRUE) != 0) {
-                  img.data[, m] = img.data[, m]/max(img.data[, m], na.rm = TRUE)
+                  cur.processed.data = cur.processed.data/max(cur.processed.data, na.rm = TRUE)
                 }
+            } else if (all(is.factor(img.data[, m]))) {
+              if (length(levels(img.data[, m])) < 10){
+                cur.processed.data <- img.data[, m]
+              } else {
+                message("Metadata ",colnames(img.data)[m]," contains too many levels and will not be shown!")
+              }
             }
+            img.data.processed <- cbind(img.data.processed,cur.processed.data)
         }
     }
     
