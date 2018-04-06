@@ -1,7 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial
-### Communities And host phenoTypes
-### EMBL Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes EMBL Heidelberg
+### 2012-2018 GNU GPL 3.0
 
 #' @title Model training
 #' @description This function trains the a machine learning model on the
@@ -16,8 +15,8 @@
 #'        internal cross-validation, may contain these: \code{c('auc', 'f1',
 #'        'acc', 'pr')}, defaults to \code{list('auc')}
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that
-#'        should be present in the model (only for \code{"lasso"},
-#'        \code{"ridge"}, and \code{"enet"}, defaults to \code{1}
+#'        should be present in the model (only for \code{'lasso'},
+#'        \code{'ridge'}, and \code{'enet'}, defaults to \code{1}
 #' @param param.set a list of extra parameters for mlr run, may contain:
 #'        \itemize{
 #'          \item \code{cost} - for lasso_ll and ridge_ll
@@ -44,23 +43,21 @@
 #'        are tuned with the function \link[mlr]{tuneParams} within the
 #'        \code{mlr}-package.
 #'
-#'        The methods \code{"lasso"}, \code{"enet"}, and \code{"ridge"} are
-#'        implemented as mlr-taks using the \code{"classif.cvglmnet"} Learner,
-#'        \code{"lasso_ll"} and \code{"ridge_ll"} use the
-#'        \code{"classif.LiblineaRL1LogReg"} and the
-#'        \code{"classif.LiblineaRL2LogReg"} Learners respectively. The
-#'        \code{"randomForest"} method is implemented via the
-#'        \code{"classif.randomForest"} Learner.
+#'        The methods \code{'lasso'}, \code{'enet'}, and \code{'ridge'} are
+#'        implemented as mlr-taks using the \code{'classif.cvglmnet'} Learner,
+#'        \code{'lasso_ll'} and \code{'ridge_ll'} use the
+#'        \code{'classif.LiblineaRL1LogReg'} and the
+#'        \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
+#'        \code{'randomForest'} method is implemented via the
+#'        \code{'classif.randomForest'} Learner.
 #' @examples
 #'
 #'  data(siamcat_example)
 #'  # simple working example
 #'  siamcat_validated <- train.model(siamcat_example, method='lasso')
 #'
-train.model <- function(siamcat, 
-    method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"),
-    stratify = TRUE, modsel.crit = list("auc"), min.nonzero.coeff = 1, 
-    param.set = NULL, verbose = 1) {
+train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), stratify = TRUE, 
+    modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL, verbose = 1) {
     
     if (verbose > 1) 
         cat("+ starting train.model\n")
@@ -82,14 +79,11 @@ train.model <- function(siamcat,
         } else if (m == "f1") {
             measure[[length(measure) + 1]] <- mlr::f1
         } else if (m == "pr" || m == "auprc") {
-            auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, 
-                worst = 0, 
-                properties = c("classif", "req.pred", "req.truth", "req.prob"), 
-                name = "Area under the Precision Recall Curve", 
-                fun = function(task, model, pred, feats, extra.args) {
+            auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0, properties = c("classif", "req.pred", 
+                "req.truth", "req.prob"), name = "Area under the Precision Recall Curve", fun = function(task, model, 
+                pred, feats, extra.args) {
                 # if (anyMissing(pred$data$response) || length(unique(pred$data$truth)) == 1L) return(NA_real_)
-                measureAUPRC(getPredictionProbabilities(pred), pred$data$truth,
-                    pred$task.desc$negative, pred$task.desc$positive)
+                measureAUPRC(getPredictionProbabilities(pred), pred$data$truth, pred$task.desc$negative, pred$task.desc$positive)
             })
             measure[[length(measure) + 1]] <- auprc
         }

@@ -11,9 +11,9 @@ create.label(meta, column)
 of \link[phyloseq]{sample_data-class}}
 
 \item{column}{name of column that will be used
-to create the label
-#' @keywords internal}
+to create the label}
 }
 \description{
 This function creates a label object from metadata
 }
+\keyword{internal}

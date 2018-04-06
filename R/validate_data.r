@@ -1,5 +1,6 @@
+#!/usr/bin/Rscript
 ### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes EMBL Heidelberg
-### 2012-2017 GNU GPL 3.0
+### 2012-2018 GNU GPL 3.0
 
 #' @title Validate samples in labels, features, and metadata
 #' @description This function checks if labels are available for all samples in
@@ -67,7 +68,7 @@ validate.data <- function(siamcat, verbose = 1) {
         }
         if (sum(siamcat@label@label == i) < 10) {
             cat("Data set has only", sum(siamcat@label@label == i), "training examples of class", i, " . Note that a dataset this small/skewed is not necessarily
-        suitable for analysis in this pipeline.")
+          suitable for analysis in this pipeline.")
         }
     }
     

@@ -1,7 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial
-### Communities And host phenoTypes
-### EMBL Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes EMBL Heidelberg
+### 2012-2018 GNU GPL 3.0
 
 #' @title Select samples based on metadata
 #' @description This functions selects labels and metadata based on

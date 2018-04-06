@@ -1,7 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial
-### Communities And host phenoTypes
-### EMBL Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes EMBL Heidelberg
+### 2012-2018 GNU GPL 3.0
 
 #' @title Evaluate prediction results
 #' @description This function takes the correct labels and predictions for all
@@ -56,25 +55,52 @@
 #'  # simple working example
 #'  siamcat_evaluated <- evaluate.predictions(siamcat_example)
 #'
-evaluate.predictions <- function(siamcat,verbose=1){
-  if(verbose>1) cat("+ starting evaluate.predictions\n")
-  s.time <- proc.time()[3]
-  # TODO compare header to label
-  ### make sure that label and prediction are in the same order
-  m    <- match(names(siamcat@label@label), rownames(siamcat@pred_matrix))
-  
-  pred <- siamcat@pred_matrix[m,,drop=FALSE]
-  stopifnot(all(names(siamcat@label@label) == rownames(pred)))
-
-  # ROC curve
-  if(verbose>2) cat("+ calculating ROC\n")
-  auroc = 0
-  if (ncol(pred) > 1) {
-    rocc = list(NULL)
-    aucs = vector('numeric', ncol(pred))
-    for (c in 1:ncol(pred)) {
-      rocc[c] = list(roc(response=siamcat@label@label, predictor=pred[,c], ci=FALSE))
-      aucs[c] = rocc[[c]]$auc
+evaluate.predictions <- function(siamcat, verbose = 1) {
+    if (verbose > 1) 
+        cat("+ starting evaluate.predictions\n")
+    s.time <- proc.time()[3]
+    # TODO compare header to label make sure that label and prediction are in the same order
+    m <- match(names(siamcat@label@label), rownames(siamcat@pred_matrix))
+    
+    pred <- siamcat@pred_matrix[m, , drop = FALSE]
+    stopifnot(all(names(siamcat@label@label) == rownames(pred)))
+    
+    # ROC curve
+    if (verbose > 2) 
+        cat("+ calculating ROC\n")
+    auroc = 0
+    if (ncol(pred) > 1) {
+        rocc = list(NULL)
+        aucs = vector("numeric", ncol(pred))
+        for (c in 1:ncol(pred)) {
+            rocc[c] = list(roc(response = siamcat@label@label, predictor = pred[, c], ci = FALSE))
+            aucs[c] = rocc[[c]]$auc
+        }
+        l.vec = rep(siamcat@label@label, ncol(pred))
+    } else {
+        l.vec = siamcat@label@label
+    }
+    # average data for plotting one mean prediction curve
+    if (verbose > 2) 
+        cat("+ calculating mean ROC\n")
+    summ.stat = "mean"
+    rocsumm = list(roc(response = siamcat@label@label, predictor = apply(pred, 1, summ.stat), ci = TRUE, of = "se", 
+        sp = seq(0, 1, 0.05)))
+    auroc = list(rocsumm[[1]]$auc)
+    # precision recall curve
+    pr = list(NULL)
+    ev = list(NULL)
+    if (ncol(pred) > 1) {
+        aucspr = vector("numeric", dim(pred)[2])
+        for (c in 1:ncol(pred)) {
+            ev[c] = list(evaluate.classifier(pred[, c], siamcat@label@label, siamcat@label, verbose = verbose))
+            pr[c] = list(evaluate.get.pr(ev[[c]], verbose = verbose))
+            aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose = verbose)
+        }
+        ev = append(ev, list(evaluate.classifier(apply(pred, 1, summ.stat), siamcat@label@label, siamcat@label)))
+    } else {
+        ev[1] = list(evaluate.classifier(as.vector(pred), siamcat@label@label, siamcat@label, verbose = verbose))
+        pr[1] = list(evaluate.get.pr(ev[[1]]), verbose = verbose)
     }
     if (ncol(pred) > 1) {
         if (verbose > 2) 
