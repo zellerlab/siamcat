@@ -13,7 +13,7 @@ get.pred_matrix(siamcat)
 Prediction matrix
 }
 \description{
-Function to access prediction matrix  in siamcat@pred_matrix
+Function to access prediction matrix  in siamcat@pred_matrix 
 siamcat@orig_feat in an object of class \link{siamcat-class}
 }
 \details{

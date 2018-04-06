@@ -1,17 +1,23 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
-### Heidelberg 2012-2018 GNU GPL 3.0
+###
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
+# R flavor
+# EMBL Heidelberg 2012-2018
+# GNU GPL 3.0
+###
 
 #' @title Read feature file
-#' @description This file reads in the tsv file with features and converts it into a matrix.
+#' @description This file reads in the tsv file with features and
+#' converts it into a matrix.
 #'
 #' The file should be oragnized as follows:
 #' features (in rows) x samples (in columns).
 #'
 #' First row should contain sample labels (consistent with label data), while
 #' the first column should contain feature labels (e.g. taxonomic identifiers).
-#' The remaining entries are expected to be real values \code{>= 0} that quantify
-#' the abundance of each feature in each sample.
+#' The remaining entries are expected to be real values \code{>= 0} that
+#' quantify the abundance of each feature in each sample.
 #' @param fn.in.feat name of the tsv file containing features
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for information about progress and time, defaults to \code{0}
@@ -19,31 +25,26 @@
 #' @return \code{otu_table} containing features from the file
 #' @examples
 #'  # run with example data
-#'  fn.feat <- system.file('extdata', 'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-#'    package = 'SIAMCAT')
+#'  fn.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+#'    package = "SIAMCAT")
 #'  features <- read.features(fn.feat)
-read.features <- function(fn.in.feat, verbose = 0) {
-    if (verbose > 1) 
-        cat("+ starting read.features\n")
-    s.time <- proc.time()[3]
-    if (is.null(fn.in.feat)) 
-        stop("Filename for features file not provided!\n")
-    if (!file.exists(fn.in.feat)) 
-        stop("Feature file ", fn.in.feat, " does not exist!\n")
-    
-    feat <- read.table(file = fn.in.feat, sep = "\t", header = TRUE, stringsAsFactors = FALSE, check.names = FALSE, 
-        quote = "")
-    feat <- as.matrix(feat)
-    featNames <- make.names(rownames(feat))  ### making the names semantically correct
-    
-    if (any(rownames(feat) != featNames)) {
-        cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
-        rownames(feat) <- featNames
-    }
-    e.time <- proc.time()[3]
-    if (verbose > 0) 
-        cat("+ finished read.features in", e.time - s.time, "s\n")
-    invisible(otu_table(feat, taxa_are_rows = TRUE))
+read.features <- function(fn.in.feat, verbose=0){
+  if(verbose>1) cat("+ starting read.features\n")
+  s.time <- proc.time()[3]
+  if(is.null(fn.in.feat))      stop("Filename for features file not provided!\n")
+  if(!file.exists(fn.in.feat)) stop("Feature file ", fn.in.feat, " does not exist!\n")
+
+  feat <- read.table(file=fn.in.feat, sep='\t', header=TRUE, stringsAsFactors=FALSE, check.names=FALSE, quote='')
+  feat <- as.matrix(feat)
+  featNames <- make.names(rownames(feat)) ### making the names semantically correct
+
+  if(any(rownames(feat)!=featNames)){
+    cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
+    rownames(feat) <- featNames
+  }
+  e.time <- proc.time()[3]
+  if(verbose>0) cat("+ finished read.features in",e.time-s.time,"s\n")
+  invisible(otu_table(feat,taxa_are_rows=TRUE))
 }
 
 #' @title Read labels file
@@ -74,61 +75,60 @@ read.features <- function(fn.in.feat, verbose = 0) {
 #'}
 #' @examples
 #'  # run with example data
-#' fn.label <- system.file('extdata', 'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-#'  package = 'SIAMCAT')
+#' fn.label <- system.file("extdata", "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+#'  package = "SIAMCAT")
 #' labels <- read.labels(fn.label)
-read.labels <- function(fn.in.label) {
-    if (is.null(fn.in.label)) 
-        stop("Filename for labels file not provided!\n")
-    if (!file.exists(fn.in.label)) 
-        stop("Label file ", fn.in.label, " does not exist!\n")
-    label <- read.table(file = fn.in.label, sep = "\t", header = TRUE, row.names = NULL, stringsAsFactors = FALSE, 
-        check.names = FALSE, quote = "", comment.char = "#")
-    label <- as.matrix(label)
-    if (dim(label)[1] > dim(label)[2]) {
-        temp <- names(label)
-        names(label) <- NULL
-        label <- rbind(temp, label)
-        rownames(label) <- label[, 1]
-        label[, 1] <- NULL
-        label <- t(label)
+read.labels <- function(fn.in.label){
+  if (is.null(fn.in.label)) stop("Filename for labels file not provided!\n")
+  if(!file.exists(fn.in.label)) stop("Label file ", fn.in.label, " does not exist!\n")
+  label <- read.table(file=fn.in.label, sep='\t', header=TRUE, row.names=NULL, stringsAsFactors=FALSE,
+                      check.names=FALSE, quote='', comment.char="#")
+  label <- as.matrix(label)
+  if (dim(label)[1] > dim(label)[2]){
+    temp            <- names(label)
+    names(label)    <- NULL
+    label           <- rbind(temp,label)
+    rownames(label) <- label[,1]
+    label[,1]       <- NULL
+    label           <- t(label)
+  }
+  namesL          <- colnames(label)
+  label           <- as.numeric(label)
+  names(label)    <- namesL
+
+  # Check general suitablity of supplied dataset
+  classes <- unique(label)
+  for (i in classes){
+    if(sum(label==i) <= 5) stop("Data set has only",sum(label==i), "training examples of class",i," This is not enough for SIAMCAT to proceed")
+    if (sum(label==i) < 10){
+      cat("Data set has only",sum(label==i), "training examples of class",i," . Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipe line." )
     }
-    namesL <- colnames(label)
-    label <- as.numeric(label)
-    names(label) <- namesL
-    
-    # Check general suitablity of supplied dataset
-    classes <- unique(label)
-    for (i in classes) {
-        if (sum(label == i) <= 5) 
-            stop("Data set has only", sum(label == i), "training examples of class", i, " This is not enough for SIAMCAT to proceed")
-        if (sum(label == i) < 10) {
-            cat("Data set has only", sum(label == i), "training examples of class", i, " . Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipe line.")
-        }
-    }
-    
-    # Check label header!
-    con <- file(fn.in.label, "rt")
-    header <- readLines(con, 1)
-    if (substring(header, 1, 1) != "#") {
-        stop("Label header seems to be missing or broken.")
-    }
-    close(con)
-    label <- list(label = label, header = header)
-    label$info <- parse.label.header(label$header)
-    stopifnot(label$info$type == "BINARY")
-    label$positive.lab <- max(label$info$class.descr)
-    label$negative.lab <- min(label$info$class.descr)
-    
-    label$n.idx <- label$label == label$negative.lab
-    label$n.lab <- gsub("[_.-]", " ", names(label$info$class.descr)[label$info$class.descr == label$negative.lab])
-    
-    label$p.idx <- label$label == label$positive.lab
-    label$p.lab <- gsub("[_.-]", " ", names(label$info$class.descr)[label$info$class.descr == label$positive.lab])
-    
-    labelRes <- new("label", label = label$label, header = label$header, info = label$info, positive.lab = label$positive.lab, 
-        negative.lab = label$negative.lab, n.idx = label$n.idx, p.idx = label$p.idx, n.lab = label$n.lab, p.lab = label$p.lab)
-    invisible(labelRes)
+  }
+
+  #Check label header!
+  con               <- file(fn.in.label, 'rt')
+  header            <- readLines(con, 1)
+  if (substring(header,1,1) != "#"){
+    stop("Label header seems to be missing or broken.")
+  }
+  close(con)
+  label             <- list("label" = label, "header" = header)
+  label$info <- parse.label.header(label$header)
+  stopifnot(label$info$type == 'BINARY')
+  label$positive.lab <- max(label$info$class.descr)
+  label$negative.lab <- min(label$info$class.descr)
+
+  label$n.idx <- label$label==label$negative.lab
+  label$n.lab <- gsub('[_.-]', ' ', names(label$info$class.descr)[label$info$class.descr==label$negative.lab])
+
+  label$p.idx <- label$label==label$positive.lab
+  label$p.lab <- gsub('[_.-]', ' ', names(label$info$class.descr)[label$info$class.descr==label$positive.lab])
+
+  labelRes <- new("label", label = label$label, header = label$header, info=label$info,
+                  positive.lab=label$positive.lab,
+                  negative.lab=label$negative.lab, n.idx=label$n.idx, p.idx=label$p.idx,
+                  n.lab=label$n.lab, p.lab=label$p.lab)
+  invisible(labelRes)
 }
 
 #' @title Read metadata file
@@ -146,50 +146,48 @@ read.labels <- function(fn.in.label) {
 #' @return \code{sample_data} object
 #' @examples
 #'  # run with example data
-#' fn.meta  <- system.file('extdata', 'num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-#'  package = 'SIAMCAT')
+#' fn.meta  <- system.file("extdata", "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+#'  package = "SIAMCAT")
 #' meta_data <- read.meta(fn.meta)
 
-read.meta <- function(fn.in.meta) {
-    if (is.null(fn.in.meta) || toupper(fn.in.meta) == "NULL" || toupper(fn.in.meta) == "NONE" || toupper(fn.in.meta) == 
-        "UNKNOWN") {
-        warning("Filename for metadata file not provided, continuing without it.\n")
-    } else {
-        if (!file.exists(fn.in.meta)) 
-            stop("Metadata file ", fn.in.meta, " does not exist!\n")
-        meta <- read.table(file = fn.in.meta, sep = "\t", header = TRUE, row.names = 1, check.names = FALSE, quote = "")
-    }
-    invisible(sample_data(meta))
+read.meta <- function(fn.in.meta){
+  if (is.null(fn.in.meta) || toupper(fn.in.meta)=='NULL' || toupper(fn.in.meta)=='NONE' || toupper(fn.in.meta)=='UNKNOWN') {
+    warning("Filename for metadata file not provided, continuing without it.\n")
+  }else{
+    if(!file.exists(fn.in.meta)) stop("Metadata file ", fn.in.meta, " does not exist!\n")
+    meta <- read.table(file=fn.in.meta, sep='\t', header=TRUE, row.names=1, check.names=FALSE, quote='')
+  }
+  invisible(sample_data(meta))
 }
 
 
-##### auxiliary function to trim whitespace from string returns string without leading or trailing whitespace
+##### auxiliary function to trim whitespace from string
+# returns string without leading or trailing whitespace
 #' @keywords internal
-trim <- function(x) {
-    gsub("^\\s+|\\s+$", "", x)
+trim <- function (x) {
+  gsub("^\\s+|\\s+$", "", x)
 }
 
-#' @title Parse label header 
-#' @description This function parses the header of a label file
-#' @param  label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
-#' where <TYPE> is a string specifying the type of label variable such as
-#' BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
-#' <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
+##### function to parse the header of a label file
+### label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
+###   where <TYPE> is a string specifying the type of label variable such as
+###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
+###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
 #' @keywords internal
 parse.label.header <- function(label.header) {
-    s <- strsplit(label.header, ":")[[1]]
-    type <- trim(s[1])
-    if (substr(type, 1, 1) == "#") 
-        type <- trim(substr(type, 2, nchar(type)))
-    class.descr <- unlist(strsplit(strsplit(trim(s[2]), ";")[[1]], "="))
-    l <- class.descr[seq(2, length(class.descr), 2)]
-    class.descr <- as.numeric(class.descr[seq(1, length(class.descr) - 1, 2)])
-    names(class.descr) <- l
-    
-    label.info <- list()
-    label.info$type <- type
-    label.info$class.descr <- class.descr
-    return(label.info)
+  s    <- strsplit(label.header, ':')[[1]]
+  type <- trim(s[1])
+  if (substr(type, 1, 1) == '#')
+  type <- trim(substr(type, 2, nchar(type)))
+  class.descr <- unlist(strsplit(strsplit(trim(s[2]), ';')[[1]], '='))
+  l <- class.descr[seq(2,length(class.descr),2)]
+  class.descr <- as.numeric(class.descr[seq(1,length(class.descr)-1,2)])
+  names(class.descr) <- l
+
+  label.info <- list()
+  label.info$type <- type
+  label.info$class.descr <- class.descr
+  return(label.info)
 }
 
 #' @title create a label object from metadata
@@ -201,27 +199,27 @@ parse.label.header <- function(label.header) {
 #' @keywords internal
 #' @export 
 create.label <- function(meta, column) {
-    if (!column %in% colnames(meta)) 
-        stop("ERROR: Column", column, "not found in the metadata\n")
-    metaColumn <- sapply(meta[, column], as.character)
-    if (!length(unique(metaColumn)) == 2) 
-        stop("ERROR: Column", column, "does not contain binary label\n")
-    label <- list(label = rep(-1, length(metaColumn)), positive.lab = 1, negative.lab = (-1))
-    label$n.lab <- gsub("[_.-]", " ", unique(metaColumn)[1])
-    label$p.lab <- gsub("[_.-]", " ", unique(metaColumn)[2])
-    class.descr <- c(-1, 1)
-    names(class.descr) <- c(label$n.lab, label$p.lab)
-    
-    names(label$label) <- rownames(meta)
-    label$header <- paste0("#BINARY:1=", label$p.lab, ";-1=", label$n.lab)
-    label$label[which(metaColumn == unique(metaColumn)[2])] <- 1
-    
-    label$n.idx <- label$label == label$negative.lab
-    label$p.idx <- label$label == label$positive.lab
-    
-    label$info <- list(type = "BINARY", class.descr = class.descr)
-    
-    labelRes <- new("label", label = label$label, header = label$header, info = label$info, positive.lab = label$positive.lab, 
-        negative.lab = label$negative.lab, n.idx = label$n.idx, p.idx = label$p.idx, n.lab = label$n.lab, p.lab = label$p.lab)
-    return(labelRes)
+  if (!column %in% colnames(meta)) 
+    stop("ERROR: Column", column, "not found in the metadata\n")
+  metaColumn <- sapply(meta[, column], as.character)
+  if (!length(unique(metaColumn)) == 2) 
+    stop("ERROR: Column", column, "does not contain binary label\n")
+  label <- list(label = rep(-1, length(metaColumn)), positive.lab = 1, negative.lab = (-1))
+  label$n.lab <- gsub("[_.-]", " ", unique(metaColumn)[1])
+  label$p.lab <- gsub("[_.-]", " ", unique(metaColumn)[2])
+  class.descr <- c(-1, 1)
+  names(class.descr) <- c(label$n.lab, label$p.lab)
+  
+  names(label$label) <- rownames(meta)
+  label$header <- paste0("#BINARY:1=", label$p.lab, ";-1=", label$n.lab)
+  label$label[which(metaColumn == unique(metaColumn)[2])] <- 1
+  
+  label$n.idx <- label$label == label$negative.lab
+  label$p.idx <- label$label == label$positive.lab
+  
+  label$info <- list(type = "BINARY", class.descr = class.descr)
+  
+  labelRes <- new("label", label = label$label, header = label$header, info = label$info, positive.lab = label$positive.lab, 
+                  negative.lab = label$negative.lab, n.idx = label$n.idx, p.idx = label$p.idx, n.lab = label$n.lab, p.lab = label$p.lab)
+  return(labelRes)
 }

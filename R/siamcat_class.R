@@ -1,6 +1,11 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes EMBL Heidelberg
-### 2012-2018 GNU GPL 3.0
+###
+# SIAMCAT -  Statistical Inference of Associations between
+#   Microbial Communities And host phenoTypes
+# R flavor
+# EMBL Heidelberg 2012-2018
+# GNU GPL 3.0
+###
 
 #' The S4 class for storing models.
 #' @name model_list-class
@@ -20,7 +25,10 @@ setClass("model_list", representation(models = "list", model.type = "character")
 #' @slot num.resample number of repetition rounds for cv
 #' @slot num.folds number of folds for cv
 #' @exportClass data_split
-setClass("data_split", representation(training.folds = "list", test.folds = "list", num.resample = "numeric", num.folds = "numeric"))
+setClass("data_split", representation(training.folds = "list",
+                                     test.folds = "list",
+                                     num.resample = "numeric",
+                                     num.folds = "numeric"))
 
 #' The S4 class for storing label info.
 #' @name label-class
@@ -35,11 +43,14 @@ setClass("data_split", representation(training.folds = "list", test.folds = "lis
 #' withc negative label
 #' @slot p.idx numeric vector - on which positions in the label there are samples
 #' withc positive label
-#' @slot n.lab character string with a name for the negative label (e.g. 'healthy')
-#' @slot p.lab character string with a name for the positive label (e.g. 'cancer')
+#' @slot n.lab character string with a name for the negative label (e.g. "healthy")
+#' @slot p.lab character string with a name for the positive label (e.g. "cancer")
 #' @exportClass label
-setClass("label", representation(label = "vector", header = "character", info = "list", positive.lab = "numeric", negative.lab = "numeric", 
-    n.idx = "vector", p.idx = "vector", n.lab = "character", p.lab = "character"))
+setClass("label", representation(label = "vector", header = "character",
+                                 info="list", positive.lab="numeric",
+                                 negative.lab="numeric",
+                                 n.idx="vector", p.idx="vector",
+                                 n.lab="character", p.lab="character"))
 
 #' The S4 class for storing taxa-abundance information and models.
 #' @name siamcat-class
@@ -62,6 +73,5 @@ setClass("label", representation(label = "vector", header = "character", info = 
 #'}
 #' @slot pred_matrix a matrix with predictions made by \link{make.predictions} function
 #' @exportClass siamcat
-setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat = "otu_table", eval_data = "list", 
-    label = "label", norm_param = "list", data_split = "data_split", pred_matrix = "matrix"))
-
+setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat="otu_table", eval_data = "list",
+                                   label="label", norm_param="list", data_split="data_split", pred_matrix="matrix"))

@@ -28,12 +28,12 @@ suppressMessages(library('methods'))
 # parse arguments
 opt            <- parse_args(OptionParser(option_list=option_list))
 # print parameters of the run
-cat("=== 10_make_predictions.r\n")
+cat("=== 10_plm_predictor.r\n")
 cat("=== Paramaters of the run:\n\n")
 cat('feat_in         =', opt$feat_in,      '\n')
 cat('mlr_models_list =', opt$mlr_models_list,'\n')
 cat('label_in        =', opt$label_in,     '\n')
-cat('data_split      =', opt$data_split, '\n')
+cat('data_split        =', opt$data_split, '\n')
 cat('pred            =', opt$pred,           '\n')
 cat('\n')
 

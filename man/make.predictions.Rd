@@ -10,8 +10,8 @@ make.predictions(siamcat, siamcat.holdout = NULL, normalize.holdout = TRUE,
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
-\item{siamcat.holdout}{optional, object of class \link{siamcat-class} on
-which to make predictions, defaults to \code{NULL}}
+\item{siamcat.holdout}{optional, object of class \link{siamcat-class} on which
+to make predictions, defaults to \code{NULL}}
 
 \item{normalize.holdout}{boolean, should the holdout features be normalized
 with a frozen normalization (see \link{normalize.features}) using the
@@ -19,25 +19,24 @@ normalization parameters in \code{siamcat}?, defaults to \code{TRUE}}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
-defaults to \code{1}}
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 object of class \link{siamcat-class} with the slot \code{pred_matrix}
        filled or a matrix containing the predictions for the holdout set
 }
 \description{
-This function takes a \link{siamcat-class}-object containing
-       a model trained by \link{train.model} and performs predictions on
-       a given test-set.
+This function takes a \link{siamcat-class}-object containing a model
+       trained by \link{train.model} and performs predictions on a given
+       test-set.
 }
 \details{
 This functions uses the model in the \code{model_list}-slot of the
-       \code{siamcat} object to make predictions on a given test set. The
-       test set can either consist of the test instances in the cross-
-       validation, saved in the \code{data_split}-slot of the same
-       \code{siamcat} object, or a completely external feature set, given in
-       the form of another \code{siamcat} object (\code{siamcat.holdout}).
+       \code{siamcat} object to make predictions on a given test set. The test
+       set can either consist of the test instances in the cross-validation,
+       saved in the \code{data_split}-slot of the same \code{siamcat} object,
+       or a completely external feature set, given in the form of another
+       \code{siamcat} object (\code{siamcat.holdout}).
 }
 \examples{
  data(siamcat_example)

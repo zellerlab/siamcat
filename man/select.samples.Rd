@@ -19,18 +19,16 @@ should be done}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
-defaults to \code{1}}
+level of information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat-class} with labels and metadata
-       filtered in order to contain only allowed values
+an object of class \link{siamcat-class} with labels and metadata filtered
+       in order to contain only allowed values
 }
 \description{
 This functions selects labels and metadata based on
        a specific column in the metadata. Provided with a column-name in the
        metadata and a range or a set of allowed values, the function will
-       filter the \link{siamcat-class} object accordingly.
 }
 \examples{
  data(siamcat_example)

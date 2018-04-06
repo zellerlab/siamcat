@@ -205,13 +205,29 @@ check.color.scheme <- function(color.scheme, label, meta.studies=NULL,  verbose=
       }
       colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(2))
     } else {
-        stop("Supplied colors do not match the number of classes or are no valid colors")
+      # if color scheme and multiclass label, make colors either directly out of the palette (if n.classes smaller than maxcolors) or like before
+      if (!color.scheme %in% row.names(brewer.pal.info)){
+        warning("Not a valid RColorBrewer palette name, defaulting to Set3.\n  See brewer.pal.info for more information about RColorBrewer palettes.")
+        color.scheme <- 'Set3'
+      }
+      # if color scheme and multiclass label, check that the palette is not divergent or sequential, but qualitative. Only issue warning.
+      if (brewer.pal.info[color.scheme,'category'] != 'qual'){warning("Using a divergent or sequential color palette for multiclass data.")}
+      if (n.classes <= brewer.pal.info[color.scheme, 'maxcolors']){
+        colors <- brewer.pal(n.classes, color.scheme)
+      } else {
+        warning("The data contains more classes than the color.palette provides.")
+        colors <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme,'maxcolors'], color.scheme))(n.classes))
+      }
     }
-    # add transparency
-    colors <- sapply(colors, FUN = function(x) {
-        paste0(x, "85")
-    }, USE.NAMES = FALSE)
-    if (verbose > 2) 
-        cat("+ finished check.color.scheme\n")
-    return(colors)
+  } else if (length(color.scheme == n.classes) && all(is.color(color.scheme))){
+    # if colors, check that all strings are real colors and check that the same length as n classes
+    # convert color names to hex representation
+    colors <- sapply(color.scheme, FUN=function(x){rgb(t(col2rgb(x)), maxColorValue = 255)}, USE.NAMES = FALSE)
+  } else {
+    stop("Supplied colors do not match the number of classes or are no valid colors")
+  }
+  # add transparency
+  colors <- sapply(colors, FUN=function(x){paste0(x, '85')}, USE.NAMES = FALSE)
+  if(verbose>2) cat("+ finished check.color.scheme\n")
+  return(colors)
 }

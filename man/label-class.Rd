@@ -27,8 +27,8 @@ withc negative label}
 \item{\code{p.idx}}{numeric vector - on which positions in the label there are samples
 withc positive label}
 
-\item{\code{n.lab}}{character string with a name for the negative label (e.g. 'healthy')}
+\item{\code{n.lab}}{character string with a name for the negative label (e.g. "healthy")}
 
-\item{\code{p.lab}}{character string with a name for the positive label (e.g. 'cancer')}
+\item{\code{p.lab}}{character string with a name for the positive label (e.g. "cancer")}
 }}
 
