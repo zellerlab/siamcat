@@ -168,11 +168,13 @@ trim <- function (x) {
   gsub("^\\s+|\\s+$", "", x)
 }
 
-##### function to parse the header of a label file
-### label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
-###   where <TYPE> is a string specifying the type of label variable such as
-###   BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
-###   <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
+#' @title Parse label header 
+#' @description This function parses the header of a label file
+#' @param  label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
+#' where <TYPE> is a string specifying the type of label variable such as
+#' BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
+#' <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
+#' @return a list
 #' @keywords internal
 parse.label.header <- function(label.header) {
   s    <- strsplit(label.header, ':')[[1]]
@@ -197,6 +199,7 @@ parse.label.header <- function(label.header) {
 #' @param column name of column that will be used
 #' to create the label
 #' @keywords internal
+
 #' @export 
 create.label <- function(meta, column) {
   if (!column %in% colnames(meta)) 

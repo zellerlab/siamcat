@@ -302,8 +302,11 @@ filter.label <- function(siamcat,ids, verbose=1){
   return(siamcat)
 }
 
-#based on https://github.com/joey711/phyloseq/blob/master/R/show-methods.R
+# based on https://github.com/joey711/phyloseq/blob/master/R/show-methods.R
+#' @title Show method for siamcat class object
 #' @rdname show-methods
+#' @return none
+#' @keywords internal
 setMethod("show", "siamcat", function(object){
   cat("siamcat-class object", fill=TRUE)
   if(!is.null(object@label)) cat(paste("label()                label:           ",

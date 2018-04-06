@@ -10,10 +10,10 @@ The S4 class for storing data splits
 \section{Slots}{
 
 \describe{
-\item{\code{training.folds}}{a list - for each cv fold contains ids of 
+\item{\code{training.folds}}{a list - for each cv fold contains ids of
 samples used for training}
 
-\item{\code{test.folds}}{a list - for each cv fold contains ids of 
+\item{\code{test.folds}}{a list - for each cv fold contains ids of
 samples used for testing}
 
 \item{\code{num.resample}}{number of repetition rounds for cv}

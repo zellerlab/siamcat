@@ -15,16 +15,17 @@ check.associations(siamcat, fn.plot, color.scheme = "RdYlBu", alpha = 0.05,
 \item{fn.plot}{filename for the pdf-plot}
 
 \item{color.scheme}{valid R color scheme or vector of valid R colors (must
-be of the same length as the number of classes), defaults to \code{'RdYlBu'}}
+be of the same length as the number of classes),
+defaults to \code{'RdYlBu'}}
 
 \item{alpha}{float, significance level, defaults to \code{0.05}}
 
-\item{mult.corr}{multiple hypothesis correction method, see \code{\link[stats]{p.adjust}},
-defaults to \code{"fdr"}}
+\item{mult.corr}{multiple hypothesis correction method, see
+\code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}}
 
-\item{sort.by}{string, sort features by p-value (\code{"p.val"}), by fold change
-(\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
-\code{"fc"}}
+\item{sort.by}{string, sort features by p-value (\code{"p.val"}),
+by fold change (\code{"fc"}) or by prevalence shift
+(\code{"pr.shift"}), defaults to \code{"fc"}}
 
 \item{detect.lim}{float, pseudocount to be added before log-transformation of
 the data, defaults to \code{1e-06}}
@@ -45,7 +46,8 @@ transformed abundances, possible entries are \code{c("fc", "auroc",
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information, defaults to \code{1}}
+level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 Does not return anything, but produces an association plot

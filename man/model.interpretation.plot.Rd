@@ -39,24 +39,27 @@ interpretation plot, defaults to 50}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information, defaults to \code{1}}
+level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 Does not return anything, but produces the model interpretion plot.
 }
 \description{
-Produces a plot for model interpretation, displaying feature weights,
-       robustness of feature weights, and features scores across patients.
+Produces a plot for model interpretation, displaying feature
+       weights, robustness of feature weights, and features scores across
+       patients.
 }
 \details{
 Produces a plot consisting of \itemize{
  \item a barplot showing the feature weights and their robustness (i.e. in
    what proportion of models have they been incorporated)
- \item a heatmap showing the z-scores of the metagenomic features across patients
+ \item a heatmap showing the z-scores of the metagenomic features across
+   patients
  \item another heatmap displaying the metadata categories (if applicable)
- \item a boxplot displaying the poportion of weight per model that is actually shown
-   for the features that are incorporated into more than \code{consens.thres}
-   percent of the models.
+ \item a boxplot displaying the poportion of weight per model that is
+   actually shown for the features that are incorporated into more than
+   \code{consens.thres} percent of the models.
 }
 }
 \examples{
