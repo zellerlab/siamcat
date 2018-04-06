@@ -156,6 +156,34 @@ setMethod("label", "ANY", function(siamcat){
 #' @rdname label-methods
 setMethod("label", "label", function(siamcat){ return(siamcat) })
 
+################################################################################
+#' Retrieve a \link{data_split-class} object from object.
+#'
+#'
+#' @usage label(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a label or instance of \link{data_split-class}.
+#'
+#'
+#' @return The \link{data_split-class} object or NULL.
+#' 
+#' @export
+#' @rdname data_split-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  data_split(siamcat_example)
+setGeneric("data_split", function(siamcat) standardGeneric("data_split"))
+#' @rdname data_split-methods
+#' @aliases data_split,ANY-method
+setMethod("data_split", "ANY", function(siamcat){
+  accessSlot(siamcat, "data_split")
+})
+# Return as-is if already a data_split object
+#' @rdname data_split-methods
+setMethod("data_split", "data_split", function(siamcat){ return(siamcat) })
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features
