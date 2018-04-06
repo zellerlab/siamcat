@@ -11,8 +11,8 @@ filter.features(siamcat, filter.method = "abundance", cutoff = 0.001,
 \item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{filter.method}{method used for filtering the features, can be one of
-these: \code{c("abundance", "cum.abundance", "prevalence")},
-defaults to \code{"abundance"}}
+these: \code{c('abundance', 'cum.abundance', 'prevalence')},
+defaults to \code{'abundance'}}
 
 \item{cutoff}{float, abundace or prevalence cutoff, default to \code{0.001}}
 
@@ -40,13 +40,13 @@ This function filters the features in a \link{siamcat-class}
        object in a unsupervised manner.
 
        The different filter methods work in the following way: \itemize{
-       \item \code{"abundace"} remove features whose abundance is never above
+       \item \code{'abundace'} remove features whose abundance is never above
          the threshold value in any of the samples
-       \item \code{"cum.abundance"} remove features with very low abundance
+       \item \code{'cum.abundance'} remove features with very low abundance
          in all samples i.e. ones that are never among the most abundant
          entities that collectively make up (1-cutoff) of the reads in
          any sample
-       \item \code{"prevalence"} remove features with low prevalence across
+       \item \code{'prevalence'} remove features with low prevalence across
          samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
          proportion of samples.
        }

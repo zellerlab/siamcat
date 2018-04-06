@@ -14,16 +14,16 @@ model.interpretation.plot(siamcat, fn.plot, color.scheme = "BrBG",
 
 \item{fn.plot}{string, filename for the pdf-plot}
 
-\item{color.scheme}{color scheme for the heatmap, defaults to \code{"BrBG"}}
+\item{color.scheme}{color scheme for the heatmap, defaults to \code{'BrBG'}}
 
 \item{consens.thres}{minimal ratio of models incorporating a feature in order
 to include it into the heatmap, defaults to \code{0.5}
-Note that for \code{"randomForest"} models, this cutoff specifies the
+Note that for \code{'randomForest'} models, this cutoff specifies the
 minimum median Gini coefficient for a feature to be included and
 should therefore be much lower, e.g. \code{0.01}}
 
-\item{heatmap.type}{type of the heatmap, can be either \code{"fc"} or
-\code{"zscore"}, defaults to \code{"zscore"}}
+\item{heatmap.type}{type of the heatmap, can be either \code{'fc'} or
+\code{'zscore'}, defaults to \code{'zscore'}}
 
 \item{norm.models}{boolean, should the feature weights be normalized across
 models?, defaults to \code{FALSE}}

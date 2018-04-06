@@ -91,8 +91,9 @@
     </div>
 
     
-    <p>Produces a plot for model interpretation, displaying feature weights,
-       robustness of feature weights, and features scores across patients.</p>
+    <p>Produces a plot for model interpretation, displaying feature
+       weights, robustness of feature weights, and features scores across
+       patients.</p>
     
 
     <pre class="usage"><span class='fu'>model.interpretation.plot</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>,
@@ -152,7 +153,8 @@ interpretation plot, defaults to 50</p></td>
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
@@ -165,11 +167,12 @@ level of information and <code>3</code> for full debug information, defaults to 
     <p>Produces a plot consisting of</p><ul>
 <li><p>a barplot showing the feature weights and their robustness (i.e. in
    what proportion of models have they been incorporated)</p></li>
-<li><p>a heatmap showing the z-scores of the metagenomic features across patients</p></li>
+<li><p>a heatmap showing the z-scores of the metagenomic features across
+   patients</p></li>
 <li><p>another heatmap displaying the metadata categories (if applicable)</p></li>
-<li><p>a boxplot displaying the poportion of weight per model that is actually shown
-   for the features that are incorporated into more than <code>consens.thres</code>
-   percent of the models.</p></li>
+<li><p>a boxplot displaying the poportion of weight per model that is
+   actually shown for the features that are incorporated into more than
+   <code>consens.thres</code> percent of the models.</p></li>
 </ul>
     
 

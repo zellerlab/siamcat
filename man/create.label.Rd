@@ -13,6 +13,9 @@ of \link[phyloseq]{sample_data-class}}
 \item{column}{name of column that will be used
 to create the label}
 }
+\value{
+an object of class \link{label-class}
+}
 \description{
 This function creates a label object from metadata
 }

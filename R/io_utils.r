@@ -172,11 +172,16 @@ trim <- function(x) {
 
 #' @title Parse label header 
 #' @description This function parses the header of a label file
-#' @param  label.header - string in the format: #<TYPE>:<L1>=<class1>;<L2>=<class2>[;<L3>=<class3>]
-#' where <TYPE> is a string specifying the type of label variable such as
-#' BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
-#' <L1> is a short numeric label for the first class with description <class1> (similarly for the other classes)
-#' @return a list
+#' @param  label.header - string in the format: #<TYPE>:<L1>=<class1>;
+#' <L2>=<class2>[;<L3>=<class3>] where <TYPE> is a string specifying the type
+#' of label variable such as BINARY (for binary classification), CATEGORICAL
+#' (for multi-class classification), or CONTINUOUS (for regression)
+#' <L1> is a short numeric label for the first class with description <class1> 
+#' (similarly for the other classes)
+#' @return a list with tow items \itemize{
+#' \item \code{$type} type of the label: BINARY CONTINUOUS or CATEGORICAL
+#' \item \code{$class.descr} lables and information on what do they mean
+#'}
 #' @keywords internal
 parse.label.header <- function(label.header) {
     s <- strsplit(label.header, ":")[[1]]
@@ -201,7 +206,7 @@ parse.label.header <- function(label.header) {
 #' @param column name of column that will be used
 #' to create the label
 #' @keywords internal
-
+#' @return an object of class \link{label-class}
 #' @export 
 create.label <- function(meta, column) {
     if (!column %in% colnames(meta)) 

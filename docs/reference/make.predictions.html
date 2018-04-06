@@ -91,9 +91,9 @@
     </div>
 
     
-    <p>This function takes a <a href='siamcat-class.html'>siamcat-class</a>-object containing a model
-       trained by <a href='train.model.html'>train.model</a> and performs predictions on a given
-       test-set.</p>
+    <p>This function takes a <a href='siamcat-class.html'>siamcat-class</a>-object containing
+       a model trained by <a href='train.model.html'>train.model</a> and performs predictions on
+       a given test-set.</p>
     
 
     <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>siamcat</span>, <span class='kw'>siamcat.holdout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>normalize.holdout</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -108,8 +108,8 @@
     </tr>
     <tr>
       <th>siamcat.holdout</th>
-      <td><p>optional, object of class <a href='siamcat-class.html'>siamcat-class</a> on which
-to make predictions, defaults to <code>NULL</code></p></td>
+      <td><p>optional, object of class <a href='siamcat-class.html'>siamcat-class</a> on
+which to make predictions, defaults to <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>normalize.holdout</th>
@@ -121,7 +121,8 @@ normalization parameters in <code>siamcat</code>?, defaults to <code>TRUE</code>
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
@@ -133,11 +134,11 @@ level of information and <code>3</code> for full debug information, defaults to 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This functions uses the model in the <code>model_list</code>-slot of the
-       <code>siamcat</code> object to make predictions on a given test set. The test
-       set can either consist of the test instances in the cross-validation,
-       saved in the <code>data_split</code>-slot of the same <code>siamcat</code> object,
-       or a completely external feature set, given in the form of another
-       <code>siamcat</code> object (<code>siamcat.holdout</code>).</p>
+       <code>siamcat</code> object to make predictions on a given test set. The
+       test set can either consist of the test instances in the cross-
+       validation, saved in the <code>data_split</code>-slot of the same
+       <code>siamcat</code> object, or a completely external feature set, given in
+       the form of another <code>siamcat</code> object (<code>siamcat.holdout</code>).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

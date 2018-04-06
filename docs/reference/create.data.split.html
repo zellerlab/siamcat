@@ -119,7 +119,8 @@ resampling), defaults to <code>1</code></p></td>
     <tr>
       <th>stratify</th>
       <td><p>boolean, should the splits be stratified so that an equal
-proportion of classes are present in each fold?, defaults to <code>TRUE</code></p></td>
+proportion of classes are present in each fold?,
+defaults to <code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>inseparable</th>
@@ -129,26 +130,32 @@ proportion of classes are present in each fold?, defaults to <code>TRUE</code></
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the <code>data_split</code>-slot filled</p>
+    <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the <code>data_split</code>-slot
+       filled</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function splits the labels within a <a href='siamcat-class.html'>siamcat-class</a> object and
-       prepares the internal cross-validation for the model training (see
-       <a href='train.model.html'>train.model</a>).</p>
+    <p>This function splits the labels within a <a href='siamcat-class.html'>siamcat-class</a>
+       object and prepares the internal cross-validation for the model
+       training (see <a href='train.model.html'>train.model</a>).</p>
 <p>The function saves the training and test instances for the different
        cross-validation folds within a list in the <code>data_split</code>-slot
-       of the <a href='siamcat-class.html'>siamcat-class</a> object, which is a list with four entries:</p><ul>
+       of the <a href='siamcat-class.html'>siamcat-class</a> object, which is a list with four
+       entries:</p><ul>
 <li><p><code>num.folds</code> the number of cross-validation folds</p></li>
-<li><p><code>num.resample</code> the number of repetitions for the cross-validation</p></li>
-<li><p><code>training.folds</code> a list containing the indices for the training instances</p></li>
-<li><p><code>test.folds</code> a list containing the indices for the test instances</p></li>
+<li><p><code>num.resample</code> the number of repetitions for the
+               cross-validation</p></li>
+<li><p><code>training.folds</code> a list containing the indices for the
+               training instances</p></li>
+<li><p><code>test.folds</code> a list containing the indices for the test
+               instances</p></li>
 </ul>
     
 

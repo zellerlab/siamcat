@@ -30,6 +30,7 @@ an object of class \link{siamcat-class} with labels and metadata
 This functions selects labels and metadata based on
        a specific column in the metadata. Provided with a column-name in the
        metadata and a range or a set of allowed values, the function will
+       filter the \link{siamcat-class} object accordingly.
 }
 \examples{
  data(siamcat_example)

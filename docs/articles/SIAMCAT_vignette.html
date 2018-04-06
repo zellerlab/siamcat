@@ -139,7 +139,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## +++ before filtering, the data has 1754 features
 ## +++ removed 1 features corresponding to UNMAPPED reads
 ## +++ removed 1546 features whose values did not exceed 0.001 in any sample (retaining 207)
-## + finished filter.features in 0.045 s</code></pre>
+## + finished filter.features in 0.072 s</code></pre>
 </div>
 <div id="associationconfounder-testing" class="section level1">
 <h1 class="hasAnchor">
@@ -176,7 +176,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## +++ performing de novo normalization using the  log.unit  method
 ## + feature sparsity before normalization: 45.11598%
 ## +++ feature sparsity after normalization: 0%
-## + finished normalize.features in 0.03 s</code></pre>
+## + finished normalize.features in 0.042 s</code></pre>
 </div>
 <div id="prepare-cross-validation" class="section level2">
 <h2 class="hasAnchor">
@@ -191,7 +191,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <pre><code>## + starting create.data.split
 ## + resampling round 1 
 ## + resampling round 2 
-## + finished create.data.split in 0.057 s</code></pre>
+## + finished create.data.split in 0.051 s</code></pre>
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">
@@ -223,7 +223,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## ++++ repetition: 1 
 ## ++++ repetition: 2 
 ## 
-## + finished train.model in 17.321 s</code></pre>
+## + finished train.model in 25.55 s</code></pre>
 <p>The models are saved in the <code>model_list</code> slot of the <code>siamcat</code> object. This slot stores objects of <code>model_list-class</code>. To get the complete list out of the SIAMCAT object:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.model_list.html">get.model_list</a></span>(siamcat)</code></pre></div>
 <p>This slot also stores information on which method was used to construct the model:</p>
@@ -243,13 +243,13 @@ models[[<span class="dv">1</span>]]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">0</span>)
 pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.pred_matrix.html">get.pred_matrix</a></span>(siamcat)
 <span class="kw">head</span>(pred_matrix)</code></pre></div>
-<pre><code>##                       CV_rep1    CV_rep2
-## CCIS27304052ST-3-0 -0.6550778 -0.7945604
-## CCIS15794887ST-4-0 -0.6731294 -0.4455925
-## CCIS74726977ST-3-0 -0.4542887 -0.1998039
-## CCIS16561622ST-4-0 -0.6990310 -0.2787479
-## CCIS79210440ST-3-0 -0.2068696 -0.3048015
-## CCIS82507866ST-3-0 -0.8425932 -0.7692176</code></pre>
+<pre><code>##                        CV_rep1     CV_rep2
+## CCIS27304052ST-3-0 -0.71526641 -0.80799227
+## CCIS15794887ST-4-0 -0.66482181 -0.68612534
+## CCIS74726977ST-3-0 -0.06644352 -0.09444828
+## CCIS16561622ST-4-0 -0.60546240 -0.59851009
+## CCIS79210440ST-3-0 -0.68895319 -0.48263800
+## CCIS82507866ST-3-0 -0.79726761 -0.52797149</code></pre>
 </div>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level1">
@@ -258,7 +258,7 @@ pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 <p>In the final part, we want to find out how well the model performed and which microbial markers had been selected in the model. In order to do so, we first calculate how well the predictions fit the real data using the function <code>evaluate.predictions</code>. This function calculates the Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR) Curve for each resampled cross-validation run. The results of the evaluation will be stored in the <code>eval_data</code> slot of the <code>siamcat</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
 <pre><code>## + starting evaluate.predictions
-## + finished evaluate.predictions in 7.43 s</code></pre>
+## + finished evaluate.predictions in 12.316 s</code></pre>
 <div id="evaluation-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#evaluation-plot" class="anchor"></a>Evaluation plot</h2>
@@ -315,7 +315,7 @@ yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre></div>
 <pre><code>## R version 3.4.4 (2018-03-15)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.3
+## Running under: macOS High Sierra 10.13.4
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
@@ -328,7 +328,7 @@ yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="d
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_0.99.0    phyloseq_1.22.3   mlr_2.12          ParamHelpers_1.10
+## [1] SIAMCAT_0.99.4    phyloseq_1.22.3   mlr_2.12          ParamHelpers_1.10
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] reshape2_1.4.3      splines_3.4.4       lattice_0.20-35    

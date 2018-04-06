@@ -93,11 +93,13 @@
     
     <p>This function takes the correct labels and predictions for all
        samples and evaluates the results using the</p><ul>
-<li><p>Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC)</p></li>
+<li><p>Area Under the Receiver Operating Characteristic (ROC)
+               Curve (AU-ROC)</p></li>
 <li><p>and the Precision-Recall Curve (PR)</p></li>
 </ul><p>as metric. Predictions can be supplied either for a single case or as
        matrix after resampling of the dataset.</p>
-<p>Prediction results are usually produced with the function <a href='make.predictions.html'>make.predictions</a>.</p>
+<p>Prediction results are usually produced with the function
+       <a href='make.predictions.html'>make.predictions</a>.</p>
     
 
     <pre class="usage"><span class='fu'>evaluate.predictions</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
@@ -113,35 +115,43 @@
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the slot <code>eval_data</code> filled</p>
+    <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the
+        slot <code>eval_data</code> filled</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This functions calculates for the predictions in the <code>pred_matrix</code>
-       -slot of the <a href='siamcat-class.html'>siamcat-class</a>-object several metrices. The Area Under the
-       Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision-
-       Recall Curve will be evaluated and the results will be saved in the
-       <code>eval_data</code>-slot of the supplied <a href='siamcat-class.html'>siamcat-class</a>-object. The
-       <code>eval_data</code>-slot contains a list with several entries:</p><ul>
+    <p>This functions calculates for the predictions in the
+       <code>pred_matrix</code> -slot of the <a href='siamcat-class.html'>siamcat-class</a>-object several
+       metrices. The Area Under the Receiver Operating Characteristic (ROC)
+       Curve (AU-ROC) and the Precision-Recall Curve will be evaluated and
+       the results will be saved in the <code>eval_data</code>-slot of the
+       supplied <a href='siamcat-class.html'>siamcat-class</a>-object. The <code>eval_data</code>-slot
+       contains a list with several entries:</p><ul>
 <li><p><code>$roc.average</code> average ROC-curve across repeats or a
                single ROC-curve on complete dataset;</p></li>
 <li><p><code>$auc.average</code> AUC value for the average ROC-curve;</p></li>
 <li><p><code>$ev.list</code> list of <code>length(num.folds)</code>, containing
-               for different decision thresholds the number of false positives,
-               false negatives, true negatives, and true positives;</p></li>
+               for different decision thresholds the number of false
+               positives, false negatives, true negatives, and
+               true positives;</p></li>
 <li><p><code>$pr.list</code> list of <code>length(num.folds)</code>, containing
                the positive predictive value (precision) and true positive
                rate (recall) values used to plot the PR curves.</p></li>
-</ul><p>For the case of repeated cross-validation, the function will additonally return</p><ul>
-<li><p><code>$roc.all</code> list of roc objects (see <a href='http://www.rdocumentation.org/packages/pROC/topics/roc'>roc</a>) for every repeat;</p></li>
-<li><p><code>$aucspr</code> vector of AUC values for the PR curves for every repeat;</p></li>
-<li><p><code>$auc.all</code> vector of AUC values for the ROC curves for every repeat.</p></li>
+</ul><p>For the case of repeated cross-validation, the function will
+       additonally return</p><ul>
+<li><p><code>$roc.all</code> list of roc objects (see <a href='http://www.rdocumentation.org/packages/pROC/topics/roc'>roc</a>)
+               for every repeat;</p></li>
+<li><p><code>$aucspr</code> vector of AUC values for the PR curves
+               for every repeat;</p></li>
+<li><p><code>$auc.all</code> vector of AUC values for the ROC curves
+               for every repeat.</p></li>
 </ul>
     
 
