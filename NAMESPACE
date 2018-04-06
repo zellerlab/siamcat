@@ -3,6 +3,7 @@
 export("eval_data<-")
 export("label<-")
 export("model_list<-")
+export("norm_param<-")
 export("phyloseq<-")
 export(add.meta.pred)
 export(check.associations)
