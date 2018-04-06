@@ -156,3 +156,25 @@ setMethod("data_split<-", c("siamcat","data_split"), function(x, value){
   siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
           x@eval_data, x@pred_matrix, x@norm_param)
 })
+
+################################################################################
+#' Assign a new otu_table object to \code{x} orig_feat slot
+#'
+#' @usage orig_feat(x) <- value
+#'
+#' @param x an object of class \link{siamcat-class}
+#' @param value an object of class \link[phyloseq]{otu_table-class}
+#' @export
+#' @docType methods
+#' @rdname assign-orig_feat
+#' @aliases assign-orig_feat
+#'
+#' @examples
+#' # data(siamcat_example)
+setGeneric("orig_feat<-", function(x, value) standardGeneric("orig_feat<-"))
+#' @rdname assign-orig_feat
+#' @aliases orig_feat<-
+setMethod("orig_feat<-", c("siamcat","otu_table"), function(x, value){
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@data_split, 
+          x@eval_data, x@pred_matrix, x@norm_param)
+})
