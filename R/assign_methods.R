@@ -112,3 +112,25 @@ setMethod("norm_param<-", c("siamcat","list"), function(x, value){
   siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
           x@eval_data, x@data_split, x@pred_matrix)
 })
+
+################################################################################
+#' Assign a new pred_matrix object to \code{x}
+#'
+#' @usage pred_matrix(x) <- value
+#'
+#' @param x an object of class \link{siamcat-class}
+#' @param value an pred_matrix matrix
+#' @export
+#' @docType methods
+#' @rdname assign-pred_matrix
+#' @aliases assign-pred_matrix
+#'
+#' @examples
+#' # data(siamcat_example)
+setGeneric("pred_matrix<-", function(x, value) standardGeneric("pred_matrix<-"))
+#' @rdname assign-pred_matrix
+#' @aliases pred_matrix<-
+setMethod("pred_matrix<-", c("siamcat","matrix"), function(x, value){
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
+          x@eval_data, x@data_split, x@norm_param)
+})
