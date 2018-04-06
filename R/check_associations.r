@@ -95,7 +95,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     plot.type <- "quantile.box"
   }
   # either give n_classes colors or color palette
-  col <- check.color.scheme(color.scheme, siamcat@label)
+  col <- check.color.scheme(color.scheme, label(siamcat))
 
   feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
                  dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))

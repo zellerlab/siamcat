@@ -24,16 +24,7 @@
 #' access(siamcat_example, "label")
 #' access(siamcat_example, "model_list")
 accessSlot <- function(siamcat, slot){
-  if( is.component.class(siamcat) ){
-    # If physeq is a component class, might return as-is. Depends on slot.
-    if( inherits(siamcat, get.component.classes()[slot]) ){
-      # if slot-name matches, return physeq as-is.
-      out = siamcat
-    } else {
-      # If slot/component mismatch, set out to NULL. Test later if this is an error.			
-      out = NULL
-    }
-  } else if(!slot %in% slotNames(siamcat) ){
+  if(!slot %in% slotNames(siamcat) ){
     # If slot is invalid, set out to NULL. Test later if this is an error.
     out = NULL
   } else {
