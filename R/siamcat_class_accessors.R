@@ -192,7 +192,7 @@ setMethod("data_split", "data_split", function(siamcat){ return(siamcat) })
 #' @usage orig_feat(siamcat, errorIfNULL=TRUE)
 #' 
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link{data_split-class}.
+#'  that contains a label or instance of \link[phyloseq]{otu_table-class}.
 #'
 #'
 #' @return The \link[phyloseq]{otu_table-class} object or NULL.
@@ -221,7 +221,7 @@ setMethod("orig_feat", "otu_table", function(siamcat){ return(siamcat) })
 #' @usage physeq(siamcat, errorIfNULL=TRUE)
 #' 
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link{data_split-class}.
+#'  that contains a label or instance of \link[phyloseq]{phyloseq-class}.
 #'
 #'
 #' @return The \link[phyloseq]{phyloseq-class} object or NULL.
@@ -239,9 +239,38 @@ setGeneric("physeq", function(siamcat) standardGeneric("physeq"))
 setMethod("physeq", "ANY", function(siamcat){
   accessSlot(siamcat, "phyloseq")
 })
-# Return as-is if already a otu_table object
+# Return as-is if already a phyloseq object
 #' @rdname physeq-methods
 setMethod("physeq", "phyloseq", function(siamcat){ return(siamcat) })
+
+################################################################################
+#' Retrieve a \link[phyloseq]{otu_table-class} object from object.
+#'
+#'
+#' @usage features(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a label or instance of \link{data_split-class}.
+#'
+#'
+#' @return The \link[phyloseq]{phyloseq-class} object or NULL.
+#' 
+#' @export
+#' @rdname features-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  features(siamcat_example)
+setGeneric("features", function(siamcat) standardGeneric("features"))
+#' @rdname features-methods
+#' @aliases features,ANY-method
+setMethod("features", "ANY", function(siamcat){
+  otu_table(physeq(siamcat))
+})
+# Return as-is if already a otu_table object
+#' @rdname features-methods
+setMethod("features", "otu_table", function(siamcat){ return(siamcat) })
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features

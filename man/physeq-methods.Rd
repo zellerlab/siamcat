@@ -15,7 +15,7 @@ physeq(siamcat, errorIfNULL=TRUE)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a label or instance of \link{data_split-class}.}
+that contains a label or instance of \link[phyloseq]{phyloseq-class}.}
 }
 \value{
 The \link[phyloseq]{phyloseq-class} object or NULL.
