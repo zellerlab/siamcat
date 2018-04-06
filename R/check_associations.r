@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
-### Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between Microbial
+### Communities And host phenoTypes
+### EMBL Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Check and visualize associations between features and classes
 #' @description This function calculates for each feature a pseudo-fold change
@@ -22,13 +23,14 @@
 #' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot filename for the pdf-plot
 #' @param color.scheme valid R color scheme or vector of valid R colors (must
-#'        be of the same length as the number of classes), defaults to \code{'RdYlBu'}
+#'        be of the same length as the number of classes),
+#'        defaults to \code{'RdYlBu'}
 #' @param alpha float, significance level, defaults to \code{0.05}
-#' @param mult.corr multiple hypothesis correction method, see \code{\link[stats]{p.adjust}},
-#'        defaults to \code{'fdr'}
-#' @param sort.by string, sort features by p-value (\code{'p.val'}), by fold change
-#'        (\code{'fc'}) or by prevalence shift (\code{'pr.shift'}), defaults to
-#'        \code{'fc'}
+#' @param mult.corr multiple hypothesis correction method, see
+#'        \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
+#' @param sort.by string, sort features by p-value (\code{"p.val"}),
+#'        by fold change (\code{"fc"}) or by prevalence shift
+#'        (\code{"pr.shift"}), defaults to \code{"fc"}
 #' @param detect.lim float, pseudocount to be added before log-transformation of
 #'        the data, defaults to \code{1e-06}
 #' @param pr.cutoff float, cutoff for the prevalence computation, defaults to
@@ -43,7 +45,8 @@
 #'        'prevalence')}, defaults to \code{c('fc', 'auroc')}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @return Does not return anything, but produces an association plot
 #' @keywords SIAMCAT check.associations
 #' @export
@@ -67,15 +70,107 @@
 #'  # Custom colors
 #'  check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf', plot.type='box',
 #'    color.scheme=c('cornflowerblue', '#ffc125'))
-check.associations <- function(siamcat, fn.plot, color.scheme = "RdYlBu", alpha = 0.05, mult.corr = "fdr", sort.by = "fc", 
-    detect.lim = 1e-06, pr.cutoff = 10^-6, max.show = 50, plot.type = "quantile.box", panels = c("fc", "auroc"), verbose = 1) {
-    # check panel and plot.type parameter
-    if (verbose > 1) 
-        cat("+ starting check.associations\n")
-    s.time <- proc.time()[3]
-    
-    if (!all(panels %in% c("fc", "auroc", "prevalence"))) {
-        stop("Unknown panel-type selected!")
+check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
+                               alpha=0.05, mult.corr="fdr", sort.by="fc",
+                               detect.lim=1e-06, pr.cutoff=10^-6, max.show=50,
+                               plot.type="quantile.box",
+                               panels=c("fc", "auroc"), verbose=1){
+  # check panel and plot.type parameter
+  if(verbose>1) cat("+ starting check.associations\n")
+  s.time <- proc.time()[3]
+
+  if (!all(panels %in% c("fc", "auroc", "prevalence"))){
+    stop("Unknown panel-type selected!")
+  }
+  if (length(panels) > 3){
+    warning("Plot layout is not suited for more than 3 panels. Continuing with first three panels.")
+    panels <- panels[1:3]
+  }
+  if ((!plot.type %in% c("bean", "box", "quantile.box", "quantile.rect")) || length(plot.type) != 1){
+    warning("Plot type has not been specified properly! Continue with quantile.box.")
+    plot.type <- "quantile.box"
+  }
+  # either give n_classes colors or color palette
+  col <- check.color.scheme(color.scheme, siamcat@label)
+
+  feat <- matrix(siamcat@phyloseq@otu_table,nrow=nrow(siamcat@phyloseq@otu_table), ncol=ncol(siamcat@phyloseq@otu_table),
+                 dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
+  ### Calculate different effect sizes
+  if(verbose>2) cat("+++ analysing features\n")
+  result.list <- analyse.binary.marker(feat=feat, label=siamcat@label, detect.lim=detect.lim, colors=col,
+                                        pr.cutoff=pr.cutoff, mult.corr=mult.corr, alpha=alpha,
+                                        max.show=max.show, sort.by=sort.by, probs.fc=seq(.1, .9, .05),verbose=verbose)
+
+  ### TODO: remove at some point
+  p.val     <- result.list$p.val
+  p.adj     <- result.list$p.adj
+  fc        <- result.list$fc
+  aucs      <- result.list$aucs
+  pr.shift  <- result.list$pr.shift
+  feat.red  <- result.list$feat.red
+  truncated <- result.list$truncated
+  bcols     <- result.list$bcol
+  detect.lim <- result.list$detect.lim
+
+  ##############################################################################
+  ### generate plots with significant associations between features and labels
+
+  # make plot matrix dependent on panels parameters
+  if(verbose>2) cat("+++ preparing plotting layout\n")
+  if (length(panels) == 3){
+    layout.mat <- cbind(2,1, t(seq(3, length.out=length(panels))))
+    widths <- c(0.5, 0.1, rep(0.4/3, length(panels)))
+  } else {
+    layout.mat <- cbind(2,1, t(seq(3, length.out=length(panels))))
+    widths <- c(0.5, 0.1, rep(0.2, length(panels)))
+  }
+  pdf(fn.plot, paper='special', height=8.27, width=11.69) # format: A4 landscape
+
+  layout(mat=layout.mat, widths=widths)
+
+  ##############################################################################
+  # PANEL 2: P-VALUES
+  # print p-values in second panel of the plot
+  associations.pvals.plot(p.vals=p.adj, alpha=alpha,verbose=verbose)
+
+  ##############################################################################
+  # PANEL 1: DATA
+  # prepare margins
+  associations.margins.plot(species_names = row.names(feat.red),verbose=verbose)
+
+  # get data
+  data.n <- log10(as.matrix(feat.red[, siamcat@label@n.idx, drop=FALSE]) + detect.lim)
+  data.p <- log10(as.matrix(feat.red[, siamcat@label@p.idx, drop=FALSE]) + detect.lim)
+
+  if(verbose>2) cat("+++ plotting results\n")
+  if (plot.type == "bean"){
+    associations.bin.plot(data.n, data.p, siamcat@label, col=col, verbose=verbose)
+  } else if (plot.type == "box"){
+    associations.box.plot(data.n, data.p, siamcat@label, col=col, verbose=verbose)
+  } else if (plot.type == "quantile.box"){
+    associations.quantile.box.plot(data.p, data.n, siamcat@label, col=col, verbose=verbose)
+  } else if (plot.type == "quantile.rect"){
+    associations.quantile.rect.plot(data.p, data.n, siamcat@label, col=col, verbose=verbose)
+  }
+
+  # plot title
+  if (!truncated) {
+    title(main='Differentially abundant features',
+          xlab='Abundance (log10-scale)')
+  } else {
+    title(main=paste('Differentially abundant features\nshowing top', max.show, 'features'),
+          xlab='Abundance (log10-scale)')
+  }
+
+  ##############################################################################
+  # OTHER PANELS
+  for (p in panels){
+    if (p == "fc"){
+      associations.fcs.plot(fc.all=fc, binary.cols=bcols,verbose=verbose)
+    } else if (p == "prevalence"){
+      associations.pr.shift.plot(pr.shifts=pr.shift, col=col,verbose=verbose)
+    } else if (p == "auroc"){
+      associations.aucs.plot(aucs=aucs, binary.cols=bcols,verbose=verbose)
     }
     if (length(panels) > 3) {
         warning("Plot layout is not suited for more than 3 panels. Continuing with first three panels.")
@@ -242,17 +337,50 @@ associations.box.plot <- function(data1, data2, label, col, verbose = 1) {
 }
 
 # quantile.box plot
-associations.quantile.box.plot <- function(data1, data2, label, col, verbose = 1) {
-    if (verbose > 2) 
-        cat("+ starting associations.quantile.box.plot\n")
-    x.col <- col[2]
-    y.col <- col[1]
-    
-    p.m = min(c(min(data1, na.rm = TRUE), min(data2, na.rm = TRUE)))
-    plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1], xlab = "", ylab = "", yaxs = "i", axes = FALSE, xlim = c(p.m, 0), 
-        ylim = c(0.5, dim(data1)[1] + 0.5), frame.plot = FALSE, type = "n")
-    for (v in seq(p.m, -1, 1)) {
-        abline(v = v, lty = 3, col = "lightgrey")
+associations.quantile.box.plot <- function(data1, data2, label, col, verbose=1){
+  if(verbose>2) cat("+ starting associations.quantile.box.plot\n")
+  x.col <- col[2]
+  y.col <- col[1]
+
+  p.m = min(c(min(data1, na.rm=TRUE), min(data2, na.rm=TRUE)))
+  plot(rep(p.m, dim(data1)[1]), 1:dim(data1)[1],
+       xlab='', ylab='', yaxs='i', axes=FALSE,
+       xlim=c(p.m, 0), ylim=c(0.5, dim(data1)[1]+0.5), frame.plot=FALSE, type='n')
+  for (v in seq(p.m,-1,1)) {
+    abline(v=v, lty=3, col='lightgrey')
+  }
+
+  tck = floor(p.m):0
+  axis(1, tck, formatC(10^tck, format='E', digits=0), las=1, cex.axis=0.7)
+
+  x.q = apply(data1, 1, function (x)quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+                                              na.rm=TRUE, names=FALSE))
+  y.q = apply(data2, 1, function (x)quantile(x, c(0.05, 0.25, 0.5, 0.75, 0.95),
+                                              na.rm=TRUE, names=FALSE))
+
+  # inter-quartile range
+  rect(x.q[2,], 1:dim(data1)[1], x.q[4,], (1:dim(data1)[1])+0.3, col=x.col)
+  rect(y.q[2,], (1:dim(data2)[1])-0.3, y.q[4,], 1:dim(data2)[1], col=y.col)
+
+  # 90% interval
+  segments(x.q[1,], 1:dim(data1)[1], x.q[5,], 1:dim(data1)[1])
+  segments(y.q[1,], 1:dim(data1)[1], y.q[5,], 1:dim(data1)[1])
+  segments(x.q[1,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
+  segments(y.q[1,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
+  segments(x.q[5,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.2)
+  segments(y.q[5,], y0=(1:dim(data1)[1])-0.2, y1=1:dim(data1)[1])
+
+  # median
+  segments(x.q[3,], y0=1:dim(data1)[1], y1=(1:dim(data1)[1])+0.3, lwd=3)
+  segments(y.q[3,], y0=(1:dim(data1)[1])-0.3, y1=1:dim(data1)[1], lwd=3)
+
+  # scatter plot on top
+  for (i in 1:dim(data1)[1]) {
+    if (nchar(x.col) > 7) {
+      # adjust alpha channel by reducing transparency
+      a = substr(x.col,nchar(x.col)-1, nchar(x.col))
+      a = 1 - (1 - as.numeric(paste('0x', a, sep=''))/255)/2
+      x.col = gsub('..$', toupper(as.hexmode(round(a*255))), x.col)
     }
     
     tck = floor(p.m):0

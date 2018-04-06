@@ -1,11 +1,12 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial 
-### Communities And host phenoTypes R flavor EMBL
-### Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between Microbial
+### Communities And host phenoTypes
+### EMBL Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Model Interpretation Plot
-#' @description Produces a plot for model interpretation, displaying feature weights,
-#'        robustness of feature weights, and features scores across patients.
+#' @description Produces a plot for model interpretation, displaying feature
+#'        weights, robustness of feature weights, and features scores across
+#'        patients.
 #' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param color.scheme color scheme for the heatmap, defaults to \code{'BrBG'}
@@ -26,18 +27,20 @@
 #'        interpretation plot, defaults to 50
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @keywords SIAMCAT model.interpretation.plot
 #' @return Does not return anything, but produces the model interpretion plot.
 #' @export
 #' @details Produces a plot consisting of \itemize{
 #'  \item a barplot showing the feature weights and their robustness (i.e. in
 #'    what proportion of models have they been incorporated)
-#'  \item a heatmap showing the z-scores of the metagenomic features across patients
+#'  \item a heatmap showing the z-scores of the metagenomic features across
+#'    patients
 #'  \item another heatmap displaying the metadata categories (if applicable)
-#'  \item a boxplot displaying the poportion of weight per model that is actually shown
-#'    for the features that are incorporated into more than \code{consens.thres}
-#'    percent of the models.
+#'  \item a boxplot displaying the poportion of weight per model that is
+#'    actually shown for the features that are incorporated into more than
+#'    \code{consens.thres} percent of the models.
 #'}
 #' @examples
 #'
@@ -59,155 +62,127 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG", c
     See brewer.pal.info for more information about RColorBrewer palettes...")
         color.scheme <- "BrBG"
     }
-    color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme, "maxcolors"], color.scheme))(100))
-    
-    # ############################################################################ get model type from model
-    if (verbose > 2) 
-        cat("+++ retrieving model type\n")
-    W.mat <- get.weights.matrix(siamcat@model_list@models, verbose = verbose)
-    all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep("META", row.names(W.mat), value = TRUE)), 
-        ]  # remove possible intercept parameters, but keep possible meta data included in the model
-    rel.weights <- apply(all.weights, 2, function(x) {
-        x/sum(abs(x))
-    })
-    # ############################################################################ preprocess models
-    if (verbose > 2) 
-        cat("+++ preprocessing models\n")
-    sel.idx <- select.features(weights = all.weights, model.type = siamcat@model_list@model.type, consens.thres = consens.thres, 
-        label = siamcat@label, norm.models = norm.models, max.show = max.show, verbose = verbose)
-    num.sel.f <- length(sel.idx)
-    # ############################################################################ aggreate predictions and sort
-    # patients by score aggregate predictions of several models if more than one is given
-    mean.agg.pred <- rowMeans(siamcat@pred_matrix)
-    ### idx to sort samples according to their class membership and prediction score
-    srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return = TRUE)$ix
-    # ############################################################################ prepare heatmap
-    if (verbose > 2) 
-        cat("+++ preparing heatmap\n")
-    if (heatmap.type == "zscore") {
-        feat <- matrix(siamcat@phyloseq@otu_table, nrow = nrow(siamcat@phyloseq@otu_table), ncol = ncol(siamcat@phyloseq@otu_table), 
-            dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
-        img.data <- prepare.heatmap.zscore(heatmap.data = feat[sel.idx, srt.idx], limits = limits, verbose = verbose)
-    } else if (heatmap.type == "fc") {
-        feat <- matrix(siamcat@orig_feat, nrow = nrow(siamcat@orig_feat), ncol = ncol(siamcat@orig_feat), dimnames = list(rownames(siamcat@orig_feat), 
-            colnames(siamcat@orig_feat)))
-        if (is.null(detect.lim)) {
-            warning("WARNING: Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...\n")
-            detect.lim <- quantile(feat[feat != 0], 0.05)
-        }
-        img.data <- prepare.heatmap.fc(heatmap.data = feat[, srt.idx], sel.feat = names(sel.idx), limits = limits, 
-            meta = siamcat@phyloseq@sam_data, label = siamcat@label, detect.lim = detect.lim, verbose = verbose)
-    } else {
-        stop("! unknown heatmap.type: ", heatmap.type)
-    }
-    
-    # ############################################################################ start plotting model properties
-    if (verbose > 2) 
-        cat("+++ plotting model properties\n")
-    pdf(fn.plot, paper = "special", height = 8.27, width = 11.69, onefile = TRUE)
-    
-    ### plot layout
-    sel.f.cex <- max(0.3, 0.8 - 0.01 * num.sel.f)
-    lmat <- rbind(c(1, 2, 3, 4), c(5, 6, 0, 7), c(0, 8, 0, 0))
-    h_t <- 0.1
-    h_m <- ifelse(is.null(siamcat@phyloseq@sam_data), 0.8, max(0.5, 0.7 - 0.01 * dim(siamcat@phyloseq@sam_data)[2]))
-    h_b <- 1 - h_t - h_m  # ifelse(is.null(meta), 0.1, 0.1+0.02*dim(meta)[2])
-    cat("Layout height values: ", h_t, ", ", h_m, ", ", h_b, "\n", sep = "")
-    layout(lmat, widths = c(0.14, 0.58, 0.1, 0.14), heights = c(h_t, h_m, h_b))
-    par(oma = c(3, 4, 3, 4))
-    
-    ### header row ############################################################################ Title of Feature Weights
-    ### plot
-    if (verbose > 2) 
-        cat("+++ plotting titles\n")
-    par(mar = c(0, 1.1, 3.1, 1.1))
-    plot(NULL, type = "n", xlim = c(-0.1, 0.1), xaxt = "n", xlab = "", ylim = c(-0.1, 0.1), yaxt = "n", ylab = "", 
-        bty = "n")
-    mtext("Feature Weights", side = 3, line = 2, at = 0.04, cex = 1, adj = 0.5)
-    
-    # ############################################################################ Title of heatmap and brackets for
-    # classes
-    par(mar = c(0, 4.1, 3.1, 5.1))
-    hm.label <- siamcat@label@label[srt.idx]
-    plot(NULL, type = "n", xlim = c(0, length(hm.label)), xaxs = "i", xaxt = "n", ylim = c(-0.5, 0.5), yaxs = "i", 
-        yaxt = "n", xlab = "", ylab = "", bty = "n")
-    ul <- unique(hm.label)
-    for (l in 1:length(ul)) {
-        idx <- which(ul[l] == hm.label)
-        lines(c(idx[1] - 0.8, idx[length(idx)] - 0.2), c(0, 0))
-        lines(c(idx[1] - 0.8, idx[1] - 0.8), c(-0.2, 0))
-        lines(c(idx[length(idx)] - 0.2, idx[length(idx)] - 0.2), c(-0.2, 0))
-        h <- (idx[1] + idx[length(idx)])/2
-        t <- gsub("_", " ", names(siamcat@label@info$class.descr)[siamcat@label@info$class.descr == ul[l]])
-        t <- paste(t, " (n=", length(idx), ")", sep = "")
-        mtext(t, side = 3, line = -0.5, at = h, cex = 0.7, adj = 0.5)
-    }
-    mtext("Metagenomic Features", side = 3, line = 2, at = length(hm.label)/2, cex = 1, adj = 0.5)
-    
-    # ############################################################################ Heatmap legend LOW PRIORITY # TODO
-    # would be nice to overplot a histogram h = as.vector(img.data) h = h[h > z.score.lim[1] & h < z.score.lim[2]] h =
-    # hist(h, 100, plot=FALSE)$counts end TODO LOW PRIORITY #
-    if (verbose > 2) 
-        cat("+++ plotting legend\n")
-    par(mar = c(3.1, 1.1, 1.1, 1.1))
-    barplot(as.matrix(rep(1, 100)), col = color.scheme, horiz = TRUE, border = 0, ylab = "", axes = FALSE)
-    if (heatmap.type == "fc") {
-        key.ticks <- seq(round(min(img.data, na.rm = TRUE), digits = 1), round(max(img.data, na.rm = TRUE), digits = 1), 
-            length.out = 7)
-        key.label <- "Feature fold change over controls"
-    } else if (heatmap.type == "zscore") {
-        key.ticks <- seq(limits[1], limits[2], length.out = 7)
-        key.label <- "Feature z-score"
-    }
-    axis(side = 1, at = seq(0, 100, length.out = 7), labels = key.ticks)
-    mtext(key.label, side = 3, line = 0.5, at = 50, cex = 0.7, adj = 0.5)
-    
-    # ############################################################################ Model header (model sensitive)
-    par(mar = c(0, 6.1, 3.1, 1.1))
-    plot(NULL, type = "n", xlim = c(-0.1, 0.1), xaxt = "n", xlab = "", ylim = c(-0.1, 0.1), yaxt = "n", ylab = "", 
-        bty = "n")
-    mtext(paste0(siamcat@model_list@model.type, " model"), side = 3, line = 2, at = 0.04, cex = 0.7, adj = 0.5)
-    mtext(paste("(|W| = ", num.sel.f, ")", sep = ""), side = 3, line = 1, at = 0.04, cex = 0.7, adj = 0.5)
-    
-    # ############################################################################ Feature weights ( model sensitive)
-    if (verbose > 2) 
-        cat("+++ plotting feature weights \n")
-    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, mod.type = siamcat@model_list@model.type, label = siamcat@label)
-    
-    # ############################################################################ Heatmap
-    if (verbose > 2) 
-        cat("+++ plotting heatmap \n")
-    if (siamcat@model_list@model.type != "RandomForest") {
-        plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = apply(rel.weights[sel.idx, 
-            ], 1, median), verbose = verbose)
-    } else {
-        auroc.effect <- sapply(colnames(img.data), FUN = function(f) {
-            roc(predictor = img.data[, f], response = siamcat@label, direction = "<")$auc
-        })
-        bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
-        plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = NULL, verbose = verbose)
-    }
-    
-    # ############################################################################ Proportion of weights shown if
-    # (model.type != 'RandomForest'){
-    if (verbose > 2) 
-        cat("+++ plotting proportion of weights shown \n")
-    plot.proportion.of.weights(selected.weights = all.weights[sel.idx, ], all.weights = all.weights, verbose = verbose)
-    # } else { cat(dim(all.weights[sel.idx,]), '\n') cat(dim(all.weights), '\n')
-    # plot.percentage.of.features(selected.weights=all.weights[sel.idx,], all.weights=all.weights) }
-    
-    # ############################################################################ Metadata and prediction
-    if (verbose > 2) 
-        cat("+++ plotting metadata and predictions\n")
-    plot.pred.and.meta(prediction = mean.agg.pred[srt.idx], label = siamcat@label, meta = siamcat@phyloseq@sam_data[srt.idx, 
-        ], verbose = verbose)
-    
-    tmp <- dev.off()
-    e.time <- proc.time()[3]
-    if (verbose > 1) 
-        cat("+ finished model.interpretation.plot in", e.time - s.time, "s\n")
-    if (verbose == 1) 
-        cat("Plotted associations between features and label successfully to:", fn.plot, "\n")
+    img.data <- prepare.heatmap.fc(heatmap.data=feat[, srt.idx],
+                                   sel.feat=names(sel.idx),
+                                   limits=limits, meta=siamcat@phyloseq@sam_data,
+                                   label=siamcat@label, detect.lim=detect.lim, verbose=verbose)
+  } else {
+    stop('! unknown heatmap.type: ', heatmap.type)
+  }
+
+  # ############################################################################
+  ### start plotting model properties
+  if(verbose>2) cat("+++ plotting model properties\n")
+  pdf(fn.plot, paper='special', height=8.27, width=11.69, onefile=TRUE)
+
+  ### plot layout
+  sel.f.cex <- max(0.3, 0.8 - 0.01*num.sel.f)
+  lmat <- rbind(c(1, 2, 3, 4),
+               c(5, 6, 0, 7),
+               c(0, 8, 0, 0))
+  h_t <- 0.10
+  h_m <- ifelse(is.null(siamcat@phyloseq@sam_data), 0.8, max(0.5, 0.7-0.01*dim(siamcat@phyloseq@sam_data)[2]))
+  h_b <- 1 - h_t - h_m
+  cat('Layout height values: ', h_t, ', ', h_m, ', ', h_b, '\n', sep='')
+  layout(lmat, widths=c(0.14, 0.58, 0.1, 0.14), heights=c(h_t, h_m, h_b))
+  par(oma=c(3, 4, 3, 4))
+
+  ### header row
+  # ############################################################################
+  # Title of Feature Weights plot
+  if(verbose>2) cat("+++ plotting titles\n")
+  par(mar=c(0, 1.1, 3.1, 1.1))
+  plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
+       ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
+  mtext('Feature Weights', side=3, line=2, at=0.04, cex=1, adj=0.5)
+
+  # ############################################################################
+  # Title of heatmap and brackets for classes
+  par(mar=c(0, 4.1, 3.1, 5.1))
+  hm.label <- siamcat@label@label[srt.idx]
+  plot(NULL, type='n', xlim=c(0,length(hm.label)), xaxs='i', xaxt='n',
+       ylim=c(-0.5,0.5), yaxs='i', yaxt='n', xlab='', ylab='', bty='n')
+  ul <- unique(hm.label)
+  for (l in 1:length(ul)) {
+    idx <- which(ul[l] == hm.label)
+    lines(c(idx[1]-0.8, idx[length(idx)]-0.2), c(0, 0))
+    lines(c(idx[1]-0.8, idx[1]-0.8), c(-0.2, 0))
+    lines(c(idx[length(idx)]-0.2, idx[length(idx)]-0.2), c(-0.2, 0))
+    h <- (idx[1] + idx[length(idx)]) / 2
+    t <- gsub('_', ' ', names(siamcat@label@info$class.descr)[siamcat@label@info$class.descr==ul[l]])
+    t <- paste(t, ' (n=', length(idx), ')', sep='')
+    mtext(t, side=3, line=-0.5, at=h, cex=0.7, adj=0.5)
+  }
+  mtext('Metagenomic Features', side=3, line=2, at=length(hm.label)/2, cex=1, adj=0.5)
+
+  # ############################################################################
+  # Heatmap legend
+  if(verbose>2) cat("+++ plotting legend\n")
+  par(mar=c(3.1, 1.1, 1.1, 1.1))
+  barplot(as.matrix(rep(1,100)), col = color.scheme,
+          horiz=TRUE, border=0, ylab='', axes=FALSE)
+  if (heatmap.type == 'fc') {
+    key.ticks <- seq(round(min(img.data, na.rm=TRUE), digits = 1),
+                    round(max(img.data, na.rm=TRUE), digits = 1), length.out=7)
+    key.label <- 'Feature fold change over controls'
+  } else if (heatmap.type == 'zscore') {
+    key.ticks <- seq(limits[1], limits[2], length.out=7)
+    key.label <- 'Feature z-score'
+  }
+  axis(side=1, at=seq(0, 100, length.out=7), labels=key.ticks)
+  mtext(key.label, side=3, line=0.5, at=50, cex=0.7, adj=0.5)
+
+  # ############################################################################
+  # Model header (model sensitive)
+  par(mar=c(0, 6.1, 3.1, 1.1))
+  plot(NULL, type='n', xlim=c(-0.1,0.1), xaxt='n', xlab='',
+       ylim=c(-0.1,0.1), yaxt='n', ylab='', bty='n')
+  mtext(paste0(siamcat@model_list@model.type, ' model'), side=3, line=2, at=0.04, cex=.7, adj=0.5)
+  mtext(paste('(|W| = ', num.sel.f, ')', sep=''), side=3, line=1, at=0.04, cex=0.7, adj=0.5)
+
+  # ############################################################################
+  # Feature weights ( model sensitive)
+  if(verbose>2) cat("+++ plotting feature weights \n")
+  plot.feature.weights(rel.weights=rel.weights, sel.idx=sel.idx,
+                       mod.type=siamcat@model_list@model.type, label=siamcat@label)
+
+  # ############################################################################
+  # Heatmap
+  if(verbose>2) cat("+++ plotting heatmap \n")
+  if (siamcat@model_list@model.type!='RandomForest'){
+    plot.heatmap(image.data=img.data,
+                 limits=limits,
+                 color.scheme=color.scheme,
+                 effect.size=apply(rel.weights[sel.idx,], 1, median),verbose=verbose)
+  } else {
+    auroc.effect <-  sapply(colnames(img.data),
+        FUN=function(f){roc(predictor=img.data[,f],
+                        response=siamcat@label, direction='<')$auc})
+    bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
+    plot.heatmap(image.data=img.data,
+                 limits=limits,
+                 color.scheme=color.scheme,
+                 effect.size=NULL, verbose=verbose)
+  }
+
+  # ############################################################################
+  # Proportion of weights shown
+  if(verbose>2) cat("+++ plotting proportion of weights shown \n")
+    plot.proportion.of.weights(selected.weights=all.weights[sel.idx,],
+                               all.weights=all.weights,verbose=verbose)
+
+  # ############################################################################
+  # Metadata and prediction
+  if(verbose>2) cat("+++ plotting metadata and predictions\n")
+  plot.pred.and.meta(prediction=mean.agg.pred[srt.idx],
+                     label=siamcat@label,
+                     meta=siamcat@phyloseq@sam_data[srt.idx,],verbose=verbose)
+
+  tmp <- dev.off()
+  e.time <- proc.time()[3]
+  if(verbose>1) cat("+ finished model.interpretation.plot in",e.time-s.time,"s\n")
+  if(verbose==1) cat("Plotted associations between features and label successfully to:",fn.plot,"\n")
+>>>>>>> development
 }
 
 plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label, verbose = 0) {
@@ -471,7 +446,6 @@ select.features <- function(weights, model.type, consens.thres, norm.models, lab
         # head(sort(auroc.transformed, decreasing=TRUE, index.return=TRUE)$ix, n=50) auroc.effect <- auroc.effect[idx] }
         # sel.idx <- sel.idx[sort(auroc.effect, decreasing=TRUE, index.return=TRUE)$ix]
     }
-    
     if (verbose > 2) 
         cat("+++ generating plot for a model with", length(sel.idx), "selected features\n")
     if (verbose > 2) 

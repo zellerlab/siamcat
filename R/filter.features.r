@@ -1,6 +1,7 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
-### Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between Microbial
+### Communities And host phenoTypes
+### EMBL Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Perform unsupervised feature filtering.
 #' @description This function performs unsupervised feature filtering. Features
@@ -17,20 +18,22 @@
 #'        \code{TRUE}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information, defaults to \code{1}
+#'        level of information and \code{3} for full debug information,
+#'        defaults to \code{1}
 #' @keywords SIAMCAT filter.features
-#' @details This function filters the features in a \link{siamcat-class} object in a
-#'        unsupervised manner.
+#' @details This function filters the features in a \link{siamcat-class}
+#'        object in a unsupervised manner.
 #'
 #'        The different filter methods work in the following way: \itemize{
 #'        \item \code{'abundace'} remove features whose abundance is never above
 #'          the threshold value in any of the samples
 #'        \item \code{'cum.abundance'} remove features with very low abundance
 #'          in all samples i.e. ones that are never among the most abundant
-#'          entities that collectively make up (1-cutoff) of the reads in any sample
-#'        \item \code{'prevalence'} remove features with low prevalence across samples
-#'          i.e. ones that are 0 (undetected) in more than (1-cutoff) proportion
-#'          of samples.
+#'          entities that collectively make up (1-cutoff) of the reads in
+#'          any sample
+#'        \item \code{"prevalence"} remove features with low prevalence across
+#'          samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
+#'          proportion of samples.
 #'        }
 #' @export
 #' @return siamcat an object of class \link{siamcat-class}
@@ -43,19 +46,44 @@
 #'
 #' # Simple examples
 #' siamcat_filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)
-filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, 
-    verbose = 1) {
-    ### this statement does not have the purpose to calculate relative abundances on the fly and return them.  Instead,
-    ### it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept) when
-    ### feature list has already been transformed to relative abundances, but e.g. certain features have been removed
-    ### manually.  TODO check filter.method, add default value for cutoff, recomp.prop, and rm.unmapped?  Check filter
-    ### methods
-    if (verbose > 1) 
-        cat("+ starting filter.features\n")
-    s.time <- proc.time()[3]
-    
-    if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")) {
-        stop("! Unrecognized filter.method, exiting!\n")
+filter.features <- function(siamcat, filter.method="abundance", cutoff=0.001,
+                            recomp.prop=FALSE, rm.unmapped=TRUE, verbose=1){
+  ### this statement does not have the purpose to calculate relative abundances on the fly and return them.
+  ### Instead, it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept)
+  ### when feature list has already been transformed to relative abundances, but e.g. certain features have been removed manually.
+
+  if(verbose>1) cat("+ starting filter.features\n")
+  s.time <- proc.time()[3]
+
+  if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")){
+    stop('! Unrecognized filter.method, exiting!\n')
+  }
+
+  if (verbose > 1) cat("+++ before filtering, the data has", nrow(siamcat@phyloseq@otu_table), "features\n")
+  if (recomp.prop) {
+    # recompute relative abundance values (proportions)
+    ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)
+    siamcat@phyloseq@otu_table <- otu_table(ra.feat,taxa_are_rows = TRUE )
+  } else {
+    ra.feat <- siamcat@phyloseq@otu_table
+  }
+
+  ### apply filters
+  if(verbose>2) cat("+++ applying",filter.method,"filter\n")
+  if (filter.method == 'abundance') {
+    # remove features whose abundance is never above the threshold value (e.g. 0.5%) in any of the samples
+    f.max <- apply(ra.feat, 1, max)
+    f.idx <- which(f.max >= cutoff)
+  } else if (filter.method == 'cum.abundance') {
+    # remove features with very low abundance in all samples i.e. ones that are never among the most abundant
+    # entities that collectively make up (1-cutoff) of the reads in any sample
+    f.idx <- vector('numeric', 0)
+    # sort features per sample and apply cumsum to identify how many collectively have weight K
+    for (s in 1:ncol(ra.feat)) {
+      srt   <- sort(ra.feat[,s], index.return=TRUE)
+      cs    <- cumsum(srt$x)
+      m     <- max(which(cs < cutoff))
+      f.idx <- union(f.idx, srt$ix[-(1:m)])
     }
     
     if (verbose > 1) 
