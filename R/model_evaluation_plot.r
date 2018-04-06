@@ -1,11 +1,6 @@
 #!/usr/bin/Rscript
-###
-# SIAMCAT -  Statistical Inference of Associations between
-#   Microbial Communities And host phenoTypes
-# R flavor
-# EMBL Heidelberg 2012-2018
-# GNU GPL 3.0
-###
+### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
+### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Model Evaluation Plot
 #' @description Produces two plots for model evaluation. The first plot shows
@@ -27,79 +22,88 @@
 #'  # simple working example
 #'  model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
 #'
-model.evaluation.plot <- function(siamcat, fn.plot, verbose=1){
-  if(verbose>1) cat("+ starting model.evaluation.plot\n")
-  s.time <- proc.time()[3]
-  pdf(fn.plot, onefile=TRUE)
-
-  if(verbose>2) cat("+ plotting ROC\n")
-  plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='False positive rate', ylab='True positive rate', type='n')
-  title(paste('ROC curve for the model', sep=' '))
-  abline(a=0, b=1, lty=3)
-  if (dim(siamcat@pred_matrix)[2] > 1) {
-    aucs = vector('numeric', dim(siamcat@pred_matrix)[2])
-    for (c in 1:dim(siamcat@pred_matrix)[2]) {
-      roc.c = siamcat@eval_data$roc.all[[c]]
-      lines(1-roc.c$specificities, roc.c$sensitivities, col=gray(runif(1,0.2,0.8)))
-      aucs[c] = siamcat@eval_data$auc.all[c]
-      if(verbose>2) cat('+++ AU-ROC (resampled run ', c, '): ', format(aucs[c], digits=3), '\n', sep='')
+model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
+    if (verbose > 1) 
+        cat("+ starting model.evaluation.plot\n")
+    s.time <- proc.time()[3]
+    pdf(fn.plot, onefile = TRUE)
+    
+    if (verbose > 2) 
+        cat("+ plotting ROC\n")
+    plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "False positive rate", ylab = "True positive rate", type = "n")
+    title(paste("ROC curve for the model", sep = " "))
+    abline(a = 0, b = 1, lty = 3)
+    if (dim(siamcat@pred_matrix)[2] > 1) {
+        aucs = vector("numeric", dim(siamcat@pred_matrix)[2])
+        for (c in 1:dim(siamcat@pred_matrix)[2]) {
+            roc.c = siamcat@eval_data$roc.all[[c]]
+            lines(1 - roc.c$specificities, roc.c$sensitivities, col = gray(runif(1, 0.2, 0.8)))
+            aucs[c] = siamcat@eval_data$auc.all[c]
+            if (verbose > 2) 
+                cat("+++ AU-ROC (resampled run ", c, "): ", format(aucs[c], digits = 3), "\n", sep = "")
+        }
+        l.vec = rep(siamcat@label@label, dim(siamcat@pred_matrix)[2])
+    } else {
+        l.vec = siamcat@label@label
     }
-    l.vec = rep(siamcat@label@label, dim(siamcat@pred_matrix)[2])
-  } else {
-    l.vec = siamcat@label@label
-  }
-  roc.summ = siamcat@eval_data$roc.average[[1]]
-  lines(1-roc.summ$specificities, roc.summ$sensitivities, col='black', lwd=2)
-  auroc = siamcat@eval_data$auc.average[1]
-  # plot CI
-  x = as.numeric(rownames(roc.summ$ci))
-  yl = roc.summ$ci[,1]
-  yu = roc.summ$ci[,3]
-  polygon(1-c(x, rev(x)), c(yl, rev(yu)), col='#88888844' , border=NA)
-
-  if (dim(siamcat@pred_matrix)[2] > 1) {
-    if(verbose>1) cat('+ AU-ROC:\n+++ mean-prediction:', format(auroc, digits=3),
-                      '\n+++ averaged       :', format(mean(aucs), digits=3),
-                      '\n+++ sd             :', format(sd(aucs), digits=4), '\n', sep='')
-    text(0.7, 0.1, paste('Mean-prediction AUC:', format(auroc, digits=3)))
-  } else {
-    if(verbose>1) cat('+ AU-ROC:', format(auroc, digits=3), '\n')
-    text(0.7, 0.1, paste('AUC:', format(auroc, digits=3)))
-  }
-
-  # precision recall curve
-  if(verbose>2) cat("+ plotting PRC\n")
-  plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab='Recall', ylab='Precision', type='n')
-  title(paste('Precision-recall curve for the model', sep=' '))
-  abline(h=mean(siamcat@label@label==siamcat@label@positive.lab), lty=3)
-
-  if (dim(siamcat@pred_matrix)[2] > 1) {
-    aucspr = vector('numeric', dim(siamcat@pred_matrix)[2])
-    for (c in 1:dim(siamcat@pred_matrix)[2]) {
-      ev = siamcat@eval_data$ev.list[[c]]
-      pr = siamcat@eval_data$pr.list[[c]]
-      lines(pr$x, pr$y, col=gray(runif(1,0.2,0.8)))
-      aucspr[c] = siamcat@eval_data$aucspr[c]
-      if(verbose>2) cat('+++ AU-PRC (resampled run ', c, '): ', format(aucspr[c], digits=3), '\n', sep='')
+    roc.summ = siamcat@eval_data$roc.average[[1]]
+    lines(1 - roc.summ$specificities, roc.summ$sensitivities, col = "black", lwd = 2)
+    auroc = siamcat@eval_data$auc.average[1]
+    # plot CI
+    x = as.numeric(rownames(roc.summ$ci))
+    yl = roc.summ$ci[, 1]
+    yu = roc.summ$ci[, 3]
+    polygon(1 - c(x, rev(x)), c(yl, rev(yu)), col = "#88888844", border = NA)
+    
+    if (dim(siamcat@pred_matrix)[2] > 1) {
+        if (verbose > 1) 
+            cat("+ AU-ROC:\n+++ mean-prediction:", format(auroc, digits = 3), "\n+++ averaged       :", format(mean(aucs), 
+                digits = 3), "\n+++ sd             :", format(sd(aucs), digits = 4), "\n", sep = "")
+        text(0.7, 0.1, paste("Mean-prediction AUC:", format(auroc, digits = 3)))
+    } else {
+        if (verbose > 1) 
+            cat("+ AU-ROC:", format(auroc, digits = 3), "\n")
+        text(0.7, 0.1, paste("AUC:", format(auroc, digits = 3)))
     }
-    ev = siamcat@eval_data$ev.list[[length(siamcat@eval_data$ev.list)]]
-  } else {
-    ev = siamcat@eval_data$ev.list[[1]]
-  }
-  pr = evaluate.get.pr(ev,verbose=verbose)
-  lines(pr$x, pr$y, col='black', lwd=2)
-  aupr = evaluate.calc.aupr(ev,verbose=verbose)
-  if (dim(siamcat@pred_matrix)[2] > 1) {
-    if(verbose>1) cat('+ AU-PRC:\n+++ mean-prediction:', format(aupr, digits=3),
-                      '\n+++ averaged       :', format(mean(aucspr), digits=3),
-                      '\n+++ sd             :', format(sd(aucspr), digits=4), '\n', sep='')
-    text(0.7, 0.1, paste('Mean-prediction AU-PRC:', format(aupr, digits=3)))
-  } else {
-    if(verbose>1) cat('+ AU-PRC:', format(aupr, digits=3), '\n')
-    text(0.7, 0.1, paste('AUC:', format(aupr, digits=3)))
-  }
-  tmp <- dev.off()
-  e.time <- proc.time()[3]
-  if(verbose>1) cat("+ finished model.evaluation.plot in",e.time-s.time,"s\n")
-  if(verbose==1) cat("Plotted evaluation of predictions successfully to:",fn.plot,"\n")
+    
+    # precision recall curve
+    if (verbose > 2) 
+        cat("+ plotting PRC\n")
+    plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "Recall", ylab = "Precision", type = "n")
+    title(paste("Precision-recall curve for the model", sep = " "))
+    abline(h = mean(siamcat@label@label == siamcat@label@positive.lab), lty = 3)
+    
+    if (dim(siamcat@pred_matrix)[2] > 1) {
+        aucspr = vector("numeric", dim(siamcat@pred_matrix)[2])
+        for (c in 1:dim(siamcat@pred_matrix)[2]) {
+            ev = siamcat@eval_data$ev.list[[c]]
+            pr = siamcat@eval_data$pr.list[[c]]
+            lines(pr$x, pr$y, col = gray(runif(1, 0.2, 0.8)))
+            aucspr[c] = siamcat@eval_data$aucspr[c]
+            if (verbose > 2) 
+                cat("+++ AU-PRC (resampled run ", c, "): ", format(aucspr[c], digits = 3), "\n", sep = "")
+        }
+        ev = siamcat@eval_data$ev.list[[length(siamcat@eval_data$ev.list)]]
+    } else {
+        ev = siamcat@eval_data$ev.list[[1]]
+    }
+    pr = evaluate.get.pr(ev, verbose = verbose)
+    lines(pr$x, pr$y, col = "black", lwd = 2)
+    aupr = evaluate.calc.aupr(ev, verbose = verbose)
+    if (dim(siamcat@pred_matrix)[2] > 1) {
+        if (verbose > 1) 
+            cat("+ AU-PRC:\n+++ mean-prediction:", format(aupr, digits = 3), "\n+++ averaged       :", format(mean(aucspr), 
+                digits = 3), "\n+++ sd             :", format(sd(aucspr), digits = 4), "\n", sep = "")
+        text(0.7, 0.1, paste("Mean-prediction AU-PRC:", format(aupr, digits = 3)))
+    } else {
+        if (verbose > 1) 
+            cat("+ AU-PRC:", format(aupr, digits = 3), "\n")
+        text(0.7, 0.1, paste("AUC:", format(aupr, digits = 3)))
+    }
+    tmp <- dev.off()
+    e.time <- proc.time()[3]
+    if (verbose > 1) 
+        cat("+ finished model.evaluation.plot in", e.time - s.time, "s\n")
+    if (verbose == 1) 
+        cat("Plotted evaluation of predictions successfully to:", fn.plot, "\n")
 }
