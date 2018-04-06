@@ -19,6 +19,35 @@ reset.features <- function(siamcat) {
   return(siamcat)
 }
 
+#' @title Filter samples from \code{siamcat@label}
+#' @description This functions filters \code{siamcat@label}.
+#' @param siamcat an object of class \link{siamcat-class}
+#' @param ids names of samples to be left in the \code{siamcat@label}
+#' @param verbose control output: \code{0} for no output at all, \code{1} for more
+#'  information about progress and success, defaults to \code{1}
+#' @keywords filter.label
+#' @export
+#' @return siamcat an object of class \link{siamcat-class}
+#' @examples
+#'
+#'  data(siamcat_example)
+#'  # simple working example
+#'  siamcat_filtered <- filter.label(siamcat_example, ids=c(1:10))
+#'
+filter.label <- function(siamcat, ids, verbose = 1) {
+  labels_new <- new("label", label = siamcat@label@label[ids], header = siamcat@label@header, info = siamcat@label@info, 
+                    positive.lab = siamcat@label@positive.lab, negative.lab = siamcat@label@negative.lab, n.lab = siamcat@label@n.lab, 
+                    p.lab = siamcat@label@p.lab)
+  labels_new@n.idx <- labels_new@label == labels_new@negative.lab
+  labels_new@p.idx <- labels_new@label == labels_new@positive.lab
+  
+  if (verbose > 0) 
+    cat("Keeping labels of", length(labels_new@label), "sample(s).\n")
+  
+  siamcat@label <- labels_new
+  return(siamcat)
+}
+
 # based on https://github.com/joey711/phyloseq/blob/master/R/show-methods.R
 #' @title Show method for siamcat class object
 #' @rdname show-methods
