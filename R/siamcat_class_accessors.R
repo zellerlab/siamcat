@@ -4,6 +4,50 @@
 ### EMBL Heidelberg 2012-2018 GNU GPL 3.0
 
 ################################################################################
+#' Universal slot accessor function for siamcat-class.
+#'
+#' This function is used internally by many accessors.
+#'
+#' @usage accessSlot(siamcat, slot, errorIfNULL=FALSE)
+#'
+#' @param siamcat an object of \link{siamcat-class}.
+#'
+#' @param slot A character string indicating the slot (not data class)
+#'  of the component data type that is desired.
+#'
+#' @return Returns the component object specified by the argument \code{slot}. 
+#'  Returns NULL if slot does not exist.
+#'
+#' @export
+#' @examples #
+#' data(siamcat_example)
+#' access(siamcat_example, "label")
+#' access(siamcat_example, "model_list")
+accessSlot <- function(siamcat, slot){
+  if( is.component.class(siamcat) ){
+    # If physeq is a component class, might return as-is. Depends on slot.
+    if( inherits(siamcat, get.component.classes()[slot]) ){
+      # if slot-name matches, return physeq as-is.
+      out = siamcat
+    } else {
+      # If slot/component mismatch, set out to NULL. Test later if this is an error.			
+      out = NULL
+    }
+  } else if(!slot %in% slotNames(siamcat) ){
+    # If slot is invalid, set out to NULL. Test later if this is an error.
+    out = NULL
+  } else {
+    # By elimination, must be valid. Access slot
+    out = eval(parse(text=paste("siamcat@", slot, sep=""))) 
+  }
+  if(is.null(out) ){
+    # Only error regarding a NULL return value if errorIfNULL is TRUE.
+    message(slot, " slot is empty.")
+  }
+  return(out)
+}
+
+################################################################################
 #' Retrieve model_list from object.
 #'
 #'
@@ -12,11 +56,8 @@
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a model_list or instance of \link{model_list-class}.
 #'
-#' @param errorIfNULL Should the accessor stop with 
-#'  an error if the slot is empty (\code{NULL})? Default \code{TRUE}.
 #'
 #' @return The \link{model_list-class} object or NULL.
-#'  By default this method stops with an error in the latter case.
 #' 
 #' @export
 #' @rdname model_list-methods
@@ -25,15 +66,66 @@
 #' @examples
 #'  data(siamcat_example)
 #'  model_list(siamcat_example)
-setGeneric("model_list", function(siamcat, errorIfNULL=TRUE) standardGeneric("model_list"))
+setGeneric("model_list", function(siamcat) standardGeneric("model_list"))
 #' @rdname model_list-methods
 #' @aliases model_list,ANY-method
-setMethod("model_list", "ANY", function(siamcat, errorIfNULL=TRUE){
-  access(siamcat, "model_list", errorIfNULL)
+setMethod("model_list", "ANY", function(siamcat){
+  accessSlot(siamcat, "model_list")
 })
 # Return as-is if already a model_list object
 #' @rdname model_list-methods
 setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
+
+################################################################################
+#' Retrieve eval_data from object.
+#'
+#'
+#' @usage eval_data(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a eval_data..
+#'
+#' @return The eval_data list or NULL.
+#' 
+#' @export
+#' @rdname eval_data-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  eval_data(siamcat_example)
+setGeneric("eval_data", function(siamcat) standardGeneric("eval_data"))
+#' @rdname eval_data-methods
+#' @aliases eval_data,ANY-method
+setMethod("eval_data", "ANY", function(siamcat){
+  accessSlot(siamcat, "eval_data")
+})
+
+################################################################################
+#' Retrieve eval_data from object.
+#'
+#'
+#' @usage eval_data(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a eval_data.
+#'
+#'
+#' @return The eval_data list or NULL.
+#' 
+#' @export
+#' @rdname eval_data-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  eval_data(siamcat_example)
+setGeneric("eval_data", function(siamcat) standardGeneric("eval_data"))
+#' @rdname eval_data-methods
+#' @aliases eval_data,ANY-method
+setMethod("eval_data", "ANY", function(siamcat){
+  accessSlot(siamcat, "eval_data")
+})
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.features

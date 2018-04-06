@@ -9,20 +9,16 @@
 \usage{
 model_list(siamcat, errorIfNULL=TRUE)
 
-\S4method{model_list}{ANY}(siamcat, errorIfNULL = TRUE)
+\S4method{model_list}{ANY}(siamcat)
 
 \S4method{model_list}{model_list}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a model_list or instance of \link{model_list-class}.}
-
-\item{errorIfNULL}{Should the accessor stop with 
-an error if the slot is empty (\code{NULL})? Default \code{TRUE}.}
 }
 \value{
 The \link{model_list-class} object or NULL.
- By default this method stops with an error in the latter case.
 }
 \description{
 Retrieve model_list from object.
