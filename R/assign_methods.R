@@ -68,3 +68,25 @@ setMethod("model_list<-", c("siamcat","model_list"), function(x, value){
   siamcat(value, x@label, x@eval_data, x@phyloseq, x@orig_feat, 
           x@norm_param, x@data_split, x@pred_matrix)
 })
+
+################################################################################
+#' Assign a new eval_data object to \code{x}
+#'
+#' @usage eval_data(x) <- value
+#'
+#' @param x an object of class \link{siamcat-class}
+#' @param value an eval_data list
+#' @export
+#' @docType methods
+#' @rdname assign-eval_data
+#' @aliases assign-eval_data
+#'
+#' @examples
+#' # data(siamcat_example)
+setGeneric("eval_data<-", function(x, value) standardGeneric("eval_data<-"))
+#' @rdname assign-eval_data
+#' @aliases eval_data<-
+setMethod("eval_data<-", c("siamcat","list"), function(x, value){
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
+          x@norm_param, x@data_split, x@pred_matrix)
+})
