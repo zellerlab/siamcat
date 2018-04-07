@@ -121,7 +121,7 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
         cat("+++ removed ", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), " features whose values did not exceed ", 
             cutoff, " in any sample (retaining ", length(f.idx), ")\n", sep = "")
     f.names <- rownames(features(siamcat))[f.idx]
-    siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
+    physeq(siamcat) <- prune_taxa(x = physeq(phyloseq), taxa = f.names)
     e.time <- proc.time()[3]
     if (verbose > 1) 
         cat("+ finished filter.features in", e.time - s.time, "s\n")
