@@ -94,13 +94,13 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     if (ncol(pred) > 1) {
         aucspr = vector("numeric", dim(pred)[2])
         for (c in 1:ncol(pred)) {
-            ev[c] = list(evaluate.classifier(pred[, c], label$label, siamcat@label, verbose = verbose))
+            ev[c] = list(evaluate.classifier(pred[, c], label$label, label, verbose = verbose))
             pr[c] = list(evaluate.get.pr(ev[[c]], verbose = verbose))
             aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose = verbose)
         }
-        ev = append(ev, list(evaluate.classifier(apply(pred, 1, summ.stat), label$label, siamcat@label)))
+        ev = append(ev, list(evaluate.classifier(apply(pred, 1, summ.stat), label$label, label)))
     } else {
-        ev[1] = list(evaluate.classifier(as.vector(pred), label$label, siamcat@label, verbose = verbose))
+        ev[1] = list(evaluate.classifier(as.vector(pred), label$label, label, verbose = verbose))
         pr[1] = list(evaluate.get.pr(ev[[1]]), verbose = verbose)
     }
     if (ncol(pred) > 1) {
@@ -146,10 +146,10 @@ evaluate.classifier <- function(predictions, test.label, label, verbose = 0) {
         tn = vector("numeric", length(thr))
         fn = vector("numeric", length(thr))
         for (i in 1:length(thr)) {
-            tp[i] = sum(test.label == label@positive.lab & predictions > thr[i])
-            fp[i] = sum(test.label == label@negative.lab & predictions > thr[i])
-            tn[i] = sum(test.label == label@negative.lab & predictions < thr[i])
-            fn[i] = sum(test.label == label@positive.lab & predictions < thr[i])
+            tp[i] = sum(test.label == label$positive.lab & predictions > thr[i])
+            fp[i] = sum(test.label == label$negative.lab & predictions > thr[i])
+            tn[i] = sum(test.label == label$negative.lab & predictions < thr[i])
+            fn[i] = sum(test.label == label$positive.lab & predictions < thr[i])
         }
     } else {
         # assuming that several models were applied to predict the same data and predictions of each model occupy one
@@ -161,10 +161,10 @@ evaluate.classifier <- function(predictions, test.label, label, verbose = 0) {
         fn = matrix(0, nrow = length(thr), ncol = ncol(predictions))
         for (c in 1:ncol(predictions)) {
             for (r in 1:length(t)) {
-                tp[r, c] = sum(test.label == label@positive.lab & predictions[, c] > thr[r])
-                fp[r, c] = sum(test.label == label@negative.lab & predictions[, c] > thr[r])
-                tn[r, c] = sum(test.label == label@negative.lab & predictions[, c] < thr[r])
-                fn[r, c] = sum(test.label == label@positive.lab & predictions[, c] < thr[r])
+                tp[r, c] = sum(test.label == label$positive.lab & predictions[, c] > thr[r])
+                fp[r, c] = sum(test.label == label$negative.lab & predictions[, c] > thr[r])
+                tn[r, c] = sum(test.label == label$negative.lab & predictions[, c] < thr[r])
+                fn[r, c] = sum(test.label == label$positive.lab & predictions[, c] < thr[r])
             }
         }
     }
