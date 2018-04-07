@@ -61,13 +61,13 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
     }
     
     if (verbose > 1) 
-        cat("+++ before filtering, the data has", nrow(siamcat@phyloseq@otu_table), "features\n")
+        cat("+++ before filtering, the data has", nrow(features(siamcat)), "features\n")
     if (recomp.prop) {
         # recompute relative abundance values (proportions)
-        ra.feat <- prop.table(siamcat@phyloseq@otu_table, 2)
-        siamcat@phyloseq@otu_table <- otu_table(ra.feat, taxa_are_rows = TRUE)
+        ra.feat <- prop.table(features(siamcat), 2)
+        features(siamcat) <- otu_table(ra.feat, taxa_are_rows = TRUE)
     } else {
-        ra.feat <- siamcat@phyloseq@otu_table
+        ra.feat <- features(siamcat)
     }
     
     ### apply filters
@@ -103,11 +103,11 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
     if (rm.unmapped) {
         # remove 'unmapped' feature
         names.unmapped <- c("UNMAPPED", "-1", "X.1", "unmapped", "UNCLASSIFIED", "unclassified", "UNASSIGNED", "unassigned")
-        unm.idx <- rownames(siamcat@phyloseq@otu_table) %in% names.unmapped
+        unm.idx <- rownames(features(siamcat)) %in% names.unmapped
         if (any(unm.idx)) {
             f.idx <- f.idx[-which(f.idx %in% unm.idx)]
             if (verbose > 2) 
-                cat("+++ removing ", rownames(siamcat@phyloseq@otu_table)[unm.idx], " as unmapped reads\n")
+                cat("+++ removing ", rownames(features(siamcat))[unm.idx], " as unmapped reads\n")
             if (verbose > 1) 
                 cat("+++ removed ", sum(unm.idx), " features corresponding to UNMAPPED reads\n", sep = "")
         } else {
@@ -118,9 +118,9 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
     if (verbose > 2) 
         cat("+++ applying prune_taxa\n")
     if (verbose > 1) 
-        cat("+++ removed ", nrow(siamcat@phyloseq@otu_table) - length(f.idx) - sum(unm.idx), " features whose values did not exceed ", 
+        cat("+++ removed ", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), " features whose values did not exceed ", 
             cutoff, " in any sample (retaining ", length(f.idx), ")\n", sep = "")
-    f.names <- rownames(siamcat@phyloseq@otu_table)[f.idx]
+    f.names <- rownames(features(siamcat))[f.idx]
     siamcat@phyloseq <- prune_taxa(x = siamcat@phyloseq, taxa = f.names)
     e.time <- proc.time()[3]
     if (verbose > 1) 

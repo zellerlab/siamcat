@@ -98,7 +98,7 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
             pr[c] = list(evaluate.get.pr(ev[[c]], verbose = verbose))
             aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose = verbose)
         }
-        ev = append(ev, list(evaluate.classifier(apply(pred, 1, summ.stat), label, label)))
+        ev = append(ev, list(evaluate.classifier(apply(pred, 1, summ.stat), label$label, label)))
     } else {
         ev[1] = list(evaluate.classifier(as.vector(pred), label$label, label, verbose = verbose))
         pr[1] = list(evaluate.get.pr(ev[[1]]), verbose = verbose)
