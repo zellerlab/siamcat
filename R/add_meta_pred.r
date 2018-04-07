@@ -43,11 +43,11 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose =
             if (!p %in% colnames(siamcat@phyloseq@sam_data)) {
                 stop("There is no metadata variable called ", p)
             }
-            idx <- which(colnames(siamcat@phyloseq@sam_data) == p)
+            idx <- which(colnames(meta(siamcat)) == p)
             if (length(idx) != 1) 
                 stop(p, "matches multiple columns in the metada")
             
-            m <- unlist(siamcat@phyloseq@sam_data[, idx])
+            m <- unlist(meta(siamcat)[, idx])
             
             if (!all(is.finite(m))) {
                 na.cnt <- sum(!is.finite(m))
@@ -65,9 +65,12 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose =
                 stopifnot(!m.sd == 0)
                 m <- (m - m.mean)/m.sd
             }
+            features.with.meta <- otu_table(rbind(features(siamcat),m),
+                taxa_are_rows = TRUE)
+            rownames(features.with.meta)[nrow(features.with.meta)] <- paste(
+            "META_", toupper(p), sep = "")
+            features(siamcat) <- features.with.meta
             
-            features(siamcat)<- otu_table(rbind(siamcat@phyloseq@otu_table, m), taxa_are_rows = TRUE)
-            rownames(siamcat@phyloseq@otu_table)[nrow(siamcat@phyloseq@otu_table)] <- paste("META_", toupper(p), sep = "")
             cnt <- cnt + 1
         }
         if (verbose > 1) 
@@ -76,7 +79,6 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose =
         if (verbose > 0) 
             message("+++ Not adding any of the meta-variables as predictor to the feature matrix")
     }
-    stopifnot(all(!is.na(siamcat@phyloseq@otu_table)))
     e.time <- proc.time()[3]
     if (verbose > 1) 
         message(paste("+ finished add.meta.pred in", formatC(e.time - s.time, digits = 3), "s"))

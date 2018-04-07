@@ -199,3 +199,24 @@ setGeneric("features<-", function(x, value) standardGeneric("features<-"))
 setMethod("features<-", c("siamcat","otu_table"), function(x, value){
   otu_table(physeq(x)) <-  value
 })
+
+################################################################################
+#' Assign a new sam_data object to \code{x}
+#'
+#' @usage meta(x) <- value
+#'
+#' @param x an object of class \link{siamcat-class}
+#' @param value an object of class \link[phyloseq]{sample_data-class}
+#' @export
+#' @docType methods
+#' @rdname assign-meta
+#' @aliases assign-meta
+#'
+#' @examples
+#' # data(siamcat_example)
+setGeneric("meta<-", function(x, value) standardGeneric("meta<-"))
+#' @rdname assign-meta
+#' @aliases meta<-
+setMethod("meta<-", c("siamcat","sample_data"), function(x, value){
+  sample_data(physeq(x)) <-  value
+})
