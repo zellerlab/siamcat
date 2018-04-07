@@ -90,40 +90,40 @@ setGeneric("models", function(siamcat) standardGeneric("models"))
 #' @rdname models-methods
 #' @aliases models,ANY-method
 setMethod("models", "ANY", function(siamcat){
-  accessSlot(siamcat, "model_list")
+  eval(model_list(siamcat)@models)
 })
-# Return as-is if already a model_list object
+# Return list of models if a model_list object
 #' @rdname model_list-methods
-setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
+setMethod("models", "model_list", function(siamcat){ return(siamcat@models) })
 
 ################################################################################
-#' Retrieve model_list from object.
+#' Retrieve model_type from object.
 #'
 #'
-#' @usage model_list(siamcat, errorIfNULL=TRUE)
+#' @usage model_type(siamcat)
 #' 
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a model_list or instance of \link{model_list-class}.
 #'
 #'
-#' @return The \link{model_list-class} object or NULL.
+#' @return The string describing type of model used or NULL.
 #' 
 #' @export
-#' @rdname model_list-methods
+#' @rdname model_type-methods
 #' @docType methods
 #'
 #' @examples
 #'  data(siamcat_example)
-#'  model_list(siamcat_example)
-setGeneric("model_list", function(siamcat) standardGeneric("model_list"))
-#' @rdname model_list-methods
-#' @aliases model_list,ANY-method
-setMethod("model_list", "ANY", function(siamcat){
-  accessSlot(siamcat, "model_list")
+#'  model_type(siamcat_example)
+setGeneric("model_type", function(siamcat) standardGeneric("model_type"))
+#' @rdname model_type-methods
+#' @aliases model_type,ANY-method
+setMethod("model_type", "ANY", function(siamcat){
+  eval(model_list(siamcat)@model_type)
 })
-# Return as-is if already a model_list object
+# Return model type if a model_list object
 #' @rdname model_list-methods
-setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
+setMethod("model_type", "model_list", function(siamcat){ return(siamcat@model_type) })
 
 ################################################################################
 #' Retrieve eval_data from object.

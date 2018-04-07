@@ -5,10 +5,8 @@
 \alias{model_list}
 \alias{model_list,ANY-method}
 \alias{model_list,model_list-method}
-\alias{model_list,model_list-method}
-\alias{model_list}
-\alias{model_list,ANY-method}
-\alias{model_list,model_list-method}
+\alias{models,model_list-method}
+\alias{model_type,model_list-method}
 \title{Retrieve \link{model_list-class} from object.}
 \usage{
 model_list(siamcat, errorIfNULL=TRUE)
@@ -17,34 +15,21 @@ model_list(siamcat, errorIfNULL=TRUE)
 
 \S4method{model_list}{model_list}(siamcat)
 
-\S4method{model_list}{model_list}(siamcat)
+\S4method{models}{model_list}(siamcat)
 
-model_list(siamcat, errorIfNULL=TRUE)
-
-\S4method{model_list}{ANY}(siamcat)
-
-\S4method{model_list}{model_list}(siamcat)
+\S4method{model_type}{model_list}(siamcat)
 }
 \arguments{
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a model_list or instance of \link{model_list-class}.}
-
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a model_list or instance of \link{model_list-class}.}
 }
 \value{
 The \link{model_list-class} object or NULL.
-
-The \link{model_list-class} object or NULL.
 }
 \description{
 Retrieve \link{model_list-class} from object.
-
-Retrieve model_list from object.
 }
 \examples{
- data(siamcat_example)
- model_list(siamcat_example)
  data(siamcat_example)
  model_list(siamcat_example)
 }
