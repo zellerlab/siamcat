@@ -58,14 +58,13 @@
 evaluate.predictions <- function(siamcat, verbose = 1) {
     if (verbose > 1) 
         cat("+ starting evaluate.predictions\n")
-    label      <- get.label.list(siamcat)
     s.time <- proc.time()[3]
     # TODO compare header to label make sure that label and prediction are in the same order
-    m <- match(names(label$label), rownames(pred_matrix(siamcat)))
+    m <- match(names(siamcat@label@label), rownames(siamcat@pred_matrix))
     
-    pred <- pred_matrix(siamcat)[m, , drop = FALSE]
-    stopifnot(all(names(label$label) == rownames(pred)))
-
+    pred <- siamcat@pred_matrix[m, , drop = FALSE]
+    stopifnot(all(names(siamcat@label@label) == rownames(pred)))
+    
     # ROC curve
     if (verbose > 2) 
         cat("+ calculating ROC\n")
@@ -74,18 +73,18 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
         rocc = list(NULL)
         aucs = vector("numeric", ncol(pred))
         for (c in 1:ncol(pred)) {
-            rocc[c] = list(roc(response = label$label, predictor = pred[, c], ci = FALSE))
+            rocc[c] = list(roc(response = siamcat@label@label, predictor = pred[, c], ci = FALSE))
             aucs[c] = rocc[[c]]$auc
         }
-        l.vec = rep(label$label, ncol(pred))
+        l.vec = rep(siamcat@label@label, ncol(pred))
     } else {
-        l.vec = label$label
+        l.vec = siamcat@label@label
     }
     # average data for plotting one mean prediction curve
     if (verbose > 2) 
         cat("+ calculating mean ROC\n")
     summ.stat = "mean"
-    rocsumm = list(roc(response = label$label, predictor = apply(pred, 1, summ.stat), ci = TRUE, of = "se", 
+    rocsumm = list(roc(response = siamcat@label@label, predictor = apply(pred, 1, summ.stat), ci = TRUE, of = "se", 
         sp = seq(0, 1, 0.05)))
     auroc = list(rocsumm[[1]]$auc)
     # precision recall curve
@@ -94,24 +93,24 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     if (ncol(pred) > 1) {
         aucspr = vector("numeric", dim(pred)[2])
         for (c in 1:ncol(pred)) {
-            ev[c] = list(evaluate.classifier(pred[, c], label$label, label, verbose = verbose))
+            ev[c] = list(evaluate.classifier(pred[, c], siamcat@label@label, siamcat@label, verbose = verbose))
             pr[c] = list(evaluate.get.pr(ev[[c]], verbose = verbose))
             aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose = verbose)
         }
-        ev = append(ev, list(evaluate.classifier(apply(pred, 1, summ.stat), label$label, label)))
+        ev = append(ev, list(evaluate.classifier(apply(pred, 1, summ.stat), siamcat@label@label, siamcat@label)))
     } else {
-        ev[1] = list(evaluate.classifier(as.vector(pred), label$label, label, verbose = verbose))
+        ev[1] = list(evaluate.classifier(as.vector(pred), siamcat@label@label, siamcat@label, verbose = verbose))
         pr[1] = list(evaluate.get.pr(ev[[1]]), verbose = verbose)
     }
     if (ncol(pred) > 1) {
         if (verbose > 2) 
             cat("+ evaluating multiple predictions\n")
-        eval_data(siamcat) <- list(roc.all = rocc, auc.all = aucs, roc.average = rocsumm, auc.average = auroc, ev.list = ev, 
+        siamcat@eval_data <- list(roc.all = rocc, auc.all = aucs, roc.average = rocsumm, auc.average = auroc, ev.list = ev, 
             pr.list = pr, aucspr = aucspr)
     } else {
         if (verbose > 2) 
             cat("+ evaluating single prediction\n")
-        eval_data(siamcat) <- list(roc.average = rocsumm, auc.average = auroc, ev.list = ev, pr.list = pr)
+        siamcat@eval_data <- list(roc.average = rocsumm, auc.average = auroc, ev.list = ev, pr.list = pr)
     }
     e.time <- proc.time()[3]
     if (verbose > 1) 
@@ -146,10 +145,10 @@ evaluate.classifier <- function(predictions, test.label, label, verbose = 0) {
         tn = vector("numeric", length(thr))
         fn = vector("numeric", length(thr))
         for (i in 1:length(thr)) {
-            tp[i] = sum(test.label == label$positive.lab & predictions > thr[i])
-            fp[i] = sum(test.label == label$negative.lab & predictions > thr[i])
-            tn[i] = sum(test.label == label$negative.lab & predictions < thr[i])
-            fn[i] = sum(test.label == label$positive.lab & predictions < thr[i])
+            tp[i] = sum(test.label == label@positive.lab & predictions > thr[i])
+            fp[i] = sum(test.label == label@negative.lab & predictions > thr[i])
+            tn[i] = sum(test.label == label@negative.lab & predictions < thr[i])
+            fn[i] = sum(test.label == label@positive.lab & predictions < thr[i])
         }
     } else {
         # assuming that several models were applied to predict the same data and predictions of each model occupy one
@@ -161,10 +160,10 @@ evaluate.classifier <- function(predictions, test.label, label, verbose = 0) {
         fn = matrix(0, nrow = length(thr), ncol = ncol(predictions))
         for (c in 1:ncol(predictions)) {
             for (r in 1:length(t)) {
-                tp[r, c] = sum(test.label == label$positive.lab & predictions[, c] > thr[r])
-                fp[r, c] = sum(test.label == label$negative.lab & predictions[, c] > thr[r])
-                tn[r, c] = sum(test.label == label$negative.lab & predictions[, c] < thr[r])
-                fn[r, c] = sum(test.label == label$positive.lab & predictions[, c] < thr[r])
+                tp[r, c] = sum(test.label == label@positive.lab & predictions[, c] > thr[r])
+                fp[r, c] = sum(test.label == label@negative.lab & predictions[, c] > thr[r])
+                tn[r, c] = sum(test.label == label@negative.lab & predictions[, c] < thr[r])
+                fn[r, c] = sum(test.label == label@positive.lab & predictions[, c] < thr[r])
             }
         }
     }
