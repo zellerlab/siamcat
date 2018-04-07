@@ -151,6 +151,31 @@ setMethod("eval_data", "ANY", function(siamcat){
 })
 
 ################################################################################
+#' Retrieve pred_matrix from object.
+#'
+#'
+#' @usage pred_matrix(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a pred_matrix
+#'
+#' @return The pred_matrix matrix or NULL.
+#' 
+#' @export
+#' @rdname pred_matrix-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  pred_matrix(siamcat_example)
+setGeneric("pred_matrix", function(siamcat) standardGeneric("pred_matrix"))
+#' @rdname pred_matrix-methods
+#' @aliases pred_matrix,ANY-method
+setMethod("pred_matrix", "ANY", function(siamcat){
+  accessSlot(siamcat, "pred_matrix")
+})
+
+################################################################################
 #' Retrieve norm_param from object.
 #'
 #'
