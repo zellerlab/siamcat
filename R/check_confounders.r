@@ -35,8 +35,8 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     s.time <- proc.time()[3]
     # TODO: implement color.scheme selection as function parameter
     pdf(fn.plot, onefile = TRUE)
-    case.count <- length(siamcat@label@label[siamcat@label@p.idx])
-    ctrl.count <- length(siamcat@label@label[siamcat@label@n.idx])
+    case.count <- sum(siamcat@label@p.idx)
+    ctrl.count <- sum(siamcat@label@n.idx)
     
     if (verbose > 2) 
         cat("+++ checking group sizes\n")
@@ -57,13 +57,13 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     hmapcolors <- colorRampPalette(brewer.pal(10, "RdYlGn"))
     color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info["BrBG", "maxcolors"], "BrBG"))(100))
     
-    for (m in 1:ncol(siamcat@phyloseq@sam_data)) {
-        mname <- gsub("[_.-]", " ", colnames(siamcat@phyloseq@sam_data)[m])
+    for (m in 1:ncol(meta(siamcat))) {
+        mname <- gsub("[_.-]", " ", colnames(meta(siamcat))[m])
         mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep = "")
         if (verbose > 1) 
             cat("+++ checking", mname, "as a potential confounder\n")
         
-        mvar <- as.numeric(unlist(siamcat@phyloseq@sam_data[, m]))
+        mvar <- as.numeric(unlist(meta(siamcat)[, m]))
         u.val <- unique(mvar)
         u.val <- u.val[!is.na(u.val)]
         colors <- brewer.pal(5, "Spectral")

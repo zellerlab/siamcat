@@ -39,6 +39,64 @@ accessSlot <- function(siamcat, slot){
 }
 
 ################################################################################
+#' Retrieve \link{model_list-class} from object.
+#'
+#'
+#' @usage model_list(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a model_list or instance of \link{model_list-class}.
+#'
+#'
+#' @return The \link{model_list-class} object or NULL.
+#' 
+#' @export
+#' @rdname model_list-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  model_list(siamcat_example)
+setGeneric("model_list", function(siamcat) standardGeneric("model_list"))
+#' @rdname model_list-methods
+#' @aliases model_list,ANY-method
+setMethod("model_list", "ANY", function(siamcat){
+  accessSlot(siamcat, "model_list")
+})
+# Return as-is if already a model_list object
+#' @rdname model_list-methods
+setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
+
+################################################################################
+#' Retrieve list of models from object.
+#'
+#'
+#' @usage models(siamcat, errorIfNULL=TRUE)
+#' 
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'  that contains a model_list or instance of \link{model_list-class}.
+#'
+#'
+#' @return The list of models or NULL.
+#' 
+#' @export
+#' @rdname models-methods
+#' @docType methods
+#'
+#' @examples
+#'  data(siamcat_example)
+#'  models(siamcat_example)
+setGeneric("models", function(siamcat) standardGeneric("models"))
+#' @rdname models-methods
+#' @aliases models,ANY-method
+setMethod("models", "ANY", function(siamcat){
+  accessSlot(siamcat, "model_list")
+})
+# Return as-is if already a model_list object
+#' @rdname model_list-methods
+setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
+
+################################################################################
 #' Retrieve model_list from object.
 #'
 #'
