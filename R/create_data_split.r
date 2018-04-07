@@ -142,7 +142,7 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1, stratify
         test.list[[r]] <- test.temp
     }
     
-    siamcat@data_split <- new("data_split", training.folds = train.list, test.folds = test.list, num.resample = num.resample, 
+    data_split(siamcat) <- new("data_split", training.folds = train.list, test.folds = test.list, num.resample = num.resample, 
         num.folds = num.folds)
     e.time <- proc.time()[3]
     if (verbose > 1) 

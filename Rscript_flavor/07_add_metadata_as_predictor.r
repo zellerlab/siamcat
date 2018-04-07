@@ -49,6 +49,6 @@ siamcat     <- add.meta.pred(siamcat,
 	                        std.meta=opt$std_meta)
 
 ### write combined feature table
-write.table(siamcat@phyloseq@otu_table, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(features(siamcat), file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 cat('\nSuccessfully added metadata to features in ', proc.time()[1] - start.time, ' seconds\n', sep='')

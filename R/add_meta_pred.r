@@ -40,7 +40,7 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose =
         for (p in pred.names) {
             if (verbose > 2) 
                 message("+++ adding metadata predictor:", p)
-            if (!p %in% colnames(siamcat@phyloseq@sam_data)) {
+            if (!p %in% colnames(meta(siamcat))) {
                 stop("There is no metadata variable called ", p)
             }
             idx <- which(colnames(meta(siamcat)) == p)

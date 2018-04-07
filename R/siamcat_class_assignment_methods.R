@@ -198,6 +198,7 @@ setGeneric("features<-", function(x, value) standardGeneric("features<-"))
 #' @aliases features<-
 setMethod("features<-", c("siamcat","otu_table"), function(x, value){
   otu_table(physeq(x)) <-  value
+  return(x)
 })
 
 ################################################################################
@@ -219,4 +220,5 @@ setGeneric("meta<-", function(x, value) standardGeneric("meta<-"))
 #' @aliases meta<-
 setMethod("meta<-", c("siamcat","sample_data"), function(x, value){
   sample_data(physeq(x)) <-  value
+  return(x)
 })
