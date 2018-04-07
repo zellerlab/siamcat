@@ -58,13 +58,13 @@
 evaluate.predictions <- function(siamcat, verbose = 1) {
     if (verbose > 1) 
         cat("+ starting evaluate.predictions\n")
+    label      <- get.label.list(siamcat)
     s.time <- proc.time()[3]
     # TODO compare header to label make sure that label and prediction are in the same order
     m <- match(names(label$label), rownames(pred_matrix(siamcat)))
     
     pred <- pred_matrix(siamcat)[m, , drop = FALSE]
     stopifnot(all(names(label$label) == rownames(pred)))
-    label      <- get.label.list(siamcat)
 
     # ROC curve
     if (verbose > 2) 
