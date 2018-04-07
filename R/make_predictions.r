@@ -69,11 +69,11 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
                 stopifnot(all(rownames(data) == names(test.label)))
                 
                 data$label <- test.label
-                model <- siamcat@model_list@models[[i]]
+                model <- models(siamcat)[[i]]
                 
                 stopifnot(!any(rownames(model$task$env$data) %in% rownames(data)))
                 if (verbose > 2) 
-                  cat("Applying ", siamcat@model_list@model.type, " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample * 
+                  cat("Applying ", model_list(siamcat), " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample * 
                     num.folds, ")...\n", sep = "")
                 
                 task <- makeClassifTask(data = data, target = "label")
@@ -91,21 +91,21 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             }
         }
         stopifnot(!any(is.na(pred)))
-        siamcat@pred_matrix <- pred
+        pred_matrix(siamcat) <- pred
         return.object <- siamcat
     } else {
-        
+        label.holdout      <- get.label.list(siamcat.holdout)
         if (verbose > 1) 
             cat("+ starting make.predictions on external dataset\n")
         
         if (normalize.holdout) {
             if (verbose > 1) 
                 cat("+ Performing frozen normalization on holdout set\n")
-            siamcat.holdout <- normalize.features(siamcat.holdout, norm.param = siamcat@norm_param, verbose = verbose)
+            siamcat.holdout <- normalize.features(siamcat.holdout, norm.param = norm_param(siamcat), verbose = verbose)
         } else {
             cat("WARNING: holdout set is not being normalized!\n")
         }
-        feat.test <- t(siamcat.holdout@phyloseq@otu_table)
+        feat.test <- t(features(siamcat.holdout))
         feat.ref <- t(features(siamcat))
         
         # data sanity checks
@@ -121,13 +121,13 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         for (i in 1:num.models) {
             
             data <- as.data.frame(feat.test)
-            model <- siamcat@model_list@models[[i]]
+            model <- models(siamcat)[[i]]
             
             data <- data[, model$features]
-            data$label <- as.factor(siamcat.holdout@label@label)
+            data$label <- as.factor(label.holdout$label)
             
             if (verbose > 2) 
-                cat("Applying ", siamcat@model_list@model.type, " on complete external dataset", " (", i, " of ", num.models, 
+                cat("Applying ", model_type(siamcat), " on complete external dataset", " (", i, " of ", num.models, 
                   ")...\n", sep = "")
             
             task <- makeClassifTask(data = data, target = "label")
