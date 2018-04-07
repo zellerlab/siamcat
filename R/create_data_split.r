@@ -52,9 +52,10 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1, stratify
     if (verbose > 1) 
         cat("+ starting create.data.split\n")
     s.time <- proc.time()[3]
-    
-    labelNum <- as.numeric(siamcat@label@label)
-    names(labelNum) <- names(siamcat@label@label)
+
+    label    <- get.label.list(siamcat)
+    labelNum <- as.numeric(label$label)
+    names(labelNum) <- names(label$label)
     exm.ids <- names(labelNum)
     
     if (is.null(inseparable) || inseparable == "" || toupper(inseparable) == "NULL" || toupper(inseparable) == "NONE" || 
@@ -63,7 +64,7 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1, stratify
     }
     
     # parse label description
-    classes <- sort(c(siamcat@label@negative.lab, siamcat@label@positive.lab))
+    classes <- sort(c(label$negative.lab, label$positive.lab))
     
     ### check arguments
     if (num.resample < 1) {
@@ -88,14 +89,14 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1, stratify
         stratify <- FALSE
         num.folds <- length(labelNum) - 1
     }
-    if (!is.null(inseparable) && is.null(siamcat@phyloseq@sam_data)) {
+    if (!is.null(inseparable) && is.null(meta(siamcat))) {
         stop("Meta-data must be provided if the inseparable parameter is not NULL")
     }
     if (!is.null(inseparable)) {
         if (is.numeric(inseparable) && length(inseparable) == 1) {
-            stopifnot(inseparable <= ncol(siamcat@phyloseq@sam_data))
+            stopifnot(inseparable <= ncol(meta(siamcat)))
         } else if (class(inseparable) == "character" && length(inseparable == 1)) {
-            stopifnot(inseparable %in% colnames(siamcat@phyloseq@sam_data))
+            stopifnot(inseparable %in% colnames(meta(siamcat)))
         } else {
             stop("Inseparable parameter must be either a single column index or a single column name of metadata matrix")
         }
@@ -108,7 +109,7 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1, stratify
     for (r in 1:num.resample) {
         labelNum <- sample(labelNum)
         foldid <- assign.fold(label = labelNum, num.folds = num.folds, stratified = stratify, inseparable = inseparable, 
-            meta = siamcat@phyloseq@sam_data, verbose = verbose)
+            meta = meta(siamcat), verbose = verbose)
         names(foldid) <- names(labelNum)
         stopifnot(length(labelNum) == length(foldid))
         stopifnot(length(unique(foldid)) == num.folds)
