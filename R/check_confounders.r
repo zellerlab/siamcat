@@ -35,19 +35,20 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     s.time <- proc.time()[3]
     # TODO: implement color.scheme selection as function parameter
     pdf(fn.plot, onefile = TRUE)
-    case.count <- sum(siamcat@label@p.idx)
-    ctrl.count <- sum(siamcat@label@n.idx)
+    label      <- get.label.list(siamcat)
+    case.count <- sum(label$p.idx)
+    ctrl.count <- sum(label$n.idx)
     
     if (verbose > 2) 
         cat("+++ checking group sizes\n")
     if (case.count > ctrl.count) {
-        lgr <- siamcat@label@p.idx
-        smlr <- siamcat@label@n.idx
-        bp.labs <- c(siamcat@label@p.lab, siamcat@label@n.lab)
+        lgr <- label$p.idx
+        smlr <- label$n.idx
+        bp.labs <- c(label$p.lab, label$n.lab)
     } else {
-        lgr <- siamcat@label@n.idx
-        smlr <- siamcat@label@p.idx
-        bp.labs <- c(siamcat@label@n.lab, siamcat@label@p.lab)
+        lgr <- label$n.idx
+        smlr <- label$p.idx
+        bp.labs <- c(label$n.lab, label$p.lab)
     }
     
     if (verbose > 2) 
@@ -79,8 +80,8 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
             ct <- matrix(NA, nrow = 2, ncol = length(u.val))
             nms <- c()
             for (i in 1:length(u.val)) {
-                ct[1, i] = sum(mvar[siamcat@label@n.idx] == u.val[i], na.rm = TRUE)  # ctr
-                ct[2, i] = sum(mvar[siamcat@label@p.idx] == u.val[i], na.rm = TRUE)  # cases
+                ct[1, i] = sum(mvar[label$n.idx] == u.val[i], na.rm = TRUE)  # ctr
+                ct[2, i] = sum(mvar[label$p.idx] == u.val[i], na.rm = TRUE)  # cases
                 nms <- c(nms, paste(mname, u.val[i]))
             }
             freq <- t(ct)
@@ -100,7 +101,7 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
             vps <- baseViewports()
             pushViewport(vps$figure)
             vp1 <- plotViewport()
-            bar.plot <- barplot(freq, ylim = c(0, 1), main = mname, names.arg = c(siamcat@label@n.lab, siamcat@label@p.lab), 
+            bar.plot <- barplot(freq, ylim = c(0, 1), main = mname, names.arg = c(label$n.lab, label$p.lab), 
                 col = colors)
             legend(2.5, 1, legend = u.val, xpd = NA, lwd = 2, col = colors, inset = 0.5, bg = "grey96", cex = 0.8)
             p.val <- fisher.test(ct)$p.value
@@ -113,9 +114,9 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
             plot.new()
             vps <- baseViewports()
             pushViewport(vps$figure)
-            niceLabel <- rep(siamcat@label@p.lab, length(siamcat@label@label))
-            names(niceLabel) <- names(siamcat@label@label)
-            niceLabel[siamcat@label@n.idx] <- siamcat@label@n.lab
+            niceLabel <- rep(label$p.lab, length(label$label))
+            names(niceLabel) <- names(label$label)
+            niceLabel[label$n.idx] <- label$n.lab
             vp1 <- plotViewport()
             t <- addmargins(table(mvar, niceLabel, dnn = c(mname, "Label")))
             grid.table(t, theme = ttheme_minimal())
@@ -126,9 +127,9 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
                 cat("++++ continuous variable, using a Q-Q plot\n")
             # discretize continuous variable; split at median for now
             dct <- matrix(NA, nrow = 2, ncol = 2)
-            dct[1, ] <- c(sum(mvar[siamcat@label@n.idx] <= median(mvar, na.rm = TRUE), na.rm = TRUE), sum(mvar[siamcat@label@p.idx] <= 
+            dct[1, ] <- c(sum(mvar[label$n.idx] <= median(mvar, na.rm = TRUE), na.rm = TRUE), sum(mvar[label$p.idx] <= 
                 median(mvar, na.rm = TRUE), na.rm = TRUE))
-            dct[2, ] <- c(sum(mvar[siamcat@label@n.idx] > median(mvar, na.rm = TRUE), na.rm = TRUE), sum(mvar[siamcat@label@p.idx] > 
+            dct[2, ] <- c(sum(mvar[label$n.idx] > median(mvar, na.rm = TRUE), na.rm = TRUE), sum(mvar[label$p.idx] > 
                 median(mvar, na.rm = TRUE), na.rm = TRUE))
             rownames(dct) <- c(paste(mname, "<= med"), paste(mname, "> med"))
             hmap <- rbind(hmap, dct)
@@ -138,19 +139,19 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
                 cat("++++ panel 1/4: Q-Q plot\n")
             par(mar = c(4.5, 4.5, 2.5, 1.5), mgp = c(2.5, 1, 0))
             ax.int <- c(min(mvar, na.rm = TRUE), max(mvar, na.rm = TRUE))
-            qqplot(mvar[siamcat@label@n.idx], mvar[siamcat@label@p.idx], xlim = ax.int, ylim = ax.int, pch = 16, cex = 0.6, 
-                xlab = siamcat@label@n.lab, ylab = siamcat@label@p.lab, main = paste("Q-Q plot for", mname))
+            qqplot(mvar[label$n.idx], mvar[label$p.idx], xlim = ax.int, ylim = ax.int, pch = 16, cex = 0.6, 
+                xlab = label$n.lab, ylab = label$p.lab, main = paste("Q-Q plot for", mname))
             abline(0, 1, lty = 3)
-            p.val <- wilcox.test(mvar[siamcat@label@n.idx], mvar[siamcat@label@p.idx], exact = FALSE)$p.value
+            p.val <- wilcox.test(mvar[label$n.idx], mvar[label$p.idx], exact = FALSE)$p.value
             text(ax.int[1] + 0.9 * (ax.int[2] - ax.int[1]), ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]), cex = 0.8, paste("MWW test p-value:", 
                 format(p.val, digits = 4)), pos = 2)
             
             if (verbose > 2) 
                 cat("++++ panel 2/4: X histogram\n")
             par(mar = c(4, 2.5, 3.5, 1.5))
-            hist(mvar[siamcat@label@n.idx], main = siamcat@label@n.lab, xlab = mname, col = histcolors, breaks = seq(min(mvar, 
+            hist(mvar[label$n.idx], main = label$n.lab, xlab = mname, col = histcolors, breaks = seq(min(mvar, 
                 na.rm = TRUE), max(mvar, na.rm = TRUE), length.out = 10))
-            mtext(paste("N =", length(mvar[siamcat@label@n.idx])), cex = 0.6, side = 3, adj = 1, line = 1)
+            mtext(paste("N =", length(mvar[label$n.idx])), cex = 0.6, side = 3, adj = 1, line = 1)
             
             if (verbose > 2) 
                 cat("++++ panel 3/4: X boxplot\n")
@@ -165,9 +166,9 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
             if (verbose > 2) 
                 cat("++++ panel 4/4: Y histogram\n")
             par(mar = c(4.5, 2.5, 3.5, 1.5))
-            hist(mvar[siamcat@label@p.idx], main = siamcat@label@p.lab, xlab = mname, col = histcolors, breaks = seq(min(mvar, 
+            hist(mvar[label$p.idx], main = label$p.lab, xlab = mname, col = histcolors, breaks = seq(min(mvar, 
                 na.rm = TRUE), max(mvar, na.rm = TRUE), length.out = 10))
-            mtext(paste("N =", length(mvar[siamcat@label@p.idx])), cex = 0.6, side = 3, adj = 1, line = 1)
+            mtext(paste("N =", length(mvar[label$p.idx])), cex = 0.6, side = 3, adj = 1, line = 1)
             par(mfrow = c(1, 1))
         }
     }
