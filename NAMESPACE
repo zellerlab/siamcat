@@ -2,6 +2,7 @@
 
 export("data_split<-")
 export("eval_data<-")
+export("features<-")
 export("label<-")
 export("model_list<-")
 export("norm_param<-")

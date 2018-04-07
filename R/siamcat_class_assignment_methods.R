@@ -178,3 +178,24 @@ setMethod("orig_feat<-", c("siamcat","otu_table"), function(x, value){
   siamcat(value, x@label, x@model_list, x@phyloseq, x@data_split, 
           x@eval_data, x@pred_matrix, x@norm_param)
 })
+
+################################################################################
+#' Assign a new otu_table object to \code{x} features slot
+#'
+#' @usage features(x) <- value
+#'
+#' @param x an object of class \link{siamcat-class}
+#' @param value an object of class \link[phyloseq]{otu_table-class}
+#' @export
+#' @docType methods
+#' @rdname assign-features
+#' @aliases assign-features
+#'
+#' @examples
+#' # data(siamcat_example)
+setGeneric("features<-", function(x, value) standardGeneric("features<-"))
+#' @rdname assign-features
+#' @aliases features<-
+setMethod("features<-", c("siamcat","otu_table"), function(x, value){
+  otu_table(physeq(x)) <-  value
+})
