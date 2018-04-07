@@ -37,6 +37,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
     
     s.time <- proc.time()[3]
     
+    label      <- get.label.list(siamcat)
     # if holdout is NULL, make predictions on data in siamcat
     if (is.null(siamcat.holdout)) {
         
@@ -44,7 +45,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             cat("+ starting make.predictions on siamcat object\n")
         
         feat <- t(features(siamcat))
-        label.fac <- factor(siamcat@label@label, levels = c(siamcat@label@negative.lab, siamcat@label@positive.lab))
+        label.fac <- factor(label$label, levels = c(label$negative.lab, label$positive.lab))
         
         # assert that there is a split
         stopifnot(!is.null(data_split(siamcat)))
@@ -80,7 +81,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
                 
                 # rescale posterior probabilities between -1 and 1 (this works only for binary data!!!!)  TODO: Will need
                 # adjustment and generalization in the future)
-                p <- siamcat@label@negative.lab + abs(siamcat@label@positive.lab - siamcat@label@negative.lab) * pdata$data[, 
+                p <- label$negative.lab + abs(label$positive.lab - label$negative.lab) * pdata$data[, 
                   4]
                 names(p) <- rownames(pdata$data)
                 pred[names(p), r] <- p
@@ -132,7 +133,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
             
-            p <- siamcat@label@negative.lab + abs(siamcat@label@positive.lab - siamcat@label@negative.lab) * pdata$data[, 
+            p <- label$negative.lab + abs(label$positive.lab - label$negative.lab) * pdata$data[, 
                 4]
             names(p) <- rownames(pdata$data)
             pred[names(p), i] <- p
