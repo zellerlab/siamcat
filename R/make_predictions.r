@@ -43,7 +43,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         if (verbose > 1) 
             cat("+ starting make.predictions on siamcat object\n")
         
-        feat <- t(siamcat@phyloseq@otu_table)
+        feat <- t(features(siamcat))
         label.fac <- factor(siamcat@label@label, levels = c(siamcat@label@negative.lab, siamcat@label@positive.lab))
         
         # assert that there is a split
@@ -105,7 +105,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             cat("WARNING: holdout set is not being normalized!\n")
         }
         feat.test <- t(siamcat.holdout@phyloseq@otu_table)
-        feat.ref <- t(siamcat@phyloseq@otu_table)
+        feat.ref <- t(features(siamcat))
         
         # data sanity checks
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
