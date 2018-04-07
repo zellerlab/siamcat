@@ -47,10 +47,10 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         label.fac <- factor(siamcat@label@label, levels = c(siamcat@label@negative.lab, siamcat@label@positive.lab))
         
         # assert that there is a split
-        stopifnot(!is.null(siamcat@data_split))
+        stopifnot(!is.null(data_split(siamcat)))
         
-        num.folds <- siamcat@data_split@num.folds
-        num.resample <- siamcat@data_split@num.resample
+        num.folds <- data_split(siamcat)@num.folds
+        num.resample <- data_split(siamcat)@num.resample
         
         pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac), dimnames = list(names(label.fac), paste0("CV_rep", 
             1:num.resample)))
@@ -60,8 +60,8 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         for (f in 1:num.folds) {
             for (r in 1:num.resample) {
                 
-                test.label <- label.fac[siamcat@data_split@test.folds[[r]][[f]]]
-                data <- as.data.frame(feat[siamcat@data_split@test.folds[[r]][[f]], ])
+                test.label <- label.fac[data_split(siamcat)@test.folds[[r]][[f]]]
+                data <- as.data.frame(feat[data_split(siamcat)@test.folds[[r]][[f]], ])
                 
                 # assert stuff
                 stopifnot(nrow(data) == length(test.label))
@@ -111,7 +111,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
         
         # prediction
-        num.models <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
+        num.models <- data_split(siamcat)@num.folds * data_split(siamcat)@num.resample
         
         pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test), dimnames = list(rownames(feat.test), paste0("Model_", 
             1:num.models)))
