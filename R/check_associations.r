@@ -169,7 +169,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     } else if (p == "prevalence"){
       associations.pr.shift.plot(pr.shifts=effect.size$pr.shift, col=col,verbose=verbose)
     } else if (p == "auroc"){
-      associations.aucs.plot(aucs=effect.size[,auc], binary.cols=effect.size$bcols,verbose=verbose)
+      associations.aucs.plot(aucs=effect.size[,c('auc', 'auc.ci.l', 'auc.ci.h')], binary.cols=effect.size$bcol,verbose=verbose)
     }
   }
 
@@ -266,7 +266,7 @@ associations.quantile.box.plot <- function(data.mat, label, col, verbose=1){
 
   n.spec <- nrow(data.mat)
   p.m = min(data.mat, na.rm=TRUE)
-  plot(rep(p.m, n.spec), 1:n.spec,
+  plot(rep(p.m, n.spec), seq_len(n.spec),
        xlab='', ylab='', yaxs='i', axes=FALSE,
        xlim=c(p.m, 0), ylim=c(0.5, n.spec+0.5),
        frame.plot=FALSE, type='n')
@@ -290,7 +290,7 @@ associations.quantile.box.plot <- function(data.mat, label, col, verbose=1){
 
 
   # scatter plot on top
-  for (i in 1:n.spec) {
+  for (i in seq_len(n.spec)) {
     pos.col.t <- change.transparency(pos.col)
     neg.col.t <- change.transparency(neg.col)
 
@@ -316,9 +316,9 @@ associations.quantile.rect.plot <- function(data.mat, label, col, verbose=1){
   p.mn <- min(data.mat, na.rm=TRUE)
   p.mx <- max(data.mat, na.rm=TRUE)
 
-  plot(rep(p.m, n.spec), 1:n.spec,
+  plot(rep(p.mn, n.spec), seq_len(n.spec),
        xlab='', ylab='', yaxs='i', axes=FALSE,
-       xlim=c(p.m, p.mx),
+       xlim=c(p.mn, p.mx),
        ylim=c(0, n.spec), frame.plot=FALSE, type='n')
   for (v in seq(p.mn,0,1)) {
     abline(v=v, lty=3, col='lightgrey')
@@ -335,7 +335,7 @@ associations.quantile.rect.plot <- function(data.mat, label, col, verbose=1){
   quantile.rect.plot(quantiles.neg, up=FALSE, colors.n)
   quantile.median.plot(quantiles.pos, up=TRUE)
   quantile.median.plot(quantiles.neg, up=FALSE)
-  
+
   mtext('Quantiles', 3, line=0, at=1, adj = 1.675, padj = 0.45, las=1, cex=0.7)
   legend(-1.75, n.spec, legend = c("40%-60%","30%-70%", "20%-80%","10%-90%","median","","","","",""), bty='n', cex=1,
          fill=c(rev(colors.p), 'white', rev(colors.n), 'white'), lwd <- 1.3, ncol = 2,
@@ -379,7 +379,7 @@ associations.aucs.plot <- function(aucs, binary.cols,verbose=1){
   # make thicker line at .5
   abline(v=.5, lty=1, col='lightgrey')
   # plot single feature aucs
-  for (i in 1:nrow(aucs)) {
+  for (i in seq_len(nrow(aucs))) {
     segments(x0=aucs[i, 2], x1=aucs[i, 3], y0=i, col='lightgrey', lwd=1.5)
     points(aucs[i, 1], i, pch=18, col=binary.cols[i])
     points(aucs[i, 1], i, pch=5, col='black', cex=0.9)
@@ -521,11 +521,11 @@ associations.labels.plot <- function(labels, plot.type,  verbose=1){
   if(verbose>2) message("+ starting associations.labels.plot")
   adj <- rep(0, length(labels))
   if (plot.type == 'quantile.rect') adj <- rep(-0.5, length(labels))
-  if (plot.type == 'box') adj <- -0.5 + 1:length(labels)
+  if (plot.type == 'box') adj <- -0.5 + seq_len(length(labels))
   cex.org <- par()$cex
   par(cex=1)
   cex.labels <- min(.7,(((par()$pin[2]/length(labels))*.6)/max( strheight(labels, units = 'inches'))))
-  for (i in 1:length(labels)){
+  for (i in seq_len(length(labels))){
     mtext(labels[i], 2, line=0, at=i+adj[i], las=1, cex=cex.labels)
   }
   par(cex=cex.org)
@@ -623,7 +623,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     idx <- idx[order(p.adj.log, decreasing=FALSE)]
   }
   e.time <- proc.time()[3]
-  if(verbose>1) message(paste("+ finished analyse.binary.markerin",e.time-s.time,"s"))
+  if(verbose>1) message(paste("+ finished analyse.binary.marker in", formatC(e.time-s.time, digits=3),"s"))
   return(list("effect.size"=effect.size[idx,],
               "feat.red"=feat[idx,,drop=FALSE],
               "truncated"=truncated,
@@ -647,13 +647,13 @@ quantiles.plot <- function(quantiles, up=TRUE, col){
   adj.y0 <- ifelse(up, 0, 0.3)
   adj.y1 <- ifelse(up, 0.3, 0)
   # box
-  rect(quantiles[2,], 1:n.spec-adj.y0, quantiles[4,], (1:n.spec)+adj.y1, col=col)
+  rect(quantiles[2,], seq_len(n.spec)-adj.y0, quantiles[4,], seq_len(n.spec)+adj.y1, col=col)
   # 90% interval
-  segments(quantiles[1,], 1:n.spec, quantiles[5,], 1:n.spec)
-  segments(quantiles[1,], y0=1:n.spec-adj.y0/3*2, y1=(1:n.spec)+adj.y1/3*2)
-  segments(quantiles[5,], y0=1:n.spec-adj.y0/3*2, y1=(1:n.spec)+adj.y1/3*2)
+  segments(quantiles[1,], seq_len(n.spec), quantiles[5,], seq_len(n.spec))
+  segments(quantiles[1,], y0=seq_len(n.spec)-adj.y0/3*2, y1=seq_len(n.spec)+adj.y1/3*2)
+  segments(quantiles[5,], y0=seq_len(n.spec)-adj.y0/3*2, y1=seq_len(n.spec)+adj.y1/3*2)
   # median
-  segments(quantiles[3,], y0=1:n.spec-adj.y0, y1=(1:n.spec)+adj.y0, lwd=3)
+  segments(quantiles[3,], y0=seq_len(n.spec)-adj.y0, y1=seq_len(n.spec)+adj.y1, lwd=3)
 }
 
 create.tints <- function(colour, vec){
@@ -665,7 +665,7 @@ quantile.rect.plot <- function(quantiles, up=TRUE, colors){
   n.spec <- ncol(quantiles)
   adj.y0 <- ifelse(up, 0, 0.3)
   adj.y1 <- ifelse(up, 0.3, 0)
-  for (i in 1:(nrow(quantiles)/2)){
+  for (i in seq_len(nrow(quantiles)/2)){
     rect(quantiles[i,], (0.5:n.spec)-adj.y0, quantiles[nrow(quantiles)+1-i,], (0.5:n.spec)+adj.y1,
          col = colors[i], border = c("black"), lwd = 0.9)
   }
