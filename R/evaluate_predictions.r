@@ -58,7 +58,7 @@
 #'
 evaluate.predictions <- function(siamcat, verbose = 1) {
     if (verbose > 1)
-        cat("+ starting evaluate.predictions\n")
+        message("+ starting evaluate.predictions")
     label      <- get.label.list(siamcat)
     s.time <- proc.time()[3]
     # TODO compare header to label make sure that label and prediction are in the same order
@@ -69,12 +69,12 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
 
     # ROC curve
     if (verbose > 2)
-        cat("+ calculating ROC\n")
+        message("+ calculating ROC")
     auroc = 0
     if (ncol(pred) > 1) {
         rocc = list(NULL)
         aucs = vector("numeric", ncol(pred))
-        for (c in 1:ncol(pred)) {
+        for (c in seq_len(ncol(pred))) {
             rocc[c] = list(roc(response = label$label, predictor = pred[, c], ci = FALSE))
             aucs[c] = rocc[[c]]$auc
         }
@@ -84,7 +84,7 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     }
     # average data for plotting one mean prediction curve
     if (verbose > 2)
-        cat("+ calculating mean ROC\n")
+        message("+ calculating mean ROC")
     summ.stat = "mean"
     rocsumm = list(roc(response = label$label, predictor = apply(pred, 1, summ.stat), ci = TRUE, of = "se",
         sp = seq(0, 1, 0.05)))
@@ -94,7 +94,7 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     ev = list(NULL)
     if (ncol(pred) > 1) {
         aucspr = vector("numeric", dim(pred)[2])
-        for (c in 1:ncol(pred)) {
+        for (c in seq_len(ncol(pred))) {
             ev[c] = list(evaluate.classifier(pred[, c], label$label, label, verbose = verbose))
             pr[c] = list(evaluate.get.pr(ev[[c]], verbose = verbose))
             aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose = verbose)
@@ -106,19 +106,19 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     }
     if (ncol(pred) > 1) {
         if (verbose > 2)
-            cat("+ evaluating multiple predictions\n")
+            message("+ evaluating multiple predictions")
         siamcat@eval_data <- list(roc.all = rocc, auc.all = aucs, roc.average = rocsumm, auc.average = auroc, ev.list = ev,
             pr.list = pr, aucspr = aucspr)
     } else {
         if (verbose > 2)
-            cat("+ evaluating single prediction\n")
+            message("+ evaluating single prediction")
         siamcat@eval_data <- list(roc.average = rocsumm, auc.average = auroc, ev.list = ev, pr.list = pr)
     }
     e.time <- proc.time()[3]
     if (verbose > 1)
-        cat("+ finished evaluate.predictions in", e.time - s.time, "s\n")
+        message(paste("+ finished evaluate.predictions in", formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
-        cat("Evaluated predictions successfully.\n")
+        message("Evaluated predictions successfully.")
     return(siamcat)
 }
 
@@ -128,7 +128,7 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
 #' @keywords internal
 evaluate.classifier <- function(predictions, test.label, label, verbose = 0) {
     if (verbose > 2)
-        cat("+ starting evaluate.classifier\n")
+        message("+ starting evaluate.classifier")
     stopifnot(dim(test.label) == NULL)
     stopifnot(length(unique(test.label)) == 2)
     stopifnot(all(is.finite(predictions)))
@@ -142,42 +142,28 @@ evaluate.classifier <- function(predictions, test.label, label, verbose = 0) {
         # assuming that a single model was applied to predict the data set
         stopifnot(length(test.label) == length(predictions))
         # actual evaluations per threshold value
-        tp = vector("numeric", length(thr))
-        fp = vector("numeric", length(thr))
-        tn = vector("numeric", length(thr))
-        fn = vector("numeric", length(thr))
-        for (i in 1:length(thr)) {
-            tp[i] = sum(test.label == label$positive.lab & predictions > thr[i])
-            fp[i] = sum(test.label == label$negative.lab & predictions > thr[i])
-            tn[i] = sum(test.label == label$negative.lab & predictions < thr[i])
-            fn[i] = sum(test.label == label$positive.lab & predictions < thr[i])
-        }
+        tp = vapply(thr, FUN=function(x){sum(test.label == label$positive.lab & predictions > x)}, USE.NAMES = FALSE, FUN.VALUE = integer(1))
+        fp = vapply(thr, FUN=function(x){sum(test.label == label$negative.lab & predictions > x)}, USE.NAMES = FALSE, FUN.VALUE = integer(1))
+        tn = vapply(thr, FUN=function(x){sum(test.label == label$negative.lab & predictions < x)}, USE.NAMES = FALSE, FUN.VALUE = integer(1))
+        fn = vapply(thr, FUN=function(x){sum(test.label == label$positive.lab & predictions < x)}, USE.NAMES = FALSE, FUN.VALUE = integer(1))
     } else {
         # assuming that several models were applied to predict the same data and predictions of each model occupy one
         # column
         stopifnot(length(test.label) == nrow(predictions))
-        tp = matrix(0, nrow = length(thr), ncol = ncol(predictions))
-        fp = matrix(0, nrow = length(thr), ncol = ncol(predictions))
-        tn = matrix(0, nrow = length(thr), ncol = ncol(predictions))
-        fn = matrix(0, nrow = length(thr), ncol = ncol(predictions))
-        for (c in 1:ncol(predictions)) {
-            for (r in 1:length(t)) {
-                tp[r, c] = sum(test.label == label$positive.lab & predictions[, c] > thr[r])
-                fp[r, c] = sum(test.label == label$negative.lab & predictions[, c] > thr[r])
-                tn[r, c] = sum(test.label == label$negative.lab & predictions[, c] < thr[r])
-                fn[r, c] = sum(test.label == label$positive.lab & predictions[, c] < thr[r])
-            }
-        }
+        tp = t(tp = vapply(thr, FUN=function(x){apply(predictions, 2, FUN=function(y){sum(test.label == label$positive.lab & y > x)})}, USE.NAMES = FALSE, FUN.VALUE = integer(2)))
+        fp = t(tp = vapply(thr, FUN=function(x){apply(predictions, 2, FUN=function(y){sum(test.label == label$negative.lab & y > x)})}, USE.NAMES = FALSE, FUN.VALUE = integer(2)))
+        tn = t(tp = vapply(thr, FUN=function(x){apply(predictions, 2, FUN=function(y){sum(test.label == label$negative.lab & y < x)})}, USE.NAMES = FALSE, FUN.VALUE = integer(2)))
+        fn = t(tp = vapply(thr, FUN=function(x){apply(predictions, 2, FUN=function(y){sum(test.label == label$positive.lab & y < x)})}, USE.NAMES = FALSE, FUN.VALUE = integer(2)))
     }
     if (verbose > 2)
-        cat("+ finished evaluate.classifier\n")
+        message("+ finished evaluate.classifier")
     return(list(tp = tp, tn = tn, fp = fp, fn = fn, thresholds = thr))
 }
 
 # calculates the area under a curve using a trapezoid approximation
 evaluate.area.trapez = function(x, y, verbose = 0) {
     if (verbose > 2)
-        cat("+ starting evaluate.area.trapez\n")
+        message("+ starting evaluate.area.trapez")
     if (x[1] > x[length(x)]) {
         x = rev(x)
         y = rev(y)
@@ -185,31 +171,31 @@ evaluate.area.trapez = function(x, y, verbose = 0) {
     xd = x[-1] - x[-length(x)]
     ym = 0.5 * (y[-1] + y[-length(y)])
     if (verbose > 2)
-        cat("+ finished evaluate.area.trapez\n")
+        message("+ finished evaluate.area.trapez")
     return(xd %*% ym)
 }
 
 # returns a vector of x and y values for plotting a precision-recall curve
 evaluate.get.pr = function(eval, verbose = 0) {
     if (verbose > 2)
-        cat("+ starting evaluate.get.pr\n")
+        message("+ starting evaluate.get.pr")
     tpr = eval$tp/(eval$tp + eval$fn)
     ppv = eval$tp/(eval$tp + eval$fp)
     # at thresholds where the classifier makes no positive predictions at all, we (somewhat arbitrarily) set its
     # precision to 1
     ppv[is.na(ppv)] = 1
     if (verbose > 2)
-        cat("+ finished evaluate.get.pr\n")
+        message("+ finished evaluate.get.pr")
     return(list(x = tpr, y = ppv))
 }
 
 # calculates the area under the precision-recall curve (over the interval [0, max.tpr], if specified)
 evaluate.calc.aupr = function(eval, max.tpr = 1, verbose = 0) {
     if (verbose > 2)
-        cat("+ starting evaluate.calc.aupr\n")
+        message("+ starting evaluate.calc.aupr")
     pr = evaluate.get.pr(eval, verbose = verbose)
     idx = pr$x <= max.tpr
     if (verbose > 2)
-        cat("+ finished evaluate.calc.aupr\n")
+        message("+ finished evaluate.calc.aupr")
     return(evaluate.area.trapez(pr$x[idx], pr$y[idx]))
 }
