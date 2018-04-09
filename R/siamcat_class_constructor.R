@@ -32,7 +32,7 @@ siamcat <- function(...) {
   # ignore all but component data classes.
   component_classes <- get.component.classes("both")
 
-  for (argNr in 1:length(arglist)) {
+  for (argNr in seq_len(length(arglist))) {
     classOfArg <- class(arglist[[argNr]])[1]
     if (classOfArg %in% names(component_classes)) {
       names(arglist)[argNr] <- component_classes[classOfArg]
@@ -40,10 +40,10 @@ siamcat <- function(...) {
   }
 
   if (is.null(arglist$phyloseq)) {
-    arglistphyloseq <- arglist[sapply(names(arglist), is.component.class, "phyloseq")]
+    arglistphyloseq <- arglist[vapply(names(arglist), is.component.class, "phyloseq", FUN.VALUE=logical(1))]
     arglist$phyloseq <- do.call("new", c(list(Class = "phyloseq"), arglistphyloseq))
   }
-  arglist <- arglist[sapply(names(arglist), is.component.class, "siamcat")]
+  arglist <- arglist[vapply(names(arglist), is.component.class, "siamcat", FUN.VALUE=logical(1))]
   sc <- do.call("new", c(list(Class = "siamcat"), arglist))
   return(sc)
 }
