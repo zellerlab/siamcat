@@ -53,13 +53,12 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         num.folds <- siamcat@data_split@num.folds
         num.resample <- siamcat@data_split@num.resample
 
-        pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac), dimnames = list(names(label.fac), paste0("CV_rep",
-            1:num.resample)))
+        pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac), dimnames = list(names(label.fac), paste0("CV_rep", seq_len(num.resample))))
         i = 1
         if (verbose == 1 || verbose == 2)
             pb <- txtProgressBar(max = num.folds * num.resample, style = 3)
-        for (f in 1:num.folds) {
-            for (r in 1:num.resample) {
+        for (f in seq_len(num.folds)) {
+            for (r in seq_len(num.resample)) {
 
                 test.label <- label.fac[siamcat@data_split@test.folds[[r]][[f]]]
                 data <- as.data.frame(feat[siamcat@data_split@test.folds[[r]][[f]], ])
@@ -113,11 +112,10 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         # prediction
         num.models <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
 
-        pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test), dimnames = list(rownames(feat.test), paste0("Model_",
-            1:num.models)))
+        pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test), dimnames = list(rownames(feat.test), paste0("Model_", seq_len(num.models))))
         if (verbose == 1 || verbose == 2)
             pb <- txtProgressBar(max = num.folds * num.resample, style = 3)
-        for (i in 1:num.models) {
+        for (i in seq_len(num.models)) {
 
             data <- as.data.frame(feat.test)
             model <- siamcat@model_list@models[[i]]

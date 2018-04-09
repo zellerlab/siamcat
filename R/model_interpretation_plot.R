@@ -139,7 +139,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     plot(NULL, type = "n", xlim = c(0, length(hm.label)), xaxs = "i", xaxt = "n", ylim = c(-0.5, 0.5), yaxs = "i",
         yaxt = "n", xlab = "", ylab = "", bty = "n")
     ul <- unique(hm.label)
-    for (l in 1:length(ul)) {
+    for (l in seq_along(ul)) {
         idx <- which(ul[l] == hm.label)
         lines(c(idx[1] - 0.8, idx[length(idx)] - 0.2), c(0, 0))
         lines(c(idx[1] - 0.8, idx[1] - 0.8), c(-0.2, 0))
@@ -240,10 +240,10 @@ plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label, verbose 
             max(abs(mi), max(mx))), ylim = c(0, dim(relative.weights)[1]), xlab = "", ylab = "", yaxt = "n", add = TRUE)
 
         # error bars
-        arrows(y0 = c(1:length(med)) - 0.5, x0 = -upp.qt, x1 = -low.qt, angle = 90, code = 3, length = 0.04)
+        arrows(y0 = c(seq_along(med)) - 0.5, x0 = -upp.qt, x1 = -low.qt, angle = 90, code = 3, length = 0.04)
         mtext("median relative feat. weight", side = 1, line = 2, at = 0, cex = 0.7, adj = 0.5)
         # robustness indicated as percentage of models including a given feature (to the right of the barplot)
-        for (f in 1:length(sel.idx)) {
+        for (f in seq_along(sel.idx)) {
             t = paste(format(100 * sum(rel.weights[sel.idx[f], ] != 0)/dim(rel.weights)[2], digits = 1, scientific = FALSE),
                 "%", sep = "")
             mtext(t, side = 4, line = 2.5, at = (f - 0.5), cex = max(0.3, 0.8 - 0.01 * length(sel.idx)), las = 2, adj = 1)
@@ -270,7 +270,7 @@ plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label, verbose 
             dim(relative.weights)[1]), xlab = "", ylab = "", yaxt = "n", add = TRUE)
 
         # error bars
-        arrows(y0 = c(1:length(med)) - 0.5, x0 = -upp.qt, x1 = -low.qt, angle = 90, code = 3, length = 0.04)
+        arrows(y0 = c(seq_along(med)) - 0.5, x0 = -upp.qt, x1 = -low.qt, angle = 90, code = 3, length = 0.04)
         # labels
         mtext("median relative Gini coefficient", side = 1, line = 2, at = mx/2, cex = 0.7, adj = 0.5)
         mtext("effect size", side = 3, line = 1, at = (mx/2), cex = 0.7, adj = 0.5)
@@ -290,7 +290,7 @@ plot.pred.and.meta <- function(prediction, label, meta = NULL, verbose = 0) {
     if (!is.null(meta)) {
         img.data = cbind(meta[, dim(meta)[2]:1], img.data)
         ### transform any categorial column into a numeric one
-        for (m in 1:dim(img.data)[2]) {
+        for (m in seq_len(ncol(img.data))) {
             img.data[, m] = (img.data[, m] - min(img.data[, m], na.rm = TRUE))
             if (max(img.data[, m], na.rm = TRUE) != 0) {
                 img.data[, m] = img.data[, m]/max(img.data[, m], na.rm = TRUE)
@@ -304,14 +304,14 @@ plot.pred.and.meta <- function(prediction, label, meta = NULL, verbose = 0) {
     # add deliminator between the different classes
     abline(v = length(which(label@label == label@negative.lab))/length(label@label), col = "red")
 
-    meta.cex = max(0.3, 0.7 - 0.01 * dim(img.data)[2])
-    for (m in 1:dim(img.data)[2]) {
+    meta.cex = max(0.3, 0.7 - 0.01 * ncol(img.data))
+    for (m in seq_len(ncol(img.data))) {
         t = colnames(img.data)[m]
         t = gsub("\\.|_", " ", t)
         mtext(t, side = 4, line = 1, at = (m - 1)/(dim(img.data)[2] - 1), cex = meta.cex, las = 2)
     }
     # mark missing values
-    for (m in 1:dim(img.data)[2]) {
+    for (m in seq_len(ncol(img.data))) {
         idx = which(is.na(img.data[, m]))
         for (i in idx) {
             x = (i - 1)/(dim(img.data)[1] - 1)
@@ -351,13 +351,13 @@ plot.heatmap <- function(image.data, limits, color.scheme, effect.size, verbose 
     par(mar = c(0.1, 4.1, 0, 5.1))
     image(image.data, zlim = limits, col = color.scheme, xaxt = "n", yaxt = "n", xlab = "", ylab = "", bty = "n")
     if (!is.null(effect.size)) {
-        for (f in 1:dim(image.data)[2]) {
+        for (f in seq_len(ncol(image.data))) {
             mtext(colnames(image.data)[f], side = 4, line = 1, at = (f - 1)/(dim(image.data)[2] - 1), las = 2, cex = max(0.3,
                 0.8 - 0.01 * dim(image.data)[2]), col = ifelse(effect.size[f] > 0, color.scheme[1 + 4], color.scheme[length(color.scheme) -
                 4]))
         }
     } else {
-        for (f in 1:dim(image.data)[2]) {
+        for (f in seq_len(ncol(image.data))) {
             mtext(colnames(image.data)[f], side = 4, line = 1, at = (f - 1)/(dim(image.data)[2] - 1), las = 2, cex = max(0.3,
                 0.8 - 0.01 * dim(image.data)[2]), col = "black")
         }
@@ -472,7 +472,7 @@ get.weights.matrix <- function(models.list, verbose = 0) {
         W.mat <- cbind(W.mat, as.numeric(models.list[[i]]$feat.weights))
     }
     rownames(W.mat) <- models.list[[1]]$features
-    colnames(W.mat) <- paste("M", 1:ncol(W.mat), sep = "_")
+    colnames(W.mat) <- paste("M", seq_len(ncol(W.mat)), sep = "_")
     if (verbose > 2)
         message("+ finished get.weights.matrix")
     return(W.mat)

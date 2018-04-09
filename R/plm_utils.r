@@ -11,7 +11,7 @@ train.plm <- function(data, method = c("lasso", "enet", "ridge", "lasso_ll", "ri
     ## 1) Define the task Specify the type of analysis (e.g. classification) and provide data and response variable
     ## assert that the label for the first patient is always the same in order for lasso_ll to work correctly
     if (data$label[1] != neg.lab) {
-        data <- data[c(which(data$label == neg.lab)[1], c(1:nrow(data))[-which(data$label == neg.lab)[1]]), ]
+        data <- data[c(which(data$label == neg.lab)[1], c(seq_len(nrow(data)))[-which(data$label == neg.lab)[1]]), ]
     }
     task <- makeClassifTask(data = data, target = "label")
     ## 2) Define the learner Choose a specific algorithm (e.g. linear discriminant analysis)

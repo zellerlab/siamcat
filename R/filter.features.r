@@ -83,11 +83,11 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
         # that collectively make up (1-cutoff) of the reads in any sample
         f.idx <- vector("numeric", 0)
         # sort features per sample and apply cumsum to identify how many collectively have weight K
-        for (s in 1:ncol(ra.feat)) {
+        for (s in seq_len(ncol(ra.feat))) {
             srt <- sort(ra.feat[, s], index.return = TRUE)
             cs <- cumsum(srt$x)
             m <- max(which(cs < cutoff))
-            f.idx <- union(f.idx, srt$ix[-(1:m)])
+            f.idx <- union(f.idx, srt$ix[-(seq_len(m))])
         }
         # an index of those features that collectively make up more than 1-K of the read mass in any sample
         f.idx <- sort(f.idx)

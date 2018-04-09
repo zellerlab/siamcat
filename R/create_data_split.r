@@ -177,9 +177,9 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL,
         if (any(as.data.frame(table(label))[, 2] < num.folds)) {
             stop("+++ Number of CV folds is too large for this data set to maintain stratification. Reduce num.folds or turn stratification off. Exiting.")
         }
-        for (c in 1:length(classes)) {
+        for (c in seq_along(classes)) {
             idx <- which(label == classes[c])
-            foldid[idx] <- sample(rep(1:num.folds, length.out = length(idx)))
+            foldid[idx] <- sample(rep(seq_len(num.folds), length.out = length(idx)))
         }
     } else {
         # If stratify is not TRUE, make sure that num.sample is not bigger than number.folds
@@ -189,14 +189,14 @@ assign.fold <- function(label, num.folds, stratified, inseparable = NULL,
         }
         if (!is.null(inseparable)) {
             strata <- unique(meta[, inseparable])
-            sid <- sample(rep(1:num.folds, length.out = length(strata)))
-            for (s in 1:length(strata)) {
+            sid <- sample(rep(seq_len(num.folds), length.out = length(strata)))
+            for (s in seq_along(strata)) {
                 idx <- which(meta[, inseparable] == strata[s])
                 foldid[idx] <- sid[s]
             }
             stopifnot(all(!is.na(foldid)))
         } else {
-            foldid <- sample(rep(1:num.folds, length.out = length(label)))
+            foldid <- sample(rep(seq_len(num.folds), length.out = length(label)))
         }
     }
     # make sure that for each test fold the training fold (i.e. all other folds together) contain examples from all

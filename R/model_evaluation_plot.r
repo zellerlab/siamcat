@@ -36,7 +36,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     abline(a = 0, b = 1, lty = 3)
     if (dim(siamcat@pred_matrix)[2] > 1) {
         aucs = vector("numeric", dim(siamcat@pred_matrix)[2])
-        for (c in 1:dim(siamcat@pred_matrix)[2]) {
+        for (c in seq_len(ncol(pred_matrix(siamcat)))) {
             roc.c = siamcat@eval_data$roc.all[[c]]
             lines(1 - roc.c$specificities, roc.c$sensitivities, col = gray(runif(1, 0.2, 0.8)))
             aucs[c] = siamcat@eval_data$auc.all[c]
@@ -76,7 +76,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
 
     if (dim(siamcat@pred_matrix)[2] > 1) {
         aucspr = vector("numeric", dim(siamcat@pred_matrix)[2])
-        for (c in 1:dim(siamcat@pred_matrix)[2]) {
+        for (c in seq_len(ncol(pred_matrix(siamcat)))) {
             ev = siamcat@eval_data$ev.list[[c]]
             pr = siamcat@eval_data$pr.list[[c]]
             lines(pr$x, pr$y, col = gray(runif(1, 0.2, 0.8)))
