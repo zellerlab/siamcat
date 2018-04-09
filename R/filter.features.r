@@ -54,7 +54,7 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
     ### manually.
 
     if (verbose > 1)
-        cat("+ starting filter.features\n")
+        message("+ starting filter.features")
     s.time <- proc.time()[3]
 
     if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")) {
@@ -62,7 +62,7 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
     }
 
     if (verbose > 1)
-        cat("+++ before filtering, the data has", nrow(features(siamcat)), "features\n")
+        message(paste("+++ before filtering, the data has", nrow(features(siamcat)), "features"))
     if (recomp.prop) {
         # recompute relative abundance values (proportions)
         ra.feat <- prop.table(features(siamcat), 2)
@@ -73,7 +73,7 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
 
     ### apply filters
     if (verbose > 2)
-        cat("+++ applying", filter.method, "filter\n")
+        message(paste("+++ applying", filter.method, "filter"))
     if (filter.method == "abundance") {
         # remove features whose abundance is never above the threshold value (e.g. 0.5%) in any of the samples
         f.max <- apply(ra.feat, 1, max)
@@ -99,7 +99,7 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
 
 
     if (verbose > 2)
-        cat("+++ checking for unmapped reads\n")
+        message("+++ checking for unmapped reads")
     ### postprocessing and output generation
     if (rm.unmapped) {
         # remove 'unmapped' feature
@@ -108,25 +108,25 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
         if (any(unm.idx)) {
             f.idx <- f.idx[-which(f.idx %in% unm.idx)]
             if (verbose > 2)
-                cat("+++ removing ", rownames(features(siamcat))[unm.idx], " as unmapped reads\n")
+                message(paste("+++ removing", rownames(features(siamcat))[unm.idx], "as unmapped reads"))
             if (verbose > 1)
-                cat("+++ removed ", sum(unm.idx), " features corresponding to UNMAPPED reads\n", sep = "")
+                message(paste("+++ removed", sum(unm.idx), "features corresponding to UNMAPPED reads"))
         } else {
             if (verbose > 1)
-                cat("+++ tried to remove unmapped reads, but could not find them. Continue anyway.\n")
+                message("+++ tried to remove unmapped reads, but could not find them. Continue anyway.")
         }
     }
     if (verbose > 2)
-        cat("+++ applying prune_taxa\n")
+        message("+++ applying prune_taxa")
     if (verbose > 1)
-        cat("+++ removed ", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), " features whose values did not exceed ",
-            cutoff, " in any sample (retaining ", length(f.idx), ")\n", sep = "")
+        message(paste("+++ removed", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), "features whose values did not exceed",
+            cutoff, "in any sample (retaining", length(f.idx), ")"))
     f.names <- rownames(features(siamcat))[f.idx]
     physeq(siamcat) <- prune_taxa(x = physeq(siamcat), taxa = f.names)
     e.time <- proc.time()[3]
     if (verbose > 1)
-        cat("+ finished filter.features in", e.time - s.time, "s\n")
+        message(paste("+ finished filter.features in", formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
-        cat("Features successfully filtered\n")
+        message("Features successfully filtered")
     return(siamcat)
 }
