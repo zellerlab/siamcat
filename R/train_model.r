@@ -57,11 +57,14 @@
 #'  # simple working example
 #'  siamcat_validated <- train.model(siamcat_example, method='lasso')
 #'
-train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), stratify = TRUE,
-    modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL, verbose = 1) {
+train.model <- function(siamcat,
+                        method = c("lasso", "enet", "ridge",
+                                   "lasso_ll", "ridge_ll", "randomForest"),
+                        stratify = TRUE, modsel.crit = list("auc"),
+                        min.nonzero.coeff = 1, param.set = NULL, verbose = 1) {
 
     if (verbose > 1)
-        cat("+ starting train.model\n")
+        message("+ starting train.model")
     s.time <- proc.time()[3]
     # check modsel.crit
     if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))) {
@@ -71,7 +74,7 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll"
         measure <- list()
     }
     if (verbose > 2)
-        cat("+++ preparing selection measures\n")
+        message("+++ preparing selection measures")
     for (m in modsel.crit) {
         if (m == "auc") {
             measure[[length(measure) + 1]] <- mlr::auc
@@ -98,20 +101,20 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll"
     num.runs <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
     bar <- 0
     if (verbose > 1)
-        cat("+ training", method, "models on", num.runs, "training sets\n")
+        message(paste("+ training", method, "models on", num.runs, "training sets"))
 
     if (verbose == 1 || verbose == 2)
         pb <- txtProgressBar(max = num.runs, style = 3)
 
-    for (fold in 1:siamcat@data_split@num.folds) {
+    for (fold in seq_len(siamcat@data_split@num.folds)) {
 
         if (verbose > 2)
-            cat("+++ training on cv fold:", fold, "\n")
+            message(paste("+++ training on cv fold:", fold))
 
-        for (resampling in 1:siamcat@data_split@num.resample) {
+        for (resampling in seq_len(siamcat@data_split@num.resample)) {
 
             if (verbose > 2)
-                cat("++++ repetition:", resampling, "\n")
+                message(paste("++++ repetition:", resampling))
 
             fold.name <- paste0("cv_fold", as.character(fold), "_rep", as.character(resampling))
             fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(siamcat@label@label))
@@ -144,9 +147,9 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll"
     e.time <- proc.time()[3]
 
     if (verbose > 1)
-        cat("\n+ finished train.model in", e.time - s.time, "s\n")
+        message(paste("+ finished train.model in", formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
-        cat("\nTrained", method, "models successfully.\n")
+        message(paste("Trained", method, "models successfully."))
 
     return(siamcat)
 }
