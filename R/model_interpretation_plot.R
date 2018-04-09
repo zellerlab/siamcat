@@ -72,11 +72,8 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 2)
         message("+++ retrieving model type")
     W.mat <- get.weights.matrix(siamcat@model_list@models, verbose = verbose)
-    all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep("META", row.names(W.mat), value = TRUE)),
-        ]  # remove possible intercept parameters, but keep possible meta data included in the model
-    rel.weights <- apply(all.weights, 2, function(x) {
-        x/sum(abs(x))
-    })
+    all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep("META", row.names(W.mat), value = TRUE)), ]  # remove possible intercept parameters, but keep possible meta data included in the model
+    rel.weights <- t(t(all.weights)/colSums(abs(all.weights)))
     # ############################################################################ preprocess models
     if (verbose > 2)
         message("+++ preprocessing models")
@@ -92,18 +89,16 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 2)
         message("+++ preparing heatmap")
     if (heatmap.type == "zscore") {
-        feat <- matrix(siamcat@phyloseq@otu_table, nrow = nrow(siamcat@phyloseq@otu_table), ncol = ncol(siamcat@phyloseq@otu_table),
-            dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table)))
+        feat <- features(siamcat)@.Data
         img.data <- prepare.heatmap.zscore(heatmap.data = feat[sel.idx, srt.idx], limits = limits, verbose = verbose)
     } else if (heatmap.type == "fc") {
-        feat <- matrix(siamcat@orig_feat, nrow = nrow(siamcat@orig_feat), ncol = ncol(siamcat@orig_feat), dimnames = list(rownames(siamcat@orig_feat),
-            colnames(siamcat@orig_feat)))
+        feat <- orig_feat(siamcat)@.Data
         if (is.null(detect.lim)) {
             warning("WARNING: Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...")
             detect.lim <- quantile(feat[feat != 0], 0.05)
         }
         img.data <- prepare.heatmap.fc(heatmap.data = feat[, srt.idx], sel.feat = names(sel.idx), limits = limits,
-            meta = siamcat@phyloseq@sam_data, label = siamcat@label, detect.lim = detect.lim, verbose = verbose)
+            meta = meta(siamcat), label = label(siamcat), detect.lim = detect.lim, verbose = verbose)
     } else {
         stop("! unknown heatmap.type: ", heatmap.type)
     }
@@ -183,8 +178,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 2)
         message("+++ plotting heatmap")
     if (siamcat@model_list@model.type != "RandomForest") {
-        plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = apply(rel.weights[sel.idx,
-            ], 1, median), verbose = verbose)
+        plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = rowMedians(rel.weights[sel.idx), verbose = verbose)
     } else {
         auroc.effect <- apply(img.data, 2, FUN = function(f) {
             roc(predictor = f, response = label(siamcat)@label, direction = "<")$auc
@@ -220,9 +214,9 @@ plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label, verbose 
     } else {
         relative.weights <- -rel.weights[sel.idx, ]
     }
-    med = apply(relative.weights, 1, median)
-    low.qt = apply(relative.weights, 1, quantile)[2, ]  # 25%
-    upp.qt = apply(relative.weights, 1, quantile)[4, ]  # 75%
+    med <- rowMedians(relative.weights)
+    low.qt <- rowQuantiles(relative.weights, probs=0.25)
+    upp.qt <- rowQuantiles(relative.weights, probs=0.75)
 
     if (mod.type != "RandomForest") {
         par(mar = c(0.1, 1.1, 0, 1.1))
@@ -371,9 +365,8 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL, labe
     if (verbose > 2)
         message("+ prepare.heatmap.fc")
     if (!any(grepl("META", sel.feat))) {
-        img.data <- apply(heatmap.data[sel.feat, ], 1, FUN = function(x, label, detect.lim) {
-            log10(x + detect.lim) - log10(median(as.numeric(x[label@n.idx])) + detect.lim)
-        }, label = label, detect.lim = detect.lim)
+        feat.log <- log10(heatmap.data[sel.feat,] + detect.lim)
+        img.data <- t(feat.log - log10(rowMedians(heatmap.data[sel.feat,label@n.idx]) + detect.lim))
     } else {
         img.data <- matrix(NA, nrow = length(sel.feat), ncol = ncol(heatmap.data))
         row.names(img.data) <- sel.feat
@@ -406,9 +399,7 @@ prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
     if (verbose > 2)
         message("+ prepare.heatmap.zscore")
     # data is transposed and transformed to feature z-scores for display
-    img.data <- apply(heatmap.data, 1, FUN = function(x) {
-        (x - mean(x))/sd(x)
-    })
+    img.data <-  (heatmap.data - rowMeans(heatmap.data))/rowSds(heatmap.data)
     img.data[img.data < limits[1]] <- limits[1]
     img.data[img.data > limits[2]] <- limits[2]
     if (verbose > 2)
@@ -416,22 +407,19 @@ prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
     return(img.data)
 }
 
-select.features <- function(weights, model.type, consens.thres, norm.models, label, max.show, verbose = 0) {
+select.features <- function(weights, model.type, consens.thres,
+                            norm.models, label, max.show, verbose = 0) {
     message("+ select.features")
     # for linear models, select those that have been selected more than consens.thres percent of the models
     if (model.type != "RandomForest") {
         # normalize by overall model size
         if (norm.models) {
-            weights <- apply(weights, 2, function(x) {
-                x/sum(abs(x))
-            })
+            weights <- t(t(weights)/colSums(abs(weights)))
         }
         sel.idx = which(rowSums(weights != 0)/dim(weights)[2] >= consens.thres)
         # normalize by model size and order features by relative model weight
-        weights.norm <- apply(weights, 2, function(x) {
-            x/sum(abs(x))
-        })
-        med.weights <- apply(weights.norm, 1, median)
+        weights.norm <- t(t(weights)/colSums(abs(weights)))
+        med.weights <- rowMedians(weights.norm)
         median.sorted.features <- sort(med.weights[sel.idx], decreasing = TRUE, index.return = TRUE)
         # restrict to plot at maximum fifty features
         if (length(sel.idx) > max.show) {
@@ -445,10 +433,8 @@ select.features <- function(weights, model.type, consens.thres, norm.models, lab
         }
     } else {
         # for Random Forest, caluclate relative median feature weights and sort by auroc as effect measure
-        weights <- apply(weights, 2, function(x) {
-            x/sum(abs(x))
-        })
-        median.sorted.features <- sort(apply(weights, 1, median), decreasing = FALSE, index.return = TRUE)
+        weights <- t(t(weights)/colSums(abs(weights)))
+        median.sorted.features <- sort(rowMedians(weights), decreasing = FALSE, index.return = TRUE)
         # take the feature with median higher than consens.threshold
         sel.idx <- median.sorted.features$ix[which(median.sorted.features$x >= consens.thres)]
 
