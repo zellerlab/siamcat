@@ -36,9 +36,9 @@ the data, defaults to \code{1e-06}}
 \item{max.show}{integer, how many associated features should be shown,
 defaults to \code{50}}
 
-\item{plot.type}{string, specify how the abundance should be plotted, must be
-one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")},
-defaults to \code{"quantile.box"}}
+\item{plot.type}{string, specify how the abundance should be plotted, must
+be one of these: \code{c("bean", "box", "quantile.box",
+"quantile.rect")}, defaults to \code{"quantile.box"}}
 
 \item{panels}{vector, name of the panels to be plotted next to the log10-
 transformed abundances, possible entries are \code{c("fc", "auroc",
@@ -81,15 +81,17 @@ Shift, and Fold Change)
  check.associations(siamcat_example, './assoc_plot.pdf')
 
  # Plot associations as bean plot
- check.associations(siamcat_example, './assoc_plot_bean.pdf', plot.type='bean')
+ check.associations(siamcat_example, './assoc_plot_bean.pdf',
+   plot.type='bean')
 
  # Plot assocations as box plot
  # Additionally, sort by p-value instead of by fold change
- check.associations(siamcat_example, './assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
+ check.associations(siamcat_example, './assoc_plot_fc.pdf',
+   plot.type='box', sort.by='p.val')
 
  # Custom colors
- check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf', plot.type='box',
-   color.scheme=c('cornflowerblue', '#ffc125'))
+ check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
+   plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
 }
 \keyword{SIAMCAT}
 \keyword{check.associations}

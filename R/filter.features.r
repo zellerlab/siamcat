@@ -69,7 +69,7 @@ filter.features <- function(siamcat, filter.method = "abundance",
         ra.feat <- prop.table(features(siamcat), 2)
         features(siamcat) <- otu_table(ra.feat, taxa_are_rows = TRUE)
     } else {
-        ra.feat <- features(siamcat)
+        ra.feat <- features(siamcat)@.Data
     }
 
     ### apply filters

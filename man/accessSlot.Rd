@@ -13,7 +13,7 @@ accessSlot(siamcat, slot, errorIfNULL=FALSE)
 of the component data type that is desired.}
 }
 \value{
-Returns the component object specified by the argument \code{slot}. 
+Returns the component object specified by the argument \code{slot}.
  Returns NULL if slot does not exist.
 }
 \description{

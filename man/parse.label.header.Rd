@@ -11,7 +11,7 @@ parse.label.header(label.header)
 <L2>=<class2>[;<L3>=<class3>] where <TYPE> is a string specifying the type
 of label variable such as BINARY (for binary classification), CATEGORICAL
 (for multi-class classification), or CONTINUOUS (for regression)
-<L1> is a short numeric label for the first class with description <class1> 
+<L1> is a short numeric label for the first class with description <class1>
 (similarly for the other classes)}
 }
 \value{
