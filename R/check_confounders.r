@@ -58,7 +58,7 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     hmapcolors <- colorRampPalette(brewer.pal(10, "RdYlGn"))
     color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info["BrBG", "maxcolors"], "BrBG"))(100))
 
-    for (m in 1:ncol(meta(siamcat))) {
+    for (m in seq_len(ncol(meta(siamcat)))) {
         mname <- gsub("[_.-]", " ", colnames(meta(siamcat))[m])
         mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep = "")
         if (verbose > 1)
@@ -77,18 +77,12 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
             if (verbose > 1)
                 message("++++ discreet variable, using a bar plot")
 
-            ct <- matrix(NA, nrow = 2, ncol = length(u.val))
+            ct <- vapply(u.val, FUN=function(x){
+              return(c(sum(mvar[label$n.idx] == x, na.rm=TRUE),
+                       sum(mvar[label$p.idx] == x, na.rm=TRUE)))},
+              USE.NAMES = FALSE, FUN.VALUE = integer(2))
 
-            for (i in 1:length(u.val)) {
-                ct[1, i] = sum(mvar[label$n.idx] == u.val[i], na.rm = TRUE)  # ctr
-                ct[2, i] = sum(mvar[label$p.idx] == u.val[i], na.rm = TRUE)  # cases
-
-            }
-            freq <- t(ct)
-
-            for (i in 1:dim(freq)[2]) {
-                freq[, i] <- freq[, i]/sum(freq[, i])
-            }
+            freq <- t(ct/rowSums(ct))
 
             if (verbose > 2)
                 message("++++ plotting barplot")
