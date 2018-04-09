@@ -178,7 +178,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 2)
         message("+++ plotting heatmap")
     if (siamcat@model_list@model.type != "RandomForest") {
-        plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = rowMedians(rel.weights[sel.idx), verbose = verbose)
+        plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = rowMedians(rel.weights[sel.idx,]), verbose = verbose)
     } else {
         auroc.effect <- apply(img.data, 2, FUN = function(f) {
             roc(predictor = f, response = label(siamcat)@label, direction = "<")$auc
