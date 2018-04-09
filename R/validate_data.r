@@ -97,7 +97,7 @@ validate.data <- function(siamcat, verbose = 1) {
     siamcat@orig_feat <- otu_table(siamcat@phyloseq)
     e.time <- proc.time()[3]
     if (verbose > 1)
-        message(paste(("+ finished validate.data in", formatC(e.time - s.time, digits=3), "s"))
+        message(paste("+ finished validate.data in", formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
         message("Data succesfully validated")
     return(siamcat)
