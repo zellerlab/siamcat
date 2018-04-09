@@ -90,7 +90,7 @@ normalize.features <- function(siamcat,
     if (verbose > 1)
         message("+ starting normalize.features")
     s.time <- proc.time()[3]
-    feat <- siamcat@phyloseq@otu_table
+    feat <- features(feat)@.Data
 
     if (is.null(norm.param$norm.method)) {
         # de novo normalization
@@ -101,18 +101,18 @@ normalize.features <- function(siamcat,
         if (any(!keep.idx)) {
             feat.red.na <- feat[keep.idx, ]
             if (verbose > 1) {
-                message(paste("+++ removed ", nrow(feat.red.na) - nrow(feat), " features with missing values (retaining ", nrow(feat.red.na),
+                message(paste0("+++ removed ", nrow(feat.red.na) - nrow(feat), " features with missing values (retaining ", nrow(feat.red.na),
                   ")"))
             }
         } else {
             feat.red.na <- feat
         }
         ### remove features with zero sd
-        keep.idx.sd <- (apply(feat.red.na, 1, sd) == 0)
+        keep.idx.sd <- (rowSds(feat.red.na) == 0)
         if (any(keep.idx.sd)) {
             feat.red <- feat.red.na[!keep.idx.sd, ]
             if (verbose > 1) {
-                message(paste("+++ removed ", nrow(feat.red.na) - nrow(feat.red), " features with no variation across samples (retaining ",
+                message(paste0("+++ removed ", nrow(feat.red.na) - nrow(feat.red), " features with no variation across samples (retaining ",
                   nrow(feat.red), ")"))
             }
         } else {
@@ -150,45 +150,39 @@ normalize.features <- function(siamcat,
         par$norm.margin <- norm.param$norm.margin
 
         if (verbose > 1)
-            message(paste("+ feature sparsity before normalization: ", 100 * mean(feat.red == 0), "%"))
+            message(paste0("+ feature sparsity before normalization: ", formatC(100 * mean(feat.red == 0), digits=4), "%"))
         # normalization
         if (verbose > 2)
             message("+++ performing normalization")
         if (norm.method == "rank.unit") {
-            feat.rank <- apply(feat.red, 2, rank, ties.method = "average")
-            stopifnot(!any(is.na(feat)))
-            feat.norm <- apply(feat.rank, 2, FUN = function(x) {
-                x/sqrt(sum(x^2))
-            })
+            feat.rank <- colRanks(feat.red, preserveShape = TRUE, ties.method = 'average')
+            stopifnot(!any(is.na(feat.rank)))
+            feat.norm <- t(t(feat.rank)/sqrt(colSums(feat.rank^2)))
+            dimnames(feat.norm) <- dimnames(feat.red)
         } else if (norm.method == "log.clr") {
-            feat.log <- feat.red + norm.param$log.n0
-            gm <- apply(feat.log, 1, FUN = function(x) {
-                exp(mean(log(x)))
-            })
-            feat.norm <- t(apply(feat.log, 1, FUN = function(x) {
-                log(x/exp(mean(log(x))))
-            }))
+            gm <- exp(rowMeans(log(feat.red + norm.param$log.n0)))
+            feat.norm <- log((feat.red + norm.param$log.n0)/gm)
             par$geometric.mean <- gm
         } else if (norm.method == "rank.std") {
-            feat.rank <- apply(feat.red, 2, rank, ties.method = "average")
-            m <- apply(feat.rank, 1, mean)
-            s <- apply(feat.rank, 1, sd)
+            feat.rank <- colRanks(feat.red, preserveShape = TRUE, ties.method = 'average')
+            m <- rowMeans(feat.rank)
+            s <- rowSds(feat.rank)
             q <- quantile(s, norm.param$sd.min.q, names = FALSE)
             stopifnot(q > 0)
-            feat.norm <- t(apply(feat.rank, 1, FUN = function(x, q) {
-                (x - mean(x))/(sd(x) + q)
-            }, q = q))
+            feat.norm <- (feat.rank - m)/(s + q)
+            names(m) <- rownames(feat.rank)
+            names(s) <- rownames(feat.rank)
             par$feat.mean <- m
             par$feat.adj.sd <- s + q
         } else if (norm.method == "log.std") {
             feat.log <- log10(feat.red + norm.param$log.n0)
-            m <- apply(feat.log, 1, mean)
-            s <- apply(feat.log, 1, sd)
+            m <- rowMeans(feat.log)
+            s <- rowSds(feat.log)
             q <- quantile(s, norm.param$sd.min.q, names = FALSE)
             stopifnot(q > 0)
-            feat.norm <- t(apply(feat.log, 1, FUN = function(x, q) {
-                (x - mean(x))/(sd(x) + q)
-            }, q = q))
+            feat.norm <- (feat.log - m)/(s + q)
+            names(m) <- rownames(feat.log)
+            names(s) <- rownames(feat.log)
             par$feat.mean <- m
             par$feat.adj.sd <- s + q
         } else if (norm.method == "log.unit") {
@@ -220,7 +214,7 @@ normalize.features <- function(siamcat,
             }
         }
         if (verbose > 1)
-            message(paste("+++ feature sparsity after normalization: ", 100 * mean(feat.norm == 0), "%"))
+            message(paste("+++ feature sparsity after normalization: ", formatC(100 * mean(feat.norm == 0), digits=4), "%"))
         stopifnot(!any(is.na(feat.norm)))
         siamcat@norm_param <- par
         siamcat@norm_param$norm.method <- norm.method
@@ -233,16 +227,16 @@ normalize.features <- function(siamcat,
         feat.red <- feat[norm.param$retained.feat, ]
 
         if (verbose > 1)
-            message(paste("+ feature sparsity before normalization: ", 100 * mean(feat.red == 0), "%"))
+            message(paste0("+ feature sparsity before normalization: ", formatC(100 * mean(feat.red == 0),digits=4), "%"))
 
         # normalization
         if (verbose > 2)
             message("+++ performing normalization")
         if (norm.param$norm.method == "rank.unit") {
-            feat.rank <- apply(feat.red, 2, rank, ties.method = "average")
-            feat.norm <- apply(feat.rank, 2, FUN = function(x) {
-                x/sqrt(sum(x^2))
-            })
+            feat.rank <- colRanks(feat.red, preserveShape = TRUE, ties.method = 'average')
+            stopifnot(!any(is.na(feat.rank)))
+            feat.norm <- t(t(feat.rank)/sqrt(colSums(feat.rank^2)))
+            dimnames(feat.norm) <- dimnames(feat.red)
         } else if (norm.param$norm.method == "log.clr") {
             stopifnot(!is.null(norm.param$log.n0) && !is.null(norm.param$geometric.mean) && all(names(norm.param$geometric.mean) ==
                 row.names(feat.red)))
@@ -251,7 +245,8 @@ normalize.features <- function(siamcat,
         } else if (norm.param$norm.method == "rank.std") {
             stopifnot(!is.null(norm.param$feat.mean) && !is.null(norm.param$feat.adj.sd) && all(names(norm.param$feat.mean) ==
                 row.names(feat.red)) && all(names(norm.param$feat.adj.s) == row.names(feat.red)))
-            feat.rank <- apply(feat.red, 2, rank, ties.method = "average")
+            feat.rank <- colRanks(feat.red, preserveShape = TRUE, ties.method = 'average')
+            dimnames(feat.rank) <- dimnames(feat.red)
             feat.norm <- (feat.rank - norm.param$feat.mean)/norm.param$feat.adj.s
         } else if (norm.param$norm.method == "log.std") {
             stopifnot(!is.null(norm.param$log.n0) && !is.null(norm.param$feat.mean) && !is.null(norm.param$feat.adj.sd) &&
@@ -273,7 +268,7 @@ normalize.features <- function(siamcat,
             }
         }
         if (verbose > 1)
-            message(paste("+ feature sparsity after normalization: ", 100 * mean(feat.norm == 0), "%"))
+            message(paste0("+ feature sparsity after normalization: ", formatC(100 * mean(feat.norm == 0), digits=4), "%"))
         stopifnot(!any(is.na(feat.norm)))
 
     }

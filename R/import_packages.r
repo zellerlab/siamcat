@@ -17,6 +17,6 @@
 #' @importFrom grid popViewport pushViewport plotViewport
 #' @importFrom gridBase baseViewports
 #' @importFrom gridExtra ttheme_minimal grid.table
-#' @importFrom matrixStats rowQuantiles rowMaxs
+#' @importFrom matrixStats rowQuantiles rowMaxs rowSds colRanks
 
 NULL
