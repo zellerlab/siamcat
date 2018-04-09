@@ -46,8 +46,9 @@
 #'
 #' # Simple examples
 #' siamcat_filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)
-filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE,
-    verbose = 1) {
+filter.features <- function(siamcat, filter.method = "abundance",
+                            cutoff = 0.001, recomp.prop = FALSE,
+                            rm.unmapped = TRUE, verbose = 1) {
     ### this statement does not have the purpose to calculate relative abundances on the fly and return them.  Instead,
     ### it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept) when
     ### feature list has already been transformed to relative abundances, but e.g. certain features have been removed
@@ -76,7 +77,7 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
         message(paste("+++ applying", filter.method, "filter"))
     if (filter.method == "abundance") {
         # remove features whose abundance is never above the threshold value (e.g. 0.5%) in any of the samples
-        f.max <- apply(ra.feat, 1, max)
+        f.max <- rowMaxs(ra.feat)
         f.idx <- which(f.max >= cutoff)
     } else if (filter.method == "cum.abundance") {
         # remove features with very low abundance in all samples i.e. ones that are never among the most abundant entities
