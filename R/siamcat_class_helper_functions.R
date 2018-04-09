@@ -42,7 +42,7 @@ filter.label <- function(siamcat, ids, verbose = 1) {
   labels_new@p.idx <- labels_new@label == labels_new@positive.lab
 
   if (verbose > 0)
-    cat("Keeping labels of", length(labels_new@label), "sample(s).\n")
+    message(paste("Keeping labels of", length(labels_new@label), "sample(s)."))
 
   siamcat@label <- labels_new
   return(siamcat)
