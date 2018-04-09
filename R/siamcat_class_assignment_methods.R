@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial
-### Communities And host phenoTypes
-### EMBL Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between
+### Microbial Communities And host phenoTypes R flavor EMBL
+### Heidelberg 2012-2018 GNU GPL 3.0
 
 ################################################################################
 #' Assign a new phyloseq object to \code{x}
@@ -43,7 +43,7 @@ setGeneric("label<-", function(x, value) standardGeneric("label<-"))
 #' @rdname assign-label
 #' @aliases label<-
 setMethod("label<-", c("siamcat","label"), function(x, value){
-  siamcat(value, x@model_list, x@eval_data, x@phyloseq, x@orig_feat, 
+  siamcat(value, x@model_list, x@eval_data, x@phyloseq, x@orig_feat,
           x@norm_param, x@data_split, x@pred_matrix)
 })
 
@@ -65,7 +65,7 @@ setGeneric("model_list<-", function(x, value) standardGeneric("model_list<-"))
 #' @rdname assign-model_list
 #' @aliases model_list<-
 setMethod("model_list<-", c("siamcat","model_list"), function(x, value){
-  siamcat(value, x@label, x@eval_data, x@phyloseq, x@orig_feat, 
+  siamcat(value, x@label, x@eval_data, x@phyloseq, x@orig_feat,
           x@norm_param, x@data_split, x@pred_matrix)
 })
 
@@ -87,7 +87,7 @@ setGeneric("eval_data<-", function(x, value) standardGeneric("eval_data<-"))
 #' @rdname assign-eval_data
 #' @aliases eval_data<-
 setMethod("eval_data<-", c("siamcat","list"), function(x, value){
-  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat,
           x@norm_param, x@data_split, x@pred_matrix)
 })
 
@@ -109,7 +109,7 @@ setGeneric("norm_param<-", function(x, value) standardGeneric("norm_param<-"))
 #' @rdname assign-norm_param
 #' @aliases norm_param<-
 setMethod("norm_param<-", c("siamcat","list"), function(x, value){
-  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat,
           x@eval_data, x@data_split, x@pred_matrix)
 })
 
@@ -131,7 +131,7 @@ setGeneric("pred_matrix<-", function(x, value) standardGeneric("pred_matrix<-"))
 #' @rdname assign-pred_matrix
 #' @aliases pred_matrix<-
 setMethod("pred_matrix<-", c("siamcat","matrix"), function(x, value){
-  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat,
           x@eval_data, x@data_split, x@norm_param)
 })
 
@@ -153,7 +153,7 @@ setGeneric("data_split<-", function(x, value) standardGeneric("data_split<-"))
 #' @rdname assign-data_split
 #' @aliases data_split<-
 setMethod("data_split<-", c("siamcat","data_split"), function(x, value){
-  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat, 
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@orig_feat,
           x@eval_data, x@pred_matrix, x@norm_param)
 })
 
@@ -175,7 +175,7 @@ setGeneric("orig_feat<-", function(x, value) standardGeneric("orig_feat<-"))
 #' @rdname assign-orig_feat
 #' @aliases orig_feat<-
 setMethod("orig_feat<-", c("siamcat","otu_table"), function(x, value){
-  siamcat(value, x@label, x@model_list, x@phyloseq, x@data_split, 
+  siamcat(value, x@label, x@model_list, x@phyloseq, x@data_split,
           x@eval_data, x@pred_matrix, x@norm_param)
 })
 

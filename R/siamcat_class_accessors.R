@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial
-### Communities And host phenoTypes
-### EMBL Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between
+### Microbial Communities And host phenoTypes R flavor EMBL
+### Heidelberg 2012-2018 GNU GPL 3.0
 
 ################################################################################
 #' Universal slot accessor function for siamcat-class.
@@ -15,7 +15,7 @@
 #' @param slot A character string indicating the slot (not data class)
 #'  of the component data type that is desired.
 #'
-#' @return Returns the component object specified by the argument \code{slot}. 
+#' @return Returns the component object specified by the argument \code{slot}.
 #'  Returns NULL if slot does not exist.
 #'
 #' @export
@@ -29,7 +29,7 @@ accessSlot <- function(siamcat, slot){
     out = NULL
   } else {
     # By elimination, must be valid. Access slot
-    out = eval(parse(text=paste("siamcat@", slot, sep=""))) 
+    out = eval(parse(text=paste("siamcat@", slot, sep="")))
   }
   if(is.null(out) ){
     # Only error regarding a NULL return value if errorIfNULL is TRUE.
@@ -43,13 +43,13 @@ accessSlot <- function(siamcat, slot){
 #'
 #'
 #' @usage model_list(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a model_list or instance of \link{model_list-class}.
 #'
 #'
 #' @return The \link{model_list-class} object or NULL.
-#' 
+#'
 #' @export
 #' @rdname model_list-methods
 #' @docType methods
@@ -72,13 +72,13 @@ setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
 #'
 #'
 #' @usage models(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a model_list or instance of \link{model_list-class}.
 #'
 #'
 #' @return The list of models or NULL.
-#' 
+#'
 #' @export
 #' @rdname models-methods
 #' @docType methods
@@ -101,13 +101,13 @@ setMethod("models", "model_list", function(siamcat){ return(siamcat@models) })
 #'
 #'
 #' @usage model_type(siamcat)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a model_list or instance of \link{model_list-class}.
 #'
 #'
 #' @return The string describing type of model used or NULL.
-#' 
+#'
 #' @export
 #' @rdname model_type-methods
 #' @docType methods
@@ -130,12 +130,12 @@ setMethod("model_type", "model_list", function(siamcat){ return(siamcat@model_ty
 #'
 #'
 #' @usage eval_data(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a eval_data..
 #'
 #' @return The eval_data list or NULL.
-#' 
+#'
 #' @export
 #' @rdname eval_data-methods
 #' @docType methods
@@ -155,12 +155,12 @@ setMethod("eval_data", "ANY", function(siamcat){
 #'
 #'
 #' @usage pred_matrix(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a pred_matrix
 #'
 #' @return The pred_matrix matrix or NULL.
-#' 
+#'
 #' @export
 #' @rdname pred_matrix-methods
 #' @docType methods
@@ -180,13 +180,13 @@ setMethod("pred_matrix", "ANY", function(siamcat){
 #'
 #'
 #' @usage norm_param(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a norm_param
 #'
 #'
 #' @return The norm_param list or NULL.
-#' 
+#'
 #' @export
 #' @rdname norm_param-methods
 #' @docType methods
@@ -206,13 +206,13 @@ setMethod("norm_param", "ANY", function(siamcat){
 #'
 #'
 #' @usage label(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a label or instance of \link{label-class}.
 #'
 #'
 #' @return The \link{label-class} object or NULL.
-#' 
+#'
 #' @export
 #' @rdname label-methods
 #' @docType methods
@@ -235,13 +235,13 @@ setMethod("label", "label", function(siamcat){ return(siamcat) })
 #'
 #'
 #' @usage data_split(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a label or instance of \link{data_split-class}.
 #'
 #'
 #' @return The \link{data_split-class} object or NULL.
-#' 
+#'
 #' @export
 #' @rdname data_split-methods
 #' @docType methods
@@ -264,13 +264,13 @@ setMethod("data_split", "data_split", function(siamcat){ return(siamcat) })
 #'
 #'
 #' @usage orig_feat(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a label or instance of \link[phyloseq]{otu_table-class}.
 #'
 #'
 #' @return The \link[phyloseq]{otu_table-class} object or NULL.
-#' 
+#'
 #' @export
 #' @rdname orig_feat-methods
 #' @docType methods
@@ -293,13 +293,13 @@ setMethod("orig_feat", "otu_table", function(siamcat){ return(siamcat) })
 #'
 #'
 #' @usage physeq(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a label or instance of \link[phyloseq]{phyloseq-class}.
 #'
 #'
 #' @return The \link[phyloseq]{phyloseq-class} object or NULL.
-#' 
+#'
 #' @export
 #' @rdname physeq-methods
 #' @docType methods
@@ -322,13 +322,13 @@ setMethod("physeq", "phyloseq", function(siamcat){ return(siamcat) })
 #'
 #'
 #' @usage features(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a label or instance of \link[phyloseq]{otu_table-class} .
 #'
 #'
 #' @return The \link[phyloseq]{otu_table-class} object or NULL.
-#' 
+#'
 #' @export
 #' @rdname features-methods
 #' @docType methods
@@ -351,13 +351,13 @@ setMethod("features", "otu_table", function(siamcat){ return(siamcat) })
 #'
 #'
 #' @usage meta(siamcat, errorIfNULL=TRUE)
-#' 
+#'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'  that contains a label or instance of \link[phyloseq]{sample_data-class}.
 #'
 #'
 #' @return The \link[phyloseq]{sample_data-class} object or NULL.
-#' 
+#'
 #' @export
 #' @rdname meta-methods
 #' @docType methods
@@ -414,7 +414,7 @@ get.phyloseq <- function(siamcat) {
 #'  data(siamcat_example)
 #'  feat <- get.features.matrix(siamcat_example)
 get.features.matrix <- function(siamcat) {
-    return(matrix(siamcat@phyloseq@otu_table, nrow = nrow(siamcat@phyloseq@otu_table), ncol = ncol(siamcat@phyloseq@otu_table), 
+    return(matrix(siamcat@phyloseq@otu_table, nrow = nrow(siamcat@phyloseq@otu_table), ncol = ncol(siamcat@phyloseq@otu_table),
         dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table))))
 }
 
@@ -527,8 +527,8 @@ get.label <- function(siamcat) {
 #'  data(siamcat_example)
 #'  label <- get.label.list(siamcat_example)
 get.label.list <- function(siamcat) {
-    return(list(label = siamcat@label@label, header = siamcat@label@header, info = siamcat@label@info, positive.lab = siamcat@label@positive.lab, 
-        negative.lab = siamcat@label@negative.lab, n.idx = siamcat@label@n.idx, p.idx = siamcat@label@p.idx, n.lab = siamcat@label@n.lab, 
+    return(list(label = siamcat@label@label, header = siamcat@label@header, info = siamcat@label@info, positive.lab = siamcat@label@positive.lab,
+        negative.lab = siamcat@label@negative.lab, n.idx = siamcat@label@n.idx, p.idx = siamcat@label@p.idx, n.lab = siamcat@label@n.lab,
         p.lab = siamcat@label@p.lab))
 }
 

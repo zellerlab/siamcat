@@ -1,5 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
+### SIAMCAT - Statistical Inference of Associations between
+### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Perform unsupervised feature filtering.
@@ -45,22 +46,22 @@
 #'
 #' # Simple examples
 #' siamcat_filtered <- filter.features(siamcat_example, filter.method='abundance', cutoff=1e-03)
-filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, 
+filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE,
     verbose = 1) {
     ### this statement does not have the purpose to calculate relative abundances on the fly and return them.  Instead,
     ### it's purpose is to be able to calculate f.idx (specifying the indices of features which are to be kept) when
     ### feature list has already been transformed to relative abundances, but e.g. certain features have been removed
     ### manually.
-    
-    if (verbose > 1) 
+
+    if (verbose > 1)
         cat("+ starting filter.features\n")
     s.time <- proc.time()[3]
-    
+
     if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")) {
         stop("! Unrecognized filter.method, exiting!\n")
     }
-    
-    if (verbose > 1) 
+
+    if (verbose > 1)
         cat("+++ before filtering, the data has", nrow(features(siamcat)), "features\n")
     if (recomp.prop) {
         # recompute relative abundance values (proportions)
@@ -69,9 +70,9 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
     } else {
         ra.feat <- features(siamcat)
     }
-    
+
     ### apply filters
-    if (verbose > 2) 
+    if (verbose > 2)
         cat("+++ applying", filter.method, "filter\n")
     if (filter.method == "abundance") {
         # remove features whose abundance is never above the threshold value (e.g. 0.5%) in any of the samples
@@ -95,9 +96,9 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
         # proportion of samples
         f.idx <- which(rowSums(ra.feat > 0)/ncol(ra.feat) > cutoff)
     }
-    
-    
-    if (verbose > 2) 
+
+
+    if (verbose > 2)
         cat("+++ checking for unmapped reads\n")
     ### postprocessing and output generation
     if (rm.unmapped) {
@@ -106,26 +107,26 @@ filter.features <- function(siamcat, filter.method = "abundance", cutoff = 0.001
         unm.idx <- rownames(features(siamcat)) %in% names.unmapped
         if (any(unm.idx)) {
             f.idx <- f.idx[-which(f.idx %in% unm.idx)]
-            if (verbose > 2) 
+            if (verbose > 2)
                 cat("+++ removing ", rownames(features(siamcat))[unm.idx], " as unmapped reads\n")
-            if (verbose > 1) 
+            if (verbose > 1)
                 cat("+++ removed ", sum(unm.idx), " features corresponding to UNMAPPED reads\n", sep = "")
         } else {
-            if (verbose > 1) 
+            if (verbose > 1)
                 cat("+++ tried to remove unmapped reads, but could not find them. Continue anyway.\n")
         }
     }
-    if (verbose > 2) 
+    if (verbose > 2)
         cat("+++ applying prune_taxa\n")
-    if (verbose > 1) 
-        cat("+++ removed ", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), " features whose values did not exceed ", 
+    if (verbose > 1)
+        cat("+++ removed ", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), " features whose values did not exceed ",
             cutoff, " in any sample (retaining ", length(f.idx), ")\n", sep = "")
     f.names <- rownames(features(siamcat))[f.idx]
     physeq(siamcat) <- prune_taxa(x = physeq(siamcat), taxa = f.names)
     e.time <- proc.time()[3]
-    if (verbose > 1) 
+    if (verbose > 1)
         cat("+ finished filter.features in", e.time - s.time, "s\n")
-    if (verbose == 1) 
+    if (verbose == 1)
         cat("Features successfully filtered\n")
     return(siamcat)
 }

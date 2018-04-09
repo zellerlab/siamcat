@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial
-### Communities And host phenoTypes
-### EMBL Heidelberg 2012-2018 GNU GPL 3.0
+### SIAMCAT - Statistical Inference of Associations between
+### Microbial Communities And host phenoTypes R flavor EMBL
+### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' Build siamcat-class objects from their components.
 #' @title siamcat
@@ -25,20 +25,20 @@
 #' siamcat <- siamcat(feat, label, meta)
 siamcat <- function(...) {
   arglist <- list(...)
-  
+
   # Remove names from arglist. Will replace them based on their class
   names(arglist) <- NULL
-  
+
   # ignore all but component data classes.
   component_classes <- get.component.classes("both")
-  
+
   for (argNr in 1:length(arglist)) {
     classOfArg <- class(arglist[[argNr]])[1]
     if (classOfArg %in% names(component_classes)) {
       names(arglist)[argNr] <- component_classes[classOfArg]
     }
   }
-  
+
   if (is.null(arglist$phyloseq)) {
     arglistphyloseq <- arglist[sapply(names(arglist), is.component.class, "phyloseq")]
     arglist$phyloseq <- do.call("new", c(list(Class = "phyloseq"), arglistphyloseq))
@@ -56,10 +56,10 @@ get.component.classes <- function(class) {
   # define classes vector the names of component.classes needs to be the slot names to match getSlots / splat
   component.classes.siamcat <- c("model_list", "orig_feat", "label", "norm_param", "data_split", "phyloseq")  #slot names
   names(component.classes.siamcat) <- c("model_list", "orig_feat", "label", "norm_param", "data_split", "phyloseq")  #class names
-  
+
   component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", "tax_table", "refseq")  #slot names
   names(component.classes.phyloseq) <- c("otu_table", "sample_data", "phylo", "taxonomyTable", "XStringSet")  #class names
-  
+
   if (class == "siamcat") {
     return(component.classes.siamcat)
   } else if (class == "phyloseq") {

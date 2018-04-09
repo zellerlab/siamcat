@@ -1,5 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
+### SIAMCAT - Statistical Inference of Associations between
+### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Add metadata as predictors
@@ -28,37 +29,37 @@
 #'  siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
 #'      'bmi', 'gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose = 1) {
-    if (verbose > 1) 
+    if (verbose > 1)
         message("+ starting add.meta.pred")
     s.time <- proc.time()[3]
     ### add metadata as predictors to the feature matrix
     cnt <- 0
-    
+
     if (pred.names != "" && !is.null(pred.names)) {
-        if (verbose > 2) 
+        if (verbose > 2)
             message("+ starting to add metadata predictors")
         for (p in pred.names) {
-            if (verbose > 2) 
+            if (verbose > 2)
                 message("+++ adding metadata predictor:", p)
             if (!p %in% colnames(meta(siamcat))) {
                 stop("There is no metadata variable called ", p)
             }
             idx <- which(colnames(meta(siamcat)) == p)
-            if (length(idx) != 1) 
+            if (length(idx) != 1)
                 stop(p, "matches multiple columns in the metada")
-            
+
             m <- unlist(meta(siamcat)[, idx])
-            
+
             if (!all(is.finite(m))) {
                 na.cnt <- sum(!is.finite(m))
-                if (verbose > 1) 
+                if (verbose > 1)
                   message(paste("++++ filling in", na.cnt, "missing values by mean imputation"))
                 mn <- mean(m, na.rm = TRUE)
                 m[!is.finite(m)] <- mn
             }
-            
+
             if (std.meta) {
-                if (verbose > 1) 
+                if (verbose > 1)
                   message(paste("++++ standardizing metadata feature", p))
                 m.mean <- mean(m, na.rm = TRUE)
                 m.sd <- sd(m, na.rm = TRUE)
@@ -70,19 +71,19 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose =
             rownames(features.with.meta)[nrow(features.with.meta)] <- paste(
             "META_", toupper(p), sep = "")
             features(siamcat) <- features.with.meta
-            
+
             cnt <- cnt + 1
         }
-        if (verbose > 1) 
+        if (verbose > 1)
             message(paste("+++ added", cnt, "meta-variables as predictor to the feature matrix"))
     } else {
-        if (verbose > 0) 
+        if (verbose > 0)
             message("+++ Not adding any of the meta-variables as predictor to the feature matrix")
     }
     e.time <- proc.time()[3]
-    if (verbose > 1) 
+    if (verbose > 1)
         message(paste("+ finished add.meta.pred in", formatC(e.time - s.time, digits = 3), "s"))
-    if (verbose == 1) 
+    if (verbose == 1)
         message("Adding metadata as predictor finished")
     return(siamcat)
 }

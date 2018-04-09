@@ -1,5 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
+### SIAMCAT - Statistical Inference of Associations between
+### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Model training
@@ -56,10 +57,10 @@
 #'  # simple working example
 #'  siamcat_validated <- train.model(siamcat_example, method='lasso')
 #'
-train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), stratify = TRUE, 
+train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll", "randomForest"), stratify = TRUE,
     modsel.crit = list("auc"), min.nonzero.coeff = 1, param.set = NULL, verbose = 1) {
-    
-    if (verbose > 1) 
+
+    if (verbose > 1)
         cat("+ starting train.model\n")
     s.time <- proc.time()[3]
     # check modsel.crit
@@ -69,7 +70,7 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll"
     } else {
         measure <- list()
     }
-    if (verbose > 2) 
+    if (verbose > 2)
         cat("+++ preparing selection measures\n")
     for (m in modsel.crit) {
         if (m == "auc") {
@@ -79,42 +80,42 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll"
         } else if (m == "f1") {
             measure[[length(measure) + 1]] <- mlr::f1
         } else if (m == "pr" || m == "auprc") {
-            auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0, properties = c("classif", "req.pred", 
-                "req.truth", "req.prob"), name = "Area under the Precision Recall Curve", fun = function(task, model, 
+            auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0, properties = c("classif", "req.pred",
+                "req.truth", "req.prob"), name = "Area under the Precision Recall Curve", fun = function(task, model,
                 pred, feats, extra.args) {
                 measureAUPRC(getPredictionProbabilities(pred), pred$data$truth, pred$task.desc$negative, pred$task.desc$positive)
             })
             measure[[length(measure) + 1]] <- auprc
         }
     }
-    
+
     # Create matrix with hyper parameters.
     hyperpar.list <- list()
-    
+
     # Create List to save models.
     models.list <- list()
     power <- NULL
     num.runs <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
     bar <- 0
-    if (verbose > 1) 
+    if (verbose > 1)
         cat("+ training", method, "models on", num.runs, "training sets\n")
-    
-    if (verbose == 1 || verbose == 2) 
+
+    if (verbose == 1 || verbose == 2)
         pb <- txtProgressBar(max = num.runs, style = 3)
-    
+
     for (fold in 1:siamcat@data_split@num.folds) {
-        
-        if (verbose > 2) 
+
+        if (verbose > 2)
             cat("+++ training on cv fold:", fold, "\n")
-        
+
         for (resampling in 1:siamcat@data_split@num.resample) {
-            
-            if (verbose > 2) 
+
+            if (verbose > 2)
                 cat("++++ repetition:", resampling, "\n")
-            
+
             fold.name <- paste0("cv_fold", as.character(fold), "_rep", as.character(resampling))
             fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(siamcat@label@label))
-            
+
             ### subselect examples for training
             label.fac <- factor(siamcat@label@label, levels = c(siamcat@label@negative.lab, siamcat@label@positive.lab))
             train.label <- label.fac[fold.exm.idx]
@@ -122,31 +123,31 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll"
             stopifnot(nrow(data) == length(train.label))
             stopifnot(all(rownames(data) == names(train.label)))
             data$label <- train.label
-            
+
             ### internal cross-validation for model selection
-            model <- train.plm(data = data, method = method, measure = measure, min.nonzero.coeff = min.nonzero.coeff, 
+            model <- train.plm(data = data, method = method, measure = measure, min.nonzero.coeff = min.nonzero.coeff,
                 param.set = param.set, neg.lab = siamcat@label@negative.lab)
             bar <- bar + 1
-            
+
             if (!all(model$feat.weights == 0)) {
                 models.list[[bar]] <- model
             } else {
                 warning("Model without any features selected!\n")
             }
-            
-            if (verbose == 1 || verbose == 2) 
+
+            if (verbose == 1 || verbose == 2)
                 setTxtProgressBar(pb, bar)
         }
     }
-    
+
     siamcat@model_list <- new("model_list", models = models.list, model.type = method)
     e.time <- proc.time()[3]
-    
-    if (verbose > 1) 
+
+    if (verbose > 1)
         cat("\n+ finished train.model in", e.time - s.time, "s\n")
-    if (verbose == 1) 
+    if (verbose == 1)
         cat("\nTrained", method, "models successfully.\n")
-    
+
     return(siamcat)
 }
 

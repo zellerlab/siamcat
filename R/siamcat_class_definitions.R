@@ -1,5 +1,6 @@
 #!/usr/bin/Rscript
-### SIAMCAT - Statistical Inference of Associations between Microbial Communities And host phenoTypes R flavor EMBL
+### SIAMCAT - Statistical Inference of Associations between
+### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' The S4 class for storing models.
@@ -38,7 +39,7 @@ setClass("data_split", representation(training.folds = "list", test.folds = "lis
 #' @slot n.lab character string with a name for the negative label (e.g. 'healthy')
 #' @slot p.lab character string with a name for the positive label (e.g. 'cancer')
 #' @exportClass label
-setClass("label", representation(label = "vector", header = "character", info = "list", positive.lab = "numeric", negative.lab = "numeric", 
+setClass("label", representation(label = "vector", header = "character", info = "list", positive.lab = "numeric", negative.lab = "numeric",
     n.idx = "vector", p.idx = "vector", n.lab = "character", p.lab = "character"))
 
 #' The S4 class for storing taxa-abundance information and models.
@@ -62,5 +63,5 @@ setClass("label", representation(label = "vector", header = "character", info = 
 #'}
 #' @slot pred_matrix a matrix with predictions made by \link{make.predictions} function
 #' @exportClass siamcat
-setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat = "otu_table", eval_data = "list", 
+setClass("siamcat", representation(model_list = "model_list", phyloseq = "phyloseq", orig_feat = "otu_table", eval_data = "list",
     label = "label", norm_param = "list", data_split = "data_split", pred_matrix = "matrix"))
