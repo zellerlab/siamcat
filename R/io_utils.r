@@ -212,7 +212,7 @@ parse.label.header <- function(label.header) {
 create.label <- function(meta, column) {
     if (!column %in% colnames(meta))
         stop("ERROR: Column", column, "not found in the metadata\n")
-    metaColumn <- sapply(meta[, column], as.character)
+    metaColumn <- vapply(meta[, column], as.character, FUN.VALUE=character(nrow(meta)))
     if (!length(unique(metaColumn)) == 2)
         stop("ERROR: Column", column, "does not contain binary label\n")
     label <- list(label = rep(-1, length(metaColumn)), positive.lab = 1, negative.lab = (-1))
