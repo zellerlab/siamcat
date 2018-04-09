@@ -82,7 +82,7 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
     # get lambdas that fullfill the minimum nonzero coefficients criterion
     lambdas <- trained.model$learner.model$glmnet.fit$lambda[which(trained.model$learner.model$nzero >= min.nonzero.coeff)]
     # get performance on training set for all those lambdas in trace
-    performances <- sapply(lambdas, FUN = function(lambda, model, task, measure) {
+    performances <- vapply(lambdas, FUN = function(lambda, model, task, measure) {
         model.transformed <- model
         # lambda.1se is the default parameter value, but could in principle be set be the user.... will not have an effect
         # though...
@@ -93,7 +93,7 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
         }
         pred.temp <- predict(model.transformed, task)
         performance(pred.temp, measures = measure)
-    }, model = trained.model, task = training.task, measure = perf.measure)
+    }, model = trained.model, task = training.task, measure = perf.measure, USE.NAMES=FALSE, FUN.VALUE=double(1))
     # get optimal lambda in depence of the performance measure
     if (length(perf.measure) == 1) {
         if (perf.measure[[1]]$minimize == TRUE) {
@@ -103,7 +103,7 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
         }
     } else {
         opt.idx <- c()
-        for (m in 1:length(perf.measure)) {
+        for (m in seq_len(length(perf.measure))) {
             if (perf.measure[[m]]$minimize == TRUE) {
                 opt.idx <- c(opt.idx, which(performances[m, ] == min(performances[m, ]))[1])
             } else {
