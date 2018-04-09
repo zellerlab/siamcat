@@ -275,10 +275,8 @@ associations.quantile.box.plot <- function(data.mat, label, col, verbose=1){
 
   # get quantiles
   quant.probs <- c(0.05, 0.25, 0.5, 0.75, 0.95)
-  quantiles.pos = apply(data.mat[,label@p.idx], 1,
-    quantile, probs=quant.probs, na.rm=TRUE, names=FALSE)
-  quantiles.neg = apply(data.mat[,label@n.idx], 1,
-    quantile, probs=quant.probs, na.rm=TRUE, names=FALSE)
+  quantiles.pos = rowQuantiles(data.mat[,label@p.idx], probs=quant.probs, na.rm=TRUE)
+  quantiles.neg = rowQuantiles(data.mat[,label@n.idx], probs=quant.probs, na.rm=TRUE)
 
   # inter-quartile range
   quantiles.plot(quantiles.pos, up=TRUE, pos.col)
@@ -304,10 +302,8 @@ associations.quantile.rect.plot <- function(data.mat, label, col, verbose=1){
   n.spec <- nrow(data.mat)
   quant.probs <- seq(from=0.1,to=0.9,by=0.1)
 
-  quantiles.pos <- apply(data.mat[,label@p.idx], 1,
-    quantile, probs=quant.probs, na.rm=TRUE, names=FALSE)
-  quantiles.neg <- apply(data.mat[,label@n.idx], 1,
-    quantile, probs=quant.probs, na.rm=TRUE, names=FALSE)
+  quantiles.pos = rowQuantiles(data.mat[,label@p.idx], probs=quant.probs, na.rm=TRUE)
+  quantiles.neg = rowQuantiles(data.mat[,label@n.idx], probs=quant.probs, na.rm=TRUE)
 
   p.mn <- min(data.mat, na.rm=TRUE)
   p.mx <- max(data.mat, na.rm=TRUE)
@@ -639,17 +635,17 @@ change.transparency <- function(col.name){
 }
 
 quantiles.plot <- function(quantiles, up=TRUE, col){
-  n.spec <- ncol(quantiles)
+  n.spec <- nrow(quantiles)
   adj.y0 <- ifelse(up, 0, 0.3)
   adj.y1 <- ifelse(up, 0.3, 0)
   # box
-  rect(quantiles[2,], seq_len(n.spec)-adj.y0, quantiles[4,], seq_len(n.spec)+adj.y1, col=col)
+  rect(quantiles[,2], seq_len(n.spec)-adj.y0, quantiles[,4], seq_len(n.spec)+adj.y1, col=col)
   # 90% interval
-  segments(quantiles[1,], seq_len(n.spec), quantiles[5,], seq_len(n.spec))
-  segments(quantiles[1,], y0=seq_len(n.spec)-adj.y0/3*2, y1=seq_len(n.spec)+adj.y1/3*2)
-  segments(quantiles[5,], y0=seq_len(n.spec)-adj.y0/3*2, y1=seq_len(n.spec)+adj.y1/3*2)
+  segments(quantiles[,1], seq_len(n.spec), quantiles[,5], seq_len(n.spec))
+  segments(quantiles[,1], y0=seq_len(n.spec)-adj.y0/3*2, y1=seq_len(n.spec)+adj.y1/3*2)
+  segments(quantiles[,5], y0=seq_len(n.spec)-adj.y0/3*2, y1=seq_len(n.spec)+adj.y1/3*2)
   # median
-  segments(quantiles[3,], y0=seq_len(n.spec)-adj.y0, y1=seq_len(n.spec)+adj.y1, lwd=3)
+  segments(quantiles[,3], y0=seq_len(n.spec)-adj.y0, y1=seq_len(n.spec)+adj.y1, lwd=3)
 }
 
 create.tints <- function(colour, vec){
@@ -658,18 +654,18 @@ create.tints <- function(colour, vec){
 }
 
 quantile.rect.plot <- function(quantiles, up=TRUE, colors){
-  n.spec <- ncol(quantiles)
+  n.spec <- nrow(quantiles)
   adj.y0 <- ifelse(up, 0, 0.3)
   adj.y1 <- ifelse(up, 0.3, 0)
-  for (i in seq_len(nrow(quantiles)/2)){
-    rect(quantiles[i,], (0.5:n.spec)-adj.y0, quantiles[nrow(quantiles)+1-i,], (0.5:n.spec)+adj.y1,
+  for (i in seq_len(ncol(quantiles)/2)){
+    rect(quantiles[,i], (0.5:n.spec)-adj.y0, quantiles[,ncol(quantiles)+1-i], (0.5:n.spec)+adj.y1,
          col = colors[i], border = c("black"), lwd = 0.9)
   }
 }
 
 quantile.median.plot <- function(quantiles, up=TRUE){
-  n.spec <- ncol(quantiles)
+  n.spec <- nrow(quantiles)
   adj.y <- ifelse(up, 0.15, -0.15)
-  points(quantiles[ceiling(nrow(quantiles)/2),],
+  points(quantiles[,ceiling(ncol(quantiles)/2)],
          y=(0.5:n.spec)+adj.y, pch=18, cex = min(35/n.spec,4))
 }
