@@ -22,13 +22,14 @@ Imports:
     gridBase,
     gridExtra,
     LiblineaR,
+    matrixStats,
+    methods,
     ParamHelpers,
     pROC,
     PRROC,
     RColorBrewer,
     stats,
-    utils,
-    methods
+    utils
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
