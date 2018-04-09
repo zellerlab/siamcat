@@ -103,7 +103,7 @@ get.optimal.lambda.for.glmnet <- function(trained.model, training.task, perf.mea
         }
     } else {
         opt.idx <- c()
-        for (m in seq_len(length(perf.measure))) {
+        for (m in seq_along(perf.measure)) {
             if (perf.measure[[m]]$minimize == TRUE) {
                 opt.idx <- c(opt.idx, which(performances[m, ] == min(performances[m, ]))[1])
             } else {

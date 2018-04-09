@@ -86,7 +86,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   }
   if (length(panels) > 3){
     warning("Plot layout is not suited for more than 3 panels. Continuing with first three panels.")
-    panels <- panels[1:3]
+    panels <- panels[seq_len(3)]
   }
   if ((!plot.type %in% c("bean", "box", "quantile.box", "quantile.rect")) || length(plot.type) != 1){
     warning("Plot type has not been specified properly! Continue with quantile.box.")
@@ -517,11 +517,11 @@ associations.labels.plot <- function(labels, plot.type,  verbose=1){
   if(verbose>2) message("+ starting associations.labels.plot")
   adj <- rep(0, length(labels))
   if (plot.type == 'quantile.rect') adj <- rep(-0.5, length(labels))
-  if (plot.type == 'box') adj <- -0.5 + seq_len(length(labels))
+  if (plot.type == 'box') adj <- -0.5 + seq_along(labels)
   cex.org <- par()$cex
   par(cex=1)
   cex.labels <- min(.7,(((par()$pin[2]/length(labels))*.6)/max( strheight(labels, units = 'inches'))))
-  for (i in seq_len(length(labels))){
+  for (i in seq_along(labels)){
     mtext(labels[i], 2, line=0, at=i+adj[i], las=1, cex=cex.labels)
   }
   par(cex=cex.org)

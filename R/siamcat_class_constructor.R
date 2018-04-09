@@ -32,7 +32,7 @@ siamcat <- function(...) {
   # ignore all but component data classes.
   component_classes <- get.component.classes("both")
 
-  for (argNr in seq_len(length(arglist))) {
+  for (argNr in seq_along(arglist)) {
     classOfArg <- class(arglist[[argNr]])[1]
     if (classOfArg %in% names(component_classes)) {
       names(arglist)[argNr] <- component_classes[classOfArg]
