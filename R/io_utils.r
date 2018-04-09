@@ -26,7 +26,7 @@
 #'  features <- read.features(fn.feat)
 read.features <- function(fn.in.feat, verbose = 0) {
     if (verbose > 1)
-        cat("+ starting read.features\n")
+        message("+ starting read.features")
     s.time <- proc.time()[3]
     if (is.null(fn.in.feat))
         stop("Filename for features file not provided!\n")
@@ -39,12 +39,12 @@ read.features <- function(fn.in.feat, verbose = 0) {
     featNames <- make.names(rownames(feat))  ### making the names semantically correct
 
     if (any(rownames(feat) != featNames)) {
-        cat("The provided feature names were not semantically correct for use in R, they were updated.\n")
+        message("The provided feature names were not semantically correct for use in R, they were updated.")
         rownames(feat) <- featNames
     }
     e.time <- proc.time()[3]
     if (verbose > 0)
-        cat("+ finished read.features in", e.time - s.time, "s\n")
+        message(paste("+ finished read.features in", formatC(e.time - s.time, digits=3), "s"))
     invisible(otu_table(feat, taxa_are_rows = TRUE))
 }
 
@@ -105,7 +105,7 @@ read.labels <- function(fn.in.label) {
         if (sum(label == i) <= 5)
             stop("Data set has only", sum(label == i), "training examples of class", i, " This is not enough for SIAMCAT to proceed")
         if (sum(label == i) < 10) {
-            cat("Data set has only", sum(label == i), "training examples of class", i, " . Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipe line.")
+            message(paste("Data set has only", sum(label == i), "training examples of class", i, " . Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipe line."))
         }
     }
 

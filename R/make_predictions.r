@@ -42,7 +42,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
     if (is.null(siamcat.holdout)) {
 
         if (verbose > 1)
-            cat("+ starting make.predictions on siamcat object\n")
+            message("+ starting make.predictions on siamcat object")
 
         feat <- t(features(siamcat))
         label.fac <- factor(siamcat@label@label, levels = c(siamcat@label@negative.lab, siamcat@label@positive.lab))
@@ -73,8 +73,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
 
                 stopifnot(!any(rownames(model$task$env$data) %in% rownames(data)))
                 if (verbose > 2)
-                  cat("Applying ", siamcat@model_list@model.type, " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample *
-                    num.folds, ")...\n", sep = "")
+                  message(paste("Applying ", model_list(siamcat)@model.type, " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample*num.folds, ")..."))
 
                 task <- makeClassifTask(data = data, target = "label")
                 pdata <- predict(model, task = task)
@@ -96,14 +95,14 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
     } else {
 
         if (verbose > 1)
-            cat("+ starting make.predictions on external dataset\n")
+            message("+ starting make.predictions on external dataset")
 
         if (normalize.holdout) {
             if (verbose > 1)
-                cat("+ Performing frozen normalization on holdout set\n")
+                message("+ Performing frozen normalization on holdout set")
             siamcat.holdout <- normalize.features(siamcat.holdout, norm.param = siamcat@norm_param, verbose = verbose)
         } else {
-            cat("WARNING: holdout set is not being normalized!\n")
+            message("WARNING: holdout set is not being normalized!")
         }
         feat.test <- t(siamcat.holdout@phyloseq@otu_table)
         feat.ref <- t(features(siamcat))
@@ -127,8 +126,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             data$label <- as.factor(siamcat.holdout@label@label)
 
             if (verbose > 2)
-                cat("Applying ", siamcat@model_list@model.type, " on complete external dataset", " (", i, " of ", num.models,
-                  ")...\n", sep = "")
+                message(paste("Applying ", model_list(siamcat)@model.type, " on complete external dataset", " (", i, " of ", num.models, ")..."))
 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
@@ -145,19 +143,19 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
 
     # print correlation matrix
     if (verbose > 1)
-        cat("\nTotal number of predictions made:", length(pred), "\n")
+        message(paste("Total number of predictions made:", length(pred)))
     correlation <- cor(pred, method = "spearman")
     if (verbose > 1)
-        cat("Correlation between predictions from repeated CV:\n")
+        message("Correlation between predictions from repeated CV:")
     if (verbose > 1)
-        cat("Min: ", min(correlation), ", Median: ", median(correlation), ", Mean: ", mean(correlation), "\n", sep = "")
+        message(paste("Min: ", min(correlation), ", Median: ", median(correlation), ", Mean: ", mean(correlation)))
 
     # print out time
     e.time <- proc.time()[3]
     if (verbose > 1)
-        cat("+ finished make.predictions in", e.time - s.time, "s\n")
+        message(paste("+ finished make.predictions in", formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
-        cat("\nMade predictions successfully.\n")
+        message("Made predictions successfully.")
 
     return(return.object)
 }

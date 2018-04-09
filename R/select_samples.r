@@ -31,11 +31,11 @@
 #'  \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender', allowed.set=c(1, 2), verbose=2)}
 select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = NULL, verbose = 1) {
     if (verbose > 1)
-        cat("+ starting select.samples\n")
+        message("+ starting select.samples")
     s.time <- proc.time()[3]
 
     if (verbose > 2)
-        cat("+++ checking allowed values\n")
+        message("+++ checking allowed values")
     if (!is.null(allowed.range)) {
         allowed.range <- gsub("\\[|\\]", "", allowed.range)
         allowed.range <- as.numeric(unlist(strsplit(allowed.range, ",")))
@@ -55,10 +55,10 @@ select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = 
     } else {
         if (!is.null(allowed.range)) {
             if (verbose > 2)
-                cat("+++ allowed.range  = [", paste(allowed.range, collapse = ","), "]\n", sep = "")
+                message(paste0("+++ allowed.range  = [", paste(allowed.range, collapse = ","), "]"))
         } else {
             if (verbose > 2)
-                cat("+++ allowed.set = {", paste(allowed.set, collapse = ","), "}\n", sep = "")
+                message(paste0("+++ allowed.set = {", paste(allowed.set, collapse = ","), "}"))
         }
     }
 
@@ -69,15 +69,15 @@ select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = 
     if (!is.null(allowed.range)) {
         s.idx <- !is.na(filter.var) & filter.var >= allowed.range[1] & filter.var <= allowed.range[2]
         if (verbose > 1) {
-            cat("+++ removed ", sum(!s.idx), " samples with ", filter, " not in [", paste(allowed.range, collapse = ", "),
-                "] (retaining ", sum(s.idx), ")\n", sep = "")
+            message(paste0("+++ removed ", sum(!s.idx), " samples with ", filter, " not in [", paste(allowed.range, collapse = ", "),
+                "] (retaining ", sum(s.idx), ")"))
         }
 
     } else {
         s.idx <- !is.na(filter.var) & filter.var %in% allowed.set
         if (verbose > 1) {
-            cat("+++ removed ", sum(!s.idx), " samples with ", filter, " not in {", paste(allowed.set, collapse = ", "),
-                "} (retaining ", sum(s.idx), ")\n", sep = "")
+            message(paste0("+++ removed ", sum(!s.idx), " samples with ", filter, " not in {", paste(allowed.set, collapse = ", "),
+                "} (retaining ", sum(s.idx), ")"))
         }
     }
 
@@ -86,8 +86,8 @@ select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = 
     siamcat <- filter.label(siamcat, verbose = verbose)
     e.time <- proc.time()[3]
     if (verbose > 1)
-        cat("+ finished select.samples in", e.time - s.time, "s\n")
+        message(paste("+ finished select.samples in", formatC(e.time - s.time, digits=3) "s"))
     if (verbose == 1)
-        cat("Selecting samples finished\n")
+        message("Selecting samples finished")
     return(siamcat)
 }

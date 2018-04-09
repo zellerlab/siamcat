@@ -79,25 +79,30 @@
 #'  # log.std example
 #'  siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=.1))
 
-normalize.features <- function(siamcat, norm.method = c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
-    norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1, n.p = 2, norm.margin = 1), verbose = 1) {
+normalize.features <- function(siamcat,
+                               norm.method = c("rank.unit", "rank.std",
+                                               "log.std", "log.unit",
+                                               "log.clr"),
+                               norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
+                                                 n.p = 2, norm.margin = 1),
+                               verbose = 1) {
 
     if (verbose > 1)
-        cat("+ starting normalize.features\n")
+        message("+ starting normalize.features")
     s.time <- proc.time()[3]
     feat <- siamcat@phyloseq@otu_table
 
     if (is.null(norm.param$norm.method)) {
         # de novo normalization
         if (verbose > 1)
-            cat("+++ performing de novo normalization using the ", norm.method, " method\n")
+            message(paste("+++ performing de novo normalization using the ", norm.method, " method"))
         ### remove features with missing values
         keep.idx <- rowSums(is.na(feat)) == 0
         if (any(!keep.idx)) {
             feat.red.na <- feat[keep.idx, ]
             if (verbose > 1) {
-                cat("+++ removed ", nrow(feat.red.na) - nrow(feat), " features with missing values (retaining ", nrow(feat.red.na),
-                  ")\n", sep = "")
+                message(paste("+++ removed ", nrow(feat.red.na) - nrow(feat), " features with missing values (retaining ", nrow(feat.red.na),
+                  ")"))
             }
         } else {
             feat.red.na <- feat
@@ -107,8 +112,8 @@ normalize.features <- function(siamcat, norm.method = c("rank.unit", "rank.std",
         if (any(keep.idx.sd)) {
             feat.red <- feat.red.na[!keep.idx.sd, ]
             if (verbose > 1) {
-                cat("+++ removed ", nrow(feat.red.na) - nrow(feat.red), " features with no variation across samples (retaining ",
-                  nrow(feat.red), ")\n", sep = "")
+                message(paste("+++ removed ", nrow(feat.red.na) - nrow(feat.red), " features with no variation across samples (retaining ",
+                  nrow(feat.red), ")"))
             }
         } else {
             feat.red <- feat.red.na
@@ -123,7 +128,7 @@ normalize.features <- function(siamcat, norm.method = c("rank.unit", "rank.std",
         par$norm.method <- norm.method
         par$retained.feat <- rownames(feat.red)
         if (verbose > 2)
-            cat("+++ checking is parameters are compatible with each other\n")
+            message("+++ checking is parameters are compatible with each other")
         ## check if the right set of normalization parameters have been supplied for the chosen norm.method
         if (norm.method == "rank.std" && is.null(norm.param$sd.min.q)) {
             stop("The rank.std method requires the parameter sd.min.q, which is not supplied. Exiting ...")
@@ -145,10 +150,10 @@ normalize.features <- function(siamcat, norm.method = c("rank.unit", "rank.std",
         par$norm.margin <- norm.param$norm.margin
 
         if (verbose > 1)
-            cat("+ feature sparsity before normalization: ", 100 * mean(feat.red == 0), "%\n", sep = "")
+            message(paste("+ feature sparsity before normalization: ", 100 * mean(feat.red == 0), "%"))
         # normalization
         if (verbose > 2)
-            cat("+++ performing normalization\n")
+            message("+++ performing normalization")
         if (norm.method == "rank.unit") {
             feat.rank <- apply(feat.red, 2, rank, ties.method = "average")
             stopifnot(!any(is.na(feat)))
@@ -215,24 +220,24 @@ normalize.features <- function(siamcat, norm.method = c("rank.unit", "rank.std",
             }
         }
         if (verbose > 1)
-            cat("+++ feature sparsity after normalization: ", 100 * mean(feat.norm == 0), "%\n", sep = "")
+            message(paste("+++ feature sparsity after normalization: ", 100 * mean(feat.norm == 0), "%"))
         stopifnot(!any(is.na(feat.norm)))
         siamcat@norm_param <- par
         siamcat@norm_param$norm.method <- norm.method
     } else {
         # frozen normalization
         if (verbose > 1)
-            cat("+ performing frozen ", norm.param$norm.method, " normalization using the supplied parameters\n")
+            message(paste("+ performing frozen ", norm.param$norm.method, " normalization using the supplied parameters"))
         # check if all retained.feat in norm.params are also found in features
         stopifnot(all(norm.param$retained.feat %in% row.names(feat)))
         feat.red <- feat[norm.param$retained.feat, ]
 
         if (verbose > 1)
-            cat("+ feature sparsity before normalization: ", 100 * mean(feat.red == 0), "%\n", sep = "")
+            message(paste("+ feature sparsity before normalization: ", 100 * mean(feat.red == 0), "%"))
 
         # normalization
         if (verbose > 2)
-            cat("+++ performing normalization\n")
+            message("+++ performing normalization")
         if (norm.param$norm.method == "rank.unit") {
             feat.rank <- apply(feat.red, 2, rank, ties.method = "average")
             feat.norm <- apply(feat.rank, 2, FUN = function(x) {
@@ -268,15 +273,15 @@ normalize.features <- function(siamcat, norm.method = c("rank.unit", "rank.std",
             }
         }
         if (verbose > 1)
-            cat("+ feature sparsity after normalization: ", 100 * mean(feat.norm == 0), "%\n", sep = "")
+            message(paste("+ feature sparsity after normalization: ", 100 * mean(feat.norm == 0), "%"))
         stopifnot(!any(is.na(feat.norm)))
 
     }
     siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = TRUE)
     e.time <- proc.time()[3]
     if (verbose > 1)
-        cat("+ finished normalize.features in", e.time - s.time, "s\n")
+        message(paste("+ finished normalize.features in", formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
-        cat("Features normalized successfully.\n")
+        message("Features normalized successfully.")
     return(siamcat)
 }
