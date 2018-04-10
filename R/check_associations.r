@@ -163,7 +163,6 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     if (p == "fc"){
       associations.fcs.plot(fc.all=effect.size$fc, binary.cols=effect.size$bcol,verbose=verbose)
     } else if (p == "prevalence"){
-      print(effect.size$pr.shift)
       associations.pr.shift.plot(pr.shifts=effect.size$pr.shift, col=col,verbose=verbose)
     } else if (p == "auroc"){
       associations.aucs.plot(aucs=effect.size[,c('auc', 'auc.ci.l', 'auc.ci.h')], binary.cols=effect.size$bcol,verbose=verbose)

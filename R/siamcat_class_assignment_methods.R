@@ -23,6 +23,13 @@ setGeneric("physeq<-", function(x, value) standardGeneric("physeq<-"))
 setMethod("physeq<-", c("siamcat","phyloseq"), function(x, value){
   siamcat(value, x@model_list, x@eval_data, x@label, x@norm_param, x@data_split, x@pred_matrix)
 })
+#' @rdname assign-physeq
+#' @aliases physeq<-
+setMethod("physeq<-", c("siamcat","otu_table"), function(x, value){
+  phyloseq <- physeq(x)
+  otu_table(phyloseq) <- value
+  siamcat(phyloseq, x@model_list, x@eval_data, x@label, x@norm_param, x@data_split, x@pred_matrix)
+})
 
 
 ################################################################################
