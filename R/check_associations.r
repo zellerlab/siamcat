@@ -163,6 +163,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
     if (p == "fc"){
       associations.fcs.plot(fc.all=effect.size$fc, binary.cols=effect.size$bcol,verbose=verbose)
     } else if (p == "prevalence"){
+      print(effect.size$pr.shift)
       associations.pr.shift.plot(pr.shifts=effect.size$pr.shift, col=col,verbose=verbose)
     } else if (p == "auroc"){
       associations.aucs.plot(aucs=effect.size[,c('auc', 'auc.ci.l', 'auc.ci.h')], binary.cols=effect.size$bcol,verbose=verbose)
@@ -559,7 +560,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     # prevalence shift
     temp.n <- sum(x[label@n.idx] >= pr.cutoff)/sum(label@n.idx)
     temp.p <- sum(x[label@p.idx] >= pr.cutoff)/sum(label@p.idx)
-    pr.shift <- c(temp.p-temp.n, temp.n, temp.p)
+    pr.shift <- c(abs(temp.p-temp.n), temp.n, temp.p)
     if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
     return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2], 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
              'pr.shift' = pr.shift[1], 'pr.n'=pr.shift[2], 'pr.p'=pr.shift[3]))
