@@ -415,7 +415,7 @@ associations.pr.shift.plot <- function(pr.shifts, col, verbose=1){
 
   # plot background
  plot(NULL, xlab='', ylab='', xaxs='i', yaxs='i', axes=FALSE,
-       xlim=c(0, 1), ylim=c(0.2, nrow(pr.shifts)+0.2), type='n')
+       xlim=c(0, 1), ylim=c(0.2, length(pr.shifts)+0.2), type='n')
 
   # plot bars
   row.names(pr.shifts) <- NULL
@@ -560,7 +560,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     # prevalence shift
     temp.n <- sum(x[label@n.idx] >= pr.cutoff)/sum(label@n.idx)
     temp.p <- sum(x[label@p.idx] >= pr.cutoff)/sum(label@p.idx)
-    pr.shift <- c(abs(temp.p-temp.n), temp.n, temp.p)
+    pr.shift <- c(temp.p-temp.n, temp.n, temp.p)
     if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
     return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2], 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
              'pr.shift' = pr.shift[1], 'pr.n'=pr.shift[2], 'pr.p'=pr.shift[3]))
