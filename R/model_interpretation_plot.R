@@ -431,7 +431,7 @@ select.features <- function(weights, model.type, consens.thres,
         if (norm.models) {
             weights <- t(t(weights)/colSums(abs(weights)))
         }
-        sel.idx = which(rowSums(weights != 0)/dim(weights)[2] >= consens.thres)
+        sel.idx = which(rowSums(weights != 0)/ncol(weights) >= consens.thres)
         # normalize by model size and order features by relative model weight
         weights.norm <- t(t(weights)/colSums(abs(weights)))
         med.weights <- rowMedians(weights.norm)
