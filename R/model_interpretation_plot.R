@@ -407,7 +407,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL, labe
     img.data[img.data > limits[2]] = limits[2]
     if (verbose > 2)
         message("+ finished plot.heatmap")
-    return(img.data)
+    return(t(img.data))
 }
 
 prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
@@ -419,7 +419,7 @@ prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
     img.data[img.data > limits[2]] <- limits[2]
     if (verbose > 2)
         message("+ finished plot.heatmap")
-    return(img.data)
+    return(t(img.data))
 }
 
 select.features <- function(weights, model.type, consens.thres,
