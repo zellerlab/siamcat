@@ -46,13 +46,16 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
 
         feat <- t(features(siamcat))
         label <- get.label.list(siamcat)
+        data.split <- get.data.split(siamcat)
+        models <- get.models(siamcat)
+
         label.fac <- factor(label$label, levels = c(label$negative.lab, label$positive.lab))
 
         # assert that there is a split
         stopifnot(!is.null(data_split(siamcat)))
 
-        num.folds <- data_split(siamcat)@num.folds
-        num.resample <- data_split(siamcat)@num.resample
+        num.folds <- data.split$num.folds
+        num.resample <- data.split$num.resample
 
         pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac), dimnames = list(names(label.fac), paste0("CV_rep", seq_len(num.resample))))
         i = 1
@@ -61,19 +64,19 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         for (f in seq_len(num.folds)) {
             for (r in seq_len(num.resample)) {
 
-                test.label <- label.fac[data_split(siamcat)@test.folds[[r]][[f]]]
-                data <- as.data.frame(feat[data_split(siamcat)@test.folds[[r]][[f]], ])
+                test.label <- label.fac[data.split$test.folds[[r]][[f]]]
+                data <- as.data.frame(feat[data.split$test.folds[[r]][[f]], ])
 
                 # assert stuff
                 stopifnot(nrow(data) == length(test.label))
                 stopifnot(all(rownames(data) == names(test.label)))
 
                 data$label <- test.label
-                model <- model_list(siamcat)@models[[i]]
+                model <- models[[i]]
 
                 stopifnot(!any(rownames(model$task$env$data) %in% rownames(data)))
                 if (verbose > 2)
-                  message(paste0("Applying ", model_list(siamcat)@model.type, " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample*num.folds, ")..."))
+                  message(paste0("Applying ", get.model.type(siamcat), " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample*num.folds, ")..."))
 
                 task <- makeClassifTask(data = data, target = "label")
                 pdata <- predict(model, task = task)
@@ -106,11 +109,13 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         feat.test <- t(features(siamcat.holdout))
         feat.ref <- t(features(siamcat))
         label <- get.label.list(siamcat.holdout)
+        data.split <- get.data.split(siamcat)
+        models <- get.models(siamcat)
         # data sanity checks
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
 
         # prediction
-        num.models <- data_split(siamcat)@num.folds * data_split(siamcat)@num.resample
+        num.models <- data.split$num.folds * data.split$num.resample
 
         pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test), dimnames = list(rownames(feat.test), paste0("Model_", seq_len(num.models))))
         if (verbose == 1 || verbose == 2)
@@ -118,13 +123,13 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         for (i in seq_len(num.models)) {
 
             data <- as.data.frame(feat.test)
-            model <- model_list(siamcat)@models[[i]]
+            model <- models[[i]]
 
             data <- data[, model$features]
             data$label <- as.factor(label$label)
 
             if (verbose > 2)
-                message(paste0("Applying ", model_list(siamcat)@model.type, " on complete external dataset", " (", i, " of ", num.models, ")..."))
+                message(paste0("Applying ", get.model.type(siamcat), " on complete external dataset", " (", i, " of ", num.models, ")..."))
 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)

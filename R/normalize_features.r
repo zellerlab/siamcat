@@ -90,7 +90,7 @@ normalize.features <- function(siamcat,
     if (verbose > 1)
         message("+ starting normalize.features")
     s.time <- proc.time()[3]
-    feat <- features(feat)@.Data
+    feat <- get.features.matrix(siamcat)
 
     if (is.null(norm.param$norm.method)) {
         # de novo normalization

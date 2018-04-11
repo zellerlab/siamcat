@@ -95,7 +95,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   # either give n_classes colors or color palette
   col <- check.color.scheme(color.scheme, label(siamcat))
 
-  feat <- features(siamcat)@.Data
+  feat <- get.features.matrix(siamcat)
   label <- get.label.list(siamcat)
 
   ### Calculate different effect sizes
@@ -565,7 +565,7 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
     return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2], 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
              'pr.shift' = pr.shift[1], 'pr.n'=pr.shift[2], 'pr.p'=pr.shift[3]))
   })))
-  cat('\n')
+
   effect.size$bcol <- ifelse(effect.size[,'auc'] >= 0.5, colors[2], colors[1])
 
   ### Apply multi-hypothesis testing correction

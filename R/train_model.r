@@ -66,6 +66,7 @@ train.model <- function(siamcat,
     if (verbose > 1)
         message("+ starting train.model")
     label <- get.label.list(siamcat)
+    data.split <- get.data.split(siamcat)
     s.time <- proc.time()[3]
     # check modsel.crit
     if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))) {
@@ -99,7 +100,7 @@ train.model <- function(siamcat,
     # Create List to save models.
     models.list <- list()
     power <- NULL
-    num.runs <- data_split(siamcat)@num.folds * data_split(siamcat)@num.resample
+    num.runs <- data.split$num.folds * data.split$num.resample
     bar <- 0
     if (verbose > 1)
         message(paste("+ training", method, "models on", num.runs, "training sets"))
@@ -107,18 +108,18 @@ train.model <- function(siamcat,
     if (verbose == 1 || verbose == 2)
         pb <- txtProgressBar(max = num.runs, style = 3)
 
-    for (fold in seq_len(data_split(siamcat)@num.folds)) {
+    for (fold in seq_len(data.split$num.folds)) {
 
         if (verbose > 2)
             message(paste("+++ training on cv fold:", fold))
 
-        for (resampling in seq_len(data_split(siamcat)@num.resample)) {
+        for (resampling in seq_len(data.split$num.resample)) {
 
             if (verbose > 2)
                 message(paste("++++ repetition:", resampling))
 
             fold.name <- paste0("cv_fold", as.character(fold), "_rep", as.character(resampling))
-            fold.exm.idx <- match(data_split(siamcat)@training.folds[[resampling]][[fold]], names(label$label))
+            fold.exm.idx <- match(data.split$training.folds[[resampling]][[fold]], names(label$label))
 
             ### subselect examples for training
             label.fac <- factor(label$label, levels = c(label$negative.lab, label$positive.lab))

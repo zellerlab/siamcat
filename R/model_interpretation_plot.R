@@ -59,6 +59,8 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
     label <- get.label.list(siamcat)
+    model.type <- get.model.type(siamcat)
+    models <- get.models(siamcat)
     # #########################################################################
     # some color pre-processing
     if (verbose > 2)
@@ -74,14 +76,14 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     # get model type from model
     if (verbose > 2)
         message("+++ retrieving model type")
-    W.mat <- get.weights.matrix(model_list(siamcat)@models, verbose = verbose)
+    W.mat <- get.weights.matrix(models, verbose = verbose)
     all.weights <- W.mat[union(row.names(features(siamcat)), grep("META", row.names(W.mat), value = TRUE)), ]  # remove possible intercept parameters, but keep possible meta data included in the model
     rel.weights <- t(t(all.weights)/colSums(abs(all.weights)))
     # #########################################################################
     # preprocess models
     if (verbose > 2)
         message("+++ preprocessing models")
-    sel.idx <- select.features(weights = all.weights, model.type = model_list(siamcat)@model.type, consens.thres = consens.thres,
+    sel.idx <- select.features(weights = all.weights, model.type = model.type, consens.thres = consens.thres,
         label = label, norm.models = norm.models, max.show = max.show, verbose = verbose)
     num.sel.f <- length(sel.idx)
     # #########################################################################
@@ -95,10 +97,10 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 2)
         message("+++ preparing heatmap")
     if (heatmap.type == "zscore") {
-        feat <- features(siamcat)@.Data
+        feat <- get.features.matrix(siamcat)
         img.data <- prepare.heatmap.zscore(heatmap.data = feat[sel.idx, srt.idx], limits = limits, verbose = verbose)
     } else if (heatmap.type == "fc") {
-        feat <- orig_feat(siamcat)@.Data
+        feat <- get.orig_feat.matrix(siamcat)
         if (is.null(detect.lim)) {
             warning("WARNING: Pseudo-count before log-transformation not supplied! Estimating it as 5% percentile...")
             detect.lim <- quantile(feat[feat != 0], 0.05)
@@ -176,20 +178,20 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     par(mar = c(0, 6.1, 3.1, 1.1))
     plot(NULL, type = "n", xlim = c(-0.1, 0.1), xaxt = "n", xlab = "", ylim = c(-0.1, 0.1), yaxt = "n", ylab = "",
         bty = "n")
-    mtext(paste0(model_list(siamcat)@model.type, " model"), side = 3, line = 2, at = 0.04, cex = 0.7, adj = 0.5)
+    mtext(paste0(model.type, " model"), side = 3, line = 2, at = 0.04, cex = 0.7, adj = 0.5)
     mtext(paste("(|W| = ", num.sel.f, ")", sep = ""), side = 3, line = 1, at = 0.04, cex = 0.7, adj = 0.5)
 
     # #########################################################################
     # Feature weights ( model sensitive)
     if (verbose > 2)
         message("+++ plotting feature weights")
-    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, mod.type = model_list(siamcat)@model.type, label = label)
+    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, mod.type = model.type, label = label)
 
     # #########################################################################
     # Heatmap
     if (verbose > 2)
         message("+++ plotting heatmap")
-    if (model_list(siamcat)@model.type != "RandomForest") {
+    if (model.type != "RandomForest") {
         plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = rowMedians(rel.weights[sel.idx,]), verbose = verbose)
     } else {
         auroc.effect <- apply(img.data, 2, FUN = function(f) {
