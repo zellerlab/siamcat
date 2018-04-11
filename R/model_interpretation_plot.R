@@ -58,7 +58,8 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
-    # ############################################################################ some color pre-processing
+    # #########################################################################
+    # some color pre-processing
     if (verbose > 2)
         message("+++ preprocessing color scheme")
     if (!color.scheme %in% row.names(brewer.pal.info)) {
@@ -68,24 +69,28 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     }
     color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info[color.scheme, "maxcolors"], color.scheme))(100))
 
-    # ############################################################################ get model type from model
+    # #########################################################################
+    # get model type from model
     if (verbose > 2)
         message("+++ retrieving model type")
-    W.mat <- get.weights.matrix(siamcat@model_list@models, verbose = verbose)
-    all.weights <- W.mat[union(row.names(siamcat@phyloseq@otu_table), grep("META", row.names(W.mat), value = TRUE)), ]  # remove possible intercept parameters, but keep possible meta data included in the model
+    W.mat <- get.weights.matrix(model_list(siamcat)@models, verbose = verbose)
+    all.weights <- W.mat[union(row.names(features(siamcat)), grep("META", row.names(W.mat), value = TRUE)), ]  # remove possible intercept parameters, but keep possible meta data included in the model
     rel.weights <- t(t(all.weights)/colSums(abs(all.weights)))
-    # ############################################################################ preprocess models
+    # #########################################################################
+    # preprocess models
     if (verbose > 2)
         message("+++ preprocessing models")
-    sel.idx <- select.features(weights = all.weights, model.type = siamcat@model_list@model.type, consens.thres = consens.thres,
-        label = siamcat@label, norm.models = norm.models, max.show = max.show, verbose = verbose)
+    sel.idx <- select.features(weights = all.weights, model.type = model_list(siamcat)@model.type, consens.thres = consens.thres,
+        label = label(siamcat), norm.models = norm.models, max.show = max.show, verbose = verbose)
     num.sel.f <- length(sel.idx)
-    # ############################################################################ aggreate predictions and sort
+    # #########################################################################
+    # aggreate predictions and sort
     # patients by score aggregate predictions of several models if more than one is given
-    mean.agg.pred <- rowMeans(siamcat@pred_matrix)
+    mean.agg.pred <- rowMeans(pred_matrix(siamcat))
     ### idx to sort samples according to their class membership and prediction score
-    srt.idx <- sort(siamcat@label@label + mean.agg.pred, index.return = TRUE)$ix
-    # ############################################################################ prepare heatmap
+    srt.idx <- sort(label(siamcat)@label + mean.agg.pred, index.return = TRUE)$ix
+    # #########################################################################
+    # prepare heatmap
     if (verbose > 2)
         message("+++ preparing heatmap")
     if (heatmap.type == "zscore") {
@@ -103,7 +108,8 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         stop("! unknown heatmap.type: ", heatmap.type)
     }
 
-    # ############################################################################ start plotting model properties
+    # #########################################################################
+    # start plotting model properties
     if (verbose > 2)
         message("+++ plotting model properties")
     pdf(fn.plot, paper = "special", height = 8.27, width = 11.69, onefile = TRUE)
@@ -112,14 +118,15 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     sel.f.cex <- max(0.3, 0.8 - 0.01 * num.sel.f)
     lmat <- rbind(c(1, 2, 3, 4), c(5, 6, 0, 7), c(0, 8, 0, 0))
     h_t <- 0.1
-    h_m <- ifelse(is.null(siamcat@phyloseq@sam_data), 0.8, max(0.5, 0.7 - 0.01 * dim(siamcat@phyloseq@sam_data)[2]))
+    h_m <- ifelse(is.null(meta(siamcat)), 0.8, max(0.5, 0.7 - 0.01 * ncol(meta(siamcat))))
     h_b <- 1 - h_t - h_m
     message(paste0("Layout height values: ", h_t, ", ", h_m, ", ", h_b))
     layout(lmat, widths = c(0.14, 0.58, 0.1, 0.14), heights = c(h_t, h_m, h_b))
     par(oma = c(3, 4, 3, 4))
 
-    ### header row ############################################################################ Title of Feature Weights
-    ### plot
+    ### header row
+    #########################################################################
+    # Title of Feature Weights
     if (verbose > 2)
         message("+++ plotting titles")
     par(mar = c(0, 1.1, 3.1, 1.1))
@@ -127,10 +134,10 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         bty = "n")
     mtext("Feature Weights", side = 3, line = 2, at = 0.04, cex = 1, adj = 0.5)
 
-    # ############################################################################ Title of heatmap and brackets for
-    # classes
+    # #########################################################################
+    # Title of heatmap and brackets for classes
     par(mar = c(0, 4.1, 3.1, 5.1))
-    hm.label <- siamcat@label@label[srt.idx]
+    hm.label <- label(siamcat)@label[srt.idx]
     plot(NULL, type = "n", xlim = c(0, length(hm.label)), xaxs = "i", xaxt = "n", ylim = c(-0.5, 0.5), yaxs = "i",
         yaxt = "n", xlab = "", ylab = "", bty = "n")
     ul <- unique(hm.label)
@@ -140,13 +147,14 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         lines(c(idx[1] - 0.8, idx[1] - 0.8), c(-0.2, 0))
         lines(c(idx[length(idx)] - 0.2, idx[length(idx)] - 0.2), c(-0.2, 0))
         h <- (idx[1] + idx[length(idx)])/2
-        t <- gsub("_", " ", names(siamcat@label@info$class.descr)[siamcat@label@info$class.descr == ul[l]])
+        t <- gsub("_", " ", names(label(siamcat)@info$class.descr)[label(siamcat)@info$class.descr == ul[l]])
         t <- paste(t, " (n=", length(idx), ")", sep = "")
         mtext(t, side = 3, line = -0.5, at = h, cex = 0.7, adj = 0.5)
     }
     mtext("Metagenomic Features", side = 3, line = 2, at = length(hm.label)/2, cex = 1, adj = 0.5)
 
-    # ############################################################################ Heatmap legend
+    # #########################################################################
+    # Heatmap legend
     if (verbose > 2)
         message("+++ plotting legend")
     par(mar = c(3.1, 1.1, 1.1, 1.1))
@@ -162,22 +170,25 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     axis(side = 1, at = seq(0, 100, length.out = 7), labels = key.ticks)
     mtext(key.label, side = 3, line = 0.5, at = 50, cex = 0.7, adj = 0.5)
 
-    # ############################################################################ Model header (model sensitive)
+    # #########################################################################
+    # Model header (model sensitive)
     par(mar = c(0, 6.1, 3.1, 1.1))
     plot(NULL, type = "n", xlim = c(-0.1, 0.1), xaxt = "n", xlab = "", ylim = c(-0.1, 0.1), yaxt = "n", ylab = "",
         bty = "n")
-    mtext(paste0(siamcat@model_list@model.type, " model"), side = 3, line = 2, at = 0.04, cex = 0.7, adj = 0.5)
+    mtext(paste0(model_list(siamcat)@model.type, " model"), side = 3, line = 2, at = 0.04, cex = 0.7, adj = 0.5)
     mtext(paste("(|W| = ", num.sel.f, ")", sep = ""), side = 3, line = 1, at = 0.04, cex = 0.7, adj = 0.5)
 
-    # ############################################################################ Feature weights ( model sensitive)
+    # #########################################################################
+    # Feature weights ( model sensitive)
     if (verbose > 2)
         message("+++ plotting feature weights")
-    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, mod.type = siamcat@model_list@model.type, label = siamcat@label)
+    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, mod.type = model_list(siamcat)@model.type, label = label(siamcat))
 
-    # ############################################################################ Heatmap
+    # #########################################################################
+    # Heatmap
     if (verbose > 2)
         message("+++ plotting heatmap")
-    if (siamcat@model_list@model.type != "RandomForest") {
+    if (model_list(siamcat)@model.type != "RandomForest") {
         plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = rowMedians(rel.weights[sel.idx,]), verbose = verbose)
     } else {
         auroc.effect <- apply(img.data, 2, FUN = function(f) {
@@ -187,16 +198,17 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = NULL, verbose = verbose)
     }
 
-    # ############################################################################ Proportion of weights shown
+    # #########################################################################
+    # Proportion of weights shown
     if (verbose > 2)
         message("+++ plotting proportion of weights shown")
     plot.proportion.of.weights(selected.weights = all.weights[sel.idx, ], all.weights = all.weights, verbose = verbose)
 
-    # ############################################################################ Metadata and prediction
+    # #########################################################################
+    # Metadata and prediction
     if (verbose > 2)
         message("+++ plotting metadata and predictions")
-    plot.pred.and.meta(prediction = mean.agg.pred[srt.idx], label = siamcat@label, meta = siamcat@phyloseq@sam_data[srt.idx,
-        ], verbose = verbose)
+    plot.pred.and.meta(prediction = mean.agg.pred[srt.idx], label = label(siamcat), meta = meta(siamcat)[srt.idx,], verbose = verbose)
 
     tmp <- dev.off()
     e.time <- proc.time()[3]

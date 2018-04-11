@@ -98,7 +98,7 @@ train.model <- function(siamcat,
     # Create List to save models.
     models.list <- list()
     power <- NULL
-    num.runs <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
+    num.runs <- data_split(siamcat)@num.folds * data_split(siamcat)@num.resample
     bar <- 0
     if (verbose > 1)
         message(paste("+ training", method, "models on", num.runs, "training sets"))
@@ -106,30 +106,30 @@ train.model <- function(siamcat,
     if (verbose == 1 || verbose == 2)
         pb <- txtProgressBar(max = num.runs, style = 3)
 
-    for (fold in seq_len(siamcat@data_split@num.folds)) {
+    for (fold in seq_len(data_split(siamcat)@num.folds)) {
 
         if (verbose > 2)
             message(paste("+++ training on cv fold:", fold))
 
-        for (resampling in seq_len(siamcat@data_split@num.resample)) {
+        for (resampling in seq_len(data_split(siamcat)@num.resample)) {
 
             if (verbose > 2)
                 message(paste("++++ repetition:", resampling))
 
             fold.name <- paste0("cv_fold", as.character(fold), "_rep", as.character(resampling))
-            fold.exm.idx <- match(siamcat@data_split@training.folds[[resampling]][[fold]], names(siamcat@label@label))
+            fold.exm.idx <- match(data_split(siamcat)@training.folds[[resampling]][[fold]], names(label(siamcat)@label))
 
             ### subselect examples for training
-            label.fac <- factor(siamcat@label@label, levels = c(siamcat@label@negative.lab, siamcat@label@positive.lab))
+            label.fac <- factor(label(siamcat)@label, levels = c(label(siamcat)@negative.lab, label(siamcat)@positive.lab))
             train.label <- label.fac[fold.exm.idx]
-            data <- as.data.frame(t(siamcat@phyloseq@otu_table)[fold.exm.idx, ])
+            data <- as.data.frame(t(features(siamcat))[fold.exm.idx, ])
             stopifnot(nrow(data) == length(train.label))
             stopifnot(all(rownames(data) == names(train.label)))
             data$label <- train.label
 
             ### internal cross-validation for model selection
             model <- train.plm(data = data, method = method, measure = measure, min.nonzero.coeff = min.nonzero.coeff,
-                param.set = param.set, neg.lab = siamcat@label@negative.lab)
+                param.set = param.set, neg.lab = label(siamcat)@negative.lab)
             bar <- bar + 1
 
             if (!all(model$feat.weights == 0)) {
@@ -143,7 +143,7 @@ train.model <- function(siamcat,
         }
     }
 
-    siamcat@model_list <- new("model_list", models = models.list, model.type = method)
+    model_list(siamcat) <- new("model_list", models = models.list, model.type = method)
     e.time <- proc.time()[3]
 
     if (verbose > 1)

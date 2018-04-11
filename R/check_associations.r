@@ -139,13 +139,13 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
 
   if(verbose>2) message("+++ plotting results")
   if (plot.type == "bean"){
-    associations.bean.plot(feat.red.log, siamcat@label, col=col, verbose=verbose)
+    associations.bean.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
   } else if (plot.type == "box"){
-    associations.box.plot(feat.red.log, siamcat@label, col=col, verbose=verbose)
+    associations.box.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
   } else if (plot.type == "quantile.box"){
-    associations.quantile.box.plot(feat.red.log, siamcat@label, col=col, verbose=verbose)
+    associations.quantile.box.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
   } else if (plot.type == "quantile.rect"){
-    associations.quantile.rect.plot(feat.red.log, siamcat@label, col=col, verbose=verbose)
+    associations.quantile.rect.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
   }
 
   # plot title

@@ -45,13 +45,13 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             message("+ starting make.predictions on siamcat object")
 
         feat <- t(features(siamcat))
-        label.fac <- factor(siamcat@label@label, levels = c(siamcat@label@negative.lab, siamcat@label@positive.lab))
+        label.fac <- factor(label(siamcat)@label, levels = c(label(siamcat)@negative.lab, label(siamcat)@positive.lab))
 
         # assert that there is a split
-        stopifnot(!is.null(siamcat@data_split))
+        stopifnot(!is.null(data_split(siamcat)))
 
-        num.folds <- siamcat@data_split@num.folds
-        num.resample <- siamcat@data_split@num.resample
+        num.folds <- data_split(siamcat)@num.folds
+        num.resample <- data_split(siamcat)@num.resample
 
         pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac), dimnames = list(names(label.fac), paste0("CV_rep", seq_len(num.resample))))
         i = 1
@@ -60,15 +60,15 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         for (f in seq_len(num.folds)) {
             for (r in seq_len(num.resample)) {
 
-                test.label <- label.fac[siamcat@data_split@test.folds[[r]][[f]]]
-                data <- as.data.frame(feat[siamcat@data_split@test.folds[[r]][[f]], ])
+                test.label <- label.fac[data_split(siamcat)@test.folds[[r]][[f]]]
+                data <- as.data.frame(feat[data_split(siamcat)@test.folds[[r]][[f]], ])
 
                 # assert stuff
                 stopifnot(nrow(data) == length(test.label))
                 stopifnot(all(rownames(data) == names(test.label)))
 
                 data$label <- test.label
-                model <- siamcat@model_list@models[[i]]
+                model <- model_list(siamcat)@models[[i]]
 
                 stopifnot(!any(rownames(model$task$env$data) %in% rownames(data)))
                 if (verbose > 2)
@@ -79,8 +79,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
 
                 # rescale posterior probabilities between -1 and 1 (this works only for binary data!!!!)  TODO: Will need
                 # adjustment and generalization in the future)
-                p <- siamcat@label@negative.lab + abs(siamcat@label@positive.lab - siamcat@label@negative.lab) * pdata$data[,
-                  4]
+                p <- label(siamcat)@negative.lab + abs(label(siamcat)@positive.lab - label(siamcat)@negative.lab) * pdata$data[,4]
                 names(p) <- rownames(pdata$data)
                 pred[names(p), r] <- p
                 i <- i + 1
@@ -89,7 +88,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             }
         }
         stopifnot(!any(is.na(pred)))
-        siamcat@pred_matrix <- pred
+        pred_matrix(siamcat) <- pred
         return.object <- siamcat
     } else {
 
@@ -99,18 +98,18 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         if (normalize.holdout) {
             if (verbose > 1)
                 message("+ Performing frozen normalization on holdout set")
-            siamcat.holdout <- normalize.features(siamcat.holdout, norm.param = siamcat@norm_param, verbose = verbose)
+            siamcat.holdout <- normalize.features(siamcat.holdout, norm.param = norm_param(siamcat), verbose = verbose)
         } else {
             message("WARNING: holdout set is not being normalized!")
         }
-        feat.test <- t(siamcat.holdout@phyloseq@otu_table)
+        feat.test <- t(features(siamcat.holdout))
         feat.ref <- t(features(siamcat))
 
         # data sanity checks
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
 
         # prediction
-        num.models <- siamcat@data_split@num.folds * siamcat@data_split@num.resample
+        num.models <- data_split(siamcat)@num.folds * data_split(siamcat)@num.resample
 
         pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test), dimnames = list(rownames(feat.test), paste0("Model_", seq_len(num.models))))
         if (verbose == 1 || verbose == 2)
@@ -118,10 +117,10 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         for (i in seq_len(num.models)) {
 
             data <- as.data.frame(feat.test)
-            model <- siamcat@model_list@models[[i]]
+            model <- model_list(siamcat)@models[[i]]
 
             data <- data[, model$features]
-            data$label <- as.factor(siamcat.holdout@label@label)
+            data$label <- as.factor(label(siamcat.holdout)@label)
 
             if (verbose > 2)
                 message(paste("Applying ", model_list(siamcat)@model.type, " on complete external dataset", " (", i, " of ", num.models, ")..."))
@@ -129,8 +128,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
 
-            p <- siamcat@label@negative.lab + abs(siamcat@label@positive.lab - siamcat@label@negative.lab) * pdata$data[,
-                4]
+            p <- label(siamcat)@negative.lab + abs(label(siamcat)@positive.lab - label(siamcat)@negative.lab) * pdata$data[,4]
             names(p) <- rownames(pdata$data)
             pred[names(p), i] <- p
             if (verbose == 1 || verbose == 2)
