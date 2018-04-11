@@ -65,6 +65,7 @@ train.model <- function(siamcat,
 
     if (verbose > 1)
         message("+ starting train.model")
+    label <- get.label.list(siamcat)
     s.time <- proc.time()[3]
     # check modsel.crit
     if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))) {
@@ -117,10 +118,10 @@ train.model <- function(siamcat,
                 message(paste("++++ repetition:", resampling))
 
             fold.name <- paste0("cv_fold", as.character(fold), "_rep", as.character(resampling))
-            fold.exm.idx <- match(data_split(siamcat)@training.folds[[resampling]][[fold]], names(label(siamcat)@label))
+            fold.exm.idx <- match(data_split(siamcat)@training.folds[[resampling]][[fold]], names(label$label))
 
             ### subselect examples for training
-            label.fac <- factor(label(siamcat)@label, levels = c(label(siamcat)@negative.lab, label(siamcat)@positive.lab))
+            label.fac <- factor(label$label, levels = c(label$negative.lab, label$positive.lab))
             train.label <- label.fac[fold.exm.idx]
             data <- as.data.frame(t(features(siamcat))[fold.exm.idx, ])
             stopifnot(nrow(data) == length(train.label))
@@ -129,7 +130,7 @@ train.model <- function(siamcat,
 
             ### internal cross-validation for model selection
             model <- train.plm(data = data, method = method, measure = measure, min.nonzero.coeff = min.nonzero.coeff,
-                param.set = param.set, neg.lab = label(siamcat)@negative.lab)
+                param.set = param.set, neg.lab = label$negative.lab)
             bar <- bar + 1
 
             if (!all(model$feat.weights == 0)) {

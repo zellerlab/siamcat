@@ -27,6 +27,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
+    label <- get.label.list(siamcat)
     pdf(fn.plot, onefile = TRUE)
 
     if (verbose > 2)
@@ -43,9 +44,9 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
             if (verbose > 2)
                 message(paste("+++ AU-ROC (resampled run ", c, "): ", format(aucs[c], digits = 3)))
         }
-        l.vec = rep(label(siamcat)@label, ncol(pred_matrix(siamcat)))
+        l.vec = rep(label$label, ncol(pred_matrix(siamcat)))
     } else {
-        l.vec = label(siamcat)@label
+        l.vec = label$label
     }
     roc.summ = eval_data(siamcat)$roc.average[[1]]
     lines(1 - roc.summ$specificities, roc.summ$sensitivities, col = "black", lwd = 2)
@@ -72,7 +73,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
         message("+ plotting PRC")
     plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "Recall", ylab = "Precision", type = "n")
     title(paste("Precision-recall curve for the model", sep = " "))
-    abline(h = mean(label(siamcat)@label == label(siamcat)@positive.lab), lty = 3)
+    abline(h = mean(label$label == label$positive.lab), lty = 3)
 
     if (ncol(pred_matrix(siamcat)) > 1) {
         aucspr = vector("numeric", ncol(pred_matrix(siamcat)))

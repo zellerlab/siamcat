@@ -1,4 +1,4 @@
-#!/usr/bin/Rscript
+label$#!/usr/bin/Rscript
 ### SIAMCAT - Statistical Inference of Associations between
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
@@ -96,10 +96,11 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   col <- check.color.scheme(color.scheme, label(siamcat))
 
   feat <- features(siamcat)@.Data
+  label <- get.label.list(siamcat)
 
   ### Calculate different effect sizes
   if(verbose>2) message("+++ analysing features\n")
-  result.list <- analyse.binary.marker(feat=feat, label=label(siamcat), detect.lim=detect.lim, colors=col,
+  result.list <- analyse.binary.marker(feat=feat, label=label, detect.lim=detect.lim, colors=col,
                                         pr.cutoff=pr.cutoff, mult.corr=mult.corr, alpha=alpha,
                                         max.show=max.show, sort.by=sort.by, probs.fc=seq(.1, .9, .05),verbose=verbose)
 
@@ -139,13 +140,13 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
 
   if(verbose>2) message("+++ plotting results")
   if (plot.type == "bean"){
-    associations.bean.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
+    associations.bean.plot(feat.red.log, label, col=col, verbose=verbose)
   } else if (plot.type == "box"){
-    associations.box.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
+    associations.box.plot(feat.red.log, label, col=col, verbose=verbose)
   } else if (plot.type == "quantile.box"){
-    associations.quantile.box.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
+    associations.quantile.box.plot(feat.red.log, label, col=col, verbose=verbose)
   } else if (plot.type == "quantile.rect"){
-    associations.quantile.rect.plot(feat.red.log, label(siamcat), col=col, verbose=verbose)
+    associations.quantile.rect.plot(feat.red.log, label, col=col, verbose=verbose)
   }
 
   # plot title
@@ -183,13 +184,13 @@ associations.bean.plot <- function(data.mat, label, col, verbose=1){
   if(verbose>2) message("+ starting associations.bean.plot")
   # create data.frame in format for beanplot
   bean.data <- data.frame(data=c(data.mat))
-  bean.data$factor <- c(vapply(label@label,
+  bean.data$factor <- c(vapply(label$label,
     FUN=function(x){
-      paste(rownames(data.mat), names(label@info$class.descr[match(x, label@info$class.descr)]))},
+      paste(rownames(data.mat), names(label$info$class.descr[match(x, label$info$class.descr)]))},
     FUN.VALUE = character(nrow(data.mat)),
     USE.NAMES = FALSE))
     # ensure correct ordering by converting to a factor
-  bean.data$factor <- factor(bean.data$factor, levels=paste(rep(rownames(data.mat),each=2), c(label@n.lab, label@p.lab)))
+  bean.data$factor <- factor(bean.data$factor, levels=paste(rep(rownames(data.mat),each=2), c(label$n.lab, label$p.lab)))
 
  mn <- as.integer(c(min(bean.data$data)))
  mx <- as.integer(c(max(bean.data$data)))
@@ -211,7 +212,7 @@ associations.bean.plot <- function(data.mat, label, col, verbose=1){
            what = c(FALSE,TRUE,TRUE,FALSE), axes = FALSE, add = TRUE)
 
 
-  legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
+  legend('topright', legend=c(label$p.lab, label$n.lab), fill=rev(col), bty='n')
   associations.labels.plot(rownames(data.mat), plot.type='bean', verbose=verbose)
   if(verbose>2) message("+ finished associations.bean.plot")
 }
@@ -223,13 +224,13 @@ associations.box.plot <- function(data.mat, label, col, verbose=1){
 
   # create data.frame in format for beanplot
   plot.data <- data.frame(data=c(data.mat))
-  plot.data$factor <- c(vapply(label@label,
+  plot.data$factor <- c(vapply(label$label,
     FUN=function(x){
-      paste(rownames(data.mat), names(label@info$class.descr[match(x, label@info$class.descr)]))},
+      paste(rownames(data.mat), names(label$info$class.descr[match(x, label$info$class.descr)]))},
     FUN.VALUE = character(nrow(data.mat)),
     USE.NAMES = FALSE))
     # ensure correct ordering by converting to a factor
-  plot.data$factor <- factor(plot.data$factor, levels=paste(rep(rownames(data.mat),each=2), c(label@n.lab, label@p.lab)))
+  plot.data$factor <- factor(plot.data$factor, levels=paste(rep(rownames(data.mat),each=2), c(label$n.lab, label$p.lab)))
 
   mn <- as.integer(c(min(data.mat)))
   mx <- as.integer(c(max(data.mat)))
@@ -249,7 +250,7 @@ associations.box.plot <- function(data.mat, label, col, verbose=1){
 
   tick.labels <- formatC(10^ticks, format='E', digits=0)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
+  legend('topright', legend=c(label$p.lab, label$n.lab), fill=rev(col), bty='n')
   associations.labels.plot(row.names(data.mat), plot.type='box', verbose=verbose)
   if(verbose>2) message("+ finished associations.box.plot")
 }
@@ -275,8 +276,8 @@ associations.quantile.box.plot <- function(data.mat, label, col, verbose=1){
 
   # get quantiles
   quant.probs <- c(0.05, 0.25, 0.5, 0.75, 0.95)
-  quantiles.pos = rowQuantiles(data.mat[,label@p.idx], probs=quant.probs, na.rm=TRUE)
-  quantiles.neg = rowQuantiles(data.mat[,label@n.idx], probs=quant.probs, na.rm=TRUE)
+  quantiles.pos = rowQuantiles(data.mat[,label$p.idx], probs=quant.probs, na.rm=TRUE)
+  quantiles.neg = rowQuantiles(data.mat[,label$n.idx], probs=quant.probs, na.rm=TRUE)
 
   # inter-quartile range
   quantiles.plot(quantiles.pos, up=TRUE, pos.col)
@@ -288,10 +289,10 @@ associations.quantile.box.plot <- function(data.mat, label, col, verbose=1){
     pos.col.t <- change.transparency(pos.col)
     neg.col.t <- change.transparency(neg.col)
 
-    points(data.mat[i,label@p.idx], rep(i+0.15, sum(label@p.idx))+rnorm(sum(label@p.idx),sd=0.03), pch=16, cex=0.6, col=pos.col.t)
-    points(data.mat[i,label@n.idx], rep(i-0.15, sum(label@n.idx))+rnorm(sum(label@n.idx),sd=0.03), pch=16, cex=0.6, col=neg.col.t)
+    points(data.mat[i,label$p.idx], rep(i+0.15, sum(label$p.idx))+rnorm(sum(label$p.idx),sd=0.03), pch=16, cex=0.6, col=pos.col.t)
+    points(data.mat[i,label$n.idx], rep(i-0.15, sum(label$n.idx))+rnorm(sum(label$n.idx),sd=0.03), pch=16, cex=0.6, col=neg.col.t)
   }
-  legend('topright', legend=c(label@p.lab, label@n.lab), fill=rev(col), bty='n')
+  legend('topright', legend=c(label$p.lab, label$n.lab), fill=rev(col), bty='n')
   associations.labels.plot(row.names(data.mat), plot.type='quantile.box',verbose=verbose)
   if(verbose>2) message("+ finished associations.quantile.box.plot")
 }
@@ -302,8 +303,8 @@ associations.quantile.rect.plot <- function(data.mat, label, col, verbose=1){
   n.spec <- nrow(data.mat)
   quant.probs <- seq(from=0.1,to=0.9,by=0.1)
 
-  quantiles.pos = rowQuantiles(data.mat[,label@p.idx], probs=quant.probs, na.rm=TRUE)
-  quantiles.neg = rowQuantiles(data.mat[,label@n.idx], probs=quant.probs, na.rm=TRUE)
+  quantiles.pos = rowQuantiles(data.mat[,label$p.idx], probs=quant.probs, na.rm=TRUE)
+  quantiles.neg = rowQuantiles(data.mat[,label$n.idx], probs=quant.probs, na.rm=TRUE)
 
   p.mn <- min(data.mat, na.rm=TRUE)
   p.mx <- max(data.mat, na.rm=TRUE)
@@ -471,7 +472,7 @@ is.color <- function(x){
 #     as strings
 check.color.scheme <- function(color.scheme, label, verbose=1){
   if(verbose>2) message("+ starting check.color.scheme")
-  n.classes = ifelse(label@info$type == 'BINARY', 2, length(unique(label@label)))
+  n.classes = ifelse(label$info$type == 'BINARY', 2, length(unique(label$label)))
 
   if (length(color.scheme) == 1 && class(color.scheme) == 'character'){
     if (n.classes == 2){
@@ -545,20 +546,20 @@ analyse.binary.marker<- function(feat, label, detect.lim, colors,
   if(verbose) pb = txtProgressBar(max=nrow(feat), style=3)
   effect.size <- data.frame(t(apply(feat, 1, FUN=function(x){
     # pseudo-fold change as differential quantile area
-    q.p <- quantile(log10(x[label@p.idx]+detect.lim), probs=probs.fc)
-    q.n <- quantile(log10(x[label@n.idx]+detect.lim), probs=probs.fc)
+    q.p <- quantile(log10(x[label$p.idx]+detect.lim), probs=probs.fc)
+    q.n <- quantile(log10(x[label$n.idx]+detect.lim), probs=probs.fc)
     fc <- sum(q.p - q.n)/length(q.p)
 
     # wilcoxon
-    p.val <- wilcox.test(x[label@n.idx], x[label@p.idx], exact = FALSE)$p.value
+    p.val <- wilcox.test(x[label$n.idx], x[label$p.idx], exact = FALSE)$p.value
 
     # AU-ROC
-    temp  <- roc(predictor=x, response=label@label, ci=TRUE, direction='<')
+    temp  <- roc(predictor=x, response=label$label, ci=TRUE, direction='<')
     aucs <- c(temp$ci)
 
     # prevalence shift
-    temp.n <- sum(x[label@n.idx] >= pr.cutoff)/sum(label@n.idx)
-    temp.p <- sum(x[label@p.idx] >= pr.cutoff)/sum(label@p.idx)
+    temp.n <- sum(x[label$n.idx] >= pr.cutoff)/sum(label$n.idx)
+    temp.p <- sum(x[label$p.idx] >= pr.cutoff)/sum(label$p.idx)
     pr.shift <- c(temp.p-temp.n, temp.n, temp.p)
     if(verbose) setTxtProgressBar(pb, (pb$getVal()+1))
     return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2], 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],

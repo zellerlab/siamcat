@@ -1,4 +1,4 @@
-#!/usr/bin/Rscript
+label$#!/usr/bin/Rscript
 ### SIAMCAT - Statistical Inference of Associations between
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
@@ -58,6 +58,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
+    label <- get.label.list(siamcat)
     # #########################################################################
     # some color pre-processing
     if (verbose > 2)
@@ -81,14 +82,14 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 2)
         message("+++ preprocessing models")
     sel.idx <- select.features(weights = all.weights, model.type = model_list(siamcat)@model.type, consens.thres = consens.thres,
-        label = label(siamcat), norm.models = norm.models, max.show = max.show, verbose = verbose)
+        label = label, norm.models = norm.models, max.show = max.show, verbose = verbose)
     num.sel.f <- length(sel.idx)
     # #########################################################################
     # aggreate predictions and sort
     # patients by score aggregate predictions of several models if more than one is given
     mean.agg.pred <- rowMeans(pred_matrix(siamcat))
     ### idx to sort samples according to their class membership and prediction score
-    srt.idx <- sort(label(siamcat)@label + mean.agg.pred, index.return = TRUE)$ix
+    srt.idx <- sort(label$label + mean.agg.pred, index.return = TRUE)$ix
     # #########################################################################
     # prepare heatmap
     if (verbose > 2)
@@ -103,7 +104,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
             detect.lim <- quantile(feat[feat != 0], 0.05)
         }
         img.data <- prepare.heatmap.fc(heatmap.data = feat[, srt.idx], sel.feat = names(sel.idx), limits = limits,
-            meta = meta(siamcat), label = label(siamcat), detect.lim = detect.lim, verbose = verbose)
+            meta = meta(siamcat), label = label, detect.lim = detect.lim, verbose = verbose)
     } else {
         stop("! unknown heatmap.type: ", heatmap.type)
     }
@@ -137,7 +138,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     # #########################################################################
     # Title of heatmap and brackets for classes
     par(mar = c(0, 4.1, 3.1, 5.1))
-    hm.label <- label(siamcat)@label[srt.idx]
+    hm.label <- label$label[srt.idx]
     plot(NULL, type = "n", xlim = c(0, length(hm.label)), xaxs = "i", xaxt = "n", ylim = c(-0.5, 0.5), yaxs = "i",
         yaxt = "n", xlab = "", ylab = "", bty = "n")
     ul <- unique(hm.label)
@@ -147,7 +148,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         lines(c(idx[1] - 0.8, idx[1] - 0.8), c(-0.2, 0))
         lines(c(idx[length(idx)] - 0.2, idx[length(idx)] - 0.2), c(-0.2, 0))
         h <- (idx[1] + idx[length(idx)])/2
-        t <- gsub("_", " ", names(label(siamcat)@info$class.descr)[label(siamcat)@info$class.descr == ul[l]])
+        t <- gsub("_", " ", names(label$info$class.descr)[label$info$class.descr == ul[l]])
         t <- paste(t, " (n=", length(idx), ")", sep = "")
         mtext(t, side = 3, line = -0.5, at = h, cex = 0.7, adj = 0.5)
     }
@@ -182,7 +183,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     # Feature weights ( model sensitive)
     if (verbose > 2)
         message("+++ plotting feature weights")
-    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, mod.type = model_list(siamcat)@model.type, label = label(siamcat))
+    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, mod.type = model_list(siamcat)@model.type, label = label)
 
     # #########################################################################
     # Heatmap
@@ -192,7 +193,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = rowMedians(rel.weights[sel.idx,]), verbose = verbose)
     } else {
         auroc.effect <- apply(img.data, 2, FUN = function(f) {
-            roc(predictor = f, response = label(siamcat)@label, direction = "<")$auc
+            roc(predictor = f, response = label$label, direction = "<")$auc
         })
         bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
         plot.heatmap(image.data = img.data, limits = limits, color.scheme = color.scheme, effect.size = NULL, verbose = verbose)
@@ -208,7 +209,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     # Metadata and prediction
     if (verbose > 2)
         message("+++ plotting metadata and predictions")
-    plot.pred.and.meta(prediction = mean.agg.pred[srt.idx], label = label(siamcat), meta = meta(siamcat)[srt.idx,], verbose = verbose)
+    plot.pred.and.meta(prediction = mean.agg.pred[srt.idx], label = label, meta = meta(siamcat)[srt.idx,], verbose = verbose)
 
     tmp <- dev.off()
     e.time <- proc.time()[3]
@@ -256,8 +257,8 @@ plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label, verbose 
         }
 
         # label cancer/healthy
-        mtext(gsub("_", " ", label@n.lab), side = 2, at = floor(length(sel.idx)/2), line = -2)
-        mtext(gsub("_", " ", label@p.lab), side = 4, at = floor(length(sel.idx)/2), line = -2)
+        mtext(gsub("_", " ", label$n.lab), side = 2, at = floor(length(sel.idx)/2), line = -2)
+        mtext(gsub("_", " ", label$p.lab), side = 4, at = floor(length(sel.idx)/2), line = -2)
 
         mtext("effect size", side = 3, line = 1, at = (mx/2), cex = 0.7, adj = 1)
         mtext("robustness", side = 3, line = 1, at = mx, cex = 0.7, adj = 0)
@@ -308,7 +309,7 @@ plot.pred.and.meta <- function(prediction, label, meta = NULL, verbose = 0) {
     image(as.matrix(img.data), col = grays, xaxt = "n", yaxt = "n", xlab = "", ylab = "", bty = "n")
     box(lwd = 1)
     # add deliminator between the different classes
-    abline(v = length(which(label@label == label@negative.lab))/length(label@label), col = "red")
+    abline(v = length(which(label$label == label$negative.lab))/length(label$label), col = "red")
 
     meta.cex = max(0.3, 0.7 - 0.01 * ncol(img.data))
     for (m in seq_len(ncol(img.data))) {
@@ -378,7 +379,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL, labe
         message("+ prepare.heatmap.fc")
     if (!any(grepl("META", sel.feat))) {
         feat.log <- log10(heatmap.data[sel.feat,] + detect.lim)
-        img.data <- t(feat.log - log10(rowMedians(heatmap.data[sel.feat,label@n.idx]) + detect.lim))
+        img.data <- t(feat.log - log10(rowMedians(heatmap.data[sel.feat,label$n.idx]) + detect.lim))
     } else {
         img.data <- matrix(NA, nrow = length(sel.feat), ncol = ncol(heatmap.data))
         row.names(img.data) <- sel.feat
@@ -388,7 +389,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL, labe
             if (verbose > 2)
                 message(paste("+++", f))
             if (!grepl("META", f)) {
-                median.ctr <- suppressWarnings(median(as.numeric(heatmap.data[f, label@n.idx])))
+                median.ctr <- suppressWarnings(median(as.numeric(heatmap.data[f, label$n.idx])))
                 img.data[f, ] <- log10(heatmap.data[f, ] + detect.lim) - log10(median.ctr + detect.lim)
             } else {
                 meta.data <- meta[, grep(strsplit(f, "_")[[1]][2], colnames(meta), ignore.case = TRUE, value = TRUE)]

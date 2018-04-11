@@ -45,7 +45,8 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             message("+ starting make.predictions on siamcat object")
 
         feat <- t(features(siamcat))
-        label.fac <- factor(label(siamcat)@label, levels = c(label(siamcat)@negative.lab, label(siamcat)@positive.lab))
+        label <- get.label.list(siamcat)
+        label.fac <- factor(label$label, levels = c(label$negative.lab, label$positive.lab))
 
         # assert that there is a split
         stopifnot(!is.null(data_split(siamcat)))
@@ -79,7 +80,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
 
                 # rescale posterior probabilities between -1 and 1 (this works only for binary data!!!!)  TODO: Will need
                 # adjustment and generalization in the future)
-                p <- label(siamcat)@negative.lab + abs(label(siamcat)@positive.lab - label(siamcat)@negative.lab) * pdata$data[,4]
+                p <- label$negative.lab + abs(label$positive.lab - label$negative.lab) * pdata$data[,4]
                 names(p) <- rownames(pdata$data)
                 pred[names(p), r] <- p
                 i <- i + 1
@@ -104,7 +105,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         }
         feat.test <- t(features(siamcat.holdout))
         feat.ref <- t(features(siamcat))
-
+        label <- get.label.list(siamcat.holdout)
         # data sanity checks
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
 
@@ -120,7 +121,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             model <- model_list(siamcat)@models[[i]]
 
             data <- data[, model$features]
-            data$label <- as.factor(label(siamcat.holdout)@label)
+            data$label <- as.factor(label$label)
 
             if (verbose > 2)
                 message(paste0("Applying ", model_list(siamcat)@model.type, " on complete external dataset", " (", i, " of ", num.models, ")..."))
@@ -128,7 +129,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
 
-            p <- label(siamcat)@negative.lab + abs(label(siamcat)@positive.lab - label(siamcat)@negative.lab) * pdata$data[,4]
+            p <- label$negative.lab + abs(label$positive.lab - label$negative.lab) * pdata$data[,4]
             names(p) <- rownames(pdata$data)
             pred[names(p), i] <- p
             if (verbose == 1 || verbose == 2)
