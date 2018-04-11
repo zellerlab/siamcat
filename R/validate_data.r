@@ -34,28 +34,28 @@ validate.data <- function(siamcat, verbose = 1) {
         message("+++ checking if labels are available for all samples in features")
     }
     if (length(label(siamcat)@label) == ncol(features(siamcat))) {
-        stopifnot(all(names(label(siamcat)) %in% colnames(features(siamcat))) && all(colnames(features(siamcat)) %in%
-            names(label(siamcat))))
+        stopifnot(all(names(label(siamcat)@label) %in% colnames(features(siamcat))) && all(colnames(features(siamcat)) %in%
+            names(label(siamcat)@label)))
         # if of the same length, everything should match and be in the same order
-        m <- match(names(label(siamcat)), colnames(features(siamcat)))
+        m <- match(names(label(siamcat)@label), colnames(features(siamcat)))
         features(siamcat) <- features(siamcat)[, m]
-        stopifnot(all(names(label(siamcat)) == colnames(features(siamcat))))
+        stopifnot(all(names(label(siamcat)@label) == colnames(features(siamcat))))
 
-    } else if (length(label(siamcat)) >= ncol(features(siamcat))) {
+    } else if (length(label(siamcat)@label) >= ncol(features(siamcat))) {
         # if there are more labels than samples in features, remove them in labels
-        stopifnot(all(colnames(features(siamcat)) %in% names(label(siamcat))))
+        stopifnot(all(colnames(features(siamcat)) %in% names(label(siamcat)@label)))
 
-        ids <- colnames(features(siamcat))[colnames(features(siamcat)) %in% names(label(siamcat))]
+        ids <- colnames(features(siamcat))[colnames(features(siamcat)) %in% names(label(siamcat)@label)]
         # create new labels object with reduced labels
         siamcat <- filter.label(siamcat, ids)
 
-    } else if (length(label(siamcat)) <= ncol(features(siamcat))) {
+    } else if (length(label(siamcat)@label) <= ncol(features(siamcat))) {
         # if there are more samples in features, remove them and keep only the ones for which labels are available
-        stopifnot(all(names(label(siamcat)) %in% colnames(features(siamcat))))
+        stopifnot(all(names(label(siamcat)@label) %in% colnames(features(siamcat))))
 
-        message(paste("Warning: Removing", ncol(features(siamcat)) - length(label(siamcat)), "sample(s) for which no labels are available."))
+        message(paste("Warning: Removing", ncol(features(siamcat)) - length(label(siamcat)@label), "sample(s) for which no labels are available."))
 
-        m <- match(names(label(siamcat)), colnames(features(siamcat)))
+        m <- match(names(label(siamcat)@label), colnames(features(siamcat)))
         features(siamcat) <- features(siamcat)[, m]
 
     }
@@ -64,11 +64,11 @@ validate.data <- function(siamcat, verbose = 1) {
     if (verbose > 2)
         message("+++ checking sample number per class")
     for (i in label(siamcat)@info$class.descr) {
-        if (sum(label(siamcat) == i) <= 5) {
-            stop("Data set has only", sum(label(siamcat) == i), "training examples of class", i, " This is not enough for SIAMCAT to proceed")
+        if (sum(label(siamcat)@label == i) <= 5) {
+            stop("Data set has only", sum(label(siamcat)@label == i), "training examples of class", i, " This is not enough for SIAMCAT to proceed")
         }
-        if (sum(label(siamcat) == i) < 10) {
-            message(paste("Data set has only", sum(label(siamcat) == i), "training examples of class", i, " . Note that a dataset this small/skewed is not necessarily
+        if (sum(label(siamcat)@label == i) < 10) {
+            message(paste("Data set has only", sum(label(siamcat)@label == i), "training examples of class", i, " . Note that a dataset this small/skewed is not necessarily
         suitable for analysis in this pipeline."))
         }
     }
@@ -78,23 +78,23 @@ validate.data <- function(siamcat, verbose = 1) {
     if (!is.null(meta(siamcat))) {
         if (verbose > 2)
             message("+++ check for overlap between labels and metadata")
-        if (length(label(siamcat)) == nrow(meta(siamcat))) {
-            stopifnot(all(names(label(siamcat)) %in% rownames(meta(siamcat))) && all(rownames(meta(siamcat)) %in%
-                names(label(siamcat))))
-            m <- match(names(label(siamcat)), rownames(meta(siamcat)))
+        if (length(label(siamcat)@label) == nrow(meta(siamcat))) {
+            stopifnot(all(names(label(siamcat)@label) %in% rownames(meta(siamcat))) && all(rownames(meta(siamcat)) %in%
+                names(label(siamcat)@label)))
+            m <- match(names(label(siamcat)@label), rownames(meta(siamcat)))
             meta(siamcat) <- meta(siamcat)[m, ]
-            stopifnot(all(names(label(siamcat)) == rownames(meta(siamcat))))
-        } else if (length(label(siamcat)) <= nrow(meta(siamcat))) {
-            stopifnot(all(names(label(siamcat)) %in% rownames(meta(siamcat))))
-            m <- match(names(label(siamcat)), rownames(meta(siamcat)))
-            message(paste("Warning: Removing metadata information for", nrow(meta(siamcat)) - length(label(siamcat)),
+            stopifnot(all(names(label(siamcat)@label) == rownames(meta(siamcat))))
+        } else if (length(label(siamcat)@label) <= nrow(meta(siamcat))) {
+            stopifnot(all(names(label(siamcat)@label) %in% rownames(meta(siamcat))))
+            m <- match(names(label(siamcat)@label), rownames(meta(siamcat)))
+            message(paste("Warning: Removing metadata information for", nrow(meta(siamcat)) - length(label(siamcat)@label),
                 "superfluous samples."))
             meta(siamcat) <- meta(siamcat)[m, ]
         } else {
             stop("! Metadata is not available for all samples!")
         }
     }
-    orig_feat(siamcat) <- otu_table(siamcat@phyloseq)
+    orig_feat(siamcat) <- otu_table(get.phyloseq(siamcat))
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste("+ finished validate.data in", formatC(e.time - s.time, digits=3), "s"))
