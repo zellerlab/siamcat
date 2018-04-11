@@ -1,4 +1,4 @@
-label$#!/usr/bin/Rscript
+#!/usr/bin/Rscript
 ### SIAMCAT - Statistical Inference of Associations between
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
