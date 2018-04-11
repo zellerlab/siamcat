@@ -72,7 +72,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
 
                 stopifnot(!any(rownames(model$task$env$data) %in% rownames(data)))
                 if (verbose > 2)
-                  message(paste("Applying ", model_list(siamcat)@model.type, " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample*num.folds, ")..."))
+                  message(paste0("Applying ", model_list(siamcat)@model.type, " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample*num.folds, ")..."))
 
                 task <- makeClassifTask(data = data, target = "label")
                 pdata <- predict(model, task = task)
@@ -123,7 +123,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             data$label <- as.factor(label(siamcat.holdout)@label)
 
             if (verbose > 2)
-                message(paste("Applying ", model_list(siamcat)@model.type, " on complete external dataset", " (", i, " of ", num.models, ")..."))
+                message(paste0("Applying ", model_list(siamcat)@model.type, " on complete external dataset", " (", i, " of ", num.models, ")..."))
 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
