@@ -88,7 +88,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             }
         }
         stopifnot(!any(is.na(pred)))
-        pred_matrix(siamcat) <- pred
+        siamcat@pred_matrix <- pred
         return.object <- siamcat
     } else {
 
