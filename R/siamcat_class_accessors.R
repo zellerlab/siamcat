@@ -346,6 +346,7 @@ setMethod("features", "ANY", function(siamcat){
 #' @rdname features-methods
 setMethod("features", "otu_table", function(siamcat){ return(siamcat) })
 
+
 ################################################################################
 #' Retrieve a \link[phyloseq]{sample_data-class} object from object.
 #'
@@ -413,9 +414,9 @@ get.phyloseq <- function(siamcat) {
 #' @examples
 #'  data(siamcat_example)
 #'  feat <- get.features.matrix(siamcat_example)
-get.features.matrix <- function(siamcat) {
-    return(matrix(siamcat@phyloseq@otu_table, nrow = nrow(siamcat@phyloseq@otu_table), ncol = ncol(siamcat@phyloseq@otu_table),
-        dimnames = list(rownames(siamcat@phyloseq@otu_table), colnames(siamcat@phyloseq@otu_table))))
+features.as.matrix <- function(otu_table) {
+    return(matrix(otu_table, nrow = nrow(otu_table), ncol = ncol(otu_table),
+        dimnames = list(rownames(otu_table), colnames(otu_table))))
 }
 
 

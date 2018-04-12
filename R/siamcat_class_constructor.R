@@ -43,6 +43,7 @@ siamcat <- function(...) {
     arglistphyloseq <- arglist[vapply(names(arglist), is.component.class, "phyloseq", FUN.VALUE=logical(1))]
     arglist$phyloseq <- do.call("new", c(list(Class = "phyloseq"), arglistphyloseq))
   }
+  arglist$orig_feat <- otu_table(arglist$phyloseq)
   arglist <- arglist[vapply(names(arglist), is.component.class, "siamcat", FUN.VALUE=logical(1))]
   sc <- do.call("new", c(list(Class = "siamcat"), arglist))
   return(sc)

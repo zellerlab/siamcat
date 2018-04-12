@@ -47,7 +47,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     } else {
         l.vec = siamcat@label@label
     }
-    roc.summ = siamcat@eval_data$roc.average[[1]]
+    roc.summ = eval_data(siamcat)$roc.average[[1]]
     lines(1 - roc.summ$specificities, roc.summ$sensitivities, col = "black", lwd = 2)
     auroc = siamcat@eval_data$auc.average[1]
     # plot CI
