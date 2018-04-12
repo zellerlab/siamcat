@@ -403,7 +403,7 @@ associations.fcs.plot <- function(fc.all, binary.cols,  verbose=1){
   ticks <- seq(from=mn, to=mx, length.out=5)
   tick.labels <- formatC(ticks, digits=2)
   axis(side=1, at=ticks, labels=tick.labels, cex.axis=0.7)
-  title(main='Fold change', xlab='Pseudo Fold Change')
+  title(main='Fold change', xlab='Generalized Fold Change')
   if(verbose>2) message("+ finished associations.fcs.plot")
 }
 
