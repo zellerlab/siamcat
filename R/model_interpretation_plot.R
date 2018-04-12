@@ -296,6 +296,7 @@ plot.pred.and.meta <- function(prediction, label, meta = NULL, verbose = 0) {
     par(mar = c(1.1, 4.1, 0.3, 5.1))
     img.data = as.matrix(prediction)
     colnames(img.data) = "Classification result"
+    img.data.processed <- NULL
     if (!is.null(meta)) {
         img.data = cbind(meta[, ncol(meta):1], img.data)
         ### transform any categorial column into a numeric one
@@ -417,7 +418,7 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL, labe
     img.data[img.data > limits[2]] = limits[2]
     if (verbose > 2)
         message("+ finished plot.heatmap")
-    return(t(img.data))
+    return(img.data)
 }
 
 prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
