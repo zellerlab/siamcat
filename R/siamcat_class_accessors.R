@@ -414,14 +414,8 @@ get.phyloseq <- function(siamcat) {
 #' @examples
 #'  data(siamcat_example)
 #'  feat <- get.features.matrix(siamcat_example)
-<<<<<<< HEAD
-features.as.matrix <- function(otu_table) {
-    return(matrix(otu_table, nrow = nrow(otu_table), ncol = ncol(otu_table),
-        dimnames = list(rownames(otu_table), colnames(otu_table))))
-=======
 get.features.matrix <- function(siamcat) {
     return(siamcat@phyloseq@otu_table@.Data)
->>>>>>> 806eaaef6b4b101a426d496696b9b7ee526b60e8
 }
 
 #' Access original features in siamcat@orig_feat as matrix
