@@ -62,9 +62,9 @@ select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = 
         }
     }
 
-    if (!filter %in% colnames(siamcat@phyloseq@sam_data))
-        stop("! The filter name is not present in colnames of the siamcat@phyloseq@sam_data. Stopping.\n")
-    filter.var <- siamcat@phyloseq@sam_data[, filter]
+    if (!filter %in% colnames(meta(siamcat)))
+        stop("! The filter name is not present in colnames of the sample data. Stopping.\n")
+    filter.var <- meta(siamcat)[, filter]
 
     if (!is.null(allowed.range)) {
         s.idx <- !is.na(filter.var) & filter.var >= allowed.range[1] & filter.var <= allowed.range[2]
@@ -81,7 +81,7 @@ select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = 
         }
     }
 
-    s.names <- rownames(siamcat@phyloseq@sam_data)[s.idx]
+    s.names <- rownames(meta(siamcat))[s.idx]
     siamcat@phyloseq <- prune_samples(x = siamcat@phyloseq, samples = s.names)
     siamcat <- filter.label(siamcat, verbose = verbose)
     e.time <- proc.time()[3]

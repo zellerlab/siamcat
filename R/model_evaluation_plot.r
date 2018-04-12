@@ -27,6 +27,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
+    label <- get.label.list(siamcat)
     pdf(fn.plot, onefile = TRUE)
 
     if (verbose > 2)
@@ -34,29 +35,29 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "False positive rate", ylab = "True positive rate", type = "n")
     title(paste("ROC curve for the model", sep = " "))
     abline(a = 0, b = 1, lty = 3)
-    if (dim(siamcat@pred_matrix)[2] > 1) {
-        aucs = vector("numeric", dim(siamcat@pred_matrix)[2])
+    if (ncol(pred_matrix(siamcat)) > 1) {
+        aucs = vector("numeric", ncol(pred_matrix(siamcat)))
         for (c in seq_len(ncol(pred_matrix(siamcat)))) {
-            roc.c = siamcat@eval_data$roc.all[[c]]
+            roc.c = eval_data(siamcat)$roc.all[[c]]
             lines(1 - roc.c$specificities, roc.c$sensitivities, col = gray(runif(1, 0.2, 0.8)))
-            aucs[c] = siamcat@eval_data$auc.all[c]
+            aucs[c] = eval_data(siamcat)$auc.all[c]
             if (verbose > 2)
                 message(paste("+++ AU-ROC (resampled run ", c, "): ", format(aucs[c], digits = 3)))
         }
-        l.vec = rep(siamcat@label@label, dim(siamcat@pred_matrix)[2])
+        l.vec = rep(label$label, ncol(pred_matrix(siamcat)))
     } else {
-        l.vec = siamcat@label@label
+        l.vec = label$label
     }
     roc.summ = eval_data(siamcat)$roc.average[[1]]
     lines(1 - roc.summ$specificities, roc.summ$sensitivities, col = "black", lwd = 2)
-    auroc = siamcat@eval_data$auc.average[1]
+    auroc = eval_data(siamcat)$auc.average[1]
     # plot CI
     x = as.numeric(rownames(roc.summ$ci))
     yl = roc.summ$ci[, 1]
     yu = roc.summ$ci[, 3]
     polygon(1 - c(x, rev(x)), c(yl, rev(yu)), col = "#88888844", border = NA)
 
-    if (dim(siamcat@pred_matrix)[2] > 1) {
+    if (ncol(pred_matrix(siamcat)) > 1) {
         if (verbose > 1)
             message(paste("+ AU-ROC:\n+++ mean-prediction:", format(auroc, digits = 3), "\n+++ averaged       :", format(mean(aucs),
                 digits = 3), "\n+++ sd             :", format(sd(aucs), digits = 4)))
@@ -72,26 +73,26 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
         message("+ plotting PRC")
     plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "Recall", ylab = "Precision", type = "n")
     title(paste("Precision-recall curve for the model", sep = " "))
-    abline(h = mean(siamcat@label@label == siamcat@label@positive.lab), lty = 3)
+    abline(h = mean(label$label == label$positive.lab), lty = 3)
 
-    if (dim(siamcat@pred_matrix)[2] > 1) {
-        aucspr = vector("numeric", dim(siamcat@pred_matrix)[2])
+    if (ncol(pred_matrix(siamcat)) > 1) {
+        aucspr = vector("numeric", ncol(pred_matrix(siamcat)))
         for (c in seq_len(ncol(pred_matrix(siamcat)))) {
-            ev = siamcat@eval_data$ev.list[[c]]
-            pr = siamcat@eval_data$pr.list[[c]]
+            ev = eval_data(siamcat)$ev.list[[c]]
+            pr = eval_data(siamcat)$pr.list[[c]]
             lines(pr$x, pr$y, col = gray(runif(1, 0.2, 0.8)))
-            aucspr[c] = siamcat@eval_data$aucspr[c]
+            aucspr[c] = eval_data(siamcat)$aucspr[c]
             if (verbose > 2)
                 message(paste("+++ AU-PRC (resampled run ", c, "): ", format(aucspr[c], digits = 3)))
         }
-        ev = siamcat@eval_data$ev.list[[length(siamcat@eval_data$ev.list)]]
+        ev = eval_data(siamcat)$ev.list[[length(eval_data(siamcat)$ev.list)]]
     } else {
-        ev = siamcat@eval_data$ev.list[[1]]
+        ev = eval_data(siamcat)$ev.list[[1]]
     }
     pr = evaluate.get.pr(ev, verbose = verbose)
     lines(pr$x, pr$y, col = "black", lwd = 2)
     aupr = evaluate.calc.aupr(ev, verbose = verbose)
-    if (dim(siamcat@pred_matrix)[2] > 1) {
+    if (ncol(pred_matrix(siamcat)) > 1) {
         if (verbose > 1)
             message(paste("+ AU-PRC:\n+++ mean-prediction:", format(aupr, digits = 3), "\n+++ averaged       :", format(mean(aucspr),
                 digits = 3), "\n+++ sd             :", format(sd(aucspr), digits = 4)))

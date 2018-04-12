@@ -90,7 +90,7 @@ normalize.features <- function(siamcat,
     if (verbose > 1)
         message("+ starting normalize.features")
     s.time <- proc.time()[3]
-    feat <- features(feat)@.Data
+    feat <- get.features.matrix(siamcat)
 
     if (is.null(norm.param$norm.method)) {
         # de novo normalization
@@ -216,8 +216,7 @@ normalize.features <- function(siamcat,
         if (verbose > 1)
             message(paste("+++ feature sparsity after normalization: ", formatC(100 * mean(feat.norm == 0), digits=4), "%"))
         stopifnot(!any(is.na(feat.norm)))
-        siamcat@norm_param <- par
-        siamcat@norm_param$norm.method <- norm.method
+        norm_param(siamcat) <- par
     } else {
         # frozen normalization
         if (verbose > 1)
@@ -272,7 +271,7 @@ normalize.features <- function(siamcat,
         stopifnot(!any(is.na(feat.norm)))
 
     }
-    siamcat@phyloseq@otu_table <- otu_table(feat.norm, taxa_are_rows = TRUE)
+    features(siamcat) <- otu_table(feat.norm, taxa_are_rows = TRUE)
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste("+ finished normalize.features in", formatC(e.time - s.time, digits=3), "s"))

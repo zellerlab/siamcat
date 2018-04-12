@@ -59,7 +59,7 @@
 evaluate.predictions <- function(siamcat, verbose = 1) {
     if (verbose > 1)
         message("+ starting evaluate.predictions")
-    label      <- get.label.list(siamcat)
+    label  <- get.label.list(siamcat)
     s.time <- proc.time()[3]
     # TODO compare header to label make sure that label and prediction are in the same order
     m <- match(names(label$label), rownames(pred_matrix(siamcat)))

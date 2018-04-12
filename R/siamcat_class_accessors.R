@@ -404,7 +404,7 @@ get.phyloseq <- function(siamcat) {
     return(siamcat@phyloseq)
 }
 
-#' Access features in siamcat@phylose@otu_table
+#' Access features in siamcat@phylose@otu_table as matrix
 #' @title get.features.matrix
 #' @name get.features.matrix
 #' @description Function to access features in siamcat@phylose@otu_table
@@ -414,12 +414,29 @@ get.phyloseq <- function(siamcat) {
 #' @examples
 #'  data(siamcat_example)
 #'  feat <- get.features.matrix(siamcat_example)
+<<<<<<< HEAD
 features.as.matrix <- function(otu_table) {
     return(matrix(otu_table, nrow = nrow(otu_table), ncol = ncol(otu_table),
         dimnames = list(rownames(otu_table), colnames(otu_table))))
+=======
+get.features.matrix <- function(siamcat) {
+    return(siamcat@phyloseq@otu_table@.Data)
+>>>>>>> 806eaaef6b4b101a426d496696b9b7ee526b60e8
 }
 
-
+#' Access original features in siamcat@orig_feat as matrix
+#' @title get.orig_feat.matrix
+#' @name get.orig_feat.matrix
+#' @description Function to access original features in siamcat@orig_feat
+#' @param siamcat an object of class \link{siamcat-class}t
+#' @return Original features as a matrix
+#' @export
+#' @examples
+#'  data(siamcat_example)
+#'  orig_feat <- get.orig_feat.matrix(siamcat_example)
+get.orig_feat.matrix <- function(siamcat) {
+    return(siamcat@orig_feat@.Data)
+}
 
 #' Access features in siamcat@phylose@otu_table
 #' @title get.model_list
@@ -545,4 +562,18 @@ get.label.list <- function(siamcat) {
 #'  label_info <- get.label.info(siamcat_example)
 get.label.info <- function(siamcat) {
     return(siamcat@label@info)
+}
+
+#' Access the data split in siamcat@data_split
+#' @title get.data.split
+#' @name get.data.split
+#' @description Function to access the data split info in siamcat@data_split
+#' @param siamcat an object of class \link{siamcat-class}
+#' @return List of the data split
+#' @export
+#' @examples
+#'  data(siamcat_example)
+#'  data_split <- get.data.split(siamcat_example)
+get.data.split <- function(siamcat) {
+    return(list(num.folds=siamcat@data_split@num.folds, num.resample=siamcat@data_split@num.resample, test.folds=siamcat@data_split@test.folds, training.folds=siamcat@data_split@training.folds))
 }

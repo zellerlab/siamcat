@@ -16,7 +16,7 @@ Features as a matrix
 Function to access features in siamcat@phylose@otu_table
 }
 \details{
-Access features in siamcat@phylose@otu_table
+Access features in siamcat@phylose@otu_table as matrix
 }
 \examples{
  data(siamcat_example)

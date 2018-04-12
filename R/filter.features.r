@@ -69,7 +69,7 @@ filter.features <- function(siamcat, filter.method = "abundance",
         ra.feat           <- prop.table(features(siamcat), 2)
         features(siamcat) <- otu_table(ra.feat, taxa_are_rows = TRUE)
     } else {
-        ra.feat <- features(siamcat)@.Data
+        ra.feat <- get.features.matrix(siamcat)
     }
 
     ### apply filters
@@ -120,8 +120,8 @@ filter.features <- function(siamcat, filter.method = "abundance",
     if (verbose > 2)
         message("+++ applying prune_taxa")
     if (verbose > 1)
-        message(paste("+++ removed", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), "features whose values did not exceed",
-            cutoff, "in any sample (retaining", length(f.idx), ")"))
+        message(paste0("+++ removed ", nrow(features(siamcat)) - length(f.idx) - sum(unm.idx), " features whose values did not exceed",
+            cutoff, " in any sample (retaining ", length(f.idx), ")"))
     f.names <- rownames(features(siamcat))[f.idx]
     physeq(siamcat) <- prune_taxa(x = physeq(siamcat), taxa = f.names)
     e.time <- proc.time()[3]
