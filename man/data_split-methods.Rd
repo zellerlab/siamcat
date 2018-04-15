@@ -5,6 +5,7 @@
 \alias{data_split}
 \alias{data_split,ANY-method}
 \alias{data_split,data_split-method}
+\alias{data_split,list-method}
 \title{Retrieve a \link{data_split-class} object from object.}
 \usage{
 data_split(siamcat, errorIfNULL=TRUE)
@@ -12,10 +13,12 @@ data_split(siamcat, errorIfNULL=TRUE)
 \S4method{data_split}{ANY}(siamcat)
 
 \S4method{data_split}{data_split}(siamcat)
+
+\S4method{data_split}{list}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a label or instance of \link{data_split-class}.}
+that contains a label or instance of \link{data_split-class} or a list.}
 }
 \value{
 The \link{data_split-class} object or NULL.

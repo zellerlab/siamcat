@@ -159,9 +159,9 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
         test.list[[r]] <- test.temp
     }
 
-    data_split(siamcat) <- new("data_split", training.folds = train.list,
+    data_split(siamcat) <- data_split(list(training.folds = train.list,
         test.folds = test.list, num.resample = num.resample,
-        num.folds = num.folds)
+        num.folds = num.folds))
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste("+ finished create.data.split in", 

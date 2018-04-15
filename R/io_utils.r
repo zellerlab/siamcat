@@ -147,10 +147,10 @@ read.labels <- function(fn.in.label) {
     label$p.lab <- gsub("[_.-]", " ", names(label$info$class.descr)
         [label$info$class.descr == label$positive.lab])
 
-    labelRes <- new("label", label = label$label, header = label$header,
-     info = label$info, positive.lab = label$positive.lab,
+    labelRes <- label(list(label = label$label, header = label$header,
+        info = label$info, positive.lab = label$positive.lab,
         negative.lab = label$negative.lab, n.idx = label$n.idx,
-        p.idx = label$p.idx, n.lab = label$n.lab, p.lab = label$p.lab)
+        p.idx = label$p.idx, n.lab = label$n.lab, p.lab = label$p.lab))
     invisible(labelRes)
 }
 

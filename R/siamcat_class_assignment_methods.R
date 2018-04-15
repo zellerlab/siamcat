@@ -56,6 +56,7 @@ setMethod("label<-", c("siamcat","label"), function(x, value){
           x@norm_param, x@data_split, x@pred_matrix)
 })
 
+
 ###############################################################################
 #' Assign a new model_list object to \code{x}
 #'

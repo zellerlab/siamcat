@@ -209,7 +209,7 @@ setMethod("norm_param", "ANY", function(siamcat){
 #' @usage label(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link{label-class}.
+#'  that contains a label or instance of \link{label-class} or a list.
 #'
 #'
 #' @return The \link{label-class} object or NULL.
@@ -230,6 +230,9 @@ setMethod("label", "ANY", function(siamcat){
 # Return as-is if already a label object
 #' @rdname label-methods
 setMethod("label", "label", function(siamcat){ return(siamcat) })
+# constructor; for creating label from a list
+#' @rdname label-methods
+setMethod("label", "list", function(siamcat){ return(new("label", siamcat)) })
 
 ################################################################################
 #' Retrieve a \link{data_split-class} object from object.
@@ -238,7 +241,7 @@ setMethod("label", "label", function(siamcat){ return(siamcat) })
 #' @usage data_split(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link{data_split-class}.
+#'  that contains a label or instance of \link{data_split-class} or a list.
 #'
 #'
 #' @return The \link{data_split-class} object or NULL.
@@ -259,6 +262,10 @@ setMethod("data_split", "ANY", function(siamcat){
 # Return as-is if already a data_split object
 #' @rdname data_split-methods
 setMethod("data_split", "data_split", function(siamcat){ return(siamcat) })
+# Return as-is if already a data_split object
+#' @rdname data_split-methods
+setMethod("data_split", "list", function(siamcat){ 
+  return(new("data_split", siamcat)) })
 
 ################################################################################
 #' Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.

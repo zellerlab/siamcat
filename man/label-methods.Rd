@@ -5,6 +5,7 @@
 \alias{label}
 \alias{label,ANY-method}
 \alias{label,label-method}
+\alias{label,list-method}
 \title{Retrieve a \link{label-class} object from object.}
 \usage{
 label(siamcat, errorIfNULL=TRUE)
@@ -12,10 +13,12 @@ label(siamcat, errorIfNULL=TRUE)
 \S4method{label}{ANY}(siamcat)
 
 \S4method{label}{label}(siamcat)
+
+\S4method{label}{list}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a label or instance of \link{label-class}.}
+that contains a label or instance of \link{label-class} or a list.}
 }
 \value{
 The \link{label-class} object or NULL.
