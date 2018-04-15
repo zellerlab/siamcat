@@ -377,33 +377,6 @@ setMethod("meta", "ANY", function(siamcat){
 #' @rdname meta-methods
 setMethod("meta", "sample_data", function(siamcat){ return(siamcat) })
 
-#' Access features in siamcat@phylose@otu_table
-#' @title get.features
-#' @name get.features
-#' @description Function to access features in siamcat@phylose@otu_table
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return Features as \link[phyloseq]{otu_table-class} object
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  feat <- get.features(siamcat_example)
-get.features <- function(siamcat) {
-    return(siamcat@phyloseq@otu_table)
-}
-
-#' Access phyloseq object in siamcat@phyloseq
-#' @title get.phyloseq
-#' @name get.phyloseq
-#' @description Function to access phyloseq object in siamcat@phylose
-#' @param siamcat an object of class \link{siamcat-class}t
-#' @return Object of class \link[phyloseq]{phyloseq-class}
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  phyloseq <- get.phyloseq(siamcat_example)
-get.phyloseq <- function(siamcat) {
-    return(siamcat@phyloseq)
-}
 
 #' Access features in siamcat@phylose@otu_table as matrix
 #' @title get.features.matrix
@@ -431,72 +404,4 @@ get.features.matrix <- function(siamcat) {
 #'  orig_feat <- get.orig_feat.matrix(siamcat_example)
 get.orig_feat.matrix <- function(siamcat) {
     return(siamcat@orig_feat@.Data)
-}
-
-#' Access features in siamcat@phylose@otu_table
-#' @title get.model_list
-#' @name get.model_list
-#' @description Function to access model_list in siamcat@get.model_list
-#' @param siamcat an object of class \link{siamcat-class}t
-#' @return List of models in a \link{model_list-class} object
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  model_list <- get.model_list(siamcat_example)
-get.model_list <- function(siamcat) {
-    return(siamcat@model_list)
-}
-#' Access model type in siamcat@model_list@model.type
-#' @title get.model.type
-#' @name get.model.type
-#' @description Function to access features in siamcat@model_list@model.type
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return Character string specifing the name of the method used to construct the model.
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  get.model.type(siamcat_example)
-get.model.type <- function(siamcat) {
-    return(model.type = siamcat@model_list@model.type)
-}
-
-#' Access models in siamcat@model_list@models
-#' @title get.models
-#' @name get.models
-#' @description Function to access models in siamcat@model_list@models
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return List of models
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  models <- get.models(siamcat_example)
-get.models <- function(siamcat) {
-    return(siamcat@model_list@models)
-}
-#' Access evaluation data in siamcat@eval_data
-#' @title get.eval_data
-#' @name get.eval_data
-#' @description Function to access evaluation data in siamcat@eval_data
-#' @param siamcat an object of class \link{siamcat-class}t
-#' @return Evaluation data
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  eval_data <- get.eval_data(siamcat_example)
-get.eval_data <- function(siamcat) {
-    return(siamcat@eval_data)
-}
-#' Access Prediction matrix  in siamcat@pred_matrix
-#' @title get.pred_matrix
-#' @name get.pred_matrix
-#' @description Function to access prediction matrix  in siamcat@pred_matrix
-#' siamcat@orig_feat in an object of class \link{siamcat-class}
-#' @param siamcat an object of class \link{siamcat-class}t
-#' @return Prediction matrix
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  pred_matrix <- get.pred_matrix(siamcat_example)
-get.pred_matrix <- function(siamcat) {
-    return(siamcat@pred_matrix)
 }
