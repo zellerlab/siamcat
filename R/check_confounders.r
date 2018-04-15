@@ -37,7 +37,7 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     s.time <- proc.time()[3]
     # TODO: implement color.scheme selection as function parameter
     pdf(fn.plot, onefile = TRUE)
-    label      <- get.label.list(siamcat)
+    label      <- label(siamcat)
     case.count <- sum(label$p.idx)
     ctrl.count <- sum(label$n.idx)
 

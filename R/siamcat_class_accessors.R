@@ -38,7 +38,7 @@ accessSlot <- function(siamcat, slot){
   return(out)
 }
 
-################################################################################
+###############################################################################
 #' Retrieve \link{model_list-class} from object.
 #'
 #'
@@ -67,7 +67,7 @@ setMethod("model_list", "ANY", function(siamcat){
 #' @rdname model_list-methods
 setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
 
-################################################################################
+###############################################################################
 #' Retrieve list of models from object.
 #'
 #'
@@ -96,7 +96,7 @@ setMethod("models", "ANY", function(siamcat){
 #' @rdname model_list-methods
 setMethod("models", "model_list", function(siamcat){ return(siamcat@models) })
 
-################################################################################
+###############################################################################
 #' Retrieve model_type from object.
 #'
 #'
@@ -123,9 +123,10 @@ setMethod("model_type", "ANY", function(siamcat){
 })
 # Return model type if a model_list object
 #' @rdname model_list-methods
-setMethod("model_type", "model_list", function(siamcat){ return(siamcat@model_type) })
+setMethod("model_type", "model_list", function(siamcat){ 
+  return(siamcat@model_type) })
 
-################################################################################
+###############################################################################
 #' Retrieve eval_data from object.
 #'
 #'
@@ -150,7 +151,7 @@ setMethod("eval_data", "ANY", function(siamcat){
   accessSlot(siamcat, "eval_data")
 })
 
-################################################################################
+###############################################################################
 #' Retrieve pred_matrix from object.
 #'
 #'
@@ -175,7 +176,7 @@ setMethod("pred_matrix", "ANY", function(siamcat){
   accessSlot(siamcat, "pred_matrix")
 })
 
-################################################################################
+###############################################################################
 #' Retrieve norm_param from object.
 #'
 #'
@@ -498,76 +499,4 @@ get.eval_data <- function(siamcat) {
 #'  pred_matrix <- get.pred_matrix(siamcat_example)
 get.pred_matrix <- function(siamcat) {
     return(siamcat@pred_matrix)
-}
-
-#' Access labels in siamcat@label@label
-#' @title get.label.label
-#' @name get.label.label
-#' @description Function to access labels in siamcat@label@label
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return Labels as a vector
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  label <- get.label.label(siamcat_example)
-get.label.label <- function(siamcat) {
-    return(siamcat@label@label)
-}
-
-#' Access label object in siamcat@label
-#' @title get.label
-#' @name get.label
-#' @description Function to access labels in siamcat@label
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return an object of class \link{label-class}
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  label <- get.label(siamcat_example)
-get.label <- function(siamcat) {
-    return(siamcat@label)
-}
-
-#' Access labels in siamcat@label
-#' @title get.label.list
-#' @name get.label.list
-#' @description Function to access labels in siamcat@label
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return Label object converted to a list
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  label <- get.label.list(siamcat_example)
-get.label.list <- function(siamcat) {
-    return(list(label = siamcat@label@label, header = siamcat@label@header, info = siamcat@label@info, positive.lab = siamcat@label@positive.lab,
-        negative.lab = siamcat@label@negative.lab, n.idx = siamcat@label@n.idx, p.idx = siamcat@label@p.idx, n.lab = siamcat@label@n.lab,
-        p.lab = siamcat@label@p.lab))
-}
-
-#' Access label info in siamcat@label@info
-#' @title get.label.info
-#' @name get.label.info
-#' @description Function to access label info in siamcat@label@info
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return List of label informations
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  label_info <- get.label.info(siamcat_example)
-get.label.info <- function(siamcat) {
-    return(siamcat@label@info)
-}
-
-#' Access the data split in siamcat@data_split
-#' @title get.data.split
-#' @name get.data.split
-#' @description Function to access the data split info in siamcat@data_split
-#' @param siamcat an object of class \link{siamcat-class}
-#' @return List of the data split
-#' @export
-#' @examples
-#'  data(siamcat_example)
-#'  data_split <- get.data.split(siamcat_example)
-get.data.split <- function(siamcat) {
-    return(list(num.folds=siamcat@data_split@num.folds, num.resample=siamcat@data_split@num.resample, test.folds=siamcat@data_split@test.folds, training.folds=siamcat@data_split@training.folds))
 }

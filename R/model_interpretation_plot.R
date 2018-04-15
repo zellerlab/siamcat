@@ -58,7 +58,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
-    label <- get.label.list(siamcat)
+    label <- label(siamcat)
     model.type <- model_type(siamcat)
     models <- models(siamcat)
     # #########################################################################

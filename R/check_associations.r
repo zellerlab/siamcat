@@ -99,7 +99,7 @@ check.associations <- function(siamcat, fn.plot, color.scheme="RdYlBu",
   col <- check.color.scheme(color.scheme, label(siamcat))
 
   feat <- get.features.matrix(siamcat)
-  label <- get.label.list(siamcat)
+  label <- label(siamcat)
 
   ### Calculate different effect sizes
   if(verbose>2) message("+++ analysing features\n")

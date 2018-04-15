@@ -47,7 +47,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL,
             message("+ starting make.predictions on siamcat object")
 
         feat <- t(features(siamcat))
-        label <- get.label.list(siamcat)
+        label <- label(siamcat)
         data.split <- data_split(siamcat)
         models <- models(siamcat)
 
@@ -119,7 +119,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL,
         }
         feat.test <- t(features(siamcat.holdout))
         feat.ref <- t(features(siamcat))
-        label <- get.label.list(siamcat.holdout)
+        label <- label(siamcat.holdout)
         data.split <- data_split(siamcat)
         models <- models(siamcat)
         # data sanity checks

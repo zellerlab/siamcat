@@ -58,7 +58,7 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
         message("+ starting create.data.split")
     s.time <- proc.time()[3]
 
-    label    <- get.label.list(siamcat)
+    label    <- label(siamcat)
     labelNum <- as.numeric(label$label)
     names(labelNum) <- names(label$label)
     exm.ids <- names(labelNum)

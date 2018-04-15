@@ -27,7 +27,7 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
-    label <- get.label.list(siamcat)
+    label <- label(siamcat)
     pdf(fn.plot, onefile = TRUE)
 
     if (verbose > 2)

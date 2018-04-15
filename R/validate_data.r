@@ -28,7 +28,7 @@
 validate.data <- function(siamcat, verbose = 1) {
     if (verbose > 1)
         message("+ starting validate.data")
-    label <- get.label.list(siamcat)
+    label <- label(siamcat)
     feat  <- features(siamcat)
     meta  <- meta(siamcat)
     s.time <- proc.time()[3]
