@@ -119,7 +119,7 @@ setGeneric("model_type", function(siamcat) standardGeneric("model_type"))
 #' @rdname model_type-methods
 #' @aliases model_type,ANY-method
 setMethod("model_type", "ANY", function(siamcat){
-  eval(model_list(siamcat)@model_type)
+  eval(model_list(siamcat)@model.type)
 })
 # Return model type if a model_list object
 #' @rdname model_list-methods
@@ -150,6 +150,11 @@ setGeneric("eval_data", function(siamcat) standardGeneric("eval_data"))
 setMethod("eval_data", "ANY", function(siamcat){
   accessSlot(siamcat, "eval_data")
 })
+# constructor; for creating eval_data from a list
+#' @rdname eval_data-methods
+#' @aliases eval_data
+setMethod("eval_data", "list", function(siamcat){ return(new("eval_data",
+ siamcat)) })
 
 ###############################################################################
 #' Retrieve pred_matrix from object.
@@ -175,6 +180,12 @@ setGeneric("pred_matrix", function(siamcat) standardGeneric("pred_matrix"))
 setMethod("pred_matrix", "ANY", function(siamcat){
   accessSlot(siamcat, "pred_matrix")
 })
+# constructor; for creating pred_matrix from a matrix
+#' @rdname pred_matrix-methods
+#' @aliases pred_matrix
+setMethod("pred_matrix", "matrix", function(siamcat){ return(new("pred_matrix",
+ siamcat)) })
+
 
 ###############################################################################
 #' Retrieve norm_param from object.

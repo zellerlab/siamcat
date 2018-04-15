@@ -4,11 +4,15 @@
 \name{eval_data}
 \alias{eval_data}
 \alias{eval_data,ANY-method}
+\alias{eval_data,list-method}
+\alias{eval_data}
 \title{Retrieve eval_data from object.}
 \usage{
 eval_data(siamcat, errorIfNULL=TRUE)
 
 \S4method{eval_data}{ANY}(siamcat)
+
+\S4method{eval_data}{list}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

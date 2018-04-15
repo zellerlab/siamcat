@@ -63,10 +63,9 @@ get.component.classes <- function(class) {
   # define classes vector the names of component.classes needs to be the slot
   # names to match getSlots / splat
   component.classes.siamcat <- c("model_list", "orig_feat", "label", 
-  "norm_param", "data_split", "phyloseq")  #slot names
+  "norm_param", "data_split", "phyloseq","eval_data", "pred_matrix")  #slot names
   names(component.classes.siamcat) <- c("model_list", "orig_feat", "label",
-   "norm_param", "data_split", "phyloseq")  #class names
-
+   "norm_param", "data_split", "phyloseq","eval_data", "pred_matrix")  #class names
   component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", 
   "tax_table", "refseq")  #slot names
   names(component.classes.phyloseq) <- c("otu_table", "sample_data", 

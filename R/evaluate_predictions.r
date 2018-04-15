@@ -113,14 +113,14 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     if (ncol(pred) > 1) {
         if (verbose > 2)
             message("+ evaluating multiple predictions")
-        eval_data(siamcat) <- list(roc.all = rocc, auc.all = aucs, 
+        eval_data(siamcat) <- eval_data(list(roc.all = rocc, auc.all = aucs, 
             roc.average = rocsumm, auc.average = auroc, ev.list = ev,
-            pr.list = pr, aucspr = aucspr)
+            pr.list = pr, aucspr = aucspr))
     } else {
         if (verbose > 2)
             message("+ evaluating single prediction")
-        eval_data(siamcat) <- list(roc.average = rocsumm, auc.average = auroc,
-         ev.list = ev, pr.list = pr)
+        eval_data(siamcat) <- eval_data(list(roc.average = rocsumm, 
+            auc.average = auroc,ev.list = ev, pr.list = pr))
     }
     e.time <- proc.time()[3]
     if (verbose > 1)

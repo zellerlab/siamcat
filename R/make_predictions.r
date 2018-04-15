@@ -102,6 +102,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL,
             }
         }
         stopifnot(!any(is.na(pred)))
+        pred <- pred_matrix(pred)
         pred_matrix(siamcat) <- pred
         return.object <- siamcat
     } else {
@@ -153,6 +154,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL,
                 label$negative.lab) * pdata$data[,4]
             names(p) <- rownames(pdata$data)
             pred[names(p), i] <- p
+            pred <- pred_matrix(pred)
             if (verbose == 1 || verbose == 2)
                 setTxtProgressBar(pb, i)
         }

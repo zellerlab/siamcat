@@ -53,17 +53,19 @@ setClass("data_split", contains="list")
 #' @exportClass label
 setClass("label", contains="list")
 
-#' The S4 class for storing taxa-abundance information and models.
-#' @name siamcat-class
-#' @rdname siamcat-class
-#' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
-#' @slot label an object of class \link{label-class}
-#' @slot orig_feat an object of class \link[phyloseq]{otu_table-class}
-#' @slot data_split an object of class \link{data_split-class}
-#' @slot norm_param a list of normalzation parameters, see 
-#'   \link{normalize.features} for more details
-#' @slot model_list an object of class \link{model_list-class}
-#' @slot eval_data list containing \itemize{
+#' The S4 class for storing label info.
+#' @name pred_matrix-class
+#' @rdname pred_matrix-class
+#' @slot .Data inherited from \code{\link{matrix}} class, contains a matrix with
+#'  predictions made by \link{make.predictions} function
+#' @exportClass pred_matrix
+setClass("pred_matrix", contains="matrix")
+
+#' The S4 class for storing evaluation data.
+#' @name eval_data-class
+#' @rdname eval_data-class
+#' @slot .Data inherited from \code{\link{list}} class, contains a list with: 
+#'  \itemize{
 #'  \item \code{$roc.average} average ROC-curve across repeats or a single 
 #'   ROC-curve on complete dataset;
 #'  \item \code{$auc.average} AUC value for the average ROC-curve;
@@ -83,8 +85,21 @@ setClass("label", contains="list")
 #'  \item \code{$auc.all} vector of AUC values for the ROC curves for every
 #'    repeat
 #'}
-#' @slot pred_matrix a matrix with predictions made by \link{make.predictions}
-#'    function
+#' @exportClass eval_data
+setClass("eval_data", contains="list")
+
+#' The S4 class for storing taxa-abundance information and models.
+#' @name siamcat-class
+#' @rdname siamcat-class
+#' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
+#' @slot label an object of class \link{label-class}
+#' @slot orig_feat an object of class \link[phyloseq]{otu_table-class}
+#' @slot data_split an object of class \link{data_split-class}
+#' @slot norm_param a list of normalzation parameters, see 
+#'   \link{normalize.features} for more details
+#' @slot model_list an object of class \link{model_list-class}
+#' @slot eval_data an object of class \link{eval_data-class}
+#' @slot pred_matrix an object of class \link{pred_matrix-class}
 #' @exportClass siamcat
 setClass("siamcat", representation(model_list = "model_list", 
 	                               phyloseq = "phyloseq", 
