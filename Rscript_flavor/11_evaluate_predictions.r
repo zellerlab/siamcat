@@ -45,7 +45,7 @@ siamcat    <- siamcat(feat,label)
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)
-pred_matrix(siamcat) <- pred
+pred_matrix(siamcat) <- pred_matrix(pred)
 
 siamcat <- evaluate.predictions(siamcat)
 
