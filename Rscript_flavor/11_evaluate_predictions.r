@@ -18,7 +18,7 @@ suppressMessages(library('SIAMCAT'))
 
 # define arguments
   option_list = list(
-  #make_option('--pkgdir', type='character', help='Source directory of dataprep'),
+  make_option('--feat_in',         type='character',                     help='Input file containing features'),
   make_option('--label_in',              type='character',                help='Input file containing labels'),
   make_option('--pred',               type='character',                help='Input file containing the trained classification model(s)'),
   make_option('--plot',               type='character',                help='Output file for plotting'),
@@ -30,6 +30,7 @@ suppressMessages(library('SIAMCAT'))
 opt            <- parse_args(OptionParser(option_list=option_list))
 cat("=== 11_model_evaler.r\n")
 cat("=== Paramaters of the run:\n\n")
+cat('feat_in         =', opt$feat_in,      '\n')
 cat('label_in           =', opt$label_in, '\n')
 cat('pred               =', opt$pred, '\n')
 cat('plot               =', opt$plot, '\n')
@@ -39,11 +40,12 @@ cat('\n')
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
 start.time <- proc.time()[1]
 label      <- read.labels(opt$label_in)
-siamcat <- siamcat(label)
+feat       <- read.features(opt$feat_in)
+siamcat <- siamcat(feat,label)
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)
-siamcat@pred_matrix <- pred
+pred_matrix(siamcat) <- pred
 
 siamcat <-  evaluate.predictions(siamcat)
 

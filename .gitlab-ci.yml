@@ -83,7 +83,7 @@ evaluate_interpret:
     - cd Rscript_flavor
     - R CMD INSTALL SIAMCAT_0.99.4.tar.gz
   script:
-    - Rscript 11_evaluate_predictions.r --label_in valLabel_sel.tsv --plot evalPlot.pdf --pred pred.tsv
+    - Rscript 11_evaluate_predictions.r --feat_in valFeat_sel_norm.tsv --label_in valLabel_sel.tsv --plot evalPlot.pdf --pred pred.tsv
     - Rscript 12_interpret_model.r --label_in valLabel_sel.tsv --feat_in valFeat_sel_norm.tsv --origin_feat valFeat_sel.tsv --metadata_in valMetaData_sel.tsv --mlr_models_list models.RData --plot interpretation.pdf --pred pred.tsv --col_scheme="BrBG" --heatmap_type="zscore" --consens_thres="0.5"
 
   artifacts:
