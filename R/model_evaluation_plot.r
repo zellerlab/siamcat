@@ -32,24 +32,28 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
 
     if (verbose > 2)
         message("+ plotting ROC")
-    plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "False positive rate", ylab = "True positive rate", type = "n")
+    plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "False positive rate",
+        ylab = "True positive rate", type = "n")
     title(paste("ROC curve for the model", sep = " "))
     abline(a = 0, b = 1, lty = 3)
     if (ncol(pred_matrix(siamcat)) > 1) {
         aucs = vector("numeric", ncol(pred_matrix(siamcat)))
         for (c in seq_len(ncol(pred_matrix(siamcat)))) {
             roc.c = eval_data(siamcat)$roc.all[[c]]
-            lines(1 - roc.c$specificities, roc.c$sensitivities, col = gray(runif(1, 0.2, 0.8)))
+            lines(1 - roc.c$specificities, roc.c$sensitivities, 
+                col = gray(runif(1, 0.2, 0.8)))
             aucs[c] = eval_data(siamcat)$auc.all[c]
             if (verbose > 2)
-                message(paste("+++ AU-ROC (resampled run ", c, "): ", format(aucs[c], digits = 3)))
+                message(paste("+++ AU-ROC (resampled run ", c, "): ", 
+                    format(aucs[c], digits = 3)))
         }
         l.vec = rep(label$label, ncol(pred_matrix(siamcat)))
     } else {
         l.vec = label$label
     }
     roc.summ = eval_data(siamcat)$roc.average[[1]]
-    lines(1 - roc.summ$specificities, roc.summ$sensitivities, col = "black", lwd = 2)
+    lines(1 - roc.summ$specificities, roc.summ$sensitivities, col = "black",
+     lwd = 2)
     auroc = eval_data(siamcat)$auc.average[1]
     # plot CI
     x = as.numeric(rownames(roc.summ$ci))
@@ -59,9 +63,12 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
 
     if (ncol(pred_matrix(siamcat)) > 1) {
         if (verbose > 1)
-            message(paste("+ AU-ROC:\n+++ mean-prediction:", format(auroc, digits = 3), "\n+++ averaged       :", format(mean(aucs),
-                digits = 3), "\n+++ sd             :", format(sd(aucs), digits = 4)))
-        text(0.7, 0.1, paste("Mean-prediction AUC:", format(auroc, digits = 3)))
+            message(paste("+ AU-ROC:\n+++ mean-prediction:", 
+                format(auroc, digits = 3), "\n+++ averaged       :", 
+                format(mean(aucs), digits = 3), "\n+++ sd             :",
+                format(sd(aucs), digits = 4)))
+        text(0.7, 0.1, paste("Mean-prediction AUC:", 
+            format(auroc, digits = 3)))
     } else {
         if (verbose > 1)
             message(paste("+ AU-ROC:", format(auroc, digits = 3)))
@@ -71,7 +78,8 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     # precision recall curve
     if (verbose > 2)
         message("+ plotting PRC")
-    plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "Recall", ylab = "Precision", type = "n")
+    plot(NULL, xlim = c(0, 1), ylim = c(0, 1), xlab = "Recall", 
+        ylab = "Precision", type = "n")
     title(paste("Precision-recall curve for the model", sep = " "))
     abline(h = mean(label$label == label$positive.lab), lty = 3)
 
@@ -83,7 +91,8 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
             lines(pr$x, pr$y, col = gray(runif(1, 0.2, 0.8)))
             aucspr[c] = eval_data(siamcat)$aucspr[c]
             if (verbose > 2)
-                message(paste("+++ AU-PRC (resampled run ", c, "): ", format(aucspr[c], digits = 3)))
+                message(paste("+++ AU-PRC (resampled run ", c, "): ", 
+                    format(aucspr[c], digits = 3)))
         }
         ev = eval_data(siamcat)$ev.list[[length(eval_data(siamcat)$ev.list)]]
     } else {
@@ -94,9 +103,12 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     aupr = evaluate.calc.aupr(ev, verbose = verbose)
     if (ncol(pred_matrix(siamcat)) > 1) {
         if (verbose > 1)
-            message(paste("+ AU-PRC:\n+++ mean-prediction:", format(aupr, digits = 3), "\n+++ averaged       :", format(mean(aucspr),
-                digits = 3), "\n+++ sd             :", format(sd(aucspr), digits = 4)))
-        text(0.7, 0.1, paste("Mean-prediction AU-PRC:", format(aupr, digits = 3)))
+            message(paste("+ AU-PRC:\n+++ mean-prediction:", 
+                format(aupr, digits = 3), "\n+++ averaged       :",
+                format(mean(aucspr), digits = 3), "\n+++ sd             :", 
+                format(sd(aucspr), digits = 4)))
+        text(0.7, 0.1, paste("Mean-prediction AU-PRC:", 
+            format(aupr, digits = 3)))
     } else {
         if (verbose > 1)
             message("+ AU-PRC:", format(aupr, digits = 3), "\n")
@@ -105,7 +117,9 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     tmp <- dev.off()
     e.time <- proc.time()[3]
     if (verbose > 1)
-        message(paste("+ finished model.evaluation.plot in", formatC(e.time - s.time, digits=3), "s"))
+        message(paste("+ finished model.evaluation.plot in", 
+            formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
-        message(paste("Plotted evaluation of predictions successfully to:", fn.plot))
+        message(paste("Plotted evaluation of predictions successfully to:", 
+            fn.plot))
 }
