@@ -58,11 +58,13 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     len.diff <- abs(case.count - ctrl.count)
 
     hmapcolors <- colorRampPalette(brewer.pal(10, "RdYlGn"))
-    color.scheme <- rev(colorRampPalette(brewer.pal(brewer.pal.info["BrBG", "maxcolors"], "BrBG"))(100))
+    color.scheme <- rev(colorRampPalette(brewer.pal(
+        brewer.pal.info["BrBG", "maxcolors"], "BrBG"))(100))
 
     for (m in seq_len(ncol(meta(siamcat)))) {
         mname <- gsub("[_.-]", " ", colnames(meta(siamcat))[m])
-        mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep = "")
+        mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
+         sep = "")
         if (verbose > 1)
             message(paste("+++ checking", mname, "as a potential confounder"))
 
@@ -73,7 +75,8 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
         histcolors <- brewer.pal(9, "YlGnBu")
         if (length(u.val) == 1) {
             if (verbose > 1) {
-                message("+++  skipped because all subjects have the same value")
+                message("+++  skipped because all subjects have the same
+                 value")
             }
         } else if (length(u.val) <= 5) {
             if (verbose > 1)
@@ -95,11 +98,14 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
             vps <- baseViewports()
             pushViewport(vps$figure)
             vp1 <- plotViewport()
-            bar.plot <- barplot(freq, ylim = c(0, 1), main = mname, names.arg = c(label$n.lab, label$p.lab),
+            bar.plot <- barplot(freq, ylim = c(0, 1), main = mname, 
+                names.arg = c(label$n.lab, label$p.lab),
                 col = colors)
-            legend(2.5, 1, legend = u.val, xpd = NA, lwd = 2, col = colors, inset = 0.5, bg = "grey96", cex = 0.8)
+            legend(2.5, 1, legend = u.val, xpd = NA, lwd = 2, col = colors,
+             inset = 0.5, bg = "grey96", cex = 0.8)
             p.val <- fisher.test(ct)$p.value
-            mtext(paste("Fisher test p-value:", format(p.val, digits = 4)), cex = 0.6, side = 1, line = 2)
+            mtext(paste("Fisher test p-value:", format(p.val, digits = 4)),
+             cex = 0.6, side = 1, line = 2)
             popViewport()
 
             if (verbose > 2)
@@ -126,19 +132,25 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
                 message("++++ panel 1/4: Q-Q plot")
             par(mar = c(4.5, 4.5, 2.5, 1.5), mgp = c(2.5, 1, 0))
             ax.int <- c(min(mvar, na.rm = TRUE), max(mvar, na.rm = TRUE))
-            qqplot(mvar[label$n.idx], mvar[label$p.idx], xlim = ax.int, ylim = ax.int, pch = 16, cex = 0.6,
-                xlab = label$n.lab, ylab = label$p.lab, main = paste("Q-Q plot for", mname))
+            qqplot(mvar[label$n.idx], mvar[label$p.idx], xlim = ax.int,
+             ylim = ax.int, pch = 16, cex = 0.6,
+                xlab = label$n.lab, ylab = label$p.lab, main = 
+                paste("Q-Q plot for", mname))
             abline(0, 1, lty = 3)
-            p.val <- wilcox.test(mvar[label$n.idx], mvar[label$p.idx], exact = FALSE)$p.value
-            text(ax.int[1] + 0.9 * (ax.int[2] - ax.int[1]), ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]), cex = 0.8, paste("MWW test p-value:",
-                format(p.val, digits = 4)), pos = 2)
+            p.val <- wilcox.test(mvar[label$n.idx], mvar[label$p.idx], 
+                exact = FALSE)$p.value
+            text(ax.int[1] + 0.9 * (ax.int[2] - ax.int[1]), 
+                ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]), cex = 0.8, 
+                paste("MWW test p-value:",format(p.val, digits = 4)), pos = 2)
 
             if (verbose > 2)
                 message("++++ panel 2/4: X histogram")
             par(mar = c(4, 2.5, 3.5, 1.5))
-            hist(mvar[label$n.idx], main = label$n.lab, xlab = mname, col = histcolors, breaks = seq(min(mvar,
+            hist(mvar[label$n.idx], main = label$n.lab, xlab = mname, 
+                col = histcolors, breaks = seq(min(mvar,
                 na.rm = TRUE), max(mvar, na.rm = TRUE), length.out = 10))
-            mtext(paste("N =", length(mvar[label$n.idx])), cex = 0.6, side = 3, adj = 1, line = 1)
+            mtext(paste("N =", length(mvar[label$n.idx])), cex = 0.6, side = 3,
+             adj = 1, line = 1)
 
             if (verbose > 2)
                 message("++++ panel 3/4: X boxplot")
@@ -146,16 +158,21 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
             combine <- data.frame(mvar[lgr], c(mvar[smlr], rep(NA, len.diff)))
 
 
-            boxplot(combine[, 1], na.omit(combine[, 2]), range=1.5, use.cols = TRUE, names = bp.labs, ylab = mname, main = paste("Boxplot for",
+            boxplot(combine[, 1], na.omit(combine[, 2]), range=1.5, 
+                use.cols = TRUE, names = bp.labs, ylab = mname, 
+                main = paste("Boxplot for",
                 mname), col = histcolors, outpch=NA)
-            stripchart(combine, vertical = TRUE, add = TRUE, method = "jitter", pch = 20)
+            stripchart(combine, vertical = TRUE, add = TRUE,
+             method = "jitter", pch = 20)
 
             if (verbose > 2)
                 message("++++ panel 4/4: Y histogram")
             par(mar = c(4.5, 2.5, 3.5, 1.5))
-            hist(mvar[label$p.idx], main = label$p.lab, xlab = mname, col = histcolors, breaks = seq(min(mvar,
+            hist(mvar[label$p.idx], main = label$p.lab, xlab = mname,
+             col = histcolors, breaks = seq(min(mvar,
                 na.rm = TRUE), max(mvar, na.rm = TRUE), length.out = 10))
-            mtext(paste("N =", length(mvar[label$p.idx])), cex = 0.6, side = 3, adj = 1, line = 1)
+            mtext(paste("N =", length(mvar[label$p.idx])), cex = 0.6, side = 3,
+             adj = 1, line = 1)
             par(mfrow = c(1, 1))
         }
     }
@@ -163,9 +180,11 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     e.time <- proc.time()[3]
     tmp <- dev.off()
     if (verbose > 1) {
-        message(paste("+ finished check.confounders in", formatC(e.time - s.time, digits=3), "s"))
+        message(paste("+ finished check.confounders in", 
+            formatC(e.time - s.time, digits=3), "s"))
     }
     if (verbose == 1) {
-        message(paste("Checking metadata for confounders finished, results plotted to:", fn.plot))
+        message(paste("Checking metadata for confounders finished, results 
+            plotted to:", fn.plot))
     }
 }
