@@ -54,7 +54,7 @@ siamcat <- make.predictions(siamcat)
 
 
 ### save prediction
-pred.header <- paste('#Predictions for ', label@positive.lab, ':', label@p.lab,
+pred.header <- paste('#Predictions for ', label$positive.lab, ':', label$p.lab,
   ' [', label@header, ']', sep='')
 write(pred.header, file=opt$pred, append=FALSE)
 #print(pred$pred)
