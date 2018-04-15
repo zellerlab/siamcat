@@ -389,7 +389,7 @@ setGeneric("meta", function(siamcat) standardGeneric("meta"))
 #' @rdname meta-methods
 #' @aliases meta,ANY-method
 setMethod("meta", "ANY", function(siamcat){
-  sample_data(physeq(siamcat))
+  sample_data(physeq(siamcat),errorIfNULL = FALSE)
 })
 # Return as-is if already a sample_data object
 #' @rdname meta-methods

@@ -66,6 +66,10 @@ load(opt$mlr_models_list) ##loads plm.out
 # parse model header
 
 siamcat <- siamcat(feat,label)
+if(!is.null(opt$metadata_in)){
+  meta          <- read.meta(opt$metadata_in)
+  meta(siamcat) <- meta
+}
 model_list(siamcat) <- model_list
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
