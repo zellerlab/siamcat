@@ -66,7 +66,7 @@ train.model <- function(siamcat,
     if (verbose > 1)
         message("+ starting train.model")
     label <- label(siamcat)
-    data.split <- get.data.split(siamcat)
+    data.split <- data_split(siamcat)
     s.time <- proc.time()[3]
     # check modsel.crit
     if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))) {

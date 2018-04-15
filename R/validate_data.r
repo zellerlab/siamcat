@@ -108,7 +108,7 @@ validate.data <- function(siamcat, verbose = 1) {
             stop("! Metadata is not available for all samples!")
         }
     }
-    orig_feat(siamcat) <- otu_table(get.phyloseq(siamcat))
+    orig_feat(siamcat) <- otu_table(physeq(siamcat))
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste("+ finished validate.data in", 
