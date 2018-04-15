@@ -85,10 +85,13 @@ train.model <- function(siamcat,
         } else if (m == "f1") {
             measure[[length(measure) + 1]] <- mlr::f1
         } else if (m == "pr" || m == "auprc") {
-            auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, worst = 0, properties = c("classif", "req.pred",
-                "req.truth", "req.prob"), name = "Area under the Precision Recall Curve", fun = function(task, model,
+            auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, 
+                worst = 0, properties = c("classif", "req.pred",
+                "req.truth", "req.prob"), name = "Area under the Precision
+                 Recall Curve", fun = function(task, model,
                 pred, feats, extra.args) {
-                measureAUPRC(getPredictionProbabilities(pred), pred$data$truth, pred$task.desc$negative, pred$task.desc$positive)
+                measureAUPRC(getPredictionProbabilities(pred), pred$data$truth,
+                 pred$task.desc$negative, pred$task.desc$positive)
             })
             measure[[length(measure) + 1]] <- auprc
         }
@@ -103,7 +106,8 @@ train.model <- function(siamcat,
     num.runs <- data.split$num.folds * data.split$num.resample
     bar <- 0
     if (verbose > 1)
-        message(paste("+ training", method, "models on", num.runs, "training sets"))
+        message(paste("+ training", method, "models on", num.runs,
+         "training sets"))
 
     if (verbose == 1 || verbose == 2)
         pb <- txtProgressBar(max = num.runs, style = 3)
@@ -118,11 +122,15 @@ train.model <- function(siamcat,
             if (verbose > 2)
                 message(paste("++++ repetition:", resampling))
 
-            fold.name <- paste0("cv_fold", as.character(fold), "_rep", as.character(resampling))
-            fold.exm.idx <- match(data.split$training.folds[[resampling]][[fold]], names(label$label))
+            fold.name <- paste0("cv_fold", as.character(fold), "_rep",
+             as.character(resampling))
+            fold.exm.idx <- match(
+                data.split$training.folds[[resampling]][[fold]], 
+                names(label$label))
 
             ### subselect examples for training
-            label.fac <- factor(label$label, levels = c(label$negative.lab, label$positive.lab))
+            label.fac <- factor(label$label, levels = c(label$negative.lab,
+                                label$positive.lab))
             train.label <- label.fac[fold.exm.idx]
             data <- as.data.frame(t(features(siamcat))[fold.exm.idx, ])
             stopifnot(nrow(data) == length(train.label))
@@ -130,7 +138,8 @@ train.model <- function(siamcat,
             data$label <- train.label
 
             ### internal cross-validation for model selection
-            model <- train.plm(data = data, method = method, measure = measure, min.nonzero.coeff = min.nonzero.coeff,
+            model <- train.plm(data = data, method = method, measure = measure, 
+                min.nonzero.coeff = min.nonzero.coeff,
                 param.set = param.set, neg.lab = label$negative.lab)
             bar <- bar + 1
 
@@ -145,11 +154,13 @@ train.model <- function(siamcat,
         }
     }
 
-    model_list(siamcat) <- new("model_list", models = models.list, model.type = method)
+    model_list(siamcat) <- new("model_list", models = models.list, 
+        model.type = method)
     e.time <- proc.time()[3]
 
     if (verbose > 1)
-        message(paste("+ finished train.model in", formatC(e.time - s.time, digits=3), "s"))
+        message(paste("+ finished train.model in", formatC(e.time - s.time,
+         digits=3), "s"))
     if (verbose == 1)
         message(paste("Trained", method, "models successfully."))
 
@@ -157,6 +168,7 @@ train.model <- function(siamcat,
 }
 
 measureAUPRC <- function(probs, truth, negative, positive) {
-    pr <- pr.curve(scores.class0 = probs[which(truth == positive)], scores.class1 = probs[which(truth == negative)])
+    pr <- pr.curve(scores.class0 = probs[which(truth == positive)], 
+                   scores.class1 = probs[which(truth == negative)])
     return(pr$auc.integral)
 }
