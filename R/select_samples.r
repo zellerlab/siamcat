@@ -24,12 +24,15 @@
 #' @examples
 #'  data(siamcat_example)
 #'  # Select all samples that fall into an Age-range between 20 and 80 years
-#'  siamcat_selected <- select.samples(siamcat_example, 'age', allowed.range=c(20, 80))
+#'  siamcat_selected <- select.samples(siamcat_example, 'age', 
+#'  allowed.range=c(20, 80))
 #'
 #'  # Select all samples for which information about the gender is given
 #'  # Provide additional information with verbose
-#'  \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender', allowed.set=c(1, 2), verbose=2)}
-select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = NULL, verbose = 1) {
+#'  \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender', 
+#'  allowed.set=c(1, 2), verbose=2)}
+select.samples <- function(siamcat, filter, allowed.set = NULL, 
+    allowed.range = NULL, verbose = 1) {
     if (verbose > 1)
         message("+ starting select.samples")
     s.time <- proc.time()[3]
@@ -51,42 +54,50 @@ select.samples <- function(siamcat, filter, allowed.set = NULL, allowed.range = 
     }
 
     if (!xor(is.null(allowed.range), is.null(allowed.set))) {
-        stop("Neither allowed.range nor allowed.set (or both at the same time) have been provided, exiting!\n")
+        stop("Neither allowed.range nor allowed.set (or both at the same time) 
+            have been provided, exiting!\n")
     } else {
         if (!is.null(allowed.range)) {
             if (verbose > 2)
-                message(paste0("+++ allowed.range  = [", paste(allowed.range, collapse = ","), "]"))
+                message(paste0("+++ allowed.range  = [", paste(allowed.range, 
+                    collapse = ","), "]"))
         } else {
             if (verbose > 2)
-                message(paste0("+++ allowed.set = {", paste(allowed.set, collapse = ","), "}"))
+                message(paste0("+++ allowed.set = {", paste(allowed.set, 
+                    collapse = ","), "}"))
         }
     }
 
     if (!filter %in% colnames(meta(siamcat)))
-        stop("! The filter name is not present in colnames of the sample data. Stopping.\n")
+        stop("! The filter name is not present in colnames of the sample data.
+         Stopping.\n")
     filter.var <- meta(siamcat)[, filter]
 
     if (!is.null(allowed.range)) {
-        s.idx <- !is.na(filter.var) & filter.var >= allowed.range[1] & filter.var <= allowed.range[2]
+        s.idx <- !is.na(filter.var) & filter.var >= allowed.range[1] & 
+        filter.var <= allowed.range[2]
         if (verbose > 1) {
-            message(paste0("+++ removed ", sum(!s.idx), " samples with ", filter, " not in [", paste(allowed.range, collapse = ", "),
+            message(paste0("+++ removed ", sum(!s.idx), " samples with ", 
+                filter, " not in [", paste(allowed.range, collapse = ", "),
                 "] (retaining ", sum(s.idx), ")"))
         }
 
     } else {
         s.idx <- !is.na(filter.var) & filter.var %in% allowed.set
         if (verbose > 1) {
-            message(paste0("+++ removed ", sum(!s.idx), " samples with ", filter, " not in {", paste(allowed.set, collapse = ", "),
+            message(paste0("+++ removed ", sum(!s.idx), " samples with ", 
+                filter, " not in {", paste(allowed.set, collapse = ", "),
                 "} (retaining ", sum(s.idx), ")"))
         }
     }
 
     s.names <- rownames(meta(siamcat))[s.idx]
-    siamcat@phyloseq <- prune_samples(x = siamcat@phyloseq, samples = s.names)
+    physeq(siamcat) <- prune_samples(x = physeq(siamcat), samples = s.names)
     siamcat <- filter.label(siamcat, verbose = verbose)
     e.time <- proc.time()[3]
     if (verbose > 1)
-        message(paste("+ finished select.samples in", formatC(e.time - s.time, digits=3), "s"))
+        message(paste("+ finished select.samples in", formatC(e.time - s.time, 
+            digits=3), "s"))
     if (verbose == 1)
         message("Selecting samples finished")
     return(siamcat)
