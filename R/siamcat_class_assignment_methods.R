@@ -3,7 +3,7 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-################################################################################
+###############################################################################
 #' Assign a new phyloseq object to \code{x}
 #'
 #' @usage physeq(x) <- value
@@ -21,18 +21,20 @@ setGeneric("physeq<-", function(x, value) standardGeneric("physeq<-"))
 #' @rdname assign-physeq
 #' @aliases physeq<-
 setMethod("physeq<-", c("siamcat","phyloseq"), function(x, value){
-  siamcat(value, x@model_list, x@eval_data, x@label, x@norm_param, x@data_split, x@pred_matrix)
+  siamcat(value, x@model_list, x@eval_data, x@label, x@norm_param, 
+    x@data_split, x@pred_matrix)
 })
 #' @rdname assign-physeq
 #' @aliases physeq<-
 setMethod("physeq<-", c("siamcat","otu_table"), function(x, value){
   phyloseq <- physeq(x)
   otu_table(phyloseq) <- value
-  siamcat(phyloseq, x@model_list, x@eval_data, x@label, x@norm_param, x@data_split, x@pred_matrix)
+  siamcat(phyloseq, x@model_list, x@eval_data, x@label, x@norm_param, 
+    x@data_split, x@pred_matrix)
 })
 
 
-################################################################################
+###############################################################################
 #' Assign a new label object to \code{x}
 #'
 #' @usage label(x) <- value
@@ -54,7 +56,7 @@ setMethod("label<-", c("siamcat","label"), function(x, value){
           x@norm_param, x@data_split, x@pred_matrix)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new model_list object to \code{x}
 #'
 #' @usage model_list(x) <- value
@@ -76,7 +78,7 @@ setMethod("model_list<-", c("siamcat","model_list"), function(x, value){
           x@norm_param, x@data_split, x@pred_matrix)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new eval_data object to \code{x}
 #'
 #' @usage eval_data(x) <- value
@@ -98,7 +100,7 @@ setMethod("eval_data<-", c("siamcat","list"), function(x, value){
           x@norm_param, x@data_split, x@pred_matrix)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new norm_param object to \code{x}
 #'
 #' @usage norm_param(x) <- value
@@ -120,7 +122,7 @@ setMethod("norm_param<-", c("siamcat","list"), function(x, value){
           x@eval_data, x@data_split, x@pred_matrix)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new pred_matrix object to \code{x}
 #'
 #' @usage pred_matrix(x) <- value
@@ -142,7 +144,7 @@ setMethod("pred_matrix<-", c("siamcat","matrix"), function(x, value){
           x@eval_data, x@data_split, x@norm_param)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new data_split object to \code{x}
 #'
 #' @usage data_split(x) <- value
@@ -164,7 +166,7 @@ setMethod("data_split<-", c("siamcat","data_split"), function(x, value){
           x@eval_data, x@pred_matrix, x@norm_param)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new otu_table object to \code{x} orig_feat slot
 #'
 #' @usage orig_feat(x) <- value
@@ -186,7 +188,7 @@ setMethod("orig_feat<-", c("siamcat","otu_table"), function(x, value){
           x@eval_data, x@pred_matrix, x@norm_param)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new otu_table object to \code{x} features slot
 #'
 #' @usage features(x) <- value
@@ -208,7 +210,7 @@ setMethod("features<-", c("siamcat","otu_table"), function(x, value){
   return(x)
 })
 
-################################################################################
+###############################################################################
 #' Assign a new sam_data object to \code{x}
 #'
 #' @usage meta(x) <- value
