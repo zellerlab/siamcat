@@ -41,13 +41,13 @@ cat('\n')
 start.time <- proc.time()[1]
 label      <- read.labels(opt$label_in)
 feat       <- read.features(opt$feat_in)
-siamcat <- siamcat(feat,label)
+siamcat    <- siamcat(feat,label)
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)
 pred_matrix(siamcat) <- pred
 
-siamcat <-  evaluate.predictions(siamcat)
+siamcat <- evaluate.predictions(siamcat)
 
 model.evaluation.plot(siamcat, fn.plot=opt$plot)
 
