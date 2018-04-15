@@ -64,23 +64,23 @@ marker.analysis.with.metadata <- function(feat, label, meta, detect.lim, colors,
                   na.samples <- c(na.samples, rownames(meta)[n])
                 }
             }
-            block <- block[!names(label@label) %in% na.samples]
+            block <- block[!names(label$label) %in% na.samples]
             
             # wilcoxon test blocking for this metadata category if 'object 'y' not found' error - check that feat is matrix not
             # otu table object
-            d <- data.frame(y = feat[f, which(!names(label@label) %in% na.samples)], x = as.factor(label@label[!(names(label@label) %in% 
-                na.samples)]), block, row.names = names(label@label[!(names(label@label) %in% na.samples)]))
+            d <- data.frame(y = feat[f, which(!names(label$label) %in% na.samples)], x = as.factor(label$label[!(names(label$label) %in% 
+                na.samples)]), block, row.names = names(label$label[!(names(label$label) %in% na.samples)]))
             p.val.mat[f, c] <- pvalue(wilcox_test(y ~ x | block, data = d))
         }
         
         # redefine x & y for unstratified differential abundance methods
-        x <- feat[f, label@p.idx]  #cases
-        y <- feat[f, label@n.idx]  #controls
+        x <- feat[f, label$p.idx]  #cases
+        y <- feat[f, label$n.idx]  #controls
         
         # wilcoxon
         p.val.mat[f, "no block"] <- wilcox.test(y, x, exact = FALSE)$p.value
         
-        # AUC temp <- roc(predictor=feat[f,], response=siamcat@label@label, ci=TRUE, direction='<')
+        # AUC temp <- roc(predictor=feat[f,], response=siamcat@label$label, ci=TRUE, direction='<')
         temp <- roc(controls = y, cases = x, direction = "<", ci = TRUE, auc = TRUE)
         aucs[[f]] <- c(temp$ci)
         
@@ -157,9 +157,9 @@ feature.wise.anova.with.metadata <- function(feat, label, meta, pr.cutoff, marke
         
         # disease status labels
         grand.mean <- mean(rank(x)/length(x))
-        rank.p <- rank(x[label@p.idx])/length(label@p.idx)
-        rank.n <- rank(x[label@n.idx])/length(label@n.idx)
-        vals[1] <- sum(sum((rank.p - mean(rank.p))^2), sum((rank.n - mean(rank.n))^2))/length(c(label@p.idx, label@n.idx))
+        rank.p <- rank(x[label$p.idx])/length(label$p.idx)
+        rank.n <- rank(x[label$n.idx])/length(label$n.idx)
+        vals[1] <- sum(sum((rank.p - mean(rank.p))^2), sum((rank.n - mean(rank.n))^2))/length(c(label$p.idx, label$n.idx))
         
         # ss for each metadata column
         for (c in 1:ncol(meta)) {
@@ -195,7 +195,7 @@ feature.wise.anova.with.metadata <- function(feat, label, meta, pr.cutoff, marke
     
     # quick get sample size & group parameters - can't do inside apply??? REDUNDANT :(
     params <- matrix(NA, nrow = 2, ncol = ncol(meta) + 1, dimnames = list(c("N", "K"), colnames(ss.groups)))
-    params[, "label"] <- c(length(label@label), 2)
+    params[, "label"] <- c(length(label$label), 2)
     for (c in colnames(meta)) {
         if (length(unique(meta[, c][!is.na(meta[, c])])) > 5) {
             quartiles <- quantile(meta[, c], probs = seq(0, 1, 0.25), na.rm = TRUE)
@@ -225,7 +225,7 @@ feature.wise.anova.with.metadata <- function(feat, label, meta, pr.cutoff, marke
 check.color.scheme <- function(color.scheme, label, meta.studies = NULL, verbose = 1) {
     if (verbose > 2) 
         cat("+ starting check.color.scheme\n")
-    n.classes = ifelse(label@info$type == "BINARY", 2, length(unique(label@label)))
+    n.classes = ifelse(label$info$type == "BINARY", 2, length(unique(label$label)))
     
     if (length(color.scheme) == 1 && class(color.scheme) == "character") {
         if (n.classes == 2) {
