@@ -28,7 +28,8 @@
 #'  # Additionally, prevent standardization of the added features
 #'  siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
 #'      'bmi', 'gender'), std.meta=FALSE)
-add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose = 1) {
+add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
+ verbose = 1) {
     if (verbose > 1)
         message("+ starting add.meta.pred")
     s.time <- proc.time()[3]
@@ -53,7 +54,8 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose =
             if (!all(is.finite(m))) {
                 na.cnt <- sum(!is.finite(m))
                 if (verbose > 1)
-                  message(paste("++++ filling in", na.cnt, "missing values by mean imputation"))
+                  message(paste("++++ filling in", na.cnt, 
+                    "missing values by mean imputation"))
                 mn <- mean(m, na.rm = TRUE)
                 m[!is.finite(m)] <- mn
             }
@@ -75,14 +77,17 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE, verbose =
             cnt <- cnt + 1
         }
         if (verbose > 1)
-            message(paste("+++ added", cnt, "meta-variables as predictor to the feature matrix"))
+            message(paste("+++ added", cnt, "meta-variables as predictor to the
+             feature matrix"))
     } else {
         if (verbose > 0)
-            message("+++ Not adding any of the meta-variables as predictor to the feature matrix")
+            message("+++ Not adding any of the meta-variables as predictor to 
+                the feature matrix")
     }
     e.time <- proc.time()[3]
     if (verbose > 1)
-        message(paste("+ finished add.meta.pred in", formatC(e.time - s.time, digits = 3), "s"))
+        message(paste("+ finished add.meta.pred in", formatC(e.time - s.time, 
+            digits = 3), "s"))
     if (verbose == 1)
         message("Adding metadata as predictor finished")
     return(siamcat)
