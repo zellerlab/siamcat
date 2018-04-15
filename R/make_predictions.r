@@ -33,8 +33,10 @@
 #'  siamcat.pred <- make.predictions(siamcat_example)
 #'
 #'  # Predictions on a holdout-set
-#'  \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout=TRUE)}
-make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout = TRUE, verbose = 1) {
+#'  \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
+#'   normalize.holdout=TRUE)}
+make.predictions <- function(siamcat, siamcat.holdout = NULL, 
+    normalize.holdout = TRUE, verbose = 1) {
 
     s.time <- proc.time()[3]
 
@@ -46,10 +48,11 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
 
         feat <- t(features(siamcat))
         label <- get.label.list(siamcat)
-        data.split <- get.data.split(siamcat)
-        models <- get.models(siamcat)
+        data.split <- data_split(siamcat)
+        models <- models(siamcat)
 
-        label.fac <- factor(label$label, levels = c(label$negative.lab, label$positive.lab))
+        label.fac <- factor(label$label, levels = c(label$negative.lab, 
+            label$positive.lab))
 
         # assert that there is a split
         stopifnot(!is.null(data_split(siamcat)))
@@ -57,7 +60,9 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         num.folds <- data.split$num.folds
         num.resample <- data.split$num.resample
 
-        pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac), dimnames = list(names(label.fac), paste0("CV_rep", seq_len(num.resample))))
+        pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac), 
+            dimnames = list(names(label.fac), paste0("CV_rep", 
+                seq_len(num.resample))))
         i = 1
         if (verbose == 1 || verbose == 2)
             pb <- txtProgressBar(max = num.folds * num.resample, style = 3)
@@ -74,16 +79,21 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
                 data$label <- test.label
                 model <- models[[i]]
 
-                stopifnot(!any(rownames(model$task$env$data) %in% rownames(data)))
+                stopifnot(!any(rownames(model$task$env$data) %in% 
+                    rownames(data)))
                 if (verbose > 2)
-                  message(paste0("Applying ", get.model.type(siamcat), " on cv_fold", f, "_rep", r, " (", i, " of ", num.resample*num.folds, ")..."))
+                  message(paste0("Applying ", model_type(siamcat), 
+                    " on cv_fold", f, "_rep", r, " (", i, " of ", 
+                    num.resample*num.folds, ")..."))
 
                 task <- makeClassifTask(data = data, target = "label")
                 pdata <- predict(model, task = task)
 
-                # rescale posterior probabilities between -1 and 1 (this works only for binary data!!!!)  TODO: Will need
-                # adjustment and generalization in the future)
-                p <- label$negative.lab + abs(label$positive.lab - label$negative.lab) * pdata$data[,4]
+                # rescale posterior probabilities between -1 and 1 (this works 
+                # only for binary data!!!!)
+                # TODO: Will need adjustment and generalization in the future)
+                p <- label$negative.lab + abs(label$positive.lab - 
+                    label$negative.lab) * pdata$data[,4]
                 names(p) <- rownames(pdata$data)
                 pred[names(p), r] <- p
                 i <- i + 1
@@ -92,7 +102,7 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             }
         }
         stopifnot(!any(is.na(pred)))
-        siamcat@pred_matrix <- pred
+        pred_matrix(siamcat) <- pred
         return.object <- siamcat
     } else {
 
@@ -102,22 +112,25 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
         if (normalize.holdout) {
             if (verbose > 1)
                 message("+ Performing frozen normalization on holdout set")
-            siamcat.holdout <- normalize.features(siamcat.holdout, norm.param = norm_param(siamcat), verbose = verbose)
+            siamcat.holdout <- normalize.features(siamcat.holdout, 
+                norm.param = norm_param(siamcat), verbose = verbose)
         } else {
             message("WARNING: holdout set is not being normalized!")
         }
         feat.test <- t(features(siamcat.holdout))
         feat.ref <- t(features(siamcat))
         label <- get.label.list(siamcat.holdout)
-        data.split <- get.data.split(siamcat)
-        models <- get.models(siamcat)
+        data.split <- data_split(siamcat)
+        models <- models(siamcat)
         # data sanity checks
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
 
         # prediction
         num.models <- data.split$num.folds * data.split$num.resample
 
-        pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test), dimnames = list(rownames(feat.test), paste0("Model_", seq_len(num.models))))
+        pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test), 
+            dimnames = list(rownames(feat.test), paste0("Model_", 
+                seq_len(num.models))))
         if (verbose == 1 || verbose == 2)
             pb <- txtProgressBar(max = num.folds * num.resample, style = 3)
         for (i in seq_len(num.models)) {
@@ -129,12 +142,15 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
             data$label <- as.factor(label$label)
 
             if (verbose > 2)
-                message(paste0("Applying ", get.model.type(siamcat), " on complete external dataset", " (", i, " of ", num.models, ")..."))
+                message(paste0("Applying ", model_type(siamcat), 
+                    " on complete external dataset", " (", i, " of ",
+                     num.models, ")..."))
 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
 
-            p <- label$negative.lab + abs(label$positive.lab - label$negative.lab) * pdata$data[,4]
+            p <- label$negative.lab + abs(label$positive.lab - 
+                label$negative.lab) * pdata$data[,4]
             names(p) <- rownames(pdata$data)
             pred[names(p), i] <- p
             if (verbose == 1 || verbose == 2)
@@ -150,12 +166,14 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL, normalize.holdout 
     if (verbose > 1)
         message("Correlation between predictions from repeated CV:")
     if (verbose > 1)
-        message(paste("Min: ", min(correlation), ", Median: ", median(correlation), ", Mean: ", mean(correlation)))
+        message(paste("Min: ", min(correlation), ", Median: ", 
+            median(correlation), ", Mean: ", mean(correlation)))
 
     # print out time
     e.time <- proc.time()[3]
     if (verbose > 1)
-        message(paste("+ finished make.predictions in", formatC(e.time - s.time, digits=3), "s"))
+        message(paste("+ finished make.predictions in", 
+            formatC(e.time - s.time, digits=3), "s"))
     if (verbose == 1)
         message("Made predictions successfully.")
 
