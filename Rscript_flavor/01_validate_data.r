@@ -59,9 +59,9 @@ siamcat <- validate.data(siamcat)
 # labels
 
 if (!is.null(opt$label_out)){
-  write.table(label@header,          file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE,
+  write.table(label$header,          file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE,
               col.names = FALSE, append = FALSE)
-  write.table(t(as.matrix(siamcat@label@label)), file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
+  write.table(t(as.matrix(siamcat@label$label)), file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
               col.names = TRUE, append = TRUE)
 }
 write.table(siamcat@phyloseq@otu_table,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
