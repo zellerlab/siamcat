@@ -48,7 +48,7 @@ filter.label <- function(siamcat, ids, verbose = 1) {
   if (verbose > 0)
     message(paste("Keeping labels of", length(labels_new$label), "sample(s)."))
 
-  label(siamcat) <- labels_new
+  label(siamcat) <- label(labels_new)
   return(siamcat)
 }
 
