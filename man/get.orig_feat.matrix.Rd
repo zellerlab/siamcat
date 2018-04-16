@@ -19,6 +19,6 @@ Function to access original features in siamcat@orig_feat
 Access original features in siamcat@orig_feat as matrix
 }
 \examples{
- data(siamcat_example)
- orig_feat <- get.orig_feat.matrix(siamcat_example)
+    data(siamcat_example)
+    orig_feat <- get.orig_feat.matrix(siamcat_example)
 }

@@ -30,6 +30,6 @@ The \link{model_list-class} object or NULL.
 Retrieve \link{model_list-class} from object.
 }
 \examples{
- data(siamcat_example)
- model_list(siamcat_example)
+    data(siamcat_example)
+    model_list(siamcat_example)
 }

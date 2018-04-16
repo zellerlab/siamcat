@@ -20,8 +20,8 @@ an object of class \link{label-class}
 This function creates a label object from metadata
 }
 \examples{
-   data(siamcat_example)
-   label <- create.label.from.metadata(meta(siamcat_example),"gender")
+    data(siamcat_example)
+    label <- create.label.from.metadata(meta(siamcat_example),"gender")
 
 }
 \keyword{internal}

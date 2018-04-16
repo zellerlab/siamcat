@@ -19,6 +19,6 @@ Function to access features in siamcat@phylose@otu_table
 Access features in siamcat@phylose@otu_table as matrix
 }
 \examples{
- data(siamcat_example)
- feat <- get.features.matrix(siamcat_example)
+    data(siamcat_example)
+    feat <- get.features.matrix(siamcat_example)
 }

@@ -21,6 +21,6 @@ The norm_param list or NULL.
 Retrieve norm_param from object.
 }
 \examples{
- data(siamcat_example)
- norm_param(siamcat_example)
+    data(siamcat_example)
+    norm_param(siamcat_example)
 }

@@ -5,46 +5,46 @@
 
 #'@title Check and visualize associations between features and classes
 #'@description This function calculates for each feature a pseudo-fold change
-#'  (geometrical mean of the difference between quantiles) between the different
-#'  classes found in labels.
+#'     (geometrical mean of the difference between quantiles) between the different
+#'     classes found in labels.
 #'
-#'  Significance of the differences is computed for each feature using a
-#'  Wilcoxon test followed by multiple hypothesis testing correction.
+#'     Significance of the differences is computed for each feature using a
+#'     Wilcoxon test followed by multiple hypothesis testing correction.
 #'
-#'  Additionally, the Area Under the Receiver Operating Characteristic Curve
-#'  (AU-ROC) and a prevalence shift are computed for the features found to be
-#'  associated with the two different classes at a user-specified significance
-#'  level \code{alpha}.
+#'     Additionally, the Area Under the Receiver Operating Characteristic Curve
+#'     (AU-ROC) and a prevalence shift are computed for the features found to be
+#'     associated with the two different classes at a user-specified significance
+#'     level \code{alpha}.
 #'
-#'  Finally, the function produces a plot of the top \code{max.show} associated
-#'  features, showing the distribution of the log10-transformed abundances for
-#'  both classes, and user-selected panels for the effect (AU-ROC, Prevalence
-#'  Shift, and Fold Change)
+#'     Finally, the function produces a plot of the top \code{max.show} associated
+#'     features, showing the distribution of the log10-transformed abundances for
+#'     both classes, and user-selected panels for the effect (AU-ROC, Prevalence
+#'     Shift, and Fold Change)
 #'@param siamcat object of class \link{siamcat-class}
 #'@param fn.plot filename for the pdf-plot
 #'@param color.scheme valid R color scheme or vector of valid R colors (must be
-#'  of the same length as the number of classes), defaults to \code{'RdYlBu'}
+#'     of the same length as the number of classes), defaults to \code{'RdYlBu'}
 #'@param alpha float, significance level, defaults to \code{0.05}
 #'@param mult.corr multiple hypothesis correction method, see
-#'  \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
+#'     \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
 #'@param sort.by string, sort features by p-value (\code{"p.val"}), by fold
-#'  change (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
-#'  \code{"fc"}
+#'     change (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}), defaults to
+#'     \code{"fc"}
 #'@param detect.lim float, pseudocount to be added before log-transformation of
-#'  the data, defaults to \code{1e-06}
+#'     the data, defaults to \code{1e-06}
 #'@param pr.cutoff float, cutoff for the prevalence computation, defaults to
-#'  \code{1e-06}
+#'     \code{1e-06}
 #'@param max.show integer, how many associated features should be shown,
-#'  defaults to \code{50}
+#'     defaults to \code{50}
 #'@param plot.type string, specify how the abundance should be plotted, must be
-#'  one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")},
-#'  defaults to \code{"quantile.box"}
+#'     one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")},
+#'     defaults to \code{"quantile.box"}
 #'@param panels vector, name of the panels to be plotted next to the log10-
-#'  transformed abundances, possible entries are \code{c("fc", "auroc",
-#'  "prevalence")}, defaults to \code{c("fc", "auroc")}
+#'     transformed abundances, possible entries are \code{c("fc", "auroc",
+#'     "prevalence")}, defaults to \code{c("fc", "auroc")}
 #'@param verbose control output: \code{0} for no output at all, \code{1} for
-#'  only information about progress and success, \code{2} for normal level of
-#'  information and \code{3} for full debug information, defaults to \code{1}
+#'     only information about progress and success, \code{2} for normal level of
+#'     information and \code{3} for full debug information, defaults to \code{1}
 #'@return Does not return anything, but produces an association plot
 #'@keywords SIAMCAT check.associations
 #'@export
@@ -60,16 +60,16 @@
 #'
 #'# Plot associations as bean plot
 #'     check.associations(siamcat_example, './assoc_plot_bean.pdf',
-#'         plot.type='bean')
+#'      plot.type='bean')
 #'
 #'# Plot assocations as box plot
 #'# Additionally, sort by p-value instead of by fold change
 #'     check.associations(siamcat_example, './assoc_plot_fc.pdf',
-#'         plot.type='box', sort.by='p.val')
+#'      plot.type='box', sort.by='p.val')
 #'
 #'# Custom colors
 #'     check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
-#'         plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
+#'      plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
 check.associations <-
     function(siamcat,
         fn.plot,

@@ -43,35 +43,35 @@ object of class \link{siamcat-class} with added \code{model_list}
 }
 \description{
 This function trains the a machine learning model on the
-        training data
+     training data
 }
 \details{
 This functions performs the training of the machine learning model
-        and functions as an interface to the \code{mlr}-package.
+     and functions as an interface to the \code{mlr}-package.
 
-        The function expects a \link{siamcat-class}-object with a prepared
-        cross-validation (see \link{create.data.split}) in the
-        \code{data_split}-slot of the object. It then trains a model for
-        each fold of the datasplit.
+     The function expects a \link{siamcat-class}-object with a prepared
+     cross-validation (see \link{create.data.split}) in the
+     \code{data_split}-slot of the object. It then trains a model for
+     each fold of the datasplit.
 
-        For the machine learning methods that require additional
-        hyperparameters (e.g. \code{lasso_ll}), the optimal hyperparameters
-        are tuned with the function \link[mlr]{tuneParams} within the
-        \code{mlr}-package.
+     For the machine learning methods that require additional
+     hyperparameters (e.g. \code{lasso_ll}), the optimal hyperparameters
+     are tuned with the function \link[mlr]{tuneParams} within the
+     \code{mlr}-package.
 
-        The methods \code{'lasso'}, \code{'enet'}, and \code{'ridge'} are
-        implemented as mlr-taks using the \code{'classif.cvglmnet'} Learner,
-        \code{'lasso_ll'} and \code{'ridge_ll'} use the
-        \code{'classif.LiblineaRL1LogReg'} and the
-        \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
-        \code{'randomForest'} method is implemented via the
-        \code{'classif.randomForest'} Learner.
+     The methods \code{'lasso'}, \code{'enet'}, and \code{'ridge'} are
+     implemented as mlr-taks using the \code{'classif.cvglmnet'} Learner,
+     \code{'lasso_ll'} and \code{'ridge_ll'} use the
+     \code{'classif.LiblineaRL1LogReg'} and the
+     \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
+     \code{'randomForest'} method is implemented via the
+     \code{'classif.randomForest'} Learner.
 }
 \examples{
 
- data(siamcat_example)
- # simple working example
- siamcat_validated <- train.model(siamcat_example, method='lasso')
+    data(siamcat_example)
+    # simple working example
+    siamcat_validated <- train.model(siamcat_example, method='lasso')
 
 }
 \keyword{SIAMCAT}

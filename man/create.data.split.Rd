@@ -27,37 +27,37 @@ information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 object of class \link{siamcat-class} with the \code{data_split}-slot
-   filled
+    filled
 }
 \description{
 This function prepares the cross-validation by splitting the
-   data into \code{num.folds} training and test folds for \code{num.resample}
-   times.
+    data into \code{num.folds} training and test folds for \code{num.resample}
+    times.
 }
 \details{
 This function splits the labels within a \link{siamcat-class} object
-   and prepares the internal cross-validation for the model training (see
-   \link{train.model}).
+    and prepares the internal cross-validation for the model training (see
+    \link{train.model}).
 
-   The function saves the training and test instances for the different
-   cross-validation folds within a list in the \code{data_split}-slot of the
-   \link{siamcat-class} object, which is a list with four entries: \itemize{
-   \item \code{num.folds} the number of cross-validation folds \item
-   \code{num.resample} the number of repetitions for the cross-validation
-   \item \code{training.folds} a list containing the indices for the training
-   instances \item \code{test.folds} a list containing the indices for the
-   test instances }
+    The function saves the training and test instances for the different
+    cross-validation folds within a list in the \code{data_split}-slot of the
+    \link{siamcat-class} object, which is a list with four entries: \itemize{
+    \item \code{num.folds} the number of cross-validation folds \item
+    \code{num.resample} the number of repetitions for the cross-validation
+    \item \code{training.folds} a list containing the indices for the training
+    instances \item \code{test.folds} a list containing the indices for the
+    test instances }
 }
 \examples{
 
- data(siamcat_example)
- # simple working example
- siamcat_split <- create.data.split(siamcat_example, num.folds=10,
+    data(siamcat_example)
+    # simple working example
+    siamcat_split <- create.data.split(siamcat_example, num.folds=10,
     num.resample=5, stratify=TRUE)
 
- ## # example with a variable which is to be inseparable
- ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,
- ##  num.resample=5, stratify=FALSE, inseparable='Gender')
+    ## # example with a variable which is to be inseparable
+    ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,
+    ##  num.resample=5, stratify=FALSE, inseparable='Gender')
 }
 \keyword{SIAMCAT}
 \keyword{create.data.split}

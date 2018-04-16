@@ -24,6 +24,6 @@ The \link[phyloseq]{otu_table-class} object or NULL.
 Retrieve a \link[phyloseq]{otu_table-class} object from object.
 }
 \examples{
- data(siamcat_example)
- features(siamcat_example)
+    data(siamcat_example)
+    features(siamcat_example)
 }

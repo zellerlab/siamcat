@@ -18,13 +18,13 @@ setClass("model_list",
 #' @rdname data_split-class
 #' @slot .Data inherited from \code{\link{list}} class, contains
 #' a list with:
-#'  \itemize{
-#'    \item \code{training.folds} a list - for each cv fold contains ids of
+#'     \itemize{
+#'     \item \code{training.folds} a list - for each cv fold contains ids of
 #' samples used for training
-#'    \item \code{test.folds} a list - for each cv fold contains ids of
+#'     \item \code{test.folds} a list - for each cv fold contains ids of
 #' samples used for testing
-#'    \item \code{num.resample} number of repetition rounds for cv
-#'    \item \code{num.folds} number of folds for cv}
+#'     \item \code{num.resample} number of repetition rounds for cv
+#'     \item \code{num.folds} number of folds for cv}
 #' @exportClass data_split
 setClass("data_split", contains = "list")
 
@@ -34,25 +34,25 @@ setClass("data_split", contains = "list")
 #' @slot .Data inherited from \code{\link{list}} class, contains
 #' a list with:
 #' \itemize{
-#'    \item \code{label} numeric vector, specifying to which category samples
-#'    belong,
-#'           usualy made of 1s and -1s
-#'    \item \code{header} contains information from the header of the label file
-#'    \item \code{info} list with additional informations about the dataset
-#'    \item \code{positive.lab} specifies which of two numbers in label is a
-#'    positive label
-#'    \item \code{negative.lab} specifies which of two numbers in label is a
-#'    negative label
-#'    \item \code{n.idx} numeric vector - on which positions in the label there
+#'     \item \code{label} numeric vector, specifying to which category samples
+#'     belong,
+#'        usualy made of 1s and -1s
+#'     \item \code{header} contains information from the header of the label file
+#'     \item \code{info} list with additional informations about the dataset
+#'     \item \code{positive.lab} specifies which of two numbers in label is a
+#'     positive label
+#'     \item \code{negative.lab} specifies which of two numbers in label is a
+#'     negative label
+#'     \item \code{n.idx} numeric vector - on which positions in the label there
 #'     are samples
-#'              with negative label
-#'    \item \code{p.idx} numeric vector - on which positions in the label there
-#'    are samples
-#'           with positive label
-#'    \item \code{n.lab} character string with a name for the negative label
-#'    (e.g. 'healthy')
-#'    \item \code{p.lab} character string with a name for the positive label
-#'    (e.g. 'cancer')}
+#'           with negative label
+#'     \item \code{p.idx} numeric vector - on which positions in the label there
+#'     are samples
+#'        with positive label
+#'     \item \code{n.lab} character string with a name for the negative label
+#'     (e.g. 'healthy')
+#'     \item \code{p.lab} character string with a name for the positive label
+#'     (e.g. 'cancer')}
 #' @exportClass label
 setClass("label", contains = "list")
 
@@ -61,7 +61,7 @@ setClass("label", contains = "list")
 #' @rdname pred_matrix-class
 #' @slot .Data inherited from \code{\link{matrix}} class, contains
 #' a matrix with
-#'  predictions made by \link{make.predictions} function
+#'     predictions made by \link{make.predictions} function
 #' @exportClass pred_matrix
 setClass("pred_matrix", contains = "matrix")
 
@@ -70,24 +70,24 @@ setClass("pred_matrix", contains = "matrix")
 #' @rdname eval_data-class
 #' @slot .Data inherited from \code{\link{list}} class, contains
 #' a list with:
-#'  \itemize{
-#'  \item \code{$roc.average} average ROC-curve across repeats or a single
-#'    ROC-curve on complete dataset;
-#'  \item \code{$auc.average} AUC value for the average ROC-curve;
-#'  \item \code{$ev.list} list of \code{length(num.folds)}, containing for
-#'    different decision thresholds the number of false positives, false
-#'    negatives, true negatives, and true positives;
-#'  \item \code{$pr.list} list of \code{length(num.folds)}, containing the
-#'    positive predictive value (precision) and true positive rate (recall)
-#'    values used to plot the PR curves;
+#'     \itemize{
+#'     \item \code{$roc.average} average ROC-curve across repeats or a single
+#'     ROC-curve on complete dataset;
+#'     \item \code{$auc.average} AUC value for the average ROC-curve;
+#'     \item \code{$ev.list} list of \code{length(num.folds)}, containing for
+#'     different decision thresholds the number of false positives, false
+#'     negatives, true negatives, and true positives;
+#'     \item \code{$pr.list} list of \code{length(num.folds)}, containing the
+#'     positive predictive value (precision) and true positive rate (recall)
+#'     values used to plot the PR curves;
 #' }. If \code{prediction} had more than one column, i.e. if the models has
-#'    been trained with several repeats, the function will additonally
-#'    return \itemize{
-#'  \item \code{$roc.all} list of roc objects (see \link[pROC]{roc}) for
-#'    every repeat;
-#'  \item \code{$aucspr} vector of AUC values for the PR curves for every
+#'     been trained with several repeats, the function will additonally
+#'     return \itemize{
+#'     \item \code{$roc.all} list of roc objects (see \link[pROC]{roc}) for
+#'     every repeat;
+#'     \item \code{$aucspr} vector of AUC values for the PR curves for every
 #'     repeat;
-#'  \item \code{$auc.all} vector of AUC values for the ROC curves for every
+#'     \item \code{$auc.all} vector of AUC values for the ROC curves for every
 #'     repeat
 #'}
 #' @exportClass eval_data
@@ -101,7 +101,7 @@ setClass("eval_data", contains = "list")
 #' @slot orig_feat an object of class \link[phyloseq]{otu_table-class}
 #' @slot data_split an object of class \link{data_split-class}
 #' @slot norm_param a list of normalzation parameters, see
-#'    \link{normalize.features} for more details
+#'     \link{normalize.features} for more details
 #' @slot model_list an object of class \link{model_list-class}
 #' @slot eval_data an object of class \link{eval_data-class}
 #' @slot pred_matrix an object of class \link{pred_matrix-class}

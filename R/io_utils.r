@@ -16,16 +16,16 @@
 #' quantify the abundance of each feature in each sample.
 #' @param fn.in.feat name of the tsv file containing features
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'         for information about progress and time, defaults to \code{0}
+#'      for information about progress and time, defaults to \code{0}
 #' @export
 #' @return \code{otu_table} containing features from the file
 #' @examples
-#'  # run with example data
-#'  fn.feat <- system.file('extdata',
-#'    'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+#'     # run with example data
+#'     fn.feat <- system.file('extdata',
+#'     'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
 #'     package = 'SIAMCAT')
 #'
-#'  features <- read.features(fn.feat)
+#'     features <- read.features(fn.feat)
 read.features <- function(fn.in.feat, verbose = 0) {
     if (verbose > 1)
         message("+ starting read.features")
@@ -94,10 +94,10 @@ read.features <- function(fn.in.feat, verbose = 0) {
 #' \item \code{$p.lab} label for cases, e.g. \code{cancer}
 #'}
 #' @examples
-#'  # run with example data
+#'     # run with example data
 #' fn.label <- system.file('extdata',
 #' 'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-#'  package = 'SIAMCAT')
+#'     package = 'SIAMCAT')
 #'
 #' labels <- read.labels(fn.label)
 read.labels <- function(fn.in.label) {
@@ -208,7 +208,7 @@ read.labels <- function(fn.in.label) {
 #' @export
 #' @return \code{sample_data} object
 #' @examples
-#'  # run with example data
+#'     # run with example data
 #' fn.meta  <- system.file('extdata',
 #' 'num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
 #' package = 'SIAMCAT')
@@ -285,8 +285,8 @@ parse.label.header <- function(label.header) {
 #' @keywords internal
 #' @return an object of class \link{label-class}
 #' @examples
-#'    data(siamcat_example)
-#'    label <- create.label.from.metadata(meta(siamcat_example),"gender")
+#'     data(siamcat_example)
+#'     label <- create.label.from.metadata(meta(siamcat_example),"gender")
 #'
 #' @export
 create.label.from.metadata <- function(meta, column) {

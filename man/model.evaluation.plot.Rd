@@ -21,15 +21,15 @@ Does not return anything, but produces the model evaluation plot.
 }
 \description{
 Produces two plots for model evaluation. The first plot shows
-        the Receiver Operating Characteristic (ROC)-curves, the other the
-        Precision-recall (PR)-curves for the different cross-validation
-        repetitions.
+     the Receiver Operating Characteristic (ROC)-curves, the other the
+     Precision-recall (PR)-curves for the different cross-validation
+     repetitions.
 }
 \examples{
 
- data(siamcat_example)
- # simple working example
- model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
+    data(siamcat_example)
+    # simple working example
+    model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
 
 }
 \keyword{SIAMCAT}

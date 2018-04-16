@@ -5,23 +5,23 @@
 
 #' @title Model Evaluation Plot
 #' @description Produces two plots for model evaluation. The first plot shows
-#'         the Receiver Operating Characteristic (ROC)-curves, the other the
-#'         Precision-recall (PR)-curves for the different cross-validation
-#'         repetitions.
+#'      the Receiver Operating Characteristic (ROC)-curves, the other the
+#'      Precision-recall (PR)-curves for the different cross-validation
+#'      repetitions.
 #' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'         for only information about progress and success, \code{2} for normal
-#'         level of information and \code{3} for full debug information,
-#'         defaults to \code{1}
+#'      for only information about progress and success, \code{2} for normal
+#'      level of information and \code{3} for full debug information,
+#'      defaults to \code{1}
 #' @keywords SIAMCAT model.evaluation.plot
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
 #' @examples
 #'
-#'  data(siamcat_example)
-#'  # simple working example
-#'  model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
+#'     data(siamcat_example)
+#'     # simple working example
+#'     model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
 #'
 model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     if (verbose > 1)

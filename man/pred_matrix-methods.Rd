@@ -24,6 +24,6 @@ The pred_matrix matrix or NULL.
 Retrieve pred_matrix from object.
 }
 \examples{
- data(siamcat_example)
- pred_matrix(siamcat_example)
+    data(siamcat_example)
+    pred_matrix(siamcat_example)
 }

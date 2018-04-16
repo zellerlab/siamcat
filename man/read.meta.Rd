@@ -24,7 +24,7 @@ Metadata may be optional for the SIAMCAT workflow, but are necessary for
 heatmap displays, see \link{model.interpretation.plot}
 }
 \examples{
- # run with example data
+    # run with example data
 fn.meta  <- system.file('extdata',
 'num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
 package = 'SIAMCAT')

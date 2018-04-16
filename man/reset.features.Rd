@@ -20,6 +20,6 @@ siamcat@orig_feat in an object of class \link{siamcat-class}
 Reset features in siamcat@phylose@otu_table to those in siamcat@orig_feat
 }
 \examples{
- data(siamcat_example)
- siamcat_example <- reset.features(siamcat_example)
+    data(siamcat_example)
+    siamcat_example <- reset.features(siamcat_example)
 }

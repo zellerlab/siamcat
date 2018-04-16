@@ -27,45 +27,45 @@ an object of class \link{siamcat-class} with normalized features
 }
 \description{
 This function performs feature normalization according to user-
- specified parameters.
+    specified parameters.
 }
 \details{
 There are five different normalization methods available:
 \itemize{
- \item \code{'rank.unit'} converts features to ranks and normalizes each
-        column (=sample) by the square root of the sum of ranks
- \item \code{'rank.std'} converts features to ranks and applies z-score
-        standardization
- \item \code{'log.clr'} centered log-ratio transformation (with the addition
-        of pseudocounts)
- \item \code{'log.std'} log-transforms features (after addition of
-        pseudocounts) and applies z-score standardization
- \item \code{'log.unit'} log-transforms features (after addition of
-        pseudocounts) and normalizes by features or samples with different
-        norms
+    \item \code{'rank.unit'} converts features to ranks and normalizes each
+     column (=sample) by the square root of the sum of ranks
+    \item \code{'rank.std'} converts features to ranks and applies z-score
+     standardization
+    \item \code{'log.clr'} centered log-ratio transformation (with the addition
+     of pseudocounts)
+    \item \code{'log.std'} log-transforms features (after addition of
+     pseudocounts) and applies z-score standardization
+    \item \code{'log.unit'} log-transforms features (after addition of
+     pseudocounts) and normalizes by features or samples with different
+     norms
 }
 
 The list entries in \code{'norm.param'} specify the normalzation parameters,
 which are dependant on the normalization method of choice:
 \itemize{
- \item \code{'rank.unit'} does not require any other parameters
- \item \code{'rank.std'} requires \code{sd.min.q}, quantile of the
-        distribution of standard deviations of all features that will be added
-        to the denominator during standardization in order to avoid
-        underestimation of the standard deviation, defaults to 0.1
- \item \code{'clr'} requires \code{log.n0}, which is the pseudocount to be
-        added before log-transformation, defaults to \code{NULL} leading to
-        the estimation of \code{log.n0} from the data
- \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
-        using the same default values
- \item \code{'log.unit'} requires next to \code{log.n0} also the parameters
-        \code{n.p} and \code{norm.margin}. \code{n.p} specifies the vector
-        norm to be used, can be either \code{1} for \code{x/sum(x)} or
-        \code{2} for \code{x/sqrt(sum(x^2))}. The parameter \code{norm.margin}
-        specifies the margin over which to normalize, similarly to the
-        \code{apply}-syntax: Allowed values are \code{1} for normalization
-        over features, \code{2} over samples, and \code{3} for normalization
-        by the global maximum.
+    \item \code{'rank.unit'} does not require any other parameters
+    \item \code{'rank.std'} requires \code{sd.min.q}, quantile of the
+     distribution of standard deviations of all features that will be added
+     to the denominator during standardization in order to avoid
+     underestimation of the standard deviation, defaults to 0.1
+    \item \code{'clr'} requires \code{log.n0}, which is the pseudocount to be
+     added before log-transformation, defaults to \code{NULL} leading to
+     the estimation of \code{log.n0} from the data
+    \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
+     using the same default values
+    \item \code{'log.unit'} requires next to \code{log.n0} also the parameters
+     \code{n.p} and \code{norm.margin}. \code{n.p} specifies the vector
+     norm to be used, can be either \code{1} for \code{x/sum(x)} or
+     \code{2} for \code{x/sqrt(sum(x^2))}. The parameter \code{norm.margin}
+     specifies the margin over which to normalize, similarly to the
+     \code{apply}-syntax: Allowed values are \code{1} for normalization
+     over features, \code{2} over samples, and \code{3} for normalization
+     by the global maximum.
 }
 
 The function additionally allows to perform a frozen normalization on a
@@ -76,23 +76,23 @@ way to the first dataset (e.g. by using the same mean for the features for
 z-score standardization)
 }
 \examples{
- # Example data
- data(siamcat_example)
- # since the whole pipeline has been run in the example data, exchange the
- # normalized features with the original features
- siamcat_example <- reset.features(siamcat_example)
+    # Example data
+    data(siamcat_example)
+    # since the whole pipeline has been run in the example data, exchange the
+    # normalized features with the original features
+    siamcat_example <- reset.features(siamcat_example)
 
- # Simple example
- siamcat_norm <- normalize.features(siamcat_example,
- norm.method='rank.unit')
+    # Simple example
+    siamcat_norm <- normalize.features(siamcat_example,
+    norm.method='rank.unit')
 
- # log.unit example
- siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit',
- norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+    # log.unit example
+    siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit',
+    norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
 
- # log.std example
- siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std',
- norm.param=list(log.n0=1e-05, sd.min.q=.1))
+    # log.std example
+    siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std',
+    norm.param=list(log.n0=1e-05, sd.min.q=.1))
 }
 \keyword{SIAMCAT}
 \keyword{normalize.features}

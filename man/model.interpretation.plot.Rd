@@ -47,26 +47,26 @@ Does not return anything, but produces the model interpretion plot.
 }
 \description{
 Produces a plot for model interpretation, displaying feature
-        weights, robustness of feature weights, and features scores across
-        patients.
+     weights, robustness of feature weights, and features scores across
+     patients.
 }
 \details{
 Produces a plot consisting of \itemize{
- \item a barplot showing the feature weights and their robustness (i.e. in
+    \item a barplot showing the feature weights and their robustness (i.e. in
     what proportion of models have they been incorporated)
- \item a heatmap showing the z-scores of the metagenomic features across
+    \item a heatmap showing the z-scores of the metagenomic features across
     patients
- \item another heatmap displaying the metadata categories (if applicable)
- \item a boxplot displaying the poportion of weight per model that is
+    \item another heatmap displaying the metadata categories (if applicable)
+    \item a boxplot displaying the poportion of weight per model that is
     actually shown for the features that are incorporated into more than
     \code{consens.thres} percent of the models.
 }
 }
 \examples{
 
- data(siamcat_example)
- # simple working example
- model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf',
+    data(siamcat_example)
+    # simple working example
+    model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf',
     heatmap.type='zscore')
 
 }

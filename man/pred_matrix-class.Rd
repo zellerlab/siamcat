@@ -12,6 +12,6 @@ The S4 class for storing label info.
 \describe{
 \item{\code{.Data}}{inherited from \code{\link{matrix}} class, contains
 a matrix with
- predictions made by \link{make.predictions} function}
+    predictions made by \link{make.predictions} function}
 }}
 

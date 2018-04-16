@@ -14,7 +14,7 @@ of the component data type that is desired.}
 }
 \value{
 Returns the component object specified by the argument \code{slot}.
- Returns NULL if slot does not exist.
+    Returns NULL if slot does not exist.
 }
 \description{
 This function is used internally by many accessors.

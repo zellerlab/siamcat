@@ -24,6 +24,6 @@ The eval_data list or NULL.
 Retrieve eval_data from object.
 }
 \examples{
- data(siamcat_example)
- eval_data(siamcat_example)
+    data(siamcat_example)
+    eval_data(siamcat_example)
 }

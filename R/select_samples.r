@@ -22,15 +22,15 @@
 #' @return an object of class \link{siamcat-class} with labels and metadata
 #'         filtered in order to contain only allowed values
 #' @examples
-#'  data(siamcat_example)
-#'  # Select all samples that fall into an Age-range between 20 and 80 years
-#'  siamcat_selected <- select.samples(siamcat_example, 'age',
-#'  allowed.range=c(20, 80))
+#'     data(siamcat_example)
+#'     # Select all samples that fall into an Age-range between 20 and 80 years
+#'     siamcat_selected <- select.samples(siamcat_example, 'age',
+#'     allowed.range=c(20, 80))
 #'
-#'  # Select all samples for which information about the gender is given
-#'  # Provide additional information with verbose
-#'  \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender',
-#'  allowed.set=c(1, 2), verbose=2)}
+#'     # Select all samples for which information about the gender is given
+#'     # Provide additional information with verbose
+#'     \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender',
+#'     allowed.set=c(1, 2), verbose=2)}
 select.samples <- function(siamcat,
     filter,
     allowed.set = NULL,

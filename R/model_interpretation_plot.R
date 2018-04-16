@@ -5,48 +5,48 @@
 
 #' @title Model Interpretation Plot
 #' @description Produces a plot for model interpretation, displaying feature
-#'         weights, robustness of feature weights, and features scores across
-#'         patients.
+#'      weights, robustness of feature weights, and features scores across
+#'      patients.
 #' @param siamcat object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param color.scheme color scheme for the heatmap, defaults to \code{'BrBG'}
 #' @param consens.thres minimal ratio of models incorporating a feature in order
-#'         to include it into the heatmap, defaults to \code{0.5}
-#'         Note that for \code{'randomForest'} models, this cutoff specifies the
-#'         minimum median Gini coefficient for a feature to be included and
-#'         should therefore be much lower, e.g. \code{0.01}
+#'      to include it into the heatmap, defaults to \code{0.5}
+#'      Note that for \code{'randomForest'} models, this cutoff specifies the
+#'      minimum median Gini coefficient for a feature to be included and
+#'      should therefore be much lower, e.g. \code{0.01}
 #' @param heatmap.type type of the heatmap, can be either \code{'fc'} or
-#'         \code{'zscore'}, defaults to \code{'zscore'}
+#'      \code{'zscore'}, defaults to \code{'zscore'}
 #' @param norm.models boolean, should the feature weights be normalized across
-#'         models?, defaults to \code{FALSE}
+#'      models?, defaults to \code{FALSE}
 #' @param limits vector, cutoff for extreme values in the heatmap,
-#'         defaults to \code{c(-3, 3)}
+#'      defaults to \code{c(-3, 3)}
 #' @param detect.lim float, pseudocount to be added before log-transformation
-#'         of features, defaults to \code{1e-06}
+#'      of features, defaults to \code{1e-06}
 #' @param max.show integer, maximum number of features to be shown in the model
-#'         interpretation plot, defaults to 50
+#'      interpretation plot, defaults to 50
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'         for only information about progress and success, \code{2} for normal
-#'         level of information and \code{3} for full debug information,
-#'         defaults to \code{1}
+#'      for only information about progress and success, \code{2} for normal
+#'      level of information and \code{3} for full debug information,
+#'      defaults to \code{1}
 #' @keywords SIAMCAT model.interpretation.plot
 #' @return Does not return anything, but produces the model interpretion plot.
 #' @export
 #' @details Produces a plot consisting of \itemize{
-#'  \item a barplot showing the feature weights and their robustness (i.e. in
+#'     \item a barplot showing the feature weights and their robustness (i.e. in
 #'     what proportion of models have they been incorporated)
-#'  \item a heatmap showing the z-scores of the metagenomic features across
+#'     \item a heatmap showing the z-scores of the metagenomic features across
 #'     patients
-#'  \item another heatmap displaying the metadata categories (if applicable)
-#'  \item a boxplot displaying the poportion of weight per model that is
+#'     \item another heatmap displaying the metadata categories (if applicable)
+#'     \item a boxplot displaying the poportion of weight per model that is
 #'     actually shown for the features that are incorporated into more than
 #'     \code{consens.thres} percent of the models.
 #'}
 #' @examples
 #'
-#'  data(siamcat_example)
-#'  # simple working example
-#'  model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf',
+#'     data(siamcat_example)
+#'     # simple working example
+#'     model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf',
 #'     heatmap.type='zscore')
 #'
 model.interpretation.plot <-

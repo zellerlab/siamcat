@@ -27,6 +27,6 @@ The \link{data_split-class} object or NULL.
 Retrieve a \link{data_split-class} object from object.
 }
 \examples{
- data(siamcat_example)
- data_split(siamcat_example)
+    data(siamcat_example)
+    data_split(siamcat_example)
 }

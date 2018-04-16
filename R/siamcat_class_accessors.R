@@ -13,10 +13,10 @@
 #' @param siamcat an object of \link{siamcat-class}.
 #'
 #' @param slot A character string indicating the slot (not data class)
-#'  of the component data type that is desired.
+#'     of the component data type that is desired.
 #'
 #' @return Returns the component object specified by the argument \code{slot}.
-#'  Returns NULL if slot does not exist.
+#'     Returns NULL if slot does not exist.
 #'
 #' @export
 #' @examples #
@@ -45,7 +45,7 @@ accessSlot <- function(siamcat, slot) {
 #' @usage model_list(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a model_list or instance of \link{model_list-class}.
+#'     that contains a model_list or instance of \link{model_list-class}.
 #'
 #'
 #' @return The \link{model_list-class} object or NULL.
@@ -55,8 +55,8 @@ accessSlot <- function(siamcat, slot) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  model_list(siamcat_example)
+#'     data(siamcat_example)
+#'     model_list(siamcat_example)
 setGeneric("model_list", function(siamcat)
     standardGeneric("model_list"))
 #' @rdname model_list-methods
@@ -77,7 +77,7 @@ setMethod("model_list", "model_list", function(siamcat) {
 #' @usage models(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a model_list or instance of \link{model_list-class}.
+#'     that contains a model_list or instance of \link{model_list-class}.
 #'
 #'
 #' @return The list of models or NULL.
@@ -87,8 +87,8 @@ setMethod("model_list", "model_list", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  models(siamcat_example)
+#'     data(siamcat_example)
+#'     models(siamcat_example)
 setGeneric("models", function(siamcat)
     standardGeneric("models"))
 #' @rdname models-methods
@@ -109,7 +109,7 @@ setMethod("models", "model_list", function(siamcat) {
 #' @usage model_type(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a model_list or instance of \link{model_list-class}.
+#'     that contains a model_list or instance of \link{model_list-class}.
 #'
 #'
 #' @return The string describing type of model used or NULL.
@@ -119,8 +119,8 @@ setMethod("models", "model_list", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  model_type(siamcat_example)
+#'     data(siamcat_example)
+#'     model_type(siamcat_example)
 setGeneric("model_type", function(siamcat)
     standardGeneric("model_type"))
 #' @rdname model_type-methods
@@ -141,7 +141,7 @@ setMethod("model_type", "model_list", function(siamcat) {
 #' @usage eval_data(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a eval_data..
+#'     that contains a eval_data..
 #'
 #' @return The eval_data list or NULL.
 #'
@@ -150,8 +150,8 @@ setMethod("model_type", "model_list", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  eval_data(siamcat_example)
+#'     data(siamcat_example)
+#'     eval_data(siamcat_example)
 setGeneric("eval_data", function(siamcat)
     standardGeneric("eval_data"))
 #' @rdname eval_data-methods
@@ -174,7 +174,7 @@ setMethod("eval_data", "list", function(siamcat) {
 #' @usage pred_matrix(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a pred_matrix
+#'     that contains a pred_matrix
 #'
 #' @return The pred_matrix matrix or NULL.
 #'
@@ -183,8 +183,8 @@ setMethod("eval_data", "list", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  pred_matrix(siamcat_example)
+#'     data(siamcat_example)
+#'     pred_matrix(siamcat_example)
 setGeneric("pred_matrix", function(siamcat)
     standardGeneric("pred_matrix"))
 #' @rdname pred_matrix-methods
@@ -208,7 +208,7 @@ setMethod("pred_matrix", "matrix", function(siamcat) {
 #' @usage norm_param(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a norm_param
+#'     that contains a norm_param
 #'
 #'
 #' @return The norm_param list or NULL.
@@ -218,8 +218,8 @@ setMethod("pred_matrix", "matrix", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  norm_param(siamcat_example)
+#'     data(siamcat_example)
+#'     norm_param(siamcat_example)
 setGeneric("norm_param", function(siamcat)
     standardGeneric("norm_param"))
 #' @rdname norm_param-methods
@@ -235,7 +235,7 @@ setMethod("norm_param", "ANY", function(siamcat) {
 #' @usage label(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link{label-class} or a list.
+#'     that contains a label or instance of \link{label-class} or a list.
 #'
 #'
 #' @return The \link{label-class} object or NULL.
@@ -245,8 +245,8 @@ setMethod("norm_param", "ANY", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  label(siamcat_example)
+#'     data(siamcat_example)
+#'     label(siamcat_example)
 setGeneric("label", function(siamcat)
     standardGeneric("label"))
 #' @rdname label-methods
@@ -274,7 +274,7 @@ setMethod("label", "list", function(siamcat) {
 #' @usage data_split(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link{data_split-class} or a list.
+#'     that contains a label or instance of \link{data_split-class} or a list.
 #'
 #'
 #' @return The \link{data_split-class} object or NULL.
@@ -284,8 +284,8 @@ setMethod("label", "list", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  data_split(siamcat_example)
+#'     data(siamcat_example)
+#'     data_split(siamcat_example)
 setGeneric("data_split", function(siamcat)
     standardGeneric("data_split"))
 #' @rdname data_split-methods
@@ -311,7 +311,7 @@ setMethod("data_split", "list", function(siamcat) {
 #' @usage orig_feat(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link[phyloseq]{otu_table-class}.
+#'     that contains a label or instance of \link[phyloseq]{otu_table-class}.
 #'
 #'
 #' @return The \link[phyloseq]{otu_table-class} object or NULL.
@@ -321,8 +321,8 @@ setMethod("data_split", "list", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  data_split(siamcat_example)
+#'     data(siamcat_example)
+#'     data_split(siamcat_example)
 setGeneric("orig_feat", function(siamcat)
     standardGeneric("orig_feat"))
 #' @rdname orig_feat-methods
@@ -343,7 +343,7 @@ setMethod("orig_feat", "otu_table", function(siamcat) {
 #' @usage physeq(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link[phyloseq]{phyloseq-class}.
+#'     that contains a label or instance of \link[phyloseq]{phyloseq-class}.
 #'
 #'
 #' @return The \link[phyloseq]{phyloseq-class} object or NULL.
@@ -353,8 +353,8 @@ setMethod("orig_feat", "otu_table", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  physeq(siamcat_example)
+#'     data(siamcat_example)
+#'     physeq(siamcat_example)
 setGeneric("physeq", function(siamcat)
     standardGeneric("physeq"))
 #' @rdname physeq-methods
@@ -375,7 +375,7 @@ setMethod("physeq", "phyloseq", function(siamcat) {
 #' @usage features(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link[phyloseq]{otu_table-class} .
+#'     that contains a label or instance of \link[phyloseq]{otu_table-class} .
 #'
 #'
 #' @return The \link[phyloseq]{otu_table-class} object or NULL.
@@ -385,8 +385,8 @@ setMethod("physeq", "phyloseq", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  features(siamcat_example)
+#'     data(siamcat_example)
+#'     features(siamcat_example)
 setGeneric("features", function(siamcat)
     standardGeneric("features"))
 #' @rdname features-methods
@@ -408,7 +408,7 @@ setMethod("features", "otu_table", function(siamcat) {
 #' @usage meta(siamcat, errorIfNULL=TRUE)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'  that contains a label or instance of \link[phyloseq]{sample_data-class}.
+#'     that contains a label or instance of \link[phyloseq]{sample_data-class}.
 #'
 #'
 #' @return The \link[phyloseq]{sample_data-class} object or NULL.
@@ -418,8 +418,8 @@ setMethod("features", "otu_table", function(siamcat) {
 #' @docType methods
 #'
 #' @examples
-#'  data(siamcat_example)
-#'  meta(siamcat_example)
+#'     data(siamcat_example)
+#'     meta(siamcat_example)
 setGeneric("meta", function(siamcat)
     standardGeneric("meta"))
 #' @rdname meta-methods
@@ -442,8 +442,8 @@ setMethod("meta", "sample_data", function(siamcat) {
 #' @return Features as a matrix
 #' @export
 #' @examples
-#'  data(siamcat_example)
-#'  feat <- get.features.matrix(siamcat_example)
+#'     data(siamcat_example)
+#'     feat <- get.features.matrix(siamcat_example)
 get.features.matrix <- function(siamcat) {
     return(siamcat@phyloseq@otu_table@.Data)
 }
@@ -456,8 +456,8 @@ get.features.matrix <- function(siamcat) {
 #' @return Original features as a matrix
 #' @export
 #' @examples
-#'  data(siamcat_example)
-#'  orig_feat <- get.orig_feat.matrix(siamcat_example)
+#'     data(siamcat_example)
+#'     orig_feat <- get.orig_feat.matrix(siamcat_example)
 get.orig_feat.matrix <- function(siamcat) {
     return(siamcat@orig_feat@.Data)
 }

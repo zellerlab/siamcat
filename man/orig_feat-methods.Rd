@@ -24,6 +24,6 @@ The \link[phyloseq]{otu_table-class} object or NULL.
 Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.
 }
 \examples{
- data(siamcat_example)
- data_split(siamcat_example)
+    data(siamcat_example)
+    data_split(siamcat_example)
 }

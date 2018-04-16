@@ -24,6 +24,6 @@ The \link[phyloseq]{sample_data-class} object or NULL.
 Retrieve a \link[phyloseq]{sample_data-class} object from object.
 }
 \examples{
- data(siamcat_example)
- meta(siamcat_example)
+    data(siamcat_example)
+    meta(siamcat_example)
 }

@@ -27,6 +27,6 @@ The \link{label-class} object or NULL.
 Retrieve a \link{label-class} object from object.
 }
 \examples{
- data(siamcat_example)
- label(siamcat_example)
+    data(siamcat_example)
+    label(siamcat_example)
 }

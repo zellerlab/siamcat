@@ -21,6 +21,6 @@ The string describing type of model used or NULL.
 Retrieve model_type from object.
 }
 \examples{
- data(siamcat_example)
- model_type(siamcat_example)
+    data(siamcat_example)
+    model_type(siamcat_example)
 }

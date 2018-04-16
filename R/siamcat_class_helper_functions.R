@@ -12,8 +12,8 @@
 #' @return A new \link{siamcat-class} object
 #' @export
 #' @examples
-#'  data(siamcat_example)
-#'  siamcat_example <- reset.features(siamcat_example)
+#'     data(siamcat_example)
+#'     siamcat_example <- reset.features(siamcat_example)
 reset.features <- function(siamcat) {
     siamcat@phyloseq@otu_table <- siamcat@orig_feat
     return(siamcat)
@@ -30,9 +30,9 @@ reset.features <- function(siamcat) {
 #' @return siamcat an object of class \link{siamcat-class}
 #' @examples
 #'
-#'  data(siamcat_example)
-#'  # simple working example
-#'  siamcat_filtered <- filter.label(siamcat_example, ids=c(1:10))
+#'     data(siamcat_example)
+#'     # simple working example
+#'     siamcat_filtered <- filter.label(siamcat_example, ids=c(1:10))
 #'
 filter.label <- function(siamcat, ids, verbose = 1) {
     label_old <- label(siamcat)

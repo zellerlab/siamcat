@@ -21,6 +21,6 @@ The list of models or NULL.
 Retrieve list of models from object.
 }
 \examples{
- data(siamcat_example)
- models(siamcat_example)
+    data(siamcat_example)
+    models(siamcat_example)
 }
