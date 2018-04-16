@@ -16,6 +16,9 @@ eval_data(x) <- value
 
 \item{value}{an eval_data list}
 }
+\value{
+none
+}
 \description{
 Assign a new eval_data object to \code{x}
 }

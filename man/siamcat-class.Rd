@@ -18,7 +18,7 @@ The S4 class for storing taxa-abundance information and models.
 
 \item{\code{data_split}}{an object of class \link{data_split-class}}
 
-\item{\code{norm_param}}{a list of normalzation parameters, see 
+\item{\code{norm_param}}{a list of normalzation parameters, see
 \link{normalize.features} for more details}
 
 \item{\code{model_list}}{an object of class \link{model_list-class}}

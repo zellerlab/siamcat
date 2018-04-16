@@ -12,15 +12,15 @@
 #' @export
 #' @examples
 #' # example with package data
-#' fn.in.feat    <- system.file('extdata', 
-#'    'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-#'     package = 'SIAMCAT')
-#' fn.in.label <- system.file('extdata', 
-#'    'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-#'     package = 'SIAMCAT')
-#' fn.in.meta    <- system.file('extdata', 
+#' fn.in.feat    <- system.file('extdata',
+#'     'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+#'      package = 'SIAMCAT')
+#' fn.in.label <- system.file('extdata',
+#'     'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+#'      package = 'SIAMCAT')
+#' fn.in.meta    <- system.file('extdata',
 #' 'num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-#'     package = 'SIAMCAT')
+#'      package = 'SIAMCAT')
 #'
 #' feat    <- read.features(fn.in.feat)
 #' label <- read.labels(fn.in.label)
@@ -28,29 +28,36 @@
 #' siamcat <- siamcat(feat, label, meta)
 siamcat <- function(...) {
     arglist <- list(...)
-
+    
     # Remove names from arglist. Will replace them based on their class
     names(arglist) <- NULL
-
+    
     # ignore all but component data classes.
     component_classes <- get.component.classes("both")
-
+    
     for (argNr in seq_along(arglist)) {
         classOfArg <- class(arglist[[argNr]])[1]
         if (classOfArg %in% names(component_classes)) {
             names(arglist)[argNr] <- component_classes[classOfArg]
         }
     }
-
+    
     if (is.null(arglist$phyloseq)) {
-        arglistphyloseq <- arglist[vapply(names(arglist), is.component.class, 
-            "phyloseq", FUN.VALUE=logical(1))]
-        arglist$phyloseq <- do.call("new", c(list(Class = "phyloseq"), 
-            arglistphyloseq))
+        arglistphyloseq <-
+            arglist[vapply(names(arglist),
+                is.component.class,
+                "phyloseq",
+                FUN.VALUE = logical(1))]
+        arglist$phyloseq <-
+            do.call("new", c(list(Class = "phyloseq"),
+                arglistphyloseq))
     }
     arglist$orig_feat <- otu_table(arglist$phyloseq)
-    arglist <- arglist[vapply(names(arglist), is.component.class, "siamcat", 
-        FUN.VALUE=logical(1))]
+    arglist <-
+        arglist[vapply(names(arglist),
+            is.component.class,
+            "siamcat",
+            FUN.VALUE = logical(1))]
     sc <- do.call("new", c(list(Class = "siamcat"), arglist))
     return(sc)
 }
@@ -62,29 +69,55 @@ siamcat <- function(...) {
 get.component.classes <- function(class) {
     # define classes vector the names of component.classes needs to be the slot
     # names to match getSlots / splat
-
+    
     #slot names
-    component.classes.siamcat <- c("model_list", "orig_feat", "label", 
-    "norm_param", "data_split", "phyloseq","eval_data", "pred_matrix")
-
+    component.classes.siamcat <-
+        c(
+            "model_list",
+            "orig_feat",
+            "label",
+            "norm_param",
+            "data_split",
+            "phyloseq",
+            "eval_data",
+            "pred_matrix"
+        )
+    
     #class names
-    names(component.classes.siamcat) <- c("model_list", "orig_feat", "label",
-    "norm_param", "data_split", "phyloseq","eval_data", "pred_matrix") 
-
+    names(component.classes.siamcat) <-
+        c(
+            "model_list",
+            "orig_feat",
+            "label",
+            "norm_param",
+            "data_split",
+            "phyloseq",
+            "eval_data",
+            "pred_matrix"
+        )
+    
     #slot names
-    component.classes.phyloseq <- c("otu_table", "sam_data", "phy_tree", 
-    "tax_table", "refseq")
-
+    component.classes.phyloseq <-
+        c("otu_table", "sam_data", "phy_tree",
+            "tax_table", "refseq")
+    
     #class names
-    names(component.classes.phyloseq) <- c("otu_table", "sample_data", 
-    "phylo", "taxonomyTable", "XStringSet")    
-
+    names(component.classes.phyloseq) <-
+        c("otu_table",
+            "sample_data",
+            "phylo",
+            "taxonomyTable",
+            "XStringSet")
+    
     if (class == "siamcat") {
         return(component.classes.siamcat)
     } else if (class == "phyloseq") {
         return(component.classes.phyloseq)
     } else if (class == "both") {
-        return(c(component.classes.siamcat, component.classes.phyloseq))
+        return(c(
+            component.classes.siamcat,
+            component.classes.phyloseq
+        ))
     }
 }
 

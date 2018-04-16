@@ -16,6 +16,9 @@ pred_matrix(x) <- value
 
 \item{value}{an pred_matrix matrix}
 }
+\value{
+none
+}
 \description{
 Assign a new pred_matrix object to \code{x}
 }

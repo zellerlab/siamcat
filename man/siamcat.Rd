@@ -20,15 +20,15 @@ Build siamcat-class objects from their components.
 }
 \examples{
 # example with package data
-fn.in.feat    <- system.file('extdata', 
-   'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-    package = 'SIAMCAT')
-fn.in.label <- system.file('extdata', 
-   'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-    package = 'SIAMCAT')
-fn.in.meta    <- system.file('extdata', 
+fn.in.feat    <- system.file('extdata',
+    'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+     package = 'SIAMCAT')
+fn.in.label <- system.file('extdata',
+    'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+     package = 'SIAMCAT')
+fn.in.meta    <- system.file('extdata',
 'num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
-    package = 'SIAMCAT')
+     package = 'SIAMCAT')
 
 feat    <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)

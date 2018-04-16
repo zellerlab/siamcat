@@ -16,6 +16,9 @@ meta(x) <- value
 
 \item{value}{an object of class \link[phyloseq]{sample_data-class}}
 }
+\value{
+none
+}
 \description{
 Assign a new sam_data object to \code{x}
 }

@@ -17,49 +17,43 @@ defaults to \code{2}}
 resampling), defaults to \code{1}}
 
 \item{stratify}{boolean, should the splits be stratified so that an equal
-proportion of classes are present in each fold?,
-defaults to \code{TRUE}}
+proportion of classes are present in each fold?, defaults to \code{TRUE}}
 
 \item{inseparable}{column name of metadata variable, defaults to \code{NULL}}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
-defaults to \code{1}}
+\item{verbose}{control output: \code{0} for no output at all, \code{1} for
+only information about progress and success, \code{2} for normal level of
+information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 object of class \link{siamcat-class} with the \code{data_split}-slot
-       filled
+   filled
 }
 \description{
 This function prepares the cross-validation by splitting the
-       data into \code{num.folds} training and test folds for
-       \code{num.resample} times.
+   data into \code{num.folds} training and test folds for \code{num.resample}
+   times.
 }
 \details{
-This function splits the labels within a \link{siamcat-class}
-       object and prepares the internal cross-validation for the model
-       training (see \link{train.model}).
+This function splits the labels within a \link{siamcat-class} object
+   and prepares the internal cross-validation for the model training (see
+   \link{train.model}).
 
-       The function saves the training and test instances for the different
-       cross-validation folds within a list in the \code{data_split}-slot
-       of the \link{siamcat-class} object, which is a list with four
-       entries: \itemize{
-         \item \code{num.folds} the number of cross-validation folds
-         \item \code{num.resample} the number of repetitions for the
-               cross-validation
-         \item \code{training.folds} a list containing the indices for the
-               training instances
-         \item \code{test.folds} a list containing the indices for the test
-               instances
-       }
+   The function saves the training and test instances for the different
+   cross-validation folds within a list in the \code{data_split}-slot of the
+   \link{siamcat-class} object, which is a list with four entries: \itemize{
+   \item \code{num.folds} the number of cross-validation folds \item
+   \code{num.resample} the number of repetitions for the cross-validation
+   \item \code{training.folds} a list containing the indices for the training
+   instances \item \code{test.folds} a list containing the indices for the
+   test instances }
 }
 \examples{
 
  data(siamcat_example)
  # simple working example
  siamcat_split <- create.data.split(siamcat_example, num.folds=10,
-   num.resample=5, stratify=TRUE)
+    num.resample=5, stratify=TRUE)
 
  ## # example with a variable which is to be inseparable
  ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,

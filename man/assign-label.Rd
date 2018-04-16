@@ -16,6 +16,9 @@ label(x) <- value
 
 \item{value}{an object of class \link{label-class}}
 }
+\value{
+none
+}
 \description{
 Assign a new label object to \code{x}
 }

@@ -16,6 +16,9 @@ data_split(x) <- value
 
 \item{value}{an object of class \link{data_split-class}}
 }
+\value{
+none
+}
 \description{
 Assign a new data_split object to \code{x}
 }

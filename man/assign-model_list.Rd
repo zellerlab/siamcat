@@ -16,6 +16,9 @@ model_list(x) <- value
 
 \item{value}{an object of class \link{model_list-class}}
 }
+\value{
+none
+}
 \description{
 Assign a new model_list object to \code{x}
 }

@@ -17,10 +17,10 @@ file;
 \item \code{$info} information about the type of label (e.g. \code{BINARY});
 \item \code{$positive.lab} numerical label for controls, e.g. \code{-1};
 \item \code{$negative.lab} numerical label for cases, e.g. \code{1};
-\item \code{$n.idx} logical vector of labels (\code{TRUE} for controls, 
+\item \code{$n.idx} logical vector of labels (\code{TRUE} for controls,
 \code{FALSE} otherwise);
 \item \code{$n.lab} label for controls, e.g. \code{healthy};
-\item \code{$p.idx} logical vector of labels (\code{TRUE} for cases, 
+\item \code{$p.idx} logical vector of labels (\code{TRUE} for cases,
 \code{FALSE} otherwise);
 \item \code{$p.lab} label for cases, e.g. \code{cancer}
 }
@@ -45,6 +45,6 @@ importantly, the label for cases has to be greater than the one for controls
 fn.label <- system.file('extdata',
 'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
  package = 'SIAMCAT')
- 
+
 labels <- read.labels(fn.label)
 }

@@ -51,7 +51,7 @@ distinguish patients with colorectal cancer (CRC) from healthy controls.
         "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
         package = "SIAMCAT")
     fn.in.meta  <- system.file("extdata", 
-        "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+    "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
         package = "SIAMCAT")
 ```
 
@@ -384,7 +384,8 @@ model.interpretation.plot(siamcat,
                         verbose=2)
 ```
 
-Alternatively, we show here only the z-score heatmap for the top selected features:
+Alternatively, we show here only the z-score heatmap for the top selected 
+features:
 
 ```{r fig.width=7, fig.height=5, fig.align="center", echo=FALSE}
 
@@ -392,7 +393,7 @@ color.scheme <- rev(colorRampPalette(RColorBrewer::brewer.pal(
                     RColorBrewer::brewer.pal.info['BrBG','maxcolors'],
                     'BrBG'))(100))
 
-W.mat       <- get.weights.matrix(models(siamcat), verbose=0)
+W.mat       <- SIAMCAT:::get.weights.matrix(models(siamcat), verbose=0)
 feat        <- get.features.matrix(siamcat)
 all.weights <- W.mat[union(row.names(feat), grep('META', row.names(W.mat), 
 value = TRUE)),]
@@ -426,11 +427,13 @@ par(mar=c(0, 2, 1, 10))
     lines(c(idx[1]-0.8, idx[1]-0.8), c(-0.2, 0))
     lines(c(idx[length(idx)]-0.2, idx[length(idx)]-0.2), c(-0.2, 0))
     h <- (idx[1] + idx[length(idx)]) / 2
-    t <- gsub('_', ' ', names(label$info$class.descr)[label$info$class.descr==ul[l]])
+    t <- gsub('_', ' ', 
+        names(label$info$class.descr)[label$info$class.descr==ul[l]])
     t <- paste(t, ' (n=', length(idx), ')', sep='')
     mtext(t, side=3, line=-0.5, at=h, cex=0.7, adj=0.5)
   }
-  mtext('Metagenomic Features', side=3, line=2, at=length(hm.label)/2, cex=1, adj=0.5)
+  mtext('Metagenomic Features', side=3, line=2, at=length(hm.label)/2,
+        cex=1, adj=0.5)
 
 
 SIAMCAT:::model.interpretation.heatmap.plot(image.data=img.data,

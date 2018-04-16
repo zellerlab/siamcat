@@ -5,52 +5,52 @@
 
 #' @title Model training
 #' @description This function trains the a machine learning model on the
-#'        training data
+#'         training data
 #' @param siamcat object of class \link{siamcat-class}
 #' @param method string, specifies the type of model to be trained, may be one
-#'        of these: \code{c('lasso', 'enet', 'ridge', 'lasso_ll', 'ridge_ll',
-#'        'randomForest')}
+#'         of these: \code{c('lasso', 'enet', 'ridge', 'lasso_ll', 'ridge_ll',
+#'         'randomForest')}
 #' @param stratify boolean, should the folds in the internal cross-validation be
-#'        stratified?, defaults to \code{TRUE}
+#'         stratified?, defaults to \code{TRUE}
 #' @param modsel.crit list, specifies the model selection criterion during
-#'        internal cross-validation, may contain these: \code{c('auc', 'f1',
-#'        'acc', 'pr')}, defaults to \code{list('auc')}
+#'         internal cross-validation, may contain these: \code{c('auc', 'f1',
+#'         'acc', 'pr')}, defaults to \code{list('auc')}
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that
-#'        should be present in the model (only for \code{'lasso'},
-#'        \code{'ridge'}, and \code{'enet'}, defaults to \code{1}
+#'         should be present in the model (only for \code{'lasso'},
+#'         \code{'ridge'}, and \code{'enet'}, defaults to \code{1}
 #' @param param.set a list of extra parameters for mlr run, may contain:
-#'        \itemize{
-#'          \item \code{cost} - for lasso_ll and ridge_ll
-#'          \item \code{alpha} for enet
-#'          \item \code{ntree} and \code{mtry} for RandomForrest.
-#'        } Defaults to \code{NULL}
+#'         \itemize{
+#'           \item \code{cost} - for lasso_ll and ridge_ll
+#'           \item \code{alpha} for enet
+#'           \item \code{ntree} and \code{mtry} for RandomForrest.
+#'         } Defaults to \code{NULL}
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information,
-#'        defaults to \code{1}
+#'         for only information about progress and success, \code{2} for normal
+#'         level of information and \code{3} for full debug information,
+#'         defaults to \code{1}
 #' @export
 #' @keywords SIAMCAT plm.trainer
 #' @return object of class \link{siamcat-class} with added \code{model_list}
 #' @details This functions performs the training of the machine learning model
-#'        and functions as an interface to the \code{mlr}-package.
+#'         and functions as an interface to the \code{mlr}-package.
 #'
-#'        The function expects a \link{siamcat-class}-object with a prepared
-#'        cross-validation (see \link{create.data.split}) in the
-#'        \code{data_split}-slot of the object. It then trains a model for
-#'        each fold of the datasplit.
+#'         The function expects a \link{siamcat-class}-object with a prepared
+#'         cross-validation (see \link{create.data.split}) in the
+#'         \code{data_split}-slot of the object. It then trains a model for
+#'         each fold of the datasplit.
 #'
-#'        For the machine learning methods that require additional
-#'        hyperparameters (e.g. \code{lasso_ll}), the optimal hyperparameters
-#'        are tuned with the function \link[mlr]{tuneParams} within the
-#'        \code{mlr}-package.
+#'         For the machine learning methods that require additional
+#'         hyperparameters (e.g. \code{lasso_ll}), the optimal hyperparameters
+#'         are tuned with the function \link[mlr]{tuneParams} within the
+#'         \code{mlr}-package.
 #'
-#'        The methods \code{'lasso'}, \code{'enet'}, and \code{'ridge'} are
-#'        implemented as mlr-taks using the \code{'classif.cvglmnet'} Learner,
-#'        \code{'lasso_ll'} and \code{'ridge_ll'} use the
-#'        \code{'classif.LiblineaRL1LogReg'} and the
-#'        \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
-#'        \code{'randomForest'} method is implemented via the
-#'        \code{'classif.randomForest'} Learner.
+#'         The methods \code{'lasso'}, \code{'enet'}, and \code{'ridge'} are
+#'         implemented as mlr-taks using the \code{'classif.cvglmnet'} Learner,
+#'         \code{'lasso_ll'} and \code{'ridge_ll'} use the
+#'         \code{'classif.LiblineaRL1LogReg'} and the
+#'         \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
+#'         \code{'randomForest'} method is implemented via the
+#'         \code{'classif.randomForest'} Learner.
 #' @examples
 #'
 #'  data(siamcat_example)
@@ -58,11 +58,17 @@
 #'  siamcat_validated <- train.model(siamcat_example, method='lasso')
 #'
 train.model <- function(siamcat,
-                        method = c("lasso", "enet", "ridge",
-                                   "lasso_ll", "ridge_ll", "randomForest"),
-                        stratify = TRUE, modsel.crit = list("auc"),
-                        min.nonzero.coeff = 1, param.set = NULL, verbose = 1) {
-
+    method = c("lasso",
+        "enet",
+        "ridge",
+        "lasso_ll",
+        "ridge_ll",
+        "randomForest"),
+    stratify = TRUE,
+    modsel.crit = list("auc"),
+    min.nonzero.coeff = 1,
+    param.set = NULL,
+    verbose = 1) {
     if (verbose > 1)
         message("+ starting train.model")
     label <- label(siamcat)
@@ -85,21 +91,35 @@ train.model <- function(siamcat,
         } else if (m == "f1") {
             measure[[length(measure) + 1]] <- mlr::f1
         } else if (m == "pr" || m == "auprc") {
-            auprc <- makeMeasure(id = "auprc", minimize = FALSE, best = 1, 
-                worst = 0, properties = c("classif", "req.pred",
-                "req.truth", "req.prob"), name = "Area under the Precision
-                 Recall Curve", fun = function(task, model,
-                pred, feats, extra.args) {
-                measureAUPRC(getPredictionProbabilities(pred), pred$data$truth,
-                 pred$task.desc$negative, pred$task.desc$positive)
-            })
+            auprc <- makeMeasure(
+                id = "auprc",
+                minimize = FALSE,
+                best = 1,
+                worst = 0,
+                properties = c("classif", "req.pred",
+                    "req.truth", "req.prob"),
+                name = "Area under the Precision
+                Recall Curve",
+                fun = function(task,
+                    model,
+                    pred,
+                    feats,
+                    extra.args) {
+                    measureAUPRC(
+                        getPredictionProbabilities(pred),
+                        pred$data$truth,
+                        pred$task.desc$negative,
+                        pred$task.desc$positive
+                    )
+                }
+            )
             measure[[length(measure) + 1]] <- auprc
         }
     }
-
+    
     # Create matrix with hyper parameters.
     hyperpar.list <- list()
-
+    
     # Create List to save models.
     models.list <- list()
     power <- NULL
@@ -107,68 +127,81 @@ train.model <- function(siamcat,
     bar <- 0
     if (verbose > 1)
         message(paste("+ training", method, "models on", num.runs,
-         "training sets"))
-
+            "training sets"))
+    
     if (verbose == 1 || verbose == 2)
         pb <- txtProgressBar(max = num.runs, style = 3)
-
+    
     for (fold in seq_len(data.split$num.folds)) {
-
         if (verbose > 2)
             message(paste("+++ training on cv fold:", fold))
-
+        
         for (resampling in seq_len(data.split$num.resample)) {
-
             if (verbose > 2)
                 message(paste("++++ repetition:", resampling))
-
-            fold.name <- paste0("cv_fold", as.character(fold), "_rep",
-             as.character(resampling))
-            fold.exm.idx <- match(
-                data.split$training.folds[[resampling]][[fold]], 
+            
+            fold.name <-
+                paste0("cv_fold",
+                    as.character(fold),
+                    "_rep",
+                    as.character(resampling))
+            fold.exm.idx <- match(data.split$training.folds[[resampling]][[fold]],
                 names(label$label))
-
+            
             ### subselect examples for training
-            label.fac <- factor(label$label, levels = c(label$negative.lab,
-                                label$positive.lab))
+            label.fac <-
+                factor(label$label,
+                    levels = c(label$negative.lab,
+                        label$positive.lab))
             train.label <- label.fac[fold.exm.idx]
-            data <- as.data.frame(t(features(siamcat))[fold.exm.idx, ])
+            data <-
+                as.data.frame(t(features(siamcat))[fold.exm.idx,])
             stopifnot(nrow(data) == length(train.label))
             stopifnot(all(rownames(data) == names(train.label)))
             data$label <- train.label
-
+            
             ### internal cross-validation for model selection
-            model <- train.plm(data = data, method = method, measure = measure, 
-                min.nonzero.coeff = min.nonzero.coeff,
-                param.set = param.set, neg.lab = label$negative.lab)
+            model <-
+                train.plm(
+                    data = data,
+                    method = method,
+                    measure = measure,
+                    min.nonzero.coeff = min.nonzero.coeff,
+                    param.set = param.set,
+                    neg.lab = label$negative.lab
+                )
             bar <- bar + 1
-
+            
             if (!all(model$feat.weights == 0)) {
                 models.list[[bar]] <- model
             } else {
                 warning("Model without any features selected!\n")
             }
-
+            
             if (verbose == 1 || verbose == 2)
                 setTxtProgressBar(pb, bar)
         }
     }
-
-    model_list(siamcat) <- new("model_list", models = models.list, 
+    
+    model_list(siamcat) <- new("model_list", models = models.list,
         model.type = method)
     e.time <- proc.time()[3]
-
+    
     if (verbose > 1)
-        message(paste("+ finished train.model in", formatC(e.time - s.time,
-         digits=3), "s"))
+        message(paste(
+            "+ finished train.model in",
+            formatC(e.time - s.time,
+                digits = 3),
+            "s"
+        ))
     if (verbose == 1)
         message(paste("Trained", method, "models successfully."))
-
+    
     return(siamcat)
 }
 
 measureAUPRC <- function(probs, truth, negative, positive) {
-    pr <- pr.curve(scores.class0 = probs[which(truth == positive)], 
-                   scores.class1 = probs[which(truth == negative)])
+    pr <- pr.curve(scores.class0 = probs[which(truth == positive)],
+        scores.class1 = probs[which(truth == negative)])
     return(pr$auc.integral)
 }

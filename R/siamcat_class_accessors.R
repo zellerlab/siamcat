@@ -23,19 +23,19 @@
 #' data(siamcat_example)
 #' access(siamcat_example, "label")
 #' access(siamcat_example, "model_list")
-accessSlot <- function(siamcat, slot){
-  if(!slot %in% slotNames(siamcat) ){
-    # If slot is invalid, set out to NULL. Test later if this is an error.
-    out = NULL
-  } else {
-    # By elimination, must be valid. Access slot
-    out = eval(parse(text=paste("siamcat@", slot, sep="")))
-  }
-  if(is.null(out) ){
-    # Only error regarding a NULL return value if errorIfNULL is TRUE.
-    message(slot, " slot is empty.")
-  }
-  return(out)
+accessSlot <- function(siamcat, slot) {
+    if (!slot %in% slotNames(siamcat)) {
+        # If slot is invalid, set out to NULL. Test later if this is an error.
+        out = NULL
+    } else {
+        # By elimination, must be valid. Access slot
+        out = eval(parse(text = paste("siamcat@", slot, sep = "")))
+    }
+    if (is.null(out)) {
+        # Only error regarding a NULL return value if errorIfNULL is TRUE.
+        message(slot, " slot is empty.")
+    }
+    return(out)
 }
 
 ###############################################################################
@@ -57,15 +57,18 @@ accessSlot <- function(siamcat, slot){
 #' @examples
 #'  data(siamcat_example)
 #'  model_list(siamcat_example)
-setGeneric("model_list", function(siamcat) standardGeneric("model_list"))
+setGeneric("model_list", function(siamcat)
+    standardGeneric("model_list"))
 #' @rdname model_list-methods
 #' @aliases model_list,ANY-method
-setMethod("model_list", "ANY", function(siamcat){
-  accessSlot(siamcat, "model_list")
+setMethod("model_list", "ANY", function(siamcat) {
+    accessSlot(siamcat, "model_list")
 })
 # Return as-is if already a model_list object
 #' @rdname model_list-methods
-setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
+setMethod("model_list", "model_list", function(siamcat) {
+    return(siamcat)
+})
 
 ###############################################################################
 #' Retrieve list of models from object.
@@ -86,15 +89,18 @@ setMethod("model_list", "model_list", function(siamcat){ return(siamcat) })
 #' @examples
 #'  data(siamcat_example)
 #'  models(siamcat_example)
-setGeneric("models", function(siamcat) standardGeneric("models"))
+setGeneric("models", function(siamcat)
+    standardGeneric("models"))
 #' @rdname models-methods
 #' @aliases models,ANY-method
-setMethod("models", "ANY", function(siamcat){
-  eval(model_list(siamcat)@models)
+setMethod("models", "ANY", function(siamcat) {
+    eval(model_list(siamcat)@models)
 })
 # Return list of models if a model_list object
 #' @rdname model_list-methods
-setMethod("models", "model_list", function(siamcat){ return(siamcat@models) })
+setMethod("models", "model_list", function(siamcat) {
+    return(siamcat@models)
+})
 
 ###############################################################################
 #' Retrieve model_type from object.
@@ -115,16 +121,18 @@ setMethod("models", "model_list", function(siamcat){ return(siamcat@models) })
 #' @examples
 #'  data(siamcat_example)
 #'  model_type(siamcat_example)
-setGeneric("model_type", function(siamcat) standardGeneric("model_type"))
+setGeneric("model_type", function(siamcat)
+    standardGeneric("model_type"))
 #' @rdname model_type-methods
 #' @aliases model_type,ANY-method
-setMethod("model_type", "ANY", function(siamcat){
-  eval(model_list(siamcat)@model.type)
+setMethod("model_type", "ANY", function(siamcat) {
+    eval(model_list(siamcat)@model.type)
 })
 # Return model type if a model_list object
 #' @rdname model_list-methods
-setMethod("model_type", "model_list", function(siamcat){ 
-  return(siamcat@model_type) })
+setMethod("model_type", "model_list", function(siamcat) {
+    return(siamcat@model_type)
+})
 
 ###############################################################################
 #' Retrieve eval_data from object.
@@ -144,17 +152,20 @@ setMethod("model_type", "model_list", function(siamcat){
 #' @examples
 #'  data(siamcat_example)
 #'  eval_data(siamcat_example)
-setGeneric("eval_data", function(siamcat) standardGeneric("eval_data"))
+setGeneric("eval_data", function(siamcat)
+    standardGeneric("eval_data"))
 #' @rdname eval_data-methods
 #' @aliases eval_data,ANY-method
-setMethod("eval_data", "ANY", function(siamcat){
-  accessSlot(siamcat, "eval_data")
+setMethod("eval_data", "ANY", function(siamcat) {
+    accessSlot(siamcat, "eval_data")
 })
 # constructor; for creating eval_data from a list
 #' @rdname eval_data-methods
 #' @aliases eval_data
-setMethod("eval_data", "list", function(siamcat){ return(new("eval_data",
- siamcat)) })
+setMethod("eval_data", "list", function(siamcat) {
+    return(new("eval_data",
+        siamcat))
+})
 
 ###############################################################################
 #' Retrieve pred_matrix from object.
@@ -174,17 +185,20 @@ setMethod("eval_data", "list", function(siamcat){ return(new("eval_data",
 #' @examples
 #'  data(siamcat_example)
 #'  pred_matrix(siamcat_example)
-setGeneric("pred_matrix", function(siamcat) standardGeneric("pred_matrix"))
+setGeneric("pred_matrix", function(siamcat)
+    standardGeneric("pred_matrix"))
 #' @rdname pred_matrix-methods
 #' @aliases pred_matrix,ANY-method
-setMethod("pred_matrix", "ANY", function(siamcat){
-  accessSlot(siamcat, "pred_matrix")
+setMethod("pred_matrix", "ANY", function(siamcat) {
+    accessSlot(siamcat, "pred_matrix")
 })
 # constructor; for creating pred_matrix from a matrix
 #' @rdname pred_matrix-methods
 #' @aliases pred_matrix
-setMethod("pred_matrix", "matrix", function(siamcat){ return(new("pred_matrix",
- siamcat)) })
+setMethod("pred_matrix", "matrix", function(siamcat) {
+    return(new("pred_matrix",
+        siamcat))
+})
 
 
 ###############################################################################
@@ -206,11 +220,12 @@ setMethod("pred_matrix", "matrix", function(siamcat){ return(new("pred_matrix",
 #' @examples
 #'  data(siamcat_example)
 #'  norm_param(siamcat_example)
-setGeneric("norm_param", function(siamcat) standardGeneric("norm_param"))
+setGeneric("norm_param", function(siamcat)
+    standardGeneric("norm_param"))
 #' @rdname norm_param-methods
 #' @aliases norm_param,ANY-method
-setMethod("norm_param", "ANY", function(siamcat){
-  accessSlot(siamcat, "norm_param")
+setMethod("norm_param", "ANY", function(siamcat) {
+    accessSlot(siamcat, "norm_param")
 })
 
 ################################################################################
@@ -232,18 +247,25 @@ setMethod("norm_param", "ANY", function(siamcat){
 #' @examples
 #'  data(siamcat_example)
 #'  label(siamcat_example)
-setGeneric("label", function(siamcat) standardGeneric("label"))
+setGeneric("label", function(siamcat)
+    standardGeneric("label"))
 #' @rdname label-methods
 #' @aliases label,ANY-method
-setMethod("label", "ANY", function(siamcat){
-  accessSlot(siamcat, "label")
+setMethod("label", "ANY", function(siamcat) {
+    accessSlot(siamcat, "label")
 })
 # Return as-is if already a label object
 #' @rdname label-methods
-setMethod("label", "label", function(siamcat){ return(siamcat) })
+#' @aliases label
+setMethod("label", "label", function(siamcat) {
+    return(siamcat)
+})
 # constructor; for creating label from a list
 #' @rdname label-methods
-setMethod("label", "list", function(siamcat){ return(new("label", siamcat)) })
+#' @aliases label
+setMethod("label", "list", function(siamcat) {
+    return(new("label", siamcat))
+})
 
 ################################################################################
 #' Retrieve a \link{data_split-class} object from object.
@@ -264,19 +286,23 @@ setMethod("label", "list", function(siamcat){ return(new("label", siamcat)) })
 #' @examples
 #'  data(siamcat_example)
 #'  data_split(siamcat_example)
-setGeneric("data_split", function(siamcat) standardGeneric("data_split"))
+setGeneric("data_split", function(siamcat)
+    standardGeneric("data_split"))
 #' @rdname data_split-methods
 #' @aliases data_split,ANY-method
-setMethod("data_split", "ANY", function(siamcat){
-  accessSlot(siamcat, "data_split")
+setMethod("data_split", "ANY", function(siamcat) {
+    accessSlot(siamcat, "data_split")
 })
 # Return as-is if already a data_split object
 #' @rdname data_split-methods
-setMethod("data_split", "data_split", function(siamcat){ return(siamcat) })
+setMethod("data_split", "data_split", function(siamcat) {
+    return(siamcat)
+})
 # Return as-is if already a data_split object
 #' @rdname data_split-methods
-setMethod("data_split", "list", function(siamcat){ 
-  return(new("data_split", siamcat)) })
+setMethod("data_split", "list", function(siamcat) {
+    return(new("data_split", siamcat))
+})
 
 ################################################################################
 #' Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.
@@ -297,15 +323,18 @@ setMethod("data_split", "list", function(siamcat){
 #' @examples
 #'  data(siamcat_example)
 #'  data_split(siamcat_example)
-setGeneric("orig_feat", function(siamcat) standardGeneric("orig_feat"))
+setGeneric("orig_feat", function(siamcat)
+    standardGeneric("orig_feat"))
 #' @rdname orig_feat-methods
 #' @aliases orig_feat,ANY-method
-setMethod("orig_feat", "ANY", function(siamcat){
-  accessSlot(siamcat, "orig_feat")
+setMethod("orig_feat", "ANY", function(siamcat) {
+    accessSlot(siamcat, "orig_feat")
 })
 # Return as-is if already a otu_table object
 #' @rdname orig_feat-methods
-setMethod("orig_feat", "otu_table", function(siamcat){ return(siamcat) })
+setMethod("orig_feat", "otu_table", function(siamcat) {
+    return(siamcat)
+})
 
 ################################################################################
 #' Retrieve a \link[phyloseq]{phyloseq-class} object from object.
@@ -326,15 +355,18 @@ setMethod("orig_feat", "otu_table", function(siamcat){ return(siamcat) })
 #' @examples
 #'  data(siamcat_example)
 #'  physeq(siamcat_example)
-setGeneric("physeq", function(siamcat) standardGeneric("physeq"))
+setGeneric("physeq", function(siamcat)
+    standardGeneric("physeq"))
 #' @rdname physeq-methods
 #' @aliases physeq,ANY-method
-setMethod("physeq", "ANY", function(siamcat){
-  accessSlot(siamcat, "phyloseq")
+setMethod("physeq", "ANY", function(siamcat) {
+    accessSlot(siamcat, "phyloseq")
 })
 # Return as-is if already a phyloseq object
 #' @rdname physeq-methods
-setMethod("physeq", "phyloseq", function(siamcat){ return(siamcat) })
+setMethod("physeq", "phyloseq", function(siamcat) {
+    return(siamcat)
+})
 
 ################################################################################
 #' Retrieve a \link[phyloseq]{otu_table-class} object from object.
@@ -355,15 +387,18 @@ setMethod("physeq", "phyloseq", function(siamcat){ return(siamcat) })
 #' @examples
 #'  data(siamcat_example)
 #'  features(siamcat_example)
-setGeneric("features", function(siamcat) standardGeneric("features"))
+setGeneric("features", function(siamcat)
+    standardGeneric("features"))
 #' @rdname features-methods
 #' @aliases features,ANY-method
-setMethod("features", "ANY", function(siamcat){
-  otu_table(physeq(siamcat))
+setMethod("features", "ANY", function(siamcat) {
+    otu_table(physeq(siamcat))
 })
 # Return as-is if already a otu_table object
 #' @rdname features-methods
-setMethod("features", "otu_table", function(siamcat){ return(siamcat) })
+setMethod("features", "otu_table", function(siamcat) {
+    return(siamcat)
+})
 
 
 ################################################################################
@@ -385,15 +420,18 @@ setMethod("features", "otu_table", function(siamcat){ return(siamcat) })
 #' @examples
 #'  data(siamcat_example)
 #'  meta(siamcat_example)
-setGeneric("meta", function(siamcat) standardGeneric("meta"))
+setGeneric("meta", function(siamcat)
+    standardGeneric("meta"))
 #' @rdname meta-methods
 #' @aliases meta,ANY-method
-setMethod("meta", "ANY", function(siamcat){
-  sample_data(physeq(siamcat),errorIfNULL = FALSE)
+setMethod("meta", "ANY", function(siamcat) {
+    sample_data(physeq(siamcat), errorIfNULL = FALSE)
 })
 # Return as-is if already a sample_data object
 #' @rdname meta-methods
-setMethod("meta", "sample_data", function(siamcat){ return(siamcat) })
+setMethod("meta", "sample_data", function(siamcat) {
+    return(siamcat)
+})
 
 
 #' Access features in siamcat@phylose@otu_table as matrix

@@ -19,6 +19,9 @@ physeq(x) <- value
 
 \item{value}{an object of class \link[phyloseq]{phyloseq-class}}
 }
+\value{
+none
+}
 \description{
 Assign a new phyloseq object to \code{x}
 }

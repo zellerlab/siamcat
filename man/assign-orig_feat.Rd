@@ -16,6 +16,9 @@ orig_feat(x) <- value
 
 \item{value}{an object of class \link[phyloseq]{otu_table-class}}
 }
+\value{
+none
+}
 \description{
 Assign a new otu_table object to \code{x} orig_feat slot
 }

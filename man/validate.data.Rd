@@ -19,14 +19,14 @@ an object of class \link{siamcat-class} with validated data
 }
 \description{
 This function checks if labels are available for all samples in
-       features. Additionally validates metadata, if available.
+        features. Additionally validates metadata, if available.
 }
 \details{
 This function validates the data by checking that labels are
-       available for all samples in the feature matrix. Furthermore,
-       the number of samples per class is checked to ensure a minimum
-       number. If metadata is available, the overlap between labels and
-       metadata is checked as well.
+        available for all samples in the feature matrix. Furthermore,
+        the number of samples per class is checked to ensure a minimum
+        number. If metadata is available, the overlap between labels and
+        metadata is checked as well.
 }
 \examples{
 

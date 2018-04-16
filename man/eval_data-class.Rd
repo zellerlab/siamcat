@@ -11,26 +11,26 @@ The S4 class for storing evaluation data.
 
 \describe{
 \item{\code{.Data}}{inherited from \code{\link{list}} class, contains
-a list with: 
+a list with:
  \itemize{
- \item \code{$roc.average} average ROC-curve across repeats or a single 
-  ROC-curve on complete dataset;
+ \item \code{$roc.average} average ROC-curve across repeats or a single
+   ROC-curve on complete dataset;
  \item \code{$auc.average} AUC value for the average ROC-curve;
- \item \code{$ev.list} list of \code{length(num.folds)}, containing for 
-  different decision thresholds the number of false positives, false 
-  negatives, true negatives, and true positives;
- \item \code{$pr.list} list of \code{length(num.folds)}, containing the 
-  positive predictive value (precision) and true positive rate (recall) 
-  values used to plot the PR curves;
-}. If \code{prediction} had more than one column, i.e. if the models has 
-  been trained with several repeats, the function will additonally 
-  return \itemize{
- \item \code{$roc.all} list of roc objects (see \link[pROC]{roc}) for 
-  every repeat;
+ \item \code{$ev.list} list of \code{length(num.folds)}, containing for
+   different decision thresholds the number of false positives, false
+   negatives, true negatives, and true positives;
+ \item \code{$pr.list} list of \code{length(num.folds)}, containing the
+   positive predictive value (precision) and true positive rate (recall)
+   values used to plot the PR curves;
+}. If \code{prediction} had more than one column, i.e. if the models has
+   been trained with several repeats, the function will additonally
+   return \itemize{
+ \item \code{$roc.all} list of roc objects (see \link[pROC]{roc}) for
+   every repeat;
  \item \code{$aucspr} vector of AUC values for the PR curves for every
-   repeat;
+    repeat;
  \item \code{$auc.all} vector of AUC values for the ROC curves for every
-   repeat
+    repeat
 }}
 }}
 

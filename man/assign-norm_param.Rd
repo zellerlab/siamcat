@@ -16,6 +16,9 @@ norm_param(x) <- value
 
 \item{value}{an norm_param list}
 }
+\value{
+none
+}
 \description{
 Assign a new norm_param object to \code{x}
 }
