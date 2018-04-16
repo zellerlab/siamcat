@@ -10,7 +10,8 @@ The S4 class for storing evaluation data.
 \section{Slots}{
 
 \describe{
-\item{\code{.Data}}{inherited from \code{\link{list}} class, contains a list with: 
+\item{\code{.Data}}{inherited from \code{\link{list}} class, contains
+a list with: 
  \itemize{
  \item \code{$roc.average} average ROC-curve across repeats or a single 
   ROC-curve on complete dataset;

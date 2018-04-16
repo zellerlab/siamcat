@@ -10,7 +10,8 @@ The S4 class for storing label info.
 \section{Slots}{
 
 \describe{
-\item{\code{.Data}}{inherited from \code{\link{matrix}} class, contains a matrix with
-predictions made by \link{make.predictions} function}
+\item{\code{.Data}}{inherited from \code{\link{matrix}} class, contains
+a matrix with
+ predictions made by \link{make.predictions} function}
 }}
 

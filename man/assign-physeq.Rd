@@ -5,9 +5,7 @@
 \alias{physeq<-}
 \alias{assign-physeq}
 \alias{physeq<-,siamcat,phyloseq-method}
-\alias{physeq<-}
 \alias{physeq<-,siamcat,otu_table-method}
-\alias{physeq<-}
 \title{Assign a new phyloseq object to \code{x}}
 \usage{
 physeq(x) <- value
@@ -25,5 +23,6 @@ physeq(x) <- value
 Assign a new phyloseq object to \code{x}
 }
 \examples{
-# data(siamcat_example)
+data(siamcat_example)
+physeq(siamcat_example) <- physeq(siamcat_example)
 }

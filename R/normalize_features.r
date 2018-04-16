@@ -107,8 +107,9 @@ normalize.features <- function(siamcat,
             feat.red.na <- feat[keep.idx, ]
             if (verbose > 1) {
                 message(paste0("+++ removed ", nrow(feat.red.na) - nrow(feat), 
-                    " features with missing values (retaining ", nrow(feat.red.na),
-                  ")"))
+                    " features with missing values (retaining ", 
+                    nrow(feat.red.na),
+                    ")"))
             }
         } else {
             feat.red.na <- feat
@@ -118,9 +119,10 @@ normalize.features <- function(siamcat,
         if (any(keep.idx.sd)) {
             feat.red <- feat.red.na[!keep.idx.sd, ]
             if (verbose > 1) {
-                message(paste0("+++ removed ", nrow(feat.red.na) - nrow(feat.red),
+                message(paste0("+++ removed ", nrow(feat.red.na) - 
+                    nrow(feat.red),
                 " features with no variation across samples (retaining ",
-                  nrow(feat.red), ")"))
+                nrow(feat.red), ")"))
             }
         } else {
             feat.red <- feat.red.na

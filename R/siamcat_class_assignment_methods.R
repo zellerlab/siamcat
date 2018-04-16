@@ -16,7 +16,8 @@
 #' @aliases assign-physeq
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' physeq(siamcat_example) <- physeq(siamcat_example)
 setGeneric("physeq<-", function(x, value) standardGeneric("physeq<-"))
 #' @rdname assign-physeq
 #' @aliases physeq<-
@@ -47,7 +48,8 @@ setMethod("physeq<-", c("siamcat","otu_table"), function(x, value){
 #' @aliases assign-label
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' label(siamcat_example) <- label(siamcat_example)
 setGeneric("label<-", function(x, value) standardGeneric("label<-"))
 #' @rdname assign-label
 #' @aliases label<-
@@ -70,7 +72,8 @@ setMethod("label<-", c("siamcat","label"), function(x, value){
 #' @aliases assign-model_list
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' model_list(siamcat_example) <- model_list(siamcat_example)
 setGeneric("model_list<-", function(x, value) standardGeneric("model_list<-"))
 #' @rdname assign-model_list
 #' @aliases model_list<-
@@ -92,7 +95,8 @@ setMethod("model_list<-", c("siamcat","model_list"), function(x, value){
 #' @aliases assign-eval_data
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' eval_data(siamcat_example) <- eval_data(siamcat_example)
 setGeneric("eval_data<-", function(x, value) standardGeneric("eval_data<-"))
 #' @rdname assign-eval_data
 #' @aliases eval_data<-
@@ -114,7 +118,8 @@ setMethod("eval_data<-", c("siamcat","list"), function(x, value){
 #' @aliases assign-norm_param
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' norm_param(siamcat_example) <- norm_param(siamcat_example)
 setGeneric("norm_param<-", function(x, value) standardGeneric("norm_param<-"))
 #' @rdname assign-norm_param
 #' @aliases norm_param<-
@@ -136,7 +141,8 @@ setMethod("norm_param<-", c("siamcat","list"), function(x, value){
 #' @aliases assign-pred_matrix
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' pred_matrix(siamcat_example) <- pred_matrix(siamcat_example)
 setGeneric("pred_matrix<-", function(x, value) standardGeneric("pred_matrix<-"))
 #' @rdname assign-pred_matrix
 #' @aliases pred_matrix<-
@@ -158,7 +164,8 @@ setMethod("pred_matrix<-", c("siamcat","matrix"), function(x, value){
 #' @aliases assign-data_split
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' data_split(siamcat_example) <- data_split(siamcat_example)
 setGeneric("data_split<-", function(x, value) standardGeneric("data_split<-"))
 #' @rdname assign-data_split
 #' @aliases data_split<-
@@ -180,7 +187,8 @@ setMethod("data_split<-", c("siamcat","data_split"), function(x, value){
 #' @aliases assign-orig_feat
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' orig_feat(siamcat_example) <- orig_feat(siamcat_example)
 setGeneric("orig_feat<-", function(x, value) standardGeneric("orig_feat<-"))
 #' @rdname assign-orig_feat
 #' @aliases orig_feat<-
@@ -202,7 +210,8 @@ setMethod("orig_feat<-", c("siamcat","otu_table"), function(x, value){
 #' @aliases assign-features
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' features(siamcat_example) <- features(siamcat_example)
 setGeneric("features<-", function(x, value) standardGeneric("features<-"))
 #' @rdname assign-features
 #' @aliases features<-
@@ -224,7 +233,8 @@ setMethod("features<-", c("siamcat","otu_table"), function(x, value){
 #' @aliases assign-meta
 #'
 #' @examples
-#' # data(siamcat_example)
+#' data(siamcat_example)
+#' meta(siamcat_example) <- meta(siamcat_example)
 setGeneric("meta<-", function(x, value) standardGeneric("meta<-"))
 #' @rdname assign-meta
 #' @aliases meta<-

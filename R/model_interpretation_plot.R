@@ -430,6 +430,9 @@ plot.percentage.of.features <- function(selected.weights, all.weights,
         message("+ finished plot.percentage.of.features")
 }
 
+#' function to plot the heatmap
+#' @keywords internal
+#' @export
 plot.heatmap <- function(image.data, limits, color.scheme, effect.size,
  verbose = 0) {
     if (verbose > 2)
@@ -498,6 +501,9 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL,
     return(img.data)
 }
 
+#' function to prepare the data to plot zscore heatmap
+#' @keywords internal
+#' @export
 prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
     if (verbose > 2)
         message("+ prepare.heatmap.zscore")
@@ -510,6 +516,9 @@ prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
     return(t(img.data))
 }
 
+#' function to select the features to plot on the heatmap
+#' @keywords internal
+#' @export
 select.features <- function(weights, model.type, consens.thres,
                             norm.models, label, max.show, verbose = 0) {
     message("+ select.features")
@@ -562,16 +571,17 @@ select.features <- function(weights, model.type, consens.thres,
     return(sel.idx)
 }
 
+#' function to get weights matrix from the model list
+#' @keywords internal
+#' @export
 get.weights.matrix <- function(models.list, verbose = 0) {
-    if (verbose > 2)
-        message("+ get.weights.matrix")
+    if (verbose > 2)  message("+ get.weights.matrix")
     W.mat <- as.numeric(models.list[[1]]$feat.weights)
     for (i in 2:length(models.list)) {
         W.mat <- cbind(W.mat, as.numeric(models.list[[i]]$feat.weights))
     }
     rownames(W.mat) <- models.list[[1]]$features
     colnames(W.mat) <- paste("M", seq_len(ncol(W.mat)), sep = "_")
-    if (verbose > 2)
-        message("+ finished get.weights.matrix")
+    if (verbose > 2)  message("+ finished get.weights.matrix")
     return(W.mat)
 }

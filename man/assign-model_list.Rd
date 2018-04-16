@@ -5,7 +5,6 @@
 \alias{model_list<-}
 \alias{assign-model_list}
 \alias{model_list<-,siamcat,model_list-method}
-\alias{model_list<-}
 \title{Assign a new model_list object to \code{x}}
 \usage{
 model_list(x) <- value
@@ -21,5 +20,6 @@ model_list(x) <- value
 Assign a new model_list object to \code{x}
 }
 \examples{
-# data(siamcat_example)
+data(siamcat_example)
+model_list(siamcat_example) <- model_list(siamcat_example)
 }

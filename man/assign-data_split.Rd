@@ -5,7 +5,6 @@
 \alias{data_split<-}
 \alias{assign-data_split}
 \alias{data_split<-,siamcat,data_split-method}
-\alias{data_split<-}
 \title{Assign a new data_split object to \code{x}}
 \usage{
 data_split(x) <- value
@@ -21,5 +20,6 @@ data_split(x) <- value
 Assign a new data_split object to \code{x}
 }
 \examples{
-# data(siamcat_example)
+data(siamcat_example)
+data_split(siamcat_example) <- data_split(siamcat_example)
 }

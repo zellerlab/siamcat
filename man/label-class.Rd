@@ -10,7 +10,8 @@ The S4 class for storing label info.
 \section{Slots}{
 
 \describe{
-\item{\code{.Data}}{inherited from \code{\link{list}} class, contains a list with: 
+\item{\code{.Data}}{inherited from \code{\link{list}} class, contains 
+a list with: 
 \itemize{ 
   \item \code{label} numeric vector, specifying to which category samples 
   belong,

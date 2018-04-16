@@ -10,7 +10,8 @@ The S4 class for storing data splits
 \section{Slots}{
 
 \describe{
-\item{\code{.Data}}{inherited from \code{\link{list}} class, contains a list with:
+\item{\code{.Data}}{inherited from \code{\link{list}} class, contains 
+a list with:
  \itemize{ 
   \item \code{training.folds} a list - for each cv fold contains ids of
 samples used for training

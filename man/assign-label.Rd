@@ -5,7 +5,6 @@
 \alias{label<-}
 \alias{assign-label}
 \alias{label<-,siamcat,label-method}
-\alias{label<-}
 \title{Assign a new label object to \code{x}}
 \usage{
 label(x) <- value
@@ -21,5 +20,6 @@ label(x) <- value
 Assign a new label object to \code{x}
 }
 \examples{
-# data(siamcat_example)
+data(siamcat_example)
+label(siamcat_example) <- label(siamcat_example)
 }

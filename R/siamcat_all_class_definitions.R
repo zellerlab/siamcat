@@ -10,12 +10,13 @@
 #' @slot model.type name of the method used by \link{train.model}
 #' @exportClass model_list
 setClass("model_list", representation(models = "list", 
-	model.type = "character"))
+    model.type = "character"))
 
 #' The S4 class for storing data splits
 #' @name data_split-class
 #' @rdname data_split-class
-#' @slot .Data inherited from \code{\link{list}} class, contains a list with:
+#' @slot .Data inherited from \code{\link{list}} class, contains 
+#' a list with:
 #'  \itemize{ 
 #'   \item \code{training.folds} a list - for each cv fold contains ids of
 #' samples used for training
@@ -29,7 +30,8 @@ setClass("data_split", contains="list")
 #' The S4 class for storing label info.
 #' @name label-class
 #' @rdname label-class
-#' @slot .Data inherited from \code{\link{list}} class, contains a list with: 
+#' @slot .Data inherited from \code{\link{list}} class, contains 
+#' a list with: 
 #' \itemize{ 
 #'   \item \code{label} numeric vector, specifying to which category samples 
 #'   belong,
@@ -42,7 +44,7 @@ setClass("data_split", contains="list")
 #'   negative label
 #'   \item \code{n.idx} numeric vector - on which positions in the label there
 #'    are samples
-#' 			with negative label
+#'             with negative label
 #'   \item \code{p.idx} numeric vector - on which positions in the label there 
 #'   are samples
 #'          with positive label
@@ -56,7 +58,8 @@ setClass("label", contains="list")
 #' The S4 class for storing label info.
 #' @name pred_matrix-class
 #' @rdname pred_matrix-class
-#' @slot .Data inherited from \code{\link{matrix}} class, contains a matrix with
+#' @slot .Data inherited from \code{\link{matrix}} class, contains
+#' a matrix with
 #'  predictions made by \link{make.predictions} function
 #' @exportClass pred_matrix
 setClass("pred_matrix", contains="matrix")
@@ -64,7 +67,8 @@ setClass("pred_matrix", contains="matrix")
 #' The S4 class for storing evaluation data.
 #' @name eval_data-class
 #' @rdname eval_data-class
-#' @slot .Data inherited from \code{\link{list}} class, contains a list with: 
+#' @slot .Data inherited from \code{\link{list}} class, contains
+#' a list with: 
 #'  \itemize{
 #'  \item \code{$roc.average} average ROC-curve across repeats or a single 
 #'   ROC-curve on complete dataset;
@@ -102,8 +106,8 @@ setClass("eval_data", contains="list")
 #' @slot pred_matrix an object of class \link{pred_matrix-class}
 #' @exportClass siamcat
 setClass("siamcat", representation(model_list = "model_list", 
-	                               phyloseq = "phyloseq", 
-	                               orig_feat = "otu_table", eval_data = "list",
-	                               label = "label", norm_param = "list", 
-	                               data_split = "data_split", 
-	                               pred_matrix = "matrix"))
+                                   phyloseq = "phyloseq", 
+                                   orig_feat = "otu_table", eval_data = "list",
+                                   label = "label", norm_param = "list", 
+                                   data_split = "data_split", 
+                                   pred_matrix = "matrix"))
