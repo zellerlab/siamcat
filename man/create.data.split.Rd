@@ -63,7 +63,7 @@ This function splits the labels within a \link{siamcat-class}
 
  ## # example with a variable which is to be inseparable
  ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,
-   num.resample=5, stratify=FALSE, inseparable='Gender')
+ ##  num.resample=5, stratify=FALSE, inseparable='Gender')
 }
 \keyword{SIAMCAT}
 \keyword{create.data.split}
