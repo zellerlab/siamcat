@@ -87,7 +87,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     # preprocess models
     if (verbose > 2)
         message("+++ preprocessing models")
-    sel.idx <- select.features(weights = all.weights, model.type = model.type, 
+    sel.idx <- model.interpretation.select.features(weights = all.weights, model.type = model.type, 
         consens.thres = consens.thres,
         label = label, norm.models = norm.models, max.show = max.show, 
         verbose = verbose)
@@ -106,7 +106,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
         message("+++ preparing heatmap")
     if (heatmap.type == "zscore") {
         feat <- get.features.matrix(siamcat)
-        img.data <- prepare.heatmap.zscore(
+        img.data <- model.interpretation.prepare.heatmap.zscore(
             heatmap.data = feat[sel.idx, srt.idx], 
             limits = limits, verbose = verbose)
     } else if (heatmap.type == "fc") {
@@ -116,7 +116,7 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
              not supplied! Estimating it as 5% percentile...")
             detect.lim <- quantile(feat[feat != 0], 0.05)
         }
-        img.data <- prepare.heatmap.fc(heatmap.data = feat[, srt.idx], 
+        img.data <- model.interpretation.prepare.heatmap.fc(heatmap.data = feat[, srt.idx], 
             sel.feat = names(sel.idx), limits = limits,
             meta = meta(siamcat), label = label, detect.lim = detect.lim, 
             erbose = verbose)
@@ -209,23 +209,28 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     # Feature weights ( model sensitive)
     if (verbose > 2)
         message("+++ plotting feature weights")
-    plot.feature.weights(rel.weights = rel.weights, sel.idx = sel.idx, 
-        mod.type = model.type, label = label)
+    model.interpretation.feature.weights.plot(rel.weights = rel.weights, 
+                                                sel.idx = sel.idx, 
+                                                mod.type = model.type,
+                                                label = label)
 
     # #########################################################################
     # Heatmap
     if (verbose > 2)
         message("+++ plotting heatmap")
     if (model.type != "RandomForest") {
-        plot.heatmap(image.data = img.data, limits = limits, 
+        model.interpretation.heatmap.plot(image.data = img.data, 
+            limits = limits, 
             color.scheme = color.scheme, 
-            effect.size = rowMedians(rel.weights[sel.idx,]), verbose = verbose)
+            effect.size = rowMedians(rel.weights[sel.idx,]),
+            verbose = verbose)
     } else {
         auroc.effect <- apply(img.data, 2, FUN = function(f) {
             roc(predictor = f, response = label$label, direction = "<")$auc
         })
         bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
-        plot.heatmap(image.data = img.data, limits = limits, 
+        model.interpretation.heatmap.plot(image.data = img.data, 
+            limits = limits, 
             color.scheme = color.scheme, effect.size = NULL, verbose = verbose)
     }
 
@@ -233,14 +238,16 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
     # Proportion of weights shown
     if (verbose > 2)
         message("+++ plotting proportion of weights shown")
-    plot.proportion.of.weights(selected.weights = all.weights[sel.idx, ], 
+    model.interpretation.proportion.of.weights.plot(
+        selected.weights = all.weights[sel.idx, ], 
         all.weights = all.weights, verbose = verbose)
 
     # #########################################################################
     # Metadata and prediction
     if (verbose > 2)
         message("+++ plotting metadata and predictions")
-    plot.pred.and.meta(prediction = mean.agg.pred[srt.idx], label = label, 
+    model.interpretation.pred.and.meta.plot(prediction = mean.agg.pred[srt.idx], 
+        label = label, 
         meta = meta(siamcat)[srt.idx,], verbose = verbose)
 
     tmp <- dev.off()
@@ -253,10 +260,12 @@ model.interpretation.plot <- function(siamcat, fn.plot, color.scheme = "BrBG",
             successfully to:", fn.plot))
 }
 
-plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label, 
-    verbose = 0) {
+# function to plot the feature weights
+#' @keywords internal
+model.interpretation.feature.weights.plot <- function(rel.weights, sel.idx, 
+    mod.type, label, verbose = 0) {
     if (verbose > 2)
-        message("+ plot.feature.weights")
+        message("+ model.interpretation.feature.weights.plot")
     if (mod.type != "RandomForest") {
         relative.weights <- rel.weights[sel.idx, ]
     } else {
@@ -341,13 +350,15 @@ plot.feature.weights <- function(rel.weights, sel.idx, mod.type, label,
 
     box(lwd = 1)
     if (verbose > 2)
-        message("+ finished plot.feature.weights")
+        message("+ finished model.interpretation.feature.weights.plot")
 }
 
-plot.pred.and.meta <- function(prediction, label, meta = NULL, 
-    verbose = 0) {
+# function to plot the predictions and metadata
+#' @keywords internal
+model.interpretation.pred.and.meta.plot <- function(prediction, label,
+    meta = NULL, verbose = 0) {
     if (verbose > 2)
-        message("+ plot.pred.and.meta")
+        message("+ model.interpretation.pred.and.meta.plot")
     par(mar = c(1.1, 4.1, 0.3, 5.1))
     img.data = as.matrix(prediction)
     colnames(img.data) = "Classification result"
@@ -401,23 +412,27 @@ plot.pred.and.meta <- function(prediction, label, meta = NULL,
         }
     }
     if (verbose > 2)
-        message("+ finished plot.pred.and.meta")
+        message("+ finished model.interpretation.pred.and.meta.plot")
 }
 
-plot.proportion.of.weights <- function(selected.weights, all.weights,
-    verbose = 0) {
+# function to plot the proportion of weights
+#' @keywords internal
+model.interpretation.proportion.of.weights.plot <- function(selected.weights,
+    all.weights, verbose = 0) {
     if (verbose > 2)
-        message("+ plot.proportion.of.weights")
+        message("+ model.interpretation.proportion.of.weights.plot")
     par(mar = c(0.1, 6.1, 0, 1.1))
     boxplot(colSums(abs(selected.weights))/colSums(abs(all.weights)), 
         ylim = c(0, 1))
     mtext("proportion of", side = 1, line = 1, at = 1, adj = 0.5, cex = 0.7)
     mtext("weight shown", side = 1, line = 2, at = 1, adj = 0.5, cex = 0.7)
     if (verbose > 2)
-        message("+ finished plotting plot.proportion.of.weights")
+        message("+ finished plotting model.interpretation.proportion.of.weights.plot")
 }
 
-plot.percentage.of.features <- function(selected.weights, all.weights, 
+# function to plot the percentage of features
+#' @keywords internal
+plot.percentage.of.features.plot <- function(selected.weights, all.weights, 
     verbose = 0) {
     if (verbose > 2)
         message("+ plot.percentage.of.features")
@@ -430,13 +445,12 @@ plot.percentage.of.features <- function(selected.weights, all.weights,
         message("+ finished plot.percentage.of.features")
 }
 
-#' function to plot the heatmap
+# function to plot the heatmap
 #' @keywords internal
-#' @export
-plot.heatmap <- function(image.data, limits, color.scheme, effect.size,
- verbose = 0) {
+model.interpretation.heatmap.plot<- function(image.data, limits, color.scheme,
+    effect.size,verbose = 0) {
     if (verbose > 2)
-        message("+ plot.heatmap")
+        message("+ model.interpretation.heatmap.plot")
     par(mar = c(0.1, 4.1, 0, 5.1))
     image(image.data, zlim = limits, col = color.scheme, xaxt = "n", 
         yaxt = "n", xlab = "", ylab = "", bty = "n")
@@ -457,13 +471,15 @@ plot.heatmap <- function(image.data, limits, color.scheme, effect.size,
     }
     box(lwd = 1)
     if (verbose > 2)
-        message("+ finished plot.heatmap")
+        message("+ finished model.interpretation.heatmap.plot")
 }
 
-prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL, 
-    label, detect.lim, verbose = 0) {
+# function to prepare the data to plot fold change heatmap
+#' @keywords internal
+model.interpretation.prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat,
+    meta = NULL, label, detect.lim, verbose = 0) {
     if (verbose > 2)
-        message("+ prepare.heatmap.fc")
+        message("+ model.interpretation.prepare.heatmap.fc")
     if (!any(grepl("META", sel.feat))) {
         feat.log <- log10(heatmap.data[sel.feat,] + detect.lim)
         img.data <- t(feat.log - 
@@ -497,31 +513,30 @@ prepare.heatmap.fc <- function(heatmap.data, limits, sel.feat, meta = NULL,
     img.data[img.data < limits[1]] = limits[1]
     img.data[img.data > limits[2]] = limits[2]
     if (verbose > 2)
-        message("+ finished plot.heatmap")
+        message("+ finished model.interpretation.heatmap.plot")
     return(img.data)
 }
 
-#' function to prepare the data to plot zscore heatmap
+# function to prepare the data to plot zscore heatmap
 #' @keywords internal
-#' @export
-prepare.heatmap.zscore <- function(heatmap.data, limits, verbose = 0) {
+model.interpretation.prepare.heatmap.zscore <- function(heatmap.data, limits, 
+    verbose = 0) {
     if (verbose > 2)
-        message("+ prepare.heatmap.zscore")
+        message("+ model.interpretation.prepare.heatmap.zscore")
     # data is transposed and transformed to feature z-scores for display
     img.data <-  (heatmap.data - rowMeans(heatmap.data))/rowSds(heatmap.data)
     img.data[img.data < limits[1]] <- limits[1]
     img.data[img.data > limits[2]] <- limits[2]
     if (verbose > 2)
-        message("+ finished plot.heatmap")
+        message("+ finished model.interpretation.heatmap.plot")
     return(t(img.data))
 }
 
-#' function to select the features to plot on the heatmap
+# function to select the features to plot on the heatmap
 #' @keywords internal
-#' @export
-select.features <- function(weights, model.type, consens.thres,
-                            norm.models, label, max.show, verbose = 0) {
-    message("+ select.features")
+model.interpretation.select.features <- function(weights, model.type, 
+    consens.thres, norm.models, label, max.show, verbose = 0) {
+    message("+ model.interpretation.select.features")
     # for linear models, select those that have been selected more than 
     # consens.thres percent of the models
     if (model.type != "RandomForest") {
@@ -567,13 +582,12 @@ select.features <- function(weights, model.type, consens.thres,
         message(paste("+++ generating plot for a model with", length(sel.idx),
          "selected features"))
     if (verbose > 2)
-        message("+ finished select.features")
+        message("+ finished model.interpretation.select.features")
     return(sel.idx)
 }
 
-#' function to get weights matrix from the model list
+# function to get weights matrix from the model list
 #' @keywords internal
-#' @export
 get.weights.matrix <- function(models.list, verbose = 0) {
     if (verbose > 2)  message("+ get.weights.matrix")
     W.mat <- as.numeric(models.list[[1]]$feat.weights)

@@ -4,21 +4,20 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Add metadata as predictors
-#' @description This function adds metadata to the feature matrix to be
-#'        later used as predictors
+#' @description This function adds metadata to the feature matrix to be later
+#'   used as predictors
 #' @param siamcat object of class \link{siamcat-class}
 #' @param pred.names vector of names of the variables within the metadata to be
-#'        added to the feature matrix as predictors
+#'   added to the feature matrix as predictors
 #' @param std.meta boolean, should added metadata features be standardized?,
-#'        defaults to \code{TRUE}
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'        for only information about progress and success, \code{2} for normal
-#'        level of information and \code{3} for full debug information,
-#'        defaults to \code{1}
+#'   defaults to \code{TRUE}
+#' @param verbose control output: \code{0} for no output at all, \code{1} for
+#'   only information about progress and success, \code{2} for normal level of
+#'   information and \code{3} for full debug information, defaults to \code{1}
 #' @keywords SIAMCAT add.meta.pred
 #' @export
 #' @return an object of class \link{siamcat-class} with metadata added to the
-#'        features
+#'   features
 #' @examples
 #'  data(siamcat_example)
 #'  # Add the Age of the patients as potential predictor
@@ -77,7 +76,7 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
             cnt <- cnt + 1
         }
         if (verbose > 1)
-            message(paste("+++ added", cnt, "meta-variables as predictor to the
+          message(paste("+++ added", cnt, "meta-variables as predictor to the
              feature matrix"))
     } else {
         if (verbose > 0)
