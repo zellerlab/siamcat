@@ -30,6 +30,7 @@ Authors:
 
 Other contributors:
 \itemize{
+  \item Morgan Essex \email{morgan.essex@embl.de} [contributor]
   \item Nicolai Karcher [contributor]
   \item Kersten Breuer [contributor]
 }
