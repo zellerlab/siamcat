@@ -8,7 +8,7 @@
 \alias{data_split,list-method}
 \title{Retrieve a \link{data_split-class} object from object.}
 \usage{
-data_split(siamcat, errorIfNULL=TRUE)
+data_split(siamcat)
 
 \S4method{data_split}{ANY}(siamcat)
 

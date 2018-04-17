@@ -92,12 +92,12 @@
 
     
     <p>This function prepares the cross-validation by splitting the
-       data into <code>num.folds</code> training and test folds for
-       <code>num.resample</code> times.</p>
+    data into <code>num.folds</code> training and test folds for 
+    <code>num.resample</code> times.</p>
     
 
-    <pre class="usage"><span class='fu'>create.data.split</span>(<span class='no'>siamcat</span>, <span class='kw'>num.folds</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>num.resample</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>inseparable</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage">create.data.split <- (siamcat, num.folds = 2, num.resample = 1,
+    stratify = TRUE,inseparable = NULL, verbose = 1)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -119,8 +119,7 @@ resampling), defaults to <code>1</code></p></td>
     <tr>
       <th>stratify</th>
       <td><p>boolean, should the splits be stratified so that an equal
-proportion of classes are present in each fold?,
-defaults to <code>TRUE</code></p></td>
+proportion of classes are present in each fold?, defaults to <code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>inseparable</th>
@@ -128,44 +127,44 @@ defaults to <code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
-for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information,
-defaults to <code>1</code></p></td>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code> for
+only information about progress and success, <code>2</code> for normal level of
+information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the <code>data_split</code>-slot
-       filled</p>
+    filled</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function splits the labels within a <a href='siamcat-class.html'>siamcat-class</a>
-       object and prepares the internal cross-validation for the model
-       training (see <a href='train.model.html'>train.model</a>).</p>
+    <p>This function splits the labels within a <a href='siamcat-class.html'>siamcat-class</a> object
+    and prepares the internal cross-validation for the model training (see
+    <a href='train.model.html'>train.model</a>).</p>
 <p>The function saves the training and test instances for the different
-       cross-validation folds within a list in the <code>data_split</code>-slot
-       of the <a href='siamcat-class.html'>siamcat-class</a> object, which is a list with four
-       entries:</p><ul>
+    cross-validation folds within a list in the <code>data_split</code>-slot of the
+    <a href='siamcat-class.html'>siamcat-class</a> object, which is a list with four entries:</p><ul>
 <li><p><code>num.folds</code> the number of cross-validation folds</p></li>
-<li><p><code>num.resample</code> the number of repetitions for the
-               cross-validation</p></li>
-<li><p><code>training.folds</code> a list containing the indices for the
-               training instances</p></li>
-<li><p><code>test.folds</code> a list containing the indices for the test
-               instances</p></li>
+<li><p><code>num.resample</code> the number of repetitions for the 
+    cross-validation</p></li>
+<li><p><code>training.folds</code> a list containing the indices for the 
+    training instances</p></li>
+<li><p><code>test.folds</code> a list containing the indices for the
+    test instances</p></li>
 </ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
- <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># simple working example</span>
- <span class='no'>siamcat_split</span> <span class='kw'>&lt;-</span> <span class='fu'>create.data.split</span>(<span class='no'>siamcat_example</span>, <span class='kw'>num.folds</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>num.resample</span><span class='kw'>=</span><span class='fl'>5</span>, <span class='kw'>stratify</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Features splitted for cross-validation successfully.</div><div class='input'>
- ## # example with a variable which is to be inseparable
- ## siamcat_split <- create.data.split(siamcat_example, num.folds=10, num.resample=5, stratify=FALSE, inseparable='Gender')
+    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># simple working example</span>
+    <span class='no'>siamcat_split</span> <span class='kw'>&lt;-</span> <span class='fu'>create.data.split</span>(<span class='no'>siamcat_example</span>, <span class='kw'>num.folds</span><span class='kw'>=</span><span class='fl'>10</span>,
+    <span class='kw'>num.resample</span><span class='kw'>=</span><span class='fl'>5</span>, <span class='kw'>stratify</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in label$label: $ operator not defined for this S4 class</span></div><div class='input'>
+    ## # example with a variable which is to be inseparable
+    ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,
+    ##  num.resample=5, stratify=FALSE, inseparable='Gender')
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

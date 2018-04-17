@@ -7,7 +7,7 @@
 \alias{features,otu_table-method}
 \title{Retrieve a \link[phyloseq]{otu_table-class} object from object.}
 \usage{
-features(siamcat, errorIfNULL=TRUE)
+features(siamcat)
 
 \S4method{features}{ANY}(siamcat)
 

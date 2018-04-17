@@ -6,7 +6,7 @@
 \alias{norm_param,ANY-method}
 \title{Retrieve norm_param from object.}
 \usage{
-norm_param(siamcat, errorIfNULL=TRUE)
+norm_param(siamcat)
 
 \S4method{norm_param}{ANY}(siamcat)
 }

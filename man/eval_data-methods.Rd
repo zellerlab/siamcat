@@ -7,7 +7,7 @@
 \alias{eval_data,list-method}
 \title{Retrieve eval_data from object.}
 \usage{
-eval_data(siamcat, errorIfNULL=TRUE)
+eval_data(siamcat)
 
 \S4method{eval_data}{ANY}(siamcat)
 

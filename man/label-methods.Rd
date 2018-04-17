@@ -8,7 +8,7 @@
 \alias{label,list-method}
 \title{Retrieve a \link{label-class} object from object.}
 \usage{
-label(siamcat, errorIfNULL=TRUE)
+label(siamcat)
 
 \S4method{label}{ANY}(siamcat)
 

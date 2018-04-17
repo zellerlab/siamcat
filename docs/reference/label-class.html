@@ -99,18 +99,27 @@
 
     
     <dl class='dl-horizontal'>
-<dt><code>label</code></dt><dd><p>numeric vector, specifying to which category samples belong,
-usualy made of 1s and -1s</p></dd>
-    <dt><code>header</code></dt><dd><p>contains information from the header of the label file</p></dd>
-    <dt><code>info</code></dt><dd><p>list with additional informations about the dataset</p></dd>
-    <dt><code>positive.lab</code></dt><dd><p>specifies which of two numbers in label is a positive label</p></dd>
-    <dt><code>negative.lab</code></dt><dd><p>specifies which of two numbers in label is a negative label</p></dd>
-    <dt><code>n.idx</code></dt><dd><p>numeric vector - on which positions in the label there are samples
-withc negative label</p></dd>
-    <dt><code>p.idx</code></dt><dd><p>numeric vector - on which positions in the label there are samples
-withc positive label</p></dd>
-    <dt><code>n.lab</code></dt><dd><p>character string with a name for the negative label (e.g. "healthy")</p></dd>
-    <dt><code>p.lab</code></dt><dd><p>character string with a name for the positive label (e.g. "cancer")</p></dd>
+<dt><code>.Data</code></dt><dd><p>inherited from <code>list</code> class, contains
+a list with:
+<ul>
+<li><p><code>label</code> numeric vector, specifying to which category samples
+    belong, usualy made of 1s and -1s</p></li>
+<li><p><code>header</code> contains information from the header of the label 
+    file</p></li>
+<li><p><code>info</code> list with additional informations about the dataset</p></li>
+<li><p><code>positive.lab</code> specifies which of two numbers in label is a
+    positive label</p></li>
+<li><p><code>negative.lab</code> specifies which of two numbers in label is a
+    negative label</p></li>
+<li><p><code>n.idx</code> numeric vector - on which positions in the label there
+    are samples with negative label</p></li>
+<li><p><code>p.idx</code> numeric vector - on which positions in the label there
+    are samples with positive label</p></li>
+<li><p><code>n.lab</code> character string with a name for the negative label
+    (e.g. 'healthy')</p></li>
+<li><p><code>p.lab</code> character string with a name for the positive label
+    (e.g. 'cancer')</p></li>
+</ul></p></dd>
 </dl>
     
 

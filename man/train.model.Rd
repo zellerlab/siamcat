@@ -5,7 +5,9 @@
 \title{Model training}
 \usage{
 train.model(siamcat,
-    method = c("lasso","enet","ridge","lasso_ll", "ridge_ll", "randomForest")
+method = c("lasso","enet","ridge","lasso_ll", "ridge_ll", "randomForest"),
+stratify = TRUE, modsel.crit = list("auc"), min.nonzero.coeff = 1,
+param.set = NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

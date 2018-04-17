@@ -4,7 +4,7 @@
 \alias{create.data.split}
 \title{Split a dataset into training and a test sets.}
 \usage{
-create.data.split <- (siamcat, num.folds = 2, num.resample = 1,
+create.data.split(siamcat, num.folds = 2, num.resample = 1,
     stratify = TRUE,inseparable = NULL, verbose = 1)
 }
 \arguments{

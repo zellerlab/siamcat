@@ -101,16 +101,22 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>label.header</th>
-      <td><p>- string in the format: #&lt;TYPE&gt;:&lt;L1&gt;=&lt;class1&gt;;&lt;L2&gt;=&lt;class2&gt;[;&lt;L3&gt;=&lt;class3&gt;]
-where &lt;TYPE&gt; is a string specifying the type of label variable such as
-BINARY (for binary classification), CATEGORICAL (for multi-class classification), or CONTINUOUS (for regression)
-&lt;L1&gt; is a short numeric label for the first class with description &lt;class1&gt; (similarly for the other classes)</p></td>
+      <td><p>- string in the format: #&lt;TYPE&gt;:&lt;L1&gt;=&lt;class1&gt;;
+&lt;L2&gt;=&lt;class2&gt;[;&lt;L3&gt;=&lt;class3&gt;] where &lt;TYPE&gt; is a string specifying the type
+of label variable such as BINARY (for binary classification), CATEGORICAL
+(for multi-class classification), or CONTINUOUS (for regression)
+&lt;L1&gt; is a short numeric label for the first class with description &lt;class1&gt;
+(similarly for the other classes)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list</p>
+    <p>a list with tow items</p><ul>
+<li><p><code>$type</code> type of the label: BINARY CONTINUOUS or CATEGORICAL</p></li>
+<li><p><code>$class.descr</code> lables and information on what do they mean</p></li>
+</ul>
+
     
 
   </div>

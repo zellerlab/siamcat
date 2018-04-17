@@ -7,7 +7,7 @@
 \alias{orig_feat,otu_table-method}
 \title{Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.}
 \usage{
-orig_feat(siamcat, errorIfNULL=TRUE)
+orig_feat(siamcat)
 
 \S4method{orig_feat}{ANY}(siamcat)
 

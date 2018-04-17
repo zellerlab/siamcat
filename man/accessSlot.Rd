@@ -4,7 +4,7 @@
 \alias{accessSlot}
 \title{Universal slot accessor function for siamcat-class.}
 \usage{
-accessSlot(siamcat, slot, errorIfNULL=FALSE)
+accessSlot(siamcat, slot)
 }
 \arguments{
 \item{siamcat}{an object of \link{siamcat-class}.}

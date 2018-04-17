@@ -9,7 +9,7 @@
 \alias{model_type,model_list-method}
 \title{Retrieve \link{model_list-class} from object.}
 \usage{
-model_list(siamcat, errorIfNULL=TRUE)
+model_list(siamcat)
 
 \S4method{model_list}{ANY}(siamcat)
 

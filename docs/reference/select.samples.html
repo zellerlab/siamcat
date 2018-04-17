@@ -92,12 +92,13 @@
 
     
     <p>This functions selects labels and metadata based on
-       a specific column in the metadata. Provided with a column-name in the
-       metadata and a range or a set of allowed values, the function will</p>
+        a specific column in the metadata. Provided with a column-name in the
+        metadata and a range or a set of allowed values, the function will
+        filter the <a href='siamcat-class.html'>siamcat-class</a> object accordingly.</p>
     
 
-    <pre class="usage"><span class='fu'>select.samples</span>(<span class='no'>siamcat</span>, <span class='no'>filter</span>, <span class='kw'>allowed.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>allowed.range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>select.samples</span>(<span class='no'>siamcat</span>, <span class='no'>filter</span>, <span class='kw'>allowed.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='kw'>allowed.range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -131,19 +132,21 @@ defaults to <code>1</code></p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object of class <a href='siamcat-class.html'>siamcat-class</a> with labels and metadata
-       filtered in order to contain only allowed values</p>
+        filtered in order to contain only allowed values</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># Select all samples that fall into an Age-range between 20 and 80 years</span>
- <span class='no'>siamcat_selected</span> <span class='kw'>&lt;-</span> <span class='fu'>select.samples</span>(<span class='no'>siamcat_example</span>, <span class='st'>'age'</span>, <span class='kw'>allowed.range</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>20</span>, <span class='fl'>80</span>))</div><div class='output co'>#&gt; Keeping labels of 141 sample(s).
-#&gt; Selecting samples finished</div><div class='input'>
- # Select all samples for which information about the gender is given
- # Provide additional information with verbose
- </div><span class='co'># NOT RUN {</span>
-<span class='no'>siamcat_selected</span> <span class='kw'>&lt;-</span> <span class='fu'>select.samples</span>(<span class='no'>siamcat_example</span>, <span class='st'>'gender'</span>, <span class='kw'>allowed.set</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>2</span>)
-<span class='co'># }</span></pre>
+    <pre class="examples"><div class='input'>    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># Select all samples that fall into an Age-range between 20 and 80 years</span>
+    <span class='no'>siamcat_selected</span> <span class='kw'>&lt;-</span> <span class='fu'>select.samples</span>(<span class='no'>siamcat_example</span>, <span class='st'>'age'</span>,
+    <span class='kw'>allowed.range</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>20</span>, <span class='fl'>80</span>))</div><div class='output co'>#&gt; <span class='error'>Error: $ operator not defined for this S4 class</span></div><div class='input'>
+    # Select all samples for which information about the gender is given
+    # Provide additional information with verbose
+    </div><span class='co'># NOT RUN {</span>
+<span class='no'>siamcat_selected</span> <span class='kw'>&lt;-</span> <span class='fu'>select.samples</span>(<span class='no'>siamcat_example</span>, <span class='st'>'gender'</span>,
+    <span class='kw'>allowed.set</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>2</span>)
+<span class='co'># }</span><div class='input'>    
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

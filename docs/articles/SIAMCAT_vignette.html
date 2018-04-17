@@ -90,15 +90,26 @@
 <a href="#first-steps-readvalidatefilter-the-data" class="anchor"></a>First Steps: Read/Validate/Filter the Data</h1>
 <p>First, let’s load the SIAMCAT package and use the files included in SIAMCAT. The data are the same as used in the publication of <a href="http://europepmc.org/abstract/MED/25432777">Zeller et al.</a>, which demonstrated the potential of microbial markers in feacal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SIAMCAT)
-fn.in.feat  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
-  <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
-fn.in.label &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
-  <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)
-fn.in.meta  &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
-  <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>)</code></pre></div>
+fn.in.feat  &lt;-<span class="st"> </span><span class="kw">system.file</span>(
+    <span class="st">"extdata"</span>,
+    <span class="st">"feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+    <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>
+)
+fn.in.label &lt;-<span class="st"> </span><span class="kw">system.file</span>(
+    <span class="st">"extdata"</span>,
+    <span class="st">"label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+    <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>
+)
+fn.in.meta  &lt;-<span class="st"> </span><span class="kw">system.file</span>(
+    <span class="st">"extdata"</span>,
+    <span class="st">"num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
+    <span class="dt">package =</span> <span class="st">"SIAMCAT"</span>
+)</code></pre></div>
 <p>We can access the files with the dedicated SIAMCAT functions and directly construct a SIAMCAT object containing the microbial features, the patient’s labels, and metadata for the patients.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.features.html">read.features</a></span>(fn.in.feat)
-label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.labels.html">read.labels</a></span>(fn.in.label)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.features.html">read.features</a></span>(fn.in.feat)</code></pre></div>
+<pre><code>## The provided feature names were not semantically correct for
+##             use in R, they were updated.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.labels.html">read.labels</a></span>(fn.in.label)
 meta  &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.meta.html">read.meta</a></span>(fn.in.meta)
 siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(feat, label, meta)</code></pre></div>
 <p>A few information about the <code>siamcat</code> object can be accessed with the <code>show</code> function from <code>phyloseq</code>:</p>
@@ -110,7 +121,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 ## phyloseq@otu_table()   OTU Table:         [ 1754 taxa and 141 samples ]
 ## phyloseq@sam_data()    Sample Data:       [ 141 samples by 8 sample variables ]</code></pre>
 <p>In fact, <code>siamcat-class</code> object extends <code>phyloseq-class</code> object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phyloseq &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.phyloseq.html">get.phyloseq</a></span>(siamcat)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phyloseq &lt;-<span class="st"> </span><span class="kw"><a href="../reference/physeq-methods.html">physeq</a></span>(siamcat)
 <span class="kw">show</span>(phyloseq)</code></pre></div>
 <pre><code>## phyloseq-class experiment-level object
 ## otu_table()   OTU Table:         [ 1754 taxa and 141 samples ]
@@ -119,27 +130,31 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/validate.data.html">validate.data</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## Data succesfully validated</code></pre>
 <p>The data can also be sub-selected based on the available meta-data. For example, if we want to exclude patients that are too young or too old for the question of interest, we can do so easily with:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/select.samples.html">select.samples</a></span>(siamcat,
-                          <span class="dt">filter=</span><span class="st">'age'</span>,
-                          <span class="dt">allowed.set=</span><span class="ot">NULL</span>,
-                          <span class="dt">allowed.range=</span><span class="kw">c</span>(<span class="dv">20</span>,<span class="dv">90</span>),
-                          <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
-<pre><code>## + starting select.samples
-## +++ removed 0 samples with age not in [20, 90] (retaining 141)
-## Keeping labels of 141 sample(s).
-## + finished select.samples in 0.009 s</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/select.samples.html">select.samples</a></span>(
+    siamcat,
+    <span class="dt">filter =</span> <span class="st">'age'</span>,
+    <span class="dt">allowed.set =</span> <span class="ot">NULL</span>,
+    <span class="dt">allowed.range =</span> <span class="kw">c</span>(<span class="dv">20</span>, <span class="dv">90</span>),
+    <span class="dt">verbose =</span> <span class="dv">2</span>
+)</code></pre></div>
+<pre><code>## + starting select.samples</code></pre>
+<pre><code>## +++ removed 0 samples with age not in [20, 90] (retaining 141)</code></pre>
+<pre><code>## Keeping labels of 141 sample(s).</code></pre>
+<pre><code>## + finished select.samples in 0.013 s</code></pre>
 <p>Since we have quite a lot of microbial markers in the dataset at the moment, we perform unsupervised feature selection using the function <code>filter.features</code>. Here, we filter based on overall abundance, but could also do so based on prevalence or cumulative abundance.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.features.html">filter.features</a></span>(siamcat,  
-                       <span class="dt">filter.method =</span> <span class="st">'abundance'</span>,
-                       <span class="dt">cutoff =</span><span class="fl">0.001</span>,
-                       <span class="dt">recomp.prop =</span> <span class="ot">FALSE</span>,
-                       <span class="dt">rm.unmapped =</span> <span class="ot">TRUE</span>,
-                       <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
-<pre><code>## + starting filter.features
-## +++ before filtering, the data has 1754 features
-## +++ removed 1 features corresponding to UNMAPPED reads
-## +++ removed 1546 features whose values did not exceed 0.001 in any sample (retaining 207)
-## + finished filter.features in 0.072 s</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.features.html">filter.features</a></span>(
+    siamcat,
+    <span class="dt">filter.method =</span> <span class="st">'abundance'</span>,
+    <span class="dt">cutoff =</span> <span class="fl">0.001</span>,
+    <span class="dt">recomp.prop =</span> <span class="ot">FALSE</span>,
+    <span class="dt">rm.unmapped =</span> <span class="ot">TRUE</span>,
+    <span class="dt">verbose =</span> <span class="dv">2</span>
+)</code></pre></div>
+<pre><code>## + starting filter.features</code></pre>
+<pre><code>## +++ before filtering, the data has 1754 features</code></pre>
+<pre><code>## +++ removed 1 features corresponding to UNMAPPED reads</code></pre>
+<pre><code>## +++ removed 1546 features whose values did not exceed0.001 in any sample (retaining 207)</code></pre>
+<pre><code>## + finished filter.features in 0.244 s</code></pre>
 </div>
 <div id="associationconfounder-testing" class="section level1">
 <h1 class="hasAnchor">
@@ -147,18 +162,23 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <p>Another functionality of SIAMCAT are the modules for testing of confounders and associations. Confounders are checked with the function <code>check.confounders</code>, which produces a plot for each possible confounder in the metadata and diverts the output into a pdf-file. The function can be used like that:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run here, since the function produces a pdf-file as output
 <span class="kw"><a href="../reference/check.confounders.html">check.confounders</a></span>(siamcat,
-                  <span class="dt">fn.plot=</span><span class="st">'conf_check.pdf'</span>)</code></pre></div>
+    <span class="dt">fn.plot =</span> <span class="st">'conf_check.pdf'</span>)</code></pre></div>
 <p>Here would be an example output for <code>Age</code> as potential confounder:</p>
 <p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>Similarly, associations between microbial markers and the label can be tested with the <code>check.associations</code> function. The function computes a generalized fold change for the marker, the prevalence shift, a single feature AUC, and the significance of the associations. The significance is tested with a Wilcoxon test. The function again produces a pdf-file as output and is thus not run here, but can be used as follows:</p>
+<p>Similarly, associations between microbial markers and the label can be testedwith the <code>check.associations</code> function. The function computes a generalized fold change for the marker, the prevalence shift, a single feature AUC, and the significance of the associations. The significance is tested with a Wilcoxon test. The function again produces a pdf-file as output and is thus not run here, but can be used as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run here, since the function produces a pdf-file as output
-<span class="kw"><a href="../reference/check.associations.html">check.associations</a></span>(siamcat,
-                   <span class="dt">sort.by=</span><span class="st">'fc'</span>,
-                   <span class="dt">fn.plot =</span> <span class="st">'assoc.pdf'</span>,
-                   <span class="dt">alpha =</span> <span class="fl">0.05</span>, <span class="dt">mult.corr =</span> <span class="st">"fdr"</span>,
-                   <span class="dt">detect.lim =</span> <span class="dv">10</span><span class="op">^-</span><span class="dv">6</span>, <span class="dt">max.show =</span> <span class="dv">50</span>, <span class="dt">plot.type =</span> <span class="st">"quantile.box"</span>,
-                   <span class="dt">panels=</span><span class="kw">c</span>(<span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span>),
-                   <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
+<span class="kw"><a href="../reference/check.associations.html">check.associations</a></span>(
+    siamcat,
+    <span class="dt">sort.by =</span> <span class="st">'fc'</span>,
+    <span class="dt">fn.plot =</span> <span class="st">'assoc.pdf'</span>,
+    <span class="dt">alpha =</span> <span class="fl">0.05</span>,
+    <span class="dt">mult.corr =</span> <span class="st">"fdr"</span>,
+    <span class="dt">detect.lim =</span> <span class="dv">10</span> <span class="op">^</span><span class="st"> </span><span class="op">-</span><span class="dv">6</span>,
+    <span class="dt">max.show =</span> <span class="dv">50</span>,
+    <span class="dt">plot.type =</span> <span class="st">"quantile.box"</span>,
+    <span class="dt">panels =</span> <span class="kw">c</span>(<span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span>),
+    <span class="dt">verbose =</span> <span class="dv">2</span>
+)</code></pre></div>
 </div>
 <div id="model-building" class="section level1">
 <h1 class="hasAnchor">
@@ -168,69 +188,78 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <h2 class="hasAnchor">
 <a href="#data-normalization" class="anchor"></a>Data Normalization</h2>
 <p>Data normalization is performed with the <code>normalize.features</code> function. Several control options are available, i.e. the normalization method (<code>log.unit</code>, <code>log.std</code>, <code>rank.unit</code>, <code>rank.std</code>, <code>log.clr</code>) or additional parameters. Here, we use the <code>log.unit</code> method:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(siamcat,
-                          <span class="dt">norm.method =</span> <span class="st">"log.unit"</span>,
-                          <span class="dt">norm.param=</span><span class="kw">list</span>(<span class="dt">log.n0 =</span> <span class="fl">1e-06</span>, <span class="dt">n.p=</span><span class="dv">2</span>, <span class="dt">norm.margin=</span><span class="dv">1</span>),
-                          <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
-<pre><code>## + starting normalize.features
-## +++ performing de novo normalization using the  log.unit  method
-## + feature sparsity before normalization: 45.11598%
-## +++ feature sparsity after normalization: 0%
-## + finished normalize.features in 0.042 s</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(
+    siamcat,
+    <span class="dt">norm.method =</span> <span class="st">"log.unit"</span>,
+    <span class="dt">norm.param =</span> <span class="kw">list</span>(
+        <span class="dt">log.n0 =</span> <span class="fl">1e-06</span>,
+        <span class="dt">n.p =</span> <span class="dv">2</span>,
+        <span class="dt">norm.margin =</span> <span class="dv">1</span>
+    ),
+    <span class="dt">verbose =</span> <span class="dv">2</span>
+)</code></pre></div>
+<pre><code>## + starting normalize.features</code></pre>
+<pre><code>## +++ performing de novo normalization using the  log.unit  method</code></pre>
+<pre><code>## + feature sparsity before normalization: 45.12%</code></pre>
+<pre><code>## +++ feature sparsity after normalization:      0 %</code></pre>
+<pre><code>## + finished normalize.features in 0.024 s</code></pre>
 </div>
 <div id="prepare-cross-validation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#prepare-cross-validation" class="anchor"></a>Prepare Cross-Validation</h2>
 <p>Preparation of the cross-validation fold is a crucial step in machine learning. SIAMCAT greatly simplifies the set-up of cross-validation schemes, including stratification of samples or keeping samples inseperable based on metadata. For this small example, we choose a twice-repeated 5-fold cross-validation scheme. The data-split will be saved in the <code>data_split</code> slot of the <code>siamcat</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/create.data.split.html">create.data.split</a></span>(siamcat,
-                              <span class="dt">num.folds =</span> <span class="dv">5</span>,
-                              <span class="dt">num.resample =</span> <span class="dv">2</span>,
-                              <span class="dt">stratify =</span> <span class="ot">TRUE</span>,
-                              <span class="dt">inseparable =</span> <span class="ot">NULL</span>,
-                              <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
-<pre><code>## + starting create.data.split
-## + resampling round 1 
-## + resampling round 2 
-## + finished create.data.split in 0.051 s</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/create.data.split.html">create.data.split</a></span>(
+    siamcat,
+    <span class="dt">num.folds =</span> <span class="dv">5</span>,
+    <span class="dt">num.resample =</span> <span class="dv">2</span>,
+    <span class="dt">stratify =</span> <span class="ot">TRUE</span>,
+    <span class="dt">inseparable =</span> <span class="ot">NULL</span>,
+    <span class="dt">verbose =</span> <span class="dv">2</span>
+)</code></pre></div>
+<pre><code>## + starting create.data.split</code></pre>
+<pre><code>## + resampling round 1</code></pre>
+<pre><code>## + resampling round 2</code></pre>
+<pre><code>## + finished create.data.split in 0.03 s</code></pre>
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-training" class="anchor"></a>Model Training</h2>
 <p>The actual model training is performed using the function <code>train.model</code>. Again, multiple options for customization are available, ranging from the machine learning method to the measure for model selection or customizable parameter set for hyperparameter tuning. Here, we train a Lasso model and enforce at least 5 non-zero coefficients.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(siamcat,
-                       <span class="dt">method =</span> <span class="st">"lasso"</span>,
-                       <span class="dt">stratify =</span> <span class="ot">TRUE</span>,
-                       <span class="dt">modsel.crit=</span><span class="kw">list</span>(<span class="st">"pr"</span>),
-                       <span class="dt">min.nonzero.coeff =</span> <span class="dv">5</span>,
-                       <span class="dt">param.set=</span><span class="ot">NULL</span>,
-                       <span class="dt">verbose=</span><span class="dv">3</span>)</code></pre></div>
-<pre><code>## + starting train.model
-## +++ preparing selection measures
-## + training lasso models on 10 training sets
-## +++ training on cv fold: 1 
-## ++++ repetition: 1 
-## ++++ repetition: 2 
-## +++ training on cv fold: 2 
-## ++++ repetition: 1 
-## ++++ repetition: 2 
-## +++ training on cv fold: 3 
-## ++++ repetition: 1 
-## ++++ repetition: 2 
-## +++ training on cv fold: 4 
-## ++++ repetition: 1 
-## ++++ repetition: 2 
-## +++ training on cv fold: 5 
-## ++++ repetition: 1 
-## ++++ repetition: 2 
-## 
-## + finished train.model in 25.55 s</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(
+    siamcat,
+    <span class="dt">method =</span> <span class="st">"lasso"</span>,
+    <span class="dt">stratify =</span> <span class="ot">TRUE</span>,
+    <span class="dt">modsel.crit =</span> <span class="kw">list</span>(<span class="st">"pr"</span>),
+    <span class="dt">min.nonzero.coeff =</span> <span class="dv">5</span>,
+    <span class="dt">param.set =</span> <span class="ot">NULL</span>,
+    <span class="dt">verbose =</span> <span class="dv">3</span>
+)</code></pre></div>
+<pre><code>## + starting train.model</code></pre>
+<pre><code>## +++ preparing selection measures</code></pre>
+<pre><code>## + training lasso models on 10 training sets</code></pre>
+<pre><code>## +++ training on cv fold: 1</code></pre>
+<pre><code>## ++++ repetition: 1</code></pre>
+<pre><code>## ++++ repetition: 2</code></pre>
+<pre><code>## +++ training on cv fold: 2</code></pre>
+<pre><code>## ++++ repetition: 1</code></pre>
+<pre><code>## ++++ repetition: 2</code></pre>
+<pre><code>## +++ training on cv fold: 3</code></pre>
+<pre><code>## ++++ repetition: 1</code></pre>
+<pre><code>## ++++ repetition: 2</code></pre>
+<pre><code>## +++ training on cv fold: 4</code></pre>
+<pre><code>## ++++ repetition: 1</code></pre>
+<pre><code>## ++++ repetition: 2</code></pre>
+<pre><code>## +++ training on cv fold: 5</code></pre>
+<pre><code>## ++++ repetition: 1</code></pre>
+<pre><code>## ++++ repetition: 2</code></pre>
+<pre><code>## + finished train.model in   20 s</code></pre>
 <p>The models are saved in the <code>model_list</code> slot of the <code>siamcat</code> object. This slot stores objects of <code>model_list-class</code>. To get the complete list out of the SIAMCAT object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.model_list.html">get.model_list</a></span>(siamcat)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/model_list-methods.html">model_list</a></span>(siamcat)</code></pre></div>
 <p>This slot also stores information on which method was used to construct the model:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/get.model.type.html">get.model.type</a></span>(siamcat)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/model_type-methods.html">model_type</a></span>(siamcat)</code></pre></div>
 <pre><code>## [1] "lasso"</code></pre>
 <p>Models can also be easily accessed:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.models.html">get.models</a></span>(siamcat)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/models-methods.html">models</a></span>(siamcat)
 models[[<span class="dv">1</span>]]</code></pre></div>
 <pre><code>## Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
 ## Trained on: task.id = data; obs = 112; features = 207
@@ -241,15 +270,15 @@ models[[<span class="dv">1</span>]]</code></pre></div>
 <a href="#make-predictions" class="anchor"></a>Make Predictions</h2>
 <p>Using the data-split and the models trained in previous step, we can use the function <code>make.predictions</code> in order to apply the models on the test instances in the data-split. The predictions will be saved in the <code>pred_matrix</code> slot of the <code>siamcat</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">0</span>)
-pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.pred_matrix.html">get.pred_matrix</a></span>(siamcat)
+pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pred_matrix-methods.html">pred_matrix</a></span>(siamcat)
 <span class="kw">head</span>(pred_matrix)</code></pre></div>
 <pre><code>##                        CV_rep1     CV_rep2
-## CCIS27304052ST-3-0 -0.71526641 -0.80799227
-## CCIS15794887ST-4-0 -0.66482181 -0.68612534
-## CCIS74726977ST-3-0 -0.06644352 -0.09444828
-## CCIS16561622ST-4-0 -0.60546240 -0.59851009
-## CCIS79210440ST-3-0 -0.68895319 -0.48263800
-## CCIS82507866ST-3-0 -0.79726761 -0.52797149</code></pre>
+## CCIS27304052ST-3-0 -0.81060717 -0.34761606
+## CCIS15794887ST-4-0 -0.54370743 -0.55996998
+## CCIS74726977ST-3-0 -0.64686400  0.11864130
+## CCIS16561622ST-4-0 -0.01522667  0.09140268
+## CCIS79210440ST-3-0 -0.84750398 -0.65432545
+## CCIS82507866ST-3-0 -0.65597079 -0.96199085</code></pre>
 </div>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level1">
@@ -257,8 +286,8 @@ pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 <a href="#model-evaluation-and-interpretation" class="anchor"></a>Model Evaluation and Interpretation</h1>
 <p>In the final part, we want to find out how well the model performed and which microbial markers had been selected in the model. In order to do so, we first calculate how well the predictions fit the real data using the function <code>evaluate.predictions</code>. This function calculates the Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR) Curve for each resampled cross-validation run. The results of the evaluation will be stored in the <code>eval_data</code> slot of the <code>siamcat</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat, <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
-<pre><code>## + starting evaluate.predictions
-## + finished evaluate.predictions in 12.316 s</code></pre>
+<pre><code>## + starting evaluate.predictions</code></pre>
+<pre><code>## + finished evaluate.predictions in 12.7 s</code></pre>
 <div id="evaluation-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#evaluation-plot" class="anchor"></a>Evaluation plot</h2>
@@ -267,24 +296,34 @@ pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 <span class="kw"><a href="../reference/model.evaluation.plot.html">model.evaluation.plot</a></span>(siamcat,<span class="st">'eval_plot.pdf'</span>,<span class="dt">verbose =</span> <span class="dv">2</span>)</code></pre></div>
 <p>Instead of the pdf-output, we can also access the evaluation data in the <code>siamcat</code> object directly and plot e.g. the ROC-Curves:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plot ROC Curves</span>
-<span class="kw">plot</span>(<span class="ot">NULL</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),
-     <span class="dt">xlab=</span><span class="st">'False positive rate'</span>, <span class="dt">ylab=</span><span class="st">'True positive rate'</span>, <span class="dt">type=</span><span class="st">'n'</span>)
+<span class="kw">plot</span>(
+    <span class="ot">NULL</span>,
+    <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),
+    <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),
+    <span class="dt">xlab =</span> <span class="st">'False positive rate'</span>,
+    <span class="dt">ylab =</span> <span class="st">'True positive rate'</span>,
+    <span class="dt">type =</span> <span class="st">'n'</span>
+)
 <span class="kw">title</span>(<span class="st">'ROC curve for the model'</span>)
-<span class="kw">abline</span>(<span class="dt">a=</span><span class="dv">0</span>, <span class="dt">b=</span><span class="dv">1</span>, <span class="dt">lty=</span><span class="dv">3</span>)
+<span class="kw">abline</span>(<span class="dt">a =</span> <span class="dv">0</span>, <span class="dt">b =</span> <span class="dv">1</span>, <span class="dt">lty =</span> <span class="dv">3</span>)
 <span class="co"># for each resampled CV run</span>
-eval_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get.eval_data.html">get.eval_data</a></span>(siamcat)
+eval_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/eval_data-methods.html">eval_data</a></span>(siamcat)
 <span class="cf">for</span> (r <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(eval_data<span class="op">$</span>roc.all)) {
-  roc.c =<span class="st"> </span>eval_data<span class="op">$</span>roc.all[[r]]
-  <span class="kw">lines</span>(<span class="dv">1</span><span class="op">-</span>roc.c<span class="op">$</span>specificities, roc.c<span class="op">$</span>sensitivities, <span class="dt">col=</span><span class="kw">gray</span>(<span class="kw">runif</span>(<span class="dv">1</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>)))
+    roc.c =<span class="st"> </span>eval_data<span class="op">$</span>roc.all[[r]]
+    <span class="kw">lines</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>roc.c<span class="op">$</span>specificities, roc.c<span class="op">$</span>sensitivities, 
+        <span class="dt">col =</span> <span class="kw">gray</span>(<span class="kw">runif</span>(<span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">0.8</span>)))
 }
 <span class="co"># mean ROC curve</span>
 roc.summ =<span class="st"> </span>eval_data<span class="op">$</span>roc.average[[<span class="dv">1</span>]]
-<span class="kw">lines</span>(<span class="dv">1</span><span class="op">-</span>roc.summ<span class="op">$</span>specificities, roc.summ<span class="op">$</span>sensitivities, <span class="dt">col=</span><span class="st">'black'</span>, <span class="dt">lwd=</span><span class="dv">2</span>)
+<span class="kw">lines</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>roc.summ<span class="op">$</span>specificities,
+    roc.summ<span class="op">$</span>sensitivities,
+    <span class="dt">col =</span> <span class="st">'black'</span>,
+    <span class="dt">lwd =</span> <span class="dv">2</span>)
 <span class="co"># plot CI</span>
 x =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">rownames</span>(roc.summ<span class="op">$</span>ci))
-yl =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="dv">1</span>]
-yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="dv">3</span>]
-<span class="kw">polygon</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">c</span>(x, <span class="kw">rev</span>(x)), <span class="kw">c</span>(yl, <span class="kw">rev</span>(yu)), <span class="dt">col=</span><span class="st">'#88888844'</span> , <span class="dt">border=</span><span class="ot">NA</span>)</code></pre></div>
+yl =<span class="st"> </span>roc.summ<span class="op">$</span>ci[, <span class="dv">1</span>]
+yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[, <span class="dv">3</span>]
+<span class="kw">polygon</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">c</span>(x, <span class="kw">rev</span>(x)), <span class="kw">c</span>(yl, <span class="kw">rev</span>(yu)), <span class="dt">col =</span> <span class="st">'#88888844'</span> , <span class="dt">border =</span> <span class="ot">NA</span>)</code></pre></div>
 <p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="interpretation-plot" class="section level2">
@@ -298,14 +337,17 @@ yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="d
 </ul>
 <p>The function again produces a pdf-file as output and is thus not run here. An example of how it can be used can be found below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Not run here, since the function produces a pdf-file as output
-<span class="kw"><a href="../reference/model.interpretation.plot.html">model.interpretation.plot</a></span>(siamcat,
-                        <span class="dt">fn.plot=</span><span class="st">'interpretation.pdf'</span>,
-                        <span class="dt">consens.thres =</span> <span class="fl">0.5</span>,
-                        <span class="dt">norm.models =</span> <span class="ot">TRUE</span>,
-                        <span class="dt">limits=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>,<span class="dv">3</span>),
-                        <span class="dt">heatmap.type =</span> <span class="st">'zscore'</span>,
-                        <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
+<span class="kw"><a href="../reference/model.interpretation.plot.html">model.interpretation.plot</a></span>(
+    siamcat,
+    <span class="dt">fn.plot =</span> <span class="st">'interpretation.pdf'</span>,
+    <span class="dt">consens.thres =</span> <span class="fl">0.5</span>,
+    <span class="dt">norm.models =</span> <span class="ot">TRUE</span>,
+    <span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>),
+    <span class="dt">heatmap.type =</span> <span class="st">'zscore'</span>,
+    <span class="dt">verbose =</span> <span class="dv">2</span>
+)</code></pre></div>
 <p>Alternatively, we show here only the z-score heatmap for the top selected features:</p>
+<pre><code>## + model.interpretation.select.features</code></pre>
 <p><img src="SIAMCAT_vignette_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -336,24 +378,25 @@ yu =<span class="st"> </span>roc.summ<span class="op">$</span>ci[,<span class="d
 ##  [7] stats4_3.4.4        beanplot_1.2        LiblineaR_2.10-8   
 ## [10] yaml_2.1.18         mgcv_1.8-23         XML_3.98-1.10      
 ## [13] survival_2.41-3     rlang_0.2.0         pillar_1.2.1       
-## [16] RColorBrewer_1.1-2  BiocGenerics_0.24.0 foreach_1.4.4      
-## [19] plyr_1.8.4          stringr_1.3.0       zlibbioc_1.24.0    
-## [22] Biostrings_2.46.0   munsell_0.4.3       gtable_0.2.0       
-## [25] codetools_0.2-15    evaluate_0.10.1     Biobase_2.38.0     
-## [28] knitr_1.20          parallelMap_1.3     permute_0.9-4      
-## [31] IRanges_2.12.0      PRROC_1.3           biomformat_1.6.0   
-## [34] parallel_3.4.4      Rcpp_0.12.16        scales_0.5.0       
-## [37] backports_1.1.2     checkmate_1.8.5     vegan_2.4-6        
-## [40] S4Vectors_0.16.0    jsonlite_1.5        XVector_0.18.0     
-## [43] gridExtra_2.3       ggplot2_2.2.1       digest_0.6.15      
-## [46] stringi_1.1.7       BBmisc_1.11         grid_3.4.4         
-## [49] rprojroot_1.3-2     ade4_1.7-10         tools_3.4.4        
-## [52] magrittr_1.5        glmnet_2.0-13       lazyeval_0.2.1     
-## [55] tibble_1.4.2        cluster_2.0.6       ape_5.0            
-## [58] pkgconfig_2.0.1     gridBase_0.4-7      MASS_7.3-49        
-## [61] Matrix_1.2-12       data.table_1.10.4-3 pROC_1.11.0        
-## [64] rmarkdown_1.9       iterators_1.0.9     multtest_2.34.0    
-## [67] igraph_1.2.1        nlme_3.1-131.1      compiler_3.4.4</code></pre>
+## [16] RColorBrewer_1.1-2  BiocGenerics_0.24.0 matrixStats_0.53.1 
+## [19] foreach_1.4.4       plyr_1.8.4          stringr_1.3.0      
+## [22] zlibbioc_1.24.0     Biostrings_2.46.0   munsell_0.4.3      
+## [25] gtable_0.2.0        codetools_0.2-15    evaluate_0.10.1    
+## [28] Biobase_2.38.0      knitr_1.20          parallelMap_1.3    
+## [31] permute_0.9-4       IRanges_2.12.0      PRROC_1.3          
+## [34] biomformat_1.6.0    parallel_3.4.4      Rcpp_0.12.16       
+## [37] scales_0.5.0        backports_1.1.2     checkmate_1.8.5    
+## [40] vegan_2.4-6         S4Vectors_0.16.0    jsonlite_1.5       
+## [43] XVector_0.18.0      gridExtra_2.3       ggplot2_2.2.1      
+## [46] digest_0.6.15       stringi_1.1.7       BBmisc_1.11        
+## [49] grid_3.4.4          rprojroot_1.3-2     ade4_1.7-10        
+## [52] tools_3.4.4         magrittr_1.5        glmnet_2.0-16      
+## [55] lazyeval_0.2.1      tibble_1.4.2        cluster_2.0.6      
+## [58] ape_5.0             pkgconfig_2.0.1     gridBase_0.4-7     
+## [61] MASS_7.3-49         Matrix_1.2-12       data.table_1.10.4-3
+## [64] pROC_1.11.0         rmarkdown_1.9       iterators_1.0.9    
+## [67] multtest_2.34.0     igraph_1.2.1        nlme_3.1-137       
+## [70] compiler_3.4.4</code></pre>
 </div>
 </div>
   </div>

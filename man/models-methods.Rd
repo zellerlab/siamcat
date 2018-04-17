@@ -6,7 +6,7 @@
 \alias{models,ANY-method}
 \title{Retrieve list of models from object.}
 \usage{
-models(siamcat, errorIfNULL=TRUE)
+models(siamcat)
 
 \S4method{models}{ANY}(siamcat)
 }

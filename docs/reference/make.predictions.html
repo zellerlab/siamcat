@@ -92,12 +92,12 @@
 
     
     <p>This function takes a <a href='siamcat-class.html'>siamcat-class</a>-object containing
-       a model trained by <a href='train.model.html'>train.model</a> and performs predictions on
-       a given test-set.</p>
+    a model trained by <a href='train.model.html'>train.model</a> and performs predictions on
+    a given test-set.</p>
     
 
-    <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>siamcat</span>, <span class='kw'>siamcat.holdout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>normalize.holdout</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>make.predictions</span>(<span class='no'>siamcat</span>, <span class='kw'>siamcat.holdout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <span class='kw'>normalize.holdout</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -119,37 +119,38 @@ normalization parameters in <code>siamcat</code>?, defaults to <code>TRUE</code>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
-for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information,
-defaults to <code>1</code></p></td>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code></p>
+<p>for only information about progress and success, <code>2</code> for normal
+    level of information and <code>3</code> for full debug information,
+    defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the slot <code>pred_matrix</code>
-       filled or a matrix containing the predictions for the holdout set</p>
+    filled or a matrix containing the predictions for the holdout set</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This functions uses the model in the <code>model_list</code>-slot of the
-       <code>siamcat</code> object to make predictions on a given test set. The
-       test set can either consist of the test instances in the cross-
-       validation, saved in the <code>data_split</code>-slot of the same
-       <code>siamcat</code> object, or a completely external feature set, given in
-       the form of another <code>siamcat</code> object (<code>siamcat.holdout</code>).</p>
+    <code>siamcat</code> object to make predictions on a given test set. The
+    test set can either consist of the test instances in the cross-
+    validation, saved in the <code>data_split</code>-slot of the same
+    <code>siamcat</code> object, or a completely external feature set, given in
+    the form of another <code>siamcat</code> object (<code>siamcat.holdout</code>).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># Simple example</span>
- <span class='no'>siamcat.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
-#&gt; Made predictions successfully.</div><div class='input'>
- # Predictions on a holdout-set
- </div><span class='co'># NOT RUN {</span>
-<span class='no'>pred.mat</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat.trained</span>, <span class='no'>siamcat.holdout</span>, <span class='kw'>normalize.holdout</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='co'># }</span></pre>
+    <pre class="examples"><div class='input'>    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># Simple example</span>
+    <span class='no'>siamcat.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt; <span class='error'>Error in label$label: $ operator not defined for this S4 class</span></div><div class='input'>
+    # Predictions on a holdout-set
+    </div><span class='co'># NOT RUN {</span>
+<span class='no'>pred.mat</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat.trained</span>, <span class='no'>siamcat.holdout</span>,
+    <span class='kw'>normalize.holdout</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

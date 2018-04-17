@@ -4,7 +4,7 @@
 \alias{filter.features}
 \title{Perform unsupervised feature filtering.}
 \usage{
-filter.features <- function(siamcat, filter.method = "abundance",
+filter.features(siamcat, filter.method = "abundance",
     cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)
 }
 \arguments{
@@ -62,6 +62,7 @@ This function filters the features in a \link{siamcat-class}
 siamcat_filtered <- filter.features(siamcat_example,
     filter.method='abundance',
     cutoff=1e-03)
+    
 }
 \keyword{SIAMCAT}
 \keyword{filter.features}

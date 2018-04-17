@@ -7,7 +7,7 @@
 \alias{meta,sample_data-method}
 \title{Retrieve a \link[phyloseq]{sample_data-class} object from object.}
 \usage{
-meta(siamcat, errorIfNULL=TRUE)
+meta(siamcat)
 
 \S4method{meta}{ANY}(siamcat)
 

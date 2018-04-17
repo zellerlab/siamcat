@@ -103,19 +103,11 @@
     <dt><code>label</code></dt><dd><p>an object of class <a href='label-class.html'>label-class</a></p></dd>
     <dt><code>orig_feat</code></dt><dd><p>an object of class <a href='http://www.rdocumentation.org/packages/phyloseq/topics/otu_table-class'>otu_table-class</a></p></dd>
     <dt><code>data_split</code></dt><dd><p>an object of class <a href='data_split-class.html'>data_split-class</a></p></dd>
-    <dt><code>norm_param</code></dt><dd><p>a list of normalzation parameters, see <a href='normalize.features.html'>normalize.features</a> for more details</p></dd>
+    <dt><code>norm_param</code></dt><dd><p>a list of normalzation parameters, see
+<a href='normalize.features.html'>normalize.features</a> for more details</p></dd>
     <dt><code>model_list</code></dt><dd><p>an object of class <a href='model_list-class.html'>model_list-class</a></p></dd>
-    <dt><code>eval_data</code></dt><dd><p>list containing <ul>
-<li><p><code>$roc.average</code> average ROC-curve across repeats or a single ROC-curve on complete dataset;</p></li>
-<li><p><code>$auc.average</code> AUC value for the average ROC-curve;</p></li>
-<li><p><code>$ev.list</code> list of <code>length(num.folds)</code>, containing for different decision thresholds the number of false positives, false negatives, true negatives, and true positives;</p></li>
-<li><p><code>$pr.list</code> list of <code>length(num.folds)</code>, containing the positive predictive value (precision) and true positive rate (recall) values used to plot the PR curves;</p></li>
-</ul>. If <code>prediction</code> had more than one column, i.e. if the models has been trained with several repeats, the function will additonally return <ul>
-<li><p><code>$roc.all</code> list of roc objects (see <a href='http://www.rdocumentation.org/packages/pROC/topics/roc'>roc</a>) for every repeat;</p></li>
-<li><p><code>$aucspr</code> vector of AUC values for the PR curves for every repeat;</p></li>
-<li><p><code>$auc.all</code> vector of AUC values for the ROC curves for every repeat</p></li>
-</ul></p></dd>
-    <dt><code>pred_matrix</code></dt><dd><p>a matrix with predictions made by <a href='make.predictions.html'>make.predictions</a> function</p></dd>
+    <dt><code>eval_data</code></dt><dd><p>an object of class <a href='eval_data-class.html'>eval_data-class</a></p></dd>
+    <dt><code>pred_matrix</code></dt><dd><p>an object of class <a href='pred_matrix-class.html'>pred_matrix-class</a></p></dd>
 </dl>
     
 

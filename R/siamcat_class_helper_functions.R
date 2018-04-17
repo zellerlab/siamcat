@@ -107,9 +107,8 @@ setMethod("show", "siamcat", function(object) {
     if (length(model_type(object))) {
         cat(paste(
             "model_list()            model_list:       ",
-            length(models(object), model_type(object),
-                "models", sep = " ")
-        ), fill = TRUE)
+            length(models(object)) , model_type(object),
+                "models", sep = " "), fill = TRUE)
     }
     if (nrow(pred_matrix(object))) {
         cat(

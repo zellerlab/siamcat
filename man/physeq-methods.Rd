@@ -7,7 +7,7 @@
 \alias{physeq,phyloseq-method}
 \title{Retrieve a \link[phyloseq]{phyloseq-class} object from object.}
 \usage{
-physeq(siamcat, errorIfNULL=TRUE)
+physeq(siamcat)
 
 \S4method{physeq}{ANY}(siamcat)
 

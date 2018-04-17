@@ -7,7 +7,7 @@
 \alias{pred_matrix,matrix-method}
 \title{Retrieve pred_matrix from object.}
 \usage{
-pred_matrix(siamcat, errorIfNULL=TRUE)
+pred_matrix(siamcat)
 
 \S4method{pred_matrix}{ANY}(siamcat)
 

@@ -91,15 +91,16 @@
     </div>
 
     
-    <p>This file reads in the tsv file with labels and converts it into
- a label object.</p>
-<p>First row is expected to be <code>#BINARY:1=[label for cases];-1=[label for controls]</code>.
+    <p>This file reads in the tsv file with labels and converts it
+into a label object.</p>
+<p>First row is expected to be <code>#BINARY:1=[label for cases];
+-1=[label for controls]</code>.
 Second row should contain the sample identifiers as tab-separated list
 (consistent with feature and metadata).</p>
 <p>Third row is expected to contain the actual class labels (tab-separated):
 <code>1</code> for each case and <code>-1</code> for each control.</p>
 <p>Note: Labels can take other numeric values (but not characters or strings);
-importantly, the label for cases has to be greater than the one for controls.</p>
+importantly, the label for cases has to be greater than the one for controls</p>
     
 
     <pre class="usage"><span class='fu'>read.labels</span>(<span class='no'>fn.in.label</span>)</pre>
@@ -116,23 +117,28 @@ importantly, the label for cases has to be greater than the one for controls.</p
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>label object containing several entries:</p><ul>
-<li><p><code>$label</code> named vector containing the numerical labels from the file;</p></li>
+<li><p><code>$label</code> named vector containing the numerical labels from the
+file;</p></li>
 <li><p><code>$header</code> first row of the label file;</p></li>
 <li><p><code>$info</code> information about the type of label (e.g. <code>BINARY</code>);</p></li>
 <li><p><code>$positive.lab</code> numerical label for controls, e.g. <code>-1</code>;</p></li>
 <li><p><code>$negative.lab</code> numerical label for cases, e.g. <code>1</code>;</p></li>
-<li><p><code>$n.idx</code> logical vector of labels (<code>TRUE</code> for controls, <code>FALSE</code> otherwise);</p></li>
+<li><p><code>$n.idx</code> logical vector of labels (<code>TRUE</code> for controls,
+<code>FALSE</code> otherwise);</p></li>
 <li><p><code>$n.lab</code> label for controls, e.g. <code>healthy</code>;</p></li>
-<li><p><code>$p.idx</code> logical vector of labels (<code>TRUE</code> for cases, <code>FALSE</code> otherwise);</p></li>
+<li><p><code>$p.idx</code> logical vector of labels (<code>TRUE</code> for cases,
+<code>FALSE</code> otherwise);</p></li>
 <li><p><code>$p.lab</code> label for cases, e.g. <code>cancer</code></p></li>
 </ul>
 
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='co'># run with example data</span>
-<span class='no'>fn.label</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv"</span>,
- <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"SIAMCAT"</span>)
+    <pre class="examples"><div class='input'>    <span class='co'># run with example data</span>
+<span class='no'>fn.label</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>'extdata'</span>,
+<span class='st'>'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv'</span>,
+    <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>'SIAMCAT'</span>)
+
 <span class='no'>labels</span> <span class='kw'>&lt;-</span> <span class='fu'>read.labels</span>(<span class='no'>fn.label</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
