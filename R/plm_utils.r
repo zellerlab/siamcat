@@ -20,7 +20,8 @@ train.plm <-
         verbose = 1) {
         ## 1) Define the task Specify the type of analysis (e.g. classification)
         ## and provide data and response variable assert that the label for the
-        ##first patient is always the same in order for lasso_ll to work correctly
+        ## first patient is always the same in order for lasso_ll to work
+        ## correctly
         if (data$label[1] != neg.lab) {
             data <- data[c(which(data$label == neg.lab)[1],
                 c(seq_len(nrow(data)))[-which(data$label == neg.lab)[1]]), ]
@@ -101,7 +102,8 @@ train.plm <-
             hyperPars <- tuneParams(
                 learner = lrn,
                 task = task,
-                resampling = makeResampleDesc("CV", iters = 5L, stratify = TRUE),
+                resampling = makeResampleDesc("CV", iters = 5L, 
+                                                stratify = TRUE),
                 par.set = parameters,
                 control = makeTuneControlGrid(resolution = 10L),
                 measures = measure,
@@ -127,7 +129,8 @@ train.plm <-
                 (-1) * as.numeric(coef)  ### check!!!
         } else if (cl == "classif.LiblineaRL1LogReg") {
             model$feat.weights <-
-                model$learner.model$W[-which(colnames(model$learner.model$W) == "Bias")]
+                model$learner.model$W[
+                    -which(colnames(model$learner.model$W) == "Bias")]
         } else if (cl == "classif.randomForest") {
             model$feat.weights <- model$learner.model$importance
         }
@@ -144,7 +147,8 @@ get.optimal.lambda.for.glmnet <-
         min.nonzero.coeff) {
         # get lambdas that fullfill the minimum nonzero coefficients criterion
         lambdas <-
-            trained.model$learner.model$glmnet.fit$lambda[which(trained.model$learner.model$nzero >= min.nonzero.coeff)]
+            trained.model$learner.model$glmnet.fit$lambda[
+                which(trained.model$learner.model$nzero >= min.nonzero.coeff)]
         # get performance on training set for all those lambdas in trace
         performances <-
             vapply(
@@ -155,7 +159,8 @@ get.optimal.lambda.for.glmnet <-
                     if (is.null(model.transformed$learner$par.vals$s)) {
                         model.transformed$learner.model$lambda.1se <- lambda
                     } else {
-                        model.transformed$learner.model[[model.transformed$learner$par.vals$s]] <-
+                        model.transformed$learner.model[[
+                            model.transformed$learner$par.vals$s]] <-
                             lambda
                     }
                     pred.temp <- predict(model.transformed, task)
@@ -170,9 +175,11 @@ get.optimal.lambda.for.glmnet <-
         # get optimal lambda in depence of the performance measure
         if (length(perf.measure) == 1) {
             if (perf.measure[[1]]$minimize == TRUE) {
-                opt.lambda <- lambdas[which(performances == min(performances))[1]]
+                opt.lambda <- lambdas[which(performances == 
+                        min(performances))[1]]
             } else {
-                opt.lambda <- lambdas[which(performances == max(performances))[1]]
+                opt.lambda <- lambdas[which(performances == 
+                        max(performances))[1]]
             }
         } else {
             opt.idx <- c()

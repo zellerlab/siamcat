@@ -4,52 +4,58 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Evaluate prediction results
+#' 
 #' @description This function takes the correct labels and predictions for all
-#'      samples and evaluates the results using the \itemize{
-#'        \item Area Under the Receiver Operating Characteristic (ROC)
-#'              Curve (AU-ROC)
-#'        \item and the Precision-Recall Curve (PR)
-#'      }
-#'      as metric. Predictions can be supplied either for a single case or as
-#'      matrix after resampling of the dataset.
+#'     samples and evaluates the results using the \itemize{
+#'         \item Area Under the Receiver Operating Characteristic (ROC)
+#'             Curve (AU-ROC)
+#'         \item and the Precision-Recall Curve (PR)}
+#'     as metric. Predictions can be supplied either for a single case or as
+#'     matrix after resampling of the dataset.
 #'
-#'      Prediction results are usually produced with the function
-#'      \link{make.predictions}.
+#'     Prediction results are usually produced with the function
+#'     \link{make.predictions}.
+#'     
 #' @param siamcat object of class \link{siamcat-class}
+#' 
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'      for only information about progress and success, \code{2} for normal
-#'      level of information and \code{3} for full debug information,
-#'      defaults to \code{1}
+#'     for only information about progress and success, \code{2} for normal
+#'     level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
+#'     
 #' @keywords SIAMCAT evaluate.predictions
+#' 
 #' @details This functions calculates for the predictions in the
-#'      \code{pred_matrix} -slot of the \link{siamcat-class}-object several
-#'      metrices. The Area Under the Receiver Operating Characteristic (ROC)
-#'      Curve (AU-ROC) and the Precision-Recall Curve will be evaluated and
-#'      the results will be saved in the \code{eval_data}-slot of the
-#'      supplied \link{siamcat-class}-object. The \code{eval_data}-slot
-#'      contains a list with several entries: \itemize{
-#'        \item \code{$roc.average} average ROC-curve across repeats or a
-#'              single ROC-curve on complete dataset;
-#'        \item \code{$auc.average} AUC value for the average ROC-curve;
-#'        \item \code{$ev.list} list of \code{length(num.folds)}, containing
-#'              for different decision thresholds the number of false
-#'              positives, false negatives, true negatives, and
-#'              true positives;
-#'        \item \code{$pr.list} list of \code{length(num.folds)}, containing
-#'              the positive predictive value (precision) and true positive
-#'              rate (recall) values used to plot the PR curves.
-#' }      For the case of repeated cross-validation, the function will
-#'      additonally return \itemize{
-#'        \item \code{$roc.all} list of roc objects (see \link[pROC]{roc})
-#'              for every repeat;
-#'        \item \code{$aucspr} vector of AUC values for the PR curves
-#'              for every repeat;
-#'        \item \code{$auc.all} vector of AUC values for the ROC curves
-#'              for every repeat.
-#'}
+#'     \code{pred_matrix} -slot of the \link{siamcat-class}-object several
+#'     metrices. The Area Under the Receiver Operating Characteristic (ROC)
+#'     Curve (AU-ROC) and the Precision-Recall Curve will be evaluated and
+#'     the results will be saved in the \code{eval_data}-slot of the
+#'     supplied \link{siamcat-class}-object. The \code{eval_data}-slot
+#'     contains a list with several entries: \itemize{
+#'         \item \code{$roc.average} average ROC-curve across repeats or a
+#'                 single ROC-curve on complete dataset;
+#'         \item \code{$auc.average} AUC value for the average ROC-curve;
+#'         \item \code{$ev.list} list of \code{length(num.folds)}, containing
+#'                 for different decision thresholds the number of false
+#'                 positives, false negatives, true negatives, and
+#'                 true positives;
+#'         \item \code{$pr.list} list of \code{length(num.folds)}, containing
+#'                 the positive predictive value (precision) and true positive
+#'                 rate (recall) values used to plot the PR curves.}
+#'     For the case of repeated cross-validation, the function will
+#'     additonally return \itemize{
+#'         \item \code{$roc.all} list of roc objects (see \link[pROC]{roc})
+#'                 for every repeat;
+#'         \item \code{$aucspr} vector of AUC values for the PR curves
+#'                 for every repeat;
+#'         \item \code{$auc.all} vector of AUC values for the ROC curves
+#'                 for every repeat.}
+#'
 #' @export
+#' 
 #' @return object of class \link{siamcat-class} with the
-#'       slot \code{eval_data} filled
+#'     slot \code{eval_data} filled
+#'     
 #' @examples
 #'
 #'     data(siamcat_example)
@@ -175,7 +181,8 @@ evaluate.classifier <-
         dim(thr) <- NULL
         thr <- sort(unique(thr))
         thr <-
-            rev(c(min(thr) - 1, (thr[-1] + thr[-length(thr)]) / 2, max(thr) + 1))
+            rev(c(min(thr) - 1, (thr[-1] + thr[-length(thr)]) / 2, 
+                max(thr) + 1))
         if (is.null(dim(predictions))) {
             # assuming that a single model was applied to predict the data set
             stopifnot(length(test.label) == length(predictions))

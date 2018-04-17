@@ -5,9 +5,9 @@
 \title{Model Interpretation Plot}
 \usage{
 model.interpretation.plot(siamcat, fn.plot, color.scheme = "BrBG",
-  consens.thres = 0.5, heatmap.type = c("zscore", "fc"),
-  norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-06,
-  max.show = 50, verbose = 1)
+consens.thres = 0.5,heatmap.type = c("zscore", "fc"), 
+norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-06, 
+max.show = 50, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -47,8 +47,8 @@ Does not return anything, but produces the model interpretion plot.
 }
 \description{
 Produces a plot for model interpretation, displaying feature
-     weights, robustness of feature weights, and features scores across
-     patients.
+    weights, robustness of feature weights, and features scores across
+    patients.
 }
 \details{
 Produces a plot consisting of \itemize{

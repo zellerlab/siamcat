@@ -9,6 +9,7 @@
 #'     metadata. Statistical testing is performed with Fisher's exact test or
 #'     Wilcoxon test, while associations are visualized either as barplot or Q-Q
 #'     plot, depending on the type of metadata.
+#' @usage check.confounders(siamcat, fn.plot, verbose = 1) 
 #' @param siamcat an object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param verbose control output: \code{0} for no output at all, \code{1} for
@@ -29,7 +30,9 @@
 #'     check.confounders(siamcat_example, './conf_plot.pdf')
 #'
 #'     # Additional information with verbose
-#'     \dontrun{check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)}
+#'     \dontrun{
+#'     check.confounders(siamcat_example, './conf_plot.pdf', 
+#'     verbose=2)}
 check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     if (verbose > 1)
         message("+ starting check.confounders")
@@ -58,7 +61,8 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
     
     hmapcolors <- colorRampPalette(brewer.pal(10, "RdYlGn"))
     color.scheme <-
-        rev(colorRampPalette(brewer.pal(brewer.pal.info["BrBG", "maxcolors"], "BrBG"))(100))
+        rev(colorRampPalette(brewer.pal(brewer.pal.info["BrBG", "maxcolors"], 
+            "BrBG"))(100))
     
     for (m in seq_len(ncol(meta(siamcat)))) {
         mname <- gsub("[_.-]", " ", colnames(meta(siamcat))[m])

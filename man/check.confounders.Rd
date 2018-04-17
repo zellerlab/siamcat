@@ -37,7 +37,9 @@ This function checks for associations between class labels and
     check.confounders(siamcat_example, './conf_plot.pdf')
 
     # Additional information with verbose
-    \dontrun{check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)}
+    \dontrun{
+    check.confounders(siamcat_example, './conf_plot.pdf', 
+    verbose=2)}
 }
 \keyword{SIAMCAT}
 \keyword{check.confounders}

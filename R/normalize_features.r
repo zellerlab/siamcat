@@ -4,53 +4,63 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Perform feature normalization
+#' 
 #' @description This function performs feature normalization according to user-
 #'     specified parameters.
+#'     
+#' @usage normalize.features(siamcat, 
+#' norm.method = c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
+#' norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1, n.p = 2, norm.margin = 1),
+#' verbose = 1)
+#'     
 #' @param siamcat an object of class \link{siamcat-class}
+#' 
 #' @param norm.method string, normalization method, can be one of these:
 #'     '\code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr')}
+#'     
 #' @param norm.param list, specifying the parameters of the different
 #'     normalization methods, see details for more information
+#'     
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'      for only information about progress and success, \code{2} for normal
-#'      level of information and \code{3} for full debug information,
-#'      defaults to \code{1}
+#'     for only information about progress and success, \code{2} for normal
+#'     level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
+#'     
 #' @details There are five different normalization methods available:
 #' \itemize{
 #'     \item \code{'rank.unit'} converts features to ranks and normalizes each
-#'      column (=sample) by the square root of the sum of ranks
+#'     column (=sample) by the square root of the sum of ranks
 #'     \item \code{'rank.std'} converts features to ranks and applies z-score
-#'      standardization
-#'     \item \code{'log.clr'} centered log-ratio transformation (with the addition
-#'      of pseudocounts)
+#'     standardization
+#'     \item \code{'log.clr'} centered log-ratio transformation (with the 
+#'     addition of pseudocounts)
 #'     \item \code{'log.std'} log-transforms features (after addition of
-#'      pseudocounts) and applies z-score standardization
+#'     pseudocounts) and applies z-score standardization
 #'     \item \code{'log.unit'} log-transforms features (after addition of
-#'      pseudocounts) and normalizes by features or samples with different
-#'      norms
-#' }
+#'     pseudocounts) and normalizes by features or samples with different
+#'     norms}
 #'
 #' The list entries in \code{'norm.param'} specify the normalzation parameters,
 #' which are dependant on the normalization method of choice:
 #' \itemize{
 #'     \item \code{'rank.unit'} does not require any other parameters
 #'     \item \code{'rank.std'} requires \code{sd.min.q}, quantile of the
-#'      distribution of standard deviations of all features that will be added
-#'      to the denominator during standardization in order to avoid
-#'      underestimation of the standard deviation, defaults to 0.1
+#'     distribution of standard deviations of all features that will be added
+#'     to the denominator during standardization in order to avoid
+#'     underestimation of the standard deviation, defaults to 0.1
 #'     \item \code{'clr'} requires \code{log.n0}, which is the pseudocount to be
-#'      added before log-transformation, defaults to \code{NULL} leading to
-#'      the estimation of \code{log.n0} from the data
+#'     added before log-transformation, defaults to \code{NULL} leading to
+#'     the estimation of \code{log.n0} from the data
 #'     \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
-#'      using the same default values
-#'     \item \code{'log.unit'} requires next to \code{log.n0} also the parameters
-#'      \code{n.p} and \code{norm.margin}. \code{n.p} specifies the vector
-#'      norm to be used, can be either \code{1} for \code{x/sum(x)} or
-#'      \code{2} for \code{x/sqrt(sum(x^2))}. The parameter \code{norm.margin}
-#'      specifies the margin over which to normalize, similarly to the
-#'      \code{apply}-syntax: Allowed values are \code{1} for normalization
-#'      over features, \code{2} over samples, and \code{3} for normalization
-#'      by the global maximum.
+#'     using the same default values
+#'     \item \code{'log.unit'} requires next to \code{log.n0} also the 
+#'     parameters \code{n.p} and \code{norm.margin}. \code{n.p} specifies the 
+#'     vector norm to be used, can be either \code{1} for \code{x/sum(x)} or
+#'     \code{2} for \code{x/sqrt(sum(x^2))}. The parameter \code{norm.margin}
+#'     specifies the margin over which to normalize, similarly to the
+#'     \code{apply}-syntax: Allowed values are \code{1} for normalization
+#'     over features, \code{2} over samples, and \code{3} for normalization
+#'     by the global maximum.
 #'}
 #'
 #' The function additionally allows to perform a frozen normalization on a
@@ -61,8 +71,11 @@
 #' z-score standardization)
 #'
 #' @keywords SIAMCAT normalize.features
+#' 
 #' @export
+#' 
 #' @return an object of class \link{siamcat-class} with normalized features
+#' 
 #' @examples
 #'     # Example data
 #'     data(siamcat_example)
@@ -75,12 +88,14 @@
 #'     norm.method='rank.unit')
 #'
 #'     # log.unit example
-#'     siamcat_norm <- normalize.features(siamcat_example, norm.method='log.unit',
-#'     norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
+#'     siamcat_norm <- normalize.features(siamcat_example, 
+#'     norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, 
+#'     norm.margin=1))
 #'
 #'     # log.std example
-#'     siamcat_norm <- normalize.features(siamcat_example, norm.method='log.std',
-#'     norm.param=list(log.n0=1e-05, sd.min.q=.1))
+#'     siamcat_norm <- normalize.features(siamcat_example, 
+#'     norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=.1))
+#'
 
 normalize.features <- function(siamcat,
     norm.method = c("rank.unit", "rank.std",
@@ -134,7 +149,8 @@ normalize.features <- function(siamcat,
                         "+++ removed ",
                         nrow(feat.red.na) -
                             nrow(feat.red),
-                        " features with no variation across samples (retaining ",
+                        " features with no variation across samples 
+                        (retaining ",
                         nrow(feat.red),
                         ")"
                     )

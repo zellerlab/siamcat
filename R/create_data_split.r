@@ -4,37 +4,56 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Split a dataset into training and a test sets.
+#' 
 #' @name create.data.split
+#' 
 #' @description This function prepares the cross-validation by splitting the
-#'     data into \code{num.folds} training and test folds for \code{num.resample}
-#'     times.
+#'     data into \code{num.folds} training and test folds for 
+#'     \code{num.resample} times.
+#'     
+#' @usage create.data.split <- (siamcat, num.folds = 2, num.resample = 1,
+#'     stratify = TRUE,inseparable = NULL, verbose = 1)
+#'   
 #' @param siamcat object of class \link{siamcat-class}
+#' 
 #' @param num.folds number of cross-validation folds (needs to be \code{>=2}),
 #'     defaults to \code{2}
+#'     
 #' @param num.resample resampling rounds (values \code{<= 1} deactivate
 #'     resampling), defaults to \code{1}
+#'     
 #' @param stratify boolean, should the splits be stratified so that an equal
 #'     proportion of classes are present in each fold?, defaults to \code{TRUE}
+#'     
 #' @param inseparable column name of metadata variable, defaults to \code{NULL}
+#' 
 #' @param verbose control output: \code{0} for no output at all, \code{1} for
 #'     only information about progress and success, \code{2} for normal level of
 #'     information and \code{3} for full debug information, defaults to \code{1}
+#'     
 #' @keywords SIAMCAT create.data.split
+#' 
 #' @return object of class \link{siamcat-class} with the \code{data_split}-slot
 #'     filled
+#'     
 #' @details This function splits the labels within a \link{siamcat-class} object
 #'     and prepares the internal cross-validation for the model training (see
 #'     \link{train.model}).
 #'
 #'     The function saves the training and test instances for the different
 #'     cross-validation folds within a list in the \code{data_split}-slot of the
-#'     \link{siamcat-class} object, which is a list with four entries: \itemize{
-#'     \item \code{num.folds} the number of cross-validation folds \item
-#'     \code{num.resample} the number of repetitions for the cross-validation
-#'     \item \code{training.folds} a list containing the indices for the training
-#'     instances \item \code{test.folds} a list containing the indices for the
+#'     \link{siamcat-class} object, which is a list with four entries: 
+#'     \itemize{
+#'     \item \code{num.folds} the number of cross-validation folds 
+#'     \item \code{num.resample} the number of repetitions for the 
+#'     cross-validation
+#'     \item \code{training.folds} a list containing the indices for the 
+#'     training instances 
+#'     \item \code{test.folds} a list containing the indices for the
 #'     test instances }
+#'     
 #' @export
+#' 
 #' @examples
 #'
 #'     data(siamcat_example)
@@ -121,8 +140,8 @@ create.data.split <-
                 stopifnot(inseparable %in% colnames(meta(siamcat)))
             } else {
                 stop(
-                    "Inseparable parameter must be either a single column index or
-                    a single column name of metadata matrix"
+                    "Inseparable parameter must be either a single column index 
+                    or a single column name of metadata matrix"
                 )
             }
             }
@@ -209,10 +228,6 @@ create.data.split <-
         }
 
 
-
-#' @title Assign folds
-#' @description Create data split from label
-#' @return vector with fold assignments
 #' @keywords internal
 assign.fold <-
     function(label,
@@ -234,8 +249,8 @@ assign.fold <-
             if (any(as.data.frame(table(label))[, 2] < num.folds)) {
                 stop(
                     "+++ Number of CV folds is too large for this data set to
-                    maintain stratification. Reduce num.folds or turn stratification
-                    off. Exiting."
+                    maintain stratification. Reduce num.folds or turn 
+                    stratificationoff. Exiting."
                 )
             }
             for (c in seq_along(classes)) {
@@ -244,19 +259,20 @@ assign.fold <-
                     length.out = length(idx)))
             }
             } else {
-                # If stratify is not TRUE, make sure that num.sample is not bigger
-                # than number.folds
+                # If stratify is not TRUE, make sure that num.sample is not 
+                # bigger than number.folds
                 if (length(label) <= num.folds) {
                     warning(
-                        "+++ num.samples is exceeding number of folds, setting CV
-                        to (k-1) unstratified CV"
+                        "+++ num.samples is exceeding number of folds, setting 
+                        CV to (k-1) unstratified CV"
                     )
                     num.folds <- length(label) - 1
                 }
                 if (!is.null(inseparable)) {
                     strata <- unique(meta[, inseparable])
                     sid <-
-                        sample(rep(seq_len(num.folds), length.out = length(strata)))
+                        sample(rep(seq_len(num.folds), length.out = 
+                                length(strata)))
                     for (s in seq_along(strata)) {
                         idx <- which(meta[, inseparable] == strata[s])
                         foldid[idx] <- sid[s]
@@ -267,9 +283,9 @@ assign.fold <-
                         length.out = length(label)))
                 }
             }
-        # make sure that for each test fold the training fold (i.e. all other folds
-        # together) contain examples from all
-        # classes except for stratified CV
+        # make sure that for each test fold the training fold (i.e. all other 
+        # folds together) contain examples from all classes except for
+        # stratified CV
         if (!stratified) {
             for (f in seq_len(num.folds)) {
                 stopifnot(all(sort(unique(label[foldid != f])) == classes))
