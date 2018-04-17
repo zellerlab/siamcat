@@ -22,6 +22,6 @@ This function is used internally by many accessors.
 \examples{
 #
 data(siamcat_example)
-access(siamcat_example, "label")
-access(siamcat_example, "model_list")
+accessSlot(siamcat_example, "label")
+accessSlot(siamcat_example, "model_list")
 }

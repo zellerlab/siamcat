@@ -21,8 +21,8 @@
 #' @export
 #' @examples #
 #' data(siamcat_example)
-#' access(siamcat_example, "label")
-#' access(siamcat_example, "model_list")
+#' accessSlot(siamcat_example, "label")
+#' accessSlot(siamcat_example, "model_list")
 accessSlot <- function(siamcat, slot) {
     if (!slot %in% slotNames(siamcat)) {
         # If slot is invalid, set out to NULL. Test later if this is an error.
