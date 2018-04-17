@@ -301,6 +301,7 @@ evaluate.classifier <-
     }
 
 # calculates the area under a curve using a trapezoid approximation
+#' @keywords internal
 evaluate.area.trapez <- function(x, y, verbose = 0) {
     if (verbose > 2)
         message("+ starting evaluate.area.trapez")
@@ -316,6 +317,7 @@ evaluate.area.trapez <- function(x, y, verbose = 0) {
 }
 
 # returns a vector of x and y values for plotting a precision-recall curve
+#' @keywords internal
 evaluate.get.pr <- function(eval, verbose = 0) {
     if (verbose > 2)
         message("+ starting evaluate.get.pr")
@@ -332,6 +334,7 @@ evaluate.get.pr <- function(eval, verbose = 0) {
 
 # calculates the area under the precision-recall curve (over the interval
 # [0, max.tpr], if specified)
+#' @keywords internal
 evaluate.calc.aupr <- function(eval,
     max.tpr = 1,
     verbose = 0) {

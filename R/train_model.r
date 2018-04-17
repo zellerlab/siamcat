@@ -217,6 +217,7 @@ train.model <- function(siamcat,
     return(siamcat)
 }
 
+#' @keywords internal
 measureAUPRC <- function(probs, truth, negative, positive) {
     pr <- pr.curve(scores.class0 = probs[which(truth == positive)],
         scores.class1 = probs[which(truth == negative)])
