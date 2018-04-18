@@ -4,8 +4,8 @@
 \alias{select.samples}
 \title{Select samples based on metadata}
 \usage{
-select.samples(siamcat, filter, allowed.set = NULL, allowed.range = NULL,
-  verbose = 1)
+select.samples(siamcat, filter, allowed.set = NULL, 
+allowed.range = NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
@@ -19,25 +19,30 @@ should be done}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information, defaults to \code{1}}
+level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
-an object of class \link{siamcat-class} with labels and metadata filtered
-       in order to contain only allowed values
+an object of class \link{siamcat-class} with labels and metadata
+        filtered in order to contain only allowed values
 }
 \description{
 This functions selects labels and metadata based on
-       a specific column in the metadata. Provided with a column-name in the
-       metadata and a range or a set of allowed values, the function will
+        a specific column in the metadata. Provided with a column-name in the
+        metadata and a range or a set of allowed values, the function will
+        filter the \link{siamcat-class} object accordingly.
 }
 \examples{
- data(siamcat_example)
- # Select all samples that fall into an Age-range between 20 and 80 years
- siamcat_selected <- select.samples(siamcat_example, 'age', allowed.range=c(20, 80))
+    data(siamcat_example)
+    # Select all samples that fall into an Age-range between 20 and 80 years
+    siamcat_selected <- select.samples(siamcat_example, 'age',
+    allowed.range=c(20, 80))
 
- # Select all samples for which information about the gender is given
- # Provide additional information with verbose
- \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender', allowed.set=c(1, 2), verbose=2)}
+    # Select all samples for which information about the gender is given
+    # Provide additional information with verbose
+    \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender',
+    allowed.set=c(1, 2), verbose=2)}
+    
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}

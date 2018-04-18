@@ -91,12 +91,12 @@
     </div>
 
     
-    <p>This function trains the a machine learning model on the training data</p>
+    <p>This function trains the a machine learning model on the
+    training data</p>
     
 
-    <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>siamcat</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
-  <span class='st'>"ridge_ll"</span>, <span class='st'>"randomForest"</span>), <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='st'>"auc"</span>),
-  <span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>param.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage">train.model(siamcat,
+    method = c("lasso","enet","ridge","lasso_ll", "ridge_ll", "randomForest")</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -108,8 +108,8 @@
     <tr>
       <th>method</th>
       <td><p>string, specifies the type of model to be trained, may be one
-of these: <code>c("lasso", "enet", "ridge", "lasso_ll", "ridge_ll",
-"randomForest")</code></p></td>
+of these: <code>c('lasso', 'enet', 'ridge', 'lasso_ll', 'ridge_ll',
+'randomForest')</code></p></td>
     </tr>
     <tr>
       <th>stratify</th>
@@ -119,14 +119,14 @@ stratified?, defaults to <code>TRUE</code></p></td>
     <tr>
       <th>modsel.crit</th>
       <td><p>list, specifies the model selection criterion during
-internal cross-validation, may contain these: <code>c("auc", "f1",
-"acc", "pr")</code>, defaults to <code>list("auc")</code></p></td>
+internal cross-validation, may contain these: <code>c('auc', 'f1',
+'acc', 'pr')</code>, defaults to <code>list('auc')</code></p></td>
     </tr>
     <tr>
       <th>min.nonzero.coeff</th>
       <td><p>integer number of minimum nonzero coefficients that
-should be present in the model (only for <code>"lasso"</code>, <code>"ridge"</code>,
-and <code>"enet"</code>, defaults to <code>1</code></p></td>
+should be present in the model (only for <code>'lasso'</code>,
+<code>'ridge'</code>, and <code>'enet'</code>, defaults to <code>1</code></p></td>
     </tr>
     <tr>
       <th>param.set</th>
@@ -140,7 +140,8 @@ and <code>"enet"</code>, defaults to <code>1</code></p></td>
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
@@ -151,27 +152,29 @@ level of information and <code>3</code> for full debug information, defaults to 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This functions performs the training of the machine learning model
-       and functions as an interface to the <code>mlr</code>-package.</p>
+    and functions as an interface to the <code>mlr</code>-package.</p>
 <p>The function expects a <a href='siamcat-class.html'>siamcat-class</a>-object with a prepared
-       cross-validation (see <a href='create.data.split.html'>create.data.split</a>) in the <code>data_split</code>-
-       slot of the object. It then trains a model for each fold of the datasplit.</p>
-<p>For the machine learning methods that require additional hyperparameters
-       (e.g. <code>lasso_ll</code>), the optimal hyperparameters are tuned with the
-       function <a href='http://www.rdocumentation.org/packages/mlr/topics/tuneParams'>tuneParams</a> within the <code>mlr</code>-package.</p>
-<p>The methods <code>"lasso"</code>, <code>"enet"</code>, and <code>"ridge"</code> are implemented
-       as mlr-taks using the <code>"classif.cvglmnet"</code> Learner, <code>"lasso_ll"</code>
-       and <code>"ridge_ll"</code> use the <code>"classif.LiblineaRL1LogReg"</code> and
-       the <code>"classif.LiblineaRL2LogReg"</code> Learners respectively. The
-       <code>"randomForest"</code> method is implemented via the <code>"classif.randomForest"</code>
-       Learner.</p>
+    cross-validation (see <a href='create.data.split.html'>create.data.split</a>) in the
+    <code>data_split</code>-slot of the object. It then trains a model for
+    each fold of the datasplit.</p>
+<p>For the machine learning methods that require additional
+    hyperparameters (e.g. <code>lasso_ll</code>), the optimal hyperparameters
+    are tuned with the function <a href='http://www.rdocumentation.org/packages/mlr/topics/tuneParams'>tuneParams</a> within the
+    <code>mlr</code>-package.</p>
+<p>The methods <code>'lasso'</code>, <code>'enet'</code>, and <code>'ridge'</code> are
+    implemented as mlr-taks using the <code>'classif.cvglmnet'</code> Learner,
+    <code>'lasso_ll'</code> and <code>'ridge_ll'</code> use the
+    <code>'classif.LiblineaRL1LogReg'</code> and the
+    <code>'classif.LiblineaRL2LogReg'</code> Learners respectively. The
+    <code>'randomForest'</code> method is implemented via the
+    <code>'classif.randomForest'</code> Learner.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
- <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># simple working example</span>
- <span class='no'>siamcat_validated</span> <span class='kw'>&lt;-</span> <span class='fu'>train.model</span>(<span class='no'>siamcat_example</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>'lasso'</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
-#&gt; Trained lasso models successfully.</div><div class='input'>
+    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># simple working example</span>
+    <span class='no'>siamcat_validated</span> <span class='kw'>&lt;-</span> <span class='fu'>train.model</span>(<span class='no'>siamcat_example</span>, <span class='kw'>method</span><span class='kw'>=</span><span class='st'>'lasso'</span>)</div><div class='output co'>#&gt; <span class='error'>Error in data.split$num.folds: $ operator not defined for this S4 class</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

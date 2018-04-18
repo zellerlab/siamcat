@@ -92,8 +92,9 @@
 
     
     <p>Produces two plots for model evaluation. The first plot shows
-       the Receiver Operating Characteristic (ROC)-curves, the other the
-       Precision-recall (PR)-curves for the different cross-validation repetitions.</p>
+    the Receiver Operating Characteristic (ROC)-curves, the other the
+    Precision-recall (PR)-curves for the different cross-validation
+    repetitions.</p>
     
 
     <pre class="usage"><span class='fu'>model.evaluation.plot</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
@@ -113,7 +114,8 @@
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
@@ -124,9 +126,9 @@ level of information and <code>3</code> for full debug information, defaults to 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
- <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># simple working example</span>
- <span class='fu'>model.evaluation.plot</span>(<span class='no'>siamcat_example</span>, <span class='kw'>fn.plot</span><span class='kw'>=</span><span class='st'>'./eval,pdf'</span>)</div><div class='output co'>#&gt; Plotted evaluation of predictions successfully to: ./eval,pdf </div><div class='input'>
+    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># simple working example</span>
+    <span class='fu'>model.evaluation.plot</span>(<span class='no'>siamcat_example</span>, <span class='kw'>fn.plot</span><span class='kw'>=</span><span class='st'>'./eval,pdf'</span>)</div><div class='output co'>#&gt; <span class='error'>Error in label$label: $ operator not defined for this S4 class</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

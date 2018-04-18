@@ -16,19 +16,22 @@ for information about progress and time, defaults to \code{0}}
 \code{otu_table} containing features from the file
 }
 \description{
-This file reads in the tsv file with features and converts it into a matrix.
+This file reads in the tsv file with features and
+converts it into a matrix.
 
 The file should be oragnized as follows:
 features (in rows) x samples (in columns).
 
 First row should contain sample labels (consistent with label data), while
 the first column should contain feature labels (e.g. taxonomic identifiers).
-The remaining entries are expected to be real values \code{>= 0} that quantify
-the abundance of each feature in each sample.
+The remaining entries are expected to be real values \code{>= 0} that
+quantify the abundance of each feature in each sample.
 }
 \examples{
- # run with example data
- fn.feat <- system.file("extdata", "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
-   package = "SIAMCAT")
- features <- read.features(fn.feat)
+    # run with example data
+    fn.feat <- system.file('extdata',
+    'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+    package = 'SIAMCAT')
+
+    features <- read.features(fn.feat)
 }

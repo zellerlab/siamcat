@@ -11,34 +11,35 @@ check.confounders(siamcat, fn.plot, verbose = 1)
 
 \item{fn.plot}{string, filename for the pdf-plot}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
-defaults to \code{1}}
+\item{verbose}{control output: \code{0} for no output at all, \code{1} for
+only information about progress and success, \code{2} for normal level of
+information and \code{3} for full debug information, defaults to \code{1}}
 }
 \value{
 Does not return anything, but produces a single plot for each
-       metadata category.
+    metadata category.
 }
 \description{
 This function checks for associations between class labels and
-       potential confounders (e.g. age, sex, or BMI) that are present in the
-       metadata. Statistical testing is performed with Fisher's exact test
-       or Wilcoxon test, while associations are visualized either as barplot
-       or Q-Q plot, depending on the type of metadata.
+    potential confounders (e.g. age, sex, or BMI) that are present in the
+    metadata. Statistical testing is performed with Fisher's exact test or
+    Wilcoxon test, while associations are visualized either as barplot or Q-Q
+    plot, depending on the type of metadata.
 }
 \examples{
- # Example data
- data(siamcat_example)
- # since the whole pipeline has been run in the example data, exchange the
- # normalized features with the original features
- siamcat_example <- reset.features(siamcat_example)
+    # Example data
+    data(siamcat_example)
+    # since the whole pipeline has been run in the example data, exchange the
+    # normalized features with the original features
+    siamcat_example <- reset.features(siamcat_example)
 
- # Simple working example
- check.confounders(siamcat_example, './conf_plot.pdf')
+    # Simple working example
+    check.confounders(siamcat_example, './conf_plot.pdf')
 
- # Additional information with verbose
- \dontrun{check.confounders(siamcat_example, './conf_plot.pdf', verbose=2)}
+    # Additional information with verbose
+    \dontrun{
+    check.confounders(siamcat_example, './conf_plot.pdf', 
+    verbose=2)}
 }
 \keyword{SIAMCAT}
 \keyword{check.confounders}

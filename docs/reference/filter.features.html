@@ -92,12 +92,12 @@
 
     
     <p>This function performs unsupervised feature filtering. Features
-       can be filtered based on abundance or prevalence. Additionally,
-       unmapped reads may be removed.</p>
+    can be filtered based on abundance or prevalence. Additionally,
+    unmapped reads may be removed.</p>
     
 
-    <pre class="usage"><span class='fu'>filter.features</span>(<span class='no'>siamcat</span>, <span class='kw'>filter.method</span> <span class='kw'>=</span> <span class='st'>"abundance"</span>, <span class='kw'>cutoff</span> <span class='kw'>=</span> <span class='fl'>0.001</span>,
-  <span class='kw'>recomp.prop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rm.unmapped</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage">filter.features <- function(siamcat, filter.method = "abundance",
+    cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -109,8 +109,8 @@
     <tr>
       <th>filter.method</th>
       <td><p>method used for filtering the features, can be one of
-these: <code>c("abundance", "cum.abundance", "prevalence")</code>,
-defaults to <code>"abundance"</code></p></td>
+these: <code>c('abundance', 'cum.abundance', 'prevalence')</code>,
+defaults to <code>'abundance'</code></p></td>
     </tr>
     <tr>
       <th>cutoff</th>
@@ -130,7 +130,8 @@ defaults to <code>FALSE</code></p></td>
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
@@ -140,29 +141,32 @@ level of information and <code>3</code> for full debug information, defaults to 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function filters the features in a <a href='siamcat-class.html'>siamcat-class</a> object in a
-       unsupervised manner.</p>
+    <p>This function filters the features in a <a href='siamcat-class.html'>siamcat-class</a>
+    object in a unsupervised manner.</p>
 <p>The different filter methods work in the following way:</p><ul>
-<li><p><code>"abundace"</code> remove features whose abundance is never above
-         the threshold value in any of the samples</p></li>
-<li><p><code>"cum.abundance"</code> remove features with very low abundance
-         in all samples i.e. ones that are never among the most abundant
-         entities that collectively make up (1-cutoff) of the reads in any sample</p></li>
-<li><p><code>"prevalence"</code> remove features with low prevalence across samples
-         i.e. ones that are 0 (undetected) in more than (1-cutoff) proportion
-         of samples.</p></li>
+<li><p><code>'abundace'</code> remove features whose abundance is never
+    above the threshold value in any of the samples</p></li>
+<li><p><code>'cum.abundance'</code> remove features with very low abundance
+    in all samples i.e. ones that are never among the most abundant
+    entities that collectively make up (1-cutoff) of the reads in
+    any sample</p></li>
+<li><p><code>'prevalence'</code> remove features with low prevalence across
+    samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
+    proportion of samples.</p></li>
 </ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='co'># Example dataset</span>
- <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># since the whole pipeline has been run in the example data, the feature were</span>
- <span class='co'># filtered already.</span>
- <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reset.features.html'>reset.features</a></span>(<span class='no'>siamcat_example</span>)
+    <pre class="examples"><div class='input'>    <span class='co'># Example dataset</span>
+    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># since the whole pipeline has been run in the example data, the feature</span>
+    <span class='co'># were filtered already.</span>
+    <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reset.features.html'>reset.features</a></span>(<span class='no'>siamcat_example</span>)
 
 <span class='co'># Simple examples</span>
-<span class='no'>siamcat_filtered</span> <span class='kw'>&lt;-</span> <span class='fu'>filter.features</span>(<span class='no'>siamcat_example</span>, <span class='kw'>filter.method</span><span class='kw'>=</span><span class='st'>'abundance'</span>, <span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>1e-03</span>)</div><div class='output co'>#&gt; Features successfully filtered</div></pre>
+<span class='no'>siamcat_filtered</span> <span class='kw'>&lt;-</span> <span class='fu'>filter.features</span>(<span class='no'>siamcat_example</span>,
+    <span class='kw'>filter.method</span><span class='kw'>=</span><span class='st'>'abundance'</span>,
+    <span class='kw'>cutoff</span><span class='kw'>=</span><span class='fl'>1e-03</span>)</div><div class='output co'>#&gt; <span class='message'>Features successfully filtered</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

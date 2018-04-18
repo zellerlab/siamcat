@@ -91,14 +91,15 @@
     </div>
 
     
-    <p>Produces a plot for model interpretation, displaying feature weights,
-       robustness of feature weights, and features scores across patients.</p>
+    <p>Produces a plot for model interpretation, displaying feature
+    weights, robustness of feature weights, and features scores across
+    patients.</p>
     
 
     <pre class="usage"><span class='fu'>model.interpretation.plot</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>,
-  <span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"zscore"</span>, <span class='st'>"fc"</span>),
-  <span class='kw'>norm.models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>3</span>, <span class='fl'>3</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
-  <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+<span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,<span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"zscore"</span>, <span class='st'>"fc"</span>),
+<span class='kw'>norm.models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>3</span>, <span class='fl'>3</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
+<span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -113,20 +114,20 @@
     </tr>
     <tr>
       <th>color.scheme</th>
-      <td><p>color scheme for the heatmap, defaults to <code>"BrBG"</code></p></td>
+      <td><p>color scheme for the heatmap, defaults to <code>'BrBG'</code></p></td>
     </tr>
     <tr>
       <th>consens.thres</th>
       <td><p>minimal ratio of models incorporating a feature in order
 to include it into the heatmap, defaults to <code>0.5</code>
-Note that for <code>"randomForest"</code> models, this cutoff specifies the
+Note that for <code>'randomForest'</code> models, this cutoff specifies the
 minimum median Gini coefficient for a feature to be included and
 should therefore be much lower, e.g. <code>0.01</code></p></td>
     </tr>
     <tr>
       <th>heatmap.type</th>
-      <td><p>type of the heatmap, can be either <code>"fc"</code> or
-<code>"zscore"</code>, defaults to <code>"zscore"</code></p></td>
+      <td><p>type of the heatmap, can be either <code>'fc'</code> or
+<code>'zscore'</code>, defaults to <code>'zscore'</code></p></td>
     </tr>
     <tr>
       <th>norm.models</th>
@@ -152,7 +153,8 @@ interpretation plot, defaults to 50</p></td>
       <th>verbose</th>
       <td><p>control output: <code>0</code> for no output at all, <code>1</code>
 for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
+level of information and <code>3</code> for full debug information,
+defaults to <code>1</code></p></td>
     </tr>
     </table>
     
@@ -164,22 +166,22 @@ level of information and <code>3</code> for full debug information, defaults to 
 
     <p>Produces a plot consisting of</p><ul>
 <li><p>a barplot showing the feature weights and their robustness (i.e. in
-   what proportion of models have they been incorporated)</p></li>
-<li><p>a heatmap showing the z-scores of the metagenomic features across patients</p></li>
+    what proportion of models have they been incorporated)</p></li>
+<li><p>a heatmap showing the z-scores of the metagenomic features across
+    patients</p></li>
 <li><p>another heatmap displaying the metadata categories (if applicable)</p></li>
-<li><p>a boxplot displaying the poportion of weight per model that is actually shown
-   for the features that are incorporated into more than <code>consens.thres</code>
-   percent of the models.</p></li>
+<li><p>a boxplot displaying the poportion of weight per model that is
+    actually shown for the features that are incorporated into more than
+    <code>consens.thres</code> percent of the models.</p></li>
 </ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
- <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># simple working example</span>
- <span class='fu'>model.interpretation.plot</span>(<span class='no'>siamcat_example</span>, <span class='kw'>fn.plot</span><span class='kw'>=</span><span class='st'>'./interpretion,pdf'</span>,
-   <span class='kw'>heatmap.type</span><span class='kw'>=</span><span class='st'>'zscore'</span>)</div><div class='output co'>#&gt; + select.features
-#&gt; Layout height values: 0.1, 0.67, 0.23</div><div class='output co'>#&gt; Plotted associations between features and label successfully to: ./interpretion,pdf </div><div class='input'>
+    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># simple working example</span>
+    <span class='fu'>model.interpretation.plot</span>(<span class='no'>siamcat_example</span>, <span class='kw'>fn.plot</span><span class='kw'>=</span><span class='st'>'./interpretion,pdf'</span>,
+    <span class='kw'>heatmap.type</span><span class='kw'>=</span><span class='st'>'zscore'</span>)</div><div class='output co'>#&gt; <span class='message'>+ model.interpretation.select.features</span></div><div class='output co'>#&gt; <span class='error'>Error in label$label: $ operator not defined for this S4 class</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

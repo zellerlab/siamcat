@@ -92,7 +92,7 @@
 
     
     <p>This function checks if labels are available for all samples in
-       features. Additionally validates metadata, if available.</p>
+    features. Additionally validates metadata, if available.</p>
     
 
     <pre class="usage"><span class='fu'>validate.data</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
@@ -120,17 +120,17 @@ defaults to <code>1</code></p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function validates the data by checking that labels are
-       available for all samples in the feature matrix. Furthermore,
-       the number of samples per class is checked to ensure a minimum
-       number. If metadata is available, the overlap between labels and
-       metadata is checked as well.</p>
+    available for all samples in the feature matrix. Furthermore,
+    the number of samples per class is checked to ensure a minimum
+    number. If metadata is available, the overlap between labels and
+    metadata is checked as well.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
- <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># simple working example</span>
- <span class='no'>siamcat_validated</span> <span class='kw'>&lt;-</span> <span class='fu'>validate.data</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt; Data succesfully validated</div><div class='input'>
+    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># simple working example</span>
+    <span class='no'>siamcat_validated</span> <span class='kw'>&lt;-</span> <span class='fu'>validate.data</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt; <span class='error'>Error in label$label: $ operator not defined for this S4 class</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

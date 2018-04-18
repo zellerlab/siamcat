@@ -92,10 +92,10 @@
 
     
     <p>This function checks for associations between class labels and
-       potential confounders (e.g. age, sex, or BMI) that are present in the
-       metadata. Statistical testing is performed with Fisher's exact test
-       or Wilcoxon test, while associations are visualized either as barplot
-       or Q-Q plot, depending on the type of metadata.</p>
+    potential confounders (e.g. age, sex, or BMI) that are present in the
+    metadata. Statistical testing is performed with Fisher's exact test or
+    Wilcoxon test, while associations are visualized either as barplot or Q-Q
+    plot, depending on the type of metadata.</p>
     
 
     <pre class="usage"><span class='fu'>check.confounders</span>(<span class='no'>siamcat</span>, <span class='no'>fn.plot</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
@@ -113,31 +113,31 @@
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>control output: <code>0</code> for no output at all, <code>1</code>
-for only information about progress and success, <code>2</code> for normal
-level of information and <code>3</code> for full debug information,
-defaults to <code>1</code></p></td>
+      <td><p>control output: <code>0</code> for no output at all, <code>1</code> for
+only information about progress and success, <code>2</code> for normal level of
+information and <code>3</code> for full debug information, defaults to <code>1</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Does not return anything, but produces a single plot for each
-       metadata category.</p>
+    metadata category.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='co'># Example data</span>
- <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
- <span class='co'># since the whole pipeline has been run in the example data, exchange the</span>
- <span class='co'># normalized features with the original features</span>
- <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reset.features.html'>reset.features</a></span>(<span class='no'>siamcat_example</span>)
+    <pre class="examples"><div class='input'>    <span class='co'># Example data</span>
+    <span class='fu'>data</span>(<span class='no'>siamcat_example</span>)
+    <span class='co'># since the whole pipeline has been run in the example data, exchange the</span>
+    <span class='co'># normalized features with the original features</span>
+    <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reset.features.html'>reset.features</a></span>(<span class='no'>siamcat_example</span>)
 
- <span class='co'># Simple working example</span>
- <span class='fu'>check.confounders</span>(<span class='no'>siamcat_example</span>, <span class='st'>'./conf_plot.pdf'</span>)</div><div class='output co'>#&gt; Checking metadata for confounders finished, results plotted to: ./conf_plot.pdf </div><div class='input'>
- # Additional information with verbose
- </div><span class='co'># NOT RUN {</span>
-<span class='fu'>check.confounders</span>(<span class='no'>siamcat_example</span>, <span class='st'>'./conf_plot.pdf'</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>2</span>)
+    <span class='co'># Simple working example</span>
+    <span class='fu'>check.confounders</span>(<span class='no'>siamcat_example</span>, <span class='st'>'./conf_plot.pdf'</span>)</div><div class='output co'>#&gt; <span class='error'>Error in label$p.idx: $ operator not defined for this S4 class</span></div><div class='input'>
+    # Additional information with verbose
+    </div><span class='co'># NOT RUN {</span>
+    <span class='fu'>check.confounders</span>(<span class='no'>siamcat_example</span>, <span class='st'>'./conf_plot.pdf'</span>,
+    <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>2</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
