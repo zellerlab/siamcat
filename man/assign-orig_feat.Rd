@@ -4,10 +4,13 @@
 \name{orig_feat<-}
 \alias{orig_feat<-}
 \alias{assign-orig_feat}
+\alias{orig_feat<-,siamcat,orig_feat-method}
 \alias{orig_feat<-,siamcat,otu_table-method}
 \title{Assign a new otu_table object to \code{x} orig_feat slot}
 \usage{
 orig_feat(x) <- value
+
+\S4method{orig_feat}{siamcat,orig_feat}(x) <- value
 
 \S4method{orig_feat}{siamcat,otu_table}(x) <- value
 }

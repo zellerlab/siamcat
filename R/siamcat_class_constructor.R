@@ -52,7 +52,9 @@ siamcat <- function(...) {
             do.call("new", c(list(Class = "phyloseq"),
                 arglistphyloseq))
     }
-    arglist$orig_feat <- otu_table(arglist$phyloseq)
+    if (is.null(arglist$orig_feat)) {
+        arglist$orig_feat <- orig_feat(otu_table(arglist$phyloseq))
+    }
     arglist <-
         arglist[vapply(names(arglist),
             is.component.class,

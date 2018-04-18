@@ -563,10 +563,10 @@ associations.quantile.rect.plot <-
 # create different tints of the colours
         colors.p <-
             rev(create.tints(vec = seq(0, 1, length.out = 4), 
-              colour = col[2]))
+            colour = col[2]))
         colors.n <-
             rev(create.tints(vec = seq(0, 1, length.out = 4), 
-              colour = col[1]))
+            colour = col[1]))
         
         associations.quantile.rect.sub.plot(quantiles.pos, up = TRUE, colors.p)
         associations.quantile.rect.sub.plot(quantiles.neg, up = FALSE, colors.n)

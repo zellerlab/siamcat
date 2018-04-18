@@ -330,10 +330,16 @@ setGeneric("orig_feat", function(siamcat)
 setMethod("orig_feat", "ANY", function(siamcat) {
     accessSlot(siamcat, "orig_feat")
 })
-# Return as-is if already a otu_table object
+# Return as-is if already a orig_feat object
 #' @rdname orig_feat-methods
-setMethod("orig_feat", "otu_table", function(siamcat) {
+setMethod("orig_feat", "orig_feat", function(siamcat) {
     return(siamcat)
+})
+# constructor; for creating label from a list
+#' @rdname label-methods
+#' @aliases label
+setMethod("orig_feat", "otu_table", function(siamcat) {
+    return(new("orig_feat", siamcat))
 })
 
 ################################################################################

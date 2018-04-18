@@ -15,7 +15,7 @@
 #'     data(siamcat_example)
 #'     siamcat_example <- reset.features(siamcat_example)
 reset.features <- function(siamcat) {
-    siamcat@phyloseq@otu_table <- siamcat@orig_feat
+    features(siamcat) <- orig_feat(siamcat)
     return(siamcat)
 }
 

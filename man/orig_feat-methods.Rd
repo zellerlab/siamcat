@@ -4,14 +4,14 @@
 \name{orig_feat}
 \alias{orig_feat}
 \alias{orig_feat,ANY-method}
-\alias{orig_feat,otu_table-method}
+\alias{orig_feat,orig_feat-method}
 \title{Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.}
 \usage{
 orig_feat(siamcat)
 
 \S4method{orig_feat}{ANY}(siamcat)
 
-\S4method{orig_feat}{otu_table}(siamcat)
+\S4method{orig_feat}{orig_feat}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

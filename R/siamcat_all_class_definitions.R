@@ -63,6 +63,16 @@ setClass("label", contains = "list")
 #' @exportClass pred_matrix
 setClass("pred_matrix", contains = "matrix")
 
+#' The S4 class for storing original features info.
+#' @name orig_feat-class
+#' @rdname orig_feat-class
+#' @slot taxa_are_rows A single logical specifying the orientation 
+#' of the abundance table
+#' @slot .Data inherited from \code{\link{matrix}} class, contains
+#' a matrix with predictions made by \link{make.predictions} function
+#' @exportClass orig_feat
+setClass("orig_feat", contains = "otu_table")
+
 #' The S4 class for storing evaluation data.
 #' @name eval_data-class
 #' @rdname eval_data-class
@@ -109,7 +119,7 @@ setClass(
     representation(
         model_list = "model_list",
         phyloseq = "phyloseq",
-        orig_feat = "otu_table",
+        orig_feat = "orig_feat",
         eval_data = "list",
         label = "label",
         norm_param = "list",

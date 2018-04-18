@@ -10,7 +10,7 @@ output: BiocStyle::html_document
 vignette: >
     %\VignetteIndexEntry{SIAMCAT}
     %\VignetteEngine{knitr::rmarkdown}
-    %\VignetteEncoding{UTF-8}
+    %\VignetteEncoding{ASCII}
 ---
 # About this vignette
 This vignette aims to be a short tutorial for the main functionalities of 
@@ -36,7 +36,7 @@ most predictive microbial biomarkers.
 
 # First Steps: Read/Validate/Filter the Data
 
-First, let's load the SIAMCAT package and use the files included in SIAMCAT. 
+First, let`s load the SIAMCAT package and use the files included in SIAMCAT. 
 The data are the same as used in the publication of 
 [Zeller et al](http://europepmc.org/abstract/MED/25432777),
 which demonstrated the potential of microbial markers in feacal samples to
@@ -62,7 +62,7 @@ fn.in.meta  <- system.file(
 ```
 
 We can access the files with the dedicated SIAMCAT functions and directly
-construct a SIAMCAT object containing the microbial features, the patient's
+construct a SIAMCAT object containing the microbial features, the patient`s
 labels, and metadata for the patients.
 ```{r results="hide"}
 feat  <- read.features(fn.in.feat)
@@ -289,9 +289,9 @@ cross-validation instances and the trained models.
 ## Data Normalization
 
 Data normalization is performed with the `normalize.features` function.
-Several control options are available, i.e. the normalization method
-(`log.unit`, `log.std`, `rank.unit`, `rank.std`, `log.clr`) or additional
-parameters. Here, we use the `log.unit` method:
+Several control options are available, for example a choice of the normalization
+method from `log.unit`, `log.std`, `rank.unit`, `rank.std` and `log.clr` or 
+additional parameters. Here, we use the `log.unit` method:
 
 ```{r}
 siamcat <- normalize.features(
@@ -408,7 +408,7 @@ model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
 ```
 
 Instead of the pdf-output, we can also access the evaluation data in the
-`siamcat` object directly and plot e.g. the ROC-Curves:
+`siamcat` object directly and plot the ROC-Curves:
 
 ```{r fig.width = 6, fig.asp=1, fig.align="center"}
 # plot ROC Curves
