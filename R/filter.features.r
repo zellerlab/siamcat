@@ -4,25 +4,35 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Perform unsupervised feature filtering.
+#' 
 #' @description This function performs unsupervised feature filtering. Features
 #'     can be filtered based on abundance or prevalence. Additionally,
 #'     unmapped reads may be removed.
-#' @usage filter.features <- function(siamcat, filter.method = "abundance",
+#'     
+#' @usage filter.features(siamcat, filter.method = "abundance",
 #'     cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)
+#'     
 #' @param siamcat an object of class \link{siamcat-class}
+#' 
 #' @param filter.method method used for filtering the features, can be one of
 #'     these: \code{c('abundance', 'cum.abundance', 'prevalence')},
 #'     defaults to \code{'abundance'}
+#'     
 #' @param cutoff float, abundace or prevalence cutoff, default to \code{0.001}
+#' 
 #' @param recomp.prop boolean, should relative abundances be recomputed?,
 #'     defaults to \code{FALSE}
+#'     
 #' @param rm.unmapped boolean, should unmapped reads be discarded?, defaults to
 #'     \code{TRUE}
+#'     
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
+#'     
 #' @keywords SIAMCAT filter.features
+#' 
 #' @details This function filters the features in a \link{siamcat-class}
 #'     object in a unsupervised manner.
 #'
@@ -38,7 +48,9 @@
 #'     proportion of samples.
 #'     }
 #' @export
+#' 
 #' @return siamcat an object of class \link{siamcat-class}
+#' 
 #' @examples
 #'     # Example dataset
 #'     data(siamcat_example)
@@ -50,6 +62,7 @@
 #' siamcat_filtered <- filter.features(siamcat_example,
 #'     filter.method='abundance',
 #'     cutoff=1e-03)
+#'     
 filter.features <- function(siamcat,
     filter.method = "abundance",
     cutoff = 0.001,

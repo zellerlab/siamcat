@@ -228,7 +228,7 @@ evaluate.classifier <-
             # and predictions of each model occupy one
             # column
             stopifnot(length(test.label) == nrow(predictions))
-            tp = t(tp = vapply(
+            tp = t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(
@@ -242,7 +242,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(2)
             ))
-            fp = t(tp = vapply(
+            fp = t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(
@@ -256,7 +256,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(2)
             ))
-            tn = t(tp = vapply(
+            tn = t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(
@@ -270,7 +270,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(2)
             ))
-            fn = t(tp = vapply(
+            fn = t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(

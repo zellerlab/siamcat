@@ -101,7 +101,7 @@ check.associations <-
         mult.corr = "fdr",
         sort.by = "fc",
         detect.lim = 1e-06,
-        pr.cutoff = 10 ^ -6,
+        pr.cutoff = 1e-6,
         max.show = 50,
         plot.type = "quantile.box",
         panels = c("fc", "auroc"),
@@ -562,14 +562,16 @@ associations.quantile.rect.plot <-
         
 # create different tints of the colours
         colors.p <-
-            rev(create.tints(vec = seq(0, 1, length.out = 4), colour = col[2]))
+            rev(create.tints(vec = seq(0, 1, length.out = 4), 
+            colour = col[2]))
         colors.n <-
-            rev(create.tints(vec = seq(0, 1, length.out = 4), colour = col[1]))
+            rev(create.tints(vec = seq(0, 1, length.out = 4), 
+            colour = col[1]))
         
-        quantile.rect.plot(quantiles.pos, up = TRUE, colors.p)
-        quantile.rect.plot(quantiles.neg, up = FALSE, colors.n)
-        quantile.median.plot(quantiles.pos, up = TRUE)
-        quantile.median.plot(quantiles.neg, up = FALSE)
+        associations.quantile.rect.sub.plot(quantiles.pos, up = TRUE, colors.p)
+        associations.quantile.rect.sub.plot(quantiles.neg, up = FALSE, colors.n)
+        associations.quantile.median.sub.plot(quantiles.pos, up = TRUE)
+        associations.quantile.median.sub.plot(quantiles.neg, up = FALSE)
         
         mtext(
             'Quantiles',
@@ -630,7 +632,7 @@ associations.quantile.rect.plot <-
             verbose = verbose)
         if (verbose > 2)
             message("+ finished associations.quantile.rect.plot")
-    }
+}
 
 ### Prepare margins for the first plots make left margin as big as the
 ### longest label or maximally 20.1 lines
@@ -1258,7 +1260,7 @@ create.tints <- function(colour, vec) {
 }
 
 #'@keywords internal
-associations.quantile.rect.plot <-
+associations.quantile.rect.sub.plot <-
     function(quantiles, up = TRUE, colors) {
         n.spec <- nrow(quantiles)
         adj.y0 <- ifelse(up, 0, 0.3)
@@ -1274,10 +1276,10 @@ associations.quantile.rect.plot <-
                 lwd = 0.9
             )
         }
-    }
+}
 
 #'@keywords internal
-associations.quantile.median.plot <-
+associations.quantile.median.sub.plot <-
     function(quantiles, up = TRUE) {
         n.spec <- nrow(quantiles)
         adj.y <- ifelse(up, 0.15,-0.15)

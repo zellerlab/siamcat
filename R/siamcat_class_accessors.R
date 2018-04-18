@@ -8,7 +8,7 @@
 #'
 #' This function is used internally by many accessors.
 #'
-#' @usage accessSlot(siamcat, slot, errorIfNULL=FALSE)
+#' @usage accessSlot(siamcat, slot)
 #'
 #' @param siamcat an object of \link{siamcat-class}.
 #'
@@ -21,8 +21,8 @@
 #' @export
 #' @examples #
 #' data(siamcat_example)
-#' access(siamcat_example, "label")
-#' access(siamcat_example, "model_list")
+#' accessSlot(siamcat_example, "label")
+#' accessSlot(siamcat_example, "model_list")
 accessSlot <- function(siamcat, slot) {
     if (!slot %in% slotNames(siamcat)) {
         # If slot is invalid, set out to NULL. Test later if this is an error.
@@ -42,7 +42,7 @@ accessSlot <- function(siamcat, slot) {
 #' Retrieve \link{model_list-class} from object.
 #'
 #'
-#' @usage model_list(siamcat, errorIfNULL=TRUE)
+#' @usage model_list(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
@@ -74,7 +74,7 @@ setMethod("model_list", "model_list", function(siamcat) {
 #' Retrieve list of models from object.
 #'
 #'
-#' @usage models(siamcat, errorIfNULL=TRUE)
+#' @usage models(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
@@ -138,7 +138,7 @@ setMethod("model_type", "model_list", function(siamcat) {
 #' Retrieve eval_data from object.
 #'
 #'
-#' @usage eval_data(siamcat, errorIfNULL=TRUE)
+#' @usage eval_data(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a eval_data..
@@ -171,7 +171,7 @@ setMethod("eval_data", "list", function(siamcat) {
 #' Retrieve pred_matrix from object.
 #'
 #'
-#' @usage pred_matrix(siamcat, errorIfNULL=TRUE)
+#' @usage pred_matrix(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a pred_matrix
@@ -205,7 +205,7 @@ setMethod("pred_matrix", "matrix", function(siamcat) {
 #' Retrieve norm_param from object.
 #'
 #'
-#' @usage norm_param(siamcat, errorIfNULL=TRUE)
+#' @usage norm_param(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a norm_param
@@ -232,7 +232,7 @@ setMethod("norm_param", "ANY", function(siamcat) {
 #' Retrieve a \link{label-class} object from object.
 #'
 #'
-#' @usage label(siamcat, errorIfNULL=TRUE)
+#' @usage label(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link{label-class} or a list.
@@ -271,7 +271,7 @@ setMethod("label", "list", function(siamcat) {
 #' Retrieve a \link{data_split-class} object from object.
 #'
 #'
-#' @usage data_split(siamcat, errorIfNULL=TRUE)
+#' @usage data_split(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link{data_split-class} or a list.
@@ -308,7 +308,7 @@ setMethod("data_split", "list", function(siamcat) {
 #' Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.
 #'
 #'
-#' @usage orig_feat(siamcat, errorIfNULL=TRUE)
+#' @usage orig_feat(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link[phyloseq]{otu_table-class}.
@@ -330,17 +330,23 @@ setGeneric("orig_feat", function(siamcat)
 setMethod("orig_feat", "ANY", function(siamcat) {
     accessSlot(siamcat, "orig_feat")
 })
-# Return as-is if already a otu_table object
+# Return as-is if already a orig_feat object
 #' @rdname orig_feat-methods
-setMethod("orig_feat", "otu_table", function(siamcat) {
+setMethod("orig_feat", "orig_feat", function(siamcat) {
     return(siamcat)
+})
+# constructor; for creating label from a list
+#' @rdname label-methods
+#' @aliases label
+setMethod("orig_feat", "otu_table", function(siamcat) {
+    return(new("orig_feat", siamcat))
 })
 
 ################################################################################
 #' Retrieve a \link[phyloseq]{phyloseq-class} object from object.
 #'
 #'
-#' @usage physeq(siamcat, errorIfNULL=TRUE)
+#' @usage physeq(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link[phyloseq]{phyloseq-class}.
@@ -372,7 +378,7 @@ setMethod("physeq", "phyloseq", function(siamcat) {
 #' Retrieve a \link[phyloseq]{otu_table-class} object from object.
 #'
 #'
-#' @usage features(siamcat, errorIfNULL=TRUE)
+#' @usage features(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link[phyloseq]{otu_table-class} .
@@ -405,7 +411,7 @@ setMethod("features", "otu_table", function(siamcat) {
 #' Retrieve a \link[phyloseq]{sample_data-class} object from object.
 #'
 #'
-#' @usage meta(siamcat, errorIfNULL=TRUE)
+#' @usage meta(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link[phyloseq]{sample_data-class}.

@@ -165,7 +165,7 @@ model.interpretation.plot <-
                 meta = meta(siamcat),
                 label = label,
                 detect.lim = detect.lim,
-                erbose = verbose
+                verbose = verbose
             )
         } else {
             stop("! unknown heatmap.type: ", heatmap.type)

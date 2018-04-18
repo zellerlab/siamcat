@@ -41,7 +41,8 @@ read.features <- function(fn.in.feat, verbose = 0) {
         header = TRUE,
         stringsAsFactors = FALSE,
         check.names = FALSE,
-        quote = ""
+        quote = "",
+        encoding = "latin1"
     )
     feat <- as.matrix(feat)
     featNames <- make.names(rownames(feat))
@@ -114,7 +115,8 @@ read.labels <- function(fn.in.label) {
             stringsAsFactors = FALSE,
             check.names = FALSE,
             quote = "",
-            comment.char = "#"
+            comment.char = "#",
+            encoding = "latin1"
         )
     label <- as.matrix(label)
     if (dim(label)[1] > dim(label)[2]) {
@@ -231,7 +233,8 @@ read.meta <- function(fn.in.meta) {
                 header = TRUE,
                 row.names = 1,
                 check.names = FALSE,
-                quote = ""
+                quote = "",
+                encoding = "latin1"
             )
     }
     invisible(sample_data(meta))

@@ -11,7 +11,7 @@
 #'     data into \code{num.folds} training and test folds for 
 #'     \code{num.resample} times.
 #'     
-#' @usage create.data.split <- (siamcat, num.folds = 2, num.resample = 1,
+#' @usage create.data.split(siamcat, num.folds = 2, num.resample = 1,
 #'     stratify = TRUE,inseparable = NULL, verbose = 1)
 #'   
 #' @param siamcat object of class \link{siamcat-class}

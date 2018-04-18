@@ -31,7 +31,8 @@ setMethod("physeq<-", c("siamcat", "phyloseq"), function(x, value) {
         x@label,
         x@norm_param,
         x@data_split,
-        x@pred_matrix
+        x@pred_matrix,
+        x@orig_feat
     )
 })
 #' @rdname assign-physeq
@@ -46,7 +47,8 @@ setMethod("physeq<-", c("siamcat", "otu_table"), function(x, value) {
         x@label,
         x@norm_param,
         x@data_split,
-        x@pred_matrix
+        x@pred_matrix,
+        x@orig_feat
     )
 })
 
@@ -270,7 +272,7 @@ setGeneric("orig_feat<-", function(x, value)
     standardGeneric("orig_feat<-"))
 #' @rdname assign-orig_feat
 #' @aliases orig_feat<-
-setMethod("orig_feat<-", c("siamcat", "otu_table"), function(x, value) {
+setMethod("orig_feat<-", c("siamcat", "orig_feat"), function(x, value) {
     siamcat(
         value,
         x@label,
@@ -282,6 +284,21 @@ setMethod("orig_feat<-", c("siamcat", "otu_table"), function(x, value) {
         x@norm_param
     )
 })
+#' @rdname assign-orig_feat
+#' @aliases orig_feat<-
+setMethod("orig_feat<-", c("siamcat", "otu_table"), function(x, value) {
+    siamcat(
+        new("orig_feat", value),
+        x@label,
+        x@model_list,
+        x@phyloseq,
+        x@data_split,
+        x@eval_data,
+        x@pred_matrix,
+        x@norm_param
+    )
+})
+
 
 ###############################################################################
 #' Assign a new otu_table object to \code{x} features slot
