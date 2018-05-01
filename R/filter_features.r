@@ -4,35 +4,35 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Perform unsupervised feature filtering.
-#' 
+#'
 #' @description This function performs unsupervised feature filtering. Features
 #'     can be filtered based on abundance or prevalence. Additionally,
 #'     unmapped reads may be removed.
-#'     
+#'
 #' @usage filter.features(siamcat, filter.method = "abundance",
 #'     cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)
-#'     
+#'
 #' @param siamcat an object of class \link{siamcat-class}
-#' 
+#'
 #' @param filter.method method used for filtering the features, can be one of
 #'     these: \code{c('abundance', 'cum.abundance', 'prevalence')},
 #'     defaults to \code{'abundance'}
-#'     
+#'
 #' @param cutoff float, abundace or prevalence cutoff, default to \code{0.001}
-#' 
+#'
 #' @param recomp.prop boolean, should relative abundances be recomputed?,
 #'     defaults to \code{FALSE}
-#'     
+#'
 #' @param rm.unmapped boolean, should unmapped reads be discarded?, defaults to
 #'     \code{TRUE}
-#'     
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
-#'     
+#'
 #' @keywords SIAMCAT filter.features
-#' 
+#'
 #' @details This function filters the features in a \link{siamcat-class}
 #'     object in a unsupervised manner.
 #'
@@ -48,9 +48,9 @@
 #'     proportion of samples.
 #'     }
 #' @export
-#' 
+#'
 #' @return siamcat an object of class \link{siamcat-class}
-#' 
+#'
 #' @examples
 #'     # Example dataset
 #'     data(siamcat_example)
@@ -62,7 +62,7 @@
 #' siamcat_filtered <- filter.features(siamcat_example,
 #'     filter.method='abundance',
 #'     cutoff=1e-03)
-#'     
+#'
 filter.features <- function(siamcat,
     filter.method = "abundance",
     cutoff = 0.001,
@@ -74,15 +74,15 @@ filter.features <- function(siamcat,
     ### able to calculate f.idx (specifying the indices of features which are
     ### to be kept) when feature list has already been transformed to relative
     ### abundances, but e.g. certain features have been removed manually.
-    
+
     if (verbose > 1)
         message("+ starting filter.features")
     s.time <- proc.time()[3]
-    
+
     if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")) {
         stop("! Unrecognized filter.method, exiting!\n")
     }
-    
+
     if (verbose > 1)
         message(paste(
             "+++ before filtering, the data has",
@@ -97,7 +97,7 @@ filter.features <- function(siamcat,
     } else {
         ra.feat <- get.features.matrix(siamcat)
     }
-    
+
     ### apply filters
     if (verbose > 2)
         message(paste("+++ applying", filter.method, "filter"))
@@ -129,8 +129,8 @@ filter.features <- function(siamcat,
         f.idx <-
             which(rowSums(ra.feat > 0) / ncol(ra.feat) > cutoff)
     }
-    
-    
+
+
     if (verbose > 2)
         message("+++ checking for unmapped reads")
     ### postprocessing and output generation
@@ -148,7 +148,7 @@ filter.features <- function(siamcat,
         )
         unm.idx <- rownames(features(siamcat)) %in% names.unmapped
         if (any(unm.idx)) {
-            f.idx <- f.idx[-which(f.idx %in% unm.idx)]
+            f.idx <- f.idx[-which(f.idx %in% which(unm.idx))]
             if (verbose > 2)
                 message(paste(
                     "+++ removing",
@@ -176,7 +176,7 @@ filter.features <- function(siamcat,
             paste0(
                 "+++ removed ",
                 nrow(features(siamcat)) - length(f.idx) - sum(unm.idx),
-                " features whose values did not exceed",
+                " features whose values did not exceed ",
                 cutoff,
                 " in any sample (retaining ",
                 length(f.idx),
