@@ -8,7 +8,7 @@
 #'     the Receiver Operating Characteristic (ROC)-curves, the other the
 #'     Precision-recall (PR)-curves for the different cross-validation
 #'     repetitions.
-#' @param siamcat object of class \link{siamcat-class}
+#' @param ... one or more object of class \link{siamcat-class}, can be named
 #' @param fn.plot string, filename for the pdf-plot
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
@@ -23,13 +23,13 @@
 #'     # simple working example
 #'     model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
 #'
-model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
+model.evaluation.plot <- function(..., colours = NULL, fn.plot, verbose = 1) {
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
-    label <- label(siamcat)
+
     pdf(fn.plot, onefile = TRUE)
-    
+
     if (verbose > 2)
         message("+ plotting ROC")
     plot(
@@ -42,119 +42,113 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
     )
     title(paste("ROC curve for the model", sep = " "))
     abline(a = 0, b = 1, lty = 3)
-    if (ncol(pred_matrix(siamcat)) > 1) {
-        aucs = vector("numeric", ncol(pred_matrix(siamcat)))
-        for (c in seq_len(ncol(pred_matrix(siamcat)))) {
-            roc.c = eval_data(siamcat)$roc.all[[c]]
-            lines(1 - roc.c$specificities,
-                roc.c$sensitivities,
-                col = gray(runif(1, 0.2, 0.8)))
-            aucs[c] = eval_data(siamcat)$auc.all[c]
-            if (verbose > 2)
-                message(paste(
-                    "+++ AU-ROC (resampled run ",
-                    c,
-                    "): ",
-                    format(aucs[c], digits = 3)
-                ))
+
+    args <- list(...)
+
+    if (length(args) > 1) {
+        n <- length(args)
+        if (is.null(colours)) {
+            if (n > 9) {
+                colours <- colorRampPalette(brewer.pal(9, 'Set1'))(n)
+                warning(paste0('Consider plotting fewer',
+                               ' ROC-Curves into the same plot...')
+            } else if (n == 2) {
+                colours <- brewer.pal(3, 'Set1')[1:2]
+            } else {
+                colours <- brewer.pal(n, 'Set1')
+            }
         }
-        l.vec = rep(label$label, ncol(pred_matrix(siamcat)))
-    } else {
-        l.vec = label$label
-    }
-    roc.summ = eval_data(siamcat)$roc.average[[1]]
-    lines(
-        1 - roc.summ$specificities,
-        roc.summ$sensitivities,
-        col = "black",
-        lwd = 2
-    )
-    auroc = eval_data(siamcat)$auc.average[1]
-    # plot CI
-    x = as.numeric(rownames(roc.summ$ci))
-    yl = roc.summ$ci[, 1]
-    yu = roc.summ$ci[, 3]
-    polygon(1 - c(x, rev(x)),
-        c(yl, rev(yu)),
-        col = "#88888844",
-        border = NA)
-    
-    if (ncol(pred_matrix(siamcat)) > 1) {
-        if (verbose > 1)
-            message(
-                paste(
-                    "+ AU-ROC:\n+++ mean-prediction:",
-                    format(auroc, digits = 3),
-                    "\n+++ averaged       :",
-                    format(mean(aucs), digits = 3),
-                    "\n+++ sd             :",
-                    format(sd(aucs), digits = 4)
-                )
-            )
-        text(0.7, 0.1, paste("Mean-prediction AUC:",
-            format(auroc, digits = 3)))
-    } else {
-        if (verbose > 1)
-            message(paste("+ AU-ROC:", format(auroc, digits = 3)))
-        text(0.7, 0.1, paste("AUC:", format(auroc, digits = 3)))
-    }
-    
-    # precision recall curve
-    if (verbose > 2)
-        message("+ plotting PRC")
-    plot(
-        NULL,
-        xlim = c(0, 1),
-        ylim = c(0, 1),
-        xlab = "Recall",
-        ylab = "Precision",
-        type = "n"
-    )
-    title(paste("Precision-recall curve for the model", sep = " "))
-    abline(h = mean(label$label == label$positive.lab),
-        lty = 3)
-    
-    if (ncol(pred_matrix(siamcat)) > 1) {
-        aucspr = vector("numeric", ncol(pred_matrix(siamcat)))
-        for (c in seq_len(ncol(pred_matrix(siamcat)))) {
-            ev = eval_data(siamcat)$ev.list[[c]]
-            pr = eval_data(siamcat)$pr.list[[c]]
-            lines(pr$x, pr$y, col = gray(runif(1, 0.2, 0.8)))
-            aucspr[c] = eval_data(siamcat)$aucspr[c]
-            if (verbose > 2)
-                message(paste(
-                    "+++ AU-PRC (resampled run ",
-                    c,
-                    "): ",
-                    format(aucspr[c], digits = 3)
-                ))
+        stopifnot(length(colours) == n)
+        # ROC
+        legend.val <- c()
+        # plot each roc curve for each eval data object
+        for (i in 1:length(args)) {
+            legend.val <- c(legend.val,
+                            as.numeric(single.roc.plot(args[[i]],
+                                                       colours[i],
+                                                       verbose=verbose)))
         }
-        ev = eval_data(siamcat)$ev.list[[length(eval_data(siamcat)$ev.list)]]
+        if (!is.null(names(args))) {
+            legend('bottomright',
+                   legend= paste0(names(args),
+                                  ' AUC: ' ,
+                                  format(legend.val, digits=3)),
+                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+        } else {
+            legend('bottomright',
+                   legend= paste0('AUC: ' ,
+                                  format(legend.val, digits=3)),
+                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+        }
+        # PR
+        # precision recall curve
+        if (verbose > 2)
+            message("+ plotting PRC")
+        plot(
+            NULL,
+            xlim = c(0, 1),
+            ylim = c(0, 1),
+            xlab = "Recall",
+            ylab = "Precision",
+            type = "n"
+        )
+        title(paste("Precision-recall curve for the model", sep = " "))
+        legend.val <- c()
+        # plot each roc curve for each eval data object
+        for (i in 1:length(args)) {
+            legend.val <- c(legend.val,
+                            as.numeric(single.pr.plot(args[[i]],
+                                                      colours[i],
+                                                      verbose=verbose)))
+        }
+        if (!is.null(names(args))) {
+            legend('bottomright',
+                   legend= paste0(names(args),
+                                  ' AUC: ' ,
+                                  format(legend.val, digits=3)),
+                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+        } else {
+            legend('bottomright',
+                   legend= paste0('AUC: ' ,
+                                  format(legend.val, digits=3)),
+                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+        }
+
+    } else if (length(args) == 1) {
+        # ROC
+        if (is.null(colours)) colours <- 'black'
+        auroc <- single.roc.plot(args[[1]], colours, verbose=verbose)
+        if (is.null(eval_data(args[[1]])$roc.all)) {
+            text(0.7, 0.1, paste("AUC:", format(auroc, digits = 3)))
+        } else {
+            text(0.7, 0.1, paste("Mean-prediction AUC:",
+                 format(auroc, digits = 3)))
+        }
+        # PR
+        if (verbose > 2)
+            message("+ plotting PRC")
+        plot(
+            NULL,
+            xlim = c(0, 1),
+            ylim = c(0, 1),
+            xlab = "Recall",
+            ylab = "Precision",
+            type = "n"
+        )
+        title(paste("Precision-recall curve for the model", sep = " "))
+        label <- label(args[[1]])
+        abline(h = mean(label$label == label$positive.lab),
+            lty = 3)
+        aupr <- single.pr.plot(args[[1]], colours, verbose=verbose)
+        if (is.null(eval_data(args[[1]])$roc.all)) {
+            text(0.7, 0.1, paste("AUC:", format(aupr, digits = 3)))
+        } else {
+            text(0.7, 0.1, paste("Mean AUC:", format(aupr, digits = 3)))
+        }
     } else {
-        ev = eval_data(siamcat)$ev.list[[1]]
+        stop('No SIAMCAT object supplied. Exiting...')
     }
-    pr = evaluate.get.pr(ev, verbose = verbose)
-    lines(pr$x, pr$y, col = "black", lwd = 2)
-    aupr = evaluate.calc.aupr(ev, verbose = verbose)
-    if (ncol(pred_matrix(siamcat)) > 1) {
-        if (verbose > 1)
-            message(
-                paste(
-                    "+ AU-PRC:\n+++ mean-prediction:",
-                    format(aupr, digits = 3),
-                    "\n+++ averaged       :",
-                    format(mean(aucspr), digits = 3),
-                    "\n+++ sd             :",
-                    format(sd(aucspr), digits = 4)
-                )
-            )
-        text(0.7, 0.1, paste("Mean-prediction AU-PRC:",
-            format(aupr, digits = 3)))
-    } else {
-        if (verbose > 1)
-            message("+ AU-PRC:", format(aupr, digits = 3), "\n")
-        text(0.7, 0.1, paste("AUC:", format(aupr, digits = 3)))
-    }
+
     tmp <- dev.off()
     e.time <- proc.time()[3]
     if (verbose > 1)
@@ -168,4 +162,108 @@ model.evaluation.plot <- function(siamcat, fn.plot, verbose = 1) {
             "Plotted evaluation of predictions successfully to:",
             fn.plot
         ))
+
+}
+
+
+single.pr.plot <- function(siamcat, colour, verbose) {
+
+    eval.data <- eval_data(siamcat)
+
+    # pr curves for resampling
+    if (!is.null(eval.data$roc.all)) {
+        aucspr = vector("numeric", ncol(pred_matrix(siamcat)))
+        for (c in seq_len(ncol(pred_matrix(siamcat)))) {
+            ev = eval.data$ev.list[[c]]
+            pr = eval.data$pr.list[[c]]
+            lines(pr$x, pr$y, col = alpha(colour, alpha=0.5))
+            aucspr[c] = eval.data$aucspr[c]
+            if (verbose > 2)
+                message(paste(
+                    "+++ AU-PRC (resampled run ",
+                    c,
+                    "): ",
+                    format(aucspr[c], digits = 3)
+                ))
+        }
+        ev = eval_data(siamcat)$ev.list[[length(eval_data(siamcat)$ev.list)]]
+    } else {
+        ev = eval_data(siamcat)$ev.list[[1]]
+    }
+
+    pr = evaluate.get.pr(ev, verbose = verbose)
+    lines(pr$x, pr$y, col = colour, lwd = 2)
+    aupr = evaluate.calc.aupr(ev, verbose = verbose)
+
+
+    if (!is.null(eval.data$roc.all)) {
+        if (verbose > 1)
+            message(
+                paste(
+                    "+ AU-PRC:\n+++ mean-prediction:",
+                    format(aupr, digits = 3),
+                    "\n+++ averaged       :",
+                    format(mean(aucspr), digits = 3),
+                    "\n+++ sd             :",
+                    format(sd(aucspr), digits = 4)
+                )
+            )
+
+
+    } else {
+        if (verbose > 1)
+            message("+ AU-PRC:", format(aupr, digits = 3), "\n")
+    }
+    return(aupr)
+}
+
+single.roc.plot <- function(siamcat, colour, verbose) {
+
+    eval.data <- eval_data(siamcat)
+
+    if (!is.null(eval.data$roc.all)){
+        aucs = vector("numeric", length(eval.data$roc.all))
+        for (c in seq_along(eval.data$roc.all)) {
+            roc.c = eval.data$roc.all[[c]]
+            lines(1 - roc.c$specificities, roc.c$sensitivities,
+                col = alpha(colour, alpha=0.5))
+            aucs[c] = eval.data$auc.all[c]
+            if (verbose > 2) {
+                message(paste('+++ AU-ROC (resampled run ',
+                              c, "): ", format(aucs[c], digits=3)))
+            }
+        }
+    }
+
+    roc.summ = eval.data$roc.average[[1]]
+    lines(1 - roc.summ$specificities, roc.summ$sensitivities,
+        col = colour, lwd = 2)
+    auroc = eval.data$auc.average[1]
+
+    # plot CI
+    x = as.numeric(rownames(roc.summ$ci))
+    yl = roc.summ$ci[, 1]
+    yu = roc.summ$ci[, 3]
+    polygon(1 - c(x, rev(x)), c(yl, rev(yu)),
+        col = alpha(colour, alpha=0.1),
+        border = NA)
+
+    if (!is.null(eval.data$roc.all)){
+        if (verbose > 1)
+            message(
+                paste(
+                    "+ AU-ROC:\n+++ mean-prediction:",
+                    format(auroc, digits = 3),
+                    "\n+++ averaged       :",
+                    format(mean(aucs), digits = 3),
+                    "\n+++ sd             :",
+                    format(sd(aucs), digits = 4)
+                )
+            )
+    } else {
+        if (verbose > 1)
+            message(paste("+ AU-ROC:", format(auroc, digits = 3)))
+    }
+
+    return(as.numeric(auroc[[1]]))
 }
