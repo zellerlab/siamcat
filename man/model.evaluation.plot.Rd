@@ -4,10 +4,10 @@
 \alias{model.evaluation.plot}
 \title{Model Evaluation Plot}
 \usage{
-model.evaluation.plot(siamcat, fn.plot, verbose = 1)
+model.evaluation.plot(..., colours = NULL, fn.plot, verbose = 1)
 }
 \arguments{
-\item{siamcat}{object of class \link{siamcat-class}}
+\item{...}{one or more object of class \link{siamcat-class}, can be named}
 
 \item{fn.plot}{string, filename for the pdf-plot}
 

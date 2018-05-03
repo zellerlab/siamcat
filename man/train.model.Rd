@@ -34,6 +34,17 @@ should be present in the model (only for \code{'lasso'},
 \item \code{ntree} and \code{mtry} for RandomForrest.
 } Defaults to \code{NULL}}
 
+\item{perform.fs}{boolean, should feature selection be performed?
+Defaults to \code{FALSE}}
+
+\item{param.fs}{a list of parameters for the feature selection, must contain:
+\itemize{
+\item \code{thres.fs} - threshold for the feature selection,
+\item \code{method.fs} - method for the feature selection, may be
+\code{AUC}, \code{FC}, or \code{Wilcoxon}
+} See Details for more information.
+Defaults to \code{list(thres.fs=100, method.fs="AUC")}}
+
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information,
@@ -67,6 +78,20 @@ This functions performs the training of the machine learning model
     \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
     \code{'randomForest'} method is implemented via the
     \code{'classif.randomForest'} Learner.
+
+    The function can also perform feature selection on each individual fold.
+    At the moment, three methods for feature selection are implemented:
+    \itemize{
+    \item \code{'AUC'} computes the Area Under the Receiver Operating
+     Characteristics Curve for each single feature and selects the top
+     \code{param.fs$thres.fs}, e.g. 100 features
+    \item \code{'FC'} computes the generalized Fold Change (see
+     \link{check.associations}) for each feature and likewise selects the
+     top \code{param.fs$thres.fs}, e.g. 100 features
+    \item \code{Wilcoxon} computes the p-Value for each single feature with
+     the Wilcoxon test and selects features with a p-Value smaller than
+     \code{param.fs$thres.fs}
+    }
 }
 \examples{
 

@@ -4,7 +4,7 @@
 \alias{make.predictions}
 \title{Make predictions on a test set}
 \usage{
-make.predictions(siamcat, siamcat.holdout = NULL, 
+make.predictions(siamcat, siamcat.holdout = NULL,
     normalize.holdout = TRUE, verbose = 1)
 }
 \arguments{
