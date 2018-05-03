@@ -51,7 +51,7 @@ model.evaluation.plot <- function(..., colours = NULL, fn.plot, verbose = 1) {
             if (n > 9) {
                 colours <- colorRampPalette(brewer.pal(9, 'Set1'))(n)
                 warning(paste0('Consider plotting fewer',
-                               ' ROC-Curves into the same plot...')
+                               ' ROC-Curves into the same plot...'))
             } else if (n == 2) {
                 colours <- brewer.pal(3, 'Set1')[1:2]
             } else {
