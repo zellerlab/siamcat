@@ -10,7 +10,8 @@ package.list <- c("RColorBrewer",
                   "PRROC",
                   "knitr",
                   "testthat",
-                  "rmarkdown","viridis", "gridExtra", "gridBase")
+                  "rmarkdown","viridis", "gridExtra", "gridBase",
+                  "energy", "corrplot", "coin")
 
 notInst      <- which(!package.list%in%installed.packages())
 if(length(notInst)>0) install.packages(package.list[notInst], repos="http://cran.uni-muenster.de")

@@ -36,8 +36,8 @@ extraction toolkits are crucially needed!
 
 Authors:
 \itemize{
-  \item Georg Zeller \email{zeller@embl.de} (0000-0003-1429-7485)
   \item Jakob Wirbel \email{jakob.wirbel@embl.de} (0000-0002-4073-3562)
+  \item Georg Zeller \email{zeller@embl.de} (0000-0003-1429-7485)
 }
 
 Other contributors:
