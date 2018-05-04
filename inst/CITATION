@@ -1,0 +1,27 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+         title = "{SIAMCAT}: Statistical Inference of Associations between 
+                    Microbial Communities And host phenoTypes",
+         author = c(person("Konrad", "Zych"),
+                    person("Jakob", "A.", "Wirbel"),
+                    person("Morgan", "Essex"),
+                    person("Kersten", "Breuer"),
+                    person("Nicolai", "Karcher"),
+                    person("Paul", "I.","Costea"),
+                    person("Shinichi", "Sunagawa"),
+                    person("Peer", "Bork"),
+                    person("Georg", "Zeller")
+                    ),
+         year = year,
+         note = note,
+         url = "https://bioconductor.org/packages/SIAMCAT/")
+
+textVersion = paste0("Konrad Zych, Jakob A. Wirbel, Morgan Essex, 
+                Nicolai Karcher, Kersten Breuer, Nicolai Karcher, 
+                Paul I. Costea, Shinichi Sunagawa, Peer Bork, Georg Zeller (",
+                year,
+                "). SIAMCAT: Statistical Inference of Associations between 
+                Microbial Communities And host phenoTypes ",
+                note, ".")
