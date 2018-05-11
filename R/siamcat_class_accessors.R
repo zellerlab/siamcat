@@ -227,6 +227,13 @@ setGeneric("norm_param", function(siamcat)
 setMethod("norm_param", "ANY", function(siamcat) {
     accessSlot(siamcat, "norm_param")
 })
+# constructor; for creating norm_param from a list
+#' @rdname norm_param-methods
+#' @aliases norm_param
+setMethod("norm_param", "list", function(siamcat) {
+    return(new("norm_param",
+        siamcat))
+})
 
 ################################################################################
 #' Retrieve a \link{label-class} object from object.
