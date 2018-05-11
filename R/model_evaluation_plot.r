@@ -10,6 +10,9 @@
 #'     repetitions.
 #' @param ... one or more object of class \link{siamcat-class}, can be named
 #' @param fn.plot string, filename for the pdf-plot
+#' @param colours colour specification for the different \link{siamcat-class}-
+#'     objects, defaults to \code{NULL} which will cause the colours to be
+#'     picked from the \code{'Set1'} palette
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
@@ -23,7 +26,7 @@
 #'     # simple working example
 #'     model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
 #'
-model.evaluation.plot <- function(..., colours = NULL, fn.plot, verbose = 1) {
+model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
@@ -46,6 +49,10 @@ model.evaluation.plot <- function(..., colours = NULL, fn.plot, verbose = 1) {
     args <- list(...)
 
     if (length(args) > 1) {
+        # checks
+        stopifnot(all(vapply(args, class, FUN.VALUE = character(1)) == 'siamcat'))
+        stopifnot(all(vapply(args, FUN=function(x){length(eval_data(x)) != 0}, FUN.VALUE = logical(1))))
+
         n <- length(args)
         if (is.null(colours)) {
             if (n > 9) {
@@ -115,6 +122,10 @@ model.evaluation.plot <- function(..., colours = NULL, fn.plot, verbose = 1) {
         }
 
     } else if (length(args) == 1) {
+        # checks
+        stopifnot(all(class(args[[1]]) == 'siamcat'))
+        stopifnot(length(eval_data(args[[1]])) != 0)
+
         # ROC
         if (is.null(colours)) colours <- 'black'
         auroc <- single.roc.plot(args[[1]], colours, verbose=verbose)
