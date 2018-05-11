@@ -5,6 +5,7 @@
 \alias{eval_data<-}
 \alias{assign-eval_data}
 \alias{eval_data<-,siamcat,list-method}
+\alias{eval_data<-}
 \title{Assign a new eval_data object to \code{x}}
 \usage{
 eval_data(x) <- value

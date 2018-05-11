@@ -10,7 +10,4 @@
 \value{
 none
 }
-\description{
-Show method for siamcat class object
-}
 \keyword{internal}

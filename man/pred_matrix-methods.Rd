@@ -5,6 +5,7 @@
 \alias{pred_matrix}
 \alias{pred_matrix,ANY-method}
 \alias{pred_matrix,matrix-method}
+\alias{pred_matrix}
 \title{Retrieve pred_matrix from object.}
 \usage{
 pred_matrix(siamcat)

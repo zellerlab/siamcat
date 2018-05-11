@@ -5,6 +5,7 @@
 \alias{norm_param<-}
 \alias{assign-norm_param}
 \alias{norm_param<-,siamcat,list-method}
+\alias{norm_param<-}
 \title{Assign a new norm_param object to \code{x}}
 \usage{
 norm_param(x) <- value

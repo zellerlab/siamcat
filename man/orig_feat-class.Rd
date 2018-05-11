@@ -10,7 +10,7 @@ The S4 class for storing original features info.
 \section{Slots}{
 
 \describe{
-\item{\code{taxa_are_rows}}{A single logical specifying the orientation 
+\item{\code{taxa_are_rows}}{A single logical specifying the orientation
 of the abundance table}
 
 \item{\code{.Data}}{inherited from \code{\link{matrix}} class, contains
