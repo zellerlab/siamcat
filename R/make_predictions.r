@@ -111,7 +111,7 @@ make.predictions <- function(siamcat,
                 # subselect features for each model
                 # needs to be added due to feature selection
                 data <- data[,model$features]
-                
+
                 data$label <- test.label
 
                 if (verbose > 2)
@@ -185,7 +185,7 @@ make.predictions <- function(siamcat,
             )
         if (verbose == 1 || verbose == 2)
             pb <-
-            txtProgressBar(max = num.folds * num.resample, style = 3)
+            txtProgressBar(max = data.split$num.folds * data.split$num.resample, style = 3)
         for (i in seq_len(num.models)) {
             data <- as.data.frame(feat.test)
             model <- models[[i]]
