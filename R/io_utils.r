@@ -32,9 +32,7 @@ read.features <- function(fn.in.feat, verbose = 0) {
     s.time <- proc.time()[3]
     if (is.null(fn.in.feat))
         stop("Filename for features file not provided!\n")
-    if (!file.exists(fn.in.feat))
-        stop("Feature file ", fn.in.feat, " does not exist!\n")
-    
+        
     feat <- read.table(
         file = fn.in.feat,
         sep = "\t",
@@ -46,7 +44,7 @@ read.features <- function(fn.in.feat, verbose = 0) {
     )
     feat <- as.matrix(feat)
     featNames <- make.names(rownames(feat))
-    
+
     if (any(rownames(feat) != featNames)) {
         message(
             "The provided feature names were not semantically correct for
@@ -104,8 +102,6 @@ read.features <- function(fn.in.feat, verbose = 0) {
 read.labels <- function(fn.in.label) {
     if (is.null(fn.in.label))
         stop("Filename for labels file not provided!\n")
-    if (!file.exists(fn.in.label))
-        stop("Label file ", fn.in.label, " does not exist!\n")
     label <-
         read.table(
             file = fn.in.label,
@@ -130,7 +126,7 @@ read.labels <- function(fn.in.label) {
     namesL <- colnames(label)
     label <- as.numeric(label)
     names(label) <- namesL
-    
+
     # Check general suitablity of supplied dataset
     classes <- unique(label)
     for (i in classes) {
@@ -151,13 +147,13 @@ read.labels <- function(fn.in.label) {
                     "training examples of class",
                     i,
                     " . Note that a dataset this
-                    small/skewed is not necessarily suitable for analysis in 
+                    small/skewed is not necessarily suitable for analysis in
                     this pipeline."
                 )
                 )
         }
         }
-    
+
     # Check label header!
     con <- file(fn.in.label, "rt")
     header <- readLines(con, 1)
@@ -170,15 +166,15 @@ read.labels <- function(fn.in.label) {
     stopifnot(label$info$type == "BINARY")
     label$positive.lab <- max(label$info$class.descr)
     label$negative.lab <- min(label$info$class.descr)
-    
+
     label$n.idx <- label$label == label$negative.lab
     label$n.lab <- gsub("[_.-]", " ", names(label$info$class.descr)
         [label$info$class.descr == label$negative.lab])
-    
+
     label$p.idx <- label$label == label$positive.lab
     label$p.lab <- gsub("[_.-]", " ", names(label$info$class.descr)
         [label$info$class.descr == label$positive.lab])
-    
+
     labelRes <-
         label(
             list(
@@ -224,8 +220,6 @@ read.meta <- function(fn.in.meta) {
         warning("Filename for metadata file not provided, continuing
             without it.\n")
     } else {
-        if (!file.exists(fn.in.meta))
-            stop("Metadata file ", fn.in.meta, " does not exist!\n")
         meta <-
             read.table(
                 file = fn.in.meta,
@@ -272,7 +266,7 @@ parse.label.header <- function(label.header) {
     class.descr <-
         as.numeric(class.descr[seq(1, length(class.descr) - 1, 2)])
     names(class.descr) <- l
-    
+
     label.info <- list()
     label.info$type <- type
     label.info$class.descr <- class.descr
@@ -309,17 +303,17 @@ create.label.from.metadata <- function(meta, column) {
     label$p.lab <- gsub("[_.-]", " ", unique(metaColumn)[2])
     class.descr <- c(-1, 1)
     names(class.descr) <- c(label$n.lab, label$p.lab)
-    
+
     names(label$label) <- rownames(meta)
     label$header <-
         paste0("#BINARY:1=", label$p.lab, ";-1=", label$n.lab)
     label$label[which(metaColumn == unique(metaColumn)[2])] <- 1
-    
+
     label$n.idx <- label$label == label$negative.lab
     label$p.idx <- label$label == label$positive.lab
-    
+
     label$info <- list(type = "BINARY", class.descr = class.descr)
-    
+
     labelRes <-
         label(
             list(
