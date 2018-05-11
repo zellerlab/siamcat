@@ -1,0 +1,212 @@
+---
+title: "Holdout Testing With SIAMCAT"
+author:
+-   name: "Jakob Wirbel and Georg Zeller"
+    affiliation: "EMBL Heidelberg"
+    email: "georg.zeller@embl.de"
+date: "2018-05-12"
+output: BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{SIAMCAT.holdout}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{ASCII}
+---
+
+# Introduction
+
+One of the functionalities of the `SIAMCAT` package is the training of
+statistical machine learning models on metagenomics data. In this vignette,
+we demonstrate how you can build such a model on one dataset and then apply it
+on another, similarly processed holdout dataset. This might be of interest
+when comparing data from two different studies on the same disease.
+
+In this vignette, we look at two datasets from studies on colorectal cancer
+(CRC). The first study from
+[Zeller et al.](http://europepmc.org/abstract/MED/25432777) investigated
+metagenomic markers for CRC in a population in France, while the second study
+from [Feng et al.](http://europepmc.org/abstract/MED/26408641) used samples
+from China for the same goal. Both datasets were processed with the same
+[taxonomic profiling tool](https://github.com/motu-tool/mOTUs_v2), yielding
+the same taxonomic identifiers.
+
+# Load Data
+
+```{r message=FALSE, warning=FALSE}
+library(SIAMCAT)
+
+# this is data from Zeller et al., Mol. Syst. Biol. 2014
+fn.feat.fr <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/FR-CRC-N141_tax-ab-specI.tsv'
+fn.metadata.fr <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/FR-CRC-N141_metadata.tsv'
+
+# this is the external dataset from Feng et al., Nat. Commun. 2015
+fn.feat.cn <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/CN-CRC-N128_tax-ab-specI.tsv'
+fn.metadata.cn <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/CN-CRC-N128_metadata.tsv'
+
+```
+
+First of all, we build a `SIAMCAT` object using the data from the French
+study. We can create the label from the metadata column called `'Group'`.
+
+```{r message=FALSE}
+feat.fr  <- read.features(fn.feat.fr)
+meta.fr  <- read.meta(fn.metadata.fr)
+label.fr <- create.label.from.metadata(meta.fr, 'Group')
+siamcat.fr <- siamcat(feat.fr, label.fr, meta.fr)
+```
+Similarly, we built a different SIAMCAT object with the data from the
+Chinese study.
+
+```{r message=FALSE}
+feat.cn  <- read.features(fn.feat.cn)
+meta.cn  <- read.meta(fn.metadata.cn)
+label.cn <- create.label.from.metadata(meta.cn, 'Group')
+siamcat.cn <- siamcat(feat.cn, label.cn, meta.cn)
+```
+# Model Building on French Dataset
+
+With the French dataset, we perform the complete process of model building
+within `SIAMCAT`, including data preprocessing steps like data validation,
+filtering, and data normalization.
+
+```{r}
+siamcat.fr <- validate.data(siamcat.fr, verbose=2)
+
+siamcat.fr <- filter.features(
+    siamcat.fr,
+    filter.method = 'abundance',
+    cutoff = 0.001,
+    recomp.prop = FALSE,
+    rm.unmapped = TRUE,
+    verbose = 2
+)
+
+siamcat.fr <- normalize.features(
+    siamcat.fr,
+    norm.method = "log.unit",
+    norm.param = list(
+        log.n0 = 1e-06,
+        n.p = 2,
+        norm.margin = 1
+    ),
+    verbose = 3
+)
+```
+Now, we can build the statistical model. We use the same parameters as in
+the main `SIAMCAT` vignette, where the process is explained in more detail.
+
+```{r}
+siamcat.fr <-  create.data.split(
+    siamcat.fr,
+    num.folds = 5,
+    num.resample = 2,
+    stratify = TRUE,
+    inseparable = NULL,
+    verbose = 0
+)
+
+siamcat.fr <- train.model(
+    siamcat.fr,
+    method = "lasso",
+    stratify = TRUE,
+    modsel.crit = list("pr"),
+    min.nonzero.coeff = 5,
+    param.set = NULL,
+    verbose = 0
+)
+
+siamcat.fr <- make.predictions(siamcat.fr, verbose=0)
+
+siamcat.fr <-  evaluate.predictions(siamcat.fr, verbose=0)
+```
+
+
+# Application on Holdout Dataset
+
+Now that we have successfully built the model for the French dataset, we can
+apply it to the Chinese holdout dataset. First, we will normalize the Chinese
+dataset with the same parameters that we used for the French dataset in order
+to make the data comparable. For that step, we can use the frozen normalization
+functionality in the `normalize.features` function in `SIAMCAT`. We supply to
+the function all normalization parameters saved in the `SIAMCAT` object, which
+can be accessed using the `norm_param` accessor.
+
+```{r}
+
+siamcat.cn <- normalize.features(siamcat.cn,
+    norm.param=norm_param(siamcat.fr),
+    verbose = 2)
+
+```
+
+Next, we apply the trained model to predict the holdout dataset.
+
+```{r}
+pred_matrix(siamcat.cn) <- make.predictions(siamcat = siamcat.fr,
+    siamcat.holdout = siamcat.cn,
+    normalize.holdout = FALSE,
+    verbose = 0)
+```
+
+Note that the `make.predictions` function can also take care of the
+normalization of the holdout dataset.
+
+```{r eval=FALSE}
+## Alternative Code, not run here
+siamcat.cn <- siamcat(feat.cn, label.cn, meta.cn)
+pred_matrix(siamcat.cn) <- make.predictions(siamcat = siamcat.fr,
+    siamcat.holdout = siamcat.cn,
+    normalize.holdout = TRUE,
+    verbose=2)
+```
+
+Again, we have to evaluate the predictions:
+
+```{r}
+siamcat.cn <- evaluate.predictions(siamcat.cn, verbose=0)
+```
+
+# Model Evaluation Plot
+
+Now, we can compare the performance of the classifier on the original and
+the holdout dataset by using the `model.evaluation.plot` function. Here,
+we can supply several `SIAMCAT` objects for which the model evaluation will be
+plotted in the same plot. Note that we can supply the objects as named objects
+in order to print the names in the legend.
+
+```{r eval=FALSE}
+model.evaluation.plot('FR-CRC'=siamcat.fr,
+    'CN-CRC'=siamcat.cn,
+    fn.plot = './eval_plot.pdf',
+    colours=c('dimgrey', 'orange'))
+```
+```{r fig.width = 6, fig.asp=1, fig.align="left", echo=FALSE}
+
+args <- list('FR-CRC'=siamcat.fr, 'CN-CRC'=siamcat.cn)
+
+colours=c('dimgrey', 'orange')
+
+plot(NULL, xlim = c(0, 1), ylim = c(0, 1),
+    xlab = "False positive rate", ylab = "True positive rate",
+    type = "n")
+title(paste("ROC curve for the model", sep = " "))
+abline(a = 0, b = 1, lty = 3)
+
+legend.val <- c()
+for (i in 1:length(args)) {
+    legend.val <- c(legend.val,
+        as.numeric(SIAMCAT:::single.roc.plot(args[[i]], colours[i],verbose=0)))
+}
+
+legend('bottomright',
+    legend= paste0(names(args),
+        ' AUC: ' ,
+        format(legend.val, digits=3)),
+    col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+
+```
+
+# Session Info
+
+```{r}
+sessionInfo()
+```
