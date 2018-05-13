@@ -4,7 +4,7 @@
 \alias{normalize.features}
 \title{Perform feature normalization}
 \usage{
-normalize.features(siamcat, 
+normalize.features(siamcat,
 norm.method = c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
 norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1, n.p = 2, norm.margin = 1),
 verbose = 1)
@@ -37,7 +37,7 @@ There are five different normalization methods available:
     column (=sample) by the square root of the sum of ranks
     \item \code{'rank.std'} converts features to ranks and applies z-score
     standardization
-    \item \code{'log.clr'} centered log-ratio transformation (with the 
+    \item \code{'log.clr'} centered log-ratio transformation (with the
     addition of pseudocounts)
     \item \code{'log.std'} log-transforms features (after addition of
     pseudocounts) and applies z-score standardization
@@ -58,8 +58,8 @@ which are dependant on the normalization method of choice:
     the estimation of \code{log.n0} from the data
     \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
     using the same default values
-    \item \code{'log.unit'} requires next to \code{log.n0} also the 
-    parameters \code{n.p} and \code{norm.margin}. \code{n.p} specifies the 
+    \item \code{'log.unit'} requires next to \code{log.n0} also the
+    parameters \code{n.p} and \code{norm.margin}. \code{n.p} specifies the
     vector norm to be used, can be either \code{1} for \code{x/sum(x)} or
     \code{2} for \code{x/sqrt(sum(x^2))}. The parameter \code{norm.margin}
     specifies the margin over which to normalize, similarly to the
@@ -87,12 +87,12 @@ z-score standardization)
     norm.method='rank.unit')
 
     # log.unit example
-    siamcat_norm <- normalize.features(siamcat_example, 
-    norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1, 
+    siamcat_norm <- normalize.features(siamcat_example,
+    norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1,
     norm.margin=1))
 
     # log.std example
-    siamcat_norm <- normalize.features(siamcat_example, 
+    siamcat_norm <- normalize.features(siamcat_example,
     norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=.1))
 
 }

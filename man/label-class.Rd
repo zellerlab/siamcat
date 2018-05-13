@@ -15,7 +15,7 @@ a list with:
 \itemize{
     \item \code{label} numeric vector, specifying to which category samples
     belong, usualy made of 1s and -1s
-    \item \code{header} contains information from the header of the label 
+    \item \code{header} contains information from the header of the label
     file
     \item \code{info} list with additional informations about the dataset
     \item \code{positive.lab} specifies which of two numbers in label is a

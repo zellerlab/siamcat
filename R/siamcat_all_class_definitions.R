@@ -36,7 +36,7 @@ setClass("data_split", contains = "list")
 #' \itemize{
 #'     \item \code{label} numeric vector, specifying to which category samples
 #'     belong, usualy made of 1s and -1s
-#'     \item \code{header} contains information from the header of the label 
+#'     \item \code{header} contains information from the header of the label
 #'     file
 #'     \item \code{info} list with additional informations about the dataset
 #'     \item \code{positive.lab} specifies which of two numbers in label is a
@@ -66,7 +66,7 @@ setClass("pred_matrix", contains = "matrix")
 #' The S4 class for storing original features info.
 #' @name orig_feat-class
 #' @rdname orig_feat-class
-#' @slot taxa_are_rows A single logical specifying the orientation 
+#' @slot taxa_are_rows A single logical specifying the orientation
 #' of the abundance table
 #' @slot .Data inherited from \code{\link{matrix}} class, contains
 #' a matrix with predictions made by \link{make.predictions} function
@@ -100,6 +100,21 @@ setClass("orig_feat", contains = "otu_table")
 #'}
 #' @exportClass eval_data
 setClass("eval_data", contains = "list")
+
+#' The S4 class for storing the normalization paramters
+#' @name norm_param-class
+#' @rdname norm_param-class
+#' @slot .Data inherited from \code{\link{list}} class, contains
+#' a list with:
+#'     \itemize{
+#'     \item \code{norm.method} the normalization method used
+#'     \item \code{retained.feat} the names of features retained after filtering
+#'     \item \code{log.n0} pseudocount
+#'     \item \code{n.p} vector norm
+#'     \item \code{norm.margin} margin for the normalization
+#' } and additional entries depending on the normalization method used.
+#' @exportClass norm_param
+setClass("norm_param", contains = "list")
 
 #' The S4 class for storing taxa-abundance information and models.
 #' @name siamcat-class

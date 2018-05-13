@@ -4,11 +4,15 @@
 \name{norm_param}
 \alias{norm_param}
 \alias{norm_param,ANY-method}
+\alias{norm_param,list-method}
+\alias{norm_param}
 \title{Retrieve norm_param from object.}
 \usage{
 norm_param(siamcat)
 
 \S4method{norm_param}{ANY}(siamcat)
+
+\S4method{norm_param}{list}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

@@ -5,6 +5,7 @@
 \alias{label<-}
 \alias{assign-label}
 \alias{label<-,siamcat,label-method}
+\alias{label<-}
 \title{Assign a new label object to \code{x}}
 \usage{
 label(x) <- value

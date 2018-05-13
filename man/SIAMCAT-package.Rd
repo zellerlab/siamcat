@@ -7,8 +7,6 @@
 \title{SIAMCAT: Statistical Inference of Associations between Microbial
 Communities And host phenoTypes}
 \description{
-\if{html}{\figure{logo.png}{options: align='right'}}
-
 Pipeline for Statistical Inference of Associations between
 Microbial Communities And host phenoTypes (SIAMCAT). A primary goal
 of analyzing microbiome data is to determine changes in community

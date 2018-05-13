@@ -5,6 +5,7 @@
 \alias{meta<-}
 \alias{assign-meta}
 \alias{meta<-,siamcat,sample_data-method}
+\alias{meta<-}
 \title{Assign a new sam_data object to \code{x}}
 \usage{
 meta(x) <- value

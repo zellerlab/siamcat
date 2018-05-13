@@ -42,7 +42,7 @@ The data are the same as used in the publication of
 which demonstrated the potential of microbial markers in feacal samples to
 distinguish patients with colorectal cancer (CRC) from healthy controls.
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE}
 library(SIAMCAT)
 fn.in.feat  <- system.file(
     "extdata",
@@ -64,7 +64,7 @@ fn.in.meta  <- system.file(
 We can access the files with the dedicated SIAMCAT functions and directly
 construct a SIAMCAT object containing the microbial features, the patient`s
 labels, and metadata for the patients.
-```{r results="hide"}
+```{r results="hide", warning=FALSE}
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
 meta  <- read.meta(fn.in.meta)
