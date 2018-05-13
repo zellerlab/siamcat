@@ -9,19 +9,19 @@ model.evaluation.plot(..., fn.plot, colours = NULL, verbose = 1)
 \arguments{
 \item{...}{one or more object of class \link{siamcat-class}, can be named}
 
-\item{colours}{vector of colours to be used for plotting (if
-\code{NULL} default palettes will be used)}
-
 \item{fn.plot}{string, filename for the pdf-plot}
 
-\item{colours}{colour specification for the different \link{siamcat-class}-
-objects, defaults to \code{NULL} which will cause the colours to be
-picked from the \code{'Set1'} palette}
+\item{colours}{vector of colours to be used for plotting (if
+\code{NULL} default palettes will be used)}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information,
 defaults to \code{1}}
+
+\item{colours}{colour specification for the different \link{siamcat-class}-
+objects, defaults to \code{NULL} which will cause the colours to be
+picked from the \code{'Set1'} palette}
 }
 \value{
 Does not return anything, but produces the model evaluation plot.
