@@ -9,6 +9,8 @@
 #'     Precision-recall (PR)-curves for the different cross-validation
 #'     repetitions.
 #' @param ... one or more object of class \link{siamcat-class}, can be named
+#' @param colours vector of colours to be used for plotting (if
+#' \code{NULL} default palettes will be used)
 #' @param fn.plot string, filename for the pdf-plot
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal

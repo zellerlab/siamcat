@@ -9,6 +9,9 @@ model.evaluation.plot(..., colours = NULL, fn.plot, verbose = 1)
 \arguments{
 \item{...}{one or more object of class \link{siamcat-class}, can be named}
 
+\item{colours}{vector of colours to be used for plotting (if
+\code{NULL} default palettes will be used)}
+
 \item{fn.plot}{string, filename for the pdf-plot}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
