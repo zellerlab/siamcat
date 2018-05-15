@@ -4,7 +4,8 @@
 \alias{create.label.from.metadata}
 \title{create a label object from metadata}
 \usage{
-create.label.from.metadata(meta, column)
+create.label.from.metadata <- function(meta, column, case=NULL, 
+p.lab = NULL, n.lab = NULL, verbose=1)
 }
 \arguments{
 \item{meta}{metadata as read by \link{read.meta}
@@ -12,6 +13,25 @@ of \link[phyloseq]{sample_data-class}}
 
 \item{column}{name of column that will be used
 to create the label}
+
+\item{case}{name of a label that will be used as a positive label. If the
+variable is binary, the other label will be used as a negative one. If the
+variable has multiple values, all the other values will be used a negative
+label (testing one vs rest). Default to NULL in which case the first value
+of the variable will be used as a positive label.}
+
+\item{p.lab}{name of the positive label (useful mostly for visualizations). 
+Default to NULL in which case the value of the positive label will be used.}
+
+\item{n.lab}{name of the negative label (useful mostly for visualizations). 
+Default to NULL in which case the value of the negative label will be used
+for binary variables and "rest" will be used for variables with multiple
+values.}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal
+level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 an object of class \link{label-class}
@@ -24,4 +44,4 @@ This function creates a label object from metadata
     label <- create.label.from.metadata(meta(siamcat_example),"gender")
 
 }
-\keyword{internal}
+\keyword{create.label.from.metadata}
