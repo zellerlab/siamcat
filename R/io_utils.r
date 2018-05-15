@@ -286,28 +286,54 @@ parse.label.header <- function(label.header) {
 #'     label <- create.label.from.metadata(meta(siamcat_example),"gender")
 #'
 #' @export
-create.label.from.metadata <- function(meta, column) {
+create.label.from.metadata <- function(meta, column, case=NULL, verbose=1) {
+    if (verbose > 1)
+        message("+ starting create.label.from.metadata")
+    
+    s.time <- proc.time()[3]
+    
     if (!column %in% colnames(meta))
         stop("ERROR: Column ", column, " not found in the metadata\n")
+    
     metaColumn <- vapply(meta[, column], as.character,
         FUN.VALUE = character(nrow(meta)))
-    if (!length(unique(metaColumn)) == 2)
-        stop("ERROR: Column ", column, " does not contain binary label\n")
+
+    labels <- unique(metaColumn)
+
+    if (length(labels) == 2){
+        if (verbose > 0) message("Column ", column, "contains binary label\n")
+        case <- labels[1]
+        control <- labels[2]
+
+    }else if(length(labels) > 2){
+        if(is.null(case)){
+            case <- labels[1]
+        }else{
+            if(!case%in%labels){
+                stop("Column ", column, "does not contain value:",case,"\n")
+            }
+        }
+        control <- "rest"
+    }
+    if (verbose > 0)
+            message("Label used as case:\n   ",case,
+                "\nLabel used as control:\n   ",
+                paste(labels[which(labels!=case)], collapse = ","))
     label <-
-        list(
-            label = rep(-1, length(metaColumn)),
-            positive.lab = 1,
-            negative.lab = (-1)
-        )
-    label$n.lab <- gsub("[_.-]", " ", unique(metaColumn)[1])
-    label$p.lab <- gsub("[_.-]", " ", unique(metaColumn)[2])
+            list(
+                label = rep(-1, length(metaColumn)),
+                positive.lab = 1,
+                negative.lab = (-1)
+            ) 
+    label$n.lab <- gsub("[_.-]", " ", case)
+    label$p.lab <- gsub("[_.-]", " ", control)
     class.descr <- c(-1, 1)
     names(class.descr) <- c(label$n.lab, label$p.lab)
 
     names(label$label) <- rownames(meta)
     label$header <-
         paste0("#BINARY:1=", label$p.lab, ";-1=", label$n.lab)
-    label$label[which(metaColumn == unique(metaColumn)[2])] <- 1
+    label$label[which(metaColumn == case)] <- 1
 
     label$n.idx <- label$label == label$negative.lab
     label$p.idx <- label$label == label$positive.lab
@@ -328,5 +354,12 @@ create.label.from.metadata <- function(meta, column) {
                 p.lab = label$p.lab
             )
         )
+        e.time <- proc.time()[3]
+    if (verbose > 0)
+        message(paste(
+            "+ finished create.label.from.metadata in",
+            formatC(e.time - s.time, digits = 3),
+            "s"
+        ))
     return(labelRes)
 }
