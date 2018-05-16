@@ -42,8 +42,7 @@ importantly, the label for cases has to be greater than the one for controls
 }
 \examples{
     # run with example data
-fn.label <- system.file('extdata',
-'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+fn.label <- system.file('extdata', 'label_crc_zeller_msb_mocat_specI.tsv',
     package = 'SIAMCAT')
 
 labels <- read.labels(fn.label)

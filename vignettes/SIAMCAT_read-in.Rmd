@@ -1,0 +1,161 @@
+---
+title: "Using your data in SIAMCAT"
+author:
+-   name: "Konrad Zych, Jakob Wirbel, and Georg Zeller"
+    affiliation: "EMBL Heidelberg"
+    email: "georg.zeller@embl.de"
+date: "2018-05-16"
+output: BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{SIAMCAT.holdout}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{ASCII}
+---
+
+# Introduction
+
+This vignette illustrates how to read in and input your own data to the
+`SIAMCAT` package. We will cover reading in text files from the disk, formatting
+them and creating an object of `siamcat-class` of them. 
+
+An object of `siamcat-class` is the centerpiece of the package. All of the input
+data and result are stored inside. The structure of the object is described in
+the [siamcat-class object](#siamcat-class-object) section.
+
+
+# Loading your data into R
+
+## SIAMCAT format files
+
+There are three input files in SIAMCAT format:
+
+### Features file
+
+The features file is a tsv file that is organized as follows: 
+features (in rows) x samples (in columns).
+
+First row should contain sample names, while the first column should contain 
+feature labels (e.g. taxonomic identifiers). The remaining entries are expected 
+to be real values >= 0 that quantify the abundance of each feature in each 
+sample:
+
+| | Sample_1 | Sample_2  | Sample_3 | Sample_4  | Sample_5 |
+| --- | ---:| ---:| ---:| ---:| ---:|
+| **Feature_1** | 0.59 | 0.71 | 0.78 | 0.61 | 0.66 |
+| **Feature_2** | 0.00 | 0.02 | 0.00 | 0.00 | 0.00 |
+| **Feature_3** | 0.02 | 0.00 | 0.00 | 0.00 | 0.00 |
+| **Feature_4** | 0.34 | 0.00 | 0.43 | 0.00 | 0.00 |
+| **Feature_5** | 0.56 | 0.56 | 0.00 | 0.00 | 0.00 |
+
+An example of such a file is atached to a SIAMCAT package:
+
+```{r message=FALSE}
+library(SIAMCAT)
+fn.in.feat  <- system.file(
+    "extdata",
+    "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+    package = "SIAMCAT"
+)
+```
+
+We can access the file with a dedicated SIAMCAT function `read.features`:
+```{r results="hide", warning=FALSE}
+feat  <- read.features(fn.in.feat)
+```
+
+### Metadata file
+
+The metadata file a tsv file organized as follows:
+samples (in rows) x metadata (in columns):
+
+First row should contain metadata variables names, while the first column should
+contain sample names.
+
+| | Age | Gender | BMI |
+| --- | ---:| ---:| ---:|
+| **Sample_1** | 52 | 1 | 20|
+| **Sample_2** | 37 | 1 | 18 |
+| **Sample_3** | 66 | 2 | 24 |
+| **Sample_4** | 54 | 2 | 26 | 
+| **Sample_5** | 65 | 2 | 30 | 
+
+An example of such a file is atached to a SIAMCAT package:
+```{r message=FALSE}
+fn.in.meta  <- system.file(
+    "extdata",
+    "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+    package = "SIAMCAT"
+)
+```
+
+We can access the file with a dedicated SIAMCAT function `read.meta`:
+```{r results="hide", warning=FALSE}
+meta  <- read.meta(fn.in.meta)
+```
+
+### Label file
+The label file is a tsv file with labels and converts it into a label object.
+
+First row is expected to be #BINARY:1=[label for cases]; 
+-1=[label for controls]. Second row should contain the sample identifiers as 
+tab-separated list (consistent with feature and metadata).
+
+Third row is expected to contain the actual class labels (tab-separated): 
+1 for each case and -1 for each control:
+
+| #BINARY:1=cancer;-1=healthy |
+| :---| :---| :---| :---| :---|
+| Sample_1 | Sample_2  | Sample_3 | Sample_4  | Sample_5 |
+| 1 | 1 | -1 | -1 | 1 |
+
+```{r message=FALSE}
+fn.in.label <- system.file(
+    "extdata",
+    "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+    package = "SIAMCAT"
+)
+```
+
+We can access the files with the dedicated SIAMCAT functions and directly
+construct a SIAMCAT object containing the microbial features, the patient`s
+labels, and metadata for the patients.
+```{r results="hide", warning=FALSE}
+label <- read.labels(fn.in.label)
+```
+
+The label can also be created from one of the metadata columns. For example, to
+create a label from a `crc_stage` column, treating value `0` as a case and the
+other values as a control:
+```{r results="hide", warning=FALSE}
+label <- create.label.from.metadata(meta, "crc_stage", case = 0)
+```
+
+### Creating a siamcat-class object
+
+Out of the features, label and (optionally) metadata objectst we can create a 
+`siamcat-class`. The structure of the object is described inthe 
+[siamcat-class object](#siamcat-class-object) section.
+```{r results="hide", warning=FALSE}
+siamcat <- siamcat(feat, label, meta)
+```
+
+
+
+## phyloseq format files
+
+## LEfSe format files
+
+## MaAsLin format files
+
+## metagenomeSeq format files
+
+## Other file formats
+
+
+# siamcat-class object
+
+# Session Info
+
+```{r}
+sessionInfo()
+```

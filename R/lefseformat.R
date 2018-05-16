@@ -11,7 +11,7 @@
 #' 
 #' @param filename name of the input file to which data will be save
 #' 
-#' @keywords internal
+#' @keywords siamcat.to.lefse
 #' 
 #' @return nothing but data is written to a file
 #' 
@@ -38,4 +38,43 @@ siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
                 sep = '\t', 
                 row.names = TRUE,
                 col.names = FALSE)
+}
+
+#' @title read an input file in a LEfSe input format
+#' 
+#' @description This reads an input file in a LEfSe input format
+#'  
+#' @param filename name of the input file in a LEfSe input format
+#' 
+#' @keywords read.lefse
+#' 
+#' @return a list with two elements: \itemize{
+#'     \item \code{feat} a features matrix (just as returned by 
+#'     \link{read.features} function
+#'     \item \code{meta} a metadate matrix (just as returned by 
+#'     \link{read.meta} function
+#' 
+#' @export
+#' 
+read.lefse <- function(filename="data.txt", n.meta = 1) {
+
+    lefse <- read.csv("/Users/zych/Data/SIAMCAT datasets/lefseCRC.txt", 
+                        sep = "\t", header = FALSE, stringsAsFactors = F)
+    
+    meta          <- lefse[1:n.meta,]
+    samples.names <- lefse[n.meta+1,]
+    feat          <- lefse[(n.meta+2):nrow(lefse),]
+    
+    rownames(meta) <- meta[,1]
+    meta <- meta[,-1]
+    colnames(meta) <- samples.names[,-1]
+    meta <- sample_data(as.data.frame(t(meta)))
+    
+    rownames(feat) <- feat[,1]
+    feat <- feat[,-1]
+    colnames(feat) <- samples.names[,-1]
+    feat <- apply(feat,c(1,2),as.numeric)
+    feat <- otu_table(feat,taxa_are_rows = TRUE)
+    
+    return(list(feat = feat, meta = meta))
 }
