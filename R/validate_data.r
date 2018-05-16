@@ -32,6 +32,13 @@ validate.data <- function(siamcat, verbose = 1) {
     feat  <- features(siamcat)
     meta  <- meta(siamcat)
     s.time <- proc.time()[3]
+
+    # Check if features are in the right format
+    # check for compositional data
+    if (any(colSums(feat) > 1) | any(feat < 0)){
+        stop("Your data do not seem to contain relative abundances. Exiting...")
+    }
+
     # Check if labels are available for all samples in features
     if (verbose > 2) {
         message("+++ checking if labels are available for all samples in
@@ -46,22 +53,22 @@ validate.data <- function(siamcat, verbose = 1) {
         m <- match(names(label$label), colnames(feat))
         features(siamcat) <- feat[, m]
         stopifnot(all(names(label$label) == colnames(feat)))
-        
+
     } else if (length(label$label) >= ncol(feat)) {
         # if there are more labels than samples in features, remove
         # them in labels
         stopifnot(all(colnames(feat) %in% names(label$label)))
-        
+
         ids <-
             colnames(feat)[colnames(feat) %in% names(label$label)]
         # create new labels object with reduced labels
         siamcat <- filter.label(siamcat, ids)
-        
+
     } else if (length(label$label) <= ncol(feat)) {
         # if there are more samples in features, remove them and keep
         # only the ones for which labels are available
         stopifnot(all(names(label$label) %in% colnames(feat)))
-        
+
         message(
             paste(
                 "Warning: Removing",
@@ -69,12 +76,12 @@ validate.data <- function(siamcat, verbose = 1) {
                 "sample(s) for which no labels are available."
             )
         )
-        
+
         m <- match(names(label$label), colnames(feat))
         features(siamcat) <- feat[, m]
-        
+
     }
-    
+
     # Check for sample number in the different classes
     if (verbose > 2)
         message("+++ checking sample number per class")
@@ -104,8 +111,8 @@ validate.data <- function(siamcat, verbose = 1) {
             )
         }
     }
-    
-    
+
+
     # if metadata is available, check for overlap in labels
     if (!is.null(meta)) {
         if (verbose > 2)
