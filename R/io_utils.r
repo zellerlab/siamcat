@@ -48,6 +48,12 @@ read.features <- function(fn.in.feat, verbose = 0) {
         encoding = "latin1"
     )
     feat <- as.matrix(feat)
+
+    # check for compositional data
+    if (any(colSums(feat) > 1)){
+        stop("Your data do not seem to contain relative abundances. Exiting...")
+    }
+
     featNames <- make.names(rownames(feat))
 
     if (any(rownames(feat) != featNames)) {
