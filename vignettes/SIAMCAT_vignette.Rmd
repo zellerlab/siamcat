@@ -1,22 +1,31 @@
 ---
-title: "SIAMCAT: Statistical Inference of Associations between Microbial 
+title: "SIAMCAT: Statistical Inference of Associations between Microbial
 Communities And host phenoTypes"
 author:
--   name: "Konrad Zych, Jakob Wirbel and Georg Zeller"
+-   name: "Konrad Zych, Jakob Wirbel, and Georg Zeller"
     affiliation: "EMBL Heidelberg"
     email: "georg.zeller@embl.de"
-date: "2018-03-28"
+date: "Date last modified: 2018-05-16"
 output: BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{SIAMCAT}
+    %\VignetteIndexEntry{SIAMCAT basic vignette}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{ASCII}
 ---
+
 # About this vignette
-This vignette aims to be a short tutorial for the main functionalities of 
-SIAMCAT. More detailed tutorials or examples of additional workflows can 
-be found on the web under 
-[EMBL-microbiome tools](http://microbiome-tools.embl.de/).
+
+This vignette aims to be a short tutorial for the main functionalities of
+`SIAMCAT`. Examples of additional workflows or more detailed tutorials can
+be found in other vignettes (see the
+[BioConductor page](https://bioconductor.org/packages/SIAMCAT)).
+
+`SIAMCAT` is part of the suite of computational microbiome analysis tools
+hosted at [EMBL](https://www.embl.org) by the groups of
+[Peer Bork](https://www.embl.de/research/units/scb/bork/index.html) and
+[Georg Zeller](https://www.embl.de/research/units/scb/zeller/index.html). Find
+out more at [EMBL-microbiome tools](http://microbiome-tools.embl.de/).
+
 
 # Introduction
 
@@ -24,47 +33,47 @@ The promise of elucidating associations between the microbiota and their host,
 with diagnostic and therapeutic potential, is fueling metagenomics research.
 However, there is a lack of user-friendly software tools implementing robust
 statistical testing and machine learning methods suitable for microbiome data.
-Here, we describe SIAMCAT, a solution to this problem implemented as R package.
+Here, we describe `SIAMCAT`, a solution to this problem implemented as R package.
 
 Associations between microbiome and host phenotypes are ideally described by
 quantitative models able to predict host status from microbiome composition.
-SIAMCAT can do so for data from hundreds of thousands of microbial taxa, gene
-families, or metabolic pathways over hundreds of samples. SIAMCAT produces
-graphical output for convenient assessment of the quality of the input data  and
+`SIAMCAT` can do so for data from hundreds of thousands of microbial taxa, gene
+families, or metabolic pathways over hundreds of samples. `SIAMCAT` produces
+graphical output for convenient assessment of the quality of the input data and
 statistical associations, for model diagnostics and inference revealing  the
 most predictive microbial biomarkers.
 
 # First Steps: Read/Validate/Filter the Data
 
-First, let`s load the SIAMCAT package and use the files included in SIAMCAT. 
-The data are the same as used in the publication of 
+First, let us load the `SIAMCAT` package and use the files included
+in `SIAMCAT`. The data are the same as used in the publication of
 [Zeller et al](http://europepmc.org/abstract/MED/25432777),
-which demonstrated the potential of microbial markers in feacal samples to
+which demonstrated the potential of microbial markers in fecal samples to
 distinguish patients with colorectal cancer (CRC) from healthy controls.
 
 ```{r message=FALSE}
 library(SIAMCAT)
 fn.in.feat  <- system.file(
     "extdata",
-    "feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+    "feat_crc_zeller_msb.tsv",
     package = "SIAMCAT"
 )
 fn.in.label <- system.file(
     "extdata",
-    "label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+    "label_crc_zeller_msb.tsv",
     package = "SIAMCAT"
 )
 fn.in.meta  <- system.file(
     "extdata",
-    "num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv",
+    "num_metadata_crc_zeller_msb.tsv",
     package = "SIAMCAT"
 )
 ```
 
-We can access the files with the dedicated SIAMCAT functions and directly
-construct a SIAMCAT object containing the microbial features, the patient`s
+We can access the files with the dedicated `SIAMCAT` functions and directly
+construct a `SIAMCAT` object containing the microbial features, the patient's
 labels, and metadata for the patients.
-```{r results="hide", warning=FALSE}
+```{r message=FALSE}
 feat  <- read.features(fn.in.feat)
 label <- read.labels(fn.in.label)
 meta  <- read.meta(fn.in.meta)
@@ -122,167 +131,11 @@ siamcat <- filter.features(
 )
 ```
 
-# Association/Confounder Testing
-
-Another functionality of SIAMCAT are the modules for testing of confounders
-and associations. Confounders are checked with the function `check.confounders`,
-which produces a plot for each possible confounder in the metadata and diverts
-the output into a pdf-file. The function can be used like that:
-
-```{r eval=FALSE}
-## Not run here, since the function produces a pdf-file as output
-check.confounders(siamcat,
-    fn.plot = 'conf_check.pdf')
-```
-
-Here would be an example output for `Age` as potential confounder:
-
-```{r fig.height = 6, fig.width = 6, fig.align="center", echo=FALSE}
-label      <- label(siamcat)
-case.count <- length(label$label[label$p.idx])
-ctrl.count <- length(label$label[label$n.idx])
-if (case.count > ctrl.count) {
-    lgr <- label$p.idx
-    smlr <- label$n.idx
-    bp.labs <- c(label$p.lab, label$n.lab)
-} else {
-    lgr <- label$n.idx
-    smlr <- label$p.idx
-    bp.labs <- c(label$n.lab, label$p.lab)
-}
-len.diff <- abs(case.count - ctrl.count)
-hmap <- data.frame()
-m = 1
-phyloseq <- physeq(siamcat)
-sam_data <- sample_data(phyloseq)
-mname <- gsub('[_.-]', ' ', colnames(sam_data)[m])
-mname <-
-    paste(toupper(substring(mname, 1, 1)), substring(mname, 2), sep = "")
-
-mvar  <- as.numeric(unlist(sam_data[, m]))
-u.val <- unique(mvar)
-u.val <- u.val[!is.na(u.val)]
-colors <- RColorBrewer::brewer.pal(5, "Spectral")
-histcolors <- RColorBrewer::brewer.pal(9, "YlGnBu")
-
-dct <- matrix(NA, nrow = 2, ncol = 2)
-dct[1, ] <-
-    c(sum(mvar[label$n.idx] <= median(mvar, na.rm = TRUE), na.rm = TRUE),
-        sum(mvar[label$p.idx] <= median(mvar, na.rm = TRUE), na.rm = TRUE))
-dct[2, ] <-
-    c(sum(mvar[label$n.idx] > median(mvar, na.rm = TRUE), na.rm = TRUE),
-        sum(mvar[label$p.idx] > median(mvar, na.rm = TRUE), na.rm = TRUE))
-rownames(dct) <- c(paste(mname, "<= med"), paste(mname, "> med"))
-hmap <- rbind(hmap, dct)
-layout(rbind(c(1, 2), c(3, 4)))
-
-# par(mar=c(4.5, 4.5, 2.5, 1.5),mgp=c(2.5,1,0))
-ax.int <- c(min(mvar, na.rm = TRUE), max(mvar, na.rm = TRUE))
-qqplot(
-    mvar[label$n.idx],
-    mvar[label$p.idx],
-    xlim = ax.int,
-    ylim = ax.int,
-    pch = 16,
-    cex = 0.6,
-    xlab = label$n.lab,
-    ylab = label$p.lab,
-    main = paste('Q-Q plot for', mname)
-)
-abline(0, 1, lty = 3)
-p.val  <- wilcox.test(mvar[label$n.idx], mvar[label$p.idx],
-    exact = FALSE)$p.value
-text(
-    ax.int[1] + 0.9 * (ax.int[2] - ax.int[1]),
-    ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]),
-    cex = 0.8,
-    paste('MWW test p-value:', format(p.val, digits = 4)),
-    pos = 2
-)
-
-# par(mar=c(4, 2.5, 3.5, 1.5))
-hist(
-    mvar[label$n.idx],
-    main = label$n.lab,
-    xlab = mname,
-    col = histcolors,
-    breaks = seq(min(mvar, na.rm = TRUE), max(mvar, na.rm = TRUE), length.out =
-            10)
-)
-mtext(
-    paste('N =', length(mvar[label$n.idx])),
-    cex = 0.6,
-    side = 3,
-    adj = 1,
-    line = 1
-)
-
-par(mar = c(2.5, 4.5, 2.5, 1.5))
-combine <- data.frame(mvar[lgr], c(mvar[smlr], rep(NA, len.diff)))
-boxplot(
-    combine[, 1],
-    na.omit(combine[, 2]),
-    use.cols = TRUE,
-    names = bp.labs,
-    ylab = mname,
-    main = paste('Boxplot for', mname),
-    col = histcolors
-)
-stripchart(
-    combine,
-    vertical = TRUE,
-    add = TRUE,
-    method = "jitter",
-    pch = 20
-)
-
-par(mar = c(4.5, 2.5, 3.5, 1.5))
-hist(
-    mvar[label$p.idx],
-    main = label$p.lab,
-    xlab = mname,
-    col = histcolors,
-    breaks = seq(min(mvar, na.rm = TRUE), max(mvar, na.rm = TRUE), length.out =
-            10)
-)
-mtext(
-    paste('N =', length(mvar[label$p.idx])),
-    cex = 0.6,
-    side = 3,
-    adj = 1,
-    line = 1
-)
-par(mfrow = c(1, 1))
-```
-
-Similarly, associations between microbial markers and the label can be 
-testedwith the `check.associations` function. The function computes a 
-generalized fold change for the marker, the prevalence shift, a single
-feature AUC, and the significance of the associations. The significance
-is tested with a Wilcoxon test. The function again produces a pdf-file 
-as output and is thus not run here, but can be used as follows:
-
-```{r eval=FALSE}
-## Not run here, since the function produces a pdf-file as output
-check.associations(
-    siamcat,
-    sort.by = 'fc',
-    fn.plot = 'assoc.pdf',
-    alpha = 0.05,
-    mult.corr = "fdr",
-    detect.lim = 10 ^ -6,
-    max.show = 50,
-    plot.type = "quantile.box",
-    panels = c("fc", "prevalence", "auroc"),
-    verbose = 2
-)
-```
-
 # Model Building
 
-Another feature of SIAMCAT is the versatile but easy-to-use interface for the
+Another feature of `SIAMCAT` is the versatile but easy-to-use interface for the
 construction of machine learning models on the basis of microbial markers.
-SIAMCAT contains functions for data normalization, splitting the data into
+`SIAMCAT` contains functions for data normalization, splitting the data into
 cross-validation folds, training the model, and making predictions based on
 cross-validation instances and the trained models.
 
@@ -290,7 +143,7 @@ cross-validation instances and the trained models.
 
 Data normalization is performed with the `normalize.features` function.
 Several control options are available, for example a choice of the normalization
-method from `log.unit`, `log.std`, `rank.unit`, `rank.std` and `log.clr` or 
+method from `log.unit`, `log.std`, `rank.unit`, `rank.std` and `log.clr` or
 additional parameters. Here, we use the `log.unit` method:
 
 ```{r}
@@ -309,7 +162,7 @@ siamcat <- normalize.features(
 ## Prepare Cross-Validation
 
 Preparation of the cross-validation fold is a crucial step in machine learning.
-SIAMCAT greatly simplifies the set-up of cross-validation schemes, including
+`SIAMCAT` greatly simplifies the set-up of cross-validation schemes, including
 stratification of samples or keeping samples inseperable based on metadata.
 For this small example, we choose a twice-repeated 5-fold cross-validation
 scheme. The data-split will be saved in the `data_split` slot of the `siamcat`
@@ -342,13 +195,13 @@ siamcat <- train.model(
     modsel.crit = list("pr"),
     min.nonzero.coeff = 5,
     param.set = NULL,
-    verbose = 3
+    verbose = 0
 )
 ```
 
 The models are saved in the `model_list` slot of the `siamcat` object. This
 slot stores objects of `model_list-class`. To get the complete list out of the
-SIAMCAT object:
+`siamcat` object:
 
 ```{r}
 model_list <- model_list(siamcat)
@@ -407,10 +260,10 @@ Curves for the different resamples runs as well as the mean ROC and PR Curve.
 model.evaluation.plot(siamcat,'eval_plot.pdf',verbose = 2)
 ```
 
-Instead of the pdf-output, we can also access the evaluation data in the
-`siamcat` object directly and plot the ROC-Curves:
+Instead of the pdf-output, we can for this vignette also access the evaluation
+data in the `siamcat` object directly and plot the ROC-Curves:
 
-```{r fig.width = 6, fig.asp=1, fig.align="center"}
+```{r fig.width = 6, fig.asp=1, fig.align="left"}
 # plot ROC Curves
 plot(
     NULL,
@@ -426,7 +279,7 @@ abline(a = 0, b = 1, lty = 3)
 eval_data <- eval_data(siamcat)
 for (r in 1:length(eval_data$roc.all)) {
     roc.c = eval_data$roc.all[[r]]
-    lines(1 - roc.c$specificities, roc.c$sensitivities, 
+    lines(1 - roc.c$specificities, roc.c$sensitivities,
         col = gray(runif(1, 0.2, 0.8)))
 }
 # mean ROC curve
@@ -444,9 +297,9 @@ polygon(1 - c(x, rev(x)), c(yl, rev(yu)), col = '#88888844' , border = NA)
 
 ## Interpretation plot
 
-The final plot produced by SIAMCAT is the model interpretation plot, created by
-the `model.interpretation.plot` function. The plot shows for the top selected
-features the
+The final plot produced by `SIAMCAT` is the model interpretation plot, created
+by the `model.interpretation.plot` function. The plot shows for the top
+selected features the
 
 + model weights (and how robust they are) as a barplot,
 
@@ -454,6 +307,8 @@ features the
 
 + a boxplot showing the proportions of weight per model which is captured by the
 top selected features.
+
+Additionally, the distribution of metdata is shown in a heatmap below.
 
 The function again produces a pdf-file as output and is thus not run here. An
 example of how it can be used can be found below:
@@ -471,102 +326,9 @@ model.interpretation.plot(
 )
 ```
 
-Alternatively, we show here only the z-score heatmap for the top selected 
-features:
+The resulting plot looks like this:
 
-```{r fig.width=7, fig.height=5, fig.align="center", echo=FALSE}
-
-
-color.scheme <- rev(colorRampPalette(
-    RColorBrewer::brewer.pal(RColorBrewer::brewer.pal.info['BrBG', 'maxcolors'],
-        'BrBG')
-)(100))
-
-W.mat       <-
-    SIAMCAT:::get.weights.matrix(models(siamcat), verbose = 0)
-feat        <- get.features.matrix(siamcat)
-all.weights <-
-    W.mat[union(row.names(feat), grep('META', row.names(W.mat),
-        value = TRUE)), ]
-rel.weights <- apply(all.weights, 2, function(x) {
-    x / sum(abs(x))
-})
-
-sel.idx <-
-    SIAMCAT:::model.interpretation.select.features(
-        weights = all.weights,
-        model.type = model_type(siamcat),
-        consens.thres = 0.5,
-        label = label(siamcat),
-        norm.models = TRUE,
-        max.show = 50,
-        verbose = 0
-    )
-
-mean.agg.pred <- rowMeans(pred_matrix)
-srt.idx <- sort(label$label + mean.agg.pred, index.return = TRUE)$ix
-
-img.data <- SIAMCAT:::model.interpretation.prepare.heatmap.zscore(heatmap.data =
-        feat[sel.idx, srt.idx],
-    limits = c(-3, 3),
-    verbose = 0)
-
-
-# plot stuff
-layout(c(1, 2), heights = c(0.1, 0.9))
-par(mar = c(0, 2, 1, 10))
-hm.label <- label$label[srt.idx]
-plot(
-    NULL,
-    type = 'n',
-    xlim = c(0, length(hm.label)),
-    xaxs = 'i',
-    xaxt = 'n',
-    ylim = c(-0.5, 0.5),
-    yaxs = 'i',
-    yaxt = 'n',
-    xlab = '',
-    ylab = '',
-    bty = 'n'
-)
-ul <- unique(hm.label)
-for (l in 1:length(ul)) {
-    idx <- which(ul[l] == hm.label)
-    lines(c(idx[1] - 0.8, idx[length(idx)] - 0.2), c(0, 0))
-    lines(c(idx[1] - 0.8, idx[1] - 0.8), c(-0.2, 0))
-    lines(c(idx[length(idx)] - 0.2, idx[length(idx)] - 0.2), c(-0.2, 0))
-    h <- (idx[1] + idx[length(idx)]) / 2
-    t <- gsub('_', ' ',
-        names(label$info$class.descr)[label$info$class.descr == ul[l]])
-    t <- paste(t, ' (n=', length(idx), ')', sep = '')
-    mtext(
-        t,
-        side = 3,
-        line = -0.5,
-        at = h,
-        cex = 0.7,
-        adj = 0.5
-    )
-}
-mtext(
-    'Metagenomic Features',
-    side = 3,
-    line = 2,
-    at = length(hm.label) / 2,
-    cex = 1,
-    adj = 0.5
-)
-
-
-SIAMCAT:::model.interpretation.heatmap.plot(
-    image.data = img.data,
-    limits = c(-3, 3),
-    color.scheme = color.scheme,
-    effect.size = apply(rel.weights[sel.idx, ],
-        1, median),
-    verbose = 0
-)
-```
+![Model Interpretation Plot](./interpretation_plot.png)
 
 
 # Session Info
