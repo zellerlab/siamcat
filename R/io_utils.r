@@ -4,7 +4,7 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Read feature file
-#' 
+#'
 #' @description This file reads in the tsv file with features and
 #' converts it into a matrix.
 #'
@@ -15,20 +15,19 @@
 #' the first column should contain feature labels (e.g. taxonomic identifiers).
 #' The remaining entries are expected to be real values \code{>= 0} that
 #' quantify the abundance of each feature in each sample.
-#' 
+#'
 #' @param fn.in.feat name of the tsv file containing features
-#' 
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for information about progress and time, defaults to \code{0}
-#'     
+#'
 #' @export
-#' 
+#'
 #' @return \code{otu_table} containing features from the file
-#' 
+#'
 #' @examples
 #'     # run with example data
-#'     fn.feat <- system.file('extdata',
-#'     'feat_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+#'     fn.feat <- system.file('extdata', 'feat_crc_zeller_msb.tsv',
 #'     package = 'SIAMCAT')
 #'
 #'     features <- read.features(fn.feat)
@@ -38,7 +37,7 @@ read.features <- function(fn.in.feat, verbose = 0) {
     s.time <- proc.time()[3]
     if (is.null(fn.in.feat))
         stop("Filename for features file not provided!\n")
-        
+
     feat <- read.table(
         file = fn.in.feat,
         sep = "\t",
@@ -69,7 +68,7 @@ read.features <- function(fn.in.feat, verbose = 0) {
 }
 
 #' @title Read labels file
-#' 
+#'
 #' @description This file reads in the tsv file with labels and converts it
 #' into a label object.
 #'
@@ -84,9 +83,9 @@ read.features <- function(fn.in.feat, verbose = 0) {
 #' Note: Labels can take other numeric values (but not characters or strings);
 #' importantly, the label for cases has to be greater than the one for controls
 #' @param fn.in.label name of the tsv file containing labels
-#' 
+#'
 #' @export
-#' 
+#'
 #' @return label object containing several entries:\itemize{
 #' \item \code{$label} named vector containing the numerical labels from the
 #' file;
@@ -104,8 +103,7 @@ read.features <- function(fn.in.feat, verbose = 0) {
 #'
 #' @examples
 #'     # run with example data
-#' fn.label <- system.file('extdata',
-#' 'label_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+#' fn.label <- system.file('extdata', 'label_crc_zeller_msb.tsv',
 #'     package = 'SIAMCAT')
 #'
 #' labels <- read.labels(fn.label)
@@ -203,7 +201,7 @@ read.labels <- function(fn.in.label) {
         }
 
 #' @title Read metadata file
-#' 
+#'
 #' @description This file reads in the tsv file with numerical metadata and
 #' converts it into a matrix.
 #'
@@ -213,17 +211,16 @@ read.labels <- function(fn.in.label) {
 #'
 #' Metadata may be optional for the SIAMCAT workflow, but are necessary for
 #' heatmap displays, see \link{model.interpretation.plot}
-#' 
+#'
 #' @param fn.in.meta name of the tsv file containing metadata
-#' 
+#'
 #' @export
-#' 
+#'
 #' @return \code{sample_data} object
-#' 
+#'
 #' @examples
 #'     # run with example data
-#' fn.meta  <- system.file('extdata',
-#' 'num_metadata_crc_study-pop-I_N141_tax_profile_mocat_bn_specI_clusters.tsv',
+#' fn.meta  <- system.file('extdata', 'num_metadata_crc_zeller_msb.tsv',
 #' package = 'SIAMCAT')
 #'
 #' meta_data <- read.meta(fn.meta)
@@ -258,16 +255,16 @@ trim <- function(x) {
 }
 
 #' @title Parse label header
-#' 
+#'
 #' @description This function parses the header of a label file
-#' 
+#'
 #' @param  label.header - string in the format: #<TYPE>:<L1>=<class1>;
 #' <L2>=<class2>[;<L3>=<class3>] where <TYPE> is a string specifying the type
 #' of label variable such as BINARY (for binary classification), CATEGORICAL
 #' (for multi-class classification), or CONTINUOUS (for regression)
 #' <L1> is a short numeric label for the first class with description <class1>
 #' (similarly for the other classes)
-#' 
+#'
 #' @return a list with tow items \itemize{
 #' \item \code{$type} type of the label: BINARY CONTINUOUS or CATEGORICAL
 #' \item \code{$class.descr} lables and information on what do they mean
@@ -293,56 +290,56 @@ parse.label.header <- function(label.header) {
 }
 
 #' @title create a label object from metadata
-#' 
+#'
 #' @description This function creates a label object from metadata
-#' 
-#' @usage create.label.from.metadata <- function(meta, column, case=NULL, 
+#'
+#' @usage create.label.from.metadata <- function(meta, column, case=NULL,
 #' p.lab = NULL, n.lab = NULL, verbose=1)
-#' 
+#'
 #' @param meta metadata as read by \link{read.meta}
 #' of \link[phyloseq]{sample_data-class}
-#' 
+#'
 #' @param column name of column that will be used
 #' to create the label
-#' 
+#'
 #' @param case name of a label that will be used as a positive label. If the
 #' variable is binary, the other label will be used as a negative one. If the
 #' variable has multiple values, all the other values will be used a negative
 #' label (testing one vs rest). Default to NULL in which case the first value
 #' of the variable will be used as a positive label.
-#' 
-#' @param p.lab name of the positive label (useful mostly for visualizations). 
+#'
+#' @param p.lab name of the positive label (useful mostly for visualizations).
 #' Default to NULL in which case the value of the positive label will be used.
-#' 
-#' @param n.lab name of the negative label (useful mostly for visualizations). 
+#'
+#' @param n.lab name of the negative label (useful mostly for visualizations).
 #' Default to NULL in which case the value of the negative label will be used
 #' for binary variables and "rest" will be used for variables with multiple
 #' values.
-#' 
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
-#'     
+#'
 #' @keywords create.label.from.metadata
-#' 
+#'
 #' @return an object of class \link{label-class}
-#' 
+#'
 #' @examples
 #'     data(siamcat_example)
 #'     label <- create.label.from.metadata(meta(siamcat_example),"gender")
 #'
 #' @export
-create.label.from.metadata <- function(meta, column, case=NULL, 
+create.label.from.metadata <- function(meta, column, case=NULL,
                                         p.lab = NULL, n.lab = NULL, verbose=1) {
     if (verbose > 1)
         message("+ starting create.label.from.metadata")
-    
+
     s.time <- proc.time()[3]
-    
+
     if (!column %in% colnames(meta))
         stop("ERROR: Column ", column, " not found in the metadata\n")
-    
+
     metaColumn <- vapply(meta[, column], as.character,
         FUN.VALUE = character(nrow(meta)))
 
@@ -372,7 +369,7 @@ create.label.from.metadata <- function(meta, column, case=NULL,
                 label = rep(-1, length(metaColumn)),
                 positive.lab = 1,
                 negative.lab = (-1)
-            ) 
+            )
     label$n.lab <- gsub("[_.-]", " ", control)
     label$p.lab <- gsub("[_.-]", " ", case)
     class.descr <- c(-1, 1)
