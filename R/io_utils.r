@@ -346,16 +346,24 @@ create.label.from.metadata <- function(meta, column, case=NULL,
     labels <- unique(metaColumn)
 
     if (length(labels) == 2){
-        if (verbose > 0) message("Column ", column, "contains binary label\n")
-        case <- labels[1]
-        control <- labels[2]
+        if (verbose > 0) message("Column ", column, " contains binary label\n")
+        if (is.null(case)) {
+            case <- labels[1]
+            control <- labels[2]
+        } else {
+            if(!case%in%labels){
+                stop("Column ", column, " does not contain value:",case,"\n")
+            }
+            control <- setdiff(unique(labels), case)
+        }
+
 
     }else if(length(labels) > 2){
         if(is.null(case)){
             case <- labels[1]
         }else{
             if(!case%in%labels){
-                stop("Column ", column, "does not contain value:",case,"\n")
+                stop("Column ", column, " does not contain value:",case,"\n")
             }
         }
         control <- "rest"
