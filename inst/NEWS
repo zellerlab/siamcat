@@ -1,0 +1,4 @@
+## Version 1.0.1
+- update function create.label.from.metadata to make it more flexible
+- added vignette describing holdout validation
+- added vignette describing how to read in your data and process it with SIAMCAT
