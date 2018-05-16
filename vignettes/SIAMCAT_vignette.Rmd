@@ -130,6 +130,33 @@ siamcat <- filter.features(
     verbose = 2
 )
 ```
+# Association Testing
+
+Associations between microbial markers and the label can be tested
+with the `check.associations` function. The function computes a
+generalized fold change for the marker, the prevalence shift, a single
+feature AUC, and the significance of the association by using a Wilcoxon test.
+The function again produces a pdf-file as output and is thus not run here,
+but can be used as follows:
+
+```{r eval=FALSE}
+## Not run here, since the function produces a pdf-file as output
+check.associations(
+    siamcat,
+    sort.by = 'fc',
+    fn.plot = 'assoc.pdf',
+    alpha = 0.05,
+    mult.corr = "fdr",
+    detect.lim = 10 ^-6,
+    max.show = 50,
+    plot.type = "quantile.box",
+    panels = c("fc", "prevalence", "auroc"),
+    verbose = 2
+)
+```
+The resulting plot then looks like this:
+![Association Plot](./association_plot.png)
+
 
 # Model Building
 
