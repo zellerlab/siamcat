@@ -1,13 +1,13 @@
 ---
 title: "Holdout Testing With SIAMCAT"
 author:
--   name: "Jakob Wirbel and Georg Zeller"
+-   name: "Jakob Wirbel, Konrad Zych, and Georg Zeller"
     affiliation: "EMBL Heidelberg"
     email: "georg.zeller@embl.de"
-date: "2018-05-12"
+date: "Date last modified: 2018-05-16"
 output: BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{SIAMCAT.holdout}
+    %\VignetteIndexEntry{SIAMCAT holdout testing vignette}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{ASCII}
 ---
@@ -16,8 +16,8 @@ vignette: >
 
 One of the functionalities of the `SIAMCAT` package is the training of
 statistical machine learning models on metagenomics data. In this vignette,
-we demonstrate how you can build such a model on one dataset and then apply it
-on another, similarly processed holdout dataset. This might be of interest
+we demonstrate how such a model can be built on one dataset and then be applied
+on another similarly processed holdout dataset. This might be of interest
 when comparing data from two different studies on the same disease.
 
 In this vignette, we look at two datasets from studies on colorectal cancer
@@ -25,43 +25,51 @@ In this vignette, we look at two datasets from studies on colorectal cancer
 [Zeller et al.](http://europepmc.org/abstract/MED/25432777) investigated
 metagenomic markers for CRC in a population in France, while the second study
 from [Feng et al.](http://europepmc.org/abstract/MED/26408641) used samples
-from China for the same goal. Both datasets were processed with the same
+from China for the same goal. Both datasets were profiled with the same
 [taxonomic profiling tool](https://github.com/motu-tool/mOTUs_v2), yielding
-the same taxonomic identifiers.
+the same taxonomic identifiers, which must be the case for holdout testing.
 
-# Load Data
+
+# Load and handle the Data
+
+The datasets can be found on the web in the public metagenomics data
+[repository](https://git.embl.de/grp-zeller/public_metagenomics_data/) from our
+group.
 
 ```{r message=FALSE, warning=FALSE}
 library(SIAMCAT)
 
 # this is data from Zeller et al., Mol. Syst. Biol. 2014
-fn.feat.fr <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/FR-CRC-N141_tax-ab-specI.tsv'
-fn.metadata.fr <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/FR-CRC-N141_metadata.tsv'
+fn.feat.fr  <- 'https://git.embl.de/grp-zeller/public_metagenomics_data/blob/master/feat_CRC_FR_mOTU_v2_species.tsv'
+fn.label.fr <- 'https://git.embl.de/grp-zeller/public_metagenomics_data/blob/master/label_CRC_FR.tsv'
+fn.meta.fr  <- 'https://git.embl.de/grp-zeller/public_metagenomics_data/blob/master/nummeta_CRC_FR.tsv'
 
 # this is the external dataset from Feng et al., Nat. Commun. 2015
-fn.feat.cn <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/CN-CRC-N128_tax-ab-specI.tsv'
-fn.metadata.cn <- 'http://www.bork.embl.de/~zeller/public_metagenomics_data/CN-CRC-N128_metadata.tsv'
-
+fn.feat.cn  <- 'https://git.embl.de/grp-zeller/public_metagenomics_data/blob/master/feat_CRC_CN_mOTU_v2_species.tsv'
+fn.label.cn <- 'https://git.embl.de/grp-zeller/public_metagenomics_data/blob/master/label_CRC_CN.tsv'
+fn.meta.cn  <- 'https://git.embl.de/grp-zeller/public_metagenomics_data/blob/master/nummeta_CRC_CN.tsv'
 ```
 
-First of all, we build a `SIAMCAT` object using the data from the French
-study. We can create the label from the metadata column called `'Group'`.
+First of all, we build a `SIAMCAT` object using the data from the French study
+in the same way that we have seen before in the main `SIAMCAT` vignette.
 
 ```{r message=FALSE}
 feat.fr  <- read.features(fn.feat.fr)
-meta.fr  <- read.meta(fn.metadata.fr)
-label.fr <- create.label.from.metadata(meta.fr, 'Group')
+meta.fr  <- read.meta(fn.meta.fr)
+label.fr <- read.labels(fn.label.fr)
 siamcat.fr <- siamcat(feat.fr, label.fr, meta.fr)
 ```
-Similarly, we built a different SIAMCAT object with the data from the
-Chinese study.
+
+We can load the data from the Chinese study in a similar way and also create a
+`SIAMCAT` object for the holdout dataset.
 
 ```{r message=FALSE}
 feat.cn  <- read.features(fn.feat.cn)
-meta.cn  <- read.meta(fn.metadata.cn)
-label.cn <- create.label.from.metadata(meta.cn, 'Group')
+meta.cn  <- read.meta(fn.meta.cn)
+label.cn <- read.labels(fn.label.cn)
 siamcat.cn <- siamcat(feat.cn, label.cn, meta.cn)
 ```
+
 # Model Building on French Dataset
 
 With the French dataset, we perform the complete process of model building
@@ -69,7 +77,7 @@ within `SIAMCAT`, including data preprocessing steps like data validation,
 filtering, and data normalization.
 
 ```{r}
-siamcat.fr <- validate.data(siamcat.fr, verbose=2)
+siamcat.fr <- validate.data(siamcat.fr, verbose=1)
 
 siamcat.fr <- filter.features(
     siamcat.fr,
@@ -88,7 +96,7 @@ siamcat.fr <- normalize.features(
         n.p = 2,
         norm.margin = 1
     ),
-    verbose = 3
+    verbose = 2
 )
 ```
 Now, we can build the statistical model. We use the same parameters as in
@@ -101,7 +109,7 @@ siamcat.fr <-  create.data.split(
     num.resample = 2,
     stratify = TRUE,
     inseparable = NULL,
-    verbose = 0
+    verbose = 1
 )
 
 siamcat.fr <- train.model(
@@ -113,12 +121,16 @@ siamcat.fr <- train.model(
     param.set = NULL,
     verbose = 0
 )
-
-siamcat.fr <- make.predictions(siamcat.fr, verbose=0)
-
-siamcat.fr <-  evaluate.predictions(siamcat.fr, verbose=0)
 ```
 
+Finally, we can make predictions for each cross-validation fold and evaluate
+the predictions as seen in the main `SIAMCAT` vignette.
+
+```{r}
+siamcat.fr <- make.predictions(siamcat.fr, verbose=0)
+
+siamcat.fr <-  evaluate.predictions(siamcat.fr, verbose=1)
+```
 
 # Application on Holdout Dataset
 
@@ -127,8 +139,8 @@ apply it to the Chinese holdout dataset. First, we will normalize the Chinese
 dataset with the same parameters that we used for the French dataset in order
 to make the data comparable. For that step, we can use the frozen normalization
 functionality in the `normalize.features` function in `SIAMCAT`. We supply to
-the function all normalization parameters saved in the `SIAMCAT` object, which
-can be accessed using the `norm_param` accessor.
+the function all normalization parameters saved in the `siamcat.fr` object,
+which can be accessed using the `norm_param` accessor.
 
 ```{r}
 
