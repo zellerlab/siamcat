@@ -55,17 +55,17 @@ distinguish patients with colorectal cancer (CRC) from healthy controls.
 library(SIAMCAT)
 fn.in.feat  <- system.file(
     "extdata",
-    "feat_crc_zeller_msb.tsv",
+    "feat_crc_zeller_msb_mocat_specI.tsv",
     package = "SIAMCAT"
 )
 fn.in.label <- system.file(
     "extdata",
-    "label_crc_zeller_msb.tsv",
+    "label_crc_zeller_msb_mocat_specI.tsv",
     package = "SIAMCAT"
 )
 fn.in.meta  <- system.file(
     "extdata",
-    "num_metadata_crc_zeller_msb.tsv",
+    "num_metadata_crc_zeller_msb_mocat_specI.tsv",
     package = "SIAMCAT"
 )
 ```

@@ -27,7 +27,7 @@
 #'
 #' @examples
 #'     # run with example data
-#'     fn.feat <- system.file('extdata', 'feat_crc_zeller_msb.tsv',
+#'     fn.feat <- system.file('extdata', 'feat_crc_zeller_msb_mocat_specI.tsv',
 #'     package = 'SIAMCAT')
 #'
 #'     features <- read.features(fn.feat)
@@ -109,7 +109,7 @@ read.features <- function(fn.in.feat, verbose = 0) {
 #'
 #' @examples
 #'     # run with example data
-#' fn.label <- system.file('extdata', 'label_crc_zeller_msb.tsv',
+#' fn.label <- system.file('extdata', 'label_crc_zeller_msb_mocat_specI.tsv',
 #'     package = 'SIAMCAT')
 #'
 #' labels <- read.labels(fn.label)
@@ -226,7 +226,8 @@ read.labels <- function(fn.in.label) {
 #'
 #' @examples
 #'     # run with example data
-#' fn.meta  <- system.file('extdata', 'num_metadata_crc_zeller_msb.tsv',
+#' fn.meta  <- system.file('extdata',
+#' 'num_metadata_crc_zeller_msb_mocat_specI.tsv',
 #' package = 'SIAMCAT')
 #'
 #' meta_data <- read.meta(fn.meta)
