@@ -4,10 +4,14 @@
 \alias{read.lefse}
 \title{read an input file in a LEfSe input format}
 \usage{
-read.lefse(filename = "data.txt", n.meta = 1)
+read.lefse(filename = "data.txt", rows.meta = 1, row.samples = 2)
 }
 \arguments{
 \item{filename}{name of the input file in a LEfSe input format}
+
+\item{rows.meta}{specifies in which rows medata variables are stored}
+
+\item{row.samples}{specifies in which row sample names are stored}
 }
 \description{
 This reads an input file in a LEfSe input format
