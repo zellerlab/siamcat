@@ -13,6 +13,13 @@ read.lefse(filename = "data.txt", rows.meta = 1, row.samples = 2)
 
 \item{row.samples}{specifies in which row sample names are stored}
 }
+\value{
+a list with two elements: \itemize{
+    \item \code{feat} a features matrix (just as returned by 
+    \link{read.features} function
+    \item \code{meta} a metadate matrix (just as returned by 
+    \link{read.meta} function}
+}
 \description{
 This reads an input file in a LEfSe input format
 }

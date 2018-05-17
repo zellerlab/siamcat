@@ -56,7 +56,7 @@ siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
 #'     \item \code{feat} a features matrix (just as returned by 
 #'     \link{read.features} function
 #'     \item \code{meta} a metadate matrix (just as returned by 
-#'     \link{read.meta} function
+#'     \link{read.meta} function}
 #' 
 #' @export
 #' 
