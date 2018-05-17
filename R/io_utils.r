@@ -18,6 +18,8 @@
 #'
 #' @param fn.in.feat name of the tsv file containing features
 #'
+#' @param transpose should the features table be transposed?
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for information about progress and time, defaults to \code{0}
 #'
@@ -31,7 +33,7 @@
 #'     package = 'SIAMCAT')
 #'
 #'     features <- read.features(fn.feat)
-read.features <- function(fn.in.feat, verbose = 0) {
+read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0) {
     if (verbose > 1)
         message("+ starting read.features")
     s.time <- proc.time()[3]
@@ -48,6 +50,7 @@ read.features <- function(fn.in.feat, verbose = 0) {
         encoding = "latin1"
     )
     feat <- as.matrix(feat)
+    if(transpose) feat <- t(feat)
 
     featNames <- make.names(rownames(feat))
 

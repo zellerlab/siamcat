@@ -62,8 +62,8 @@ siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
 #' 
 read.lefse <- function(filename="data.txt", rows.meta = 1, row.samples = 2) {
 
-    lefse <- read.csv("/Users/zych/Data/SIAMCAT datasets/lefseCRC.txt", 
-                        sep = "\t", header = FALSE, stringsAsFactors = F)
+    lefse <- read.csv(filename, sep = "\t", header = FALSE, 
+                        stringsAsFactors = F)
     
     meta          <- lefse[rows.meta,]
     samples.names <- lefse[row.samples,]

@@ -192,20 +192,64 @@ siamcat <- siamcat(feat, label, meta)
 identification of associations between micriobial features and complex  
 metadata. MaAsLin multivariate analysis.
 
-MaAsLin can have two types of input files: a) two tsv files, one for metadata 
-and one for features - those can be read just like 
-[SIAMCAT format files](#SIAMCAT-format-files); b) a 
-single PCL file that can be read with `read.lefse` function. 
-SIAMCAT-format-files
-LEfSe-format-files
+MaAsLin can have two types of input files: 
+
+a) two tsv files, one for metadata and one for features - those can be used in
+ SIAMCAT just like with [SIAMCAT format files](#SIAMCAT-format-files) 
+ `read.features` and `read.meta`;
+
+b) a single PCL file that can be read like the 
+[LEfSe format files](#LEfSe-format-files) with the `read.lefse` function. 
+
 ## metagenomeSeq format files
+[metagenomeSeq](http://bioconductor.org/packages/metagenomeSeq/) is an R package
+ to determine differentially abundant features between multiple samples. 
+ 
+There are two ways to input data into metagenomeSeq:
 
-## Other file formats
+a) two tsv files, one for metadata and one for features - those can be used in
+ SIAMCAT just like with [SIAMCAT format files](#SIAMCAT-format-files) 
+ `read.features` and `read.meta`. The features file needs to be transposed with 
+`transpose = TRUE` parameter:
+```{r results="hide", warning=FALSE, eval=FALSE}
+fn.in.feat  <- system.file(
+    "extdata",
+    "CHK_NAME.otus.count.csv",
+    package = "metagenomeSeq"
+)
+feat <- read.features(fn.in.feat, transpose = TRUE)
+```
 
-# Creating a siamcat object of a phyloseq object
+b) BIOM format file, that can be used in SIAMCAT as decribed in the 
+[following section](BIOM-format-files)
 
+## BIOM format files
+The BIOM format files can be added to SIAMCAT via phyloseq. First the file 
+should be imported using function `import_biom`. Then a phyloseq object should 
+be imported to a siamcat object as descibed in the 
+[**Creating a siamcat object of a phyloseq object**]
+(#Creating-a-siamcat-object-of-a-phyloseq-object) section.
+
+## Creating a siamcat object of a phyloseq object
+The siamcat object extends a phyloseq object, so creating a siamcat object from 
+a phyloseq object is really straightforward. This can be done with `siamcat` 
+constructor function. First, however, we need to create a label object:
+```{r results="hide", warning=FALSE, eval=FALSE}
+data("GlobalPatterns") ## phyloseq example data
+label <- create.label.from.metadata(sample_data(GlobalPatterns),
+                                    column = "SampleType",
+                                    case = "Feces")
+```
+
+And then we will run the constructor function:
+```{r results="hide", warning=FALSE, eval=FALSE}
+siamcat <- siamcat(GlobalPatterns,label)
+```
 
 # siamcat-class object
+A siamcat class object is the centerpiece of the package where all the data is 
+stored. 
+
 
 # Session Info
 
