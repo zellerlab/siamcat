@@ -1,5 +1,5 @@
 ---
-title: "Using your data in SIAMCAT"
+title: "SIAMCAT input files formats"
 author:
 -   name: "Konrad Zych, Jakob Wirbel, and Georg Zeller"
     affiliation: "EMBL Heidelberg"
