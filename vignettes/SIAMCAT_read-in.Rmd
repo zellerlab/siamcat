@@ -174,7 +174,7 @@ fn.in.lefse<- system.file(
 SIAMCAT has a dedicated function to read LEfSe format files. The `read.lefse` 
 function will read in the input file and extract metadata and features data:
 ```{r results="hide", warning=FALSE}
-metaAndFeat <- read.lefse(fn.in.lefse, n.meta=6)
+metaAndFeat <- read.lefse(fn.in.lefse, rows.meta = 1:6, row.samples = 7)
 meta <- metaAndFeat$meta
 feat <- metaAndFeat$feat
 ```
@@ -187,12 +187,17 @@ siamcat <- siamcat(feat, label, meta)
 ```
 
 ## MaAsLin format files
-```
-sid	RANDSID	GENDER	STSite
-SRS043001	550534656	female	Stool
-SRS017127	159551223	male	Buccal_mucosa
-SRS021473	158479027	male	Buccal_mucosa
-```
+
+[MaAsLin](https://bitbucket.org/biobakery/biobakery/wiki/maaslin) is a tool for 
+identification of associations between micriobial features and complex  
+metadata. MaAsLin multivariate analysis.
+
+MaAsLin can have two types of input files: a) two tsv files, one for metadata 
+and one for features - those can be read just like 
+[SIAMCAT format files](#SIAMCAT-format-files); b) a 
+single PCL file that can be read with `read.lefse` function. 
+SIAMCAT-format-files
+LEfSe-format-files
 ## metagenomeSeq format files
 
 ## Other file formats

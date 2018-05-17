@@ -46,6 +46,10 @@ siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
 #'  
 #' @param filename name of the input file in a LEfSe input format
 #' 
+#' @param rows.meta specifies in which rows medata variables are stored
+#'
+#' @param row.samples specifies in which row sample names are stored
+#'
 #' @keywords read.lefse
 #' 
 #' @return a list with two elements: \itemize{
@@ -56,14 +60,14 @@ siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
 #' 
 #' @export
 #' 
-read.lefse <- function(filename="data.txt", n.meta = 1) {
+read.lefse <- function(filename="data.txt", rows.meta = 1, row.samples = 2) {
 
     lefse <- read.csv("/Users/zych/Data/SIAMCAT datasets/lefseCRC.txt", 
                         sep = "\t", header = FALSE, stringsAsFactors = F)
     
-    meta          <- lefse[1:n.meta,]
-    samples.names <- lefse[n.meta+1,]
-    feat          <- lefse[(n.meta+2):nrow(lefse),]
+    meta          <- lefse[rows.meta,]
+    samples.names <- lefse[row.samples,]
+    feat          <- lefse[(max(c(rows.meta,row.samples))+1):nrow(lefse),]
     
     rownames(meta) <- meta[,1]
     meta <- meta[,-1]
