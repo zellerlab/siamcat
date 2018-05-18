@@ -789,19 +789,6 @@ associations.pr.shift.plot <-
             ylim = c(0.2, nrow(pr.shifts) + 0.2),
             type = 'n'
         )
-
-# plot bars
-        row.names(pr.shifts) <- NULL
-        barplot(
-            t(pr.shifts),
-            horiz = TRUE,
-            axes = FALSE,
-            add = TRUE,
-            space = c(0, 4 / 3),
-            beside = TRUE,
-            width = .3,
-            col = c(col[1], col[2])
-        )
 # gridlines and axes labels
         ticks <- seq(from = 0,
             to = 1,
@@ -818,6 +805,18 @@ associations.pr.shift.plot <-
             labels = tick.labels,
             cex.axis = 0.7
         )
+# plot bars
+        row.names(pr.shifts) <- NULL
+        barplot(
+            t(pr.shifts),
+            horiz = TRUE,
+            axes = FALSE,
+            add = TRUE,
+            space = c(0, 4 / 3),
+            beside = TRUE,
+            width = .3,
+            col = c(col[1], col[2])
+        )        
         title(main = 'Prevalence shift', xlab = 'Prevalence [%]')
         if (verbose > 2)
             message("+ finished associations.pr.shift.plot")
