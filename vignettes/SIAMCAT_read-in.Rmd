@@ -227,14 +227,13 @@ b) BIOM format file, that can be used in SIAMCAT as decribed in the
 The BIOM format files can be added to SIAMCAT via phyloseq. First the file 
 should be imported using function `import_biom`. Then a phyloseq object should 
 be imported to a siamcat object as descibed in the 
-[**Creating a siamcat object of a phyloseq object**]
-(#Creating-a-siamcat-object-of-a-phyloseq-object) section.
+[Creating a siamcat object of a phyloseq object](#Creating-a-siamcat-object-of-a-phyloseq-object) section.
 
 ## Creating a siamcat object of a phyloseq object
 The siamcat object extends a phyloseq object, so creating a siamcat object from 
 a phyloseq object is really straightforward. This can be done with `siamcat` 
 constructor function. First, however, we need to create a label object:
-```{r results="hide", warning=FALSE, eval=FALSE}
+```{r results="hide", warning=FALSE, eval=TRUE}
 data("GlobalPatterns") ## phyloseq example data
 label <- create.label.from.metadata(sample_data(GlobalPatterns),
                                     column = "SampleType",
@@ -242,13 +241,75 @@ label <- create.label.from.metadata(sample_data(GlobalPatterns),
 ```
 
 And then we will run the constructor function:
-```{r results="hide", warning=FALSE, eval=FALSE}
+```{r results="hide", warning=FALSE, eval=TRUE}
 siamcat <- siamcat(GlobalPatterns,label)
 ```
 
 # siamcat-class object
 A siamcat class object is the centerpiece of the package where all the data is 
-stored. 
+stored:
+
+![internal make-up of a siamcat object](./siamcat.png)
+Rectangle depict slots of the object while class of the object stored in the 
+slot is given in an oval. There are three obligatory slots - phyloseq, label and
+orig_feat - marked with thick borders. 
+
+In order to explain the siamcat object better we will show how each of the slots
+is filled.
+
+## phyloseq, label and orig_feat slots
+The phyloseq and label slots are obligatory. The phyloseq slot is an object of 
+class phyloseq (that is described in the help file of the `phyloseq` class (can 
+be accessed e.g. by typing into R console: `help('phyloseq-class')`). The label 
+slot contains a list. This list has specific construction 
+(`help('label-class')`). The `orig_feat` contains object of the `otu_table` 
+class (`help('otu_table-class')`) with original feature table (that remains 
+unmodified throught the run  of the package).
+
+Thephyloseq, label and orig_feat are filled while siamcat object is first 
+created with `siamcat` function. The minimum valid call of the `siamcat`
+function requires a feature table (of `otu_table` class e.g. returned by 
+`read.features` function) and a label object (e.g. returned by `read.label` 
+function or created from metadata table with `create.label.from.metadata` 
+function):
+ ![](./allCr.png)
+
+## All the other slots
+Other slots are filled during the run of the siamcat workflow:
+![](./Slots_create.png)
+
+## Accessing and assigning slots
+
+Each slot in siamcat can be accessed with a `slot_name(siamcat)` e.g `eval_data`
+ slot with `eval_data(siamcat)`. There is one notable exception of `phyloseq` 
+slot that due to technical reasons can be accessed with `physeq(siamcat)`.
+
+Slots will be assigned by the SIAMCAT package functions. However, if for any 
+reason a slot needs to be assigned outside of the worklow following construction
+ can be used: `slot_name(siamcat) <- object_to_assign` e.g. to assing object 
+`new_label` to `label` slot: `label(siamcat) <- new_label`.
+
+## Slots inside the slots
+
+There are two slots that have slots inside of them. First, `model_list` slot has
+ `models` slot that contains the actual list of mlr models (and can be accessed
+via `models(siamcat)`) and `model.type` - a character with the name of the 
+method used to train the model (`model_type(siamcat)`).
+
+The `phyloseq` slot has a complex structure. However, unless the `phyloseq` 
+object is created outside of the SIAMCAT workflow, only two slots of phyloseq 
+slot will be occupied: `otu_table` slot containing features table (that can be 
+accessed with `features(siamcat)`) and `sam_data` slot containing metadata 
+information (`meta(siamcat)`).
+
+Additional slots inside the `phyloseq` slots do not have dedicated accessors, 
+but can easily be reached once the `phyloseq` object is exported from the 
+`siamcat` object:
+```{r}
+phyloseq <- physeq(siamcat)
+tax_tab <- tax_table(phyloseq)
+head(tax_tab)
+```
 
 
 # Session Info
