@@ -383,8 +383,13 @@ create.label.from.metadata <- function(meta, column, case=NULL,
                 positive.lab = 1,
                 negative.lab = (-1)
             )
-    label$n.lab <- gsub("[_.-]", " ", control)
-    label$p.lab <- gsub("[_.-]", " ", case)
+    if (is.null(p.lab) && is.null(n.lab)){
+        label$n.lab <- gsub("[_.-]", " ", control)
+        label$p.lab <- gsub("[_.-]", " ", case)
+    } else {
+        label$n.lab <- n.lab
+        label$p.lab <- p.lab
+    }
     class.descr <- c(-1, 1)
     names(class.descr) <- c(label$n.lab, label$p.lab)
 
