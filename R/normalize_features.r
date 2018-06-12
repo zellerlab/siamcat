@@ -238,13 +238,12 @@ normalize.features <- function(siamcat,
             feat.rank <- colRanks(feat.red,
                 preserveShape = TRUE,
                 ties.method = 'average')
+            dimnames(feat.rank) <- dimnames(feat.red)
             m <- rowMeans(feat.rank)
             s <- rowSds(feat.rank)
             q <- quantile(s, norm.param$sd.min.q, names = FALSE)
             stopifnot(q > 0)
             feat.norm <- (feat.rank - m) / (s + q)
-            names(m) <- rownames(feat.rank)
-            names(s) <- rownames(feat.rank)
             par$feat.mean <- m
             par$feat.adj.sd <- s + q
         } else if (norm.method == "log.std") {
