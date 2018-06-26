@@ -7,8 +7,8 @@
 train.model(siamcat,
 method = c("lasso","enet","ridge","lasso_ll", "ridge_ll", "randomForest"),
 stratify = TRUE, modsel.crit = list("auc"), min.nonzero.coeff = 1,
-perform.fs = FALSE, param.fs = list(thres.fs = 100, method.fs = "AUC"),
-param.set = NULL, verbose = 1)
+param.set = NULL, perform.fs = FALSE, 
+param.fs = list(thres.fs = 100, method.fs = "AUC"), verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -84,14 +84,14 @@ This functions performs the training of the machine learning model
     At the moment, three methods for feature selection are implemented:
     \itemize{
     \item \code{'AUC'} computes the Area Under the Receiver Operating
-     Characteristics Curve for each single feature and selects the top
-     \code{param.fs$thres.fs}, e.g. 100 features
+        Characteristics Curve for each single feature and selects the top
+        \code{param.fs$thres.fs}, e.g. 100 features
     \item \code{'FC'} computes the generalized Fold Change (see
-     \link{check.associations}) for each feature and likewise selects the
-     top \code{param.fs$thres.fs}, e.g. 100 features
+        \link{check.associations}) for each feature and likewise selects the
+        top \code{param.fs$thres.fs}, e.g. 100 features
     \item \code{Wilcoxon} computes the p-Value for each single feature with
-     the Wilcoxon test and selects features with a p-Value smaller than
-     \code{param.fs$thres.fs}
+        the Wilcoxon test and selects features with a p-Value smaller than
+        \code{param.fs$thres.fs}
     }
 }
 \examples{

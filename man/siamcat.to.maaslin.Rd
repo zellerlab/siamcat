@@ -18,4 +18,10 @@ nothing but data is written to a file
 This function creates a MaAsLin merged PCL single input file 
 from siamcat object
 }
+\examples{
+
+data(siamcat_example)
+siamcat.to.maaslin(siamcat_example)
+
+}
 \keyword{internal}

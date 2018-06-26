@@ -9,8 +9,6 @@
 #'     Precision-recall (PR)-curves for the different cross-validation
 #'     repetitions.
 #' @param ... one or more object of class \link{siamcat-class}, can be named
-#' @param colours vector of colours to be used for plotting (if
-#' \code{NULL} default palettes will be used)
 #' @param fn.plot string, filename for the pdf-plot
 #' @param colours colour specification for the different \link{siamcat-class}-
 #'     objects, defaults to \code{NULL} which will cause the colours to be
@@ -52,17 +50,19 @@ model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
 
     if (length(args) > 1) {
         # checks
-        stopifnot(all(vapply(args, class, FUN.VALUE = character(1)) == 'siamcat'))
-        stopifnot(all(vapply(args, FUN=function(x){length(eval_data(x)) != 0}, FUN.VALUE = logical(1))))
+        stopifnot(all(vapply(args, class, 
+            FUN.VALUE = character(1)) == 'siamcat'))
+        stopifnot(all(vapply(args, FUN=function(x){length(eval_data(x)) != 0},
+            FUN.VALUE = logical(1))))
 
         n <- length(args)
         if (is.null(colours)) {
             if (n > 9) {
                 colours <- colorRampPalette(brewer.pal(9, 'Set1'))(n)
                 warning(paste0('Consider plotting fewer',
-                               ' ROC-Curves into the same plot...'))
+                                ' ROC-Curves into the same plot...'))
             } else if (n == 2) {
-                colours <- brewer.pal(3, 'Set1')[1:2]
+                colours <- brewer.pal(3, 'Set1')[rev(seq_len(2))]
             } else {
                 colours <- brewer.pal(n, 'Set1')
             }
@@ -71,23 +71,23 @@ model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
         # ROC
         legend.val <- c()
         # plot each roc curve for each eval data object
-        for (i in 1:length(args)) {
+        for (i in seq_along(args)) {
             legend.val <- c(legend.val,
                             as.numeric(single.roc.plot(args[[i]],
-                                                       colours[i],
-                                                       verbose=verbose)))
+                                                        colours[i],
+                                                        verbose=verbose)))
         }
         if (!is.null(names(args))) {
             legend('bottomright',
-                   legend= paste0(names(args),
-                                  ' AUC: ' ,
-                                  format(legend.val, digits=3)),
-                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+                    legend= paste0(names(args),
+                                    ' AUC: ' ,
+                                    format(legend.val, digits=3)),
+                    col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
         } else {
             legend('bottomright',
-                   legend= paste0('AUC: ' ,
-                                  format(legend.val, digits=3)),
-                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+                    legend= paste0('AUC: ' ,
+                                    format(legend.val, digits=3)),
+                    col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
         }
         # PR
         # precision recall curve
@@ -104,23 +104,23 @@ model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
         title(paste("Precision-recall curve for the model", sep = " "))
         legend.val <- c()
         # plot each roc curve for each eval data object
-        for (i in 1:length(args)) {
+        for (i in seq_along(args)) {
             legend.val <- c(legend.val,
                             as.numeric(single.pr.plot(args[[i]],
-                                                      colours[i],
-                                                      verbose=verbose)))
+                                                        colours[i],
+                                                        verbose=verbose)))
         }
         if (!is.null(names(args))) {
             legend('bottomright',
-                   legend= paste0(names(args),
-                                  ' AUC: ' ,
-                                  format(legend.val, digits=3)),
-                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+                    legend= paste0(names(args),
+                                    ' AUC: ' ,
+                                    format(legend.val, digits=3)),
+                    col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
         } else {
             legend('bottomright',
-                   legend= paste0('AUC: ' ,
-                                  format(legend.val, digits=3)),
-                   col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
+                    legend= paste0('AUC: ' ,
+                                    format(legend.val, digits=3)),
+                    col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
         }
 
     } else if (length(args) == 1) {
@@ -135,7 +135,7 @@ model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
             text(0.7, 0.1, paste("AUC:", format(auroc, digits = 3)))
         } else {
             text(0.7, 0.1, paste("Mean-prediction AUC:",
-                 format(auroc, digits = 3)))
+                    format(auroc, digits = 3)))
         }
         # PR
         if (verbose > 2)
@@ -243,7 +243,7 @@ single.roc.plot <- function(siamcat, colour, verbose) {
             aucs[c] = eval.data$auc.all[c]
             if (verbose > 2) {
                 message(paste('+++ AU-ROC (resampled run ',
-                              c, "): ", format(aucs[c], digits=3)))
+                                c, "): ", format(aucs[c], digits=3)))
             }
         }
     }

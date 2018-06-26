@@ -35,9 +35,6 @@ validate.data <- function(siamcat, verbose = 1) {
 
     # Check if features are in the right format
     # check for compositional data
-    if (any(feat > 1) | any(feat < 0)){
-        stop("Your data do not seem to contain relative abundances. Exiting...")
-    }
 
     # Check if labels are available for all samples in features
     if (verbose > 2) {

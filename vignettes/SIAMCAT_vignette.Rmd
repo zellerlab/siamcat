@@ -33,7 +33,8 @@ The promise of elucidating associations between the microbiota and their host,
 with diagnostic and therapeutic potential, is fueling metagenomics research.
 However, there is a lack of user-friendly software tools implementing robust
 statistical testing and machine learning methods suitable for microbiome data.
-Here, we describe `SIAMCAT`, a solution to this problem implemented as R package.
+Here, we describe `SIAMCAT`, a solution to this problem implemented as R 
+package.
 
 Associations between microbiome and host phenotypes are ideally described by
 quantitative models able to predict host status from microbiome composition.

@@ -185,7 +185,8 @@ make.predictions <- function(siamcat,
             )
         if (verbose == 1 || verbose == 2)
             pb <-
-            txtProgressBar(max = data.split$num.folds * data.split$num.resample, style = 3)
+            txtProgressBar(max = data.split$num.folds * data.split$num.resample,
+            style = 3)
         for (i in seq_len(num.models)) {
             data <- as.data.frame(feat.test)
             model <- models[[i]]

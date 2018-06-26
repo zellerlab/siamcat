@@ -61,6 +61,7 @@ filter.label <- function(siamcat, ids, verbose = 1) {
 
 # based on https://github.com/joey711/phyloseq/blob/master/R/show-methods.R
 #' @title Show method for siamcat class object
+#' @description Show method for siamcat class object
 #' @rdname show-methods
 #' @return none
 #' @keywords internal

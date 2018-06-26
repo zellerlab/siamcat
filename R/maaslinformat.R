@@ -16,6 +16,11 @@
 #' 
 #' @return nothing but data is written to a file
 #' 
+#' @examples
+#' 
+#' data(siamcat_example)
+#' siamcat.to.maaslin(siamcat_example)
+#' 
 #' @export
 #' 
 siamcat.to.maaslin <- function(siamcat, filename="siamcat_output.pcl") {

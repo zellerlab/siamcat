@@ -17,4 +17,10 @@ nothing but data is written to a file
 \description{
 This function creates a lefse input file from siamcat object
 }
+\examples{
+
+data(siamcat_example)
+siamcat.to.lefse(siamcat_example)
+
+}
 \keyword{siamcat.to.lefse}

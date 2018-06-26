@@ -7,7 +7,7 @@
 #'
 #' @description This function creates a label object from metadata
 #'
-#' @usage create.label.from.metadata <- function(meta, column, case, 
+#' @usage create.label.from.metadata(meta, column, case, 
 #' control=NULL, p.lab = NULL, n.lab = NULL, verbose=1)
 #'
 #' @param meta metadata as read by \link{read.meta}
@@ -47,7 +47,8 @@
 #'
 #' @examples
 #'     data(siamcat_example)
-#'     label <- create.label.from.metadata(meta(siamcat_example),"gender")
+#'     label <- create.label.from.metadata(meta(siamcat_example),"fobt",
+#'     case = 1, control = 0)
 #'
 #' @export
 create.label.from.metadata <- function(meta, column, case, control = NULL,
@@ -62,6 +63,7 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
 
     metaColumn <- vapply(meta[, column], as.character,
         FUN.VALUE = character(nrow(meta)))
+    names(metaColumn) <- rownames(meta)
 
     labels <- unique(metaColumn)
 
@@ -74,7 +76,7 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
             control <- setdiff(unique(labels), case)
         } else {
             if(!control%in%labels){
-                stop("Column ", column, " does not contain value:",case,"\n")
+                stop("Column ", column, " does not contain value:",control,"\n")
             }
 
         }
@@ -87,7 +89,7 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
             control <- "rest"
         } else {
             if(!control%in%labels){
-                stop("Column ", column, " does not contain value:",case,"\n")
+                stop("Column ", column, " does not contain value:",control,"\n")
             }
             if(any(!labels%in%c(case, control))){
                 metaColumn <- metaColumn[which(metaColumn%in%c(case, control))]
@@ -112,7 +114,7 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
     class.descr <- c(-1, 1)
     names(class.descr) <- c(label$n.lab, label$p.lab)
 
-    names(label$label) <- rownames(meta)
+    names(label$label) <- names(metaColumn)
     label$header <-
         paste0("#BINARY:1=", label$p.lab, ";-1=", label$n.lab)
     label$label[which(metaColumn == case)] <- 1

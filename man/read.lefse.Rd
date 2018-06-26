@@ -23,4 +23,16 @@ a list with two elements: \itemize{
 \description{
 This reads an input file in a LEfSe input format
 }
+\examples{
+
+fn.in.lefse<- system.file("extdata",
+"LEfSe_crc_zeller_msb_mocat_specI.tsv",package = "SIAMCAT")
+meta.and.features <- read.lefse(fn.in.lefse, rows.meta = 1:6, 
+row.samples = 7)
+meta <- meta.and.features$meta
+feat <- meta.and.features$feat
+label <- create.label.from.metadata(meta, "label", case = "cancer")
+siamcat <- siamcat(feat, label, meta)
+
+}
 \keyword{read.lefse}

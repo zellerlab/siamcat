@@ -1,7 +1,7 @@
 ## Version 1.0.1
-- [ ] updated function create.label.from.metadata to make it more flexible
-- [ ] added transpose parameter to the read.features function
-- [ ] added vignette describing how to read in your data and process it with 
+- [x] updated function create.label.from.metadata to make it more flexible
+- [x] added transpose parameter to the read.features function
+- [x] added vignette describing how to read in your data and process it with 
 SIAMCAT
-- [ ] added function read.lefse to read input files in LEfSe file format
-- [ ] small bugfixes
+- [x] added function read.lefse to read input files in LEfSe file format
+- [x] small bugfixes
