@@ -26,4 +26,4 @@ If you run into any issue:
 or
 - create an issue in this repository
 or
-- ask at the SIAMCAT support group `https://groups.google.com/forum/#!forum/siamcat-users`
+- ask at the [SIAMCAT support group](https://groups.google.com/forum/#!forum/siamcat-users)
