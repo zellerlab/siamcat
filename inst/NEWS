@@ -5,3 +5,5 @@
 SIAMCAT
 - [x] added function read.lefse to read input files in LEfSe file format
 - [x] small bugfixes
+- [x] bugfix in add.meta.pred
+- [x] bugfix in validated.data
