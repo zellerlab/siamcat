@@ -60,7 +60,8 @@ validate.data <- function(siamcat, verbose = 1) {
             colnames(feat)[colnames(feat) %in% names(label$label)]
         # create new labels object with reduced labels
         siamcat <- filter.label(siamcat, ids)
-
+        # update label for later validation
+        label <- label(siamcat)
     } else if (length(label$label) <= ncol(feat)) {
         # if there are more samples in features, remove them and keep
         # only the ones for which labels are available
