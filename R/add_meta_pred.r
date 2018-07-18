@@ -60,7 +60,7 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
                 ' values with "as.numeric()"\n'))
                 m <- as.numeric(m)
             }
-            stopifnot(class(m) == 'numeric')
+            stopifnot(is.numeric(m))
 
             if (!all(is.finite(m))) {
                 na.cnt <- sum(!is.finite(m))
