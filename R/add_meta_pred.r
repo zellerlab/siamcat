@@ -53,10 +53,19 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
 
             m <- unlist(meta(siamcat)[, idx])
 
+            # check if the meta-variable is a factor or numeric
+            if (class(m) == 'factor'){
+                message(paste0('WARNING: the meta-variable is a factor and',
+                ' not numeric...\n   The values will be converted to numerical',
+                ' values with "as.numeric()"\n'))
+                m <- as.numeric(m)
+            }
+            stopifnot(class(m) == 'numeric')
+
             if (!all(is.finite(m))) {
                 na.cnt <- sum(!is.finite(m))
                 if (verbose > 1)
-                    message(paste("++++ filling in", na.cnt, 
+                    message(paste("++++ filling in", na.cnt,
                         "missing values by mean imputation"))
                 mn <- mean(m, na.rm = TRUE)
                 m[!is.finite(m)] <- mn
@@ -83,12 +92,12 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
             feature matrix"))
         } else {
             if (verbose > 0)
-            message("+++ Not adding any of the meta-variables as predictor to 
+            message("+++ Not adding any of the meta-variables as predictor to
                 the feature matrix")
         }
         e.time <- proc.time()[3]
         if (verbose > 1)
-        message(paste("+ finished add.meta.pred in", formatC(e.time - s.time, 
+        message(paste("+ finished add.meta.pred in", formatC(e.time - s.time,
             digits = 3), "s"))
         if (verbose == 1)
         message("Adding metadata as predictor finished")
