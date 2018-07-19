@@ -22,6 +22,8 @@
 #'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for information about progress and time, defaults to \code{0}
+#'     
+#' @param ... passed to \code{read.table} function
 #'
 #' @export
 #'
@@ -33,7 +35,7 @@
 #'     package = 'SIAMCAT')
 #'
 #'     features <- read.features(fn.feat)
-read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0) {
+read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0, ...) {
     if (verbose > 1)
         message("+ starting read.features")
     s.time <- proc.time()[3]
@@ -87,6 +89,8 @@ read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0) {
 #' Note: Labels can take other numeric values (but not characters or strings);
 #' importantly, the label for cases has to be greater than the one for controls
 #' @param fn.in.label name of the tsv file containing labels
+#' 
+#' @param ... passed to \code{read.table} function
 #'
 #' @export
 #'
@@ -111,7 +115,7 @@ read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0) {
 #'     package = 'SIAMCAT')
 #'
 #' labels <- read.labels(fn.label)
-read.labels <- function(fn.in.label) {
+read.labels <- function(fn.in.label, ...) {
     if (is.null(fn.in.label))
         stop("Filename for labels file not provided!\n")
     label <-
@@ -217,6 +221,8 @@ read.labels <- function(fn.in.label) {
 #' heatmap displays, see \link{model.interpretation.plot}
 #'
 #' @param fn.in.meta name of the tsv file containing metadata
+#' 
+#' @param ... passed to \code{read.table} function
 #'
 #' @export
 #'
@@ -230,7 +236,7 @@ read.labels <- function(fn.in.label) {
 #'
 #' meta_data <- read.meta(fn.meta)
 
-read.meta <- function(fn.in.meta) {
+read.meta <- function(fn.in.meta, ...) {
     if (is.null(fn.in.meta) || toupper(fn.in.meta) == "NULL" ||
             toupper(fn.in.meta) == "NONE" || toupper(fn.in.meta) ==
             "UNKNOWN") {

@@ -4,10 +4,12 @@
 \alias{read.labels}
 \title{Read labels file}
 \usage{
-read.labels(fn.in.label)
+read.labels(fn.in.label, ...)
 }
 \arguments{
 \item{fn.in.label}{name of the tsv file containing labels}
+
+\item{...}{passed to \code{read.table} function}
 }
 \value{
 label object containing several entries:\itemize{

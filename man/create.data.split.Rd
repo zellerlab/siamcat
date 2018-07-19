@@ -31,7 +31,7 @@ object of class \link{siamcat-class} with the \code{data_split}-slot
 }
 \description{
 This function prepares the cross-validation by splitting the
-    data into \code{num.folds} training and test folds for 
+    data into \code{num.folds} training and test folds for
     \code{num.resample} times.
 }
 \details{
@@ -41,13 +41,13 @@ This function splits the labels within a \link{siamcat-class} object
 
     The function saves the training and test instances for the different
     cross-validation folds within a list in the \code{data_split}-slot of the
-    \link{siamcat-class} object, which is a list with four entries: 
+    \link{siamcat-class} object, which is a list with four entries:
     \itemize{
-    \item \code{num.folds} the number of cross-validation folds 
-    \item \code{num.resample} the number of repetitions for the 
+    \item \code{num.folds} the number of cross-validation folds
+    \item \code{num.resample} the number of repetitions for the
     cross-validation
-    \item \code{training.folds} a list containing the indices for the 
-    training instances 
+    \item \code{training.folds} a list containing the indices for the
+    training instances
     \item \code{test.folds} a list containing the indices for the
     test instances }
 }

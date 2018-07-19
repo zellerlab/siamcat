@@ -4,7 +4,7 @@
 \alias{read.features}
 \title{Read feature file}
 \usage{
-read.features(fn.in.feat, transpose = FALSE, verbose = 0)
+read.features(fn.in.feat, transpose = FALSE, verbose = 0, ...)
 }
 \arguments{
 \item{fn.in.feat}{name of the tsv file containing features}
@@ -13,6 +13,8 @@ read.features(fn.in.feat, transpose = FALSE, verbose = 0)
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for information about progress and time, defaults to \code{0}}
+
+\item{...}{passed to \code{read.table} function}
 }
 \value{
 \code{otu_table} containing features from the file

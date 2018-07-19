@@ -4,10 +4,12 @@
 \alias{read.meta}
 \title{Read metadata file}
 \usage{
-read.meta(fn.in.meta)
+read.meta(fn.in.meta, ...)
 }
 \arguments{
 \item{fn.in.meta}{name of the tsv file containing metadata}
+
+\item{...}{passed to \code{read.table} function}
 }
 \value{
 \code{sample_data} object
