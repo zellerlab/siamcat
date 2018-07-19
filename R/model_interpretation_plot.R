@@ -4,54 +4,54 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Model Interpretation Plot
-#' 
+#'
 #' @description Produces a plot for model interpretation, displaying feature
 #'     weights, robustness of feature weights, and features scores across
 #'     patients.
-#'     
+#'
 #' @usage model.interpretation.plot(siamcat, fn.plot, color.scheme = "BrBG",
-#' consens.thres = 0.5,heatmap.type = c("zscore", "fc"), 
-#' norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-06, 
+#' consens.thres = 0.5,heatmap.type = c("zscore", "fc"),
+#' norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-06,
 #' max.show = 50, verbose = 1)
-#'     
+#'
 #' @param siamcat object of class \link{siamcat-class}
-#' 
+#'
 #' @param fn.plot string, filename for the pdf-plot
-#' 
+#'
 #' @param color.scheme color scheme for the heatmap, defaults to \code{'BrBG'}
-#' 
+#'
 #' @param consens.thres minimal ratio of models incorporating a feature in order
 #'     to include it into the heatmap, defaults to \code{0.5}
 #'     Note that for \code{'randomForest'} models, this cutoff specifies the
 #'     minimum median Gini coefficient for a feature to be included and
 #'     should therefore be much lower, e.g. \code{0.01}
-#'     
+#'
 #' @param heatmap.type type of the heatmap, can be either \code{'fc'} or
 #'     \code{'zscore'}, defaults to \code{'zscore'}
-#'     
+#'
 #' @param norm.models boolean, should the feature weights be normalized across
 #'     models?, defaults to \code{FALSE}
-#'     
+#'
 #' @param limits vector, cutoff for extreme values in the heatmap,
 #'     defaults to \code{c(-3, 3)}
-#'     
+#'
 #' @param detect.lim float, pseudocount to be added before log-transformation
 #'     of features, defaults to \code{1e-06}
-#'     
+#'
 #' @param max.show integer, maximum number of features to be shown in the model
 #'     interpretation plot, defaults to 50
-#'     
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
-#'     
+#'
 #' @keywords SIAMCAT model.interpretation.plot
-#' 
+#'
 #' @return Does not return anything, but produces the model interpretion plot.
-#' 
+#'
 #' @export
-#' 
+#'
 #' @details Produces a plot consisting of \itemize{
 #'     \item a barplot showing the feature weights and their robustness (i.e. in
 #'     what proportion of models have they been incorporated)
@@ -75,7 +75,7 @@ model.interpretation.plot <-
         fn.plot,
         color.scheme = "BrBG",
         consens.thres = 0.5,
-        heatmap.type = c("zscore", "fc"),
+        heatmap.type = "zscore",
         norm.models = FALSE,
         limits = c(-3, 3),
         detect.lim = 1e-06,
@@ -87,6 +87,7 @@ model.interpretation.plot <-
         label <- label(siamcat)
         model.type <- model_type(siamcat)
         models <- models(siamcat)
+        stopifnot(heatmap.type %in% c('zscore', 'fc'))
 # #########################################################################
 # some color pre-processing
         if (verbose > 2)
@@ -94,16 +95,16 @@ model.interpretation.plot <-
         if (!color.scheme %in% row.names(brewer.pal.info)) {
             warning(
                 "Not a valid RColorBrewer palette name, defaulting to BrBG...\n
-                See brewer.pal.info for more information about 
+                See brewer.pal.info for more information about
                 RColorBrewer palettes."
             )
             color.scheme <- "BrBG"
         }
         color.scheme <-
             rev(colorRampPalette(
-                brewer.pal(brewer.pal.info[color.scheme, "maxcolors"], 
+                brewer.pal(brewer.pal.info[color.scheme, "maxcolors"],
                     color.scheme))(100))
-        
+
 # #########################################################################
 # get model type from model
         if (verbose > 2)
@@ -170,7 +171,7 @@ model.interpretation.plot <-
         } else {
             stop("! unknown heatmap.type: ", heatmap.type)
         }
-        
+
 # #########################################################################
 # start plotting model properties
         if (verbose > 2)
@@ -182,7 +183,7 @@ model.interpretation.plot <-
             width = 11.69,
             onefile = TRUE
         )
-        
+
 ### plot layout
         sel.f.cex <- max(0.3, 0.8 - 0.01 * num.sel.f)
         lmat <- rbind(c(1, 2, 3, 4), c(5, 6, 0, 7), c(0, 8, 0, 0))
@@ -190,12 +191,14 @@ model.interpretation.plot <-
         h_m <- ifelse(is.null(meta(siamcat)), 0.8,
             max(0.5, 0.7 - 0.01 * ncol(meta(siamcat))))
         h_b <- 1 - h_t - h_m
-        message(paste0("Layout height values: ", h_t, ", ", h_m, ", ", h_b))
+        if (verbose >2)
+            message(paste0("+++ Layout height values: ", h_t,
+                ", ", h_m, ", ", h_b))
         layout(lmat,
             widths = c(0.14, 0.58, 0.1, 0.14),
             heights = c(h_t, h_m, h_b))
         par(oma = c(3, 4, 3, 4))
-        
+
 ### header row
 #########################################################################
 # Title of Feature Weights
@@ -221,7 +224,7 @@ model.interpretation.plot <-
             cex = 1,
             adj = 0.5
         )
-        
+
 # #########################################################################
 # Title of heatmap and brackets for classes
         par(mar = c(0, 4.1, 3.1, 5.1))
@@ -266,7 +269,7 @@ model.interpretation.plot <-
             cex = 1,
             adj = 0.5
         )
-        
+
 # #########################################################################
 # Heatmap legend
         if (verbose > 2)
@@ -302,7 +305,7 @@ model.interpretation.plot <-
             cex = 0.7,
             adj = 0.5
         )
-        
+
 # #########################################################################
 # Model header (model sensitive)
         par(mar = c(0, 6.1, 3.1, 1.1))
@@ -333,7 +336,7 @@ model.interpretation.plot <-
             cex = 0.7,
             adj = 0.5
         )
-        
+
 # #########################################################################
 # Feature weights ( model sensitive)
         if (verbose > 2)
@@ -344,7 +347,7 @@ model.interpretation.plot <-
             mod.type = model.type,
             label = label
         )
-        
+
 # #########################################################################
 # Heatmap
         if (verbose > 2)
@@ -378,7 +381,7 @@ model.interpretation.plot <-
                 verbose = verbose
             )
         }
-        
+
 # #########################################################################
 # Proportion of weights shown
         if (verbose > 2)
@@ -388,7 +391,7 @@ model.interpretation.plot <-
             all.weights = all.weights,
             verbose = verbose
         )
-        
+
 # #########################################################################
 # Metadata and prediction
         if (verbose > 2)
@@ -399,7 +402,7 @@ model.interpretation.plot <-
             meta = meta(siamcat)[srt.idx,],
             verbose = verbose
         )
-        
+
         tmp <- dev.off()
         e.time <- proc.time()[3]
         if (verbose > 1)
@@ -434,12 +437,12 @@ model.interpretation.feature.weights.plot <-
         med <- rowMedians(relative.weights)
         low.qt <- rowQuantiles(relative.weights, probs = 0.25)
         upp.qt <- rowQuantiles(relative.weights, probs = 0.75)
-        
+
         if (mod.type != "RandomForest") {
             par(mar = c(0.1, 1.1, 0, 1.1))
             mi = min(-med - (abs(low.qt - upp.qt)))
             mx = max(-med + (abs(low.qt - upp.qt)))
-            
+
             barplot(
                 -med,
                 horiz = TRUE,
@@ -475,7 +478,7 @@ model.interpretation.feature.weights.plot <-
                 yaxt = "n",
                 add = TRUE
             )
-            
+
     # error bars
             arrows(
                 y0 = c(seq_along(med)) - 0.5,
@@ -514,7 +517,7 @@ model.interpretation.feature.weights.plot <-
                     adj = 1
                 )
             }
-            
+
     # label cancer/healthy
             mtext(
                 gsub("_", " ", label$n.lab),
@@ -528,7 +531,7 @@ model.interpretation.feature.weights.plot <-
                 at = floor(length(sel.idx) / 2),
                 line = -2
             )
-            
+
             mtext(
                 "effect size",
                 side = 3,
@@ -548,7 +551,7 @@ model.interpretation.feature.weights.plot <-
         } else {
             par(mar = c(0.1, 1.1, 0, 1.1))
             mx = max(-med + (abs(low.qt - upp.qt)))
-            
+
             barplot(
                 -med,
                 horiz = TRUE,
@@ -584,7 +587,7 @@ model.interpretation.feature.weights.plot <-
                 yaxt = "n",
                 add = TRUE
             )
-            
+
     # error bars
             arrows(
                 y0 = c(seq_along(med)) - 0.5,
@@ -612,7 +615,7 @@ model.interpretation.feature.weights.plot <-
                 adj = 0.5
             )
         }
-        
+
         box(lwd = 1)
         if (verbose > 2)
             message("+ finished model.interpretation.feature.weights.plot")
@@ -654,15 +657,17 @@ model.interpretation.pred.and.meta.plot <-
                             levels and will not be shown!"
                         )
                     }
-                    }
+                }
                 img.data.processed <-
                     cbind(img.data.processed, cur.processed.data)
-                }
+            }
+        } else {
+            img.data.processed <- img.data
         }
-        
+
         grays = rev(gray(seq(0, 1, length.out = 100)))
         image(
-            as.matrix(img.data),
+            as.matrix(img.data.processed),
             col = grays,
             xaxt = "n",
             yaxt = "n",
@@ -675,7 +680,7 @@ model.interpretation.pred.and.meta.plot <-
         abline(v = length(which(label$label == label$negative.lab)) /
                 length(label$label),
             col = "red")
-        
+
         meta.cex = max(0.3, 0.7 - 0.01 * ncol(img.data))
         for (m in seq_len(ncol(img.data))) {
             t = colnames(img.data)[m]
@@ -913,7 +918,7 @@ model.interpretation.select.features <-
             if (norm.models) {
                 weights <- t(t(weights) / colSums(abs(weights)))
             }
-            sel.idx = which(rowSums(weights != 0) / ncol(weights) >= 
+            sel.idx = which(rowSums(weights != 0) / ncol(weights) >=
                 consens.thres)
     # normalize by model size and order features by relative model weight
             weights.norm <- t(t(weights) / colSums(abs(weights)))
@@ -950,12 +955,12 @@ model.interpretation.select.features <-
             sel.idx <-
                 median.sorted.features$ix[which(median.sorted.features$x >=
                         consens.thres)]
-            
+
             if (length(sel.idx) > max.show) {
                 sel.idx <- tail(sel.idx, n = max.show)
             }
         }
-        
+
         if (verbose > 2)
             message(paste(
                 "+++ generating plot for a model with",
