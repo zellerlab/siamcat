@@ -4,7 +4,7 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Evaluate prediction results
-#' 
+#'
 #' @description This function takes the correct labels and predictions for all
 #'     samples and evaluates the results using the \itemize{
 #'         \item Area Under the Receiver Operating Characteristic (ROC)
@@ -15,16 +15,16 @@
 #'
 #'     Prediction results are usually produced with the function
 #'     \link{make.predictions}.
-#'     
+#'
 #' @param siamcat object of class \link{siamcat-class}
-#' 
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
-#'     
+#'
 #' @keywords SIAMCAT evaluate.predictions
-#' 
+#'
 #' @details This functions calculates for the predictions in the
 #'     \code{pred_matrix} -slot of the \link{siamcat-class}-object several
 #'     metrices. The Area Under the Receiver Operating Characteristic (ROC)
@@ -52,10 +52,10 @@
 #'                 for every repeat.}
 #'
 #' @export
-#' 
+#'
 #' @return object of class \link{siamcat-class} with the
 #'     slot \code{eval_data} filled
-#'     
+#'
 #' @examples
 #'
 #'     data(siamcat_example)
@@ -70,10 +70,10 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     # TODO compare header to label make sure that label and prediction are in
     # the same order
     m <- match(names(label$label), rownames(pred_matrix(siamcat)))
-    
+
     pred <- pred_matrix(siamcat)[m, , drop = FALSE]
     stopifnot(all(names(label$label) == rownames(pred)))
-    
+
     # ROC curve
     if (verbose > 2)
         message("+ calculating ROC")
@@ -111,9 +111,9 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     if (ncol(pred) > 1) {
         aucspr = vector("numeric", dim(pred)[2])
         for (c in seq_len(ncol(pred))) {
-            ev[c] = list(evaluate.classifier(pred[, c], label$label, label,
-                verbose = verbose))
-            pr[c] = list(evaluate.get.pr(ev[[c]], verbose = verbose))
+            ev[[c]] = evaluate.classifier(pred[, c], label$label, label,
+                verbose = verbose)
+            pr[[c]] = evaluate.get.pr(ev[[c]], verbose = verbose)
             aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose = verbose)
         }
         ev = append(ev, list(evaluate.classifier(
@@ -121,9 +121,9 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
             label$label, label
         )))
     } else {
-        ev[1] = list(evaluate.classifier(as.vector(pred), label$label, label,
-            verbose = verbose))
-        pr[1] = list(evaluate.get.pr(ev[[1]]), verbose = verbose)
+        ev[[1]] = evaluate.classifier(as.vector(pred), label$label, label,
+            verbose = verbose)
+        pr[[1]] = evaluate.get.pr(ev[[1]], verbose = verbose)
     }
     if (ncol(pred) > 1) {
         if (verbose > 2)
@@ -181,7 +181,7 @@ evaluate.classifier <-
         dim(thr) <- NULL
         thr <- sort(unique(thr))
         thr <-
-            rev(c(min(thr) - 1, (thr[-1] + thr[-length(thr)]) / 2, 
+            rev(c(min(thr) - 1, (thr[-1] + thr[-length(thr)]) / 2,
                 max(thr) + 1))
         if (is.null(dim(predictions))) {
             # assuming that a single model was applied to predict the data set
