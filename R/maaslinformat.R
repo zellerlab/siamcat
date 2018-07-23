@@ -26,7 +26,8 @@
 siamcat.to.maaslin <- function(siamcat, filename="siamcat_output.pcl") {
     feat   <- get.features.matrix(siamcat)
     label  <- label(siamcat)
-    meta   <- t(meta(siamcat))
+    meta   <- NULL
+    if(!is.null(meta(siamcat))) meta   <- t(meta(siamcat))
     labelD <- label$label
     labelD[label$p.idx] <- label$p.lab
     labelD[label$n.idx] <- label$n.lab

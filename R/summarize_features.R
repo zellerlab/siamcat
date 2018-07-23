@@ -29,7 +29,8 @@
 #'     # simple working example
 #'     siamcat_evaluated <- summarize.features(siamcat_example)
 #'
-summarize.features <- function(siamcat, level="__g",verbose=1){
+summarize.features <- function(siamcat, level = "__g", 
+  keep_original_names = TRUE, verbose=1){
   
   if (verbose > 1)
     message("+ starting summarize.features")
@@ -40,18 +41,21 @@ summarize.features <- function(siamcat, level="__g",verbose=1){
   feat <- features(siamcat)
   rowSplitted <- strsplit(rownames(feat@.Data),"\\.")
   geniuses    <- NULL
+  origNames   <- NULL
   
   for(row in rowSplitted){
-    
-    geniuses <- c(geniuses,row[grep(level,row)])
-    
+    levelPos <- grep(level,row)
+    geniuses <- c(geniuses,row[levelPos])
+    origNames<- paste(row[1:levelPos],sep="\\.")
   }
   
   geniusesSplitted <- strsplit(geniuses,level)
   geniusesSpVec    <- do.call(rbind,geniusesSplitted)[,2]
+  geniusesSpVecMap <- cbind(geniusesSpVec,origNames)
+  geniusesSpVecMap <- geniusesSpVecMap[!duplicated(geniusesSpVecMap[,1]),]
   summarized       <- NULL
   
-  for(genus in unique(geniusesSpVec)){
+  for(genus in seq_along(1:nrow(geniusesSpVecMap))){
     
     curRows <- feat@.Data[which(geniusesSpVec==genus),]
     
@@ -71,7 +75,13 @@ summarize.features <- function(siamcat, level="__g",verbose=1){
     nrow(summarized)," features\n")
   
   rownames(summarized) <- unique(geniusesSpVec)
+
+  if(keep_original_names){
+      rownames(summarized) <-  geniusesSpVecMap[,2]
+  }
+
   colnames(summarized) <- colnames(feat)
+  
   summarized           <- summarized[-which(rownames(summarized)==""),]
   e.time <- proc.time()[3]
   if (verbose > 1)
