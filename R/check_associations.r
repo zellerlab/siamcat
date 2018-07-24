@@ -816,7 +816,7 @@ associations.pr.shift.plot <-
             beside = TRUE,
             width = .3,
             col = c(col[1], col[2])
-        )        
+        )
         title(main = 'Prevalence shift', xlab = 'Prevalence [%]')
         if (verbose > 2)
             message("+ finished associations.pr.shift.plot")
@@ -1160,27 +1160,22 @@ analyse.binary.marker <- function(feat,
 ### Sort features
     if (verbose > 2)
         message('+++ sorting features')
-    if (!sort.by %in% c('fc', 'p.val', 'pr.shift')) {
-        if (verbose > 1)
-            message(paste(
-                '+++ Unknown sorting option:',
+    if (!sort.by %in% c('fc', 'p.val', 'pr.shift', 'auc')) {
+            message(paste0(
+                '+++ Unknown sorting option: ',
                 sort.by,
                 '. Instead order by fold change.'
             ))
         sort.by <- 'fc'
     }
     if (sort.by == 'fc') {
-        fc.sign <- ifelse(effect.size[idx, 'fc'] == 0, 1,
-            sign(effect.size[idx, 'fc']))
-        p.adj.log <- -log10(effect.size$p.adj[idx]) * fc.sign
-        idx <- idx[order(p.adj.log, decreasing = FALSE)]
+        idx <- idx[order(-effect.size$fc[idx], decreasing = TRUE)]
     } else if (sort.by == 'p.val') {
         idx <- idx[order(effect.size$p.adj[idx], decreasing = TRUE)]
     } else if (sort.by == 'pr.shift') {
-        pr.sign <- ifelse(effect.size[idx, 'pr.shift'] == 0, 1,
-            sign(effect.size[idx, 'pr.shift']))
-        p.adj.log <- -log10(effect.size$p.adj[idx]) * pr.sign
-        idx <- idx[order(p.adj.log, decreasing = FALSE)]
+        idx <- idx[order(effect.size$pr.shift[idx], decreasing = FALSE)]
+    } else if (sort.by == 'auc'){
+        idx <- idx[order(-effect.size$auc[idx], decreasing = TRUE)]
     }
     e.time <- proc.time()[3]
     if (verbose > 1)
