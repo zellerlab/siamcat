@@ -114,6 +114,7 @@ check.associations <-
         if (!all(panels %in% c("fc", "auroc", "prevalence"))) {
             stop("Unknown panel-type selected!")
         }
+        panels <- unique(panels)
         if (length(panels) > 3) {
             warning(
                 "Plot layout is not suited for more than 3 panels.
@@ -531,7 +532,7 @@ associations.quantile.rect.plot <-
                                         na.rm = TRUE)
 
         p.mn <- min(data.mat, na.rm = TRUE)
-        p.mx <- max(data.mat, na.rm = TRUE)
+        p.mx <- 0# max(data.mat, na.rm = TRUE)
 
         plot(
             rep(p.mn, n.spec),
@@ -573,20 +574,11 @@ associations.quantile.rect.plot <-
         associations.quantile.median.sub.plot(quantiles.pos, up = TRUE)
         associations.quantile.median.sub.plot(quantiles.neg, up = FALSE)
 
-        mtext(
-            'Quantiles',
-            3,
-            line = 0,
-            at = 1,
-            adj = 1.675,
-            padj = 0.45,
-            las = 1,
-            cex = 0.7
-        )
         legend(
-            -1.75,
+            0.3*p.mn,
             n.spec,
             legend = c(
+                "Quantiles",
                 "40%-60%",
                 "30%-70%",
                 "20%-80%",
@@ -600,14 +592,16 @@ associations.quantile.rect.plot <-
             ),
             bty = 'n',
             cex = 1,
-            fill = c(rev(colors.p), 'white', rev(colors.n), 'white'),
+            fill = c('white', rev(colors.p), 'white', 'white', rev(colors.n), 'white'),
             lwd <- 1.3,
             ncol = 2,
             border = c(
+                "white",
                 "black",
                 "black",
                 "black",
                 "black",
+                "white",
                 "white",
                 "black",
                 "black",
@@ -617,15 +611,15 @@ associations.quantile.rect.plot <-
             )
         )
         legend(
-            -1.675,
+            0.3*p.mn + abs(0.016*p.mn),
             n.spec,
-            legend = c("", "", "", "", ""),
+            legend = c("", "", "", "", "", ""),
             bty = 'n',
-            lty = c(0, 0, 0, 0, 0),
+            lty = c(0, 0, 0, 0, 0, 0),
     # cap legend size for diamond (should look symmetric to other symbols)
             pch = 18,
             cex = 1,
-            pt.cex = c(0, 0, 0, 0, min(35 / n.spec, 2.25))
+            pt.cex = c(0, 0, 0, 0, 0, min(35 / n.spec, 2.25))
         )
         associations.labels.plot(rownames(data.mat),
             plot.type = 'quantile.rect',
