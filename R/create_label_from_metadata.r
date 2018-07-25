@@ -67,42 +67,36 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
 
     labels <- unique(metaColumn)
 
-    if (length(labels) == 2){
-        if (verbose > 0) message("Column ", column, " contains binary label\n")
-        if(!case%in%labels){
-            stop("Column ", column, " does not contain value:",case,"\n")
-        }
-        if (is.null(control)) {
-            control <- setdiff(unique(labels), case)
-        } else {
-            if(!control%in%labels){
-                stop("Column ", column, " does not contain value:",control,"\n")
-            }
+    ### checking case
+    if(!all(case%in%labels)){
+        stop("Column ", column, " does not contain values:",
+                paste(case,collapse=","),"\n")
+    }
 
-        }
 
-    }else if(length(labels) > 2){
-        if(!case%in%labels){
-            stop("Column ", column, " does not contain value:",case,"\n")
-        }
-        if (is.null(control)) {
+    ### checking control
+    if (is.null(control)) {
+        if((length(labels)-length(case))>1){
             control <- "rest"
-        } else {
-            if(!control%in%labels){
-                stop("Column ", column, " does not contain value:",control,"\n")
-            }
-            if(any(!labels%in%c(case, control))){
-                metaColumn <- metaColumn[which(metaColumn%in%c(case, control))]
-                warning("Dropping values: ",
-                    labels[which(!labels%in%c(case, control))])
-            }
-            
+        }else{
+            control <- setdiff(labels, case)
+        }
+    }else{
+        if(!control%in%labels){
+            stop("Column ", column, " does not contain value:",control,"\n")
+        }
+        ### dropping unused values
+        if(any(!labels%in%c(case, control))){
+            metaColumn <- metaColumn[which(metaColumn%in%c(case, control))]
+            warning("Dropping values: ",
+                labels[which(!labels%in%c(case, control))])
         }
     }
+
+            
     if (verbose > 0)
-            message("Label used as case:\n   ",case,
-                "\nLabel used as control:\n   ",
-                paste(labels[which(labels!=case)], collapse = ","))
+            message("Label used as case:\n   ",paste(case,collapse=","),
+                "\nLabel used as control:\n   ",paste(control,collapse=","))
     label <-
             list(
                 label = rep(-1, length(metaColumn)),
@@ -110,14 +104,24 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
                 negative.lab = (-1)
             )
     label$n.lab <- gsub("[_.-]", " ", control)
-    label$p.lab <- gsub("[_.-]", " ", case)
+        if(length(case)>1){
+        label$p.lab <- "Case"
+    }else{
+        label$p.lab <- gsub("[_.-]", " ", case)
+    }
+    
     class.descr <- c(-1, 1)
     names(class.descr) <- c(label$n.lab, label$p.lab)
 
     names(label$label) <- names(metaColumn)
     label$header <-
         paste0("#BINARY:1=", label$p.lab, ";-1=", label$n.lab)
-    label$label[which(metaColumn == case)] <- 1
+    if(length(case)>1){
+        label$label[which(metaColumn%in%case)] <- 1
+    }else{
+        label$label[which(metaColumn == case)] <- 1
+    }
+   
 
     label$n.idx <- label$label == label$negative.lab
     label$p.idx <- label$label == label$positive.lab
