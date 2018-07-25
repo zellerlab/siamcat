@@ -29,7 +29,7 @@
 #'     # simple working example
 #'     siamcat_evaluated <- summarize.features(siamcat_example)
 #'
-summarize.features <- function(siamcat, level = "__g", 
+summarize.features <- function(siamcat, level = "g__", 
   keep_original_names = TRUE, verbose=1){
   
   if (verbose > 1)
@@ -44,8 +44,9 @@ summarize.features <- function(siamcat, level = "__g",
   origNames   <- NULL
   
   for(row in rowSplitted){
+    print(row)
     levelPos <- grep(level,row)
-    if(!is.null(levelPos)){
+    if(length(levelPos)>0){
       genera <- c(genera,row[levelPos])
       origNames<- paste(row[1:levelPos],sep="\\.")
     }
