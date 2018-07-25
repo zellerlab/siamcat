@@ -37,18 +37,17 @@ summarize.features <- function(siamcat, level = "g__",
   
   s.time <- proc.time()[3]
   
-  if (verbose > 2) message("+++ sumamrizing on a level: ",level,"\n")
+  if (verbose > 2) message("+++ summarizing on a level: ",level,"\n")
   feat <- get.features.matrix(siamcat)
   rowSplitted <- strsplit(rownames(feat),"\\.")
   genera    <- NULL
   origNames   <- NULL
   
   for(row in rowSplitted){
-    print(row)
     levelPos <- grep(level,row)
     if(length(levelPos)>0){
       genera <- c(genera,row[levelPos])
-      origNames<- paste(row[1:levelPos],sep="\\.")
+      origNames<- c(origNames,paste(row[1:levelPos],collapse="."))
     }
   }
   
@@ -56,7 +55,7 @@ summarize.features <- function(siamcat, level = "g__",
   generaSpVec    <- do.call(rbind,generaSplitted)[,2]
   generaSpVecMap <- cbind(generaSpVec,origNames)
   generaSpVecMap <- generaSpVecMap[!duplicated(generaSpVecMap[,1]),]
-  summarized       <- NULL
+  summarized     <- NULL
   
   for(genus in seq_along(1:nrow(generaSpVecMap))){
     
@@ -78,6 +77,9 @@ summarize.features <- function(siamcat, level = "g__",
     nrow(summarized)," features\n")
   
   rownames(summarized) <- unique(generaSpVec)
+  if(any(rownames(summarized)==""))){
+    summarized           <- summarized[-which(rownames(summarized)==""),]
+  }
 
   if(keep_original_names){
       rownames(summarized) <-  generaSpVecMap[,2]
@@ -85,7 +87,7 @@ summarize.features <- function(siamcat, level = "g__",
 
   colnames(summarized) <- colnames(feat)
   
-  summarized           <- summarized[-which(rownames(summarized)==""),]
+  
   e.time <- proc.time()[3]
   if (verbose > 1)
     message(paste(
