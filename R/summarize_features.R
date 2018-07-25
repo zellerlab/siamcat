@@ -56,9 +56,11 @@ summarize.features <- function(siamcat, level = "g__",
   generaSpVecMap <- cbind(generaSpVec,origNames)
   generaSpVecMap <- generaSpVecMap[!duplicated(generaSpVecMap[,1]),]
   summarized     <- NULL
+  usedOnes       <- NULL
   
-  for(genus in generaSpVecMap[,1]){
+  for(genusNR in seq_along(1:nrow(generaSpVecMap))){
     
+    genus   <- generaSpVecMap[genusNR,1]
     curRows <- feat[grep(paste0(level,genus),rownames(feat)),]
     
     if(!is.null(dim(curRows))){
@@ -70,20 +72,22 @@ summarize.features <- function(siamcat, level = "g__",
       summarized <- rbind(summarized,curRows)
       
     }
+    usedOnes <- rbind(usedOnes,generaSpVecMap[genusNR,])
     
   }
   
   if (verbose > 2) message("+++ summarized features table contains: ",
     nrow(summarized)," features\n")
   
-  rownames(summarized) <- generaSpVecMap[,1]
-  if(any(rownames(summarized)=="")){
-    summarized           <- summarized[-which(rownames(summarized)==""),]
+  rownames(summarized) <- usedOnes[,1]
+  if(keep_original_names){
+      rownames(summarized) <-  usedOnes[,2]
+  }
+  if(any(usedOnes[,1]=="")){
+    summarized           <- summarized[-which(usedOnes[,1]==""),]
   }
 
-  if(keep_original_names){
-      rownames(summarized) <-  generaSpVecMap[,2]
-  }
+
 
   colnames(summarized) <- colnames(feat)
   
