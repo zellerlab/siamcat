@@ -57,9 +57,9 @@ summarize.features <- function(siamcat, level = "g__",
   generaSpVecMap <- generaSpVecMap[!duplicated(generaSpVecMap[,1]),]
   summarized     <- NULL
   
-  for(genus in seq_along(1:nrow(generaSpVecMap))){
+  for(genus in generaSpVecMap[,1]){
     
-    curRows <- feat[which(generaSpVec==genus),]
+    curRows <- feat[grep(paste0(level,genus),rownames(feat)),]
     
     if(!is.null(dim(curRows))){
       
@@ -76,8 +76,8 @@ summarize.features <- function(siamcat, level = "g__",
   if (verbose > 2) message("+++ summarized features table contains: ",
     nrow(summarized)," features\n")
   
-  rownames(summarized) <- unique(generaSpVec)
-  if(any(rownames(summarized)==""))){
+  rownames(summarized) <- generaSpVecMap[,1]
+  if(any(rownames(summarized)=="")){
     summarized           <- summarized[-which(rownames(summarized)==""),]
   }
 
