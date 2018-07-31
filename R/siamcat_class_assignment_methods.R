@@ -25,30 +25,16 @@ setGeneric("physeq<-", function(x, value)
 #' @aliases physeq<-
 setMethod("physeq<-", c("siamcat", "phyloseq"), function(x, value) {
     siamcat(
-        value,
+        'phyloseq'=value,
+        'label'=x@label,
         x@model_list,
         x@eval_data,
-        x@label,
         x@norm_param,
         x@data_split,
         x@pred_matrix,
-        x@orig_feat
-    )
-})
-#' @rdname assign-physeq
-#' @aliases physeq<-
-setMethod("physeq<-", c("siamcat", "otu_table"), function(x, value) {
-    phyloseq <- physeq(x)
-    otu_table(phyloseq) <- value
-    siamcat(
-        phyloseq,
-        x@model_list,
-        x@eval_data,
-        x@label,
-        x@norm_param,
-        x@data_split,
-        x@pred_matrix,
-        x@orig_feat
+        x@orig_feat,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -75,14 +61,16 @@ setGeneric("label<-", function(x, value)
 #' @aliases label<-
 setMethod("label<-", c("siamcat", "label"), function(x, value) {
     siamcat(
-        value,
+        'phyloseq'=x@phyloseq,
+        'label'=value,
         x@model_list,
         x@eval_data,
-        x@phyloseq,
         x@orig_feat,
         x@norm_param,
         x@data_split,
-        x@pred_matrix
+        x@pred_matrix,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -109,14 +97,16 @@ setGeneric("model_list<-", function(x, value)
 #' @aliases model_list<-
 setMethod("model_list<-", c("siamcat", "model_list"), function(x, value) {
     siamcat(
+        'label'=x@label,
+        'phyloseq'=x@phyloseq,
         value,
-        x@label,
         x@eval_data,
-        x@phyloseq,
         x@orig_feat,
         x@norm_param,
         x@data_split,
-        x@pred_matrix
+        x@pred_matrix,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -142,14 +132,16 @@ setGeneric("eval_data<-", function(x, value)
 #' @aliases eval_data<-
 setMethod("eval_data<-", c("siamcat", "list"), function(x, value) {
     siamcat(
+        'label'=x@label,
+        'phyloseq'=x@phyloseq,
         value,
-        x@label,
         x@model_list,
-        x@phyloseq,
         x@orig_feat,
         x@norm_param,
         x@data_split,
-        x@pred_matrix
+        x@pred_matrix,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -175,14 +167,16 @@ setGeneric("norm_param<-", function(x, value)
 #' @aliases norm_param<-
 setMethod("norm_param<-", c("siamcat", "list"), function(x, value) {
     siamcat(
+        'label'=x@label,
+        'phyloseq'=x@phyloseq,
         value,
-        x@label,
         x@model_list,
-        x@phyloseq,
         x@orig_feat,
         x@eval_data,
         x@data_split,
-        x@pred_matrix
+        x@pred_matrix,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -208,14 +202,16 @@ setGeneric("pred_matrix<-", function(x, value)
 #' @aliases pred_matrix<-
 setMethod("pred_matrix<-", c("siamcat", "matrix"), function(x, value) {
     siamcat(
+        'label'=x@label,
+        'phyloseq'=x@phyloseq,
         value,
-        x@label,
         x@model_list,
-        x@phyloseq,
         x@orig_feat,
         x@eval_data,
         x@data_split,
-        x@norm_param
+        x@norm_param,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -241,14 +237,16 @@ setGeneric("data_split<-", function(x, value)
 #' @aliases data_split<-
 setMethod("data_split<-", c("siamcat", "data_split"), function(x, value) {
     siamcat(
+        'label'=x@label,
+        'phyloseq'=x@phyloseq,
         value,
-        x@label,
         x@model_list,
-        x@phyloseq,
         x@orig_feat,
         x@eval_data,
         x@pred_matrix,
-        x@norm_param
+        x@norm_param,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -274,28 +272,32 @@ setGeneric("orig_feat<-", function(x, value)
 #' @aliases orig_feat<-
 setMethod("orig_feat<-", c("siamcat", "orig_feat"), function(x, value) {
     siamcat(
+        'label'=x@label,
+        'phyloseq'=x@phyloseq,
         value,
-        x@label,
         x@model_list,
-        x@phyloseq,
         x@data_split,
         x@eval_data,
         x@pred_matrix,
-        x@norm_param
+        x@norm_param,
+        validate=FALSE,
+        verbose=0
     )
 })
 #' @rdname assign-orig_feat
 #' @aliases orig_feat<-
 setMethod("orig_feat<-", c("siamcat", "otu_table"), function(x, value) {
     siamcat(
+        'label'=x@label,
+        'phyloseq'=x@phyloseq,
         new("orig_feat", value),
-        x@label,
         x@model_list,
-        x@phyloseq,
         x@data_split,
         x@eval_data,
         x@pred_matrix,
-        x@norm_param
+        x@norm_param,
+        validate=FALSE,
+        verbose=0
     )
 })
 
@@ -321,7 +323,12 @@ setGeneric("features<-", function(x, value)
 #' @rdname assign-features
 #' @aliases features<-
 setMethod("features<-", c("siamcat", "otu_table"), function(x, value) {
-    otu_table(physeq(x)) <-  value
+    temp <- physeq(x)
+    args.list <- list('otu_table'=value, 'sam_data'=meta(x),
+        'tax_table'=tax_table(temp, errorIfNULL=FALSE),
+        'phy_tree'=phy_tree(temp, errorIfNULL=FALSE))
+    physeq.new <- do.call("new", c(list(Class = "phyloseq"), args.list))
+    physeq(x) <- physeq.new
     return(x)
 })
 
