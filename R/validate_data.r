@@ -41,6 +41,14 @@ validate.data <- function(siamcat, verbose = 1) {
     if (any(colSums(feat) > 1.01) || any(colSums(feat) < 0.99)) {
         message('\t### Warning: The data does not seem to be compositional!')
     }
+    # check feature names
+    featNames <- make.names(rownames(feat))
+    if (any(rownames(feat) != featNames)) {
+        rownames(feat) <- featNames
+        features(siamcat) <- feat
+        feat <- features(siamcat)
+    }
+
     # Check if labels are available for all samples in features
     if (verbose > 2) {
         message("+++ checking overlap between labels and features")
