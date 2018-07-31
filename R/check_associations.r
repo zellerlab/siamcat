@@ -106,7 +106,7 @@ check.associations <-
         plot.type = "quantile.box",
         panels = c("fc", "auroc"),
         verbose = 1) {
-# check panel and plot.type parameter
+        # check panel and plot.type parameter
         if (verbose > 1)
             message("+ starting check.associations")
         s.time <- proc.time()[3]
@@ -129,13 +129,13 @@ check.associations <-
                 uantile.box.")
             plot.type <- "quantile.box"
         }
-# either give n_classes colors or color palette
+        # either give n_classes colors or color palette
         col <- check.color.scheme(color.scheme, label(siamcat))
 
         feat <- get.features.matrix(siamcat)
         label <- label(siamcat)
 
-### Calculate different effect sizes
+        ### Calculate different effect sizes
         if (verbose > 2)
             message("+++ analysing features\n")
         result.list <- analyse.binary.marker(
@@ -152,17 +152,18 @@ check.associations <-
             verbose = verbose
         )
 
-###
+        ###
         effect.size <- result.list$effect.size
         truncated <- result.list$truncated
         detect.lim <- result.list$detect.lim
         feat.red    <- result.list$feat.red
         feat.red.log <- log10(feat.red + detect.lim)
 
-#############################################################################
-### generate plots with significant associations between features and labels
+        ########################################################################
+        ### generate plots with significant associations between
+        ##      features and labels
 
-# make plot matrix dependent on panels parameters
+        # make plot matrix dependent on panels parameters
         if (verbose > 2)
             message("+++ preparing plotting layout")
         if (length(panels) == 3) {
@@ -179,16 +180,16 @@ check.associations <-
 
         layout(mat = layout.mat, widths = widths)
 
-#############################################################################
-# PANEL 2: P-VALUES
-# print p-values in second panel of the plot
+        ########################################################################
+        # PANEL 2: P-VALUES
+        # print p-values in second panel of the plot
         associations.pvals.plot(p.vals = effect.size$p.adj,
             alpha = alpha,
             verbose = verbose)
 
-#############################################################################
-# PANEL 1: DATA
-# prepare margins
+        ########################################################################
+        # PANEL 1: DATA
+        # prepare margins
         associations.margins.plot(species_names = row.names(feat.red),
             verbose = verbose)
 
@@ -217,7 +218,7 @@ check.associations <-
                 verbose = verbose)
         }
 
-# plot title
+        # plot title
         if (!truncated) {
             title(main = 'Differentially abundant features',
                 xlab = 'Abundance (log10-scale)')
@@ -232,8 +233,8 @@ check.associations <-
             )
         }
 
-#############################################################################
-# OTHER PANELS
+        ########################################################################
+        # OTHER PANELS
         for (p in panels) {
             if (p == "fc") {
                 associations.fcs.plot(
@@ -256,7 +257,7 @@ check.associations <-
             }
         }
 
-# close pdf device
+        # close pdf device
         tmp <- dev.off()
         e.time <- proc.time()[3]
         if (verbose > 1)
@@ -267,7 +268,7 @@ check.associations <-
             ))
         if (verbose == 1)
             message(paste(
-                "Plotted associations between features and label
+                "\nPlotted associations between features and label
                 successfully to:",
                 fn.plot
             ))
@@ -280,21 +281,25 @@ associations.bean.plot <-
     function(data.mat, label, col, verbose = 1) {
         if (verbose > 2)
             message("+ starting associations.bean.plot")
-# create data.frame in format for beanplot
+
+        p.label <- max(label$info)
+        n.label <- min(label$info)
+
+        # create data.frame in format for beanplot
         bean.data <- data.frame(data = c(data.mat))
         bean.data$factor <- c(vapply(
             label$label,
             FUN = function(x) {
-                paste(rownames(data.mat), names(label$info$class.descr[match(x,
-                    label$info$class.descr)]))
+                paste(rownames(data.mat),
+                names(label$info)[match(x, label$info)])
             },
             FUN.VALUE = character(nrow(data.mat)),
             USE.NAMES = FALSE
         ))
-# ensure correct ordering by converting to a factor
+        # ensure correct ordering by converting to a factor
         bean.data$factor <- factor(bean.data$factor,
             levels = paste(rep(rownames(data.mat), each = 2),
-                            c(label$n.lab, label$p.lab)))
+                            names(label$info[order(label$info)])))
 
         mn <- as.integer(c(min(bean.data$data)))
         mx <- as.integer(c(max(bean.data$data)))
@@ -343,7 +348,8 @@ associations.bean.plot <-
 
         legend(
             'topright',
-            legend = c(label$p.lab, label$n.lab),
+            legend = c(names(which(label$info == p.label)),
+                       names(which(label$info == n.label))),
             fill = rev(col),
             bty = 'n'
         )
@@ -361,21 +367,25 @@ associations.box.plot <-
             message("+ starting associations.box.plot")
         box.colors <- rep(c(col[1], col[2]), nrow(data.mat))
 
-# create data.frame in format for beanplot
+        p.label <- max(label$info)
+        n.label <- min(label$info)
+
+        # create data.frame in format for beanplot
         plot.data <- data.frame(data = c(data.mat))
         plot.data$factor <- c(vapply(
             label$label,
             FUN = function(x) {
-                paste(rownames(data.mat), names(label$info$class.descr[match(x,
-                    label$info$class.descr)]))
+                paste(rownames(data.mat),
+                names(label$info)[match(x, label$info)])
             },
             FUN.VALUE = character(nrow(data.mat)),
             USE.NAMES = FALSE
         ))
-# ensure correct ordering by converting to a factor
+
+        # ensure correct ordering by converting to a factor
         plot.data$factor <- factor(plot.data$factor,
             levels = paste(rep(rownames(data.mat), each = 2),
-                            c(label$n.lab, label$p.lab)))
+                            names(label$info[order(label$info)])))
 
         mn <- as.integer(c(min(data.mat)))
         mx <- as.integer(c(max(data.mat)))
@@ -419,7 +429,8 @@ associations.box.plot <-
         )
         legend(
             'topright',
-            legend = c(label$p.lab, label$n.lab),
+            legend = c(names(which(label$info == p.label)),
+                       names(which(label$info == n.label))),
             fill = rev(col),
             bty = 'n'
         )
@@ -438,6 +449,13 @@ associations.quantile.box.plot <- function(data.mat, label, col,
         message("+ starting associations.quantile.box.plot")
     pos.col <- col[2]
     neg.col <- col[1]
+
+    p.label <- max(label$info)
+    n.label <- min(label$info)
+    p.idx <- which(label$label == p.label)
+    n.idx <- which(label$label == n.label)
+    p.n <- length(which(label$label == p.label))
+    n.n <- length(which(label$label == n.label))
 
     n.spec <- nrow(data.mat)
     p.m = min(data.mat, na.rm = TRUE)
@@ -468,35 +486,33 @@ associations.quantile.box.plot <- function(data.mat, label, col,
         cex.axis = 0.7
     )
 
-# get quantiles
+    # get quantiles
     quant.probs <- c(0.05, 0.25, 0.5, 0.75, 0.95)
-    quantiles.pos = rowQuantiles(data.mat[, label$p.idx], probs = quant.probs,
-        na.rm = TRUE)
-    quantiles.neg = rowQuantiles(data.mat[, label$n.idx], probs = quant.probs,
-        na.rm = TRUE)
+    quantiles.pos = rowQuantiles(data.mat[, p.idx],
+        probs = quant.probs, na.rm = TRUE)
+    quantiles.neg = rowQuantiles(data.mat[, n.idx],
+        probs = quant.probs, na.rm = TRUE)
 
-# inter-quartile range
+        # inter-quartile range
     associations.quantiles.plot(quantiles.pos, up = TRUE, pos.col)
     associations.quantiles.plot(quantiles.neg, up = FALSE, neg.col)
 
 
-# scatter plot on top
+    # scatter plot on top
     for (i in seq_len(n.spec)) {
         pos.col.t <- change.transparency(pos.col)
         neg.col.t <- change.transparency(neg.col)
 
         points(
-            data.mat[i, label$p.idx],
-            rep(i + 0.15,
-                sum(label$p.idx)) + rnorm(sum(label$p.idx), sd = 0.03),
+            data.mat[i, p.idx],
+            rep(i + 0.15, p.n) + rnorm(p.n, sd = 0.03),
             pch = 16,
             cex = 0.6,
             col = pos.col.t
         )
         points(
-            data.mat[i, label$n.idx],
-            rep(i - 0.15,
-                sum(label$n.idx)) + rnorm(sum(label$n.idx), sd = 0.03),
+            data.mat[i, n.idx],
+            rep(i - 0.15, n.n) + rnorm(n.n, sd = 0.03),
             pch = 16,
             cex = 0.6,
             col = neg.col.t
@@ -504,7 +520,8 @@ associations.quantile.box.plot <- function(data.mat, label, col,
     }
     legend(
         'topright',
-        legend = c(label$p.lab, label$n.lab),
+        legend = c(names(which(label$info == p.label)),
+                   names(which(label$info == n.label))),
         fill = rev(col),
         bty = 'n'
     )
@@ -524,10 +541,15 @@ associations.quantile.rect.plot <-
         n.spec <- nrow(data.mat)
         quant.probs <- seq(from = 0.1, to = 0.9, by = 0.1)
 
-        quantiles.pos = rowQuantiles(data.mat[, label$p.idx],
+        p.label <- max(label$info)
+        n.label <- min(label$info)
+        p.idx <- which(label$label == p.label)
+        n.idx <- which(label$label == n.label)
+
+        quantiles.pos = rowQuantiles(data.mat[, p.idx],
                                         probs = quant.probs,
                                         na.rm = TRUE)
-        quantiles.neg = rowQuantiles(data.mat[, label$n.idx],
+        quantiles.neg = rowQuantiles(data.mat[, n.idx],
                                         probs = quant.probs,
                                         na.rm = TRUE)
 
@@ -561,7 +583,7 @@ associations.quantile.rect.plot <-
             cex.axis = 0.7
         )
 
-# create different tints of the colours
+        # create different tints of the colours
         colors.p <-
             rev(create.tints(vec = seq(0, 1, length.out = 4),
             colour = col[2]))
@@ -592,7 +614,8 @@ associations.quantile.rect.plot <-
             ),
             bty = 'n',
             cex = 1,
-            fill = c('white', rev(colors.p), 'white', 'white', rev(colors.n), 'white'),
+            fill = c('white', rev(colors.p), 'white',
+                     'white', rev(colors.n), 'white'),
             lwd <- 1.3,
             ncol = 2,
             border = c(
@@ -616,10 +639,18 @@ associations.quantile.rect.plot <-
             legend = c("", "", "", "", "", ""),
             bty = 'n',
             lty = c(0, 0, 0, 0, 0, 0),
-    # cap legend size for diamond (should look symmetric to other symbols)
+            # cap legend size for diamond (should look
+            #   symmetric to other symbols)
             pch = 18,
             cex = 1,
             pt.cex = c(0, 0, 0, 0, 0, min(35 / n.spec, 2.25))
+        )
+        legend(
+            'bottomright',
+            legend = c(names(which(label$info == max(label$info))),
+                       names(which(label$info == min(label$info)))),
+            fill = rev(col),
+            bty = 'n'
         )
         associations.labels.plot(rownames(data.mat),
             plot.type = 'quantile.rect',
@@ -657,9 +688,9 @@ associations.margins.plot <-
 associations.aucs.plot <- function(aucs, binary.cols, verbose = 1) {
     if (verbose > 2)
         message("+ starting associations.aucs.plot")
-# set margins
+    # set margins
     par(mar = c(5.1, 0, 4.1, 1.6))
-# plot background
+    # plot background
     plot(
         NULL,
         xlab = '',
@@ -671,17 +702,17 @@ associations.aucs.plot <- function(aucs, binary.cols, verbose = 1) {
         ylim = c(0.5, nrow(aucs) + 0.5),
         type = 'n'
     )
-    ticks             <- seq(0, 1.0, length.out = 5)
+    ticks <- seq(0, 1.0, length.out = 5)
     tick.labels <- formatC(ticks, digits = 2)
-# plot gridlines
+    # plot gridlines
     for (v in ticks) {
         abline(v = v,
             lty = 3,
             col = 'lightgrey')
     }
-# make thicker line at .5
+    # make thicker line at .5
     abline(v = .5, lty = 1, col = 'lightgrey')
-# plot single feature aucs
+    # plot single feature aucs
     for (i in seq_len(nrow(aucs))) {
         segments(
             x0 = aucs[i, 2],
@@ -698,7 +729,7 @@ associations.aucs.plot <- function(aucs, binary.cols, verbose = 1) {
             cex = 0.9)
     }
 
-# Title and axis label
+    # Title and axis label
     axis(
         side = 1,
         at = ticks,
@@ -716,14 +747,14 @@ associations.fcs.plot <-
     function(fc.all, binary.cols,    verbose = 1) {
         if (verbose > 2)
             message("+ starting associations.fcs.plot")
-# margins
+        # margins
         par(mar = c(5.1, 0, 4.1, 1.6))
-# get minimum and maximum fcs
+        # get minimum and maximum fcs
         mx <- max(ceiling(abs(
             range(fc.all, na.rm = TRUE, finite = TRUE)
         )))
-        mn        <- -mx
-# plot background
+        mn <- -mx
+        # plot background
         plot(
             NULL,
             xlab = '',
@@ -736,7 +767,7 @@ associations.fcs.plot <-
             type = 'n'
         )
         grid(NULL, NA, lty = 3, col = 'lightgrey')
-# plot bars
+        # plot bars
         barplot(
             fc.all,
             horiz = TRUE,
@@ -747,7 +778,7 @@ associations.fcs.plot <-
             add = TRUE,
             names.arg = FALSE
         )
-# gridlines and axes labels
+        # gridlines and axes labels
         ticks <- seq(from = mn,
             to = mx,
             length.out = 5)
@@ -768,10 +799,10 @@ associations.pr.shift.plot <-
     function(pr.shifts, col, verbose = 1) {
         if (verbose > 2)
             message("+ starting associations.pr.shift.plot")
-# margins
+        # margins
         par(mar = c(5.1, 0, 4.1, 1.6))
 
-# plot background
+        # plot background
         plot(
             NULL,
             xlab = '',
@@ -783,7 +814,7 @@ associations.pr.shift.plot <-
             ylim = c(0.2, nrow(pr.shifts) + 0.2),
             type = 'n'
         )
-# gridlines and axes labels
+        # gridlines and axes labels
         ticks <- seq(from = 0,
             to = 1,
             length.out = 5)
@@ -799,7 +830,7 @@ associations.pr.shift.plot <-
             labels = tick.labels,
             cex.axis = 0.7
         )
-# plot bars
+        # plot bars
         row.names(pr.shifts) <- NULL
         barplot(
             t(pr.shifts),
@@ -821,17 +852,17 @@ associations.pr.shift.plot <-
 associations.pvals.plot <- function(p.vals, alpha,    verbose = 1) {
     if (verbose > 2)
         message("+ starting associations.pvals.plot")
-# margins
+    # margins
     par(mar = c(5.1, .0, 4.1, 1.6))
     p.vals.log <- -log10(p.vals)
-# get minimum and maximum
-    mx        <-
+    # get minimum and maximum
+    mx <-
         max(ceiling(abs(
             range(p.vals.log, na.rm = TRUE, finite = TRUE)
         )))
-    mn        <- 0
+    mn <- 0
     p.vals.log[is.infinite(p.vals.log)] <- mx
-# plot background
+    # plot background
     plot(
         NULL,
         xlab = '',
@@ -844,7 +875,7 @@ associations.pvals.plot <- function(p.vals, alpha,    verbose = 1) {
         type = 'n'
     )
     grid(NULL, NA, lty = 3, col = 'lightgrey')
-# plot bars
+    # plot bars
     barplot(
         p.vals.log,
         horiz = TRUE,
@@ -855,7 +886,7 @@ associations.pvals.plot <- function(p.vals, alpha,    verbose = 1) {
         add = TRUE,
         names.arg = FALSE
     )
-# gridlines and axes labels
+    # gridlines and axes labels
     ticks <- seq(from = mn, to = mx)
     abline(v = -log10(alpha),
         lty = 1,
@@ -899,7 +930,7 @@ is.color <- function(x) {
 check.color.scheme <- function(color.scheme, label, verbose = 1) {
     if (verbose > 2)
         message("+ starting check.color.scheme")
-    n.classes = ifelse(label$info$type == 'BINARY', 2,
+    n.classes = ifelse(label$type == 'BINARY', 2,
         length(unique(label$label)))
 
     if (length(color.scheme) == 1 &&
@@ -966,7 +997,7 @@ check.color.scheme <- function(color.scheme, label, verbose = 1) {
             stop("Supplied colors do not match the number of classes or are no
                 valid colors")
         }
-# add transparency
+    # add transparency
     colors <- vapply(
         colors,
         FUN = function(x) {
@@ -1018,23 +1049,15 @@ associations.labels.plot <-
 #     prevalence shift
 #     single marker AUC
 #'@keywords internal
-analyse.binary.marker <- function(feat,
-    label,
-    detect.lim,
-    colors,
-    pr.cutoff,
-    mult.corr,
-    alpha,
-    max.show,
-    sort.by,
-    probs.fc = seq(.1, .9, .05),
+analyse.binary.marker <- function(feat, label, detect.lim, colors,
+    pr.cutoff, mult.corr, alpha, max.show, sort.by, probs.fc = seq(.1, .9, .05),
     verbose = 1) {
     if (verbose > 1)
         message("+ starting analyse.binary.marker")
     s.time <- proc.time()[3]
-##############################################################################
-### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for each feature
-##############################################################################
+    ############################################################################
+    ### Calculate wilcoxon, pseudo-FC, prevalence shift, and AUC for all feats
+    ############################################################################
     if (verbose > 1)
         message('+++ calculating effect size for each feature.')
     if (is.null(detect.lim)) {
@@ -1044,61 +1067,57 @@ analyse.binary.marker <- function(feat,
         )
         detect.lim <- quantile(feat[feat != 0], 0.05)
     }
+    if (any(feat[feat != 0] < detect.lim)){
+        cnt <- length(which(feat[feat!=0] < detect.lim))
+        percentage <- formatC((cnt/length(feat[feat!=0]))*100, digits = 2)
+        warning(paste0('### Some values (',cnt, ' or ', percentage,
+        '% of non-zero entries',
+        ') are smaller than the given detection limit!'))
+    }
+
+    positive.label <- max(label$info)
+    negative.label <- min(label$info)
+
     if (verbose)
         pb = txtProgressBar(max = nrow(feat), style = 3)
-    effect.size <- data.frame(t(apply(
-        feat,
-        1,
-        FUN = function(x) {
-    # pseudo-fold change as differential quantile area
-            q.p <-
-                quantile(log10(x[label$p.idx] + detect.lim), probs = probs.fc)
-            q.n <-
-                quantile(log10(x[label$n.idx] + detect.lim), probs = probs.fc)
-            fc <- sum(q.p - q.n) / length(q.p)
 
-    # wilcoxon
-            p.val <-
-                wilcox.test(x[label$n.idx], x[label$p.idx],
-                            exact = FALSE)$p.value
+    effect.size <- data.frame(t(apply(feat, 1, FUN = function(x) {
+        # pseudo-fold change as differential quantile area
+        q.p <- quantile(log10(x[which(label$label == positive.label)] +
+            detect.lim), probs = probs.fc)
+        q.n <- quantile(log10(x[which(label$label == negative.label)] +
+            detect.lim), probs = probs.fc)
+        fc <- sum(q.p - q.n) / length(q.p)
 
-    # AU-ROC
-            temp    <-
-                roc(
-                    predictor = x,
-                    response = label$label,
-                    ci = TRUE,
-                    direction = '<'
-                )
-            aucs <- c(temp$ci)
+        # wilcoxon
+        p.val <- wilcox.test(x[which(label$label == negative.label)],
+                             x[which(label$label == positive.label)],
+                             exact = FALSE)$p.value
 
-    # prevalence shift
-            temp.n <-
-                sum(x[label$n.idx] >= pr.cutoff) / sum(label$n.idx)
-            temp.p <-
-                sum(x[label$p.idx] >= pr.cutoff) / sum(label$p.idx)
-            pr.shift <- c(temp.p - temp.n, temp.n, temp.p)
-            if (verbose)
-                setTxtProgressBar(pb, (pb$getVal() + 1))
-            return(
-                c(
-                    'fc' = fc,
-                    'p.val' = p.val,
-                    'auc' = aucs[2],
-                    'auc.ci.l' = aucs[1],
-                    'auc.ci.h' = aucs[3],
-                    'pr.shift' = pr.shift[1],
-                    'pr.n' = pr.shift[2],
-                    'pr.p' = pr.shift[3]
-                )
-            )
+        # AU-ROC
+        temp <- roc(predictor = x, response = label$label, ci = TRUE,
+                    direction = '<')
+        aucs <- c(temp$ci)
+
+        # prevalence shift
+        temp.n <- sum(x[which(label$label == negative.label)] >= pr.cutoff) /
+            length(which(label$label == negative.label))
+        temp.p <- sum(x[which(label$label == positive.label)] >= pr.cutoff) /
+            length(which(label$label == positive.label))
+        pr.shift <- c(temp.p - temp.n, temp.n, temp.p)
+        if (verbose)
+            setTxtProgressBar(pb, (pb$getVal() + 1))
+        return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2],
+                 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
+                 'pr.shift' = pr.shift[1], 'pr.n' = pr.shift[2],
+                 'pr.p' = pr.shift[3]))
         }
     )))
 
     effect.size$bcol <-
         ifelse(effect.size[, 'auc'] >= 0.5, colors[2], colors[1])
 
-### Apply multi-hypothesis testing correction
+    ### Apply multi-hypothesis testing correction
     if (!tolower(mult.corr) %in%
         c('none', 'bonferroni', 'holm', 'fdr', 'bhy')) {
         stop(
@@ -1118,7 +1137,7 @@ analyse.binary.marker <- function(feat,
     if (verbose > 1)
         message(
             paste(
-                '+++ found',
+                '\n+++ found',
                 sum(effect.size$p.adj < alpha,
                     na.rm = TRUE),
                 'significant associations at a significance level <',
@@ -1136,7 +1155,7 @@ analyse.binary.marker <- function(feat,
 
     idx <- idx[order(effect.size$p.adj[idx], decreasing = TRUE)]
 
-# # truncated the list for the following plots
+    # # truncated the list for the following plots
     truncated = FALSE
     if (length(idx) >= max.show) {
         truncated = TRUE
@@ -1151,7 +1170,7 @@ analyse.binary.marker <- function(feat,
             )
     }
 
-### Sort features
+    ### Sort features
     if (verbose > 2)
         message('+++ sorting features')
     if (!sort.by %in% c('fc', 'p.val', 'pr.shift', 'auc')) {
@@ -1191,7 +1210,7 @@ analyse.binary.marker <- function(feat,
 #'@keywords internal
 change.transparency <- function(col.name) {
     if (nchar(col.name) > 7) {
-# adjust alpha channel by reducing transparency
+        # adjust alpha channel by reducing transparency
         a = substr(col.name, nchar(col.name) - 1, nchar(col.name))
         a = 1 - (1 - as.numeric(paste('0x', a, sep = '')) / 255) / 2
         new.col = gsub('..$', toupper(as.hexmode(round(a * 255))), col.name)
@@ -1206,13 +1225,13 @@ associations.quantiles.plot <- function(quantiles, up = TRUE, col) {
     n.spec <- nrow(quantiles)
     adj.y0 <- ifelse(up, 0, 0.3)
     adj.y1 <- ifelse(up, 0.3, 0)
-# box
+    #  box
     rect(quantiles[, 2],
         seq_len(n.spec) - adj.y0,
         quantiles[, 4],
         seq_len(n.spec) + adj.y1,
         col = col)
-# 90% interval
+        # 90% interval
     segments(quantiles[, 1], seq_len(n.spec), quantiles[, 5], seq_len(n.spec))
     segments(
         quantiles[, 1],
@@ -1224,7 +1243,7 @@ associations.quantiles.plot <- function(quantiles, up = TRUE, col) {
         y0 = seq_len(n.spec) - adj.y0 / 3 * 2,
         y1 = seq_len(n.spec) + adj.y1 / 3 * 2
     )
-# median
+    # median
     segments(
         quantiles[, 3],
         y0 = seq_len(n.spec) - adj.y0,
