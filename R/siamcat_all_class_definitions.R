@@ -35,22 +35,9 @@ setClass("data_split", contains = "list")
 #' a list with:
 #' \itemize{
 #'     \item \code{label} numeric vector, specifying to which category samples
-#'     belong, usualy made of 1s and -1s
-#'     \item \code{header} contains information from the header of the label
-#'     file
+#'     belong, usualy 1 and -1
+#'     \item \code{type} contains information about the label type
 #'     \item \code{info} list with additional informations about the dataset
-#'     \item \code{positive.lab} specifies which of two numbers in label is a
-#'     positive label
-#'     \item \code{negative.lab} specifies which of two numbers in label is a
-#'     negative label
-#'     \item \code{n.idx} numeric vector - on which positions in the label there
-#'     are samples with negative label
-#'     \item \code{p.idx} numeric vector - on which positions in the label there
-#'     are samples with positive label
-#'     \item \code{n.lab} character string with a name for the negative label
-#'     (e.g. 'healthy')
-#'     \item \code{p.lab} character string with a name for the positive label
-#'     (e.g. 'cancer')}
 #' @exportClass label
 setClass("label", contains = "list")
 
