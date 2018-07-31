@@ -11,7 +11,7 @@
 #' @usage train.model(siamcat,
 #' method = c("lasso","enet","ridge","lasso_ll", "ridge_ll", "randomForest"),
 #' stratify = TRUE, modsel.crit = list("auc"), min.nonzero.coeff = 1,
-#' param.set = NULL, perform.fs = FALSE, 
+#' param.set = NULL, perform.fs = FALSE,
 #' param.fs = list(thres.fs = 100, method.fs = "AUC"), verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
@@ -197,8 +197,7 @@ train.model <- function(siamcat,
             ### subselect examples for training
             label.fac <-
                 factor(label$label,
-                    levels = c(label$negative.lab,
-                        label$positive.lab))
+                    levels = sort(label$info))
             train.label <- label.fac[fold.exm.idx]
             data <-
                 as.data.frame(t(features(siamcat))[fold.exm.idx,])
@@ -249,16 +248,16 @@ train.model <- function(siamcat,
                                     FUN=get.single.feat.AUC,
                                     FUN.VALUE = double(1),
                                     label=train.label,
-                                    pos=label$positive.lab,
-                                    neg=label$negative.lab)
+                                    pos=max(label$info),
+                                    neg=min(label$info))
                     data <- data[,rank(-assoc) <= param.fs$thres.fs]
                 } else if (param.fs$method.fs == 'FC') {
                     assoc <- vapply(data,
                                     FUN=get.quantile.FC,
                                     FUN.VALUE = double(1),
                                     label=train.label,
-                                    pos=label$positive.lab,
-                                    neg=label$negative.lab)
+                                    pos=max(label$info),
+                                    neg=min(label$info))
                     data <- data[,rank(-abs(assoc)) <= param.fs$thres.fs]
                 }
 
@@ -281,7 +280,7 @@ train.model <- function(siamcat,
                     measure = measure,
                     min.nonzero.coeff = min.nonzero.coeff,
                     param.set = param.set,
-                    neg.lab = label$negative.lab
+                    neg.lab = min(label$info)
                 )
             bar <- bar + 1
 
