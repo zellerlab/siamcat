@@ -88,7 +88,7 @@ create.data.split <-
         }
 
         # parse label description
-        classes <- sort(c(label$negative.lab, label$positive.lab))
+        classes <- sort(label$info)
 
         ### check arguments
         if (num.resample < 1) {
