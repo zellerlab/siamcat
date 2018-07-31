@@ -38,23 +38,17 @@ filter.label <- function(siamcat, ids, verbose = 1) {
     label_old <- label(siamcat)
     labels_new <- list(
         label = label_old$label[ids],
-        header = label_old$header,
         info = label_old$info,
-        positive.lab = label_old$positive.lab,
-        negative.lab = label_old$negative.lab,
-        n.lab = label_old$n.lab,
-        p.lab = label_old$p.lab
+        type = label_old$type
     )
-    labels_new$n.idx <- labels_new$label == labels_new$negative.lab
-    labels_new$p.idx <- labels_new$label == labels_new$positive.lab
-    
-    if (verbose > 0)
+
+    if (verbose > 1)
         message(paste(
             "Keeping labels of",
             length(labels_new$label),
             "sample(s)."
         ))
-    
+
     label(siamcat) <- label(labels_new)
     return(siamcat)
 }
@@ -68,14 +62,17 @@ filter.label <- function(siamcat, ids, verbose = 1) {
 setMethod("show", "siamcat", function(object) {
     cat("siamcat-class object", fill = TRUE)
     if (!is.null(label(object)))
+        label <- label(object)
+        p.lab <- names(which(label$info == max(label$info)))
+        n.lab <- setdiff(names(label$info), p.lab)
+        p.n <- length(which(label$label == max(label$info)))
+        n.n <- length(which(label$label == min(label$info)))
         cat(
             paste(
                 "label()                label:           ",
-                sum(label(object)$n.idx),
-                label(object)$n.lab,
+                n.n, n.lab,
                 "and",
-                sum(label(object)$p.idx),
-                label(object)$p.lab,
+                p.n, p.lab,
                 "samples",
                 sep = " "
             ),
@@ -132,7 +129,7 @@ setMethod("show", "siamcat", function(object) {
         ),
             fill = TRUE)
     }
-    
+
     # print otu_table (always there).
     cat("\ncontains phyloseq-class experiment-level object @phyloseq:",
         fill = TRUE)
@@ -147,7 +144,7 @@ setMethod("show", "siamcat", function(object) {
         ),
         fill = TRUE
     )
-    
+
     # print Sample Data if there
     if (!is.null(sample_data(physeq(object), FALSE))) {
         cat(
@@ -162,7 +159,7 @@ setMethod("show", "siamcat", function(object) {
             fill = TRUE
         )
     }
-    
+
     # print tax Tab if there
     if (!is.null(tax_table(physeq(object), FALSE))) {
         cat(
@@ -177,7 +174,7 @@ setMethod("show", "siamcat", function(object) {
             fill = TRUE
         )
     }
-    
+
     # print tree if there
     if (!is.null(phy_tree(physeq(object), FALSE))) {
         cat(
@@ -192,7 +189,7 @@ setMethod("show", "siamcat", function(object) {
             fill = TRUE
         )
     }
-    
+
     # print refseq summary if there
     if (!is.null(refseq(physeq(object), FALSE))) {
         cat(
