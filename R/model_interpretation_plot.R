@@ -88,8 +88,8 @@ model.interpretation.plot <-
         model.type <- model_type(siamcat)
         models <- models(siamcat)
         stopifnot(heatmap.type %in% c('zscore', 'fc'))
-# #########################################################################
-# some color pre-processing
+        # ######################################################################
+        # some color pre-processing
         if (verbose > 2)
             message("+++ preprocessing color scheme")
         if (!color.scheme %in% row.names(brewer.pal.info)) {
@@ -105,18 +105,19 @@ model.interpretation.plot <-
                 brewer.pal(brewer.pal.info[color.scheme, "maxcolors"],
                     color.scheme))(100))
 
-# #########################################################################
-# get model type from model
+        # ######################################################################
+        # get model type from model
         if (verbose > 2)
             message("+++ retrieving model type")
         W.mat <- get.weights.matrix(models, verbose = verbose)
-# remove possible intercept parameters, but keep possible meta data
-# included in the model
+        # remove possible intercept parameters, but keep possible meta data
+        # included in the model
         all.weights <- W.mat[union(row.names(features(siamcat)),
             grep("META", row.names(W.mat), value = TRUE)), ]
         rel.weights <- t(t(all.weights) / colSums(abs(all.weights)))
-# #########################################################################
-# preprocess models
+
+        # ######################################################################
+        # preprocess models
         if (verbose > 2)
             message("+++ preprocessing models")
         sel.idx <-
@@ -130,17 +131,19 @@ model.interpretation.plot <-
                 verbose = verbose
             )
         num.sel.f <- length(sel.idx)
-# #########################################################################
-# aggreate predictions and sort
-# patients by score aggregate predictions of several models if more than
-# one is given
+
+        # ######################################################################
+        # aggreate predictions and sort
+        # patients by score aggregate predictions of several models if more than
+        # one is given
         mean.agg.pred <- rowMeans(pred_matrix(siamcat))
-# idx to sort samples according to their class membership and prediction
-# score
+        # idx to sort samples according to their class membership and prediction
+        # score
         srt.idx <-
             sort(label$label + mean.agg.pred, index.return = TRUE)$ix
-# #########################################################################
-# prepare heatmap
+
+        # ######################################################################
+        # prepare heatmap
         if (verbose > 2)
             message("+++ preparing heatmap")
         if (heatmap.type == "zscore") {
@@ -172,8 +175,8 @@ model.interpretation.plot <-
             stop("! unknown heatmap.type: ", heatmap.type)
         }
 
-# #########################################################################
-# start plotting model properties
+        # ######################################################################
+        # start plotting model properties
         if (verbose > 2)
             message("+++ plotting model properties")
         pdf(
@@ -184,7 +187,7 @@ model.interpretation.plot <-
             onefile = TRUE
         )
 
-### plot layout
+        ### plot layout
         sel.f.cex <- max(0.3, 0.8 - 0.01 * num.sel.f)
         lmat <- rbind(c(1, 2, 3, 4), c(5, 6, 0, 7), c(0, 8, 0, 0))
         h_t <- 0.1
@@ -199,9 +202,9 @@ model.interpretation.plot <-
             heights = c(h_t, h_m, h_b))
         par(oma = c(3, 4, 3, 4))
 
-### header row
-#########################################################################
-# Title of Feature Weights
+        ### header row
+        ########################################################################
+        # Title of Feature Weights
         if (verbose > 2)
             message("+++ plotting titles")
         par(mar = c(0, 1.1, 3.1, 1.1))
@@ -225,8 +228,8 @@ model.interpretation.plot <-
             adj = 0.5
         )
 
-# #########################################################################
-# Title of heatmap and brackets for classes
+        # ######################################################################
+        # Title of heatmap and brackets for classes
         par(mar = c(0, 4.1, 3.1, 5.1))
         hm.label <- label$label[srt.idx]
         plot(
@@ -243,6 +246,7 @@ model.interpretation.plot <-
             bty = "n"
         )
         ul <- unique(hm.label)
+
         for (l in seq_along(ul)) {
             idx <- which(ul[l] == hm.label)
             lines(c(idx[1] - 0.8, idx[length(idx)] - 0.2), c(0, 0))
@@ -250,7 +254,7 @@ model.interpretation.plot <-
             lines(c(idx[length(idx)] - 0.2, idx[length(idx)] - 0.2), c(-0.2, 0))
             h <- (idx[1] + idx[length(idx)]) / 2
             t <- gsub("_", " ",
-                names(label$info$class.descr)[label$info$class.descr == ul[l]])
+                names(label$info)[label$info == ul[l]])
             t <- paste(t, " (n=", length(idx), ")", sep = "")
             mtext(
                 t,
@@ -270,8 +274,8 @@ model.interpretation.plot <-
             adj = 0.5
         )
 
-# #########################################################################
-# Heatmap legend
+        # ######################################################################
+        # Heatmap legend
         if (verbose > 2)
             message("+++ plotting legend")
         par(mar = c(3.1, 1.1, 1.1, 1.1))
@@ -306,8 +310,8 @@ model.interpretation.plot <-
             adj = 0.5
         )
 
-# #########################################################################
-# Model header (model sensitive)
+        # ######################################################################
+        # Model header (model sensitive)
         par(mar = c(0, 6.1, 3.1, 1.1))
         plot(
             NULL,
@@ -337,8 +341,8 @@ model.interpretation.plot <-
             adj = 0.5
         )
 
-# #########################################################################
-# Feature weights ( model sensitive)
+        # ######################################################################
+        # Feature weights ( model sensitive)
         if (verbose > 2)
             message("+++ plotting feature weights")
         model.interpretation.feature.weights.plot(
@@ -348,8 +352,8 @@ model.interpretation.plot <-
             label = label
         )
 
-# #########################################################################
-# Heatmap
+        # ######################################################################
+        # Heatmap
         if (verbose > 2)
             message("+++ plotting heatmap")
         if (model.type != "RandomForest") {
@@ -382,8 +386,8 @@ model.interpretation.plot <-
             )
         }
 
-# #########################################################################
-# Proportion of weights shown
+        # ######################################################################
+        # Proportion of weights shown
         if (verbose > 2)
             message("+++ plotting proportion of weights shown")
         model.interpretation.proportion.of.weights.plot(
@@ -392,8 +396,8 @@ model.interpretation.plot <-
             verbose = verbose
         )
 
-# #########################################################################
-# Metadata and prediction
+        # ######################################################################
+        # Metadata and prediction
         if (verbose > 2)
             message("+++ plotting metadata and predictions")
         model.interpretation.pred.and.meta.plot(
@@ -459,10 +463,10 @@ model.interpretation.feature.weights.plot <-
             )
             x <- par("usr")
             rect(x[1], x[3], x[2], x[4], col = "lightgray")
-    # grid lines
+            # grid lines
             grid(NULL, NA, lty = 2, col = "gray99")
-    # plot the barplot again due to the idiotic way of how to change the
-    # background color of a plot in r
+            # plot the barplot again due to the idiotic way of how to change the
+            # background color of a plot in r
             barplot(
                 -med,
                 horiz = TRUE,
@@ -479,7 +483,7 @@ model.interpretation.feature.weights.plot <-
                 add = TRUE
             )
 
-    # error bars
+            # error bars
             arrows(
                 y0 = c(seq_along(med)) - 0.5,
                 x0 = -upp.qt,
@@ -496,8 +500,8 @@ model.interpretation.feature.weights.plot <-
                 cex = 0.7,
                 adj = 0.5
             )
-    # robustness indicated as percentage of models including a given
-    # feature (to the right of the barplot)
+            # robustness indicated as percentage of models including a given
+            # feature (to the right of the barplot)
             for (f in seq_along(sel.idx)) {
                 t = paste(format(
                     100 * sum(rel.weights[sel.idx[f], ] != 0) /
@@ -518,15 +522,15 @@ model.interpretation.feature.weights.plot <-
                 )
             }
 
-    # label cancer/healthy
+            # label positive/negative class
             mtext(
-                gsub("_", " ", label$n.lab),
+                gsub("_", " ", names(which(label$info == max(label$info)))),
                 side = 2,
                 at = floor(length(sel.idx) / 2),
                 line = -2
             )
             mtext(
-                gsub("_", " ", label$p.lab),
+                gsub("_", " ", names(which(label$info == min(label$info)))),
                 side = 4,
                 at = floor(length(sel.idx) / 2),
                 line = -2
@@ -568,10 +572,10 @@ model.interpretation.feature.weights.plot <-
             )
             x <- par("usr")
             rect(x[1], x[3], x[2], x[4], col = "lightgray")
-    # grid lines
+            # grid lines
             grid(NULL, NA, lty = 2, col = "gray99")
-    # plot the barplot again due to the idiotic way of how to change the
-    # background color of a plot in r
+            # plot the barplot again due to the idiotic way of how to change the
+            # background color of a plot in r
             barplot(
                 -med,
                 horiz = TRUE,
@@ -588,7 +592,7 @@ model.interpretation.feature.weights.plot <-
                 add = TRUE
             )
 
-    # error bars
+            # error bars
             arrows(
                 y0 = c(seq_along(med)) - 0.5,
                 x0 = -upp.qt,
@@ -597,7 +601,7 @@ model.interpretation.feature.weights.plot <-
                 code = 3,
                 length = 0.04
             )
-    # labels
+            # labels
             mtext(
                 "median relative Gini coefficient",
                 side = 1,
@@ -636,27 +640,20 @@ model.interpretation.pred.and.meta.plot <-
         img.data.processed <- NULL
         if (!is.null(meta)) {
             img.data = cbind(meta[, ncol(meta):1], img.data)
-    ### transform any categorial column into a numeric one
+            ### transform any categorial column into a numeric one
             for (m in seq_len(ncol(img.data))) {
                 cur.processed.data <- NULL
-                if (all(is.numeric(img.data[, m]))) {
-                    cur.processed.data = (img.data[, m] - min(img.data[, m],
+                temp.metadata <- img.data[,m]
+                if (!all(is.numeric(temp.metadata))) {
+
+                    temp.metadata <- factor(temp.metadata)
+                    temp.metadata <- as.numeric(temp.metadata)
+                }
+                cur.processed.data = (temp.metadata - min(temp.metadata,
                         na.rm = TRUE))
-                    if (max(img.data[, m], na.rm = TRUE) != 0) {
-                        cur.processed.data = cur.processed.data /
-                            max(cur.processed.data, na.rm = TRUE)
-                    }
-                } else if (all(is.factor(img.data[, m]))) {
-                    if (length(levels(img.data[, m])) < 10) {
-                        cur.processed.data <- img.data[, m]
-                    } else {
-                        message(
-                            "Metadata ",
-                            colnames(img.data)[m],
-                            " contains too many
-                            levels and will not be shown!"
-                        )
-                    }
+                if (max(temp.metadata, na.rm = TRUE) != 0) {
+                    cur.processed.data = cur.processed.data /
+                        max(cur.processed.data, na.rm = TRUE)
                 }
                 img.data.processed <-
                     cbind(img.data.processed, cur.processed.data)
@@ -676,8 +673,8 @@ model.interpretation.pred.and.meta.plot <-
             bty = "n"
         )
         box(lwd = 1)
-# add deliminator between the different classes
-        abline(v = length(which(label$label == label$negative.lab)) /
+        # add deliminator between the different classes
+        abline(v = length(which(label$label == min(label$info))) /
                 length(label$label),
             col = "red")
 
@@ -694,7 +691,7 @@ model.interpretation.pred.and.meta.plot <-
                 las = 2
             )
         }
-# mark missing values
+        # mark missing values
         for (m in seq_len(ncol(img.data))) {
             idx = which(is.na(img.data[, m]))
             for (i in idx) {
@@ -835,10 +832,12 @@ model.interpretation.prepare.heatmap.fc <-
         verbose = 0) {
         if (verbose > 2)
             message("+ model.interpretation.prepare.heatmap.fc")
+        n.label <- min(label$info)
+        n.idx <- which(label$label == n.label)
         if (!any(grepl("META", sel.feat))) {
             feat.log <- log10(heatmap.data[sel.feat,] + detect.lim)
             img.data <- t(feat.log -
-                    log10(rowMedians(heatmap.data[sel.feat, label$n.idx]) +
+                    log10(rowMedians(heatmap.data[sel.feat, n.idx]) +
                             detect.lim))
         } else {
             img.data <- matrix(NA,
@@ -853,7 +852,7 @@ model.interpretation.prepare.heatmap.fc <-
                 if (!grepl("META", f)) {
                     median.ctr <-
                         suppressWarnings(median(as.numeric(
-                            heatmap.data[f, label$n.idx])))
+                            heatmap.data[f, n.idx])))
                     img.data[f, ] <-
                         log10(heatmap.data[f, ] + detect.lim) -
                         log10(median.ctr + detect.lim)
@@ -890,7 +889,7 @@ model.interpretation.prepare.heatmap.zscore <-
         verbose = 0) {
         if (verbose > 2)
             message("+ model.interpretation.prepare.heatmap.zscore")
-# data is transposed and transformed to feature z-scores for display
+        # data is transposed and transformed to feature z-scores for display
         img.data <-
             (heatmap.data - rowMeans(heatmap.data)) / rowSds(heatmap.data)
         img.data[img.data < limits[1]] <- limits[1]
@@ -911,23 +910,24 @@ model.interpretation.select.features <-
         max.show,
         verbose = 0) {
         message("+ model.interpretation.select.features")
-# for linear models, select those that have been selected more than
-# consens.thres percent of the models
+        # for linear models, select those that have been selected more than
+        # consens.thres percent of the models
         if (model.type != "RandomForest") {
-    # normalize by overall model size
+            # normalize by overall model size
             if (norm.models) {
                 weights <- t(t(weights) / colSums(abs(weights)))
             }
             sel.idx = which(rowSums(weights != 0) / ncol(weights) >=
                 consens.thres)
-    # normalize by model size and order features by relative model weight
+            # normalize by model size and order features by
+            #   relative model weight
             weights.norm <- t(t(weights) / colSums(abs(weights)))
             med.weights <- rowMedians(weights.norm)
             median.sorted.features <-
                 sort(med.weights[sel.idx],
                     decreasing = TRUE,
                     index.return = TRUE)
-    # restrict to plot at maximum fifty features
+            # restrict to plot at maximum fifty features
             if (length(sel.idx) > max.show) {
                 warning("WARNING: restricting amount of features to
                     be plotted to 50")
@@ -944,8 +944,8 @@ model.interpretation.select.features <-
                 sel.idx = sel.idx[median.sorted.features$ix]
             }
         } else {
-    # for Random Forest, caluclate relative median feature weights and sort
-    # by auroc as effect measure
+        # for Random Forest, caluclate relative median feature weights and sort
+        # by auroc as effect measure
             weights <- t(t(weights) / colSums(abs(weights)))
             median.sorted.features <-
                 sort(rowMedians(weights),

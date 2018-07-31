@@ -50,7 +50,7 @@ model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
 
     if (length(args) > 1) {
         # checks
-        stopifnot(all(vapply(args, class, 
+        stopifnot(all(vapply(args, class,
             FUN.VALUE = character(1)) == 'siamcat'))
         stopifnot(all(vapply(args, FUN=function(x){length(eval_data(x)) != 0},
             FUN.VALUE = logical(1))))
@@ -150,7 +150,7 @@ model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
         )
         title(paste("Precision-recall curve for the model", sep = " "))
         label <- label(args[[1]])
-        abline(h = mean(label$label == label$positive.lab),
+        abline(h = mean(label$label == max(label$info)),
             lty = 3)
         aupr <- single.pr.plot(args[[1]], colours, verbose=verbose)
         if (is.null(eval_data(args[[1]])$roc.all)) {
