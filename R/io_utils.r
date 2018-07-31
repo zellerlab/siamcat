@@ -22,7 +22,7 @@
 #'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for information about progress and time, defaults to \code{0}
-#'     
+#'
 #' @param ... passed to \code{read.table} function
 #'
 #' @export
@@ -89,7 +89,7 @@ read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0, ...) {
 #' Note: Labels can take other numeric values (but not characters or strings);
 #' importantly, the label for cases has to be greater than the one for controls
 #' @param fn.in.label name of the tsv file containing labels
-#' 
+#'
 #' @param ... passed to \code{read.table} function
 #'
 #' @export
@@ -177,34 +177,13 @@ read.labels <- function(fn.in.label, ...) {
         stop("Label header seems to be missing or broken.")
     }
     close(con)
-    label <- list(label = label, header = header)
-    label$info <- parse.label.header(label$header)
-    stopifnot(label$info$type == "BINARY")
-    label$positive.lab <- max(label$info$class.descr)
-    label$negative.lab <- min(label$info$class.descr)
+    label <- list(label = label)
+    label.info <- parse.label.header(header)
+    label$type <- label.info$type
+    stopifnot(label$type == "BINARY")
+    label$info <- label.info$class.descr
 
-    label$n.idx <- label$label == label$negative.lab
-    label$n.lab <- gsub("[_.-]", " ", names(label$info$class.descr)
-        [label$info$class.descr == label$negative.lab])
-
-    label$p.idx <- label$label == label$positive.lab
-    label$p.lab <- gsub("[_.-]", " ", names(label$info$class.descr)
-        [label$info$class.descr == label$positive.lab])
-
-    labelRes <-
-        label(
-            list(
-                label = label$label,
-                header = label$header,
-                info = label$info,
-                positive.lab = label$positive.lab,
-                negative.lab = label$negative.lab,
-                n.idx = label$n.idx,
-                p.idx = label$p.idx,
-                n.lab = label$n.lab,
-                p.lab = label$p.lab
-            )
-        )
+    labelRes <- label(label)
     invisible(labelRes)
         }
 
@@ -221,7 +200,7 @@ read.labels <- function(fn.in.label, ...) {
 #' heatmap displays, see \link{model.interpretation.plot}
 #'
 #' @param fn.in.meta name of the tsv file containing metadata
-#' 
+#'
 #' @param ... passed to \code{read.table} function
 #'
 #' @export
