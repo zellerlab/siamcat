@@ -68,8 +68,7 @@ make.predictions <- function(siamcat,
 
         label.fac <-
             factor(label$label,
-                levels = c(label$negative.lab,
-                    label$positive.lab))
+                levels = sort(label$info))
 
         # assert that there is a split
         stopifnot(!is.null(data_split(siamcat)))
@@ -135,11 +134,7 @@ make.predictions <- function(siamcat,
                     makeClassifTask(data = data, target = "label")
                 pdata <- predict(model, task = task)
 
-                # rescale posterior probabilities between -1 and 1 (this works
-                # only for binary data!!!!)
-                # TODO: Will need adjustment and generalization in the future)
-                p <- label$negative.lab + abs(label$positive.lab -
-                        label$negative.lab) * pdata$data[, 4]
+                p <- pdata$data[, 4]
                 names(p) <- rownames(pdata$data)
                 pred[names(p), r] <- p
                 i <- i + 1
@@ -211,8 +206,7 @@ make.predictions <- function(siamcat,
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
 
-            p <- label$negative.lab + abs(label$positive.lab -
-                    label$negative.lab) * pdata$data[, 4]
+            p <- pdata$data[, 4]
             names(p) <- rownames(pdata$data)
             pred[names(p), i] <- p
             pred <- pred_matrix(pred)

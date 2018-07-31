@@ -190,7 +190,7 @@ evaluate.classifier <-
             tp = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$positive.lab
+                    sum(test.label == max(label$info)
                         & predictions > x)
                 },
                 USE.NAMES = FALSE,
@@ -199,7 +199,7 @@ evaluate.classifier <-
             fp = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$negative.lab
+                    sum(test.label == min(label$info)
                         & predictions > x)
                 },
                 USE.NAMES = FALSE,
@@ -208,7 +208,7 @@ evaluate.classifier <-
             tn = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$negative.lab
+                    sum(test.label == min(label$info)
                         & predictions < x)
                 },
                 USE.NAMES = FALSE,
@@ -217,7 +217,7 @@ evaluate.classifier <-
             fn = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$positive.lab
+                    sum(test.label == max(label$info)
                         & predictions < x)
                 },
                 USE.NAMES = FALSE,
@@ -235,7 +235,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$positive.lab & y > x)
+                            sum(test.label == max(label$info) & y > x)
                         }
                     )
                 },
@@ -249,7 +249,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$negative.lab & y > x)
+                            sum(test.label == min(label$info) & y > x)
                         }
                     )
                 },
@@ -263,7 +263,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$negative.lab & y < x)
+                            sum(test.label == min(label$info) & y < x)
                         }
                     )
                 },
@@ -277,7 +277,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$positive.lab & y < x)
+                            sum(test.label == max(label$info) & y < x)
                         }
                     )
                 },
