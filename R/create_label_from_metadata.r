@@ -7,7 +7,7 @@
 #'
 #' @description This function creates a label object from metadata
 #'
-#' @usage create.label.from.metadata(meta, column, case, 
+#' @usage create.label.from.metadata(meta, column, case,
 #' control=NULL, p.lab = NULL, n.lab = NULL, verbose=1)
 #'
 #' @param meta metadata as read by \link{read.meta}
@@ -21,11 +21,11 @@
 #' variable has multiple values, all the other values will be used a negative
 #' label (testing one vs rest).
 #'
-#' @param control name of a label or vector with names that will be used as a 
-#' negative label. All values that are nor equal to case and control will be 
-#' dropped. Default to NULL in which case: If the variable is binary, the value 
-#' not equal to case will be used as negative. If the variable has multiple 
-#' values, all the values not equal to cases will be used a negative label 
+#' @param control name of a label or vector with names that will be used as a
+#' negative label. All values that are nor equal to case and control will be
+#' dropped. Default to NULL in which case: If the variable is binary, the value
+#' not equal to case will be used as negative. If the variable has multiple
+#' values, all the values not equal to cases will be used a negative label
 #' (testing one vs rest).
 #'
 #' @param p.lab name of the positive label (useful mostly for visualizations).
@@ -52,7 +52,7 @@
 #'
 #' @export
 create.label.from.metadata <- function(meta, column, case, control = NULL,
-                                        p.lab = NULL, n.lab = NULL, verbose=1) {
+                                       verbose=1) {
     if (verbose > 1)
         message("+ starting create.label.from.metadata")
 
@@ -68,7 +68,7 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
     labels <- unique(metaColumn)
 
     ### checking case
-    if(!all(case%in%labels)){
+    if(!all(case %in% labels)){
         stop("Column ", column, " does not contain values:",
                 paste(case,collapse=","),"\n")
     }
@@ -93,55 +93,35 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
         }
     }
 
-            
+
     if (verbose > 0)
             message("Label used as case:\n   ",paste(case,collapse=","),
                 "\nLabel used as control:\n   ",paste(control,collapse=","))
-    label <-
-            list(
-                label = rep(-1, length(metaColumn)),
-                positive.lab = 1,
-                negative.lab = (-1)
-            )
-    label$n.lab <- gsub("[_.-]", " ", control)
-        if(length(case)>1){
-        label$p.lab <- "Case"
-    }else{
-        label$p.lab <- gsub("[_.-]", " ", case)
+    label <- list(label = rep(-1, length(metaColumn)))
+
+    n.lab <- gsub("[_.-]", " ", control)
+    if (length(case) > 1) {
+        p.lab <- "Case"
+    } else {
+        p.lab <- gsub("[_.-]", " ", case)
     }
-    
-    class.descr <- c(-1, 1)
-    names(class.descr) <- c(label$n.lab, label$p.lab)
+
+    info <- c(-1, 1)
+    names(info) <- c(n.lab, p.lab)
 
     names(label$label) <- names(metaColumn)
-    label$header <-
-        paste0("#BINARY:1=", label$p.lab, ";-1=", label$n.lab)
-    if(length(case)>1){
-        label$label[which(metaColumn%in%case)] <- 1
-    }else{
+
+    if (length(case) > 1){
+        label$label[which(metaColumn %in% case)] <- 1
+    } else {
         label$label[which(metaColumn == case)] <- 1
     }
-   
 
-    label$n.idx <- label$label == label$negative.lab
-    label$p.idx <- label$label == label$positive.lab
+    label$type <- "BINARY"
+    label$info <- info
 
-    label$info <- list(type = "BINARY", class.descr = class.descr)
+    labelRes <- label(label)
 
-    labelRes <-
-        label(
-            list(
-                label = label$label,
-                header = label$header,
-                info = label$info,
-                positive.lab = label$positive.lab,
-                negative.lab = label$negative.lab,
-                n.idx = label$n.idx,
-                p.idx = label$p.idx,
-                n.lab = label$n.lab,
-                p.lab = label$p.lab
-            )
-        )
         e.time <- proc.time()[3]
     if (verbose > 0)
         message(paste(
