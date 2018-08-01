@@ -95,7 +95,7 @@
 
 check.associations <-
     function(siamcat,
-        fn.plot,
+        fn.plot=NULL,
         color.scheme = "RdYlBu",
         alpha = 0.05,
         mult.corr = "fdr",
@@ -105,12 +105,14 @@ check.associations <-
         max.show = 50,
         plot.type = "quantile.box",
         panels = c("fc", "auroc"),
+        prompt=TRUE,
         verbose = 1) {
-        # check panel and plot.type parameter
+
         if (verbose > 1)
             message("+ starting check.associations")
         s.time <- proc.time()[3]
 
+        # check panel and plot.type parameter
         if (!all(panels %in% c("fc", "auroc", "prevalence"))) {
             stop("Unknown panel-type selected!")
         }
@@ -128,6 +130,27 @@ check.associations <-
             warning("Plot type has not been specified properly! Continue with q
                 uantile.box.")
             plot.type <- "quantile.box"
+        }
+
+        # check fn.plot
+        if (is.null(fn.plot)) {
+            message(paste0('### WARNING: Not plotting to a pdf-file.\n',
+                '### The plot is optimized for landscape DIN-A4 (or similar) ',
+                'layout.\n### Please make sure that your plotting region is',
+                ' large enough!!!\n### Use at your own risk...'))
+            if (prompt == TRUE){
+                continue <- askYesNo('Are you sure that you want to continue?',
+                    default = TRUE,
+                    prompts = getOption("askYesNo",
+                        gettext(c("Yes", "No", "Cancel"))))
+            } else {
+                continue <- TRUE
+            }
+            if (!continue || is.na(continue)){
+                opt <- options(show.error.messages = FALSE)
+                on.exit(options(opt))
+                stop('Exiting...')
+            }
         }
         # either give n_classes colors or color palette
         col <- check.color.scheme(color.scheme, label(siamcat))
@@ -173,10 +196,12 @@ check.associations <-
             layout.mat <- cbind(2, 1, t(seq(3, length.out = length(panels))))
             widths <- c(0.5, 0.1, rep(0.2, length(panels)))
         }
-        pdf(fn.plot,
-            paper = 'special',
-            height = 8.27,
-            width = 11.69) # format:A4 landscape
+        if (!is.null(fn.plot)) {
+            pdf(fn.plot,
+                paper = 'special',
+                height = 8.27,
+                width = 11.69) # format:A4 landscape
+            }
 
         layout(mat = layout.mat, widths = widths)
 
@@ -258,7 +283,7 @@ check.associations <-
         }
 
         # close pdf device
-        tmp <- dev.off()
+        if (!is.null(fn.plot)) tmp <- dev.off()
         e.time <- proc.time()[3]
         if (verbose > 1)
             message(paste(
@@ -266,7 +291,7 @@ check.associations <-
                 formatC(e.time - s.time, digits = 3),
                 "s"
             ))
-        if (verbose == 1)
+        if (verbose == 1 & !is.null(fn.plot))
             message(paste(
                 "\nPlotted associations between features and label
                 successfully to:",
@@ -1069,10 +1094,13 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
     }
     if (any(feat[feat != 0] < detect.lim)){
         cnt <- length(which(feat[feat!=0] < detect.lim))
-        percentage <- formatC((cnt/length(feat[feat!=0]))*100, digits = 2)
-        warning(paste0('### Some values (',cnt, ' or ', percentage,
-        '% of non-zero entries',
-        ') are smaller than the given detection limit!'))
+        percentage <- (cnt/length(feat[feat!=0]))*100
+        if (percentage >= 5){
+            warning(paste0('### Some values (',cnt, ' or ',
+            formatC(percentage, digits=2),
+            '% of non-zero entries',
+            ') are smaller than the given detection limit!'))
+        }
     }
 
     positive.label <- max(label$info)
