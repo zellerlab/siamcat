@@ -26,15 +26,17 @@
 #'     # simple working example
 #'     model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
 #'
-model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
+model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL, verbose = 1) {
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
 
-    pdf(fn.plot, onefile = TRUE)
+    if(!is.null(fn.plot)) pdf(fn.plot, onefile = TRUE)
 
     if (verbose > 2)
         message("+ plotting ROC")
+    if (is.null(fn.plot)) par(ask=TRUE)
+    par(mfrow=c(1,1), mar=c(5.1, 4.1, 4.1, 2.1))
     plot(
         NULL,
         xlim = c(0, 1),
@@ -162,7 +164,8 @@ model.evaluation.plot <- function(..., fn.plot, colours = NULL, verbose = 1) {
         stop('No SIAMCAT object supplied. Exiting...')
     }
 
-    tmp <- dev.off()
+    if(!is.null(fn.plot)) tmp <- dev.off()
+    if (is.null(fn.plot)) par(ask=FALSE)
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste(
