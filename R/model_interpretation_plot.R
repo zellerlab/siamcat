@@ -112,6 +112,7 @@ model.interpretation.plot <-
                 on.exit(options(opt))
                 stop('Exiting...')
             }
+            par.old <- par(no.readonly=TRUE)
         }
 
         # ######################################################################
@@ -448,7 +449,11 @@ model.interpretation.plot <-
             verbose = verbose
         )
 
-        if(!is.null(fn.plot)) tmp <- dev.off()
+        if(!is.null(fn.plot)) {
+            tmp <- dev.off()
+        } else {
+            par(par.old)
+        }
         e.time <- proc.time()[3]
         if (verbose > 1)
             message(paste(
@@ -919,7 +924,7 @@ model.interpretation.prepare.heatmap.fc <-
         }
         img.data[img.data < limits[1]] = limits[1]
         img.data[img.data > limits[2]] = limits[2]
-        
+
         if (verbose > 2)
             message("+ finished model.interpretation.heatmap.plot")
         return(img.data)

@@ -36,7 +36,7 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL, verbose = 1
     if (verbose > 2)
         message("+ plotting ROC")
     if (is.null(fn.plot)) par(ask=TRUE)
-    par(mfrow=c(1,1), mar=c(5.1, 4.1, 4.1, 2.1))
+    par(mar=c(5.1, 4.1, 4.1, 2.1))
     plot(
         NULL,
         xlim = c(0, 1),

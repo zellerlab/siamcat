@@ -151,6 +151,7 @@ check.associations <-
                 on.exit(options(opt))
                 stop('Exiting...')
             }
+            par.old <- par(no.readonly=TRUE)
         }
         # either give n_classes colors or color palette
         col <- check.color.scheme(color.scheme, label(siamcat))
@@ -283,7 +284,11 @@ check.associations <-
         }
 
         # close pdf device
-        if (!is.null(fn.plot)) tmp <- dev.off()
+        if (!is.null(fn.plot)) {
+            tmp <- dev.off()
+        } else {
+            par(par.old)
+        }
         e.time <- proc.time()[3]
         if (verbose > 1)
             message(paste(
