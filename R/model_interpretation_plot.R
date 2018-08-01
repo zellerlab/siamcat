@@ -72,7 +72,7 @@
 #'
 model.interpretation.plot <-
     function(siamcat,
-        fn.plot,
+        fn.plot=NULL,
         color.scheme = "BrBG",
         consens.thres = 0.5,
         heatmap.type = "zscore",
@@ -80,14 +80,40 @@ model.interpretation.plot <-
         limits = c(-3, 3),
         detect.lim = 1e-06,
         max.show = 50,
+        prompt=TRUE,
         verbose = 1) {
+
         if (verbose > 1)
             message("+ starting model.evaluation.plot")
+
         s.time <- proc.time()[3]
         label <- label(siamcat)
         model.type <- model_type(siamcat)
         models <- models(siamcat)
         stopifnot(heatmap.type %in% c('zscore', 'fc'))
+
+        # ######################################################################
+        # check fn.plot
+        if (is.null(fn.plot)) {
+            message(paste0('### WARNING: Not plotting to a pdf-file.\n',
+                '### The plot is optimized for landscape DIN-A4 (or similar) ',
+                'layout.\n### Please make sure that your plotting region is',
+                ' large enough!!!\n### Use at your own risk...'))
+            if (prompt == TRUE){
+                continue <- askYesNo('Are you sure that you want to continue?',
+                    default = TRUE,
+                    prompts = getOption("askYesNo",
+                        gettext(c("Yes", "No", "Cancel"))))
+            } else {
+                continue <- TRUE
+            }
+            if (!continue || is.na(continue)){
+                opt <- options(show.error.messages = FALSE)
+                on.exit(options(opt))
+                stop('Exiting...')
+            }
+        }
+
         # ######################################################################
         # some color pre-processing
         if (verbose > 2)
@@ -112,8 +138,18 @@ model.interpretation.plot <-
         W.mat <- get.weights.matrix(models, verbose = verbose)
         # remove possible intercept parameters, but keep possible meta data
         # included in the model
-        all.weights <- W.mat[union(row.names(features(siamcat)),
+        all.weights <- W.mat[union(make.names(row.names(features(siamcat))),
             grep("META", row.names(W.mat), value = TRUE)), ]
+        # adjust names of weights
+        feat.names.plots <- rownames(features(siamcat))
+        rownames(all.weights) <- vapply(rownames(all.weights), FUN=function(x){
+            if (grepl('^META_', x)) {
+                return(x)
+            } else {
+                feat.names.plots[which(make.names(feat.names.plots) == x)]
+            }
+        }, FUN.VALUE = character(1))
+        # relative weights
         rel.weights <- t(t(all.weights) / colSums(abs(all.weights)))
 
         # ######################################################################
@@ -155,6 +191,9 @@ model.interpretation.plot <-
             )
         } else if (heatmap.type == "fc") {
             feat <- get.orig_feat.matrix(siamcat)
+            if (any(colSums(feat) > 1.01)){
+                stop('Original features are not compositional!')
+            }
             if (is.null(detect.lim)) {
                 warning(
                     "WARNING: Pseudo-count before log-transformation
@@ -179,13 +218,15 @@ model.interpretation.plot <-
         # start plotting model properties
         if (verbose > 2)
             message("+++ plotting model properties")
-        pdf(
-            fn.plot,
-            paper = "special",
-            height = 8.27,
-            width = 11.69,
-            onefile = TRUE
-        )
+        if (!is.null(fn.plot)) {
+            pdf(
+                fn.plot,
+                paper = "special",
+                height = 8.27,
+                width = 11.69,
+                onefile = TRUE
+            )
+        }
 
         ### plot layout
         sel.f.cex <- max(0.3, 0.8 - 0.01 * num.sel.f)
@@ -283,7 +324,7 @@ model.interpretation.plot <-
             as.matrix(rep(1, 100)),
             col = color.scheme,
             horiz = TRUE,
-            border = 0,
+            border = NA,
             ylab = "",
             axes = FALSE
         )
@@ -407,7 +448,7 @@ model.interpretation.plot <-
             verbose = verbose
         )
 
-        tmp <- dev.off()
+        if(!is.null(fn.plot)) tmp <- dev.off()
         e.time <- proc.time()[3]
         if (verbose > 1)
             message(paste(
@@ -415,7 +456,7 @@ model.interpretation.plot <-
                 formatC(e.time - s.time, digits = 3),
                 "s"
             ))
-        if (verbose == 1)
+        if (verbose == 1 & !is.null(fn.plot))
             message(paste(
                 "Plotted associations between features and label
                 successfully to:",
@@ -524,13 +565,13 @@ model.interpretation.feature.weights.plot <-
 
             # label positive/negative class
             mtext(
-                gsub("_", " ", names(which(label$info == max(label$info)))),
+                gsub("_", " ", names(which(label$info == min(label$info)))),
                 side = 2,
                 at = floor(length(sel.idx) / 2),
                 line = -2
             )
             mtext(
-                gsub("_", " ", names(which(label$info == min(label$info)))),
+                gsub("_", " ", names(which(label$info == max(label$info)))),
                 side = 4,
                 at = floor(length(sel.idx) / 2),
                 line = -2
@@ -863,12 +904,13 @@ model.interpretation.prepare.heatmap.fc <-
                         ignore.case = TRUE,
                         value = TRUE
                     )]
-            # transform metadata to zscores
-                    meta.data <-
-                        apply(meta.data, c(1, 2), as.numeric)
+                    meta.data <- data.frame(meta.data)[,1]
+                    # transform metadata to zscores
+                    meta.data <- as.numeric(meta.data)
                     meta.data <-
                         (meta.data - mean(meta.data, na.rm = TRUE)) /
                         sd(meta.data, na.rm = TRUE)
+                    names(meta.data) <- rownames(meta)
                     img.data[f, ] <-
                         meta.data[colnames(heatmap.data)]
                 }
@@ -877,6 +919,7 @@ model.interpretation.prepare.heatmap.fc <-
         }
         img.data[img.data < limits[1]] = limits[1]
         img.data[img.data > limits[2]] = limits[2]
+        
         if (verbose > 2)
             message("+ finished model.interpretation.heatmap.plot")
         return(img.data)
@@ -909,7 +952,7 @@ model.interpretation.select.features <-
         label,
         max.show,
         verbose = 0) {
-        message("+ model.interpretation.select.features")
+        if (verbose > 2) message("+ model.interpretation.select.features")
         # for linear models, select those that have been selected more than
         # consens.thres percent of the models
         if (model.type != "RandomForest") {
