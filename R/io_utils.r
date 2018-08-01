@@ -54,15 +54,6 @@ read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0, ...) {
     feat <- as.matrix(feat)
     if(transpose) feat <- t(feat)
 
-    featNames <- make.names(rownames(feat))
-
-    if (any(rownames(feat) != featNames)) {
-        message(
-            "The provided feature names were not semantically correct for
-            use in R, they were updated."
-        )
-        rownames(feat) <- featNames
-    }
     e.time <- proc.time()[3]
     if (verbose > 0)
         message(paste(

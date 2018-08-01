@@ -116,9 +116,14 @@ train.model <- function(siamcat,
     verbose = 1) {
     if (verbose > 1)
         message("+ starting train.model")
+
     label <- label(siamcat)
+    feat <- features(siamcat)
+    # make sure the names fit
+    rownames(feat) <- make.names(rownames(feat))
     data.split <- data_split(siamcat)
     s.time <- proc.time()[3]
+
     # check modsel.crit
     if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))) {
         warning("Unkown model selection criterion... Defaulting to AU-ROC!\n")
@@ -200,7 +205,7 @@ train.model <- function(siamcat,
                     levels = sort(label$info))
             train.label <- label.fac[fold.exm.idx]
             data <-
-                as.data.frame(t(features(siamcat))[fold.exm.idx,])
+                as.data.frame(t(feat)[fold.exm.idx,])
             stopifnot(nrow(data) == length(train.label))
             stopifnot(all(rownames(data) == names(train.label)))
 
@@ -301,13 +306,13 @@ train.model <- function(siamcat,
 
     if (verbose > 1)
         message(paste(
-            "+ finished train.model in",
+            "\n+ finished train.model in",
             formatC(e.time - s.time,
                 digits = 3),
             "s"
         ))
     if (verbose == 1)
-        message(paste("Trained", method, "models successfully."))
+        message(paste("\nTrained", method, "models successfully."))
 
     return(siamcat)
 }
