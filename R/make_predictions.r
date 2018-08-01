@@ -61,7 +61,9 @@ make.predictions <- function(siamcat,
         if (verbose > 1)
             message("+ starting make.predictions on siamcat object")
 
-        feat <- t(features(siamcat))
+        feat <- features(siamcat)
+        rownames(feat) <- make.names(rownames(feat))
+        feat <- t(feat)
         label <- label(siamcat)
         data.split <- data_split(siamcat)
         models <- models(siamcat)
@@ -159,8 +161,12 @@ make.predictions <- function(siamcat,
         } else {
             message("WARNING: holdout set is not being normalized!")
         }
-        feat.test <- t(features(siamcat.holdout))
-        feat.ref <- t(features(siamcat))
+        feat.test <- features(siamcat.holdout)
+        rownames(feat.test) <- make.names(rownames(feat.test))
+        feat.test <- t(feat.test)
+        feat.ref <- features(siamcat)
+        rownames(feat.ref) <- make.names(rownames(feat.ref))
+        feat.ref <- t(feat.ref)
         label <- label(siamcat.holdout)
         data.split <- data_split(siamcat)
         models <- models(siamcat)
@@ -236,12 +242,12 @@ make.predictions <- function(siamcat,
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste(
-            "+ finished make.predictions in",
+            "\n+ finished make.predictions in",
             formatC(e.time - s.time, digits = 3),
             "s"
         ))
     if (verbose == 1)
-        message("Made predictions successfully.")
+        message("\nMade predictions successfully.")
 
     return(return.object)
 }
