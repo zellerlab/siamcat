@@ -4,7 +4,7 @@
 \alias{create.label.from.metadata}
 \title{create a label object from metadata}
 \usage{
-create.label.from.metadata(meta, column, case, 
+create.label.from.metadata(meta, column, case,
 control=NULL, p.lab = NULL, n.lab = NULL, verbose=1)
 }
 \arguments{
@@ -19,12 +19,17 @@ variable is binary, the other label will be used as a negative one. If the
 variable has multiple values, all the other values will be used a negative
 label (testing one vs rest).}
 
-\item{control}{name of a label or vector with names that will be used as a 
-negative label. All values that are nor equal to case and control will be 
-dropped. Default to NULL in which case: If the variable is binary, the value 
-not equal to case will be used as negative. If the variable has multiple 
-values, all the values not equal to cases will be used a negative label 
+\item{control}{name of a label or vector with names that will be used as a
+negative label. All values that are nor equal to case and control will be
+dropped. Default to NULL in which case: If the variable is binary, the value
+not equal to case will be used as negative. If the variable has multiple
+values, all the values not equal to cases will be used a negative label
 (testing one vs rest).}
+
+\item{verbose}{control output: \code{0} for no output at all, \code{1}
+for only information about progress and success, \code{2} for normal
+level of information and \code{3} for full debug information,
+defaults to \code{1}}
 
 \item{p.lab}{name of the positive label (useful mostly for visualizations).
 Default to NULL in which case the value of the positive label will be used.}
@@ -33,11 +38,6 @@ Default to NULL in which case the value of the positive label will be used.}
 Default to NULL in which case the value of the negative label will be used
 for binary variables and "rest" will be used for variables with multiple
 values.}
-
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
-defaults to \code{1}}
 }
 \value{
 an object of class \link{label-class}

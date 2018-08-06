@@ -5,7 +5,6 @@
 \alias{features<-}
 \alias{assign-features}
 \alias{features<-,siamcat,otu_table-method}
-\alias{features<-}
 \title{Assign a new otu_table object to \code{x} features slot}
 \usage{
 features(x) <- value

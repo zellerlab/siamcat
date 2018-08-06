@@ -5,7 +5,6 @@
 \alias{eval_data}
 \alias{eval_data,ANY-method}
 \alias{eval_data,list-method}
-\alias{eval_data}
 \title{Retrieve eval_data from object.}
 \usage{
 eval_data(siamcat)

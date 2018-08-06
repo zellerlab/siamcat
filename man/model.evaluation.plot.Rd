@@ -4,7 +4,8 @@
 \alias{model.evaluation.plot}
 \title{Model Evaluation Plot}
 \usage{
-model.evaluation.plot(..., fn.plot, colours = NULL, verbose = 1)
+model.evaluation.plot(..., fn.plot = NULL, colours = NULL,
+  verbose = 1)
 }
 \arguments{
 \item{...}{one or more object of class \link{siamcat-class}, can be named}

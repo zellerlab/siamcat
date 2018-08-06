@@ -5,7 +5,6 @@
 \alias{norm_param}
 \alias{norm_param,ANY-method}
 \alias{norm_param,list-method}
-\alias{norm_param}
 \title{Retrieve norm_param from object.}
 \usage{
 norm_param(siamcat)

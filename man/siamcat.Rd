@@ -4,7 +4,8 @@
 \alias{siamcat}
 \title{siamcat}
 \usage{
-siamcat(...)
+siamcat(..., feat = NULL, label = NULL, meta = NULL,
+  phyloseq = NULL, validate = TRUE, verbose = 3)
 }
 \arguments{
 \item{...}{list of arguments needed in order to construct a SIAMCAT object}
@@ -27,7 +28,7 @@ fn.in.label <- system.file('extdata',
     'label_crc_zeller_msb_mocat_specI.tsv',
     package = 'SIAMCAT')
 fn.in.meta    <- system.file('extdata',
-'num_metadata_crc_zeller_msb_mocat_specI.tsv',
+    'num_metadata_crc_zeller_msb_mocat_specI.tsv',
     package = 'SIAMCAT')
 
 feat    <- read.features(fn.in.feat)

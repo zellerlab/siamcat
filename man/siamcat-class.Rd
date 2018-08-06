@@ -26,5 +26,7 @@ The S4 class for storing taxa-abundance information and models.
 \item{\code{eval_data}}{an object of class \link{eval_data-class}}
 
 \item{\code{pred_matrix}}{an object of class \link{pred_matrix-class}}
+
+\item{\code{assoc}}{an object of class \link{assoc-class}}
 }}
 

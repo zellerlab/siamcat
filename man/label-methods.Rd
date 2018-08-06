@@ -5,11 +5,8 @@
 \alias{label}
 \alias{label,ANY-method}
 \alias{label,label-method}
-\alias{label}
 \alias{label,list-method}
-\alias{label}
 \alias{orig_feat,otu_table-method}
-\alias{label}
 \title{Retrieve a \link{label-class} object from object.}
 \usage{
 label(siamcat)

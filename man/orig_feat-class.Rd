@@ -13,7 +13,6 @@ The S4 class for storing original features info.
 \item{\code{taxa_are_rows}}{A single logical specifying the orientation
 of the abundance table}
 
-\item{\code{.Data}}{inherited from \code{\link{matrix}} class, contains
-a matrix with predictions made by \link{make.predictions} function}
+\item{\code{.Data}}{matrix containing the original feature values}
 }}
 

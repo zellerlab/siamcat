@@ -4,7 +4,8 @@
 \alias{summarize.features}
 \title{Summarize features}
 \usage{
-summarize.features(siamcat, level = "__g", verbose = 1)
+summarize.features(siamcat, level = "g__", keep_original_names = TRUE,
+  verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
