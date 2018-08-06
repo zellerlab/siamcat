@@ -111,7 +111,7 @@ the significance using a non-parametric Wilcoxon test and different effect
 sizes for the association (e.g. AUC or fold change).
 
 ```{r check_associations, eval=FALSE}
-check.associations(
+siamcat <- check.associations(
     siamcat,
     sort.by = 'fc',
     fn.plot = 'assoc.pdf',
