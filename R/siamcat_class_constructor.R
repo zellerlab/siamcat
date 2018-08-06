@@ -134,7 +134,8 @@ get.component.classes <- function(class) {
             "data_split",
             "phyloseq",
             "eval_data",
-            "pred_matrix"
+            "pred_matrix",
+            "assoc"
         )
 
     #class names
@@ -147,7 +148,8 @@ get.component.classes <- function(class) {
             "data_split",
             "phyloseq",
             "eval_data",
-            "pred_matrix"
+            "pred_matrix",
+            "assoc"
         )
 
     #slot names

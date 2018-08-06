@@ -38,15 +38,15 @@ setClass("data_split", contains = "list")
 #'     belong, usualy 1 and -1
 #'     \item \code{type} contains information about the label type
 #'     \item \code{info} list with additional informations about the dataset
+#' }
 #' @exportClass label
 setClass("label", contains = "list")
 
-#' The S4 class for storing label info.
+#' The S4 class for storing predictions.
 #' @name pred_matrix-class
 #' @rdname pred_matrix-class
 #' @slot .Data inherited from \code{\link{matrix}} class, contains
-#' a matrix with
-#'     predictions made by \link{make.predictions} function
+#' a matrix with predictions made by \link{make.predictions} function
 #' @exportClass pred_matrix
 setClass("pred_matrix", contains = "matrix")
 
@@ -55,8 +55,7 @@ setClass("pred_matrix", contains = "matrix")
 #' @rdname orig_feat-class
 #' @slot taxa_are_rows A single logical specifying the orientation
 #' of the abundance table
-#' @slot .Data inherited from \code{\link{matrix}} class, contains
-#' a matrix with predictions made by \link{make.predictions} function
+#' @slot .Data matrix containing the original feature values
 #' @exportClass orig_feat
 setClass("orig_feat", contains = "otu_table")
 
@@ -103,6 +102,20 @@ setClass("eval_data", contains = "list")
 #' @exportClass norm_param
 setClass("norm_param", contains = "list")
 
+#' The S4 class for storing the results of the association testing
+#' @name assoc-class
+#' @rdname assoc-class
+#' @slot .Data inherited from \code{\link{list}} class, contains
+#' a list with:
+#'     \itemize{
+#'     \item \code{assoc.results} a data.frame containing the results of the
+#'          association testing
+#'     \item \code{assoc.param} a list containing the parameters for the
+#'          association testing
+#' }
+#' @exportClass assoc
+setClass("assoc", contains = "list")
+
 #' The S4 class for storing taxa-abundance information and models.
 #' @name siamcat-class
 #' @rdname siamcat-class
@@ -115,6 +128,7 @@ setClass("norm_param", contains = "list")
 #' @slot model_list an object of class \link{model_list-class}
 #' @slot eval_data an object of class \link{eval_data-class}
 #' @slot pred_matrix an object of class \link{pred_matrix-class}
+#' @slot assoc an object of class \link{assoc-class}
 #' @exportClass siamcat
 setClass(
     "siamcat",
@@ -126,6 +140,7 @@ setClass(
         label = "label",
         norm_param = "list",
         data_split = "data_split",
-        pred_matrix = "matrix"
+        pred_matrix = "matrix",
+        assoc="list"
     )
 )

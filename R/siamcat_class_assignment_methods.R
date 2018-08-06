@@ -33,6 +33,7 @@ setMethod("physeq<-", c("siamcat", "phyloseq"), function(x, value) {
         x@data_split,
         x@pred_matrix,
         x@orig_feat,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
@@ -69,11 +70,44 @@ setMethod("label<-", c("siamcat", "label"), function(x, value) {
         x@norm_param,
         x@data_split,
         x@pred_matrix,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
 })
 
+###############################################################################
+#' Assign a new assoc object to \code{x}
+#'
+#' @usage associations(x) <- value
+#'
+#' @param x an object of class \link{siamcat-class}
+#' @param value an object of class list
+#' @export
+#' @docType methods
+#' @rdname assign-assoc
+#' @aliases assign-associations
+#' @return none
+#'
+setGeneric("associations<-", function(x, value)
+    standardGeneric("associations<-"))
+#' @rdname assign-assoc
+#' @aliases associations<-
+setMethod("associations<-", c("siamcat", "list"), function(x, value) {
+    siamcat(
+        'phyloseq'=x@phyloseq,
+        'label'=x@label,
+        'assoc'=associations(value),
+        x@model_list,
+        x@eval_data,
+        x@orig_feat,
+        x@norm_param,
+        x@data_split,
+        x@pred_matrix,
+        validate=FALSE,
+        verbose=0
+    )
+})
 
 ###############################################################################
 #' Assign a new model_list object to \code{x}
@@ -105,6 +139,7 @@ setMethod("model_list<-", c("siamcat", "model_list"), function(x, value) {
         x@norm_param,
         x@data_split,
         x@pred_matrix,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
@@ -140,6 +175,7 @@ setMethod("eval_data<-", c("siamcat", "list"), function(x, value) {
         x@norm_param,
         x@data_split,
         x@pred_matrix,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
@@ -175,6 +211,7 @@ setMethod("norm_param<-", c("siamcat", "list"), function(x, value) {
         x@eval_data,
         x@data_split,
         x@pred_matrix,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
@@ -210,6 +247,7 @@ setMethod("pred_matrix<-", c("siamcat", "matrix"), function(x, value) {
         x@eval_data,
         x@data_split,
         x@norm_param,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
@@ -245,6 +283,7 @@ setMethod("data_split<-", c("siamcat", "data_split"), function(x, value) {
         x@eval_data,
         x@pred_matrix,
         x@norm_param,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
@@ -280,6 +319,7 @@ setMethod("orig_feat<-", c("siamcat", "orig_feat"), function(x, value) {
         x@eval_data,
         x@pred_matrix,
         x@norm_param,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
@@ -296,6 +336,7 @@ setMethod("orig_feat<-", c("siamcat", "otu_table"), function(x, value) {
         x@eval_data,
         x@pred_matrix,
         x@norm_param,
+        x@assoc,
         validate=FALSE,
         verbose=0
     )
