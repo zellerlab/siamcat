@@ -61,9 +61,24 @@ create.label.from.metadata <- function(meta, column, case, control = NULL,
     if (!column %in% colnames(meta))
         stop("ERROR: Column ", column, " not found in the metadata\n")
 
-    metaColumn <- vapply(meta[, column], as.character,
-        FUN.VALUE = character(nrow(meta)))
+    if (class(meta) == 'sample_data'){
+        metaColumn <- vapply(meta[, column], as.character,
+            FUN.VALUE = character(nrow(meta)))
+    } else if (class(meta) == 'data.frame'){
+        metaColumn <- vapply(meta[, column], as.character,
+            FUN.VALUE = character(1))
+    } else {
+        stop('Please provide either a data.frame or a sample_data object!')
+    }
+
     names(metaColumn) <- rownames(meta)
+
+    # remove NAs in label column
+    if (any(is.na(metaColumn))){
+        if (verbose > 1) message(paste0('+ removing ', sum(is.na(metaColumn)),
+            ' instances of NA in chosen column'))
+        metaColumn <- metaColumn[!is.na(metaColumn)]
+    }
 
     labels <- unique(metaColumn)
 
