@@ -24,7 +24,8 @@
 #' accessSlot(siamcat_example, "label")
 #' accessSlot(siamcat_example, "model_list")
 accessSlot <- function(siamcat, slot, verbose=1) {
-    if (!slot %in% c(slotNames(siamcat), 'assoc.param')) {
+    if (!slot %in% c(slotNames(siamcat),
+        c('assoc.param', 'model_type', 'models'))) {
         # If slot is invalid, set out to NULL. Test later if this is an error.
         out = NULL
     } else if (slot == 'assoc') {
