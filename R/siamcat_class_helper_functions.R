@@ -44,7 +44,7 @@ filter.label <- function(siamcat, ids, verbose = 1) {
 
     if (verbose > 1)
         message(paste(
-            "Keeping labels of",
+            "+ Keeping labels of",
             length(labels_new$label),
             "sample(s)."
         ))
@@ -92,7 +92,7 @@ setMethod("show", "siamcat", function(object) {
     if (length(data_split(object)$num.folds)) {
         cat(
             paste(
-                "data_split()            data_split:       ",
+                "data_split()           data_split:       ",
                 data_split(object)$num.resample,
                 "cv rounds with",
                 data_split(object)$num.folds,
