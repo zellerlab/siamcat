@@ -78,21 +78,27 @@ setMethod("show", "siamcat", function(object) {
             ),
             fill = TRUE
         )
-    if (length(norm_param(object))) {
+    if (!is.null(associations(object, verbose=0))){
+        cat(paste("associations()         assoc:            Results from",
+                "association testing\n                                        ",
+                "with", length(assoc_param(object)$idx),
+                'significant features at alpha', assoc_param(object)$alpha,
+                sep=' '), fill=TRUE)
+    }
+    if (!is.null(norm_param(object, verbose=0))) {
         cat(
             paste(
-                "norm_param()           norm_param:       Features normalized
-                using",
-                norm_param(object)$norm.method,
+                "norm_param()           norm_param:       Features normalized",
+                "using", norm_param(object)$norm.method,
                 sep = " "
             ),
             fill = TRUE
         )
     }
-    if (length(data_split(object)$num.folds)) {
+    if (!is.null(data_split(object, verbose=0))) {
         cat(
             paste(
-                "data_split()           data_split:       ",
+                "data_split()           data_split:      ",
                 data_split(object)$num.resample,
                 "cv rounds with",
                 data_split(object)$num.folds,
@@ -102,16 +108,16 @@ setMethod("show", "siamcat", function(object) {
             fill = TRUE
         )
     }
-    if (length(model_type(object))) {
+    if (!is.null(model_type(object, verbose=0))) {
         cat(paste(
-            "model_list()            model_list:       ",
+            "model_list()           model_list:      ",
             length(models(object)) , model_type(object),
                 "models", sep = " "), fill = TRUE)
     }
-    if (nrow(pred_matrix(object))) {
+    if (!is.null(pred_matrix(object, verbose=0))) {
         cat(
             paste(
-                "pred_matrix()           pred_matrix:       Predictions for",
+                "pred_matrix()          pred_matrix:      Predictions for",
                 nrow(pred_matrix(object)),
                 "samples from",
                 ncol(pred_matrix(object)),
@@ -121,9 +127,9 @@ setMethod("show", "siamcat", function(object) {
             fill = TRUE
         )
     }
-    if (length(eval_data(object))) {
+    if (!is.null(eval_data(object, verbose=0))) {
         cat(paste(
-            "eval_data()             eval_data:         Average AUC:",
+            "eval_data()            eval_data:        Average AUC:",
             round(eval_data(object)$auc.average[[1]], 3),
             sep = " "
         ),

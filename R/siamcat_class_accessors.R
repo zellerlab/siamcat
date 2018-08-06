@@ -47,7 +47,11 @@ accessSlot <- function(siamcat, slot, verbose=1) {
             out <- NULL
         }
     }
-
+    if (slot == 'pred_matrix'){
+        if (nrow(out) == 0){
+            out <- NULL
+        }
+    }
 
     if (is.null(out) & verbose > 0) {
         # Only error regarding a NULL return value if errorIfNULL is TRUE.
