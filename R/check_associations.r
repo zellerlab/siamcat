@@ -162,25 +162,80 @@ check.associations <-
         ### Calculate different effect sizes
         if (verbose > 2)
             message("+++ analysing features\n")
-        result.list <- analyse.binary.marker(
-            feat = feat,
-            label = label,
-            detect.lim = detect.lim,
-            colors = col,
-            pr.cutoff = pr.cutoff,
-            mult.corr = mult.corr,
-            alpha = alpha,
-            max.show = max.show,
-            sort.by = sort.by,
-            probs.fc = seq(.1, .9, .05),
-            verbose = verbose
-        )
+        probs.fc <- seq(.1, .9, .05)
+        if (is.null(associations(siamcat, verbose=0))){
+            result.list <- analyse.binary.marker(
+                feat = feat,
+                label = label,
+                detect.lim = detect.lim,
+                colors = col,
+                pr.cutoff = pr.cutoff,
+                mult.corr = mult.corr,
+                alpha = alpha,
+                max.show = max.show,
+                sort.by = sort.by,
+                probs.fc = probs.fc,
+                verbose = verbose
+            )
+            # update siamcat
+            associations(siamcat) <- associations(
+                list(assoc.results=result.list$effect.size,
+                     assoc.param=list(detect.lim=result.list$detect.lim,
+                                      pr.cutoff=pr.cutoff,
+                                      probs.fc=probs.fc,
+                                      mult.corr=mult.corr,
+                                      sort.by=sort.by,
+                                      alpha=alpha,
+                                      truncated=result.list$truncated,
+                                      idx=result.list$idx)))
+        } else {
+            # if already existing, check parameters
+            old.params <- assoc_param(siamcat)
+            new.params <- list(detect.lim=detect.lim, pr.cutoff=pr.cutoff,
+                mult.corr=mult.corr, sort.by=sort.by, alpha=alpha,
+                probs.fc=probs.fc)
+            # if the same, don't compute again but rather use the old resutls
+            if (any(all.equal(new.params, old.params[match(names(new.params),
+                    names(old.params))]) == TRUE)) {
+                result.list <- list()
+                result.list$effect.size <- associations(siamcat)
+                result.list$truncated <- assoc_param(siamcat)$truncated
+                result.list$idx <- assoc_param(siamcat)$idx
+                result.list$detect.lim <- assoc_param(siamcat)$detect.lim
+            } else {
+                result.list <- analyse.binary.marker(
+                    feat = feat,
+                    label = label,
+                    detect.lim = detect.lim,
+                    colors = col,
+                    pr.cutoff = pr.cutoff,
+                    mult.corr = mult.corr,
+                    alpha = alpha,
+                    max.show = max.show,
+                    sort.by = sort.by,
+                    probs.fc = probs.fc,
+                    verbose = verbose
+                )
+                # update siamcat
+                associations(siamcat) <- associations(
+                    list(assoc.results=result.list$effect.size,
+                         assoc.param=list(detect.lim=result.list$detect.lim,
+                                          pr.cutoff=pr.cutoff,
+                                          probs.fc=probs.fc,
+                                          mult.corr=mult.corr,
+                                          sort.by=sort.by,
+                                          alpha=alpha,
+                                          truncated=result.list$truncated,
+                                          idx=result.list$idx)))
+            }
+        }
 
-        ###
-        effect.size <- result.list$effect.size
+        ########################################################################
+        # extract relevant info for plotting
+        effect.size <- result.list$effect.size[result.list$idx, , drop=FALSE]
         truncated <- result.list$truncated
         detect.lim <- result.list$detect.lim
-        feat.red    <- result.list$feat.red
+        feat.red    <- feat[result.list$idx, , drop=FALSE]
         feat.red.log <- log10(feat.red + detect.lim)
 
         ########################################################################
@@ -302,6 +357,7 @@ check.associations <-
                 successfully to:",
                 fn.plot
             ))
+        return(siamcat)
     }
 
 
@@ -1232,8 +1288,8 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
         ))
     return(
         list(
-            "effect.size" = effect.size[idx, ],
-            "feat.red" = feat[idx, , drop = FALSE],
+            "effect.size" = effect.size,
+            "idx"=idx,
             "truncated" = truncated,
             "detect.lim" = detect.lim
         )
