@@ -9,7 +9,7 @@
 \usage{
 eval_data(siamcat)
 
-\S4method{eval_data}{ANY}(siamcat)
+\S4method{eval_data}{ANY}(siamcat, verbose = 1)
 
 \S4method{eval_data}{list}(siamcat)
 }

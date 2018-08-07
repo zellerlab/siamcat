@@ -9,7 +9,7 @@
 \usage{
 norm_param(siamcat)
 
-\S4method{norm_param}{ANY}(siamcat)
+\S4method{norm_param}{ANY}(siamcat, verbose = 1)
 
 \S4method{norm_param}{list}(siamcat)
 }

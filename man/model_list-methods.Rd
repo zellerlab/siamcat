@@ -11,7 +11,7 @@
 \usage{
 model_list(siamcat)
 
-\S4method{model_list}{ANY}(siamcat)
+\S4method{model_list}{ANY}(siamcat, verbose = 1)
 
 \S4method{model_list}{model_list}(siamcat)
 

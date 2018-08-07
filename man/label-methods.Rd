@@ -11,7 +11,7 @@
 \usage{
 label(siamcat)
 
-\S4method{label}{ANY}(siamcat)
+\S4method{label}{ANY}(siamcat, verbose = 1)
 
 \S4method{label}{label}(siamcat)
 

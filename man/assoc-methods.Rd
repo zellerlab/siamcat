@@ -12,13 +12,13 @@
 \usage{
 associations(siamcat)
 
-\S4method{associations}{ANY}(siamcat)
+\S4method{associations}{ANY}(siamcat, verbose = 1)
 
 \S4method{associations}{list}(siamcat)
 
 assoc_param(siamcat)
 
-\S4method{assoc_param}{ANY}(siamcat)
+\S4method{assoc_param}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

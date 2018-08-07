@@ -9,7 +9,7 @@
 \usage{
 physeq(siamcat)
 
-\S4method{physeq}{ANY}(siamcat)
+\S4method{physeq}{ANY}(siamcat, verbose = 1)
 
 \S4method{physeq}{phyloseq}(siamcat)
 }

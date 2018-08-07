@@ -9,7 +9,7 @@
 \usage{
 pred_matrix(siamcat)
 
-\S4method{pred_matrix}{ANY}(siamcat)
+\S4method{pred_matrix}{ANY}(siamcat, verbose = 1)
 
 \S4method{pred_matrix}{matrix}(siamcat)
 }

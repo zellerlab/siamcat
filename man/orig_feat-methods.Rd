@@ -9,7 +9,7 @@
 \usage{
 orig_feat(siamcat)
 
-\S4method{orig_feat}{ANY}(siamcat)
+\S4method{orig_feat}{ANY}(siamcat, verbose = 1)
 
 \S4method{orig_feat}{orig_feat}(siamcat)
 }

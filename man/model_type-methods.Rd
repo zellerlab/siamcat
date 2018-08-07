@@ -8,7 +8,7 @@
 \usage{
 model_type(siamcat)
 
-\S4method{model_type}{ANY}(siamcat)
+\S4method{model_type}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

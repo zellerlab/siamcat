@@ -10,7 +10,7 @@
 \usage{
 data_split(siamcat)
 
-\S4method{data_split}{ANY}(siamcat)
+\S4method{data_split}{ANY}(siamcat, verbose = 1)
 
 \S4method{data_split}{data_split}(siamcat)
 
