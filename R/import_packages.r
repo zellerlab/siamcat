@@ -20,5 +20,6 @@
 #' @importFrom matrixStats rowQuantiles rowMaxs rowSds colRanks rowMedians
 #' @importFrom scales alpha
 #' @importFrom utils write.table read.csv
+#' @importFrom stringr str_extract_all
 
 NULL
