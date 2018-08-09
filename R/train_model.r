@@ -114,15 +114,25 @@ train.model <- function(siamcat,
     perform.fs = FALSE,
     param.fs = list(thres.fs = 100, method.fs = "AUC"),
     verbose = 1) {
+
     if (verbose > 1)
         message("+ starting train.model")
+    s.time <- proc.time()[3]
 
-    label <- label(siamcat)
     feat <- features(siamcat)
     # make sure the names fit
     rownames(feat) <- make.names(rownames(feat))
+
+    # checks
+    label <- label(siamcat)
+    if (label$type == "TEST"){
+        stop('Model can not be trained to SIAMCAT object with a TEST label.',
+            ' Exiting...')
+    }
+    if (is.null(data_split(siamcat, verbose=0))){
+        stop("SIAMCAT object needs a data split for model training! Exiting...")
+    }
     data.split <- data_split(siamcat)
-    s.time <- proc.time()[3]
 
     # check modsel.crit
     if (!all(modsel.crit %in% c("auc", "f1", "acc", "pr", "auprc"))) {
@@ -172,7 +182,6 @@ train.model <- function(siamcat,
 
     # Create List to save models.
     models.list <- list()
-    power <- NULL
     num.runs <- data.split$num.folds * data.split$num.resample
     bar <- 0
     if (verbose > 1)
@@ -300,8 +309,10 @@ train.model <- function(siamcat,
         }
     }
 
-    model_list(siamcat) <- new("model_list", models = models.list,
+    model_list(siamcat) <- new("model_list",
+        models = models.list,
         model.type = method)
+
     e.time <- proc.time()[3]
 
     if (verbose > 1)
