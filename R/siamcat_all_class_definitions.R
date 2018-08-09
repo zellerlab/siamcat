@@ -361,7 +361,7 @@ setClass("pred_matrix", contains = "matrix")
 check.eval.data <- function(object){
     errors <- character()
     # check that all entries are there
-    if (!c('roc', 'auroc', 'prc', 'auprc', 'ev') %in% names(object)){
+    if (!all(c('roc', 'auroc', 'prc', 'auprc', 'ev') %in% names(object))){
         msg <- 'Not all needed entries are given!'
         errors <- c(errors, msg)
     }
@@ -398,8 +398,8 @@ check.eval.data <- function(object){
     # for the case that there are multiple repeats
     if (!is.null(object$roc.all)){
         # check if all entries are there
-        if (!c('roc.all', 'auroc.all', 'prc.all', 'auprc.all', 'ev.all')
-            %in% names(object)){
+        if (!all(c('roc.all', 'auroc.all', 'prc.all', 'auprc.all', 'ev.all')
+            %in% names(object))){
                 msg <- 'Not all needed entries are given!'
                 errors <- c(errors, msg)
         }
@@ -416,7 +416,7 @@ check.eval.data <- function(object){
             msg<-'entries for individual repeats do not have concordant length!'
             errors <- c(errors, msg)
         }
-
+        ### MORE CHECKS FOR EVAL_DATA WITH MULTIPLE REPEATS?
     }
     if (length(errors) == 0) TRUE else errors
 }
