@@ -7,25 +7,27 @@
 #' @title siamcat
 #' @name siamcat
 #' @description Function to construct an object of class \link{siamcat-class}
-#' @param ... list of arguments needed in order to construct a SIAMCAT object
+#' @param ... additional arguments needed in order to construct a SIAMCAT object
+#' @param feat
+#' @param label
+#' @param meta
+#' @param phyloseq
+#' @param validate
+#' @param verbose control output: \code{0} for no output at all, \code{1}
+#'     for only information about progress and success, \code{2} for normal
+#'     level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
 #' @return A new \link{siamcat-class} object
 #' @export
 #' @examples
 #' # example with package data
-#' fn.in.feat    <- system.file('extdata',
-#'     'feat_crc_zeller_msb_mocat_specI.tsv',
-#'     package = 'SIAMCAT')
-#' fn.in.label <- system.file('extdata',
-#'     'label_crc_zeller_msb_mocat_specI.tsv',
-#'     package = 'SIAMCAT')
-#' fn.in.meta    <- system.file('extdata',
-#'     'num_metadata_crc_zeller_msb_mocat_specI.tsv',
-#'     package = 'SIAMCAT')
+#' data("feat_crc_zeller", package="SIAMCAT")
+#' data("meta_crc_zeller", package="SIAMCAT")
 #'
-#' feat    <- read.features(fn.in.feat)
-#' label <- read.labels(fn.in.label)
-#' meta    <- read.meta(fn.in.meta)
-#' siamcat <- siamcat(feat, label, meta)
+#' siamcat <- siamcat(feat=feat.crc.zeller,
+#'                    meta=meta.crc.zeller,
+#'                    label='Group',
+#'                    case='CRC')
 siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         validate=TRUE, verbose=3) {
 
@@ -92,10 +94,6 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
 
     label <- validate.label(label, feat, meta, case, verbose)
 
-    if (is.null(other.args$orig_feat)) {
-        other.args$orig_feat <- orig_feat(otu_table(other.args$phyloseq))
-    }
-
     other.args$label <- label
 
     other.args <-
@@ -109,10 +107,11 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         sc <- validate.data(sc, verbose=verbose)
     } else {
         if (verbose > 0){
-            message(paste0('### Not validating the SIAMCAT object!!!\n',
+            warning(paste0('### Not validating the SIAMCAT object!!!\n',
             '\tPlease be advised that some functions may not work correctly!'))
         }
     }
+
     return(sc)
 }
 
@@ -127,29 +126,28 @@ get.component.classes <- function(class) {
     #slot names
     component.classes.siamcat <-
         c(
-            "model_list",
-            "orig_feat",
-            "label",
-            "norm_param",
-            "data_split",
             "phyloseq",
-            "eval_data",
+            "label",
+            "filt_feat",
+            "associations",
+            "norm_feat",
+            "data_split",
+            "model_list",
             "pred_matrix",
-            "assoc"
+            "eval_data"
         )
-
     #class names
     names(component.classes.siamcat) <-
         c(
-            "model_list",
-            "orig_feat",
-            "label",
-            "norm_param",
-            "data_split",
             "phyloseq",
-            "eval_data",
+            "label",
+            "filt_feat",
+            "associations",
+            "norm_feat",
+            "data_split",
+            "model_list",
             "pred_matrix",
-            "assoc"
+            "eval_data"
         )
 
     #slot names
@@ -192,7 +190,7 @@ validate.features <- function(feat){
     }
     # check class of feature input
     if (class(feat) == 'otu_table'){
-        # can either be an otu_table (then to nothing)
+        # can either be an otu_table (then do nothing)
         return(feat)
     } else if (class(feat) == 'matrix'){
         # or a matrix (then check if it is numeric or not)
@@ -219,25 +217,31 @@ validate.features <- function(feat){
 validate.label <- function(label, feat, meta, case, verbose){
     # if NA, return simple label object which contains only one class
     if (is.null(label)){
-        message(paste0('No label information given! Generating SIAMCAT object ',
+        warning(paste0('No label information given! Generating SIAMCAT object ',
         'with placeholder label!\n\tThis SIAMCAT object is not suitable for ',
         'the complete workflow...'))
-        label <- label(list(label = sample(c(1, -1),
-            size=ncol(feat), replace=TRUE),
-            type="BINARY", info=c('TEST-A'=1, 'TEST-B'=-1)))
+        label <- label(list(label = rep(-1, ncol(feat)),
+            type="TEST", info=c('TEST'=-1)))
         names(label$label) <- colnames(feat)
         return(label)
-    }
-    if (class(label) == "label"){
+    } else if (class(label) == "label"){
         return(label)
-    } else if (is.character(label)){
+    } else if (is.character(label) & length(label) == 1){
         if(is.null(meta)) stop('Metadata needed to generate label! Exiting...')
         if(is.null(case)) stop('Case information needed! Exiting...')
-        label <- create.label.from.metadata(meta, label, case=case,
+        label <- create.label(meta=meta, label=label, case=case,
             verbose=verbose)
         label <- label(label)
         return(label)
+    } else if (is.atomic(label)) {
+        if(is.null(case)) stop('Case information needed! Exiting...')
+        label <- create.label(label=label, case=case)
+    } else {
+        stop(paste0('Cannot interpret the label object!\nPlease ',
+            'provide either a label object, a column in your metadata, or a
+            vector to distinguish cases and controls!.'))
     }
+
 }
 
 # check meta-data object
