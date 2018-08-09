@@ -20,8 +20,7 @@
 #'
 #' @export
 #'
-#' @return object of class \link{siamcat-class} with the
-#'     slot \code{eval_data} filled
+#' @return object of class \link{siamcat-class} with a summarized feature table
 #'
 #' @examples
 #'
