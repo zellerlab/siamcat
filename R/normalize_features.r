@@ -48,7 +48,7 @@
 #'     distribution of standard deviations of all features that will be added
 #'     to the denominator during standardization in order to avoid
 #'     underestimation of the standard deviation, defaults to 0.1
-#'     \item \code{'clr'} requires \code{log.n0}, which is the pseudocount to be
+#'     \item \code{'log.clr'} requires \code{log.n0}, which is the pseudocount to be
 #'     added before log-transformation, defaults to \code{NULL} leading to
 #'     the estimation of \code{log.n0} from the data
 #'     \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
@@ -111,16 +111,23 @@ normalize.features <- function(siamcat,
     if (verbose > 1)
         message("+ starting normalize.features")
     s.time <- proc.time()[3]
-    feat <- get.features.matrix(siamcat)
+
+    # check if features have already been normalized or not
+    if (is.null(norm_feat(siamcat, verbose=0))){
+        feat <- get.features.matrix(siamcat)
+    } else if (is.null(filt_feat(siamcat, verbose=0))){
+        feat <- get.orig_feat.matrix(siamcat)
+        if (verbose > 1) message('+ normalizing unfiltered features')
+    } else {
+        feat <- get.filt_feat.matrix(siamcat)
+    }
+
 
     if (is.null(norm.param$norm.method)) {
         # de novo normalization
         if (verbose > 1)
-            message(paste(
-                "+++ performing de novo normalization using the ",
-                norm.method,
-                " method"
-            ))
+            message(paste( "+++ performing de novo normalization using the ",
+                norm.method, " method"))
         ### remove features with missing values
         keep.idx <- rowSums(is.na(feat)) == 0
         if (any(!keep.idx)) {
@@ -160,6 +167,9 @@ normalize.features <- function(siamcat,
             feat.red <- feat.red.na
         }
         ## check if one of the allowed norm.methods have been supplied
+        if (length(norm.method) != 1){
+            stop('Please supply only a single normalization method! Exiting...')
+        }
         if (!norm.method %in% c("rank.unit",
             "rank.std",
             "log.std",
@@ -184,14 +194,19 @@ normalize.features <- function(siamcat,
                 not supplied. Exiting ..."
             )
         }
-        if (norm.method != "rank.std" &&
-                is.null(norm.param$log.n0)) {
-            warning(
-                "Pseudo-count before log-transformation not supplied!
-                Estimating it as 5% percentile...\n"
-            )
-            norm.param$log.n0 <-
-                quantile(feat.red[feat.red != 0], 0.05)
+        if (startsWith(norm.method, "log")){
+            if (any(feat.red < 0)){
+                stop('Can not perform log-transform on ',
+                    'negative data. Exiting...')
+            }
+            if (is.null(norm.param$log.n0)){
+                warning(
+                    "Pseudo-count before log-transformation not supplied!
+                    Estimating it as 5% percentile...\n"
+                )
+                norm.param$log.n0 <-
+                    quantile(feat.red[feat.red != 0], 0.05)
+            }
         }
         if (norm.method == "log.std" &&
                 (is.null(norm.param$sd.min.q))) {
@@ -296,7 +311,6 @@ normalize.features <- function(siamcat,
                 "%"
             ))
         stopifnot(!any(is.na(feat.norm)))
-        norm_param(siamcat) <- norm_param(par)
     } else {
         # frozen normalization
         if (verbose > 1)
@@ -413,9 +427,13 @@ normalize.features <- function(siamcat,
                 "%"
             ))
         stopifnot(!any(is.na(feat.norm)))
-
+        par <- norm.param
     }
-    features(siamcat) <- otu_table(feat.norm, taxa_are_rows = TRUE)
+
+    norm_feat(siamcat) <- new('norm_feat',
+        norm.feat=otu_table(feat.norm, taxa_are_rows=TRUE),
+        norm.param=par)
+
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste(
