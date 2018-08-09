@@ -87,9 +87,28 @@ model.interpretation.plot <-
             message("+ starting model.evaluation.plot")
 
         s.time <- proc.time()[3]
+
+        # ######################################################################
+        # general checks
+        stopifnot(heatmap.type %in% c('zscore', 'fc'))
+        stopifnot(length(heatmap.type) == 1)
+
+        if (is.null(model_list(siamcat, verbose=0))){
+            stop("SIAMCAT object does not contain any models. Exiting...")
+        }
+        if (heatmap.type == 'fc'){
+            if (any(orig_feat(siamcat) < 0) |
+                any(colSums(orig_feat(siamcat)) > 1.01)){
+                    stop("Original data should be compositional for ",
+                         "heatmap.type fc. Exiting...")
+            }
+        }
+
+
         label <- label(siamcat)
         model.type <- model_type(siamcat)
         models <- models(siamcat)
+
         stopifnot(heatmap.type %in% c('zscore', 'fc'))
 
         # ######################################################################
@@ -192,9 +211,6 @@ model.interpretation.plot <-
             )
         } else if (heatmap.type == "fc") {
             feat <- get.orig_feat.matrix(siamcat)
-            if (any(colSums(feat) > 1.01)){
-                stop('Original features are not compositional!')
-            }
             if (is.null(detect.lim)) {
                 warning(
                     "WARNING: Pseudo-count before log-transformation
