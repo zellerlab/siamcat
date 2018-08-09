@@ -30,11 +30,20 @@
 #'     # Additionally, prevent standardization of the added features
 #'     siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
 #'     'bmi', 'gender'), std.meta=FALSE)
-add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
+add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
     verbose = 1) {
+
     if (verbose > 1)
     message("+ starting add.meta.pred")
     s.time <- proc.time()[3]
+
+    if (is.null(meta(siamcat))) {
+        stop('SIAMCAT object has no metadata. Exiting...')
+    }
+    if (is.null(norm_feat(siamcat, verbose=0))){
+        warning('It is recommended to add a meta-predictor only', 
+            ' after feature normalization.')
+    }
     ### add metadata as predictors to the feature matrix
     cnt <- 0
 
@@ -47,6 +56,9 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
             if (!p %in% colnames(meta(siamcat))) {
                 stop("There is no metadata variable called ", p)
             }
+            if (paste0('META_', toupper(p)) %in% rownames(features(siamcat))){
+                stop("This meta-variable has already been added. Exiting...")
+            }
             idx <- which(colnames(meta(siamcat)) == p)
             if (length(idx) != 1)
             stop(p, "matches multiple columns in the metada")
@@ -55,7 +67,7 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
 
             # check if the meta-variable is a factor or numeric
             if (class(m) == 'factor'){
-                message(paste0('WARNING: the meta-variable is a factor and',
+                warning(paste0('WARNING: meta-variable ', p,' is a factor and',
                 ' not numeric...\n   The values will be converted to numerical',
                 ' values with "as.numeric()"\n'))
                 m <- as.numeric(m)
