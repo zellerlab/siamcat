@@ -61,33 +61,37 @@ make.predictions <- function(siamcat,
         if (verbose > 1)
             message("+ starting make.predictions on siamcat object")
 
+        # features
         feat <- features(siamcat)
         rownames(feat) <- make.names(rownames(feat))
         feat <- t(feat)
+        # label
         label <- label(siamcat)
+        if (label$type == 'TEST'){
+            stop('SIAMCAT can not predict on a reference object with a',
+                ' TEST label. Exiting...')
+        }
+        # data.split
+        if (is.null(data_split(siamcat, verbose=0))){
+            stop('SIAMCAT needs a data split for predictions! Exiting...')
+        }
         data.split <- data_split(siamcat)
+        # models
+        if (is.null(models(siamcat, verbose=0))){
+            stop('SIAMCAT does not seem to contain any models. Exiting...')
+        }
         models <- models(siamcat)
 
         label.fac <-
             factor(label$label,
                 levels = sort(label$info))
 
-        # assert that there is a split
-        stopifnot(!is.null(data_split(siamcat)))
-
         num.folds <- data.split$num.folds
         num.resample <- data.split$num.resample
 
-        pred <-
-            matrix(
-                NA,
-                ncol = num.resample,
-                nrow = length(label.fac),
+        pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac),
                 dimnames = list(names(label.fac), paste0("CV_rep",
-                    seq_len(
-                        num.resample
-                    )))
-            )
+                    seq_len(num.resample))))
         i = 1
         if (verbose == 1 || verbose == 2)
             pb <-
@@ -147,7 +151,7 @@ make.predictions <- function(siamcat,
         stopifnot(!any(is.na(pred)))
         pred <- pred_matrix(pred)
         pred_matrix(siamcat) <- pred
-        return.object <- siamcat
+        r.object <- siamcat
     } else {
         if (verbose > 1)
             message("+ starting make.predictions on external dataset")
@@ -156,10 +160,10 @@ make.predictions <- function(siamcat,
             if (verbose > 1)
                 message("+ Performing frozen normalization on holdout set")
             siamcat.holdout <- normalize.features(siamcat.holdout,
-                norm.param = norm_param(siamcat),
+                norm.param = norm_params(siamcat),
                 verbose = verbose)
         } else {
-            message("WARNING: holdout set is not being normalized!")
+            warning("WARNING: holdout set is not being normalized!")
         }
         feat.test <- features(siamcat.holdout)
         rownames(feat.test) <- make.names(rownames(feat.test))
@@ -167,33 +171,37 @@ make.predictions <- function(siamcat,
         feat.ref <- features(siamcat)
         rownames(feat.ref) <- make.names(rownames(feat.ref))
         feat.ref <- t(feat.ref)
+
         label <- label(siamcat.holdout)
+        if (is.null(data_split(siamcat, verbose=0))){
+            stop('Reference SIAMCAT object should contain a data split.',
+                ' Exiting...')
+        }
         data.split <- data_split(siamcat)
+        if (is.null(models(siamcat, verbose=0))){
+            stop('Reference SIAMCAT object should contains models. Exiting...')
+        }
         models <- models(siamcat)
+
         # data sanity checks
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
 
         # prediction
         num.models <- data.split$num.folds * data.split$num.resample
 
-        pred <-
-            matrix(
-                NA,
-                ncol = num.models,
-                nrow = nrow(feat.test),
+        pred <- matrix(NA, ncol = num.models, nrow = nrow(feat.test),
                 dimnames = list(rownames(feat.test), paste0("Model_",
-                    seq_len(num.models)))
-            )
+                    seq_len(num.models))))
         if (verbose == 1 || verbose == 2)
             pb <-
-            txtProgressBar(max = data.split$num.folds * data.split$num.resample,
+            txtProgressBar(max = data.split$num.folds*data.split$num.resample,
             style = 3)
         for (i in seq_len(num.models)) {
             data <- as.data.frame(feat.test)
             model <- models[[i]]
 
             data <- data[, model$features]
-            data$label <- as.factor(label$label)
+            data$label <- as.factor(label$label, levels=c(-1, 1))
 
             if (verbose > 2)
                 message(
@@ -215,11 +223,13 @@ make.predictions <- function(siamcat,
             p <- pdata$data[, 4]
             names(p) <- rownames(pdata$data)
             pred[names(p), i] <- p
-            pred <- pred_matrix(pred)
+
             if (verbose == 1 || verbose == 2)
                 setTxtProgressBar(pb, i)
         }
-        return.object <- pred
+        pred <- pred_matrix(pred)
+        pred_matrix(siamcat_holdout) <- pred
+        r.object <- siamcat.holdout
     }
 
     # print correlation matrix
@@ -249,5 +259,5 @@ make.predictions <- function(siamcat,
     if (verbose == 1)
         message("\nMade predictions successfully.")
 
-    return(return.object)
+    return(r.object)
 }
