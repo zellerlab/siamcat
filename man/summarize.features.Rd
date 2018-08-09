@@ -18,8 +18,7 @@ defaults to \code{1}}
 \item{siamcat}{at which level to summarize (g__ = genus)}
 }
 \value{
-object of class \link{siamcat-class} with the
-    slot \code{eval_data} filled
+object of class \link{siamcat-class} with a summarized feature table
 }
 \description{
 Summarize features

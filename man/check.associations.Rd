@@ -4,10 +4,11 @@
 \alias{check.associations}
 \title{Check and visualize associations between features and classes}
 \usage{
-check.associations(siamcat,fn.plot,color.scheme = "RdYlBu",
-    alpha =0.05,mult.corr = "fdr", sort.by = "fc",detect.lim = 1e-06,
-    pr.cutoff = 1e-6, max.show = 50, plot.type = "quantile.box",
-    panels = c("fc","auroc"),verbose = 1)
+check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
+                         alpha =0.05, mult.corr = "fdr", sort.by = "fc",
+                         detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
+                         plot.type = "quantile.box",
+                         panels = c("fc","auroc"),verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

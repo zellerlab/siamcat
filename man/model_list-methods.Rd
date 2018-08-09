@@ -17,7 +17,7 @@ model_list(siamcat)
 
 \S4method{models}{model_list}(siamcat)
 
-\S4method{model_type}{model_list}(siamcat)
+\S4method{model_type}{model_list}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

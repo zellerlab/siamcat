@@ -4,8 +4,8 @@
 \alias{select.samples}
 \title{Select samples based on metadata}
 \usage{
-select.samples(siamcat, filter, allowed.set = NULL, 
-allowed.range = NULL, verbose = 1)
+select.samples(siamcat, filter, allowed.set = NULL,
+                      allowed.range = NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
@@ -42,7 +42,7 @@ This functions selects labels and metadata based on
     # Provide additional information with verbose
     \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender',
     allowed.set=c(1, 2), verbose=2)}
-    
+
 }
 \keyword{SIAMCAT}
 \keyword{select.samples}

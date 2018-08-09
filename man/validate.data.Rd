@@ -27,6 +27,7 @@ This function validates the data by checking that labels are
     the number of samples per class is checked to ensure a minimum
     number. If metadata is available, the overlap between labels and
     metadata is checked as well.
+    This function is run when a \link{siamcat-class} object is created.
 }
 \examples{
 

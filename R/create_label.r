@@ -9,7 +9,7 @@
 #'  or an atomic vector
 #'
 #' @usage create.label(label, case, meta=NULL,
-#' control=NULL, p.lab = NULL, n.lab = NULL, verbose=1)
+#'                     control=NULL, p.lab = NULL, n.lab = NULL, verbose=1)
 #'
 #' @param label named vector to create the label or the name of the metadata
 #' column that will be used to create the label
@@ -48,8 +48,7 @@
 #'
 #' @examples
 #'     data('meta_crc_zeller')
-#'     label <- create.label(label='Group, case='CRC',
-#'     meta=meta.crc.zeller,"fobt")
+#'     label <- create.label(label='Group', case='CRC', meta=meta.crc.zeller)
 #'
 #' @export
 create.label <- function(label, case, meta=NULL, control = NULL,

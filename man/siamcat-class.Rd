@@ -14,8 +14,6 @@ The S4 class for storing taxa-abundance information and models.
 
 \item{\code{label}}{an object of class \link{label-class}}
 
-\item{\code{orig_feat}}{an object of class \link[phyloseq]{otu_table-class}}
-
 \item{\code{data_split}}{an object of class \link{data_split-class}}
 
 \item{\code{norm_param}}{a list of normalzation parameters, see

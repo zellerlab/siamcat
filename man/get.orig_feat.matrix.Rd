@@ -16,7 +16,7 @@ Original features as a matrix
 Function to access original features in siamcat@orig_feat
 }
 \details{
-Access original features in siamcat@orig_feat as matrix
+Access original features in siamcat@phyloseq as matrix
 }
 \examples{
     data(siamcat_example)

@@ -9,10 +9,13 @@
 #'     training data
 #'
 #' @usage train.model(siamcat,
-#' method = c("lasso","enet","ridge","lasso_ll", "ridge_ll", "randomForest"),
-#' stratify = TRUE, modsel.crit = list("auc"), min.nonzero.coeff = 1,
-#' param.set = NULL, perform.fs = FALSE,
-#' param.fs = list(thres.fs = 100, method.fs = "AUC"), verbose = 1)
+#'                    method = c("lasso", "enet", "ridge", "lasso_ll",
+#'                               "ridge_ll", "randomForest"),
+#'                    stratify = TRUE, modsel.crit = list("auc"),
+#'                    min.nonzero.coeff = 1, param.set = NULL,
+#'                    perform.fs = FALSE,
+#'                    param.fs = list(thres.fs = 100, method.fs = "AUC"),
+#'                    verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'

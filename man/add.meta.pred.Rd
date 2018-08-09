@@ -4,8 +4,7 @@
 \alias{add.meta.pred}
 \title{Add metadata as predictors}
 \usage{
-add.meta.pred(siamcat, pred.names = NULL, std.meta =
-    TRUE, verbose = 1)
+add.meta.pred(siamcat, pred.names, std.meta = TRUE, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

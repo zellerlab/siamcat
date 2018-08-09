@@ -11,7 +11,7 @@
 #'         filter the \link{siamcat-class} object accordingly.
 #'
 #' @usage select.samples(siamcat, filter, allowed.set = NULL,
-#' allowed.range = NULL, verbose = 1)
+#'                       allowed.range = NULL, verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'

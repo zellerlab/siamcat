@@ -10,7 +10,7 @@
 #'     a given test-set.
 #'
 #' @usage make.predictions(siamcat, siamcat.holdout = NULL,
-#'     normalize.holdout = TRUE, verbose = 1)
+#'                         normalize.holdout = TRUE, verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'

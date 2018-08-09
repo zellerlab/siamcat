@@ -7,8 +7,7 @@
 #' @title Add metadata as predictors
 #' @description This function adds metadata to the feature matrix to be later
 #'     used as predictors
-#' @usage add.meta.pred(siamcat, pred.names = NULL, std.meta =
-#'     TRUE, verbose = 1)
+#' @usage add.meta.pred(siamcat, pred.names, std.meta = TRUE, verbose = 1)
 #' @param siamcat object of class \link{siamcat-class}
 #' @param pred.names vector of names of the variables within the metadata to be
 #'   added to the feature matrix as predictors
@@ -41,7 +40,7 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
         stop('SIAMCAT object has no metadata. Exiting...')
     }
     if (is.null(norm_feat(siamcat, verbose=0))){
-        warning('It is recommended to add a meta-predictor only', 
+        warning('It is recommended to add a meta-predictor only',
             ' after feature normalization.')
     }
     ### add metadata as predictors to the feature matrix

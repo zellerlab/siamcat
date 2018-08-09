@@ -284,7 +284,7 @@ get.filt_feat.matrix <- function(siamcat) {
 #'     that contains a filt_feat object
 #' @return The list of filtering parameters or NULL.
 #' @export
-#' @rdname filt_params-methods
+#' @rdname filt_feat-methods
 #' @docType methods
 #'
 #' @examples
@@ -292,8 +292,8 @@ get.filt_feat.matrix <- function(siamcat) {
 #'     filt_params(siamcat_example)
 setGeneric("filt_params", function(siamcat, verbose=1)
     standardGeneric("filt_params"))
-#' @rdname filt_param-methods
-#' @aliases filt_param,ANY-method
+#' @rdname filt_feat-methods
+#' @aliases filt_feat,ANY-method
 setMethod("filt_params", "ANY", function(siamcat, verbose=1) {
     temp <- siamcat@filt_feat@filt.param
     if (length(temp) == 0) temp <- NULL
@@ -347,8 +347,8 @@ setMethod("associations", "associations", function(siamcat) {
 #'     assoc_param(siamcat_example)
 setGeneric("assoc_param", function(siamcat, verbose=1)
     standardGeneric("assoc_param"))
-#' @rdname assoc-methods
-#' @aliases assoc_param,ANY-method
+#' @rdname associations-methods
+#' @aliases associations_param,ANY-method
 setMethod("assoc_param", "ANY", function(siamcat, verbose=1) {
     temp <- siamcat@associations@assoc.param
     if (length(temp) == 0) temp <- NULL
@@ -392,7 +392,7 @@ setMethod("norm_feat", "ANY", function(siamcat, verbose=1) {
 #'     that contains a norm_feat
 #' @return The list of normalization parameters or NULL.
 #' @export
-#' @rdname norm_params-methods
+#' @rdname norm_feat-methods
 #' @docType methods
 #'
 #' @examples
@@ -400,8 +400,8 @@ setMethod("norm_feat", "ANY", function(siamcat, verbose=1) {
 #'     norm_params(siamcat_example)
 setGeneric("norm_params", function(siamcat, verbose=1)
     standardGeneric("norm_params"))
-#' @rdname norm_params-methods
-#' @aliases norm_params,ANY-method
+#' @rdname norm_feat-methods
+#' @aliases norm_feat,ANY-method
 setMethod("norm_params", "ANY", function(siamcat, verbose=1) {
     temp <-  siamcat@norm_feat@norm.param
     if (length(temp) == 0) temp <- NULL

@@ -4,17 +4,17 @@
 \name{associations}
 \alias{associations}
 \alias{associations,ANY-method}
-\alias{associations,list-method}
-\alias{assoc}
+\alias{associations,associations-method}
 \alias{assoc_param}
 \alias{assoc_param,ANY-method}
+\alias{associations_param,ANY-method}
 \title{Retrieve associations from object.}
 \usage{
 associations(siamcat)
 
 \S4method{associations}{ANY}(siamcat, verbose = 1)
 
-\S4method{associations}{list}(siamcat)
+\S4method{associations}{associations}(siamcat)
 
 assoc_param(siamcat)
 
@@ -22,10 +22,10 @@ assoc_param(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains an object in the assoc slot}
+that contains an object in the associations slot}
 
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains an object in the assoc slot}
+that contains an object in the associations slot}
 }
 \value{
 The results of the association testing or NULL.

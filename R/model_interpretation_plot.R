@@ -10,9 +10,11 @@
 #'     patients.
 #'
 #' @usage model.interpretation.plot(siamcat, fn.plot, color.scheme = "BrBG",
-#' consens.thres = 0.5,heatmap.type = c("zscore", "fc"),
-#' norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-06,
-#' max.show = 50, verbose = 1)
+#'                                  consens.thres = 0.5,
+#'                                  heatmap.type = c("zscore", "fc"),
+#'                                  norm.models = FALSE, limits = c(-3, 3),
+#'                                  detect.lim = 1e-06, max.show = 50,
+#'                                  verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'

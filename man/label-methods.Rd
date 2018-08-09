@@ -6,7 +6,6 @@
 \alias{label,ANY-method}
 \alias{label,label-method}
 \alias{label,list-method}
-\alias{orig_feat,otu_table-method}
 \title{Retrieve a \link{label-class} object from object.}
 \usage{
 label(siamcat)
@@ -16,8 +15,6 @@ label(siamcat)
 \S4method{label}{label}(siamcat)
 
 \S4method{label}{list}(siamcat)
-
-\S4method{orig_feat}{otu_table}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

@@ -4,14 +4,11 @@
 \name{features}
 \alias{features}
 \alias{features,ANY-method}
-\alias{features,otu_table-method}
-\title{Retrieve a \link[phyloseq]{otu_table-class} object from object.}
+\title{Retrieve the active \link[phyloseq]{otu_table-class} out of SIAMCAT}
 \usage{
 features(siamcat)
 
 \S4method{features}{ANY}(siamcat)
-
-\S4method{features}{otu_table}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
@@ -21,7 +18,7 @@ that contains a label or instance of \link[phyloseq]{otu_table-class} .}
 The \link[phyloseq]{otu_table-class} object or NULL.
 }
 \description{
-Retrieve a \link[phyloseq]{otu_table-class} object from object.
+Retrieve the active \link[phyloseq]{otu_table-class} out of SIAMCAT
 }
 \examples{
     data(siamcat_example)
