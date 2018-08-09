@@ -120,7 +120,7 @@ setMethod("show", "siamcat", function(object) {
     }
 
     # print otu_table (always there).
-    cat("\n\ncontains phyloseq-class experiment-level object @phyloseq:",
+    cat("\ncontains phyloseq-class experiment-level object @phyloseq:",
         fill = TRUE)
     cat(paste("phyloseq@otu_table()   OTU Table:        [ ",
         ntaxa(otu_table(physeq(object))), " taxa and ",
