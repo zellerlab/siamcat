@@ -56,7 +56,36 @@ setClass("label",
 #'@keywords internal
 check.filt.feat <- function(object){
     errors <- character()
-    # TODO
+    # check if all entries are lists
+    if (!all(vapply(object@filt.param, class,
+        FUN.VALUE = character(1)) == 'list')){
+            msg <- "Filtering parameters are not in the right format!"
+            errors <- c(errors, msg)
+        }
+    # check if each entry is of length 3
+    if (!all(vapply(object@filt.param, length, FUN.VALUE = numeric(1)) == 3)){
+        msg <- "Filtering parameters are not in the right format!"
+        errors <- c(errors, msg)
+    }
+    # check if they have the correct entries
+    if (!all(vapply(object@filt.param, names,
+        FUN.VALUE = character(3)) ==
+        c('filter.method', 'cutoff', 'rm.unmapped'))){
+            msg <- "Filtering parameters do not contain all needed entries!"
+            errors <- c(errors, msg)
+        }
+    # check that no filtering method appears twice
+    methods <- vapply(object@filt.param,
+        FUN=function(x){x$filter.method}, FUN.VALUE = character(1))
+    if (length(methods) != length(unique(methods))){
+        msg <- "The same filtering methods should not be applied twice!"
+        errors <- c(errors, msg)
+    }
+    # check that taxa are rows == TRUE
+    if (object@filt.feat@taxa_are_rows == FALSE){
+        msg <- "Filtered features do not have the taxa as rows!"
+        errors <- c(errors, msg)
+    }
     if (length(errors) == 0) TRUE else errors
 }
 
@@ -82,7 +111,61 @@ setClass("filt_feat",
 #'@keywords internal
 check.assoc <- function(object){
     errors <- character()
-    # TODO
+    # check that assoc.param contains all entries
+    if (!all(names(object@assoc.param) == c('detect.lim', 'pr.cutoff',
+        'probs.fc', 'mult.corr', 'alpha', 'feat.type'))){
+            msg <- 'Association testing parameters do not contain all entries!'
+            errors <- c(errors, msg)
+        }
+    # check that all entries are valid and in the expected ranges
+    if (!all(vapply(object@assoc.param, class,
+        FUN.VALUE=character(1)) == c('numeric', 'numeric', 'numeric',
+                                     'character', 'numeric', 'character'))){
+    msg<-'Association testing parameters do not contain the expected classes!'
+    errors <- c(errors, msg)
+    }
+    # detect.lim
+    if (object@assoc.param$detect.lim > 1 | object@assoc.param$detect.lim < 0){
+        msg<-'Detection limit (pseudocount) is not valid (not between 1 and 0)!'
+        errors <- c(errors, msg)
+    }
+    # pr.cutoff
+    if (object@assoc.param$pr.cutoff > 1 | object@assoc.param$pr.cutoff < 0){
+        msg<-'Prevalence cutoff is not valid (not between 1 and 0)!'
+        errors <- c(errors, msg)
+    }
+    # probs.fc
+    if (any(object@assoc.param$probs.fc > 1) |
+        any(object@assoc.param$probs.fc < 0)){
+        msg<-'Quantiles for FC calculation are not valid (not between 1 and 0)!'
+        errors <- c(errors, msg)
+    }
+    # mult.corr
+    if (!object@assoc.param$mult.corr %in%
+        c('none', 'bonferroni', 'holm', 'fdr', 'bhy')){
+            msg<-'Multiple testing correction method not valid!'
+            errors <- c(errors, msg)
+    }
+    # alpha
+    if (object@assoc.param$alpha > 1 | object@assoc.param$alpha < 0){
+        msg<-'Significance level (alpha) is not valid (not between 1 and 0)!'
+        errors <- c(errors, msg)
+    }
+    # feat.type
+    if (!object@assoc.param$feat.type %in% c('filtered', 'original')){
+        msg <- 'Detection limit (pseudocount) is not valid!'
+        errors <- c(errors, msg)
+    }
+    # check that assoc.results contains all that it should
+    if (!all(colnames(object@assoc.results)==c("fc", "p.val", "auc",
+        "auc.ci.l", "auc.ci.h", "pr.shift", "pr.n", "pr.p", "bcol", "p.adj"))){
+        msg <- 'Association results do not contain all needed entries!'
+        errors <- c(errors, msg)
+    }
+    if (nrow(object@assoc.results) < 1){
+        msg <- 'Association results are empty!'
+        errors <- c(errors, msg)
+    }
     if (length(errors) == 0) TRUE else errors
 }
 
@@ -106,7 +189,13 @@ setClass("associations",
 #'@keywords internal
 check.norm.feat <- function(object){
     errors <- character()
+    # check that all entries that are expected are there (depending on the norm.method, i guess?)
     # TODO
+    # check that taxa are rows == TRUE
+    if (object@norm.feat@taxa_are_rows == FALSE){
+        msg <- "Normalized features do not have the taxa as rows!"
+        errors <- c(errors, msg)
+    }
     if (length(errors) == 0) TRUE else errors
 }
 
@@ -271,7 +360,64 @@ setClass("pred_matrix", contains = "matrix")
 #'@keywords internal
 check.eval.data <- function(object){
     errors <- character()
-    # TODO
+    # check that all entries are there
+    if (!c('roc', 'auroc', 'prc', 'auprc', 'ev') %in% names(object)){
+        msg <- 'Not all needed entries are given!'
+        errors <- c(errors, msg)
+    }
+    # check roc
+    if (class(object$roc) != 'roc'){
+        msg <- 'Entry for roc is not an object of class roc (from pROC)!'
+        errors <- c(errors, msg)
+    }
+    # check prc
+    if (class(object$prc) != 'list' |
+        !all(names(object$prc) ==c('recall', 'precision')) |
+        length(unique(vapply(object$prc, length, FUN.VALUE=numeric(1))))!=1){
+        msg <- paste0('No valid entry for prc ',
+            '(missing entries or no list with entries of equal length)!')
+        errors <- c(errors, msg)
+    }
+    # check ev
+    if (class(object$ev) != 'list' |
+        !all(names(object$ev) == c("tp", "tn", "fp", "fn", "thresholds"))){
+        msg <- 'Not a valid entry for ev (missing entries or no list)!'
+        errors <- c(errors, msg)
+    }
+    # check that the lenghts of each entry in ev are the same
+    if (length(unique(vapply(object$ev, length, FUN.VALUE = numeric(1)))) != 1){
+        msg <- 'No concordance for the entries in ev (unequal length)!'
+        errors <- c(errors, msg)
+    }
+    # check concordance between ev and prc
+    if (length(object$prc$recall) != length(object$ev$thresholds)){
+        msg <- 'No concordance for the entries in ev and prc (unequal length)!'
+        errors <- c(errors, msg)
+    }
+
+    # for the case that there are multiple repeats
+    if (!is.null(object$roc.all)){
+        # check if all entries are there
+        if (!c('roc.all', 'auroc.all', 'prc.all', 'auprc.all', 'ev.all')
+            %in% names(object)){
+                msg <- 'Not all needed entries are given!'
+                errors <- c(errors, msg)
+        }
+        # test roc.all
+        if (!all(vapply(object$roc.all, class,
+            FUN.VALUE = character(1)) == 'roc')){
+                msg <- 'roc.all entries are not objects of class roc!'
+                errors <- c(errors, msg)
+            }
+        # test lenght concordance
+        if (length(unique(
+            vapply(object[grep('.all', names(object))], length,
+            FUN.VALUE = integer(1))))!=1){
+            msg<-'entries for individual repeats do not have concordant length!'
+            errors <- c(errors, msg)
+        }
+
+    }
     if (length(errors) == 0) TRUE else errors
 }
 
