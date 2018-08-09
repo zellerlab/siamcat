@@ -93,20 +93,10 @@
 #'     check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
 #'     plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
 
-check.associations <-
-    function(siamcat,
-        fn.plot=NULL,
-        color.scheme = "RdYlBu",
-        alpha = 0.05,
-        mult.corr = "fdr",
-        sort.by = "fc",
-        detect.lim = 1e-06,
-        pr.cutoff = 1e-6,
-        max.show = 50,
-        plot.type = "quantile.box",
-        panels = c("fc", "auroc"),
-        prompt=TRUE,
-        verbose = 1) {
+check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
+    alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 1e-06,
+    pr.cutoff = 1e-6, max.show = 50, plot.type = "quantile.box",
+    panels = c("fc", "auroc"), prompt=TRUE, verbose = 1) {
 
         if (verbose > 1)
             message("+ starting check.associations")
@@ -130,6 +120,22 @@ check.associations <-
             warning("Plot type has not been specified properly! Continue with q
                 uantile.box.")
             plot.type <- "quantile.box"
+        }
+        # check features
+        if (is.null(filt_feat(siamcat, verbose=0)) & verbose > 0){
+            message('+ No feature filtering had been performed. Calculating ',
+                'associations on the original features')
+            feat <- get.orig_feat.matrix(siamcat)
+            feat.type <- 'original'
+        } else {
+            feat <- get.filt_feat.matrix(siamcat)
+            feat.type <- 'filtered'
+        }
+        if (any(is.na(feat))){
+            stop('Features contain NAs. Exiting...')
+        }
+        if (any(colSums(feat) > 1.01)){
+            stop('This function expects compositional data. Exiting...')
         }
 
         # check fn.plot
@@ -156,7 +162,6 @@ check.associations <-
         # either give n_classes colors or color palette
         col <- check.color.scheme(color.scheme, label(siamcat))
 
-        feat <- get.features.matrix(siamcat)
         label <- label(siamcat)
 
         ### Calculate different effect sizes
@@ -172,35 +177,27 @@ check.associations <-
                 pr.cutoff = pr.cutoff,
                 mult.corr = mult.corr,
                 alpha = alpha,
-                max.show = max.show,
-                sort.by = sort.by,
                 probs.fc = probs.fc,
                 verbose = verbose
             )
             # update siamcat
-            associations(siamcat) <- associations(
-                list(assoc.results=result.list$effect.size,
-                     assoc.param=list(detect.lim=result.list$detect.lim,
-                                      pr.cutoff=pr.cutoff,
-                                      probs.fc=probs.fc,
-                                      mult.corr=mult.corr,
-                                      sort.by=sort.by,
-                                      alpha=alpha,
-                                      truncated=result.list$truncated,
-                                      idx=result.list$idx)))
+            associations(siamcat) <- new("associations",
+                assoc.results=result.list$effect.size,
+                assoc.param=list(detect.lim=result.list$detect.lim,
+                    pr.cutoff=pr.cutoff, probs.fc=probs.fc,
+                    mult.corr=mult.corr, alpha=alpha,
+                    feat.type=feat.type))
         } else {
             # if already existing, check parameters
             old.params <- assoc_param(siamcat)
-            new.params <- list(detect.lim=detect.lim, pr.cutoff=pr.cutoff,
-                mult.corr=mult.corr, sort.by=sort.by, alpha=alpha,
-                probs.fc=probs.fc)
+            new.params <- list(detect.lim=detect.lim,
+                pr.cutoff=pr.cutoff, probs.fc=probs.fc,
+                mult.corr=mult.corr, alpha=alpha,
+                feat.type=feat.type)
             # if the same, don't compute again but rather use the old resutls
-            if (any(all.equal(new.params, old.params[match(names(new.params),
-                    names(old.params))]) == TRUE)) {
+            if (any(all.equal(new.params, old.params) == TRUE)) {
                 result.list <- list()
                 result.list$effect.size <- associations(siamcat)
-                result.list$truncated <- assoc_param(siamcat)$truncated
-                result.list$idx <- assoc_param(siamcat)$idx
                 result.list$detect.lim <- assoc_param(siamcat)$detect.lim
             } else {
                 result.list <- analyse.binary.marker(
@@ -211,31 +208,26 @@ check.associations <-
                     pr.cutoff = pr.cutoff,
                     mult.corr = mult.corr,
                     alpha = alpha,
-                    max.show = max.show,
-                    sort.by = sort.by,
                     probs.fc = probs.fc,
                     verbose = verbose
                 )
                 # update siamcat
-                associations(siamcat) <- associations(
-                    list(assoc.results=result.list$effect.size,
-                         assoc.param=list(detect.lim=result.list$detect.lim,
-                                          pr.cutoff=pr.cutoff,
-                                          probs.fc=probs.fc,
-                                          mult.corr=mult.corr,
-                                          sort.by=sort.by,
-                                          alpha=alpha,
-                                          truncated=result.list$truncated,
-                                          idx=result.list$idx)))
+                associations(siamcat) <- new("associations",
+                    assoc.results=result.list$effect.size,
+                    assoc.param=list(detect.lim=result.list$detect.lim,
+                        pr.cutoff=pr.cutoff, probs.fc=probs.fc,
+                        mult.corr=mult.corr, alpha=alpha, feat.type=feat.type))
             }
         }
 
         ########################################################################
         # extract relevant info for plotting
-        effect.size <- result.list$effect.size[result.list$idx, , drop=FALSE]
-        truncated <- result.list$truncated
+        temp <- get.plotting.idx(result.list$effect.size, alpha=alpha,
+            sort.by=sort.by, max.show=max.show, verbose=verbose)
+        effect.size <- result.list$effect.size[temp$idx, , drop=FALSE]
+        truncated <- temp$truncated
         detect.lim <- result.list$detect.lim
-        feat.red    <- feat[result.list$idx, , drop=FALSE]
+        feat.red    <- feat[temp$idx, , drop=FALSE]
         feat.red.log <- log10(feat.red + detect.lim)
 
         ########################################################################
@@ -360,9 +352,459 @@ check.associations <-
         return(siamcat)
     }
 
+# ##############################################################################
+### AUC
+#' @keywords internal
+associations.aucs.plot <- function(aucs, binary.cols, verbose = 1) {
+    if (verbose > 2)
+        message("+ starting associations.aucs.plot")
+    # set margins
+    par(mar = c(5.1, 0, 4.1, 1.6))
+    # plot background
+    plot(
+        NULL,
+        xlab = '',
+        ylab = '',
+        xaxs = 'i',
+        yaxs = 'i',
+        axes = FALSE,
+        xlim = c(0, 1),
+        ylim = c(0.5, nrow(aucs) + 0.5),
+        type = 'n'
+    )
+    ticks <- seq(0, 1.0, length.out = 5)
+    tick.labels <- formatC(ticks, digits = 2)
+    # plot gridlines
+    for (v in ticks) {
+        abline(v = v,
+            lty = 3,
+            col = 'lightgrey')
+    }
+    # make thicker line at .5
+    abline(v = .5, lty = 1, col = 'lightgrey')
+    # plot single feature aucs
+    for (i in seq_len(nrow(aucs))) {
+        segments(
+            x0 = aucs[i, 2],
+            x1 = aucs[i, 3],
+            y0 = i,
+            col = 'lightgrey',
+            lwd = 1.5
+        )
+        points(aucs[i, 1], i, pch = 18, col = binary.cols[i])
+        points(aucs[i, 1],
+            i,
+            pch = 5,
+            col = 'black',
+            cex = 0.9)
+    }
 
-### one function for each type of plot
-# bean plot
+    # Title and axis label
+    axis(
+        side = 1,
+        at = ticks,
+        labels = tick.labels,
+        cex.axis = 0.7
+    )
+    title(main = 'Feature AUCs', xlab = 'AU-ROC')
+    if (verbose > 2)
+        message("+ finished associations.aucs.plot")
+}
+
+# ##############################################################################
+### FC
+#' @keywords internal
+associations.fcs.plot <-
+    function(fc.all, binary.cols,    verbose = 1) {
+        if (verbose > 2)
+            message("+ starting associations.fcs.plot")
+        # margins
+        par(mar = c(5.1, 0, 4.1, 1.6))
+        # get minimum and maximum fcs
+        mx <- max(ceiling(abs(
+            range(fc.all, na.rm = TRUE, finite = TRUE)
+        )))
+        mn <- -mx
+        # plot background
+        plot(
+            NULL,
+            xlab = '',
+            ylab = '',
+            xaxs = 'i',
+            yaxs = 'i',
+            axes = FALSE,
+            xlim = c(mn, mx),
+            ylim = c(0.2, length(fc.all) + 0.2),
+            type = 'n'
+        )
+        grid(NULL, NA, lty = 3, col = 'lightgrey')
+        # plot bars
+        barplot(
+            fc.all,
+            horiz = TRUE,
+            width = 0.6,
+            space = 2 / 3,
+            col = binary.cols,
+            axes = FALSE,
+            add = TRUE,
+            names.arg = FALSE
+        )
+        # gridlines and axes labels
+        ticks <- seq(from = mn,
+            to = mx,
+            length.out = 5)
+        tick.labels <- formatC(ticks, digits = 2)
+        axis(
+            side = 1,
+            at = ticks,
+            labels = tick.labels,
+            cex.axis = 0.7
+        )
+        title(main = 'Fold change', xlab = 'Generalized fold change')
+        if (verbose > 2)
+            message("+ finished associations.fcs.plot")
+    }
+
+# ##############################################################################
+### PREVALENCE
+#' @keywords internal
+associations.pr.shift.plot <-
+    function(pr.shifts, col, verbose = 1) {
+        if (verbose > 2)
+            message("+ starting associations.pr.shift.plot")
+        # margins
+        par(mar = c(5.1, 0, 4.1, 1.6))
+
+        # plot background
+        plot(
+            NULL,
+            xlab = '',
+            ylab = '',
+            xaxs = 'i',
+            yaxs = 'i',
+            axes = FALSE,
+            xlim = c(0, 1),
+            ylim = c(0.2, nrow(pr.shifts) + 0.2),
+            type = 'n'
+        )
+        # gridlines and axes labels
+        ticks <- seq(from = 0,
+            to = 1,
+            length.out = 5)
+        for (v in ticks) {
+            abline(v = v,
+                lty = 3,
+                col = 'lightgrey')
+        }
+        tick.labels <- formatC(ticks * 100, digits = 3)
+        axis(
+            side = 1,
+            at = ticks,
+            labels = tick.labels,
+            cex.axis = 0.7
+        )
+        # plot bars
+        row.names(pr.shifts) <- NULL
+        barplot(
+            t(pr.shifts),
+            horiz = TRUE,
+            axes = FALSE,
+            add = TRUE,
+            space = c(0, 4 / 3),
+            beside = TRUE,
+            width = .3,
+            col = c(col[1], col[2])
+        )
+        title(main = 'Prevalence shift', xlab = 'Prevalence [%]')
+        if (verbose > 2)
+            message("+ finished associations.pr.shift.plot")
+    }
+
+# ##############################################################################
+# P-VALUES
+#' @keywords internal
+associations.pvals.plot <- function(p.vals, alpha,    verbose = 1) {
+    if (verbose > 2)
+        message("+ starting associations.pvals.plot")
+    # margins
+    par(mar = c(5.1, .0, 4.1, 1.6))
+    p.vals.log <- -log10(p.vals)
+    # get minimum and maximum
+    mx <-
+        max(ceiling(abs(
+            range(p.vals.log, na.rm = TRUE, finite = TRUE)
+        )))
+    mn <- 0
+    p.vals.log[is.infinite(p.vals.log)] <- mx
+    # plot background
+    plot(
+        NULL,
+        xlab = '',
+        ylab = '',
+        xaxs = 'i',
+        yaxs = 'i',
+        axes = FALSE,
+        xlim = c(mn, mx),
+        ylim = c(0.2, length(p.vals) + 0.2),
+        type = 'n'
+    )
+    grid(NULL, NA, lty = 3, col = 'lightgrey')
+    # plot bars
+    barplot(
+        p.vals.log,
+        horiz = TRUE,
+        width = 0.6,
+        space = 2 / 3,
+        col = 'lightgrey',
+        axes = FALSE,
+        add = TRUE,
+        names.arg = FALSE
+    )
+    # gridlines and axes labels
+    ticks <- seq(from = mn, to = mx)
+    abline(v = -log10(alpha),
+        lty = 1,
+        col = 'red')
+    tick.labels <- formatC(ticks, digits = 2)
+    axis(
+        side = 1,
+        at = ticks,
+        labels = tick.labels,
+        cex.axis = 0.7
+    )
+    title(main = 'Significance', xlab = '-log10(adj. p value)')
+    if (verbose > 2)
+        message("+ finished associations.pvals.plot")
+}
+
+# ##############################################################################
+# COLOR
+# check if a string is a valid r color reprensentation
+# from stackoverflow: Check if character string is a valid color representation
+# https://stackoverflow.com/questions/13289009
+#' @keywords internal
+is.color <- function(x) {
+    vapply(
+        x,
+        FUN = function(z) {
+            tryCatch(
+                is.matrix(col2rgb(z)),
+                error = function(e)
+                    FALSE
+            )
+        },
+        FUN.VALUE = logical(1)
+    )
+}
+
+### check the user-supplied color scheme for validity
+### color scheme may either be a single RColorBrewer palette or a vector of
+### the same length as the number of classes containing interpretable colors
+### as strings
+#' @keywords internal
+check.color.scheme <- function(color.scheme, label, verbose = 1) {
+    if (verbose > 2)
+        message("+ starting check.color.scheme")
+    n.classes = ifelse(label$type == 'BINARY', 2,
+        length(unique(label$label)))
+
+    if (length(color.scheme) == 1 &&
+            class(color.scheme) == 'character') {
+        if (n.classes == 2) {
+    # if color scheme and binary label, make colors as before
+            if (!color.scheme %in% row.names(brewer.pal.info)) {
+                warning(
+                    "Not a valid RColorBrewer palette name, defaulting to
+                    RdBu.\n See brewer.pal.info for more information about
+                    RColorBrewer palettes."
+                )
+                color.scheme <- 'RdYlBu'
+            }
+            colors <-
+                rev(colorRampPalette(brewer.pal(
+                    brewer.pal.info[color.scheme,
+                        'maxcolors'], color.scheme
+                ))(2))
+        } else {
+    # if color scheme and multiclass label, make colors either directly out
+    # of the palette (if n.classes smaller than maxcolors) or like before
+            if (!color.scheme %in% row.names(brewer.pal.info)) {
+                warning(
+                    "Not a valid RColorBrewer palette name, defaulting to
+                    Set3.\n See brewer.pal.info for more information about
+                    RColorBrewer palettes."
+                )
+                color.scheme <- 'Set3'
+            }
+    # if color scheme and multiclass label, check that the palette is not
+    # divergent or sequential, but qualitative. Only issue warning.
+            if (brewer.pal.info[color.scheme, 'category'] != 'qual')
+                warning("Using a divergent or sequential color palette for
+                        multiclass data.")
+            if (n.classes <= brewer.pal.info[color.scheme, 'maxcolors']) {
+                colors <- brewer.pal(n.classes, color.scheme)
+            } else {
+                warning("The data contains more classes than the color.palette
+                    provides.")
+                colors <-
+                    rev(colorRampPalette(brewer.pal(
+                        brewer.pal.info[color.scheme,
+                            'maxcolors'], color.scheme
+                    ))(n.classes))
+            }
+        }
+        } else if (length(color.scheme == n.classes) &&
+                all(is.color(color.scheme))) {
+    # if colors, check that all strings are real colors and check that
+    # the same length as n classes
+    # convert color names to hex representation
+            colors <-
+                vapply(
+                    color.scheme,
+                    FUN = function(x) {
+                        rgb(t(col2rgb(x)),
+                            maxColorValue = 255)
+                    },
+                    FUN.VALUE = character(1),
+                    USE.NAMES = FALSE
+                )
+        } else {
+            stop("Supplied colors do not match the number of classes or are no
+                valid colors")
+        }
+    # add transparency
+    colors <- vapply(
+        colors,
+        FUN = function(x) {
+            paste0(x, '85')
+        },
+        FUN.VALUE = character(1),
+        USE.NAMES = FALSE
+    )
+    if (verbose > 2)
+        message("+ finished check.color.scheme")
+    return(colors)
+        }
+
+#' @keywords internal
+create.tints <- function(colour, vec) {
+    new.cols <-
+        vapply(
+            vec,
+            FUN = function(x) {
+                rgb(matrix(col2rgb(colour) / 255 +
+                        (1 - col2rgb(colour) / 255) * x, ncol = 3))
+            },
+            FUN.VALUE = character(1)
+        )
+    return(new.cols)
+}
+
+#' @keywords internal
+change.transparency <- function(col.name) {
+    if (nchar(col.name) > 7) {
+        # adjust alpha channel by reducing transparency
+        a = substr(col.name, nchar(col.name) - 1, nchar(col.name))
+        a = 1 - (1 - as.numeric(paste('0x', a, sep = '')) / 255) / 2
+        new.col = gsub('..$', toupper(as.hexmode(round(a * 255))), col.name)
+    } else {
+        new.col <- col.name
+    }
+    return(new.col)
+}
+
+# ##############################################################################
+# UTILITY FUNCTIONS
+### Prepare margins for the first plots make left margin as big as the
+### longest label or maximally 20.1 lines
+#' @keywords internal
+associations.margins.plot <-
+    function(species_names, p.label, verbose = 1) {
+        if (verbose > 2)
+            message("+ starting associations.margins.plot")
+        cex.org <- par()$cex
+        par(mar = c(5.1, 18, 4.1, 1.1), cex = 1)
+        temp = par()$mai
+        cex.labels <- min(.7, (((
+            par()$pin[2] / length(species_names)
+        ) * .6) /
+                max(
+                    strheight(species_names, units = 'inches')
+                )))
+        max_name <- max(strwidth(species_names, units = 'inches',
+            cex = cex.labels)) + temp[4]
+        temp[2] <- min(temp[2], max_name)
+        par(mai = temp, cex = cex.org)
+        if (verbose > 2)
+            message("+ finished associations.margins.plot")
+    }
+
+#' @keywords internal
+associations.labels.plot <-
+    function(labels, plot.type,    verbose = 1) {
+        if (verbose > 2)
+            message("+ starting associations.labels.plot")
+        adj <- rep(0, length(labels))
+        if (plot.type == 'quantile.rect')
+            adj <- rep(-0.5, length(labels))
+        if (plot.type == 'box')
+            adj <- -0.5 + seq_along(labels)
+        cex.org <- par()$cex
+        par(cex = 1)
+        cex.labels <- min(.7, (((
+            par()$pin[2] / length(labels)
+        ) * .6) /
+                max(strheight(labels, units = 'inches'))))
+        for (i in seq_along(labels)) {
+            mtext(
+                labels[i],
+                2,
+                line = 0,
+                at = i + adj[i],
+                las = 1,
+                cex = cex.labels
+            )
+        }
+        par(cex = cex.org)
+        if (verbose > 2)
+            message("+ finished associations.labels.plot")
+    }
+
+#' @keywords internal
+associations.quantiles.plot <- function(quantiles, up = TRUE, col) {
+    n.spec <- nrow(quantiles)
+    adj.y0 <- ifelse(up, 0, 0.3)
+    adj.y1 <- ifelse(up, 0.3, 0)
+    #  box
+    rect(quantiles[, 2],
+        seq_len(n.spec) - adj.y0,
+        quantiles[, 4],
+        seq_len(n.spec) + adj.y1,
+        col = col)
+        # 90% interval
+    segments(quantiles[, 1], seq_len(n.spec), quantiles[, 5], seq_len(n.spec))
+    segments(
+        quantiles[, 1],
+        y0 = seq_len(n.spec) - adj.y0 / 3 * 2,
+        y1 = seq_len(n.spec) + adj.y1 / 3 * 2
+    )
+    segments(
+        quantiles[, 5],
+        y0 = seq_len(n.spec) - adj.y0 / 3 * 2,
+        y1 = seq_len(n.spec) + adj.y1 / 3 * 2
+    )
+    # median
+    segments(
+        quantiles[, 3],
+        y0 = seq_len(n.spec) - adj.y0,
+        y1 = seq_len(n.spec) + adj.y1,
+        lwd = 3
+    )
+}
+
+# ##############################################################################
+# BEAN PLOT
+#' @keywords internal
 associations.bean.plot <-
     function(data.mat, label, col, verbose = 1) {
         if (verbose > 2)
@@ -446,7 +888,9 @@ associations.bean.plot <-
             message("+ finished associations.bean.plot")
     }
 
-# box plot
+# ##############################################################################
+# BOX PLOT
+#' @keywords internal
 associations.box.plot <-
     function(data.mat, label, col, verbose = 1) {
         if (verbose > 2)
@@ -527,7 +971,8 @@ associations.box.plot <-
             message("+ finished associations.box.plot")
     }
 
-# quantile.box plot
+# ##############################################################################
+# QUANTILE BOX PLOT
 #' @keywords internal
 associations.quantile.box.plot <- function(data.mat, label, col,
     verbose = 1) {
@@ -618,8 +1063,9 @@ associations.quantile.box.plot <- function(data.mat, label, col,
         message("+ finished associations.quantile.box.plot")
 }
 
-# quantile.rect plot
-#'@keywords internal
+# ##############################################################################
+# QUANTILE RECT PLOT
+#' @keywords internal
 associations.quantile.rect.plot <-
     function(data.mat, label, col, verbose = 1) {
         if (verbose > 2)
@@ -745,396 +1191,45 @@ associations.quantile.rect.plot <-
             message("+ finished associations.quantile.rect.plot")
 }
 
-### Prepare margins for the first plots make left margin as big as the
-### longest label or maximally 20.1 lines
-#'@keywords internal
-associations.margins.plot <-
-    function(species_names, p.label, verbose = 1) {
-        if (verbose > 2)
-            message("+ starting associations.margins.plot")
-        cex.org <- par()$cex
-        par(mar = c(5.1, 18, 4.1, 1.1), cex = 1)
-        temp = par()$mai
-        cex.labels <- min(.7, (((
-            par()$pin[2] / length(species_names)
-        ) * .6) /
-                max(
-                    strheight(species_names, units = 'inches')
-                )))
-        max_name <- max(strwidth(species_names, units = 'inches',
-            cex = cex.labels)) + temp[4]
-        temp[2] <- min(temp[2], max_name)
-        par(mai = temp, cex = cex.org)
-        if (verbose > 2)
-            message("+ finished associations.margins.plot")
+#' @keywords internal
+associations.quantile.median.sub.plot <-
+    function(quantiles, up = TRUE) {
+        n.spec <- nrow(quantiles)
+        adj.y <- ifelse(up, 0.15,-0.15)
+        points(
+            quantiles[, ceiling(ncol(quantiles) / 2)],
+            y = (0.5:n.spec) + adj.y,
+            pch = 18,
+            cex = min(35 / n.spec, 4)
+        )
     }
 
-### Plot single feature AUCs in single panel
-#'@keywords internal
-associations.aucs.plot <- function(aucs, binary.cols, verbose = 1) {
-    if (verbose > 2)
-        message("+ starting associations.aucs.plot")
-    # set margins
-    par(mar = c(5.1, 0, 4.1, 1.6))
-    # plot background
-    plot(
-        NULL,
-        xlab = '',
-        ylab = '',
-        xaxs = 'i',
-        yaxs = 'i',
-        axes = FALSE,
-        xlim = c(0, 1),
-        ylim = c(0.5, nrow(aucs) + 0.5),
-        type = 'n'
-    )
-    ticks <- seq(0, 1.0, length.out = 5)
-    tick.labels <- formatC(ticks, digits = 2)
-    # plot gridlines
-    for (v in ticks) {
-        abline(v = v,
-            lty = 3,
-            col = 'lightgrey')
-    }
-    # make thicker line at .5
-    abline(v = .5, lty = 1, col = 'lightgrey')
-    # plot single feature aucs
-    for (i in seq_len(nrow(aucs))) {
-        segments(
-            x0 = aucs[i, 2],
-            x1 = aucs[i, 3],
-            y0 = i,
-            col = 'lightgrey',
-            lwd = 1.5
-        )
-        points(aucs[i, 1], i, pch = 18, col = binary.cols[i])
-        points(aucs[i, 1],
-            i,
-            pch = 5,
-            col = 'black',
-            cex = 0.9)
-    }
-
-    # Title and axis label
-    axis(
-        side = 1,
-        at = ticks,
-        labels = tick.labels,
-        cex.axis = 0.7
-    )
-    title(main = 'Feature AUCs', xlab = 'AU-ROC')
-    if (verbose > 2)
-        message("+ finished associations.aucs.plot")
-}
-
-### Plot fold changes in single panel
-#'@keywords internal
-associations.fcs.plot <-
-    function(fc.all, binary.cols,    verbose = 1) {
-        if (verbose > 2)
-            message("+ starting associations.fcs.plot")
-        # margins
-        par(mar = c(5.1, 0, 4.1, 1.6))
-        # get minimum and maximum fcs
-        mx <- max(ceiling(abs(
-            range(fc.all, na.rm = TRUE, finite = TRUE)
-        )))
-        mn <- -mx
-        # plot background
-        plot(
-            NULL,
-            xlab = '',
-            ylab = '',
-            xaxs = 'i',
-            yaxs = 'i',
-            axes = FALSE,
-            xlim = c(mn, mx),
-            ylim = c(0.2, length(fc.all) + 0.2),
-            type = 'n'
-        )
-        grid(NULL, NA, lty = 3, col = 'lightgrey')
-        # plot bars
-        barplot(
-            fc.all,
-            horiz = TRUE,
-            width = 0.6,
-            space = 2 / 3,
-            col = binary.cols,
-            axes = FALSE,
-            add = TRUE,
-            names.arg = FALSE
-        )
-        # gridlines and axes labels
-        ticks <- seq(from = mn,
-            to = mx,
-            length.out = 5)
-        tick.labels <- formatC(ticks, digits = 2)
-        axis(
-            side = 1,
-            at = ticks,
-            labels = tick.labels,
-            cex.axis = 0.7
-        )
-        title(main = 'Fold change', xlab = 'Generalized fold change')
-        if (verbose > 2)
-            message("+ finished associations.fcs.plot")
-    }
-
-### Plot prevalence shifts in single panel
-associations.pr.shift.plot <-
-    function(pr.shifts, col, verbose = 1) {
-        if (verbose > 2)
-            message("+ starting associations.pr.shift.plot")
-        # margins
-        par(mar = c(5.1, 0, 4.1, 1.6))
-
-        # plot background
-        plot(
-            NULL,
-            xlab = '',
-            ylab = '',
-            xaxs = 'i',
-            yaxs = 'i',
-            axes = FALSE,
-            xlim = c(0, 1),
-            ylim = c(0.2, nrow(pr.shifts) + 0.2),
-            type = 'n'
-        )
-        # gridlines and axes labels
-        ticks <- seq(from = 0,
-            to = 1,
-            length.out = 5)
-        for (v in ticks) {
-            abline(v = v,
-                lty = 3,
-                col = 'lightgrey')
-        }
-        tick.labels <- formatC(ticks * 100, digits = 3)
-        axis(
-            side = 1,
-            at = ticks,
-            labels = tick.labels,
-            cex.axis = 0.7
-        )
-        # plot bars
-        row.names(pr.shifts) <- NULL
-        barplot(
-            t(pr.shifts),
-            horiz = TRUE,
-            axes = FALSE,
-            add = TRUE,
-            space = c(0, 4 / 3),
-            beside = TRUE,
-            width = .3,
-            col = c(col[1], col[2])
-        )
-        title(main = 'Prevalence shift', xlab = 'Prevalence [%]')
-        if (verbose > 2)
-            message("+ finished associations.pr.shift.plot")
-    }
-
-# p-vals
-#'@keywords internal
-associations.pvals.plot <- function(p.vals, alpha,    verbose = 1) {
-    if (verbose > 2)
-        message("+ starting associations.pvals.plot")
-    # margins
-    par(mar = c(5.1, .0, 4.1, 1.6))
-    p.vals.log <- -log10(p.vals)
-    # get minimum and maximum
-    mx <-
-        max(ceiling(abs(
-            range(p.vals.log, na.rm = TRUE, finite = TRUE)
-        )))
-    mn <- 0
-    p.vals.log[is.infinite(p.vals.log)] <- mx
-    # plot background
-    plot(
-        NULL,
-        xlab = '',
-        ylab = '',
-        xaxs = 'i',
-        yaxs = 'i',
-        axes = FALSE,
-        xlim = c(mn, mx),
-        ylim = c(0.2, length(p.vals) + 0.2),
-        type = 'n'
-    )
-    grid(NULL, NA, lty = 3, col = 'lightgrey')
-    # plot bars
-    barplot(
-        p.vals.log,
-        horiz = TRUE,
-        width = 0.6,
-        space = 2 / 3,
-        col = 'lightgrey',
-        axes = FALSE,
-        add = TRUE,
-        names.arg = FALSE
-    )
-    # gridlines and axes labels
-    ticks <- seq(from = mn, to = mx)
-    abline(v = -log10(alpha),
-        lty = 1,
-        col = 'red')
-    tick.labels <- formatC(ticks, digits = 2)
-    axis(
-        side = 1,
-        at = ticks,
-        labels = tick.labels,
-        cex.axis = 0.7
-    )
-    title(main = 'Significance', xlab = '-log10(adj. p value)')
-    if (verbose > 2)
-        message("+ finished associations.pvals.plot")
-}
-
-
-# check if a string is a valid r color reprensentation
-# from stackoverflow: Check if character string is a valid color representation
-# https://stackoverflow.com/questions/13289009
-#'@keywords internal
-is.color <- function(x) {
-    vapply(
-        x,
-        FUN = function(z) {
-            tryCatch(
-                is.matrix(col2rgb(z)),
-                error = function(e)
-                    FALSE
-            )
-        },
-        FUN.VALUE = logical(1)
-    )
-}
-
-### check the user-supplied color scheme for validity
-### color scheme may either be a single RColorBrewer palette or a vector of
-### the same length as the number of classes containing interpretable colors
-### as strings
-#'@keywords internal
-check.color.scheme <- function(color.scheme, label, verbose = 1) {
-    if (verbose > 2)
-        message("+ starting check.color.scheme")
-    n.classes = ifelse(label$type == 'BINARY', 2,
-        length(unique(label$label)))
-
-    if (length(color.scheme) == 1 &&
-            class(color.scheme) == 'character') {
-        if (n.classes == 2) {
-    # if color scheme and binary label, make colors as before
-            if (!color.scheme %in% row.names(brewer.pal.info)) {
-                warning(
-                    "Not a valid RColorBrewer palette name, defaulting to
-                    RdBu.\n See brewer.pal.info for more information about
-                    RColorBrewer palettes."
-                )
-                color.scheme <- 'RdYlBu'
-            }
-            colors <-
-                rev(colorRampPalette(brewer.pal(
-                    brewer.pal.info[color.scheme,
-                        'maxcolors'], color.scheme
-                ))(2))
-        } else {
-    # if color scheme and multiclass label, make colors either directly out
-    # of the palette (if n.classes smaller than maxcolors) or like before
-            if (!color.scheme %in% row.names(brewer.pal.info)) {
-                warning(
-                    "Not a valid RColorBrewer palette name, defaulting to
-                    Set3.\n See brewer.pal.info for more information about
-                    RColorBrewer palettes."
-                )
-                color.scheme <- 'Set3'
-            }
-    # if color scheme and multiclass label, check that the palette is not
-    # divergent or sequential, but qualitative. Only issue warning.
-            if (brewer.pal.info[color.scheme, 'category'] != 'qual')
-                warning("Using a divergent or sequential color palette for
-                        multiclass data.")
-            if (n.classes <= brewer.pal.info[color.scheme, 'maxcolors']) {
-                colors <- brewer.pal(n.classes, color.scheme)
-            } else {
-                warning("The data contains more classes than the color.palette
-                    provides.")
-                colors <-
-                    rev(colorRampPalette(brewer.pal(
-                        brewer.pal.info[color.scheme,
-                            'maxcolors'], color.scheme
-                    ))(n.classes))
-            }
-        }
-        } else if (length(color.scheme == n.classes) &&
-                all(is.color(color.scheme))) {
-    # if colors, check that all strings are real colors and check that
-    # the same length as n classes
-    # convert color names to hex representation
-            colors <-
-                vapply(
-                    color.scheme,
-                    FUN = function(x) {
-                        rgb(t(col2rgb(x)),
-                            maxColorValue = 255)
-                    },
-                    FUN.VALUE = character(1),
-                    USE.NAMES = FALSE
-                )
-        } else {
-            stop("Supplied colors do not match the number of classes or are no
-                valid colors")
-        }
-    # add transparency
-    colors <- vapply(
-        colors,
-        FUN = function(x) {
-            paste0(x, '85')
-        },
-        FUN.VALUE = character(1),
-        USE.NAMES = FALSE
-    )
-    if (verbose > 2)
-        message("+ finished check.color.scheme")
-    return(colors)
-        }
-
-#'@keywords internal
-associations.labels.plot <-
-    function(labels, plot.type,    verbose = 1) {
-        if (verbose > 2)
-            message("+ starting associations.labels.plot")
-        adj <- rep(0, length(labels))
-        if (plot.type == 'quantile.rect')
-            adj <- rep(-0.5, length(labels))
-        if (plot.type == 'box')
-            adj <- -0.5 + seq_along(labels)
-        cex.org <- par()$cex
-        par(cex = 1)
-        cex.labels <- min(.7, (((
-            par()$pin[2] / length(labels)
-        ) * .6) /
-                max(strheight(labels, units = 'inches'))))
-        for (i in seq_along(labels)) {
-            mtext(
-                labels[i],
-                2,
-                line = 0,
-                at = i + adj[i],
-                las = 1,
-                cex = cex.labels
+#' @keywords internal
+associations.quantile.rect.sub.plot <-
+    function(quantiles, up = TRUE, colors) {
+        n.spec <- nrow(quantiles)
+        adj.y0 <- ifelse(up, 0, 0.3)
+        adj.y1 <- ifelse(up, 0.3, 0)
+        for (i in seq_len(ncol(quantiles) / 2)) {
+            rect(
+                quantiles[, i],
+                (0.5:n.spec) - adj.y0,
+                quantiles[, ncol(quantiles) + 1 - i],
+                (0.5:n.spec) + adj.y1,
+                col = colors[i],
+                border = c("black"),
+                lwd = 0.9
             )
         }
-        par(cex = cex.org)
-        if (verbose > 2)
-            message("+ finished associations.labels.plot")
-    }
+}
 
-
+# ##############################################################################
 ### maker analysis for two-class data
 #     calculate p-value with Wilcoxon
 #     fold change as normalized absolute difference between quantiles
 #     prevalence shift
 #     single marker AUC
-#'@keywords internal
+#' @keywords internal
 analyse.binary.marker <- function(feat, label, detect.lim, colors,
     pr.cutoff, mult.corr, alpha, max.show, sort.by, probs.fc = seq(.1, .9, .05),
     verbose = 1) {
@@ -1233,7 +1328,26 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
                 alpha
             )
         )
-    idx <- which(effect.size$p.adj < alpha)
+
+    e.time <- proc.time()[3]
+    if (verbose > 1)
+        message(paste(
+            "+ finished analyse.binary.marker in",
+            formatC(e.time - s.time, digits = 3),
+            "s"
+        ))
+    return(
+        list(
+            "effect.size" = effect.size,
+            "detect.lim" = detect.lim
+        )
+    )
+}
+
+#' @keywords internal
+get.plotting.idx <- function(df.results, alpha, sort.by, max.show, verbose){
+
+    idx <- which(df.results$p.adj < alpha)
 
     if (length(idx) == 0) {
         stop('No significant associations found. Stopping.\n')
@@ -1242,7 +1356,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
             value')
     }
 
-    idx <- idx[order(effect.size$p.adj[idx], decreasing = TRUE)]
+    idx <- idx[order(df.results$p.adj[idx], decreasing = TRUE)]
 
     # # truncated the list for the following plots
     truncated = FALSE
@@ -1271,118 +1385,14 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
         sort.by <- 'fc'
     }
     if (sort.by == 'fc') {
-        idx <- idx[order(-effect.size$fc[idx], decreasing = TRUE)]
+        idx <- idx[order(df.results$fc[idx], decreasing = FALSE)]
     } else if (sort.by == 'p.val') {
-        idx <- idx[order(effect.size$p.adj[idx], decreasing = TRUE)]
+        idx <- idx[order(df.results$p.adj[idx], decreasing = TRUE)]
     } else if (sort.by == 'pr.shift') {
-        idx <- idx[order(effect.size$pr.shift[idx], decreasing = FALSE)]
+        idx <- idx[order(df.results$pr.shift[idx], decreasing = FALSE)]
     } else if (sort.by == 'auc'){
-        idx <- idx[order(-effect.size$auc[idx], decreasing = TRUE)]
+        idx <- idx[order(df.results$auc[idx], decreasing = FALSE)]
     }
-    e.time <- proc.time()[3]
-    if (verbose > 1)
-        message(paste(
-            "+ finished analyse.binary.marker in",
-            formatC(e.time - s.time, digits = 3),
-            "s"
-        ))
-    return(
-        list(
-            "effect.size" = effect.size,
-            "idx"=idx,
-            "truncated" = truncated,
-            "detect.lim" = detect.lim
-        )
-    )
-    }
-
-#'@keywords internal
-change.transparency <- function(col.name) {
-    if (nchar(col.name) > 7) {
-        # adjust alpha channel by reducing transparency
-        a = substr(col.name, nchar(col.name) - 1, nchar(col.name))
-        a = 1 - (1 - as.numeric(paste('0x', a, sep = '')) / 255) / 2
-        new.col = gsub('..$', toupper(as.hexmode(round(a * 255))), col.name)
-    } else {
-        new.col <- col.name
-    }
-    return(new.col)
+    return(list('idx'=idx,
+                'truncated'=truncated))
 }
-
-#'@keywords internal
-associations.quantiles.plot <- function(quantiles, up = TRUE, col) {
-    n.spec <- nrow(quantiles)
-    adj.y0 <- ifelse(up, 0, 0.3)
-    adj.y1 <- ifelse(up, 0.3, 0)
-    #  box
-    rect(quantiles[, 2],
-        seq_len(n.spec) - adj.y0,
-        quantiles[, 4],
-        seq_len(n.spec) + adj.y1,
-        col = col)
-        # 90% interval
-    segments(quantiles[, 1], seq_len(n.spec), quantiles[, 5], seq_len(n.spec))
-    segments(
-        quantiles[, 1],
-        y0 = seq_len(n.spec) - adj.y0 / 3 * 2,
-        y1 = seq_len(n.spec) + adj.y1 / 3 * 2
-    )
-    segments(
-        quantiles[, 5],
-        y0 = seq_len(n.spec) - adj.y0 / 3 * 2,
-        y1 = seq_len(n.spec) + adj.y1 / 3 * 2
-    )
-    # median
-    segments(
-        quantiles[, 3],
-        y0 = seq_len(n.spec) - adj.y0,
-        y1 = seq_len(n.spec) + adj.y1,
-        lwd = 3
-    )
-}
-
-#'@keywords internal
-create.tints <- function(colour, vec) {
-    new.cols <-
-        vapply(
-            vec,
-            FUN = function(x) {
-                rgb(matrix(col2rgb(colour) / 255 +
-                        (1 - col2rgb(colour) / 255) * x, ncol = 3))
-            },
-            FUN.VALUE = character(1)
-        )
-    return(new.cols)
-}
-
-#'@keywords internal
-associations.quantile.rect.sub.plot <-
-    function(quantiles, up = TRUE, colors) {
-        n.spec <- nrow(quantiles)
-        adj.y0 <- ifelse(up, 0, 0.3)
-        adj.y1 <- ifelse(up, 0.3, 0)
-        for (i in seq_len(ncol(quantiles) / 2)) {
-            rect(
-                quantiles[, i],
-                (0.5:n.spec) - adj.y0,
-                quantiles[, ncol(quantiles) + 1 - i],
-                (0.5:n.spec) + adj.y1,
-                col = colors[i],
-                border = c("black"),
-                lwd = 0.9
-            )
-        }
-}
-
-#'@keywords internal
-associations.quantile.median.sub.plot <-
-    function(quantiles, up = TRUE) {
-        n.spec <- nrow(quantiles)
-        adj.y <- ifelse(up, 0.15,-0.15)
-        points(
-            quantiles[, ceiling(ncol(quantiles) / 2)],
-            y = (0.5:n.spec) + adj.y,
-            pch = 18,
-            cex = min(35 / n.spec, 4)
-        )
-    }
