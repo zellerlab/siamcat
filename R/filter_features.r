@@ -88,7 +88,6 @@ filter.features <- function(siamcat,
         applied.methods <- vapply(param.set, FUN=function(x){x$filter.method},
             FUN.VALUE=character(1))
         if (filter.method %in% applied.methods){
-            if (verbose > 1)
             warning("Filtering method ", filter.method, " has already been",
                 " applied to the dataset.\nStarting filtering with original",
                 " features again.")
