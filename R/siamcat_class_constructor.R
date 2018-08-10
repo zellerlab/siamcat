@@ -51,7 +51,7 @@
 #'
 #'\code{siamcat <- siamcat(feat=feat.matrix, meta=metadata,
 #'                         label='DiseaseState', case='CRC')}
-#'  
+#'
 #'      for the construction of a label to predict CRC status (which is encoded
 #'      in the column \code{"DiseaseState"} of the metadata). For more control
 #'      (e.g. specific labels for plotting or specific control state), the
@@ -270,7 +270,7 @@ validate.label <- function(label, feat, meta, case, verbose){
         'with placeholder label!\n\tThis SIAMCAT object is not suitable for ',
         'the complete workflow...'))
         label <- label(list(label = rep(-1, ncol(feat)),
-            type="TEST", info=c('TEST'=-1)))
+             info=c('TEST'=-1), type="TEST"))
         names(label$label) <- colnames(feat)
         return(label)
     } else if (class(label) == "label"){
