@@ -189,8 +189,68 @@ setClass("associations",
 #'@keywords internal
 check.norm.feat <- function(object){
     errors <- character()
-    # check that all entries that are expected are there (depending on the norm.method, i guess?)
-    # TODO
+    norm.method <- object@norm.param$norm.method
+    # check if norm method is there
+    if (is.null(norm.method)){
+        msg <- 'norm.method is NULL!'
+        errors <- c(errors, msg)
+    }
+    if (!norm.method %in%
+        c('rank.std','rank.unit','log.unit','log.std','log.clr')){
+            mgs <- paste0('norm.method ', norm.method, 'not recognized!')
+            errors <- c(errors, msg)
+        }
+    # check if retained feat is there
+    if (is.null(object@norm.param$retained.feat)){
+        msg <- 'retained.feat is missing!'
+        errors <- c(errors, msg)
+    }
+    # for each norm method, check additional entries
+    if (startsWith(norm.method, 'log')){
+        if (is.null(object@norm.param$log.n0)){
+            msg <- 'Detection limit (pseudocount) is missing!'
+            errors <- c(errors, msg)
+        }
+        if (object@norm.param$log.n0 > 1 | object@norm.param$log.n0 < 0){
+            msg<-'Detection limit (pseudocount) is not between 0 and 1!'
+            errors <- c(errors, msg)
+        }
+    }
+    # std
+    if (endsWith(norm.method, 'std')){
+        # feat.mean or feat.adj.sd
+        if (is.null(object@norm.param$feat.mean) |
+            is.null(object@norm.param$feat.adj.sd)){
+            msg<-'Needed entries for std-normalization are missing!'
+            errors <- c(errors, msg)
+        }
+    }
+    # log.clr
+    if (norm.method == 'log.clr'){
+        if (is.null(object@norm.param$geometric.mean)){
+            msg<-'Geometric means are missing!'
+            errors <- c(errors, msg)
+        }
+    }
+    # log.unit n.p, norm.margin, norm.fun, feat.norm.denom
+    if (norm.method == 'log.unit'){
+        if (is.null(object@norm.param$n.p)){
+            msg<-'Vector norm is missing!'
+            errors <- c(errors, msg)
+        }
+        if (is.null(object@norm.param$norm.fun)){
+            msg<-'Normalization function is missing!'
+            errors <- c(errors, msg)
+        }
+        if (is.null(object@norm.param$norm.margin)){
+            msg<-'Normalization margin is missing!'
+            errors <- c(errors, msg)
+        }
+        if (is.null(object@norm.param$feat.norm.denom)){
+            msg<-'Feature specific denominator is missing!'
+            errors <- c(errors, msg)
+        }
+    }
     # check that taxa are rows == TRUE
     if (object@norm.feat@taxa_are_rows == FALSE){
         msg <- "Normalized features do not have the taxa as rows!"
