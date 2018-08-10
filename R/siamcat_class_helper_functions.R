@@ -53,7 +53,7 @@ setMethod("show", "siamcat", function(object) {
         if (type == 'TEST'){
             n <- length(label$label)
             cat(paste("label()                label:           ",
-                "Test label for ", n, " samples"))
+                "Test label for", n, "samples"), fill=TRUE)
         } else {
             p.lab <- names(which(label$info == max(label$info)))
             n.lab <- setdiff(names(label$info), p.lab)
@@ -87,7 +87,8 @@ setMethod("show", "siamcat", function(object) {
 
     # normalizes features
     if (!is.null(norm_feat(object, verbose=0))) {
-        cat(paste("norm_feat()            norm_feat:        Features normalized",
+        cat(paste("norm_feat()            norm_feat:       ",
+        nrow(norm_feat(object)), "features normalized",
         "using", norm_params(object)$norm.method, sep = " "), fill = TRUE)
     }
 
