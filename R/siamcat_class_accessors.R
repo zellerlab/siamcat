@@ -25,8 +25,7 @@
 #' accessSlot(siamcat_example, "model_list")
 accessSlot <- function(siamcat, slot, verbose=1) {
     if (!slot %in% slotNames(siamcat)) {
-        # If slot is invalid, set out to NULL. Test later if this is an error.
-        out = NULL
+        stop('SIAMCAT object does not contain a slot: ', slot)
     } else if (slot == 'associations') {
         out <- siamcat@associations@assoc.results
     } else if (slot == 'filt_feat') {
