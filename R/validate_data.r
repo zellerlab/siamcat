@@ -79,13 +79,9 @@ validate.data <- function(siamcat, verbose = 1) {
             message("+++ checking sample number per class")
         for (i in seq_along(label$info)) {
             if (sum(label$label == label$info[i]) <= 5) {
-                stop(
-                    "Data set has only",
-                    sum(label$label == label$info[i]),
-                    "training examples
-                    of class",
-                    names(label$info)[i],
-                    " This is not enough for SIAMCAT to proceed"
+                stop("Data set has only ", sum(label$label == label$info[i]),
+                    " training examples of class ", names(label$info)[i],
+                    "\nThis is not enough for SIAMCAT to proceed"
                 )
             }
             if (sum(label$label == label$info[i]) < 10) {
