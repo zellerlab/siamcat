@@ -138,7 +138,12 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         if (any(colSums(feat) > 1.01)){
             stop('This function expects compositional data. Exiting...')
         }
-
+        # check label
+        label <- label(siamcat)
+        if (label$type == 'TEST'){
+            stop('Can not check assocations for a',
+            ' SIAMCAT object with TEST label! Exiting...')
+        }
         # check fn.plot
         if (is.null(fn.plot)) {
             message(paste0('### WARNING: Not plotting to a pdf-file.\n',
@@ -161,9 +166,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
             par.old <- par(no.readonly=TRUE)
         }
         # either give n_classes colors or color palette
-        col <- check.color.scheme(color.scheme, label(siamcat))
+        col <- check.color.scheme(color.scheme, label)
 
-        label <- label(siamcat)
 
         ### Calculate different effect sizes
         if (verbose > 2)
