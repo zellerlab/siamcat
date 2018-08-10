@@ -85,6 +85,7 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
             ' object!!! Exiting...'))
     }
 
+    # optional arguments
     other.args <- list(...)
 
     # keep case info if the user wants to create the label from metadata
@@ -109,6 +110,7 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         }
     }
 
+    # if phyloseq object has been given
     if (!is.null(phyloseq)){
         if (!is.null(feat)){
             stop(paste0('Both features matrix and phyloseq object provided. ',
@@ -123,28 +125,38 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         } else {
             meta <- NULL
         }
-    } else {
-        feat <- validate.features(feat)
-        meta <- validate.metadata(meta)
+        # get all other slots from the phyloseq object
+        for (x in setdiff(get.component.classes('phyloseq'),
+            c('otu_table', 'sam_data'))){
+                if (!is.null(access(phyloseq, x))){
+                    other.args[[x]] <- access(phyloseq, x)
+                }
+            }
     }
 
+    # validate features and metadata
+    feat <- validate.features(feat)
+    meta <- validate.metadata(meta)
+
+    # make Phyloseq object properly
     if (any(vapply(names(other.args), is.component.class, "phyloseq",
         FUN.VALUE = logical(1)))){
             arglistphyloseq <- other.args[vapply(names(other.args),
                 is.component.class,
                 "phyloseq", FUN.VALUE = logical(1))]
-            arglistphyloseq <- list(arglistphyloseq, 'otu_table'=feat,
-                'sam_data'=meta)
+            arglistphyloseq$otu_table = feat
+            arglistphyloseq$sam_data = meta
     } else {
         arglistphyloseq <- list('otu_table'=feat, 'sam_data'=meta)
     }
     other.args$phyloseq <- do.call("new", c(list(Class = "phyloseq"),
         arglistphyloseq))
 
+    # label object
     label <- validate.label(label, feat, meta, case, verbose)
-
     other.args$label <- label
 
+    # any other slots
     other.args <-
         other.args[vapply(names(other.args),
             is.component.class,
@@ -152,6 +164,7 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
             FUN.VALUE = logical(1))]
     sc <- do.call("new", c(list(Class = "siamcat"), other.args))
 
+    # validate
     if (validate){
         sc <- validate.data(sc, verbose=verbose)
     } else {
