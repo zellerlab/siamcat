@@ -201,7 +201,7 @@ make.predictions <- function(siamcat,
             model <- models[[i]]
 
             data <- data[, model$features]
-            data$label <- as.factor(label$label, levels=c(-1, 1))
+            data$label <- factor(label$label, levels=c(-1))
 
             if (verbose > 2)
                 message(
@@ -228,7 +228,7 @@ make.predictions <- function(siamcat,
                 setTxtProgressBar(pb, i)
         }
         pred <- pred_matrix(pred)
-        pred_matrix(siamcat_holdout) <- pred
+        pred_matrix(siamcat.holdout) <- pred
         r.object <- siamcat.holdout
     }
 
