@@ -170,10 +170,9 @@ read.labels <- function(fn.in.label, ...) {
     close(con)
     label <- list(label = label)
     label.info <- parse.label.header(header)
+    label$info <- label.info$class.descr
     label$type <- label.info$type
     stopifnot(label$type == "BINARY")
-    label$info <- label.info$class.descr
-
     labelRes <- label(label)
     invisible(labelRes)
         }
@@ -266,6 +265,6 @@ parse.label.header <- function(label.header) {
 
     label.info <- list()
     label.info$type <- type
-    label.info$class.descr <- class.descr
+    label.info$class.descr <- sort(class.descr)
     return(label.info)
 }
