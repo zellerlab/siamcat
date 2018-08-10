@@ -66,7 +66,7 @@ The label information for SIAMCAT can take several forms:\itemize{
 
 \code{siamcat <- siamcat(feat=feat.matrix, meta=metadata,
                         label='DiseaseState', case='CRC')}
- 
+
      for the construction of a label to predict CRC status (which is encoded
      in the column \code{"DiseaseState"} of the metadata). For more control
      (e.g. specific labels for plotting or specific control state), the
