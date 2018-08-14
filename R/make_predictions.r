@@ -201,7 +201,7 @@ make.predictions <- function(siamcat,
             model <- models[[i]]
 
             data <- data[, model$features]
-            data$label <- factor(label$label, levels=c(-1))
+            data$label <- factor(label$label, levels=c(label$info))
 
             if (verbose > 2)
                 message(
