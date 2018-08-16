@@ -488,7 +488,7 @@ setMethod("models", "ANY", function(siamcat, verbose=1) {
     temp <- siamcat@model_list@models
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
-        message("Model slot are empty")
+        message("Model slot is empty")
     }
     return(temp)
 })
@@ -498,7 +498,7 @@ setMethod("models", "model_list", function(siamcat) {
     temp <- siamcat@models
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
-        message("Model slot are empty")
+        message("Model slot is empty")
     }
     return(temp)
 })
@@ -524,7 +524,7 @@ setMethod("model_type", "ANY", function(siamcat, verbose=1) {
     temp <- siamcat@model_list@model.type
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
-        message("Model type are empty")
+        message("Model type is empty")
     }
     return(temp)
 })
@@ -534,7 +534,79 @@ setMethod("model_type", "model_list", function(siamcat, verbose=1) {
     temp <- siamcat@model_type
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
-        message("Model type are empty")
+        message("Model type is empty")
+    }
+    return(temp)
+})
+
+###############################################################################
+#' Retrieve weight_matrix from object.
+#'
+#' @usage weight_matrix(siamcat)
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'     that contains a model_list or instance of \link{model_list-class}.
+#' @return A matrix containing the feature weights or NULL
+#' @export
+#' @rdname weight_matrix-methods
+#' @docType methods
+#' @examples
+#'     data(siamcat_example)
+#'     weight_matrix(siamcat_example)
+setGeneric("weight_matrix", function(siamcat, verbose=1)
+    standardGeneric("weight_matrix"))
+#' @rdname weight_matrix-methods
+#' @aliases weight_matrix,ANY-method
+setMethod("weight_matrix", "ANY", function(siamcat, verbose=1) {
+    temp <- siamcat@model_list@weight.matrix
+    if (nrow(temp) == 0) temp <- NULL
+    if (is.null(temp) & verbose > 0){
+        message("Weight matrix is empty")
+    }
+    return(temp)
+})
+# Return weight matrix if a model_list object
+#' @rdname model_list-methods
+setMethod("weight_matrix", "model_list", function(siamcat, verbose=1) {
+    temp <- siamcat@weight.matrix
+    if (nrow(temp) == 0) temp <- NULL
+    if (is.null(temp) & verbose > 0){
+        message("Weight matrix is empty")
+    }
+    return(temp)
+})
+
+###############################################################################
+#' Retrieve feature_weights from object.
+#'
+#' @usage feature_weights(siamcat)
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'     that contains a model_list or instance of \link{model_list-class}.
+#' @return A dataframe containing mean/median feature weight and additional info
+#' @export
+#' @rdname feature_weights-methods
+#' @docType methods
+#' @examples
+#'     data(siamcat_example)
+#'     feature_weights(siamcat_example)
+setGeneric("feature_weights", function(siamcat, verbose=1)
+    standardGeneric("feature_weights"))
+#' @rdname feature_weights-methods
+#' @aliases feature_weights,ANY-method
+setMethod("feature_weights", "ANY", function(siamcat, verbose=1) {
+    temp <- siamcat@model_list@feature.weights
+    if (nrow(temp) == 0) temp <- NULL
+    if (is.null(temp) & verbose > 0){
+        message("Feature weights are empty")
+    }
+    return(temp)
+})
+# Return feature weights if a model_list object
+#' @rdname model_list-methods
+setMethod("model_type", "model_list", function(siamcat, verbose=1) {
+    temp <- siamcat@feature.weights
+    if (nrow(temp) == 0) temp <- NULL
+    if (is.null(temp) & verbose > 0){
+        message("Feature weights are empty")
     }
     return(temp)
 })
