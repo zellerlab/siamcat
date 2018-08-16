@@ -106,6 +106,12 @@ setMethod("show", "siamcat", function(object) {
             length(models(object)) , model_type(object), "models", sep = " "),
             fill = TRUE)
     }
+    # model list
+    if (!is.null(feature_weights(object, verbose=0))) {
+        cat(paste("feature_weights()      Feature weights:     ",
+            "Summary of feature weights [ see also weight_matrix() ]", sep = " "),
+            fill = TRUE)
+    }
 
     # predictions
     if (!is.null(pred_matrix(object, verbose=0))) {
