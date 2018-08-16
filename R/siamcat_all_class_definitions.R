@@ -387,6 +387,8 @@ check.model.list <- function(object){
         msg <- 'Models are supposed to be mlr-WrappedModels!'
         errors <- c(errors, msg)
     }
+    # check feature weights and weight matrix
+    # TODO
     if (length(errors) == 0) TRUE else errors
 }
 
@@ -398,7 +400,9 @@ check.model.list <- function(object){
 #' @exportClass model_list
 setClass("model_list",
          representation(models = "list",
-                        model.type = "character"),
+                        model.type = "character",
+                        weight.matrix = "matrix",
+                        feature.weights = "data.frame"),
          validity=check.model.list)
 
 
