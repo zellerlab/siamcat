@@ -47,7 +47,7 @@ validate.data <- function(siamcat, verbose = 1) {
         stop('### The features contain missing data! Exiting...')
     }
     # check for compositional data
-    if (any(colSums(feat) > 1.01) || any(colSums(feat) < 0.99)) {
+    if (any(colSums(feat) > 1.01)) {
         warning('\t### Warning: The data does not seem to be compositional!')
     }
 
