@@ -312,9 +312,33 @@ train.model <- function(siamcat,
         }
     }
 
+    ## extract and save feature weights
+    weight.mat <- matrix(NA, nrow=nrow(feat), ncol=length(models.list),
+        dimnames=list(rownames(features(siamcat)),
+            paste0('Model_', seq_along(models.list))))
+    for (i in seq_along(models.list)){
+        m.idx <- match(models.list[[i]]$features, rownames(feat))
+        weight.mat[m.idx, i] <- models.list[[i]]$feat.weights
+    }
+    # get some additional info about feature weights
+    feat.weights <- data.frame(
+        mean.weight=rowMeans(weight.mat, na.rm=TRUE),
+        median.weight=rowMedians(weight.mat, na.rm=TRUE),
+        sd.weight=rowSds(weight.mat, na.rm=TRUE),
+        mean.rel.weight=rowMeans(t(t(weight.mat)/
+            colSums(abs(weight.mat), na.rm=TRUE)), na.rm=TRUE),
+        median.rel.weight=rowMedians(t(t(weight.mat)/
+            colSums(abs(weight.mat), na.rm=TRUE)), na.rm=TRUE),
+        sd.rel.weight=rowSds(t(t(weight.mat)/
+            colSums(abs(weight.mat), na.rm=TRUE)), na.rm=TRUE),
+        percentage=rowMeans(weight.mat != 0, na.rm=TRUE)
+    )
+
     model_list(siamcat) <- new("model_list",
         models = models.list,
-        model.type = method)
+        model.type = method,
+        weight.matrix = weight.mat,
+        feature.weights = feat.weights)
 
     e.time <- proc.time()[3]
 
