@@ -7,9 +7,8 @@
 model.interpretation.plot(siamcat, fn.plot, color.scheme = "BrBG",
                                  consens.thres = 0.5,
                                  heatmap.type = c("zscore", "fc"),
-                                 norm.models = FALSE, limits = c(-3, 3),
-                                 detect.lim = 1e-06, max.show = 50,
-                                 verbose = 1)
+                                 limits = c(-3, 3), detect.lim = 1e-06,
+                                 max.show = 50, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -26,9 +25,6 @@ should therefore be much lower, e.g. \code{0.01}}
 
 \item{heatmap.type}{type of the heatmap, can be either \code{'fc'} or
 \code{'zscore'}, defaults to \code{'zscore'}}
-
-\item{norm.models}{boolean, should the feature weights be normalized across
-models?, defaults to \code{FALSE}}
 
 \item{limits}{vector, cutoff for extreme values in the heatmap,
 defaults to \code{c(-3, 3)}}
