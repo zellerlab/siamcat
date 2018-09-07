@@ -108,10 +108,8 @@ make.predictions <- function(siamcat,
 
                 model <- models[[i]]
 
-                stopifnot(!any(
-                    rownames(model$task$env$data) %in%
-                        rownames(data)
-                ))
+                stopifnot(!any(rownames(model$task$env$data) %in%
+                  rownames(data)))
 
                 # subselect features for each model
                 # needs to be added due to feature selection
@@ -120,21 +118,9 @@ make.predictions <- function(siamcat,
                 data$label <- test.label
 
                 if (verbose > 2)
-                    message(
-                        paste0(
-                            "Applying ",
-                            model_type(siamcat),
-                            " on cv_fold",
-                            f,
-                            "_rep",
-                            r,
-                            " (",
-                            i,
-                            " of ",
-                            num.resample * num.folds,
-                            ")..."
-                        )
-                    )
+                    message(paste0("Applying ", model_type(siamcat),
+                      " on cv_fold", f, "_rep", r, " (", i, " of ",
+                      num.resample * num.folds, ")..."))
 
                 task <-
                     makeClassifTask(data = data, target = "label")
@@ -204,18 +190,9 @@ make.predictions <- function(siamcat,
             data$label <- factor(label$label, levels=c(label$info))
 
             if (verbose > 2)
-                message(
-                    paste0(
-                        "Applying ",
-                        model_type(siamcat),
-                        " on complete external dataset",
-                        " (",
-                        i,
-                        " of ",
-                        num.models,
-                        ")..."
-                    )
-                )
+                message(paste0("Applying ", model_type(siamcat),
+                    " on complete external dataset", " (", i, " of ",
+                    num.models, ")..."))
 
             task <- makeClassifTask(data = data, target = "label")
             pdata <- predict(model, task = task)
