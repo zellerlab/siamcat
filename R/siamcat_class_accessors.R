@@ -557,23 +557,25 @@ setGeneric("weight_matrix", function(siamcat, verbose=1)
 #' @rdname weight_matrix-methods
 #' @aliases weight_matrix,ANY-method
 setMethod("weight_matrix", "ANY", function(siamcat, verbose=1) {
-    temp <- siamcat@model_list@weight.matrix
-    if (nrow(temp) == 0) temp <- NULL
-    if (is.null(temp) & verbose > 0){
-        message("Weight matrix is empty")
+    temp <- siamcat@model_list@models
+    if (length(temp) == 0){
+        if (verbose > 0){
+            message('Weight matrix is empty')
+        }
+        return(NULL)
     }
-    return(temp)
-})
-# Return weight matrix if a model_list object
-#' @rdname model_list-methods
-setMethod("weight_matrix", "model_list", function(siamcat, verbose=1) {
-    temp <- siamcat@weight.matrix
-    if (nrow(temp) == 0) temp <- NULL
-    if (is.null(temp) & verbose > 0){
-        message("Weight matrix is empty")
+
+    weight.mat <- matrix(NA, nrow=nrow(features(siamcat)),
+        ncol=length(temp), dimnames=list(rownames(features(siamcat)),
+        paste0('Model_', seq_along(temp))))
+    for (i in seq_along(temp)){
+        m.idx <- match(temp[[i]]$features, make.names(rownames(weight.mat)))
+        weight.mat[m.idx, i] <- temp[[i]]$feat.weights
     }
-    return(temp)
+
+    return(weight.mat)
 })
+
 
 ###############################################################################
 #' Retrieve feature_weights from object.
@@ -593,23 +595,28 @@ setGeneric("feature_weights", function(siamcat, verbose=1)
 #' @rdname feature_weights-methods
 #' @aliases feature_weights,ANY-method
 setMethod("feature_weights", "ANY", function(siamcat, verbose=1) {
-    temp <- siamcat@model_list@feature.weights
-    if (nrow(temp) == 0) temp <- NULL
-    if (is.null(temp) & verbose > 0){
-        message("Feature weights are empty")
+    feat.weights <- weight_matrix(siamcat, verbose=0)
+    if (is.null(feat.weights)) {
+        if(verbose > 0){
+            message("Feature weights are empty")
+        }
+        return(NULL)
     }
-    return(temp)
+    feat.weights <- data.frame(
+        mean.weight=rowMeans(feat.weights, na.rm=TRUE),
+        median.weight=rowMedians(feat.weights, na.rm=TRUE),
+        sd.weight=rowSds(feat.weights, na.rm=TRUE),
+        mean.rel.weight=rowMeans(t(t(feat.weights)/
+            colSums(abs(feat.weights), na.rm=TRUE)), na.rm=TRUE),
+        median.rel.weight=rowMedians(t(t(feat.weights)/
+            colSums(abs(feat.weights), na.rm=TRUE)), na.rm=TRUE),
+        sd.rel.weight=rowSds(t(t(feat.weights)/
+            colSums(abs(feat.weights), na.rm=TRUE)), na.rm=TRUE),
+        percentage=rowMeans(feat.weights != 0, na.rm=TRUE)
+    )
+    return(feat.weights)
 })
-# Return feature weights if a model_list object
-#' @rdname model_list-methods
-setMethod("model_type", "model_list", function(siamcat, verbose=1) {
-    temp <- siamcat@feature.weights
-    if (nrow(temp) == 0) temp <- NULL
-    if (is.null(temp) & verbose > 0){
-        message("Feature weights are empty")
-    }
-    return(temp)
-})
+
 
 ###############################################################################
 #' Retrieve pred_matrix from object.
