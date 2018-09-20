@@ -3,67 +3,6 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' @title Read feature file
-#'
-#' @description This file reads in the tsv file with features and
-#' converts it into a matrix.
-#'
-#' The file should be oragnized as follows:
-#' features (in rows) x samples (in columns).
-#'
-#' First row should contain sample labels (consistent with label data), while
-#' the first column should contain feature labels (e.g. taxonomic identifiers).
-#' The remaining entries are expected to be real values \code{>= 0} that
-#' quantify the abundance of each feature in each sample.
-#'
-#' @param fn.in.feat name of the tsv file containing features
-#'
-#' @param transpose should the features table be transposed?
-#'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'     for information about progress and time, defaults to \code{0}
-#'
-#' @param ... passed to \code{read.table} function
-#'
-#' @export
-#'
-#' @return \code{otu_table} containing features from the file
-#'
-#' @examples
-#'     # run with example data
-#'     fn.feat <- system.file('extdata', 'feat_crc_zeller_msb_mocat_specI.tsv',
-#'     package = 'SIAMCAT')
-#'
-#'     features <- read.features(fn.feat)
-read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0, ...) {
-    if (verbose > 1)
-        message("+ starting read.features")
-    s.time <- proc.time()[3]
-    if (is.null(fn.in.feat))
-        stop("Filename for features file not provided!\n")
-
-    feat <- read.table(
-        file = fn.in.feat,
-        sep = "\t",
-        header = TRUE,
-        stringsAsFactors = FALSE,
-        check.names = FALSE,
-        quote = "",
-        encoding = "latin1"
-    )
-    feat <- as.matrix(feat)
-    if(transpose) feat <- t(feat)
-
-    e.time <- proc.time()[3]
-    if (verbose > 0)
-        message(paste(
-            "+ finished read.features in",
-            formatC(e.time - s.time, digits = 3),
-            "s"
-        ))
-    invisible(otu_table(feat, taxa_are_rows = TRUE))
-}
-
 #' @title Read labels file
 #'
 #' @description This file reads in the tsv file with labels and converts it
@@ -79,25 +18,16 @@ read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0, ...) {
 #'
 #' Note: Labels can take other numeric values (but not characters or strings);
 #' importantly, the label for cases has to be greater than the one for controls
-#' @param fn.in.label name of the tsv file containing labels
 #'
-#' @param ... passed to \code{read.table} function
+#' @param fn.in.label name of the tsv file containing labels
 #'
 #' @export
 #'
 #' @return label object containing several entries:\itemize{
 #' \item \code{$label} named vector containing the numerical labels from the
 #' file;
-#' \item \code{$header} first row of the label file;
-#' \item \code{$info} information about the type of label (e.g. \code{BINARY});
-#' \item \code{$positive.lab} numerical label for controls, e.g. \code{-1};
-#' \item \code{$negative.lab} numerical label for cases, e.g. \code{1};
-#' \item \code{$n.idx} logical vector of labels (\code{TRUE} for controls,
-#' \code{FALSE} otherwise);
-#' \item \code{$n.lab} label for controls, e.g. \code{healthy};
-#' \item \code{$p.idx} logical vector of labels (\code{TRUE} for cases,
-#' \code{FALSE} otherwise);
-#' \item \code{$p.lab} label for cases, e.g. \code{cancer}
+#' \item \code{$info} information about the classes in the label;
+#' \item \code{$type} information about the label type (e.g. \code{BINARY});
 #'}
 #'
 #' @examples
@@ -106,7 +36,7 @@ read.features <- function(fn.in.feat, transpose = FALSE, verbose = 0, ...) {
 #'     package = 'SIAMCAT')
 #'
 #' labels <- read.labels(fn.label)
-read.labels <- function(fn.in.label, ...) {
+read.labels <- function(fn.in.label) {
     if (is.null(fn.in.label))
         stop("Filename for labels file not provided!\n")
     label <-
@@ -175,57 +105,7 @@ read.labels <- function(fn.in.label, ...) {
     stopifnot(label$type == "BINARY")
     labelRes <- label(label)
     invisible(labelRes)
-        }
-
-#' @title Read metadata file
-#'
-#' @description This file reads in the tsv file with numerical metadata and
-#' converts it into a matrix.
-#'
-#' The file should be organized as follows:
-#' samples (in rows) x metadata (in columns). Metadata needs to be converted to
-#' numerical values by the user.
-#'
-#' Metadata may be optional for the SIAMCAT workflow, but are necessary for
-#' heatmap displays, see \link{model.interpretation.plot}
-#'
-#' @param fn.in.meta name of the tsv file containing metadata
-#'
-#' @param ... passed to \code{read.table} function
-#'
-#' @export
-#'
-#' @return \code{sample_data} object
-#'
-#' @examples
-#'     # run with example data
-#' fn.meta  <- system.file('extdata',
-#' 'num_metadata_crc_zeller_msb_mocat_specI.tsv',
-#' package = 'SIAMCAT')
-#'
-#' meta_data <- read.meta(fn.meta)
-
-read.meta <- function(fn.in.meta, ...) {
-    if (is.null(fn.in.meta) || toupper(fn.in.meta) == "NULL" ||
-            toupper(fn.in.meta) == "NONE" || toupper(fn.in.meta) ==
-            "UNKNOWN") {
-        warning("Filename for metadata file not provided, continuing
-            without it.\n")
-    } else {
-        meta <-
-            read.table(
-                file = fn.in.meta,
-                sep = "\t",
-                header = TRUE,
-                row.names = 1,
-                check.names = FALSE,
-                quote = "",
-                encoding = "latin1"
-            )
     }
-    invisible(sample_data(meta))
-}
-
 
 ##### auxiliary function to trim whitespace from string returns string without
 ##### leading or trailing whitespace
