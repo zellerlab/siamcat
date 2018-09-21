@@ -109,21 +109,27 @@ normalize.features <- function(siamcat,
         n.p = 2,
         norm.margin = 1
     ),
+    feature.type='filtered',
     verbose = 1) {
     if (verbose > 1)
         message("+ starting normalize.features")
     s.time <- proc.time()[3]
 
-    # check if features have already been normalized or not
-    if (is.null(norm_feat(siamcat, verbose=0))){
-        feat <- get.features.matrix(siamcat)
-    } else if (is.null(filt_feat(siamcat, verbose=0))){
-        feat <- get.orig_feat.matrix(siamcat)
-        if (verbose > 1) message('+ normalizing unfiltered features')
-    } else {
-        feat <- get.filt_feat.matrix(siamcat)
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
     }
 
+    # get the right features
+    if (feature.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+        if (verbose > 1) message('+ normalizing original features')
+    } else if (feature.type == 'filtered'){
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feature.type == 'normalized'){
+        warning(paste('Normalizing features that have already been normalized!',
+                '\nPlease note that some functionalities may not work properly'))
+        feat <- get.norm_feat.matrix(siamcat)
+    }
 
     if (is.null(norm.param$norm.method)) {
         # de novo normalization
@@ -135,15 +141,9 @@ normalize.features <- function(siamcat,
         if (any(!keep.idx)) {
             feat.red.na <- feat[keep.idx,]
             if (verbose > 1) {
-                message(
-                    paste0(
-                        "+++ removed ",
-                        nrow(feat.red.na) - nrow(feat),
+                message(paste0("+++ removed ", nrow(feat.red.na) - nrow(feat),
                         " features with missing values (retaining ",
-                        nrow(feat.red.na),
-                        ")"
-                    )
-                )
+                        nrow(feat.red.na), ")"))
             }
         } else {
             feat.red.na <- feat
@@ -153,17 +153,9 @@ normalize.features <- function(siamcat,
         if (any(keep.idx.sd)) {
             feat.red <- feat.red.na[!keep.idx.sd,]
             if (verbose > 1) {
-                message(
-                    paste0(
-                        "+++ removed ",
-                        nrow(feat.red.na) -
-                            nrow(feat.red),
+                message(paste0("+++ removed ", nrow(feat.red.na)-nrow(feat.red),
                         " features with no variation across samples
-                        (retaining ",
-                        nrow(feat.red),
-                        ")"
-                    )
-                )
+                        (retaining ", nrow(feat.red), ")"))
             }
         } else {
             feat.red <- feat.red.na
@@ -172,11 +164,8 @@ normalize.features <- function(siamcat,
         if (length(norm.method) != 1){
             stop('Please supply only a single normalization method! Exiting...')
         }
-        if (!norm.method %in% c("rank.unit",
-            "rank.std",
-            "log.std",
-            "log.unit",
-            "log.clr")) {
+        if (!norm.method %in%
+            c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")) {
             stop("Unknown normalization method! Exiting...")
         }
 
