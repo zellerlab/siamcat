@@ -29,7 +29,8 @@
 #'     siamcat_evaluated <- summarize.features(siamcat_example)
 #'
 summarize.features <- function(siamcat, level = "g__",
-                               keep_original_names=TRUE, verbose=1){
+                               keep_original_names=TRUE,
+                               feature.type='original', verbose=1){
 
     if (verbose > 1) message("+ starting summarize.features")
 
@@ -37,7 +38,23 @@ summarize.features <- function(siamcat, level = "g__",
 
     if (verbose > 2) message("+++ summarizing on level: ",level)
 
-    feat <- get.features.matrix(siamcat)
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
+    }
+    # get the right features
+    if (feature.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+    } else if (feature.type == 'filtered'){
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop('Features have not yet been filtered, exiting...\n')
+        }
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feature.type == 'normalized'){
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop('Features have not yet been normalized, exiting...\n')
+        }
+        feat <- get.norm_feat.matrix(siamcat)
+    }
     # make sure that seperating characters are dots
     rownames(feat) <- make.names(rownames(feat))
 
@@ -68,7 +85,8 @@ summarize.features <- function(siamcat, level = "g__",
 
     if (verbose == 1)
         message("\nSummarized features successfully.")
-    features(siamcat) <- otu_table(summarized.feat,taxa_are_rows = TRUE)
+    features(siamcat, feature.type) <-
+        otu_table(summarized.feat,taxa_are_rows = TRUE)
 
     return(siamcat)
 }
