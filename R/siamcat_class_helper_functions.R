@@ -69,9 +69,17 @@ setMethod("show", "siamcat", function(object) {
         temp <- filt_params(object)
         filtering.methods <- vapply(temp, FUN=function(x){x$filter.method},
             FUN.VALUE = character(1))
-        cat(paste("filt_feat()            Filtered features:   ",
-            nrow(filt_feat(object)), 'features after',
-            paste(filtering.methods, collapse=', '), 'filtering'), fill=TRUE)
+        if (length(filtering.methods) <= 3){
+            cat(paste("filt_feat()            Filtered features:   ",
+                nrow(filt_feat(object)), 'features after',
+                paste(filtering.methods, collapse=', '), 'filtering'),
+                    fill=TRUE)
+        } else {
+            cat(paste("filt_feat()            Filtered features:   ",
+                nrow(filt_feat(object)), 'features after',
+                length(filtering.methods), 'filtering steps'), fill=TRUE)
+        }
+
     }
 
     # assocations testing

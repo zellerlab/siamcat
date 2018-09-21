@@ -67,56 +67,66 @@ filter.features <- function(siamcat,
     filter.method = "abundance",
     cutoff = 0.001,
     rm.unmapped = TRUE,
+    feature.type='original',
     verbose = 1) {
 
     if (verbose > 1) message("+ starting filter.features")
     s.time <- proc.time()[3]
 
+    # checks
     if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")) {
-        stop("! Unrecognized filter.method, exiting!\n")
+        stop("Unrecognized filter.method, exiting!\n")
+    }
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
+    }
+    if (!is.logical(rm.unmapped)){
+        stop("rm.unmapped should be logical, exiting...\n")
     }
 
-    # check if filter feat is already there or not
-    if (is.null(filt_feat(siamcat, verbose=0))){
+    # get the right features
+    if (feature.type=='original'){
         feat <- get.orig_feat.matrix(siamcat)
         param.set <- list(list(filter.method=filter.method,
-                cutoff=cutoff, rm.unmapped=rm.unmapped))
-    } else {
-        # if filter feat are already there,
-        # check if the parameters are the same
+                cutoff=cutoff, rm.unmapped=rm.unmapped,
+                feature.type=feature.type))
+    } else if (feature.type == 'filtered'){
+        # if not yet there, stop
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop("Features have not yet been filtered, exiting...\n")
+        }
+        feat <- get.filt_feat.matrix(siamcat)
         param.set <- filt_params(siamcat)
-        applied.methods <- vapply(param.set, FUN=function(x){x$filter.method},
-            FUN.VALUE=character(1))
-        if (filter.method %in% applied.methods){
-            warning("Filtering method ", filter.method, " has already been",
-                " applied to the dataset.\nStarting filtering with original",
-                " features again.")
-            feat <- get.orig_feat.matrix(siamcat)
+        param.set[[length(param.set)+1]] <-
+            list(filter.method=filter.method,
+                 cutoff=cutoff, rm.unmapped=rm.unmapped,
+                 feature.type=feature.type)
+    } else if (feature.type == 'normalized'){
+        # if not yet there, stop
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop("Features have not yet been normalized, exiting...\n")
+        }
+        if (is.null(filt_feat(siamcat, verbose=0))){
             param.set <- list(list(filter.method=filter.method,
-                    cutoff=cutoff, rm.unmapped=rm.unmapped))
+                    cutoff=cutoff, rm.unmapped=rm.unmapped,
+                    feature.type=feature.type, feature.type=feature.type))
         } else {
-            if (verbose > 0) message('+ features have already ',
-                'been filtered with another method')
-            feat <- get.filt_feat.matrix(siamcat)
             param.set <- filt_params(siamcat)
             param.set[[length(param.set)+1]] <-
                 list(filter.method=filter.method,
-                     cutoff=cutoff, rm.unmapped=rm.unmapped)
+                     cutoff=cutoff, rm.unmapped=rm.unmapped,
+                     feature.type=feature.type)
         }
+        feat <- get.norm_feat.matrix(siamcat)
     }
 
     # check if there are NAs in the data
     if (any(is.na(feat))){
         stop("There are NAs in the feature matrix! Exiting...")
     }
-
     if (verbose > 1)
-        message(paste(
-            "+++ before filtering, the data have",
-            nrow(feat),
-            "features"
-        ))
-
+        message(paste("+++ before filtering, the data have",
+            nrow(feat), "features"))
 
     ### apply filters
     if (verbose > 2)

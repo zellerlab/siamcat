@@ -132,47 +132,6 @@ get.orig_feat.matrix <- function(siamcat) {
 }
 
 ################################################################################
-#' Retrieve the active \link[phyloseq]{otu_table-class} out of SIAMCAT
-#'
-#' @usage features(siamcat)
-#' @param siamcat (Required). An instance of \link{siamcat-class}
-#'     that contains a label or instance of \link[phyloseq]{otu_table-class} .
-#' @return The \link[phyloseq]{otu_table-class} object or NULL.
-#' @export
-#' @rdname features-methods
-#' @docType methods
-#' @examples
-#'     data(siamcat_example)
-#'     features(siamcat_example)
-setGeneric("features", function(siamcat)
-    standardGeneric("features"))
-#' @rdname features-methods
-#' @aliases features,ANY-method
-setMethod("features", "ANY", function(siamcat) {
-    if (!is.null(norm_feat(siamcat, verbose=0))){
-        return(norm_feat(siamcat))
-    } else if (!is.null(filt_feat(siamcat, verbose=0))){
-        return(filt_feat(siamcat))
-    } else {
-        return(orig_feat(siamcat))
-    }
-})
-
-#' Access features in siamcat@phylose@otu_table as matrix
-#' @title get.features.matrix
-#' @name get.features.matrix
-#' @description Function to access features in siamcat@phylose@otu_table
-#' @param siamcat an object of class \link{siamcat-class}t
-#' @return Features as a matrix
-#' @export
-#' @examples
-#'     data(siamcat_example)
-#'     feat <- get.features.matrix(siamcat_example)
-get.features.matrix <- function(siamcat) {
-    return(features(siamcat)@.Data)
-}
-
-################################################################################
 #' Retrieve a \link[phyloseq]{sample_data-class} object from object.
 #'
 #' @usage meta(siamcat)
@@ -382,6 +341,21 @@ setMethod("norm_feat", "ANY", function(siamcat, verbose=1) {
     }
     return(temp)
 })
+
+
+#' Access features in siamcat@norm_feat@norm.feat as matrix
+#' @title get.norm_feat.matrix
+#' @name get.norm_feat.matrix
+#' @description Function to access features in siamcat@norm_feat@filt.feat
+#' @param siamcat an object of class \link{siamcat-class}
+#' @return Normalized features as a matrix
+#' @export
+#' @examples
+#'     data(siamcat_example)
+#'     feat <- get.norm_feat.matrix(siamcat_example)
+get.norm_feat.matrix <- function(siamcat) {
+    return(norm_feat(siamcat)@.Data)
+}
 
 ###############################################################################
 #' Retrieve the list of normalization parameters from object.

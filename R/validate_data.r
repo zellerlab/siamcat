@@ -38,7 +38,7 @@ validate.data <- function(siamcat, verbose = 1) {
     if (verbose > 1)
         message("+ starting validate.data")
     label <- label(siamcat)
-    feat  <- features(siamcat)
+    feat  <- orig_feat(siamcat)
     meta  <- meta(siamcat)
     s.time <- proc.time()[3]
 
@@ -59,7 +59,7 @@ validate.data <- function(siamcat, verbose = 1) {
     # check and re-order features
     s.removed <- ncol(feat) - length(s.intersect)
     orig_feat(siamcat) <- feat[,s.intersect]
-    feat <- features(siamcat)
+    feat <- orig_feat(siamcat)
     if (verbose > 1 & s.removed != 0)
         message(paste0("+ Removed ", s.removed,
                        " samples from the feature matrix..."))

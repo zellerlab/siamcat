@@ -63,24 +63,18 @@ check.filt.feat <- function(object){
             errors <- c(errors, msg)
         }
     # check if each entry is of length 3
-    if (!all(vapply(object@filt.param, length, FUN.VALUE = numeric(1)) == 3)){
+    if (!all(vapply(object@filt.param, length, FUN.VALUE = numeric(1)) == 4)){
         msg <- "Filtering parameters are not in the right format!"
         errors <- c(errors, msg)
     }
     # check if they have the correct entries
     if (!all(vapply(object@filt.param, names,
-        FUN.VALUE = character(3)) ==
-        c('filter.method', 'cutoff', 'rm.unmapped'))){
+        FUN.VALUE = character(4)) ==
+        c('filter.method', 'cutoff', 'rm.unmapped', 'feature.type'))){
             msg <- "Filtering parameters do not contain all needed entries!"
             errors <- c(errors, msg)
         }
-    # check that no filtering method appears twice
-    methods <- vapply(object@filt.param,
-        FUN=function(x){x$filter.method}, FUN.VALUE = character(1))
-    if (length(methods) != length(unique(methods))){
-        msg <- "The same filtering methods should not be applied twice!"
-        errors <- c(errors, msg)
-    }
+    
     # check that taxa are rows == TRUE
     if (object@filt.feat@taxa_are_rows == FALSE){
         msg <- "Filtered features do not have the taxa as rows!"
