@@ -575,8 +575,17 @@ setMethod("weight_matrix", "ANY", function(siamcat, verbose=1) {
         return(NULL)
     }
 
-    weight.mat <- matrix(NA, nrow=nrow(features(siamcat)),
-        ncol=length(temp), dimnames=list(rownames(features(siamcat)),
+    feat.type <- feature_type(siamcat)
+    if (feat.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+    } else if (feat.type == 'filtered'){
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feat.type == 'normalized'){
+        feat <- get.norm_feat.matrix(siamcat)
+    }
+
+    weight.mat <- matrix(NA, nrow=nrow(feat),
+        ncol=length(temp), dimnames=list(rownames(feat),
         paste0('Model_', seq_along(temp))))
     for (i in seq_along(temp)){
         m.idx <- match(temp[[i]]$features, make.names(rownames(weight.mat)))

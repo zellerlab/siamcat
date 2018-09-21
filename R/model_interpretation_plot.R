@@ -105,6 +105,7 @@ model.interpretation.plot <-
 
         label <- label(siamcat)
         model.type <- model_type(siamcat)
+        feature.type <- feature_type(siamcat)
         models <- models(siamcat)
         feature.weights <- feature_weights(siamcat)
         weight.matrix <- weight_matrix(siamcat)
@@ -181,7 +182,13 @@ model.interpretation.plot <-
         if (verbose > 2)
             message("+++ preparing heatmap")
         if (heatmap.type == "zscore") {
-            feat <- get.features.matrix(siamcat)
+            if (feature.type == 'original'){
+                feat <- get.orig_feat.matrix(siamcat)
+            } else if (feature.type == 'filtered') {
+                feat <- get.filt_feat.matrix(siamcat)
+            } else if (feature.type == 'normalized') {
+                feat <- get.norm_feat.matrix(siamcat)
+            }
             img.data <- model.interpretation.prepare.heatmap.zscore(
                 heatmap.data = feat[sel.idx, srt.idx],
                 limits = limits,
