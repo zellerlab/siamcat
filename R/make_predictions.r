@@ -61,10 +61,6 @@ make.predictions <- function(siamcat,
         if (verbose > 1)
             message("+ starting make.predictions on siamcat object")
 
-        # features
-        feat <- features(siamcat)
-        rownames(feat) <- make.names(rownames(feat))
-        feat <- t(feat)
         # label
         label <- label(siamcat)
         if (label$type == 'TEST'){
@@ -81,6 +77,17 @@ make.predictions <- function(siamcat,
             stop('SIAMCAT does not seem to contain any models. Exiting...')
         }
         models <- models(siamcat)
+        # features
+        feature.type <- feature_type(siamcat)
+        if (feature.type == 'original'){
+            feat <- get.orig_feat.matrix(siamcat)
+        } else if (feature.type == 'filtered'){
+            feat <- get.filt_feat.matrix(siamcat)
+        } else if (feature.type == 'normalized'){
+            feat <- get.norm_feat.matrix(siamcat)
+        }
+        rownames(feat) <- make.names(rownames(feat))
+        feat <- t(feat)
 
         label.fac <-
             factor(label$label,
@@ -142,23 +149,7 @@ make.predictions <- function(siamcat,
         if (verbose > 1)
             message("+ starting make.predictions on external dataset")
 
-        if (normalize.holdout) {
-            if (verbose > 1)
-                message("+ Performing frozen normalization on holdout set")
-            siamcat.holdout <- normalize.features(siamcat.holdout,
-                norm.param = norm_params(siamcat),
-                verbose = verbose)
-        } else {
-            warning("WARNING: holdout set is not being normalized!")
-        }
-        feat.test <- features(siamcat.holdout)
-        rownames(feat.test) <- make.names(rownames(feat.test))
-        feat.test <- t(feat.test)
-        feat.ref <- features(siamcat)
-        rownames(feat.ref) <- make.names(rownames(feat.ref))
-        feat.ref <- t(feat.ref)
-
-        label <- label(siamcat.holdout)
+        # check reference set
         if (is.null(data_split(siamcat, verbose=0))){
             stop('Reference SIAMCAT object should contain a data split.',
                 ' Exiting...')
@@ -168,6 +159,46 @@ make.predictions <- function(siamcat,
             stop('Reference SIAMCAT object should contains models. Exiting...')
         }
         models <- models(siamcat)
+
+        feature.type <- feature_type(siamcat)
+
+        if (feature.type == 'normalized'){
+
+            if (normalize.holdout) {
+                if (verbose > 1)
+                    message("+ Performing frozen normalization on holdout set")
+                siamcat.holdout <- normalize.features(siamcat.holdout,
+                    norm.param = norm_params(siamcat), feature.type='original',
+                    verbose = verbose)
+                } else {
+                    warning("WARNING: holdout set is not being normalized!")
+                    if (is.null(norm_feat(siamcat.holdout, verbose=0))){
+                        stop('Holdout set has not been normalized yet!')
+                    }
+                }
+            feat.test <- get.norm_feat.matrix(siamcat.holdout)
+        } else if (feature.type == 'filtered') {
+            if (is.null(filt_feat(siamcat.holdout, verbose=0))){
+                stop('Holdout set has not been filtered yet!')
+            }
+            feat.test <- get.filt_feat.matrix(siamcat.holdout)
+        } else if (feature.type == 'original'){
+            feat.test <- get.orig_feat.matrix(siamcat.holdout)
+        }
+        rownames(feat.test) <- make.names(rownames(feat.test))
+        feat.test <- t(feat.test)
+
+        if (feature.type == 'normalized'){
+            feat.ref <- get.norm_feat.matrix(siamcat)
+        } else if (feature.type == 'filtered') {
+            feat.ref <- get.filt_feat.matrix(siamcat)
+        } else if (feature.type == 'original'){
+            feat.ref <- get.orig_feat.matrix(siamcat)
+        }
+        rownames(feat.ref) <- make.names(rownames(feat.ref))
+        feat.ref <- t(feat.ref)
+
+        label <- label(siamcat.holdout)
 
         # data sanity checks
         stopifnot(all(colnames(feat.ref) %in% colnames(feat.test)))
@@ -216,14 +247,8 @@ make.predictions <- function(siamcat,
     if (verbose > 1)
         message("Correlation between predictions from repeated CV:")
     if (verbose > 1)
-        message(paste(
-            "Min: ",
-            min(correlation),
-            ", Median: ",
-            median(correlation),
-            ", Mean: ",
-            mean(correlation)
-        ))
+        message(paste("Min: ", min(correlation), ", Median: ",
+            median(correlation), ", Mean: ", mean(correlation)))
 
     # print out time
     e.time <- proc.time()[3]

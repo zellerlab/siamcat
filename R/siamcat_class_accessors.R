@@ -505,10 +505,46 @@ setMethod("model_type", "ANY", function(siamcat, verbose=1) {
 # Return model type if a model_list object
 #' @rdname model_list-methods
 setMethod("model_type", "model_list", function(siamcat, verbose=1) {
-    temp <- siamcat@model_type
+    temp <- siamcat@model.type
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
         message("Model type is empty")
+    }
+    return(temp)
+})
+
+###############################################################################
+#' Retrieve feature_type from object.
+#'
+#' @usage feature_type(siamcat)
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#'     that contains a model_list or instance of \link{model_list-class}.
+#' @return The string describing type of feature used for the model or NULL.
+#' @export
+#' @rdname feature_type-methods
+#' @docType methods
+#' @examples
+#'     data(siamcat_example)
+#'     feature_type(siamcat_example)
+setGeneric("feature_type", function(siamcat, verbose=1)
+    standardGeneric("feature_type"))
+#' @rdname feature_type-methods
+#' @aliases feature_type,ANY-method
+setMethod("feature_type", "ANY", function(siamcat, verbose=1) {
+    temp <- siamcat@model_list@feature.type
+    if (length(temp) == 0) temp <- NULL
+    if (is.null(temp) & verbose > 0){
+        message("Feature type is empty")
+    }
+    return(temp)
+})
+# Return feature type if a model_list object
+#' @rdname model_list-methods
+setMethod("feature_type", "model_list", function(siamcat, verbose=1) {
+    temp <- siamcat@feature.type
+    if (length(temp) == 0) temp <- NULL
+    if (is.null(temp) & verbose > 0){
+        message("Feature type is empty")
     }
     return(temp)
 })
