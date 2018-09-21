@@ -116,13 +116,31 @@ train.model <- function(siamcat,
     param.set = NULL,
     perform.fs = FALSE,
     param.fs = list(thres.fs = 100, method.fs = "AUC"),
+    feature.type='normalized',
     verbose = 1) {
 
     if (verbose > 1)
         message("+ starting train.model")
     s.time <- proc.time()[3]
 
-    feat <- features(siamcat)
+    # check and get features
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
+    }
+    if (feature.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+    } else if (feature.type == 'filtered'){
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop('Features have not yet been filtered, exiting...\n')
+        }
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feature.type == 'normalized'){
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop('Features have not yet been normalized, exiting...\n')
+        }
+        feat <- get.norm_feat.matrix(siamcat)
+    }
+
     # make sure the names fit
     rownames(feat) <- make.names(rownames(feat))
 
@@ -314,7 +332,8 @@ train.model <- function(siamcat,
 
     model_list(siamcat) <- new("model_list",
         models = models.list,
-        model.type = method)
+        model.type = method,
+        feature.type = feature.type)
 
     e.time <- proc.time()[3]
 

@@ -383,6 +383,13 @@ check.model.list <- function(object){
         msg <- 'Models are supposed to be mlr-WrappedModels!'
         errors <- c(errors, msg)
     }
+    # check feature type
+    if (!object@feature.type %in% c('original', 'filtered', 'normalized')){
+        msg <- paste0('Feature type ', object@feature.type,
+            ' is not recognized!
+            Should be either original, filtered, or normalized!')
+        errors <- c(errors, msg)
+    }
     if (length(errors) == 0) TRUE else errors
 }
 
@@ -394,7 +401,8 @@ check.model.list <- function(object){
 #' @exportClass model_list
 setClass("model_list",
          representation(models = "list",
-                        model.type = "character"),
+                        model.type = "character",
+                        feature.type = 'character'),
          validity=check.model.list)
 
 
