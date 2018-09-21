@@ -4,8 +4,12 @@
 \alias{create.label}
 \title{create a label object from metadata or an atomic vector}
 \usage{
-create.label(label, case, meta=NULL,
-                    control=NULL, p.lab = NULL, n.lab = NULL, verbose=1)
+create.label(label, case,
+                    meta=NULL,
+                    control=NULL,
+                    p.lab = NULL, n.lab = NULL,
+                    remove.meta.column=FALSE,
+                    verbose=1)
 }
 \arguments{
 \item{label}{named vector to create the label or the name of the metadata
