@@ -29,7 +29,8 @@
 #'     # Additionally, prevent standardization of the added features
 #'     siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
 #'     'bmi', 'gender'), std.meta=FALSE)
-add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
+add.meta.pred <- function(siamcat, pred.names,
+    feature.type = 'normalized', std.meta = TRUE,
     verbose = 1) {
 
     if (verbose > 1)
@@ -39,10 +40,28 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
     if (is.null(meta(siamcat))) {
         stop('SIAMCAT object has no metadata. Exiting...')
     }
-    if (is.null(norm_feat(siamcat, verbose=0))){
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
+    }
+    if (feature.type != 'normalized'){
         warning('It is recommended to add a meta-predictor only',
             ' after feature normalization.')
     }
+    # get the right features
+    if (feature.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+    } else if (feature.type == 'filtered'){
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop('Features have not yet been filtered, exiting...\n')
+        }
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feature.type == 'normalized'){
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop('Features have not yet been normalized, exiting...\n')
+        }
+        feat <- get.norm_feat.matrix(siamcat)
+    }
+
     ### add metadata as predictors to the feature matrix
     cnt <- 0
 
@@ -55,7 +74,7 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
             if (!p %in% colnames(meta(siamcat))) {
                 stop("There is no metadata variable called ", p)
             }
-            if (paste0('META_', toupper(p)) %in% rownames(features(siamcat))){
+            if (paste0('META_', toupper(p)) %in% rownames(feat)){
                 stop("This meta-variable has already been added. Exiting...")
             }
             idx <- which(colnames(meta(siamcat)) == p)
@@ -90,11 +109,11 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
                 stopifnot(!m.sd == 0)
                 m <- (m - m.mean)/m.sd
             }
-            features.with.meta <- otu_table(rbind(features(siamcat),m),
+            features.with.meta <- otu_table(rbind(feat,m),
                 taxa_are_rows = TRUE)
             rownames(features.with.meta)[nrow(features.with.meta)] <- paste(
                 "META_", toupper(p), sep = "")
-            features(siamcat) <- features.with.meta
+            features(siamcat, feature.type) <- features.with.meta
 
             cnt <- cnt + 1
         }

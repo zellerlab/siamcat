@@ -55,19 +55,20 @@ setMethod("physeq<-", c("siamcat", "phyloseq"), function(x, value) {
 #' @examples
 #' data(siamcat_example)
 #' features(siamcat_example) <- features(siamcat_example)
-setGeneric("features<-", function(x, value)
+setGeneric("features<-", function(x, value, type)
     standardGeneric("features<-"))
 #' @rdname assign-features
 #' @aliases features<-
-setMethod("features<-", c("siamcat", "otu_table"), function(x, value) {
+setMethod("features<-", c("siamcat", "otu_table", "character"),
+    function(x, value, type) {
 
-    if (!is.null(norm_feat(x, verbose=0))){
+    if (type == 'normalized'){
         norm_feat(x) <- new('norm_feat', norm.feat=value,
             norm.param=norm_params(x))
-    } else if (!is.null(filt_feat(x, verbose=0))){
+    } else if (type == 'filtered'){
         filt_feat(x) <- new('filt_feat', filt.feat=value,
             filt.param=filt_params(x))
-    } else {
+    } else if (type == 'original'){
         orig_feat(x) <- value
     }
     return(x)
