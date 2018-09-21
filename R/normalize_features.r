@@ -124,10 +124,17 @@ normalize.features <- function(siamcat,
         feat <- get.orig_feat.matrix(siamcat)
         if (verbose > 1) message('+ normalizing original features')
     } else if (feature.type == 'filtered'){
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop('Features have not yet been filtered, exiting...\n')
+        }
         feat <- get.filt_feat.matrix(siamcat)
     } else if (feature.type == 'normalized'){
-        warning(paste('Normalizing features that have already been normalized!',
-                '\nPlease note that some functionalities may not work properly'))
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop('Features have not yet been normalized, exiting...\n')
+        }
+        warning(
+            paste('Normalizing features that have already been normalized!',
+            '\nPlease note that some functionalities may not work properly'))
         feat <- get.norm_feat.matrix(siamcat)
     }
 

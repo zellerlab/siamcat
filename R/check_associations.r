@@ -97,7 +97,8 @@
 check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
     alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 1e-06,
     pr.cutoff = 1e-6, max.show = 50, plot.type = "quantile.box",
-    panels = c("fc", "auroc"), prompt=TRUE, verbose = 1) {
+    panels = c("fc", "auroc"), prompt=TRUE, feature.type='filtered',
+    verbose = 1) {
 
         if (verbose > 1)
             message("+ starting check.associations")
@@ -122,16 +123,24 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 uantile.box.")
             plot.type <- "quantile.box"
         }
-        # check features
-        if (is.null(filt_feat(siamcat, verbose=0)) & verbose > 0){
-            message('+ No feature filtering had been performed. Calculating ',
-                'associations on the original features')
-            feat <- get.orig_feat.matrix(siamcat)
-            feat.type <- 'original'
-        } else {
-            feat <- get.filt_feat.matrix(siamcat)
-            feat.type <- 'filtered'
+        if (!feature.type %in% c('original', 'filtered', 'normalized')){
+            stop("Unrecognised feature type, exiting...\n")
         }
+        # get features
+        if (feature.type == 'original'){
+            feat <- get.orig_feat.matrix(siamcat)
+        } else if (feature.type == 'filtered'){
+            if (is.null(filt_feat(siamcat, verbose=0))){
+                stop('Features have not yet been filtered, exiting...\n')
+            }
+            feat <- get.filt_feat.matrix(siamcat)
+        } else if (feature.type == 'normalized'){
+            if (is.null(norm_feat(siamcat, verbose=0))){
+                stop('Features have not yet been normalized, exiting...\n')
+            }
+            feat <- get.norm_feat.matrix(siamcat)
+        }
+
         if (any(is.na(feat))){
             stop('Features contain NAs. Exiting...')
         }
@@ -191,14 +200,14 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 assoc.param=list(detect.lim=result.list$detect.lim,
                     pr.cutoff=pr.cutoff, probs.fc=probs.fc,
                     mult.corr=mult.corr, alpha=alpha,
-                    feat.type=feat.type))
+                    feature.type=feature.type))
         } else {
             # if already existing, check parameters
             old.params <- assoc_param(siamcat)
             new.params <- list(detect.lim=detect.lim,
                 pr.cutoff=pr.cutoff, probs.fc=probs.fc,
                 mult.corr=mult.corr, alpha=alpha,
-                feat.type=feat.type)
+                feature.type=feature.type)
             # if the same, don't compute again but rather use the old resutls
             if (any(all.equal(new.params, old.params) == TRUE)) {
                 result.list <- list()
@@ -221,7 +230,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                     assoc.results=result.list$effect.size,
                     assoc.param=list(detect.lim=result.list$detect.lim,
                         pr.cutoff=pr.cutoff, probs.fc=probs.fc,
-                        mult.corr=mult.corr, alpha=alpha, feat.type=feat.type))
+                        mult.corr=mult.corr, alpha=alpha,
+                        feature.type=feature.type))
             }
         }
 

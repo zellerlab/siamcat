@@ -74,7 +74,7 @@ check.filt.feat <- function(object){
             msg <- "Filtering parameters do not contain all needed entries!"
             errors <- c(errors, msg)
         }
-    
+
     # check that taxa are rows == TRUE
     if (object@filt.feat@taxa_are_rows == FALSE){
         msg <- "Filtered features do not have the taxa as rows!"
@@ -107,7 +107,7 @@ check.assoc <- function(object){
     errors <- character()
     # check that assoc.param contains all entries
     if (!all(names(object@assoc.param) == c('detect.lim', 'pr.cutoff',
-        'probs.fc', 'mult.corr', 'alpha', 'feat.type'))){
+        'probs.fc', 'mult.corr', 'alpha', 'feature.type'))){
             msg <- 'Association testing parameters do not contain all entries!'
             errors <- c(errors, msg)
         }
@@ -146,8 +146,10 @@ check.assoc <- function(object){
         errors <- c(errors, msg)
     }
     # feat.type
-    if (!object@assoc.param$feat.type %in% c('filtered', 'original')){
-        msg <- 'Detection limit (pseudocount) is not valid!'
+    if (!object@assoc.param$feature.type %in%
+        c('filtered', 'original', 'normalized')){
+        msg <- 'Feature type is not valid!
+            (should be original, filtered, or normalized)'
         errors <- c(errors, msg)
     }
     # check that assoc.results contains all that it should
