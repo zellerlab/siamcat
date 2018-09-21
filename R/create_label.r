@@ -8,8 +8,12 @@
 #' @description This function creates a label object from metadata
 #'  or an atomic vector
 #'
-#' @usage create.label(label, case, meta=NULL,
-#'                     control=NULL, p.lab = NULL, n.lab = NULL, verbose=1)
+#' @usage create.label(label, case,
+#'                     meta=NULL,
+#'                     control=NULL,
+#'                     p.lab = NULL, n.lab = NULL,
+#'                     remove.meta.column=FALSE,
+#'                     verbose=1)
 #'
 #' @param label named vector to create the label or the name of the metadata
 #' column that will be used to create the label
@@ -52,7 +56,8 @@
 #'
 #' @export
 create.label <- function(label, case, meta=NULL, control = NULL,
-                         p.lab=NULL, n.lab=NULL, verbose=1) {
+                         p.lab=NULL, n.lab=NULL, remove.meta.column=FALSE,
+                         verbose=1) {
     if (verbose > 1)
         message("+ starting create.label")
 
@@ -161,5 +166,11 @@ create.label <- function(label, case, meta=NULL, control = NULL,
             formatC(e.time - s.time, digits = 3),
             "s"
         ))
-    return(label.new)
+    if (!remove.meta.column){
+        return(label.new)
+    } else {
+        meta.new <- meta[,-which(colnames(meta) == label)]
+        return(list(label=label.new,
+                    meta=meta.new))
+    }
 }

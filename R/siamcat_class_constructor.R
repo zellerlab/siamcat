@@ -153,7 +153,12 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         arglistphyloseq))
 
     # label object
-    label <- validate.label(label, feat, meta, case, verbose)
+    temp <- validate.label(label, feat, meta, case, verbose)
+    label <- temp$label
+    if (!is.null(temp$meta)){
+        sample_data(other.args$phyloseq) <- temp$meta
+    }
+
     other.args$label <- label
 
     # any other slots
@@ -285,16 +290,15 @@ validate.label <- function(label, feat, meta, case, verbose){
         label <- label(list(label = rep(-1, ncol(feat)),
              info=c('TEST'=-1), type="TEST"))
         names(label$label) <- colnames(feat)
-        return(label)
     } else if (class(label) == "label"){
-        return(label)
+        label <- label
     } else if (is.character(label) & length(label) == 1){
         if(is.null(meta)) stop('Metadata needed to generate label! Exiting...')
         if(is.null(case)) stop('Case information needed! Exiting...')
-        label <- create.label(meta=meta, label=label, case=case,
-            verbose=verbose)
-        label <- label(label)
-        return(label)
+        temp <- create.label(meta=meta, label=label, case=case,
+            verbose=verbose, remove.meta.column=TRUE)
+        label <- label(temp$label)
+        meta <- temp$meta
     } else if (is.atomic(label)) {
         if(is.null(case)) stop('Case information needed! Exiting...')
         label <- create.label(label=label, case=case)
@@ -303,7 +307,7 @@ validate.label <- function(label, feat, meta, case, verbose){
             'provide either a label object, a column in your metadata, or a
             vector to distinguish cases and controls!.'))
     }
-
+    return(list(label=label, meta=meta))
 }
 
 # check meta-data object
