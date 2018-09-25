@@ -62,7 +62,7 @@ siamcat <- normalize.features(siamcat,
 
 
 ### write output
-write.table(siamcat@phyloseq@otu_table, file=opt$feat_out,
+write.table(siamcat@norm_feat@norm.feat, file=opt$feat_out,
     quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 ### write parameters
