@@ -3,7 +3,7 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' @title Read labels file
+#' @title Read label file
 #'
 #' @description This file reads in the tsv file with labels and converts it
 #' into a label object.
@@ -35,8 +35,8 @@
 #' fn.label <- system.file('extdata', 'label_crc_zeller_msb_mocat_specI.tsv',
 #'     package = 'SIAMCAT')
 #'
-#' labels <- read.labels(fn.label)
-read.labels <- function(fn.in.label) {
+#' labels <- read.label(fn.label)
+read.label <- function(fn.in.label) {
     if (is.null(fn.in.label))
         stop("Filename for labels file not provided!\n")
     label <-
