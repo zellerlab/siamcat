@@ -46,7 +46,7 @@ start.time  <- proc.time()[1]
 feat  <- read.table(opt$feat_in, sep='\t',
     header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
 label <- read.label(opt$label_in)
-meta  <- read.table(opt$metadata_in, sep='\t',
+meta  <- read.table(opt$metadata_in, sep='\t', row.names=1,
     header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
 siamcat <- siamcat(feat=feat,label=label,meta=meta)
 
