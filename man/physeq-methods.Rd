@@ -7,7 +7,7 @@
 \alias{physeq,phyloseq-method}
 \title{Retrieve a \link[phyloseq]{phyloseq-class} object from object.}
 \usage{
-physeq(siamcat)
+physeq(siamcat, verbose=1)
 
 \S4method{physeq}{ANY}(siamcat, verbose = 1)
 
@@ -16,6 +16,9 @@ physeq(siamcat)
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a label or instance of \link[phyloseq]{phyloseq-class}.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The \link[phyloseq]{phyloseq-class} object or NULL.

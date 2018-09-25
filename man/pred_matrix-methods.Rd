@@ -7,7 +7,7 @@
 \alias{pred_matrix,matrix-method}
 \title{Retrieve pred_matrix from object.}
 \usage{
-pred_matrix(siamcat)
+pred_matrix(siamcat, verbose=1)
 
 \S4method{pred_matrix}{ANY}(siamcat, verbose = 1)
 
@@ -16,6 +16,9 @@ pred_matrix(siamcat)
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a pred_matrix}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The pred_matrix matrix or NULL.

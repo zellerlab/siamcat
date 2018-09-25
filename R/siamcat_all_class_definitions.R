@@ -399,6 +399,7 @@ check.model.list <- function(object){
 #' @rdname model_list-class
 #' @slot models a list with models obtained from \link{train.model}
 #' @slot model.type name of the method used by \link{train.model}
+#' @slot feature.type which types of features used by \link{train.model}
 #' @exportClass model_list
 setClass("model_list",
          representation(models = "list",
@@ -525,13 +526,13 @@ setClass("eval_data", contains = "list", validity=check.eval.data)
 #' @rdname siamcat-class
 #' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
 #' @slot label an object of class \link{label-class}
+#' @slot filt_feat an object of class \link{filt_feat-class}
+#' @slot associations an object of class \link{associations-class}
+#' @slot norm_feat an object of class \link{norm_feat-class}
 #' @slot data_split an object of class \link{data_split-class}
-#' @slot norm_param a list of normalzation parameters, see
-#'     \link{normalize.features} for more details
 #' @slot model_list an object of class \link{model_list-class}
 #' @slot eval_data an object of class \link{eval_data-class}
 #' @slot pred_matrix an object of class \link{pred_matrix-class}
-#' @slot assoc an object of class \link{assoc-class}
 #' @exportClass siamcat
 setClass(
     "siamcat",

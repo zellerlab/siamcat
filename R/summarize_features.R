@@ -89,8 +89,18 @@ summarize.features <- function(siamcat, level = "g__",
 
     if (verbose == 1)
         message("\nSummarized features successfully.")
-    features(siamcat, feature.type) <-
-        otu_table(summarized.feat,taxa_are_rows = TRUE)
+
+    if (feature.type == 'original'){
+        orig_feat(siamcat) <- otu_table(summarized.feat,taxa_are_rows = TRUE)
+    } else if (feature.type == 'filtered'){
+        filt_feat(siamcat) <- new('filt_feat',
+            filt.feat=otu_table(summarized.feat,taxa_are_rows = TRUE),
+            filt.param=filt_params(siamcat))
+    } else if (feature.type == 'normalized'){
+        norm_feat(siamcat) <- new("norm_feat",
+            norm.feat=otu_table(summarized.feat,taxa_are_rows = TRUE),
+            norm.param=norm_params(siamcat))
+    }
 
     return(siamcat)
 }

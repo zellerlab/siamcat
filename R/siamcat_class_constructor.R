@@ -66,7 +66,7 @@
 #'      \link{create.label} function (see for more details).
 #'  \item label object: A label object can be created with the
 #'      \link{create.label} function or by reading a dedicated label file
-#'      with \link{read.labels}.
+#'      with \link{read.label}.
 #'  }
 #' @examples
 #' # example with package data

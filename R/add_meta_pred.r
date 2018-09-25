@@ -29,14 +29,15 @@
 #' @examples
 #'     data(siamcat_example)
 #'     # Add the Age of the patients as potential predictor
-#'     siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('age'))
+#'     siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('Age'))
 #'
 #'     # Add Age, BMI, and Gender as potential predictors
 #'     # Additionally, prevent standardization of the added features
-#'     siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
-#'     'bmi', 'gender'), std.meta=FALSE)
+#'     siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('Age',
+#'     'BMI', 'Gender'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names,
-    feature.type = 'normalized', std.meta = TRUE,
+    std.meta = TRUE,
+    feature.type = 'normalized',
     verbose = 1) {
 
     if (verbose > 1)
@@ -119,8 +120,17 @@ add.meta.pred <- function(siamcat, pred.names,
                 taxa_are_rows = TRUE)
             rownames(features.with.meta)[nrow(features.with.meta)] <- paste(
                 "META_", toupper(p), sep = "")
-            features(siamcat, feature.type) <- features.with.meta
-
+            if (feature.type == 'original'){
+                orig_feat(siamcat) <- features.with.meta
+            } else if (feature.type == 'filtered'){
+                filt_feat(siamcat) <- new('filt_feat',
+                    filt.feat=features.with.meta,
+                    filt.param=filt_params(siamcat))
+            } else if (feature.type == 'normalized'){
+                norm_feat(siamcat) <- new("norm_feat",
+                    norm.feat=features.with.meta,
+                    norm.param=norm_params(siamcat))
+            }
             cnt <- cnt + 1
         }
         if (verbose > 1)

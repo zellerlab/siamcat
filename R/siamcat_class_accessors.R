@@ -8,12 +8,15 @@
 #'
 #' This function is used internally by many accessors.
 #'
-#' @usage accessSlot(siamcat, slot)
+#' @usage accessSlot(siamcat, slot, verbose=1)
 #'
 #' @param siamcat an object of \link{siamcat-class}.
 #'
 #' @param slot A character string indicating the slot (not data class)
 #'     of the component data type that is desired.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
 #'
 #' @return Returns the component object specified by the argument \code{slot}.
 #'     Returns NULL if slot does not exist.
@@ -67,9 +70,13 @@ accessSlot <- function(siamcat, slot, verbose=1) {
 ################################################################################
 #' Retrieve a \link[phyloseq]{phyloseq-class} object from object.
 #'
-#' @usage physeq(siamcat)
+#' @usage physeq(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link[phyloseq]{phyloseq-class}.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The \link[phyloseq]{phyloseq-class} object or NULL.
 #' @export
 #' @rdname physeq-methods
@@ -160,9 +167,13 @@ setMethod("meta", "sample_data", function(siamcat) {
 ################################################################################
 #' Retrieve a \link{label-class} object from object.
 #'
-#' @usage label(siamcat)
+#' @usage label(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link{label-class} or a list.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The \link{label-class} object or NULL.
 #' @export
 #' @rdname label-methods
@@ -193,10 +204,13 @@ setMethod("label", "list", function(siamcat) {
 ###############################################################################
 #' Retrieve filtered features form object
 #'
-#' @usage filt_feat(siamcat)
+#' @usage filt_feat(siamcat, verbose=1)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains an object in the filt_feat slot
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
 #'
 #' @return The filtered feature matrix or NULL.
 #'
@@ -237,12 +251,16 @@ get.filt_feat.matrix <- function(siamcat) {
 ###############################################################################
 #' Retrieve the list of filtering parameters from object.
 #'
-#' @usage filt_params(siamcat)
+#' @usage filt_params(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a filt_feat object
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The list of filtering parameters or NULL.
 #' @export
-#' @rdname filt_feat-methods
+#' @rdname filt_params-methods
 #' @docType methods
 #'
 #' @examples
@@ -250,8 +268,8 @@ get.filt_feat.matrix <- function(siamcat) {
 #'     filt_params(siamcat_example)
 setGeneric("filt_params", function(siamcat, verbose=1)
     standardGeneric("filt_params"))
-#' @rdname filt_feat-methods
-#' @aliases filt_feat,ANY-method
+#' @rdname filt_params-methods
+#' @aliases filt_params,ANY-method
 setMethod("filt_params", "ANY", function(siamcat, verbose=1) {
     temp <- siamcat@filt_feat@filt.param
     if (length(temp) == 0) temp <- NULL
@@ -265,9 +283,13 @@ setMethod("filt_params", "ANY", function(siamcat, verbose=1) {
 ###############################################################################
 #' Retrieve associations from object.
 #'
-#' @usage associations(siamcat)
+#' @usage associations(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains an object in the associations slot
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The results of the association testing or NULL.
 #' @export
 #' @rdname associations-methods
@@ -282,31 +304,28 @@ setGeneric("associations", function(siamcat, verbose=1)
 setMethod("associations", "ANY", function(siamcat, verbose=1) {
     accessSlot(siamcat, "associations", verbose)
 })
-# constructor; for creating an associations object from a list
-#' @rdname associations-methods
-#' @aliases associations
-setMethod("associations", "associations", function(siamcat) {
-    return(new("associations",
-        siamcat))
-})
 
 ###############################################################################
 #' Retrieve parameters of association testing from object.
 #'
-#' @usage assoc_param(siamcat)
+#' @usage assoc_param(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains an object in the associations slot
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The parameters of the assocation testing or NULL
 #' @export
-#' @rdname associations-methods
+#' @rdname assoc_param-methods
 #' @docType methods
 #' @examples
 #'     data(siamcat_example)
 #'     assoc_param(siamcat_example)
 setGeneric("assoc_param", function(siamcat, verbose=1)
     standardGeneric("assoc_param"))
-#' @rdname associations-methods
-#' @aliases associations_param,ANY-method
+#' @rdname assoc_param-methods
+#' @aliases assoc_param_param,ANY-method
 setMethod("assoc_param", "ANY", function(siamcat, verbose=1) {
     temp <- siamcat@associations@assoc.param
     if (length(temp) == 0) temp <- NULL
@@ -319,9 +338,13 @@ setMethod("assoc_param", "ANY", function(siamcat, verbose=1) {
 ###############################################################################
 #' Retrieve normalized features form object
 #'
-#' @usage norm_feat(siamcat)
+#' @usage norm_feat(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains an object in the norm_feat slot
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The normalized feature matrix or NULL.
 #' @export
 #' @rdname norm_feat-methods
@@ -360,12 +383,16 @@ get.norm_feat.matrix <- function(siamcat) {
 ###############################################################################
 #' Retrieve the list of normalization parameters from object.
 #'
-#' @usage norm_params(siamcat)
+#' @usage norm_params(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a norm_feat
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The list of normalization parameters or NULL.
 #' @export
-#' @rdname norm_feat-methods
+#' @rdname norm_params-methods
 #' @docType methods
 #'
 #' @examples
@@ -373,8 +400,8 @@ get.norm_feat.matrix <- function(siamcat) {
 #'     norm_params(siamcat_example)
 setGeneric("norm_params", function(siamcat, verbose=1)
     standardGeneric("norm_params"))
-#' @rdname norm_feat-methods
-#' @aliases norm_feat,ANY-method
+#' @rdname norm_params-methods
+#' @aliases norm_params,ANY-method
 setMethod("norm_params", "ANY", function(siamcat, verbose=1) {
     temp <-  siamcat@norm_feat@norm.param
     if (length(temp) == 0) temp <- NULL
@@ -387,9 +414,13 @@ setMethod("norm_params", "ANY", function(siamcat, verbose=1) {
 ################################################################################
 #' Retrieve a \link{data_split-class} object from object.
 #'
-#' @usage data_split(siamcat)
+#' @usage data_split(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a label or instance of \link{data_split-class} or a list.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The \link{data_split-class} object or NULL.
 #' @export
 #' @rdname data_split-methods
@@ -418,9 +449,13 @@ setMethod("data_split", "list", function(siamcat) {
 ###############################################################################
 #' Retrieve \link{model_list-class} from object.
 #'
-#' @usage model_list(siamcat)
+#' @usage model_list(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The \link{model_list-class} object or NULL.
 #' @export
 #' @rdname model_list-methods
@@ -444,9 +479,13 @@ setMethod("model_list", "model_list", function(siamcat) {
 ###############################################################################
 #' Retrieve list of models from object.
 #'
-#' @usage models(siamcat)
+#' @usage models(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The list of models or NULL.
 #' @export
 #' @rdname models-methods
@@ -468,7 +507,7 @@ setMethod("models", "ANY", function(siamcat, verbose=1) {
 })
 # Return list of models if a model_list object
 #' @rdname model_list-methods
-setMethod("models", "model_list", function(siamcat) {
+setMethod("models", "model_list", function(siamcat, verbose=1) {
     temp <- siamcat@models
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
@@ -480,9 +519,13 @@ setMethod("models", "model_list", function(siamcat) {
 ###############################################################################
 #' Retrieve model_type from object.
 #'
-#' @usage model_type(siamcat)
+#' @usage model_type(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The string describing type of model used or NULL.
 #' @export
 #' @rdname model_type-methods
@@ -516,9 +559,13 @@ setMethod("model_type", "model_list", function(siamcat, verbose=1) {
 ###############################################################################
 #' Retrieve feature_type from object.
 #'
-#' @usage feature_type(siamcat)
+#' @usage feature_type(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The string describing type of feature used for the model or NULL.
 #' @export
 #' @rdname feature_type-methods
@@ -552,9 +599,13 @@ setMethod("feature_type", "model_list", function(siamcat, verbose=1) {
 ###############################################################################
 #' Retrieve weight_matrix from object.
 #'
-#' @usage weight_matrix(siamcat)
+#' @usage weight_matrix(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return A matrix containing the feature weights or NULL
 #' @export
 #' @rdname weight_matrix-methods
@@ -599,9 +650,13 @@ setMethod("weight_matrix", "ANY", function(siamcat, verbose=1) {
 ###############################################################################
 #' Retrieve feature_weights from object.
 #'
-#' @usage feature_weights(siamcat)
+#' @usage feature_weights(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a model_list or instance of \link{model_list-class}.
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return A dataframe containing mean/median feature weight and additional info
 #' @export
 #' @rdname feature_weights-methods
@@ -640,9 +695,13 @@ setMethod("feature_weights", "ANY", function(siamcat, verbose=1) {
 ###############################################################################
 #' Retrieve pred_matrix from object.
 #'
-#' @usage pred_matrix(siamcat)
+#' @usage pred_matrix(siamcat, verbose=1)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a pred_matrix
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
+#'
 #' @return The pred_matrix matrix or NULL.
 #' @export
 #' @rdname pred_matrix-methods
@@ -669,10 +728,13 @@ setMethod("pred_matrix", "matrix", function(siamcat) {
 #' Retrieve eval_data from object.
 #'
 #'
-#' @usage eval_data(siamcat)
+#' @usage eval_data(siamcat, verbose=1)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'     that contains a eval_data..
+#'
+#' @param verbose If the slot is empty, should a message be printed? values
+#'      can be either 0 (no output) or 1 (print message)
 #'
 #' @return The eval_data list or NULL.
 #'

@@ -4,38 +4,26 @@
 \name{norm_feat}
 \alias{norm_feat}
 \alias{norm_feat,ANY-method}
-\alias{norm_params}
-\alias{norm_params,ANY-method}
 \title{Retrieve normalized features form object}
 \usage{
-norm_feat(siamcat)
+norm_feat(siamcat, verbose=1)
 
 \S4method{norm_feat}{ANY}(siamcat, verbose = 1)
-
-norm_params(siamcat)
-
-\S4method{norm_params}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains an object in the norm_feat slot}
 
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a norm_feat}
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The normalized feature matrix or NULL.
-
-The list of normalization parameters or NULL.
 }
 \description{
 Retrieve normalized features form object
-
-Retrieve the list of normalization parameters from object.
 }
 \examples{
     data(siamcat_example)
     norm_feat(siamcat_example)
-    data(siamcat_example)
-    norm_params(siamcat_example)
 }

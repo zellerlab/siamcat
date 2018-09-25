@@ -41,6 +41,11 @@
 #' for binary variables and "rest" will be used for variables with multiple
 #' values.
 #'
+#' @param remove.meta.column boolean indicating if the label column in the
+#'  metadata should be retained. Please note that if this is set to
+#'  \code{TRUE}, the function will return a list as result. Defaults to
+#'  \code{FALSE}
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
@@ -48,7 +53,9 @@
 #'
 #' @keywords create.label
 #'
-#' @return an object of class \link{label-class}
+#' @return an object of class \link{label-class} OR a list with entries
+#'  \code{meta} and \code{label}, if \code{remove.meta.column} is set to 
+#'  \code{TRUE}
 #'
 #' @examples
 #'     data('meta_crc_zeller')

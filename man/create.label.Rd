@@ -38,13 +38,20 @@ Default to NULL in which case the value of the negative group will be used
 for binary variables and "rest" will be used for variables with multiple
 values.}
 
+\item{remove.meta.column}{boolean indicating if the label column in the
+metadata should be retained. Please note that if this is set to
+\code{TRUE}, the function will return a list as result. Defaults to
+\code{FALSE}}
+
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information,
 defaults to \code{1}}
 }
 \value{
-an object of class \link{label-class}
+an object of class \link{label-class} OR a list with entries
+ \code{meta} and \code{label}, if \code{remove.meta.column} is set to 
+ \code{TRUE}
 }
 \description{
 This function creates a label object from metadata

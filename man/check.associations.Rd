@@ -45,6 +45,9 @@ defaults to \code{"quantile.box"}}
 transformed abundances, possible entries are \code{c("fc", "auroc",
 "prevalence")}, defaults to \code{c("fc", "auroc")}}
 
+\item{prompt}{boolean to turn on/off prompting user input when not plotting
+into a pdf-file, defaults to TRUE}
+
 \item{feature.type}{On which type of features should the function work? Can
 be either "original", "filtered", or "normalized". Please only change this
 paramter if you know what you are doing!}

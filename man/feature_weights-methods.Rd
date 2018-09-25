@@ -6,13 +6,16 @@
 \alias{feature_weights,ANY-method}
 \title{Retrieve feature_weights from object.}
 \usage{
-feature_weights(siamcat)
+feature_weights(siamcat, verbose=1)
 
 \S4method{feature_weights}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a model_list or instance of \link{model_list-class}.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 A dataframe containing mean/median feature weight and additional info

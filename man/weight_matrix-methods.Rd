@@ -6,13 +6,16 @@
 \alias{weight_matrix,ANY-method}
 \title{Retrieve weight_matrix from object.}
 \usage{
-weight_matrix(siamcat)
+weight_matrix(siamcat, verbose=1)
 
 \S4method{weight_matrix}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a model_list or instance of \link{model_list-class}.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 A matrix containing the feature weights or NULL

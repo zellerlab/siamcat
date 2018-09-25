@@ -13,6 +13,7 @@
 #'                                           "log.std", "log.unit", "log.clr"),
 #'                           norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
 #'                                             n.p = 2, norm.margin = 1),
+#'                           feature.type='filtered',
 #'                           verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}

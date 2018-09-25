@@ -8,7 +8,7 @@
 \alias{label,list-method}
 \title{Retrieve a \link{label-class} object from object.}
 \usage{
-label(siamcat)
+label(siamcat, verbose=1)
 
 \S4method{label}{ANY}(siamcat, verbose = 1)
 
@@ -19,6 +19,9 @@ label(siamcat)
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a label or instance of \link{label-class} or a list.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The \link{label-class} object or NULL.

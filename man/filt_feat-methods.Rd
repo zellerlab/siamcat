@@ -4,38 +4,26 @@
 \name{filt_feat}
 \alias{filt_feat}
 \alias{filt_feat,ANY-method}
-\alias{filt_params}
-\alias{filt_params,ANY-method}
 \title{Retrieve filtered features form object}
 \usage{
-filt_feat(siamcat)
+filt_feat(siamcat, verbose=1)
 
 \S4method{filt_feat}{ANY}(siamcat, verbose = 1)
-
-filt_params(siamcat)
-
-\S4method{filt_params}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains an object in the filt_feat slot}
 
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a filt_feat object}
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The filtered feature matrix or NULL.
-
-The list of filtering parameters or NULL.
 }
 \description{
 Retrieve filtered features form object
-
-Retrieve the list of filtering parameters from object.
 }
 \examples{
     data(siamcat_example)
     filt_feat(siamcat_example)
-    data(siamcat_example)
-    filt_params(siamcat_example)
 }

@@ -40,41 +40,6 @@ setMethod("physeq<-", c("siamcat", "phyloseq"), function(x, value) {
 })
 
 ###############################################################################
-#' Assign a new otu_table object to \code{x} features slot
-#'
-#' @usage features(x) <- value
-#'
-#' @param x an object of class \link{siamcat-class}
-#' @param value an object of class \link[phyloseq]{otu_table-class}
-#' @export
-#' @docType methods
-#' @rdname assign-features
-#' @aliases assign-features
-#' @return none
-#'
-#' @examples
-#' data(siamcat_example)
-#' features(siamcat_example) <- features(siamcat_example)
-setGeneric("features<-", function(x, value, type)
-    standardGeneric("features<-"))
-#' @rdname assign-features
-#' @aliases features<-
-setMethod("features<-", c("siamcat", "otu_table", "character"),
-    function(x, value, type) {
-
-    if (type == 'normalized'){
-        norm_feat(x) <- new('norm_feat', norm.feat=value,
-            norm.param=norm_params(x))
-    } else if (type == 'filtered'){
-        filt_feat(x) <- new('filt_feat', filt.feat=value,
-            filt.param=filt_params(x))
-    } else if (type == 'original'){
-        orig_feat(x) <- value
-    }
-    return(x)
-})
-
-###############################################################################
 #' Assign a new otu_table object to \code{x} orig_feat slot
 #'
 #' @usage orig_feat(x) <- value

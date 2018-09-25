@@ -8,7 +8,7 @@
 \alias{data_split,list-method}
 \title{Retrieve a \link{data_split-class} object from object.}
 \usage{
-data_split(siamcat)
+data_split(siamcat, verbose=1)
 
 \S4method{data_split}{ANY}(siamcat, verbose = 1)
 
@@ -19,6 +19,9 @@ data_split(siamcat)
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a label or instance of \link{data_split-class} or a list.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The \link{data_split-class} object or NULL.

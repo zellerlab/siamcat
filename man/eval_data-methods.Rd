@@ -7,7 +7,7 @@
 \alias{eval_data,list-method}
 \title{Retrieve eval_data from object.}
 \usage{
-eval_data(siamcat)
+eval_data(siamcat, verbose=1)
 
 \S4method{eval_data}{ANY}(siamcat, verbose = 1)
 
@@ -16,6 +16,9 @@ eval_data(siamcat)
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a eval_data..}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The eval_data list or NULL.

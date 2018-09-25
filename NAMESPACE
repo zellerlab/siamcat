@@ -3,7 +3,6 @@
 export("associations<-")
 export("data_split<-")
 export("eval_data<-")
-export("features<-")
 export("filt_feat<-")
 export("label<-")
 export("meta<-")

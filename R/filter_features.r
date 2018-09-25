@@ -10,7 +10,8 @@
 #'     unmapped reads may be removed.
 #'
 #' @usage filter.features(siamcat, filter.method = "abundance",
-#'                        cutoff = 0.001, rm.unmapped = TRUE, verbose = 1)
+#'                        cutoff = 0.001, rm.unmapped = TRUE,
+#'                        feature.type='original', verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'

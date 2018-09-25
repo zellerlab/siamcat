@@ -15,6 +15,7 @@
 #'                    min.nonzero.coeff = 1, param.set = NULL,
 #'                    perform.fs = FALSE,
 #'                    param.fs = list(thres.fs = 100, method.fs = "AUC"),
+#'                    feature.type='normalized',
 #'                    verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}

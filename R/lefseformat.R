@@ -58,10 +58,8 @@ siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
 #' @keywords read.lefse
 #'
 #' @return a list with two elements: \itemize{
-#'     \item \code{feat} a features matrix (just as returned by
-#'     \link{read.features} function
-#'     \item \code{meta} a metadate matrix (just as returned by
-#'     \link{read.meta} function}
+#'     \item \code{feat} a features matrix
+#'     \item \code{meta} a metadate matrix}
 #' @examples
 #'
 #' fn.in.lefse<- system.file("extdata",
