@@ -61,7 +61,9 @@ siamcat     <-  select.samples(siamcat,
 
 ### write label, feature and meta-data with selected sample set
 # labels
-write(label$header, file=opt$label_out, append=FALSE)
+write(paste0('#BINARY:1=[', names(siamcat@label$info)[2],
+  '];-1=[', names(siamcat@label$info)[1], ']'),
+  file=opt$label_out, append=FALSE)
 write.table(t(as.matrix(siamcat@label$label)), file=opt$label_out,
     quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
 # features
