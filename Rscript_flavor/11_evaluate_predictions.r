@@ -39,11 +39,13 @@ cat('\n')
 
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
 start.time <- proc.time()[1]
-label      <- read.labels(opt$label_in)
-feat       <- read.features(opt$feat_in)
-siamcat    <- siamcat(feat,label)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label      <- read.label(opt$label_in)
+siamcat    <- siamcat(feat=feat,label=label)
 
-pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
+pred <- read.table(file=opt$pred, sep='\t',
+    header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)
 pred_matrix(siamcat) <- pred_matrix(pred)
 
@@ -56,10 +58,16 @@ model.evaluation.plot(siamcat, fn.plot=opt$plot)
 if (opt$write_eval_results == TRUE){
   # Testing only makes sense if dim(pred)[2] > 1
   if(ncol(pred) == 1){
-    if(!is.null(siamcat@eval_data$auc.all)) write.table(t(aucs), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=FALSE, row.names="auroc values")
-    write.table(t(siamcat@eval_data$auc.average), file=opt$output_results, quote=FALSE, sep='\t', col.names=FALSE, append=TRUE, row.names="auprc values")
+    if(!is.null(siamcat@eval_data$roc.all))
+        write.table(t(siamcat@eval_data$roc.all),
+            file=opt$output_results, quote=FALSE, sep='\t',
+            col.names=FALSE, append=FALSE, row.names="auroc values")
+        write.table(t(siamcat@eval_data$prc.all), file=opt$output_results,
+            quote=FALSE, sep='\t', col.names=FALSE, append=TRUE,
+            row.names="auprc values")
   }else{
-    cat("Only one prediction available, ignoring the write_eval_results option.\n")
+    cat("Only one prediction available,",
+        " ignoring the write_eval_results option.\n")
   }
 
 }

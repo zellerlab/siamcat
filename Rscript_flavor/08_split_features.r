@@ -55,13 +55,15 @@ start.time  <- proc.time()[1]
 set.seed(r.seed)
 
 
-feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label <- read.label(opt$label_in)
 if(!is.null(opt$inseparable)){
-  meta    <- read.meta(opt$metadata_in)
-  siamcat <- siamcat(feat,label,meta)
+    meta  <- read.table(opt$metadata_in, sep='\t', row.names=1,
+        header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+  siamcat <- siamcat(feat=feat,label=label,meta=meta)
 }else{
-  siamcat <- siamcat(feat,label)
+  siamcat <- siamcat(feat=feat,label=label)
 }
 ### Core function sourced from the library
 siamcat <- create.data.split(siamcat,
@@ -75,9 +77,11 @@ data_split <- siamcat@data_split
 save(data_split,file=opt$data_split)
 
 if (opt$stratify) {
-  cat('\nSuccessfully created data split for ', opt$num_folds, '-fold stratified cross-validation', sep='')
+  cat('\nSuccessfully created data split for ', opt$num_folds,
+    '-fold stratified cross-validation', sep='')
 } else {
-  cat('Successfully created data split for ', opt$num_folds, '-fold cross-validation', sep='')
+  cat('Successfully created data split for ', opt$num_folds,
+    '-fold cross-validation', sep='')
 }
 if (opt$resample > 1) {
   cat(' with ', opt$resample, ' times repeated resampling\n', sep='')

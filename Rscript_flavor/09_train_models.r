@@ -62,9 +62,10 @@ set.seed(r.seed)
 
 ### read training data
 # features
-feat         <- read.features(opt$feat_in)
-label        <- read.labels(opt$label_in)
-siamcat      <- siamcat(feat,label)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label        <- read.label(opt$label_in)
+siamcat      <- siamcat(feat=feat,label=label)
 
 load(opt$data_split)
 siamcat@data_split <- data_split
@@ -74,9 +75,11 @@ siamcat  <- train.model(siamcat,
                        stratify = opt$stratify,
                        modsel.crit  = opt$sel_criterion,
                        min.nonzero.coeff = opt$min_nonzero_coeff,
-                       param.set = opt$param_set)
+                       param.set = opt$param_set,
+                       feature.type='original')
 
 model_list <- siamcat@model_list
 save(model_list , file=opt$mlr_models_list)
-cat('\n++++++++++++++++++++\nSuccessfully trained models in ', proc.time()[1] - start.time,
+cat('\n++++++++++++++++++++\nSuccessfully trained models in ',
+    proc.time()[1] - start.time,
     ' seconds\n++++++++++++++++++++\n', sep='')
