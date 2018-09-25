@@ -67,8 +67,8 @@ if(!is.null(opt$inseparable)){
 }
 ### Core function sourced from the library
 siamcat <- create.data.split(siamcat,
-                               num.folds=as.integer(opt$num_folds),
-                               num.resample=as.integer(opt$resample),
+                               num.folds=as.numeric(opt$num_folds),
+                               num.resample=as.numeric(opt$resample),
                                stratify=opt$stratify,
                                inseparable=opt$inseparable)
 # write headers:
