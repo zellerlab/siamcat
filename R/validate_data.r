@@ -23,8 +23,13 @@
 #' @examples
 #'
 #'     data(siamcat_example)
-#'     # simple working example
-#'     siamcat_validated <- validate.data(siamcat_example)
+#'     # validate.data should be run before completing the pipeline
+#'     # since the complete pipeline had been run on siamcat_example, we
+#'     # construct a new siamcat object for the example
+#'     feat <- orig_feat(siamcat_example)
+#'     label <- label(siamcat_example)
+#'     siamcat <- siamcat(feat=feat, label=label)
+#'     siamcat <- validate.data(siamcat)
 #'
 validate.data <- function(siamcat, verbose = 1) {
 

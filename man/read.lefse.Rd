@@ -29,8 +29,8 @@ meta.and.features <- read.lefse(fn.in.lefse, rows.meta = 1:6,
 row.samples = 7)
 meta <- meta.and.features$meta
 feat <- meta.and.features$feat
-label <- create.label.from.metadata(meta, "label", case = "cancer")
-siamcat <- siamcat(feat, label, meta)
+label <- create.label(meta=meta, label="label", case = "cancer")
+siamcat <- siamcat(feat=feat, label=label, meta=meta)
 
 }
 \keyword{read.lefse}

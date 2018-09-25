@@ -145,7 +145,9 @@ setMethod("label<-", c("siamcat", "label"), function(x, value) {
 #'
 #' @examples
 #' data(siamcat_example)
-#' filt_feat(siamcat_example) <- filt_feat(siamcat_example)
+#' filt_feat(siamcat_example) <- new('filt_feat',
+#'      filt.feat=filt_feat(siamcat_example),
+#'      filt.param=filt_params(siamcat_example))
 setGeneric("filt_feat<-", function(x, value)
     standardGeneric("filt_feat<-"))
 #' @rdname assign-filt_feat
@@ -182,7 +184,9 @@ setMethod("filt_feat<-", c("siamcat", "filt_feat"), function(x, value) {
 #'
 #' @examples
 #' data(siamcat_example)
-#' assocications(siamcat_example) <- associations(siamcat_example)
+#' associations(siamcat_example) <- new("associations",
+#'      assoc.results=associations(siamcat_example),
+#'      assoc.param=assoc_param(siamcat_example))
 setGeneric("associations<-", function(x, value)
     standardGeneric("associations<-"))
 #' @rdname assign-associations
@@ -192,7 +196,7 @@ setMethod("associations<-", c("siamcat", "associations"), function(x, value) {
         'phyloseq'=x@phyloseq,
         'label'=x@label,
         x@filt_feat,
-        'assoc'=associations(value),
+        'associations'=value,
         x@norm_feat,
         x@data_split,
         x@model_list,
@@ -219,7 +223,9 @@ setMethod("associations<-", c("siamcat", "associations"), function(x, value) {
 #'
 #' @examples
 #' data(siamcat_example)
-#' norm_feat(siamcat_example) <- norm_feat(siamcat_example)
+#' norm_feat(siamcat_example) <- new("norm_feat",
+#'      norm.feat=norm_feat(siamcat_example),
+#'      norm.param=norm_params(siamcat_example))
 setGeneric("norm_feat<-", function(x, value)
     standardGeneric("norm_feat<-"))
 #' @rdname assign-norm_feat

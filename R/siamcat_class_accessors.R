@@ -234,15 +234,15 @@ setMethod("filt_feat", "ANY", function(siamcat, verbose=1) {
 })
 
 #' Access features in siamcat@filt_feat@filt.feat as matrix
-#' @title get.filt_features.matrix
-#' @name get.filt_features.matrix
+#' @title get.filt_feat.matrix
+#' @name get.filt_feat.matrix
 #' @description Function to access features in siamcat@filt_feat@filt.feat
 #' @param siamcat an object of class \link{siamcat-class}
 #' @return Filtered features as a matrix
 #' @export
 #' @examples
 #'     data(siamcat_example)
-#'     feat <- get.filt_features.matrix(siamcat_example)
+#'     feat <- get.filt_feat.matrix(siamcat_example)
 get.filt_feat.matrix <- function(siamcat) {
     return(filt_feat(siamcat)@.Data)
 }

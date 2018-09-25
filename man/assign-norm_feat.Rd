@@ -24,5 +24,7 @@ Assign a new norm_feat object to \code{x}
 }
 \examples{
 data(siamcat_example)
-norm_feat(siamcat_example) <- norm_feat(siamcat_example)
+norm_feat(siamcat_example) <- new("norm_feat",
+     norm.feat=norm_feat(siamcat_example),
+     norm.param=norm_params(siamcat_example))
 }

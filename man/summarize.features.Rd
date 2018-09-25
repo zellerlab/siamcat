@@ -29,9 +29,27 @@ Summarize features
 }
 \examples{
 
-    data(siamcat_example)
-    # simple working example
-    siamcat_evaluated <- summarize.features(siamcat_example)
-
+data("GlobalPatterns") ## phyloseq example data
+feat <- otu_table(GlobalPatterns)[1:500,]
+label <- create.label(meta=sample_data(GlobalPatterns),
+                      label = "SampleType",
+                      case = c("Freshwater",
+                               "Freshwater (creek)",
+                               "Ocean"))
+# rename features
+temp <- tax_table(GlobalPatterns)[1:500,]
+test <- apply(temp, 1, FUN=function(vec){
+  out <- ''
+  for (i in seq_along(vec)){
+    end <- ifelse(i == ncol(temp), '', ';')
+    x <- colnames(temp)[i]
+    x2 <- tolower(substr(x, 1, 1))
+    out <- paste0(out, x2, '__', vec[i], end)
+  }
+  return(out)})
+rownames(feat) <- test
+# run the constructor function
+siamcat <- siamcat(feat=feat, label=label)
+siamcat <- summarize.features(siamcat, level='g__', verbose=3)
 }
 \keyword{internal}

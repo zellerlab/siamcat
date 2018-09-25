@@ -24,5 +24,7 @@ Assign a new assocications object to \code{x}
 }
 \examples{
 data(siamcat_example)
-assocications(siamcat_example) <- associations(siamcat_example)
+associations(siamcat_example) <- new("associations",
+     assoc.results=associations(siamcat_example),
+     assoc.param=assoc_param(siamcat_example))
 }

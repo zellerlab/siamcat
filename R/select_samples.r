@@ -37,13 +37,13 @@
 #' @examples
 #'     data(siamcat_example)
 #'     # Select all samples that fall into an Age-range between 20 and 80 years
-#'     siamcat_selected <- select.samples(siamcat_example, 'age',
+#'     siamcat_selected <- select.samples(siamcat_example, 'Age',
 #'     allowed.range=c(20, 80))
 #'
 #'     # Select all samples for which information about the gender is given
 #'     # Provide additional information with verbose
-#'     \dontrun{siamcat_selected <- select.samples(siamcat_example, 'gender',
-#'     allowed.set=c(1, 2), verbose=2)}
+#'     \dontrun{siamcat_selected <- select.samples(siamcat_example, 'Gender',
+#'     allowed.set=c('F'), verbose=2)}
 #'
 select.samples <- function(siamcat, filter, allowed.set = NULL,
     allowed.range = NULL, verbose = 1) {

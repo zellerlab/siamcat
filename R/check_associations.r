@@ -82,9 +82,6 @@
 #'@examples
 #'# Example data
 #'     data(siamcat_example)
-#'# since the whole pipeline has been run in the example data, exchange the
-#'# normalized features with the original features
-#'     siamcat_example <- reset.features(siamcat_example)
 #'
 #'# Simple example
 #'     check.associations(siamcat_example, './assoc_plot.pdf')
