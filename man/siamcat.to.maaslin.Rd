@@ -15,7 +15,7 @@ siamcat.to.maaslin(siamcat, filename = "siamcat_output.pcl")
 nothing but data is written to a file
 }
 \description{
-This function creates a MaAsLin merged PCL single input file 
+This function creates a MaAsLin merged PCL single input file
 from siamcat object
 }
 \examples{

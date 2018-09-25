@@ -86,8 +86,8 @@ check.filt.feat <- function(object){
 #' The S4 class for storing the filter features/paramters
 #' @name filt_feat-class
 #' @rdname filt_feat-class
-#' @slot filt.feat An object of class \link[phyloseq]{otu_table-class} storing
-#' the filtered features
+#' @slot filt.feat An object of class \link[phyloseq]{otu_table-class}
+#' storing the filtered features
 #' @slot filt.param A list storing the parameters of the feature filtering
 #' @exportClass filt_feat
 setClass("filt_feat",
@@ -168,8 +168,8 @@ check.assoc <- function(object){
 #' The S4 class for storing the results of the association testing
 #' @name associations-class
 #' @rdname associations-class
-#' @slot assoc.results a data.frame containing the results of the association
-#'  testing
+#' @slot assoc.results a data.frame containing the results of the
+#'  association testing
 #' @slot assoc.param a list containing the parameters for the association
 #' testing
 #' @exportClass associations
@@ -258,12 +258,13 @@ check.norm.feat <- function(object){
 #' The S4 class for storing the normalization data/parameters
 #' @name norm_feat-class
 #' @rdname norm_feat-class
-#' @slot norm.feat An object of class \link[phyloseq]{otu_table-class} storing
-#' the normalized features
+#' @slot norm.feat An object of class \link[phyloseq]{otu_table-class}
+#' storingthe normalized features
 #' @slot norm.param A list with:
 #'     \itemize{
 #'     \item \code{norm.method} the normalization method used
-#'     \item \code{retained.feat} the names of features retained after filtering
+#'     \item \code{retained.feat} the names of features retained after
+#'      filtering
 #'     \item \code{log.n0} pseudocount
 #'     \item \code{n.p} vector norm
 #'     \item \code{norm.margin} margin for the normalization

@@ -10,8 +10,8 @@ The S4 class for storing the results of the association testing
 \section{Slots}{
 
 \describe{
-\item{\code{assoc.results}}{a data.frame containing the results of the association
-testing}
+\item{\code{assoc.results}}{a data.frame containing the results of the
+association testing}
 
 \item{\code{assoc.param}}{a list containing the parameters for the association
 testing}

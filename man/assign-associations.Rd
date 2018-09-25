@@ -22,3 +22,7 @@ none
 \description{
 Assign a new assocications object to \code{x}
 }
+\examples{
+data(siamcat_example)
+assocications(siamcat_example) <- associations(siamcat_example)
+}

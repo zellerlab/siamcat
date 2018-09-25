@@ -19,7 +19,7 @@
 #' @importFrom gridExtra ttheme_minimal grid.table
 #' @importFrom matrixStats rowQuantiles rowMaxs rowSds colRanks rowMedians
 #' @importFrom scales alpha
-#' @importFrom utils write.table read.csv
+#' @importFrom utils write.table read.csv askYesNo
 #' @importFrom stringr str_extract_all
 
 NULL

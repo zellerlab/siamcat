@@ -20,6 +20,10 @@ normalize.features(siamcat,
 \item{norm.param}{list, specifying the parameters of the different
 normalization methods, see details for more information}
 
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
+
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information,
@@ -55,9 +59,9 @@ which are dependant on the normalization method of choice:
     distribution of standard deviations of all features that will be added
     to the denominator during standardization in order to avoid
     underestimation of the standard deviation, defaults to 0.1
-    \item \code{'log.clr'} requires \code{log.n0}, which is the pseudocount to be
-    added before log-transformation, defaults to \code{NULL} leading to
-    the estimation of \code{log.n0} from the data
+    \item \code{'log.clr'} requires \code{log.n0}, which is the pseudocount
+    to be added before log-transformation, defaults to \code{NULL} leading
+    to the estimation of \code{log.n0} from the data
     \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
     using the same default values
     \item \code{'log.unit'} requires next to \code{log.n0} also the

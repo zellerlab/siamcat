@@ -4,13 +4,20 @@
 \alias{add.meta.pred}
 \title{Add metadata as predictors}
 \usage{
-add.meta.pred(siamcat, pred.names, std.meta = TRUE, verbose = 1)
+add.meta.pred(siamcat, pred.names,
+              std.meta = TRUE,
+              feature.type='normalized',
+              verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
 \item{pred.names}{vector of names of the variables within the metadata to be
 added to the feature matrix as predictors}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
 
 \item{std.meta}{boolean, should added metadata features be standardized?,
 defaults to \code{TRUE}}

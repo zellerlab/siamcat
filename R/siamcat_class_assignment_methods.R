@@ -215,6 +215,9 @@ setMethod("filt_feat<-", c("siamcat", "filt_feat"), function(x, value) {
 #' @aliases assign-associations
 #' @return none
 #'
+#' @examples
+#' data(siamcat_example)
+#' assocications(siamcat_example) <- associations(siamcat_example)
 setGeneric("associations<-", function(x, value)
     standardGeneric("associations<-"))
 #' @rdname assign-associations

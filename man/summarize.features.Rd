@@ -5,10 +5,14 @@
 \title{Summarize features}
 \usage{
 summarize.features(siamcat, level = "g__", keep_original_names = TRUE,
-  verbose = 1)
+  feature.type = "original", verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal

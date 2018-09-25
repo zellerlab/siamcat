@@ -5,10 +5,11 @@
 \title{Check and visualize associations between features and classes}
 \usage{
 check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
-                         alpha =0.05, mult.corr = "fdr", sort.by = "fc",
-                         detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
-                         plot.type = "quantile.box",
-                         panels = c("fc","auroc"),verbose = 1)
+                   alpha =0.05, mult.corr = "fdr", sort.by = "fc",
+                   detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
+                   plot.type = "quantile.box",
+                   panels = c("fc","auroc"), prompt = TRUE,
+                   feature.type = 'filtered', verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -43,6 +44,10 @@ defaults to \code{"quantile.box"}}
 \item{panels}{vector, name of the panels to be plotted next to the log10-
 transformed abundances, possible entries are \code{c("fc", "auroc",
 "prevalence")}, defaults to \code{c("fc", "auroc")}}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1} for
 only information about progress and success, \code{2} for normal level of

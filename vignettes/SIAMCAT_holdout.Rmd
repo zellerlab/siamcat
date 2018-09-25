@@ -58,12 +58,13 @@ in the same way that we have seen before in the main `SIAMCAT` vignette.
 # features
 # be vary of the defaults in R!!!
 feat.fr  <- read.table(fn.feat.fr, sep='\t', quote="",
-                       check.names = FALSE)
+                       check.names = FALSE, stringsAsFactors = FALSE)
 # the features are counts, but we want to work with relative abundances
 feat.fr.rel <- prop.table(as.matrix(feat.fr), 2)
 
 # metadata
-meta.fr  <- read.meta(fn.meta.fr)
+meta.fr  <- read.table(fn.meta.fr, sep='\t', quote="",
+                       check.names=FALSE, stringsAsFactors=FALSE)
 
 # create SIAMCAT object
 siamcat.fr <- siamcat(feat=feat.fr.rel, meta=meta.fr,
@@ -80,7 +81,8 @@ feat.cn  <- read.table(fn.feat.cn, sep='\t', quote="",
 feat.cn.rel <- prop.table(as.matrix(feat.cn), 2)
 
 # metadata
-meta.cn  <- read.meta(fn.meta.cn)
+meta.cn  <- read.table(fn.meta.cn, sep='\t', quote="",
+                       check.names=FALSE, stringsAsFactors = FALSE)
 
 # SIAMCAT object
 siamcat.cn <- siamcat(feat=feat.cn.rel, meta=meta.cn,
@@ -157,6 +159,7 @@ which can be accessed using the `norm_params` accessor.
 
 siamcat.cn <- normalize.features(siamcat.cn,
     norm.param=norm_params(siamcat.fr),
+    feature.type='original',
     verbose = 2)
 
 ```

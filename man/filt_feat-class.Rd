@@ -10,8 +10,8 @@ The S4 class for storing the filter features/paramters
 \section{Slots}{
 
 \describe{
-\item{\code{filt.feat}}{An object of class \link[phyloseq]{otu_table-class} storing
-the filtered features}
+\item{\code{filt.feat}}{An object of class \link[phyloseq]{otu_table-class}
+storing the filtered features}
 
 \item{\code{filt.param}}{A list storing the parameters of the feature filtering}
 }}

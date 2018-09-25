@@ -15,9 +15,9 @@ read.lefse(filename = "data.txt", rows.meta = 1, row.samples = 2)
 }
 \value{
 a list with two elements: \itemize{
-    \item \code{feat} a features matrix (just as returned by 
+    \item \code{feat} a features matrix (just as returned by
     \link{read.features} function
-    \item \code{meta} a metadate matrix (just as returned by 
+    \item \code{meta} a metadate matrix (just as returned by
     \link{read.meta} function}
 }
 \description{
@@ -27,7 +27,7 @@ This reads an input file in a LEfSe input format
 
 fn.in.lefse<- system.file("extdata",
 "LEfSe_crc_zeller_msb_mocat_specI.tsv",package = "SIAMCAT")
-meta.and.features <- read.lefse(fn.in.lefse, rows.meta = 1:6, 
+meta.and.features <- read.lefse(fn.in.lefse, rows.meta = 1:6,
 row.samples = 7)
 meta <- meta.and.features$meta
 feat <- meta.and.features$feat

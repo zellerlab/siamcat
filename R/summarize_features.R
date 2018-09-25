@@ -11,6 +11,10 @@
 #'
 #' @param siamcat at which level to summarize (g__ = genus)
 #'
+#' @param feature.type On which type of features should the function work? Can
+#'   be either "original", "filtered", or "normalized". Please only change this
+#'   paramter if you know what you are doing!
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,

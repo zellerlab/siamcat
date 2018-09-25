@@ -10,13 +10,14 @@ The S4 class for storing the normalization data/parameters
 \section{Slots}{
 
 \describe{
-\item{\code{norm.feat}}{An object of class \link[phyloseq]{otu_table-class} storing
-the normalized features}
+\item{\code{norm.feat}}{An object of class \link[phyloseq]{otu_table-class}
+storingthe normalized features}
 
 \item{\code{norm.param}}{A list with:
     \itemize{
     \item \code{norm.method} the normalization method used
-    \item \code{retained.feat} the names of features retained after filtering
+    \item \code{retained.feat} the names of features retained after
+     filtering
     \item \code{log.n0} pseudocount
     \item \code{n.p} vector norm
     \item \code{norm.margin} margin for the normalization

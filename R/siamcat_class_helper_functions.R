@@ -117,7 +117,8 @@ setMethod("show", "siamcat", function(object) {
     # model list
     if (!is.null(feature_weights(object, verbose=0))) {
         cat(paste("feature_weights()      Feature weights:     ",
-            "Summary of feature weights [ see also weight_matrix() ]", sep = " "),
+            "Summary of feature weights [ see also weight_matrix() ]",
+            sep = " "),
             fill = TRUE)
     }
 

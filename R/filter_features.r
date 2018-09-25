@@ -23,6 +23,10 @@
 #' @param rm.unmapped boolean, should unmapped reads be discarded?, defaults to
 #'     \code{TRUE}
 #'
+#' @param feature.type On which type of features should the function work? Can
+#'   be either "original", "filtered", or "normalized". Please only change this
+#'   paramter if you know what you are doing!
+#'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
 #'     level of information and \code{3} for full debug information,
@@ -144,7 +148,7 @@ filter.features <- function(siamcat,
         # sort features per sample and apply cumsum to identify how many
         # collectively have weight K
         for (s in seq_len(ncol(feat))) {
-            srt <- sort(rfeat[, s], index.return = TRUE)
+            srt <- sort(feat[, s], index.return = TRUE)
             cs <- cumsum(srt$x)
             m <- max(which(cs < cutoff))
             f.idx <- union(f.idx, srt$ix[-(seq_len(m))])
