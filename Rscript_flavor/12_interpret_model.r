@@ -66,17 +66,20 @@ load(opt$mlr_models_list) ##loads plm.out
 # model$W      <- read.table(file=opt$model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
 # stopifnot(nrow(model$W) == nrow(feat))
 # parse model header
-if (opt$heatmap_type == 'fc'){
-    siamcat <- siamcat(feat=origin.feat,label=label)
-} else {
-    siamcat <- siamcat(feat=feat,label=label)
-}
 
 if(!is.null(opt$metadata_in)){
     meta  <- read.table(opt$metadata_in, sep='\t', row.names=1,
         header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
-  meta(siamcat) <- meta
+} else {
+    meta <- NULL
 }
+
+if (opt$heatmap_type == 'fc'){
+    siamcat <- siamcat(feat=origin.feat,label=label, meta=meta)
+} else {
+    siamcat <- siamcat(feat=feat,label=label, meta=meta)
+}
+
 model_list(siamcat) <- model_list
 
 pred <- read.table(file=opt$pred, sep='\t', header=TRUE,
