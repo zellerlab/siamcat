@@ -41,7 +41,7 @@ preprocess_data:
 
   only:
     - master
-    - development
+    - dev
 
 train_model:
   stage: train_model
@@ -58,7 +58,7 @@ train_model:
 
   only:
     - master
-    - development
+    - dev
 
 make_predictions:
   stage: make_predictions
@@ -75,7 +75,7 @@ make_predictions:
 
   only:
     - master
-    - development
+    - dev
 
 evaluate_interpret:
   stage: evaluate_interpret
@@ -93,4 +93,4 @@ evaluate_interpret:
 
   only:
     - master
-    - development
+    - dev
