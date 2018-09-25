@@ -21,6 +21,7 @@ suppressMessages(library('SIAMCAT'))
   make_option('--feat_in',         type='character',                     help='Input file containing features'),
   make_option('--label_in',              type='character',                help='Input file containing labels'),
   make_option('--pred',               type='character',                help='Input file containing the trained classification model(s)'),
+  make_option('--data_split',      type='character',                     help='Input file containing data_split object'),
   make_option('--plot',               type='character',                help='Output file for plotting'),
   make_option('--write_eval_results', type='logical',   default=FALSE, help='Should calculated parameters be written into tab-delimited file? (Necessary for generation of test files'),
   make_option('--output_results',     type='character', default="eval_results.tsv",  help='Output file containing evaluation results (only necessary when write_eval_results is set to TRUE')
@@ -33,6 +34,7 @@ cat("=== Paramaters of the run:\n\n")
 cat('feat_in         =', opt$feat_in,      '\n')
 cat('label_in           =', opt$label_in, '\n')
 cat('pred               =', opt$pred, '\n')
+cat('data_split        =', opt$data_split, '\n')
 cat('plot               =', opt$plot, '\n')
 cat('output_results     =', opt$output_results, '\n')
 cat('\n')
@@ -50,6 +52,9 @@ pred <- as.matrix(pred)
 pred_matrix(siamcat) <- pred_matrix(pred)
 
 siamcat <- evaluate.predictions(siamcat)
+
+load(opt$data_split)
+siamcat@data_split <- data_split
 
 model.evaluation.plot(siamcat, fn.plot=opt$plot)
 

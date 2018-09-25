@@ -37,10 +37,10 @@ option_list  <-  list(
 opt            <- parse_args(OptionParser(option_list=option_list))
 cat("=== 12_model_interpretor.r\n")
 cat("=== Paramaters of the run:\n\n")
-cat('feat            =', opt$feat, '\n')
+cat('feat            =', opt$feat_in, '\n')
 cat('origin_feat.    =', opt$origin_feat, '\n')
 cat('metadata_in     =', opt$metadata_in, '\n')
-cat('label           =', opt$label, '\n')
+cat('label           =', opt$label_in, '\n')
 cat('mlr_models_list =', opt$mlr_models_list, '\n')
 cat('pred            =', opt$pred, '\n')
 cat('plot            =', opt$plot, '\n')
@@ -51,9 +51,11 @@ cat('\n')
 
 ### read features and labels
 start.time <- proc.time()[1]
-feat        <- read.features(opt$feat)
-label       <- read.labels(opt$label)
-origin.feat <- read.features(opt$origin_feat)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label      <- read.label(opt$label_in)
+origin.feat <- read.table(opt$origin_feat, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
 
 
 
@@ -64,15 +66,17 @@ load(opt$mlr_models_list) ##loads plm.out
 # model$W      <- read.table(file=opt$model, sep='\t', header=TRUE, row.names=1, stringsAsFactors=FALSE, check.names=FALSE, quote='')
 # stopifnot(nrow(model$W) == nrow(feat))
 # parse model header
-
-siamcat <- siamcat(feat,label)
+feat.object <- ifelse(opt$heatmap_type == 'fc', origin.feat, feat)
+siamcat <- siamcat(feat=feat.object,label=label)
 if(!is.null(opt$metadata_in)){
-  meta          <- read.meta(opt$metadata_in)
+    meta  <- read.table(opt$metadata_in, sep='\t', row.names=1,
+        header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
   meta(siamcat) <- meta
 }
 model_list(siamcat) <- model_list
 
-pred <- read.table(file=opt$pred, sep='\t', header=TRUE, row.names=1, check.names=FALSE, comment.char="#")
+pred <- read.table(file=opt$pred, sep='\t', header=TRUE,
+    row.names=1, check.names=FALSE, comment.char="#")
 pred <- as.matrix(pred)
 pred_matrix(siamcat) <- pred_matrix(pred)
 
