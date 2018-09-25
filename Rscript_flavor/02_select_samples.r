@@ -50,13 +50,29 @@ meta  <- read.table(opt$metadata_in, sep='\t', row.names=1,
     header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
 siamcat <- siamcat(feat=feat,label=label,meta=meta)
 
+# preprocess allowed range/allowed set
+if (!is.null(opt$allowed_range)){
+    allowed.range <- gsub("\\[|\\]", "", opt$allowed_range)
+    allowed.range <- as.numeric(unlist(strsplit(allowed.range, ",")))
+} else {
+    allowed.range <- NULL
+}
+if (!is.null(opt$allowed_set)){
+    allowed.set <- gsub("\\{|\\}", "", opt$allowed_set)
+    allowed.set <- as.numeric(unlist(strsplit(allowed.set, ",")))
+} else {
+    allowed.set <- NULL
+}
+
+
+
 
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
 siamcat     <-  select.samples(siamcat,
                                filter=opt$filter_var,
-                               allowed.range=opt$allowed_range,
-                               allowed.set=opt$allowed_set)
+                               allowed.range=allowed.range,
+                               allowed.set=allowed.set)
 
 
 ### write label, feature and meta-data with selected sample set
