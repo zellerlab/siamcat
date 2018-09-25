@@ -50,9 +50,10 @@ cat('\n')
 ### If variable source.dir does not end with "/", append "/" to end of source.dir
 start.time <- proc.time()[1]
 
-feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in)
-siamcat <- siamcat(feat, label)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label <- read.label(opt$label_in)
+siamcat <- siamcat(feat=feat, label=label)
 
 check.associations(siamcat,
                    fn.plot = opt$plot,
@@ -62,7 +63,10 @@ check.associations(siamcat,
                    sort.by=opt$sort_by,
                    detect.lim = opt$detect_limit,
                    max.show = opt$max_show,
-                   plot.type = opt$plot_type)
+                   plot.type = opt$plot_type,
+                   feature.type='original')
 
 
-cat('\nSuccessfully analyzed statistically significant associations between individual features and labels in ', proc.time()[1] - start.time, ' seconds\n', sep='')
+cat('\nSuccessfully analyzed statistically significant associations ',
+    'between individual features and labels in ',
+    proc.time()[1] - start.time, ' seconds\n', sep='')
