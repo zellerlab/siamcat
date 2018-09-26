@@ -25,6 +25,6 @@ Assign a new filt_feat object to \code{x}
 \examples{
 data(siamcat_example)
 filt_feat(siamcat_example) <- new('filt_feat',
-     filt.feat=filt_feat(siamcat_example),
-     filt.param=filt_params(siamcat_example))
+    filt.feat=filt_feat(siamcat_example),
+    filt.param=filt_params(siamcat_example))
 }

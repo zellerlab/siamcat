@@ -10,8 +10,8 @@
 #'     unmapped reads may be removed.
 #'
 #' @usage filter.features(siamcat, filter.method = "abundance",
-#'                        cutoff = 0.001, rm.unmapped = TRUE,
-#'                        feature.type='original', verbose = 1)
+#'     cutoff = 0.001, rm.unmapped = TRUE,
+#'     feature.type='original', verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'
@@ -25,8 +25,8 @@
 #'     \code{TRUE}
 #'
 #' @param feature.type On which type of features should the function work? Can
-#'   be either "original", "filtered", or "normalized". Please only change this
-#'   paramter if you know what you are doing!
+#'     be either "original", "filtered", or "normalized". Please only change
+#'     this paramter if you know what you are doing!
 #'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
@@ -104,8 +104,8 @@ filter.features <- function(siamcat,
         param.set <- filt_params(siamcat)
         param.set[[length(param.set)+1]] <-
             list(filter.method=filter.method,
-                 cutoff=cutoff, rm.unmapped=rm.unmapped,
-                 feature.type=feature.type)
+                cutoff=cutoff, rm.unmapped=rm.unmapped,
+                feature.type=feature.type)
     } else if (feature.type == 'normalized'){
         # if not yet there, stop
         if (is.null(norm_feat(siamcat, verbose=0))){
@@ -119,8 +119,8 @@ filter.features <- function(siamcat,
             param.set <- filt_params(siamcat)
             param.set[[length(param.set)+1]] <-
                 list(filter.method=filter.method,
-                     cutoff=cutoff, rm.unmapped=rm.unmapped,
-                     feature.type=feature.type)
+                    cutoff=cutoff, rm.unmapped=rm.unmapped,
+                    feature.type=feature.type)
         }
         feat <- get.norm_feat.matrix(siamcat)
     }

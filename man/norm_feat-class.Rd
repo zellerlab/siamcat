@@ -17,7 +17,7 @@ storingthe normalized features}
     \itemize{
     \item \code{norm.method} the normalization method used
     \item \code{retained.feat} the names of features retained after
-     filtering
+    filtering
     \item \code{log.n0} pseudocount
     \item \code{n.p} vector norm
     \item \code{norm.margin} margin for the normalization

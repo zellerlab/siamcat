@@ -5,7 +5,7 @@
 \title{Split a dataset into training and a test sets.}
 \usage{
 create.data.split(siamcat, num.folds = 2, num.resample = 1,
-                         stratify = TRUE, inseparable = NULL, verbose = 1)
+    stratify = TRUE, inseparable = NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

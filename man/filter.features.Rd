@@ -5,8 +5,8 @@
 \title{Perform unsupervised feature filtering.}
 \usage{
 filter.features(siamcat, filter.method = "abundance",
-                       cutoff = 0.001, rm.unmapped = TRUE,
-                       feature.type='original', verbose = 1)
+    cutoff = 0.001, rm.unmapped = TRUE,
+    feature.type='original', verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
@@ -21,8 +21,8 @@ defaults to \code{'abundance'}}
 \code{TRUE}}
 
 \item{feature.type}{On which type of features should the function work? Can
-be either "original", "filtered", or "normalized". Please only change this
-paramter if you know what you are doing!}
+be either "original", "filtered", or "normalized". Please only change
+this paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal

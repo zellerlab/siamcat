@@ -45,9 +45,7 @@ check.label <- function(object){
 #'     \item \code{info} list with additional informations about the dataset
 #' }
 #' @exportClass label
-setClass("label",
-         contains = "list",
-         validity=check.label)
+setClass("label", contains = "list", validity=check.label)
 
 # ##############################################################################
 # Filtered data/parameters
@@ -90,13 +88,10 @@ check.filt.feat <- function(object){
 #' storing the filtered features
 #' @slot filt.param A list storing the parameters of the feature filtering
 #' @exportClass filt_feat
-setClass("filt_feat",
-         representation(filt.param= "list",
-                        filt.feat="otu_table"),
-         validity=check.filt.feat,
-         prototype(filt.param = list(),
-                   filt.feat = otu_table(NA, taxa_are_rows=TRUE,
-                                         errorIfNULL=FALSE)))
+setClass("filt_feat", representation(filt.param= "list",
+        filt.feat="otu_table"),
+    validity=check.filt.feat, prototype(filt.param = list(),
+        filt.feat = otu_table(NA, taxa_are_rows=TRUE, errorIfNULL=FALSE)))
 
 # ##############################################################################
 # Associations
@@ -114,7 +109,7 @@ check.assoc <- function(object){
     # check that all entries are valid and in the expected ranges
     if (!all(vapply(object@assoc.param, class,
         FUN.VALUE=character(1)) == c('numeric', 'numeric', 'numeric',
-                                     'character', 'numeric', 'character'))){
+            'character', 'numeric', 'character'))){
     msg<-'Association testing parameters do not contain the expected classes!'
     errors <- c(errors, msg)
     }
@@ -173,10 +168,9 @@ check.assoc <- function(object){
 #' @slot assoc.param a list containing the parameters for the association
 #' testing
 #' @exportClass associations
-setClass("associations",
-         representation(assoc.results='data.frame',
-                        assoc.param = "list"),
-        validity=check.assoc)
+setClass("associations", representation(assoc.results='data.frame',
+        assoc.param = "list"),
+    validity=check.assoc)
 
 # ##############################################################################
 # Normalization data/parameters
@@ -264,19 +258,16 @@ check.norm.feat <- function(object){
 #'     \itemize{
 #'     \item \code{norm.method} the normalization method used
 #'     \item \code{retained.feat} the names of features retained after
-#'      filtering
+#'     filtering
 #'     \item \code{log.n0} pseudocount
 #'     \item \code{n.p} vector norm
 #'     \item \code{norm.margin} margin for the normalization
 #' } and additional entries depending on the normalization method used.
 #' @exportClass norm_feat
-setClass("norm_feat",
-         representation(norm.param= "list",
-                        norm.feat='otu_table'),
-         validity=check.norm.feat,
-         prototype(norm.param = list(),
-                   norm.feat = otu_table(NA, taxa_are_rows=TRUE,
-                                         errorIfNULL=FALSE)))
+setClass("norm_feat", representation(norm.param= "list",
+        norm.feat='otu_table'),
+    validity=check.norm.feat, prototype(norm.param = list(),
+        norm.feat = otu_table(NA, taxa_are_rows=TRUE, errorIfNULL=FALSE)))
 
 # ##############################################################################
 # Data split
@@ -312,7 +303,7 @@ check.data.split <- function(object){
         errors <- c(errors, msg)
     }
     if (!all(vapply(object$training.folds, length,
-             FUN.VALUE = numeric(1)) == object$num.folds)){
+            FUN.VALUE = numeric(1)) == object$num.folds)){
         msg <- 'All training.folds should be of length num.folds!'
         errors <- c(errors, msg)
     }
@@ -326,7 +317,7 @@ check.data.split <- function(object){
         errors <- c(errors, msg)
     }
     if (!all(vapply(object$test.folds, length,
-             FUN.VALUE = numeric(1)) == object$num.folds)){
+            FUN.VALUE = numeric(1)) == object$num.folds)){
         msg <- 'All test.folds should be of length num.folds!'
         errors <- c(errors, msg)
     }
@@ -360,9 +351,7 @@ check.data.split <- function(object){
 #'     \item \code{num.resample} number of repetition rounds for cv
 #'     \item \code{num.folds} number of folds for cv}
 #' @exportClass data_split
-setClass("data_split",
-         contains = "list",
-         validity=check.data.split)
+setClass("data_split", contains = "list", validity=check.data.split)
 
 # ##############################################################################
 # Model list
@@ -401,11 +390,9 @@ check.model.list <- function(object){
 #' @slot model.type name of the method used by \link{train.model}
 #' @slot feature.type which types of features used by \link{train.model}
 #' @exportClass model_list
-setClass("model_list",
-         representation(models = "list",
-                        model.type = "character",
-                        feature.type = 'character'),
-         validity=check.model.list)
+setClass("model_list", representation(models = "list",
+        model.type = "character", feature.type = 'character'),
+    validity=check.model.list)
 
 
 # ##############################################################################

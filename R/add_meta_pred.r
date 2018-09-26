@@ -8,9 +8,9 @@
 #' @description This function adds metadata to the feature matrix to be later
 #'     used as predictors
 #' @usage add.meta.pred(siamcat, pred.names,
-#'               std.meta = TRUE,
-#'               feature.type='normalized',
-#'               verbose = 1)
+#'     std.meta = TRUE,
+#'     feature.type='normalized',
+#'     verbose = 1)
 #' @param siamcat object of class \link{siamcat-class}
 #' @param pred.names vector of names of the variables within the metadata to be
 #'   added to the feature matrix as predictors

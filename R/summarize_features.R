@@ -7,9 +7,15 @@
 #'
 #' @description Summarize features
 #'
+#' @usage summarize.features(siamcat, level = 'g__',
+#'     keep.original.names=TRUE, feature.type='original',
+#'     verbose=1)
+#'
 #' @param siamcat object of class \link{siamcat-class}
 #'
-#' @param siamcat at which level to summarize (g__ = genus)
+#' @param level at which level to summarize (g__ = genus)
+#'
+#' @param keep.original.names boolean, should the original names be kept?
 #'
 #' @param feature.type On which type of features should the function work? Can
 #'   be either "original", "filtered", or "normalized". Please only change this
@@ -31,28 +37,27 @@
 #' data("GlobalPatterns") ## phyloseq example data
 #' feat <- otu_table(GlobalPatterns)[1:500,]
 #' label <- create.label(meta=sample_data(GlobalPatterns),
-#'                       label = "SampleType",
-#'                       case = c("Freshwater",
-#'                                "Freshwater (creek)",
-#'                                "Ocean"))
+#'     label = "SampleType",
+#'     case = c("Freshwater",
+#'         "Freshwater (creek)",
+#'         "Ocean"))
 #' # rename features
 #' temp <- tax_table(GlobalPatterns)[1:500,]
 #' test <- apply(temp, 1, FUN=function(vec){
-#'   out <- ''
-#'   for (i in seq_along(vec)){
-#'     end <- ifelse(i == ncol(temp), '', ';')
-#'     x <- colnames(temp)[i]
-#'     x2 <- tolower(substr(x, 1, 1))
-#'     out <- paste0(out, x2, '__', vec[i], end)
-#'   }
-#'   return(out)})
+#'     out <- ''
+#'     for (i in seq_along(vec)){
+#'         end <- ifelse(i == ncol(temp), '', ';')
+#'         x <- colnames(temp)[i]
+#'         x2 <- tolower(substr(x, 1, 1))
+#'         out <- paste0(out, x2, '__', vec[i], end)
+#'     }
+#'     return(out)})
 #' rownames(feat) <- test
 #' # run the constructor function
 #' siamcat <- siamcat(feat=feat, label=label)
 #' siamcat <- summarize.features(siamcat, level='g__', verbose=3)
 summarize.features <- function(siamcat, level = "g__",
-                               keep_original_names=TRUE,
-                               feature.type='original', verbose=1){
+    keep.original.names=TRUE, feature.type='original', verbose=1){
 
     if (verbose > 1) message("+ starting summarize.features")
 
@@ -81,14 +86,14 @@ summarize.features <- function(siamcat, level = "g__",
     rownames(feat) <- make.names(rownames(feat))
 
     # search for bins
-    prefix <- ifelse(keep_original_names==TRUE, '^.*', '')
+    prefix <- ifelse(keep.original.names==TRUE, '^.*', '')
     bins <- str_extract_all(rownames(feat),
         pattern=paste0(prefix, level, '[A-Za-z0-9]+\\.'))
     bins.unique <- unique(unlist(bins))
 
     # make empty matrix
     summarized.feat <- matrix(NA, nrow=length(bins.unique), ncol=ncol(feat),
-                              dimnames=list(bins.unique, colnames(feat)))
+        dimnames=list(bins.unique, colnames(feat)))
 
     if (verbose > 0) pb <- txtProgressBar(max=length(bins.unique), style=3)
     for (x in bins.unique){

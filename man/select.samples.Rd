@@ -5,7 +5,7 @@
 \title{Select samples based on metadata}
 \usage{
 select.samples(siamcat, filter, allowed.set = NULL,
-                      allowed.range = NULL, verbose = 1)
+    allowed.range = NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}

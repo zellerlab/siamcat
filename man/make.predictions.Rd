@@ -5,7 +5,7 @@
 \title{Make predictions on a test set}
 \usage{
 make.predictions(siamcat, siamcat.holdout = NULL,
-                        normalize.holdout = TRUE, verbose = 1)
+    normalize.holdout = TRUE, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

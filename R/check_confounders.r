@@ -81,10 +81,10 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
 
                 ct <- vapply(u.val, FUN = function(x) {
                     return(c(sum(mvar[label$label == n.label] == x,
-                                 na.rm = TRUE),
-                             sum(mvar[label$label == p.label] == x,
-                                 na.rm = TRUE)))
-                    }, USE.NAMES = FALSE, FUN.VALUE = integer(2))
+                                na.rm = TRUE),
+                            sum(mvar[label$label == p.label] == x,
+                                na.rm = TRUE)))
+                            }, USE.NAMES = FALSE, FUN.VALUE = integer(2))
 
                 freq <- t(ct / rowSums(ct))
 
@@ -142,9 +142,8 @@ check.confounders <- function(siamcat, fn.plot, verbose = 1) {
                     mvar[label$label == p.label],
                     exact = FALSE)$p.value
             text(ax.int[1] + 0.9 * (ax.int[2] - ax.int[1]),
-                 ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]), cex = 0.8,
-                 paste("MWW test p-value:", format(p.val, digits = 4)),
-                 pos = 2)
+                ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]), cex = 0.8,
+                paste("MWW test p-value:", format(p.val, digits = 4)), pos = 2)
 
             if (verbose > 2)
                 message("++++ panel 2/4: X histogram")

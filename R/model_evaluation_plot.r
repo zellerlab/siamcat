@@ -8,6 +8,8 @@
 #'     the Receiver Operating Characteristic (ROC)-curves, the other the
 #'     Precision-recall (PR)-curves for the different cross-validation
 #'     repetitions.
+#' @usage model.evaluation.plot(..., fn.plot = NULL,
+#'     colours=NULL, verbose = 1)
 #' @param ... one or more object of class \link{siamcat-class}, can be named
 #' @param fn.plot string, filename for the pdf-plot
 #' @param colours colour specification for the different \link{siamcat-class}-

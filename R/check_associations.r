@@ -23,11 +23,11 @@
 #'     (AU-ROC, Prevalence Shift, and Fold Change)
 #'
 #'@usage check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
-#'                    alpha =0.05, mult.corr = "fdr", sort.by = "fc",
-#'                    detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
-#'                    plot.type = "quantile.box",
-#'                    panels = c("fc","auroc"), prompt = TRUE,
-#'                    feature.type = 'filtered', verbose = 1)
+#'     alpha =0.05, mult.corr = "fdr", sort.by = "fc",
+#'     detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
+#'     plot.type = "quantile.box",
+#'     panels = c("fc","auroc"), prompt = TRUE,
+#'     feature.type = 'filtered', verbose = 1)
 #'
 #'@param siamcat object of class \link{siamcat-class}
 #'
@@ -980,7 +980,7 @@ associations.box.plot <-
         legend(
             'topright',
             legend = c(names(which(label$info == p.label)),
-                       names(which(label$info == n.label))),
+                names(which(label$info == n.label))),
             fill = rev(col),
             bty = 'n'
         )
@@ -1072,7 +1072,7 @@ associations.quantile.box.plot <- function(data.mat, label, col,
     legend(
         'topright',
         legend = c(names(which(label$info == p.label)),
-                   names(which(label$info == n.label))),
+            names(which(label$info == n.label))),
         fill = rev(col),
         bty = 'n'
     )
@@ -1148,62 +1148,25 @@ associations.quantile.rect.plot <-
         associations.quantile.median.sub.plot(quantiles.pos, up = TRUE)
         associations.quantile.median.sub.plot(quantiles.neg, up = FALSE)
 
-        legend(
-            0.3*p.mn,
-            n.spec,
-            legend = c(
-                "Quantiles",
-                "40%-60%",
-                "30%-70%",
-                "20%-80%",
-                "10%-90%",
-                "median",
-                "",
-                "",
-                "",
-                "",
-                ""
-            ),
-            bty = 'n',
-            cex = 1,
-            fill = c('white', rev(colors.p), 'white',
-                     'white', rev(colors.n), 'white'),
-            lwd <- 1.3,
-            ncol = 2,
-            border = c(
-                "white",
-                "black",
-                "black",
-                "black",
-                "black",
-                "white",
-                "white",
-                "black",
-                "black",
-                "black",
-                "black",
-                "white"
-            )
-        )
-        legend(
-            0.3*p.mn + abs(0.016*p.mn),
-            n.spec,
-            legend = c("", "", "", "", "", ""),
-            bty = 'n',
+        legend(0.3*p.mn, n.spec,
+            legend = c("Quantiles", "40%-60%", "30%-70%", "20%-80%", "10%-90%",
+                "median", "", "", "", "", ""),
+            bty = 'n', cex = 1, fill = c('white', rev(colors.p), 'white',
+                'white', rev(colors.n), 'white'),
+            lwd = 1.3, ncol = 2, border = c("white", "black", "black",
+                "black", "black", "white", "white", "black", "black", "black",
+                "black", "white"))
+        legend(0.3*p.mn + abs(0.016*p.mn), n.spec,
+            legend = c("", "", "", "", "", ""), bty = 'n',
             lty = c(0, 0, 0, 0, 0, 0),
             # cap legend size for diamond (should look
             #   symmetric to other symbols)
-            pch = 18,
-            cex = 1,
-            pt.cex = c(0, 0, 0, 0, 0, min(35 / n.spec, 2.25))
-        )
-        legend(
-            'bottomright',
+            pch = 18, cex = 1,
+            pt.cex = c(0, 0, 0, 0, 0, min(35 / n.spec, 2.25)))
+        legend('bottomright',
             legend = c(names(which(label$info == max(label$info))),
-                       names(which(label$info == min(label$info)))),
-            fill = rev(col),
-            bty = 'n'
-        )
+                names(which(label$info == min(label$info)))),
+            fill = rev(col), bty = 'n')
         associations.labels.plot(rownames(data.mat),
             plot.type = 'quantile.rect',
             verbose = verbose)
@@ -1295,8 +1258,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
 
         # wilcoxon
         p.val <- wilcox.test(x[which(label$label == negative.label)],
-                             x[which(label$label == positive.label)],
-                             exact = FALSE)$p.value
+            x[which(label$label == positive.label)], exact = FALSE)$p.value
 
         # AU-ROC
         temp <- roc(predictor = x, response = label$label, ci = TRUE,
@@ -1312,9 +1274,9 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
         if (verbose)
             setTxtProgressBar(pb, (pb$getVal() + 1))
         return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2],
-                 'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
-                 'pr.shift' = pr.shift[1], 'pr.n' = pr.shift[2],
-                 'pr.p' = pr.shift[3]))
+            'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
+            'pr.shift' = pr.shift[1], 'pr.n' = pr.shift[2],
+            'pr.p' = pr.shift[3]))
         }
     )))
 

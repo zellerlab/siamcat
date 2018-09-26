@@ -5,9 +5,9 @@
 \title{Add metadata as predictors}
 \usage{
 add.meta.pred(siamcat, pred.names,
-              std.meta = TRUE,
-              feature.type='normalized',
-              verbose = 1)
+    std.meta = TRUE,
+    feature.type='normalized',
+    verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

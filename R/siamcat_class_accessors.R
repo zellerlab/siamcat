@@ -99,11 +99,11 @@ setMethod("physeq", "phyloseq", function(siamcat) {
 
 ################################################################################
 #' Retrieve a \link[phyloseq]{otu_table-class} object from otu_table slot in
-#'  the phyloseq slot in a siamcat object
+#' the phyloseq slot in a siamcat object
 #'
 #' @usage orig_feat(siamcat)
 #' @param siamcat (Required). An instance of \link{siamcat-class}
-#'     that contains a label or instance of \link[phyloseq]{otu_table-class}.
+#' that contains a label or instance of \link[phyloseq]{otu_table-class}.
 #' @return The \link[phyloseq]{otu_table-class} object or NULL.
 #' @export
 #' @rdname orig_feat-methods

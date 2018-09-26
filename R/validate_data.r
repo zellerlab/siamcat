@@ -67,7 +67,7 @@ validate.data <- function(siamcat, verbose = 1) {
     feat <- orig_feat(siamcat)
     if (verbose > 1 & s.removed != 0)
         message(paste0("+ Removed ", s.removed,
-                       " samples from the feature matrix..."))
+            " samples from the feature matrix..."))
     # check and re-order labels
     s.removed <- length(label$label) - length(s.intersect)
     ids <- match(s.intersect, names(label$label))
@@ -76,7 +76,7 @@ validate.data <- function(siamcat, verbose = 1) {
     stopifnot(all(names(label$label) == colnames(feat)))
     if (verbose > 1 & s.removed != 0)
         message(paste0("+ Removed ", s.removed,
-                       " samples from the label object..."))
+            " samples from the label object..."))
 
     # Check for sample number in the different classes
     if (label$type == 'BINARY'){
@@ -90,18 +90,11 @@ validate.data <- function(siamcat, verbose = 1) {
                 )
             }
             if (sum(label$label == label$info[i]) < 10) {
-                message(
-                    paste(
-                        "Data set has only",
-                        sum(label$label == label$info[i]),
-                        "training
-                        examples of class",
-                        names(label$info)[i],
-                        " . Note that a dataset this small/skewed
-                        is not necessarily
-                        suitable for analysis in this pipeline."
-                    )
-                )
+                message(paste("Data set has only",
+                    sum(label$label == label$info[i]),
+                    "training examples of class", names(label$info)[i],
+                    ".\nNote that a dataset this small/skewed is not ",
+                    "necessarily suitable for analysis in this pipeline."))
             }
         }
     }
@@ -121,7 +114,7 @@ validate.data <- function(siamcat, verbose = 1) {
         meta(siamcat) <- meta[s.intersect,]
         if (verbose > 1 & s.removed != 0)
             message(paste0("+ Removed ", s.removed,
-                           " samples from the metadata..."))
+                " samples from the metadata..."))
         stopifnot(all(names(label$label) == rownames(meta(siamcat))))
     }
     e.time <- proc.time()[3]

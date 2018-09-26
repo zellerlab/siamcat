@@ -5,11 +5,11 @@
 \title{Model Interpretation Plot}
 \usage{
 model.interpretation.plot(siamcat, fn.plot = NULL,
-                                 color.scheme = "BrBG",
-                                 consens.thres = 0.5,
-                                 heatmap.type = "zscore",
-                                 limits = c(-3, 3), detect.lim = 1e-06,
-                                 max.show = 50, prompt=TRUE, verbose = 1)
+    color.scheme = "BrBG",
+    consens.thres = 0.5,
+    heatmap.type = "zscore",
+    limits = c(-3, 3), detect.lim = 1e-06,
+    max.show = 50, prompt=TRUE, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}

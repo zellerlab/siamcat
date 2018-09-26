@@ -105,8 +105,8 @@ can perform unsupervised feature selection using the function `filter.features`.
 
 ```{r filter_feat}
 siamcat <- filter.features(siamcat,
-  filter.method = 'abundance',
-  cutoff = 0.001)
+    filter.method = 'abundance',
+    cutoff = 0.001)
 ```
 
 # Association Testing

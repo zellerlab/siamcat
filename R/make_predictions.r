@@ -10,7 +10,7 @@
 #'     a given test-set.
 #'
 #' @usage make.predictions(siamcat, siamcat.holdout = NULL,
-#'                         normalize.holdout = TRUE, verbose = 1)
+#'     normalize.holdout = TRUE, verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
@@ -116,7 +116,7 @@ make.predictions <- function(siamcat,
                 model <- models[[i]]
 
                 stopifnot(!any(rownames(model$task$env$data) %in%
-                  rownames(data)))
+                    rownames(data)))
 
                 # subselect features for each model
                 # needs to be added due to feature selection
@@ -126,8 +126,8 @@ make.predictions <- function(siamcat,
 
                 if (verbose > 2)
                     message(paste0("Applying ", model_type(siamcat),
-                      " on cv_fold", f, "_rep", r, " (", i, " of ",
-                      num.resample * num.folds, ")..."))
+                        " on cv_fold", f, "_rep", r, " (", i, " of ",
+                        num.resample * num.folds, ")..."))
 
                 task <-
                     makeClassifTask(data = data, target = "label")

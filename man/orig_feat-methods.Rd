@@ -6,7 +6,7 @@
 \alias{orig_feat,ANY-method}
 \alias{orig_feat,otu_table-method}
 \title{Retrieve a \link[phyloseq]{otu_table-class} object from otu_table slot in
- the phyloseq slot in a siamcat object}
+the phyloseq slot in a siamcat object}
 \usage{
 orig_feat(siamcat)
 
@@ -23,7 +23,7 @@ The \link[phyloseq]{otu_table-class} object or NULL.
 }
 \description{
 Retrieve a \link[phyloseq]{otu_table-class} object from otu_table slot in
- the phyloseq slot in a siamcat object
+the phyloseq slot in a siamcat object
 }
 \examples{
     data(siamcat_example)

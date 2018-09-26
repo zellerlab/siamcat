@@ -10,11 +10,11 @@
 #'     patients.
 #'
 #' @usage model.interpretation.plot(siamcat, fn.plot = NULL,
-#'                                  color.scheme = "BrBG",
-#'                                  consens.thres = 0.5,
-#'                                  heatmap.type = "zscore",
-#'                                  limits = c(-3, 3), detect.lim = 1e-06,
-#'                                  max.show = 50, prompt=TRUE, verbose = 1)
+#'     color.scheme = "BrBG",
+#'     consens.thres = 0.5,
+#'     heatmap.type = "zscore",
+#'     limits = c(-3, 3), detect.lim = 1e-06,
+#'     max.show = 50, prompt=TRUE, verbose = 1)
 #'
 #'
 #' @param siamcat object of class \link{siamcat-class}
@@ -102,7 +102,7 @@ model.interpretation.plot <-
             if (any(orig_feat(siamcat) < 0) |
                 any(colSums(orig_feat(siamcat)) > 1.01)){
                     stop("Original data should be compositional for ",
-                         "heatmap.type fc. Exiting...")
+                        "heatmap.type fc. Exiting...")
             }
         }
 
@@ -240,7 +240,7 @@ model.interpretation.plot <-
             message(paste0("+++ Layout height values: ", h_t,
                 ", ", h_m, ", ", h_b))
         layout(lmat, widths = c(0.14, 0.58, 0.1, 0.14),
-               heights = c(h_t, h_m, h_b))
+            heights = c(h_t, h_m, h_b))
         par(oma = c(3, 4, 3, 4))
 
         ### header row
@@ -252,16 +252,16 @@ model.interpretation.plot <-
         plot(NULL, type = "n", xlim = c(-0.1, 0.1), xaxt = "n", xlab = "",
             ylim = c(-0.1, 0.1), yaxt = "n", ylab = "", bty = "n"
         )
-        mtext("Feature Weights", side = 3, line = 2, at = 0.04, cex = 1,
-              adj = 0.5)
+        mtext("Feature Weights", side = 3, line = 2, at = 0.04,
+            cex = 1, adj = 0.5)
 
         # ######################################################################
         # Title of heatmap and brackets for classes
         par(mar = c(0, 4.1, 3.1, 5.1))
         hm.label <- label$label[srt.idx]
         plot(NULL, type = "n", xlim = c(0, length(hm.label)), xaxs = "i",
-             xaxt = "n", ylim = c(-0.5, 0.5), yaxs = "i", yaxt = "n",
-             xlab = "", ylab = "", bty = "n")
+            xaxt = "n", ylim = c(-0.5, 0.5), yaxs = "i", yaxt = "n",
+            xlab = "", ylab = "", bty = "n")
         ul <- unique(hm.label)
 
         for (l in seq_along(ul)) {
@@ -276,7 +276,7 @@ model.interpretation.plot <-
             mtext(t, side = 3, line = -0.5, at = h, cex = 0.7, adj = 0.5)
         }
         mtext("Metagenomic Features", side = 3, line = 2,
-              at = length(hm.label) / 2, cex = 1, adj = 0.5)
+            at = length(hm.label) / 2, cex = 1, adj = 0.5)
 
         # ######################################################################
         # Heatmap legend
@@ -318,7 +318,7 @@ model.interpretation.plot <-
         if (verbose > 2)
             message("+++ plotting feature weights")
         rel.weights <- t(t(weight.matrix)/
-                           colSums(abs(weight.matrix), na.rm=TRUE))
+            colSums(abs(weight.matrix), na.rm=TRUE))
         model.interpretation.feature.weights.plot(
             rel.weights = rel.weights,
             sel.idx = sel.idx,
@@ -889,13 +889,12 @@ model.interpretation.select.features <-
                 warning("WARNING: restricting amount of features to
                     be plotted to 50")
                 median.sorted.features.abs <- sort(
-                  abs(feature.weights$median.rel.weight),
+                    abs(feature.weights$median.rel.weight),
                     decreasing = TRUE,
                     index.return = TRUE)
-                idx <-
-                    head(median.sorted.features.abs$ix, n = max.show)
+                idx <- head(median.sorted.features.abs$ix, n = max.show)
                 median.sorted.features <- sort(
-                  feature.weights$mean.rel.weight[idx],
+                    feature.weights$mean.rel.weight[idx],
                     decreasing = TRUE,
                     index.return = TRUE)
                 sel.idx <- idx[median.sorted.features$ix]
