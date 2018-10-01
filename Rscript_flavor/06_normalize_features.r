@@ -45,22 +45,25 @@ cat('\n')
 start.time = proc.time()[1]
 
 ### read feature data
-feat  <- read.features(opt$feat_in)
-siamcat <- siamcat(feat)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+siamcat <- siamcat(feat=feat)
 ### Start core function
 siamcat <- normalize.features(siamcat,
                       norm.method = opt$method,
                       norm.param = list(
-                      log.n0      = opt$log_n0,
-                      sd.min.q    = opt$sd_min_quantile,
-                      n.p         = opt$vector_norm,
-                      norm.margin = opt$norm_margin))
+                          log.n0      = opt$log_n0,
+                          sd.min.q    = opt$sd_min_quantile,
+                          n.p         = opt$vector_norm,
+                          norm.margin = opt$norm_margin),
+                      feature.type='original')
 
 ### End core function
 
 
 ### write output
-write.table(siamcat@phyloseq@otu_table, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@norm_feat@norm.feat, file=opt$feat_out,
+    quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
 ### write parameters
 # write('#normalization parameters', opt$param_out, append=FALSE, sep='')
@@ -70,4 +73,5 @@ write.table(siamcat@phyloseq@otu_table, file=opt$feat_out, quote=FALSE, sep='\t'
 # }
 
 
-cat('\nSuccessfully normalized feature data in ', proc.time()[1] - start.time, ' seconds\n', sep='')
+cat('\nSuccessfully normalized feature data in ',
+    proc.time()[1] - start.time, ' seconds\n', sep='')

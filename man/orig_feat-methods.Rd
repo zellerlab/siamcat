@@ -4,14 +4,15 @@
 \name{orig_feat}
 \alias{orig_feat}
 \alias{orig_feat,ANY-method}
-\alias{orig_feat,orig_feat-method}
-\title{Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.}
+\alias{orig_feat,otu_table-method}
+\title{Retrieve a \link[phyloseq]{otu_table-class} object from otu_table slot in
+the phyloseq slot in a siamcat object}
 \usage{
 orig_feat(siamcat)
 
 \S4method{orig_feat}{ANY}(siamcat)
 
-\S4method{orig_feat}{orig_feat}(siamcat)
+\S4method{orig_feat}{otu_table}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
@@ -21,9 +22,10 @@ that contains a label or instance of \link[phyloseq]{otu_table-class}.}
 The \link[phyloseq]{otu_table-class} object or NULL.
 }
 \description{
-Retrieve a \link[phyloseq]{otu_table-class} object from orig_feat slot.
+Retrieve a \link[phyloseq]{otu_table-class} object from otu_table slot in
+the phyloseq slot in a siamcat object
 }
 \examples{
     data(siamcat_example)
-    data_split(siamcat_example)
+    orig_feat(siamcat_example)
 }

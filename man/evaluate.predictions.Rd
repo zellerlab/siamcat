@@ -38,23 +38,26 @@ This functions calculates for the predictions in the
     the results will be saved in the \code{eval_data}-slot of the
     supplied \link{siamcat-class}-object. The \code{eval_data}-slot
     contains a list with several entries: \itemize{
-        \item \code{$roc.average} average ROC-curve across repeats or a
+        \item \code{$roc} average ROC-curve across repeats or a
                 single ROC-curve on complete dataset;
-        \item \code{$auc.average} AUC value for the average ROC-curve;
-        \item \code{$ev.list} list of \code{length(num.folds)}, containing
-                for different decision thresholds the number of false
-                positives, false negatives, true negatives, and
-                true positives;
-        \item \code{$pr.list} list of \code{length(num.folds)}, containing
-                the positive predictive value (precision) and true positive
-                rate (recall) values used to plot the PR curves.}
+        \item \code{$auroc} AUC value for the average ROC-curve;
+        \item \code{$prc} list containing the positive predictive value
+                (precision) and true positive rate (recall) values used
+                to plot the mean PR curve;
+        \item \code{$auprc} AUC value for the mean PR curve;
+        \item \code{$ev} list containing for different decision thresholds
+                the number of false positives, false negatives, true
+                negatives, and true positives.}
     For the case of repeated cross-validation, the function will
     additonally return \itemize{
         \item \code{$roc.all} list of roc objects (see \link[pROC]{roc})
                 for every repeat;
-        \item \code{$aucspr} vector of AUC values for the PR curves
+        \item \code{$auroc.all} vector of AUC values for the ROC curves
                 for every repeat;
-        \item \code{$auc.all} vector of AUC values for the ROC curves
+        \item \code{$prc.all} list of PR curves for every repeat;
+        \item \code{$auprc.all} vector of AUC values for the PR curves
+                for every repeat;
+        \item \code{$ev.all} list of \code{ev} lists (see above)
                 for every repeat.}
 }
 \examples{

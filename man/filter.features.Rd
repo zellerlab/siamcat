@@ -5,7 +5,8 @@
 \title{Perform unsupervised feature filtering.}
 \usage{
 filter.features(siamcat, filter.method = "abundance",
-    cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)
+    cutoff = 0.001, rm.unmapped = TRUE,
+    feature.type='original', verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
@@ -16,11 +17,12 @@ defaults to \code{'abundance'}}
 
 \item{cutoff}{float, abundace or prevalence cutoff, default to \code{0.001}}
 
-\item{recomp.prop}{boolean, should relative abundances be recomputed?,
-defaults to \code{FALSE}}
-
 \item{rm.unmapped}{boolean, should unmapped reads be discarded?, defaults to
 \code{TRUE}}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change
+this paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
@@ -40,7 +42,7 @@ This function filters the features in a \link{siamcat-class}
     object in a unsupervised manner.
 
     The different filter methods work in the following way: \itemize{
-    \item \code{'abundace'} remove features whose abundance is never
+    \item \code{'abundace'} remove features whose maximum abundance is never
     above the threshold value in any of the samples
     \item \code{'cum.abundance'} remove features with very low abundance
     in all samples i.e. ones that are never among the most abundant
@@ -50,13 +52,16 @@ This function filters the features in a \link{siamcat-class}
     samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
     proportion of samples.
     }
+
+    Features can also be filtered repeatedly with different methods, e.g.
+    first using the maximum abundance filtering and then using prevalence
+    filtering.
+    However, if a filtering method has already been applied to the dataset,
+    SIAMCAT will default back on the original features for filtering.
 }
 \examples{
     # Example dataset
     data(siamcat_example)
-    # since the whole pipeline has been run in the example data, the feature
-    # were filtered already.
-    siamcat_example <- reset.features(siamcat_example)
 
 # Simple examples
 siamcat_filtered <- filter.features(siamcat_example,

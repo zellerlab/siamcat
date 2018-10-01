@@ -18,18 +18,32 @@
 #'     the number of samples per class is checked to ensure a minimum
 #'     number. If metadata is available, the overlap between labels and
 #'     metadata is checked as well.
+#'     This function is run when a \link{siamcat-class} object is created.
 #' @return an object of class \link{siamcat-class} with validated data
 #' @examples
 #'
 #'     data(siamcat_example)
-#'     # simple working example
-#'     siamcat_validated <- validate.data(siamcat_example)
+#'     # validate.data should be run before completing the pipeline
+#'     # since the complete pipeline had been run on siamcat_example, we
+#'     # construct a new siamcat object for the example
+#'     feat <- orig_feat(siamcat_example)
+#'     label <- label(siamcat_example)
+#'     siamcat <- siamcat(feat=feat, label=label)
+#'     siamcat <- validate.data(siamcat)
 #'
 validate.data <- function(siamcat, verbose = 1) {
+
+    # check if filt_feat or norm_feat is present
+    # if yes, throw an error
+    if (!is.null(filt_feat(siamcat, verbose=0)) |
+        !is.null(norm_feat(siamcat, verbose=0))){
+            stop("Only call validate.data before starting the pipeline!")
+    }
+
     if (verbose > 1)
         message("+ starting validate.data")
     label <- label(siamcat)
-    feat  <- features(siamcat)
+    feat  <- orig_feat(siamcat)
     meta  <- meta(siamcat)
     s.time <- proc.time()[3]
 
@@ -38,8 +52,8 @@ validate.data <- function(siamcat, verbose = 1) {
         stop('### The features contain missing data! Exiting...')
     }
     # check for compositional data
-    if (any(colSums(feat) > 1.01) || any(colSums(feat) < 0.99)) {
-        message('\t### Warning: The data does not seem to be compositional!')
+    if (any(colSums(feat) > 1.01)) {
+        warning('\t### Warning: The data does not seem to be compositional!')
     }
 
     # Check if labels are available for all samples in features
@@ -49,11 +63,11 @@ validate.data <- function(siamcat, verbose = 1) {
     s.intersect <- intersect(names(label$label), colnames(feat))
     # check and re-order features
     s.removed <- ncol(feat) - length(s.intersect)
-    features(siamcat) <- feat[,s.intersect]
-    feat <- features(siamcat)
+    orig_feat(siamcat) <- feat[,s.intersect]
+    feat <- orig_feat(siamcat)
     if (verbose > 1 & s.removed != 0)
         message(paste0("+ Removed ", s.removed,
-                       " samples from the feature matrix..."))
+            " samples from the feature matrix..."))
     # check and re-order labels
     s.removed <- length(label$label) - length(s.intersect)
     ids <- match(s.intersect, names(label$label))
@@ -62,35 +76,26 @@ validate.data <- function(siamcat, verbose = 1) {
     stopifnot(all(names(label$label) == colnames(feat)))
     if (verbose > 1 & s.removed != 0)
         message(paste0("+ Removed ", s.removed,
-                       " samples from the label object..."))
+            " samples from the label object..."))
 
     # Check for sample number in the different classes
-    if (verbose > 2)
-        message("+++ checking sample number per class")
-    for (i in seq_along(label$info)) {
-        if (sum(label$label == label$info[i]) <= 5) {
-            stop(
-                "Data set has only",
-                sum(label$label == label$info[i]),
-                "training examples
-                of class",
-                names(label$info)[i],
-                " This is not enough for SIAMCAT to proceed"
-            )
-        }
-        if (sum(label$label == label$info[i]) < 10) {
-            message(
-                paste(
-                    "Data set has only",
-                    sum(label$label == label$info[i]),
-                    "training
-                    examples of class",
-                    names(label$info)[i],
-                    " . Note that a dataset this small/skewed
-                    is not necessarily
-                    suitable for analysis in this pipeline."
+    if (label$type == 'BINARY'){
+        if (verbose > 2)
+            message("+++ checking sample number per class")
+        for (i in seq_along(label$info)) {
+            if (sum(label$label == label$info[i]) <= 5) {
+                stop("Data set has only ", sum(label$label == label$info[i]),
+                    " training examples of class ", names(label$info)[i],
+                    "\nThis is not enough for SIAMCAT to proceed"
                 )
-            )
+            }
+            if (sum(label$label == label$info[i]) < 10) {
+                message(paste("Data set has only",
+                    sum(label$label == label$info[i]),
+                    "training examples of class", names(label$info)[i],
+                    ".\nNote that a dataset this small/skewed is not ",
+                    "necessarily suitable for analysis in this pipeline."))
+            }
         }
     }
 
@@ -109,11 +114,9 @@ validate.data <- function(siamcat, verbose = 1) {
         meta(siamcat) <- meta[s.intersect,]
         if (verbose > 1 & s.removed != 0)
             message(paste0("+ Removed ", s.removed,
-                           " samples from the metadata..."))
+                " samples from the metadata..."))
         stopifnot(all(names(label$label) == rownames(meta(siamcat))))
     }
-
-    orig_feat(siamcat) <- otu_table(physeq(siamcat))
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste(

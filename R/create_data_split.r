@@ -12,7 +12,7 @@
 #'     \code{num.resample} times.
 #'
 #' @usage create.data.split(siamcat, num.folds = 2, num.resample = 1,
-#'     stratify = TRUE,inseparable = NULL, verbose = 1)
+#'     stratify = TRUE, inseparable = NULL, verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
@@ -64,13 +64,9 @@
 #'     ## # example with a variable which is to be inseparable
 #'     ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,
 #'     ##  num.resample=5, stratify=FALSE, inseparable='Gender')
-create.data.split <-
-    function(siamcat,
-        num.folds = 2,
-        num.resample = 1,
-        stratify = TRUE,
-        inseparable = NULL,
-        verbose = 1) {
+create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
+    stratify = TRUE, inseparable = NULL, verbose = 1) {
+
         if (verbose > 1)
             message("+ starting create.data.split")
         s.time <- proc.time()[3]

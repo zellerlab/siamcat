@@ -7,21 +7,27 @@
 \alias{model_list,model_list-method}
 \alias{models,model_list-method}
 \alias{model_type,model_list-method}
+\alias{feature_type,model_list-method}
 \title{Retrieve \link{model_list-class} from object.}
 \usage{
-model_list(siamcat)
+model_list(siamcat, verbose=1)
 
-\S4method{model_list}{ANY}(siamcat)
+\S4method{model_list}{ANY}(siamcat, verbose = 1)
 
 \S4method{model_list}{model_list}(siamcat)
 
-\S4method{models}{model_list}(siamcat)
+\S4method{models}{model_list}(siamcat, verbose = 1)
 
-\S4method{model_type}{model_list}(siamcat)
+\S4method{model_type}{model_list}(siamcat, verbose = 1)
+
+\S4method{feature_type}{model_list}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a model_list or instance of \link{model_list-class}.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The \link{model_list-class} object or NULL.

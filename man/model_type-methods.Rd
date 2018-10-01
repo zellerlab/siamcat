@@ -6,13 +6,16 @@
 \alias{model_type,ANY-method}
 \title{Retrieve model_type from object.}
 \usage{
-model_type(siamcat)
+model_type(siamcat, verbose=1)
 
-\S4method{model_type}{ANY}(siamcat)
+\S4method{model_type}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a model_list or instance of \link{model_list-class}.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The string describing type of model used or NULL.

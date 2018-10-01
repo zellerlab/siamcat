@@ -38,9 +38,10 @@ cat('pred            =', opt$pred,           '\n')
 cat('\n')
 
 
-feat       <- read.features(opt$feat_in)
-label      <- read.labels(opt$label_in)
-siamcat    <- siamcat(feat,label)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label      <- read.label(opt$label_in)
+siamcat    <- siamcat(feat=feat,label=label)
 
 start.time   <- proc.time()[1]
 load(opt$mlr_models_list)
@@ -49,17 +50,18 @@ siamcat@model_list <- model_list
 load(opt$data_split)
 siamcat@data_split <- data_split
 
-
 siamcat <- make.predictions(siamcat)
 
 
 ### save prediction
-pred.header <- paste('#Predictions for ', label$positive.lab, ':', label$p.lab,
-  ' [', label$header, ']', sep='')
+pred.header <- paste('#Predictions for ', names(label$info)[2], ':',
+    label$info[2], ' [', '#HACK', ']', sep='')
 write(pred.header, file=opt$pred, append=FALSE)
 #print(pred$pred)
-suppressWarnings(write.table(pred_matrix(siamcat), file=opt$pred, quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
+suppressWarnings(write.table(pred_matrix(siamcat), file=opt$pred,
+    quote=FALSE, sep='\t', row.names=TRUE, col.names=NA, append=TRUE))
 cat('\nSaved all predictions\n')
 
-cat('\nSuccessfully made preictions with the model in ' , proc.time()[1] - start.time,
+cat('\nSuccessfully made preictions with the model in ' ,
+    proc.time()[1] - start.time,
     ' seconds\n', sep='')

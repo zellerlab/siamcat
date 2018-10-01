@@ -45,10 +45,12 @@ cat('\n')
 start.time <- proc.time()[1]
 
 # reading in the files
-feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in)
-meta  <- read.meta(opt$metadata_in)
-siamcat <- siamcat(feat,label,meta)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label <- read.label(opt$label_in)
+meta  <- read.table(opt$metadata_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+siamcat <- siamcat(feat=feat,label=label,meta=meta)
 
 
 ### Start Core function
@@ -59,16 +61,20 @@ siamcat <- validate.data(siamcat)
 # labels
 
 if (!is.null(opt$label_out)){
-  write.table(label$header,          file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE,
-              col.names = FALSE, append = FALSE)
-  write.table(t(as.matrix(siamcat@label$label)), file = opt$label_out,  quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
-              col.names = TRUE, append = TRUE)
+  write.table(paste0('#BINARY:1=[', names(siamcat@label$info)[2],
+    '];-1=[', names(siamcat@label$info)[1], ']'), 
+    file = opt$label_out,  quote = FALSE,
+    sep = '\t', row.names = FALSE, col.names = FALSE, append = FALSE)
+  write.table(t(as.matrix(siamcat@label$label)), file = opt$label_out,
+    quote = FALSE, sep = '\t', row.names = FALSE, ### a bit of a dirty hack?
+    col.names = TRUE, append = TRUE)
 }
-write.table(siamcat@phyloseq@otu_table,    file = opt$feat_out,   quote = FALSE, sep = '\t', row.names = TRUE,
-            col.names = TRUE)
+write.table(siamcat@phyloseq@otu_table, file = opt$feat_out, quote = FALSE,
+    sep = '\t', row.names = TRUE, col.names = TRUE)
 if (!is.null(meta) && !is.null(opt$metadata_out)) {
-write.table(siamcat@phyloseq@sam_data,  file=opt$metadata_out, quote = FALSE, sep = '\t', row.names = TRUE,
-              col.names = NA)
+    write.table(siamcat@phyloseq@sam_data, file=opt$metadata_out,
+        quote = FALSE, sep = '\t', row.names = TRUE, col.names = NA)
 }
 
-cat('\nSuccessfully validated data in ', proc.time()[1] - start.time, ' seconds\n', sep='')
+cat('\nSuccessfully validated data in ', proc.time()[1] - start.time,
+    ' seconds\n', sep='')

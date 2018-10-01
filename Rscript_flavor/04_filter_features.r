@@ -21,7 +21,6 @@ option_list = list(
   make_option('--feat_in', type='character', help='Input file containing features'),
   make_option('--method', type='character', default='abundance', help='Filtering method (one of \"abundance\", \"cum.abundance\", or \"prevalence\")'),
   make_option('--cutoff', type='double', default=0.001, help='abundance / prevalence cutoff applied for filtering'),
-  make_option('--recomp_prop', type='logical', default=FALSE, help='Should relative abundances be be recomputed?'),
   make_option('--rm_unmapped', type='logical', default=TRUE, help='Should the abundance of unmapped reads be removed?'),
   make_option('--feat_out', type='character', help='Output file to which features after selection are written')
 )
@@ -41,17 +40,19 @@ cat('\n')
 
 start.time    <- proc.time()[1]
 #### read feature data and preprocess
-feat          <- read.features(opt$feat_in)
-siamcat <- siamcat(feat)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+siamcat <- siamcat(feat=feat)
 ### Start core function
 siamcat <- filter.features(siamcat,
-	                          filter.method = opt$method,
-	                          cutoff = opt$cutoff,
-	                          recomp.prop = opt$recomp_prop,
-                            rm.unmapped = opt$rm_unmapped)
+	                       filter.method = opt$method,
+	                       cutoff = opt$cutoff,
+	                       rm.unmapped = opt$rm_unmapped)
 ### End core function
 
 # write filtered feature table
-write.table(siamcat@phyloseq@otu_table, file=opt$feat_out, quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@filt_feat@filt.feat, file=opt$feat_out,
+    quote=FALSE, sep='\t', row.names=TRUE, col.names=TRUE)
 
-cat('\nSuccessfully filtered feature data in ', proc.time()[1] - start.time, ' seconds\n', sep='')
+cat('\nSuccessfully filtered feature data in ', proc.time()[1] - start.time,
+    ' seconds\n', sep='')

@@ -4,10 +4,12 @@
 \alias{model.interpretation.plot}
 \title{Model Interpretation Plot}
 \usage{
-model.interpretation.plot(siamcat, fn.plot, color.scheme = "BrBG",
-consens.thres = 0.5,heatmap.type = c("zscore", "fc"), 
-norm.models = FALSE, limits = c(-3, 3), detect.lim = 1e-06, 
-max.show = 50, verbose = 1)
+model.interpretation.plot(siamcat, fn.plot = NULL,
+    color.scheme = "BrBG",
+    consens.thres = 0.5,
+    heatmap.type = "zscore",
+    limits = c(-3, 3), detect.lim = 1e-06,
+    max.show = 50, prompt=TRUE, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -25,9 +27,6 @@ should therefore be much lower, e.g. \code{0.01}}
 \item{heatmap.type}{type of the heatmap, can be either \code{'fc'} or
 \code{'zscore'}, defaults to \code{'zscore'}}
 
-\item{norm.models}{boolean, should the feature weights be normalized across
-models?, defaults to \code{FALSE}}
-
 \item{limits}{vector, cutoff for extreme values in the heatmap,
 defaults to \code{c(-3, 3)}}
 
@@ -36,6 +35,9 @@ of features, defaults to \code{1e-06}}
 
 \item{max.show}{integer, maximum number of features to be shown in the model
 interpretation plot, defaults to 50}
+
+\item{prompt}{boolean to turn on/off prompting user input when not plotting
+into a pdf-file, defaults to TRUE}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal

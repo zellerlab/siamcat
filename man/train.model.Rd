@@ -5,10 +5,14 @@
 \title{Model training}
 \usage{
 train.model(siamcat,
-method = c("lasso","enet","ridge","lasso_ll", "ridge_ll", "randomForest"),
-stratify = TRUE, modsel.crit = list("auc"), min.nonzero.coeff = 1,
-param.set = NULL, perform.fs = FALSE, 
-param.fs = list(thres.fs = 100, method.fs = "AUC"), verbose = 1)
+    method = c("lasso", "enet", "ridge", "lasso_ll",
+        "ridge_ll", "randomForest"),
+    stratify = TRUE, modsel.crit = list("auc"),
+    min.nonzero.coeff = 1, param.set = NULL,
+    perform.fs = FALSE,
+    param.fs = list(thres.fs = 100, method.fs = "AUC"),
+    feature.type='normalized',
+    verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -45,6 +49,10 @@ Defaults to \code{FALSE}}
 \code{AUC}, \code{FC}, or \code{Wilcoxon}
 } See Details for more information.
 Defaults to \code{list(thres.fs=100, method.fs="AUC")}}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal

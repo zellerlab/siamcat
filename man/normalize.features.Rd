@@ -5,9 +5,12 @@
 \title{Perform feature normalization}
 \usage{
 normalize.features(siamcat,
-norm.method = c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
-norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1, n.p = 2, norm.margin = 1),
-verbose = 1)
+    norm.method = c("rank.unit", "rank.std",
+        "log.std", "log.unit", "log.clr"),
+    norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
+        n.p = 2, norm.margin = 1),
+    feature.type='filtered',
+    verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
@@ -17,6 +20,10 @@ verbose = 1)
 
 \item{norm.param}{list, specifying the parameters of the different
 normalization methods, see details for more information}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
@@ -53,9 +60,9 @@ which are dependant on the normalization method of choice:
     distribution of standard deviations of all features that will be added
     to the denominator during standardization in order to avoid
     underestimation of the standard deviation, defaults to 0.1
-    \item \code{'clr'} requires \code{log.n0}, which is the pseudocount to be
-    added before log-transformation, defaults to \code{NULL} leading to
-    the estimation of \code{log.n0} from the data
+    \item \code{'log.clr'} requires \code{log.n0}, which is the pseudocount
+    to be added before log-transformation, defaults to \code{NULL} leading
+    to the estimation of \code{log.n0} from the data
     \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
     using the same default values
     \item \code{'log.unit'} requires next to \code{log.n0} also the
@@ -78,9 +85,6 @@ z-score standardization)
 \examples{
     # Example data
     data(siamcat_example)
-    # since the whole pipeline has been run in the example data, exchange the
-    # normalized features with the original features
-    siamcat_example <- reset.features(siamcat_example)
 
     # Simple example
     siamcat_norm <- normalize.features(siamcat_example,

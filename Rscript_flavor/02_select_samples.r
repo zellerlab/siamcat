@@ -43,28 +43,52 @@ start.time  <- proc.time()[1]
 
 
 ### read label, feature and meta- data
-feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in)
-meta  <- read.meta(opt$metadata_in)
-siamcat <- siamcat(feat,label,meta)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label <- read.label(opt$label_in)
+meta  <- read.table(opt$metadata_in, sep='\t', row.names=1,
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+siamcat <- siamcat(feat=feat,label=label,meta=meta)
+
+# preprocess allowed range/allowed set
+if (!is.null(opt$allowed_range)){
+    allowed.range <- gsub("\\[|\\]", "", opt$allowed_range)
+    allowed.range <- as.numeric(unlist(strsplit(allowed.range, ",")))
+} else {
+    allowed.range <- NULL
+}
+if (!is.null(opt$allowed_set)){
+    allowed.set <- gsub("\\{|\\}", "", opt$allowed_set)
+    allowed.set <- as.numeric(unlist(strsplit(allowed.set, ",")))
+} else {
+    allowed.set <- NULL
+}
+
+
 
 
 ### select samples fulfilling the filter criteria
 # (i.e. samples having certain metadata values)
 siamcat     <-  select.samples(siamcat,
                                filter=opt$filter_var,
-                               allowed.range=opt$allowed_range,
-                               allowed.set=opt$allowed_set)
+                               allowed.range=allowed.range,
+                               allowed.set=allowed.set)
 
 
 ### write label, feature and meta-data with selected sample set
 # labels
-write(label$header,        file=opt$label_out, append=FALSE)
-write.table(t(as.matrix(siamcat@label$label)), file=opt$label_out, quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
+write(paste0('#BINARY:1=[', names(siamcat@label$info)[2],
+  '];-1=[', names(siamcat@label$info)[1], ']'),
+  file=opt$label_out, append=FALSE)
+write.table(t(as.matrix(siamcat@label$label)), file=opt$label_out,
+    quote=FALSE, sep='\t', row.names=FALSE, col.names=TRUE, append=TRUE)
 # features
-write.table(siamcat@phyloseq@otu_table,  file=opt$feat_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@otu_table,  file=opt$feat_out,
+    quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 # meta-data
-write.table(siamcat@phyloseq@sam_data,  file=opt$metadata_out, quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
+write.table(siamcat@phyloseq@sam_data,  file=opt$metadata_out,
+    quote=FALSE,  sep='\t', row.names=TRUE, col.names=TRUE)
 
 
-cat('\nSuccessfully selected samples in ', proc.time()[1] - start.time, ' seconds\n', sep='')
+cat('\nSuccessfully selected samples in ', proc.time()[1] - start.time,
+    ' seconds\n', sep='')

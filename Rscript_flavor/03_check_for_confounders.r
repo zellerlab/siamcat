@@ -38,13 +38,17 @@ start.time   <- proc.time()[1]
 
 
 ### read label and meta- data
-feat  <- read.features(opt$feat_in)
-label <- read.labels(opt$label_in)
-meta  <- read.meta(opt$metadata_in)
-siamcat <- siamcat(feat,label,meta)
+feat  <- read.table(opt$feat_in, sep='\t',
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+label <- read.label(opt$label_in)
+meta  <- read.table(opt$metadata_in, sep='\t', row.names=1,
+    header=TRUE, quote='', stringsAsFactors = FALSE, check.names = FALSE)
+siamcat <- siamcat(feat=feat,label=label,meta=meta)
+
 ### Start core function
 check.confounders(siamcat, fn.plot=opt$plot)
 ### End core function
 
 
-cat('\nSuccessfully analyzed meta-data for potential confounding in ', proc.time()[1] - start.time, ' seconds\n', sep='')
+cat('\nSuccessfully analyzed meta-data for potential confounding in ',
+    proc.time()[1] - start.time, ' seconds\n', sep='')

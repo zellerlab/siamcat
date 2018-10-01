@@ -4,10 +4,10 @@ author:
 -   name: "Konrad Zych, Jakob Wirbel, and Georg Zeller"
     affiliation: "EMBL Heidelberg"
     email: "georg.zeller@embl.de"
-date: "Date last modified: 2018-05-22"
+date: "Date last modified: 2018-09-24"
 output: BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{SIAMCAT.holdout}
+    %\VignetteIndexEntry{SIAMCAT.input}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{ASCII}
 ---
@@ -15,30 +15,26 @@ vignette: >
 # Introduction
 
 This vignette illustrates how to read and input your own data to the
-`SIAMCAT` package. We will cover reading in text files from the disk, formatting
-them and using them to create an object of `siamcat-class`.
+`SIAMCAT` package. We will cover reading in text files from the disk,
+formatting them and using them to create an object of `siamcat-class`.
 
-The `siamcat-class` is the centerpiece of the package. All of the input data 
+The `siamcat-class` is the centerpiece of the package. All of the input data
 and result are stored inside of it. The structure of the object is described
 below in the [siamcat-class object](#siamcat-class-object) section.
 
 
 # Loading your data into R
 
-## SIAMCAT format files
+## SIAMCAT input
 
-Generally, there are three input files in SIAMCAT format:
+Generally, there are three types of input for `SIAMCAT`:
 
-### Features file
+### Features
 
-The features file is a `.tsv` file that is organized as follows:
+The features should be a `matrix`, a `data.frame`, or an `otu_table`,
+organized as follows:
 
-features (in rows) x samples (in columns).
-
-The first row should contain the sample names and the first column the feature 
-labels (e.g. taxonomic identifiers). The remaining entries are expected to be 
-real values `>= 0` that quantify the **relative abundance** of each feature in 
-each sample:
+`features (in rows) x samples (in columns).`
 
 | | Sample_1 | Sample_2  | Sample_3 | Sample_4  | Sample_5 |
 | --- | ---:| ---:| ---:| ---:| ---:|
@@ -48,14 +44,19 @@ each sample:
 | **Feature_4** | 0.34 | 0.00 | 0.13 | 0.07 | 0.00 |
 | **Feature_5** | 0.06 | 0.16 | 0.00 | 0.00 | 0.00 |
 
-An example of such a file is attached to the `SIAMCAT` package, containing
-data from a publication investigating the microbiome in colorectal cancer (CRC)
-patients and controls (the study can be found here:
+
+> Please note that `SIAMCAT` is supposed to work with **relative abundances**.
+Other types of data (e.g. counts) will also work, but not all functions of the
+package will result in meaningful outputs.
+
+An example of a typical feature file is attached to the `SIAMCAT` package,
+containing data from a publication investigating the microbiome in colorectal
+cancer (CRC) patients and controls (the study can be found here:
 [Zeller et al](http://europepmc.org/abstract/MED/25432777)). The metagenomics
 data were processed with the [MOCAT](http://mocat.embl.de/) pipeline, returning
 taxonomic profiles on the species levels (`specI`):
 
-```{r message=FALSE}
+```{r feat_file, message=FALSE}
 library(SIAMCAT)
 fn.in.feat  <- system.file(
     "extdata",
@@ -64,22 +65,23 @@ fn.in.feat  <- system.file(
 )
 ```
 
-We can access the file with the dedicated `SIAMCAT` function `read.features`:
+One way to load such data into `R` could be the use of `read.table`
 
-```{r message=FALSE}
-feat  <- read.features(fn.in.feat)
+_(Beware of the defaults in R! They are not always useful...)_
+
+```{r read_feat, message=FALSE}
+feat <- read.table(fn.in.feat, sep='\t',
+    header=TRUE, quote='',
+    stringsAsFactors = FALSE, check.names = FALSE)
 # look at some features
 feat[110:114, 1:2]
 ```
 
-### Metadata file
+### Metadata
 
-The metadata file is also a `.tsv` file, organized as follows:
+The metadata should be either a matrix or a `data.frame`.
 
-samples (in rows) x metadata (in columns):
-
-The first row should contain metadata variables names and the first column
-should contain sample names.
+`samples (in rows) x metadata (in columns)`:
 
 | | Age | Gender | BMI |
 | --- | ---:| ---:| ---:|
@@ -89,98 +91,82 @@ should contain sample names.
 | **Sample_4** | 54 | 2 | 26 |
 | **Sample_5** | 65 | 2 | 30 |
 
+The `rownames` of the metadata should match the `colnames` of the feature
+matrix.
+
 Again, an example of such a file is attached to the `SIAMCAT` package, taken
 from the same study:
 
-```{r message=FALSE}
+```{r meta_file, message=FALSE}
 fn.in.meta  <- system.file(
     "extdata",
     "num_metadata_crc_zeller_msb_mocat_specI.tsv",
     package = "SIAMCAT"
 )
 ```
+Also here, the `read.table` can be used to load the data into `R`.
 
-We can access the file with the `SIAMCAT` function `read.meta` and look
-at the result:
-
-```{r warning=FALSE}
-meta  <- read.meta(fn.in.meta)
+```{r read_meta, warning=FALSE}
+meta <- read.table(fn.in.meta, sep='\t',
+    header=TRUE, quote='',
+    stringsAsFactors = FALSE, check.names = FALSE)
 head(meta)
 ```
 
+### Label
 
-```{r echo=FALSE}
-## need to be run to exclude adenoma patients
-meta <- meta[meta$diagnosis != 5,]
-```
-### Label file
+Finally, the label can come in different three different flavours:
 
-Finally, the label file is another `.tsv` file containing samples and labels.
-The label file is optional, since the label can also be created out of the
-metadata, as shown below.
+* **Named vector**: A named vector containing information about cases and
+controls. The names of the vector should match the `rownames` of the metadata
+and the `colnames` of the feature data.
+The label can contain either the information about cases and controls either
+    + as integers (e.g. `0` and `1`),
+    + as characters (e.g. `CTR` and `IBD`), or
+    + as factors.
 
-The organization of the label file is a bit more complicated:
+* **Metadata column**: You can provide the name of a column in the metadata for
+the creation of the label. See below for an example.
 
-+ The first row is expected to be:
-```#BINARY:1=[label for cases];-1=[label for controls]```
+* **Label file**: `SIAMCAT` has a function called `read.label`, which will
+create a label object from a label file. The file should be organized as
+follows:
+    + The first line is supposed to read:
+        `#BINARY:1=[label for cases];-1=[label for controls]`
+    + The second row should contain the sample identifiers as tab-separated
+        list (consistent with feature and metadata).
+    + The third row is then supposed to contain the actual class labels
+        (tab-separated): `1` for each case and `-1` for each control.
 
-+ The second row should contain the sample identifiers as tab-separated list
-    (consistent with feature and metadata).
+    An example file is attached to the package again, if you want to have a
+    look at it.
 
-+ The third row is then supposed to contain the actual class labels 
-    (tab-separated): `1` for each case and `-1` for each control:
+For our example dataset, we can create the label object out of the metadata
+column called `diagnosis`:
 
-Taken together, the file should look like that:
-
-| #BINARY:1=cancer;-1=healthy |
-| :---| :---| :---| :---| :---|
-| Sample_1 | Sample_2  | Sample_3 | Sample_4  | Sample_5 |
-| 1 | 1 | -1 | -1 | 1 |
-
-Again, an example file is attached to the package:
-
-```{r message=FALSE}
-fn.in.label <- system.file(
-    "extdata",
-    "label_crc_zeller_msb_mocat_specI.tsv",
-    package = "SIAMCAT"
-)
+```{r create_label, results="hide", warning=FALSE, eval=FALSE}
+label <- create.label(meta=meta, label="diagnosis",
+    case = 1, control=0)
 ```
 
-We can access the files with the `SIAMCAT` function `read.labels`:
+When we later plot the results, it might be nicer to have names for the
+different groups stored in the label object (instead of `1` and `0`). We can
+also supply them to the `create.label` function:
 
-```{r results="hide", warning=FALSE}
-label <- read.labels(fn.in.label)
-```
-
-The label can also be created from one of the metadata columns. For example, to
-create the equivalent label, we can use the `diagnosis` column, treating the
-value `1` as a case and the `0` as a control:
-
-```{r results="hide", warning=FALSE}
-label <- create.label.from.metadata(meta, "diagnosis", case = 1)
-```
-
-For later plotting, it might be nicer to have names for the different groups
-stored in the label object (instead of `1` and `0`). We can also supply them
-to the `create.label.from.metadata` function:
-
-```{r warning=FALSE}
-label <- create.label.from.metadata(meta, "diagnosis", case = 1,
-                                    p.lab = 'cancer', n.lab = 'healthy')
-label$p.lab
+```{r create_label_2, warning=FALSE}
+label <- create.label(meta=meta, label="diagnosis",
+    case = 1, control=0,
+    p.lab = 'cancer', n.lab = 'healthy')
+label$info
 ```
 
 
-### Creating a siamcat-class object
-
-Out of the features, label and (optionally) metadata objects we can create a
-`siamcat-class`. The structure of the object is described in the
-[siamcat-class object](#siamcat-class-object) section.
-
-```{r results="hide", warning=FALSE}
-siamcat <- siamcat(feat, label, meta)
-```
+>Note:  
+If you have no label information for your dataset, you can still create a
+`SIAMCAT` object from your features alone. The `SIAMCAT` object without label
+information will contain a `TEST` label that can be used for making holdout
+predictions. Other functions, e.g. model training, will not work on such an
+object.
 
 
 ## LEfSe format files
@@ -206,7 +192,7 @@ features. The first column holds the row names:
 
 An example of such a file is attached to the `SIAMCAT` package:
 
-```{r message=FALSE}
+```{r lefse_file, message=FALSE}
 fn.in.lefse<- system.file(
     "extdata",
     "LEfSe_crc_zeller_msb_mocat_specI.tsv",
@@ -217,8 +203,9 @@ fn.in.lefse<- system.file(
 `SIAMCAT` has a dedicated function to read LEfSe format files. The `read.lefse`
 function will read in the input file and extract metadata and features:
 
-```{r results="hide", warning=FALSE}
-meta.and.features <- read.lefse(fn.in.lefse, rows.meta = 1:6, row.samples = 7)
+```{r read_lefse_file, results="hide", warning=FALSE}
+meta.and.features <- read.lefse(fn.in.lefse,
+    rows.meta = 1:6, row.samples = 7)
 meta <- meta.and.features$meta
 feat <- meta.and.features$feat
 ```
@@ -226,25 +213,9 @@ feat <- meta.and.features$feat
 We can then create a label object from one of the columns of the meta object and
 create a `siamcat` object:
 
-```{r results="hide", warning=FALSE}
-label <- create.label.from.metadata(meta, "label", case = "cancer")
-siamcat <- siamcat(feat, label, meta)
+```{r lefse_label, results="hide", warning=FALSE}
+label <- create.label(meta=meta, label="label", case = "cancer")
 ```
-
-## MaAsLin format files
-
-[MaAsLin](https://bitbucket.org/biobakery/biobakery/wiki/maaslin) is a tool for
-identification of associations between micriobial features and complex  
-metadata.
-
-MaAsLin can have two types of input files:
-
-a) two `.tsv` files, one for metadata and one for features - those can be used
-    in `SIAMCAT` just like with [SIAMCAT format files](#SIAMCAT-format-files)
-    `read.features` and `read.meta`;
-
-b) a single `PCL` file that can be read like the
-[LEfSe format files](#LEfSe-format-files) with the `read.lefse` function.
 
 ## metagenomeSeq format files
 
@@ -253,18 +224,20 @@ package to determine differentially abundant features between multiple samples.
 
 There are two ways to input data into metagenomeSeq:
 
-a) two `.tsv` files, one for metadata and one for features - those can be used
-    in `SIAMCAT` just like with [SIAMCAT format files](#SIAMCAT-format-files)
-    `read.features` and `read.meta`. The features file needs to be transposed 
-    with the `transpose = TRUE` parameter:
+a) two files, one for metadata and one for features - those can be used
+    in `SIAMCAT` just like described in [SIAMCAT input](#SIAMCAT-input) with
+    `read.table`:
 
-```{r results="hide", warning=FALSE, eval=FALSE}
+```{r read_metagenome_seq, results="hide", warning=FALSE, eval=FALSE}
 fn.in.feat  <- system.file(
     "extdata",
     "CHK_NAME.otus.count.csv",
     package = "metagenomeSeq"
 )
-feat <- read.features(fn.in.feat, transpose = TRUE)
+feat <- read.table(fn.in.feat, sep='\t',
+    header=TRUE, quote='', row.names = 1,
+    stringsAsFactors = FALSE, check.names = FALSE
+)
 ```
 
 b) `BIOM` format file, that can be used in `SIAMCAT` as described in the
@@ -272,38 +245,55 @@ b) `BIOM` format file, that can be used in `SIAMCAT` as described in the
 
 ## BIOM format files
 
-The BIOM format files can be added to `SIAMCAT` via phyloseq. First the file
-should be imported using the phyloseq function `import_biom`. Then a phyloseq 
-object can be imported as a `siamcat` object as descibed in the
-[Creating a siamcat object of a phyloseq object](#Creating-a-siamcat-object-of-a-phyloseq-object)
-section.
+The BIOM format files can be added to `SIAMCAT` via `phyloseq`. First the file
+should be imported using the `phyloseq` function `import_biom`. Then a
+`phyloseq` object can be imported as a `siamcat` object as descibed in the
+[next section.](#Creating-a-siamcat-object-of-a-phyloseq-object)
 
 ## Creating a siamcat object of a phyloseq object
-The `siamcat` object extends on the phyloseq object, so creating a `siamcat` 
-object from a phyloseq object is really straightforward. This can be done with 
-the `siamcat` constructor function. First, however, we need to create a label
-object:
 
-```{r results="hide", warning=FALSE, eval=TRUE}
+The `siamcat` object extends on the `phyloseq` object. Therefore, creating
+a `siamcat` object from a `phyloseq` object is really straightforward. This
+can be done with the `siamcat` constructor function. First, however, we need
+to create a label object:
+
+```{r create_from_phyloseq, results="hide", warning=FALSE, eval=TRUE}
 data("GlobalPatterns") ## phyloseq example data
-label <- create.label.from.metadata(sample_data(GlobalPatterns),
-                                    column = "SampleType",
-                                    case = "Feces")
+label <- create.label(meta=sample_data(GlobalPatterns),
+    label = "SampleType",
+    case = c("Freshwater", "Freshwater (creek)", "Ocean"))
+# run the constructor function
+siamcat <- siamcat(phyloseq=GlobalPatterns, label=label)
 ```
 
-And then we will run the constructor function:
-```{r results="hide", warning=FALSE, eval=TRUE}
-siamcat <- siamcat(GlobalPatterns,label)
-```
+# Creating a siamcat-class object
 
-# siamcat-class object
-The `siamcat-class` is the centerpiece of the package. All of the is stored 
+The `siamcat-class` is the centerpiece of the package. All of the is stored
 inside of the object:
-
 ![internal make-up of a siamcat object](./siamcat.png)
+
 In the figure above, rectangles depict slots of the object and the class of
-the object stored in the slot is given in the ovals. There are three
-obligatory slots -**phyloseq, label and orig_feat**- marked with thick borders.
+the object stored in the slot is given in the ovals. There are two
+obligatory slots -**phyloseq** (containing the metadata as `sample_data` and
+the original features as `otu_table`) and **label** - marked with thick borders.
+
+The `siamcat` object is constructed using the `siamcat()` function. There are
+two ways to initialize it:
+
+*  **Features**: You can provide a feature `matrix`, `data.frame`, or
+    `otu_table` to the function (together with label and metadata information):
+    ```{r constructor, eval=FALSE}
+    siamcat <- siamcat(feat=feat, label=label, meta=meta)
+    ```
+
+*  **phyloseq**: The alternative is to create a `siamcat` object directly out
+    of a `phyloseq` object:
+    ```{r constructor_phyloseq, eval=FALSE}
+    siamcat <- siamcat(phyloseq=phyloseq, label=label)
+    ```
+
+Please note that you **have to** provide either `feat` or `phyloseq` and that
+you **cannot** provide both.
 
 In order to explain the `siamcat` object better we will show how each of the
 slots is filled.
@@ -312,22 +302,18 @@ slots is filled.
 
 The phyloseq and label slots are obligatory.
 
-+ The phyloseq slot is an object of class phyloseq, which is described in the
+* The phyloseq slot is an object of class `phyloseq`, which is described in the
     help file of the `phyloseq` class. Help can be accessed by typing into R
     console: `help('phyloseq-class')`.
-+ The label slot contains a list. This list has a specific set of entries
-    -see `help('label-class')`- that are automatically generated by the 
-    `read.labels` or `create.label.from.metadata` functions.
-+ The `orig_feat` contains an object of the `otu_table` class
-    -see `help('otu_table-class')`-, which stores the original feature table 
-    (that remains unmodified throughout the run of the package).
+    + The `otu_table` slot in `phyloseq` -see `help('otu_table-class')`-
+        stores the original feature table. For `SIAMCAT`, this slot can be
+        accessed by `orig_feat`.
+* The label slot contains a list. This list has a specific set of entries
+    -see `help('label-class')`- that are automatically generated by the
+    `read.label` or `create.label` functions.
 
-The phyloseq, label and orig_feat are filled when the `siamcat` object is first
-created with the constructor function. Thus, the minimum valid call of the
-`siamcat` function requires a feature table (of `otu_table` class e.g.
-returned by `read.features` function) and a label object (e.g. returned
-by `read.label` function or created from metadata table with
-`create.label.from.metadata` function):
+The `phyloseq`, label and orig_feat are filled when the `siamcat` object is
+first created with the constructor function.
 ![construction](./allCr.png)
 
 ## All the other slots
@@ -336,7 +322,7 @@ Other slots are filled during the run of the `SIAMCAT` workflow:
 
 ## Accessing and assigning slots
 
-Each slot in `siamcat` can be accessed by typing 
+Each slot in `siamcat` can be accessed by typing
 ```
 slot_name(siamcat)
 ```
@@ -349,7 +335,7 @@ There is one notable exception: the phyloseq slot has to be accessed with
 
 Slots will be filled during the `SIAMCAT` workflow by the package's functions.
 However, if for any reason a slot needs to be assigned outside of the workflow,
-the following formula can be used: 
+the following formula can be used:
 ```
 slot_name(siamcat) <- object_to_assign
 ```
@@ -357,6 +343,8 @@ e.g. to assign a `new_label` object to the  `label` slot:
 ```{r, eval=FALSE}
 label(siamcat) <- new_label
 ```
+
+_Please note that this may lead to unforeseen consequences..._
 
 ## Slots inside the slots
 
@@ -368,7 +356,7 @@ with the name of the method used to train the model: `model_type(siamcat)`.
 
 The phyloseq slot has a complex structure. However, unless the phyloseq
 object is created outside of the `SIAMCAT` workflow, only two slots of phyloseq
-slot will be occupied: the `otu_table` slot containing the features table and 
+slot will be occupied: the `otu_table` slot containing the features table and
 the `sam_data` slot containing metadata information. Both can be accessed by
 typing either `features(siamcat)` or `meta(siamcat)`.
 
@@ -384,8 +372,8 @@ head(tax_tab)
 
 If you want to find out more about the phyloseq data structure, head over to
 the
-[phyloseq BioConductor page](https://bioconductor.org/packages/release/bioc/html/phyloseq.html).
-
+[phyloseq](https://bioconductor.org/packages/release/bioc/html/phyloseq.html)
+BioConductor page.
 # Session Info
 
 ```{r}

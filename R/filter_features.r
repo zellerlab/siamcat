@@ -10,7 +10,8 @@
 #'     unmapped reads may be removed.
 #'
 #' @usage filter.features(siamcat, filter.method = "abundance",
-#'     cutoff = 0.001, recomp.prop = FALSE, rm.unmapped = TRUE, verbose = 1)
+#'     cutoff = 0.001, rm.unmapped = TRUE,
+#'     feature.type='original', verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'
@@ -20,11 +21,12 @@
 #'
 #' @param cutoff float, abundace or prevalence cutoff, default to \code{0.001}
 #'
-#' @param recomp.prop boolean, should relative abundances be recomputed?,
-#'     defaults to \code{FALSE}
-#'
 #' @param rm.unmapped boolean, should unmapped reads be discarded?, defaults to
 #'     \code{TRUE}
+#'
+#' @param feature.type On which type of features should the function work? Can
+#'     be either "original", "filtered", or "normalized". Please only change
+#'     this paramter if you know what you are doing!
 #'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
@@ -37,7 +39,7 @@
 #'     object in a unsupervised manner.
 #'
 #'     The different filter methods work in the following way: \itemize{
-#'     \item \code{'abundace'} remove features whose abundance is never
+#'     \item \code{'abundace'} remove features whose maximum abundance is never
 #'     above the threshold value in any of the samples
 #'     \item \code{'cum.abundance'} remove features with very low abundance
 #'     in all samples i.e. ones that are never among the most abundant
@@ -47,6 +49,12 @@
 #'     samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
 #'     proportion of samples.
 #'     }
+#'
+#'     Features can also be filtered repeatedly with different methods, e.g.
+#'     first using the maximum abundance filtering and then using prevalence
+#'     filtering.
+#'     However, if a filtering method has already been applied to the dataset,
+#'     SIAMCAT will default back on the original features for filtering.
 #' @export
 #'
 #' @return siamcat an object of class \link{siamcat-class}
@@ -54,9 +62,6 @@
 #' @examples
 #'     # Example dataset
 #'     data(siamcat_example)
-#'     # since the whole pipeline has been run in the example data, the feature
-#'     # were filtered already.
-#'     siamcat_example <- reset.features(siamcat_example)
 #'
 #' # Simple examples
 #' siamcat_filtered <- filter.features(siamcat_example,
@@ -66,37 +71,67 @@
 filter.features <- function(siamcat,
     filter.method = "abundance",
     cutoff = 0.001,
-    recomp.prop = FALSE,
     rm.unmapped = TRUE,
+    feature.type='original',
     verbose = 1) {
-    ### this statement does not have the purpose to calculate relative
-    ### abundances on the fly and return them.  Instead, it's purpose is to be
-    ### able to calculate f.idx (specifying the indices of features which are
-    ### to be kept) when feature list has already been transformed to relative
-    ### abundances, but e.g. certain features have been removed manually.
 
-    if (verbose > 1)
-        message("+ starting filter.features")
+    if (verbose > 1) message("+ starting filter.features")
     s.time <- proc.time()[3]
 
+    # checks
     if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")) {
-        stop("! Unrecognized filter.method, exiting!\n")
+        stop("Unrecognized filter.method, exiting!\n")
+    }
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
+    }
+    if (!is.logical(rm.unmapped)){
+        stop("rm.unmapped should be logical, exiting...\n")
     }
 
-    if (verbose > 1)
-        message(paste(
-            "+++ before filtering, the data has",
-            nrow(features(siamcat)),
-            "features"
-        ))
-    if (recomp.prop) {
-        # recompute relative abundance values (proportions)
-        ra.feat           <- prop.table(features(siamcat), 2)
-        features(siamcat) <-
-            otu_table(ra.feat, taxa_are_rows = TRUE)
-    } else {
-        ra.feat <- get.features.matrix(siamcat)
+    # get the right features
+    if (feature.type=='original'){
+        feat <- get.orig_feat.matrix(siamcat)
+        param.set <- list(list(filter.method=filter.method,
+                cutoff=cutoff, rm.unmapped=rm.unmapped,
+                feature.type=feature.type))
+    } else if (feature.type == 'filtered'){
+        # if not yet there, stop
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop("Features have not yet been filtered, exiting...\n")
+        }
+        feat <- get.filt_feat.matrix(siamcat)
+        param.set <- filt_params(siamcat)
+        param.set[[length(param.set)+1]] <-
+            list(filter.method=filter.method,
+                cutoff=cutoff, rm.unmapped=rm.unmapped,
+                feature.type=feature.type)
+    } else if (feature.type == 'normalized'){
+        # if not yet there, stop
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop("Features have not yet been normalized, exiting...\n")
+        }
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            param.set <- list(list(filter.method=filter.method,
+                    cutoff=cutoff, rm.unmapped=rm.unmapped,
+                    feature.type=feature.type, feature.type=feature.type))
+        } else {
+            param.set <- filt_params(siamcat)
+            param.set[[length(param.set)+1]] <-
+                list(filter.method=filter.method,
+                    cutoff=cutoff, rm.unmapped=rm.unmapped,
+                    feature.type=feature.type)
+        }
+        feat <- get.norm_feat.matrix(siamcat)
     }
+
+    # check if there are NAs in the data
+    if (any(is.na(feat))){
+        stop("There are NAs in the feature matrix! Exiting...")
+    }
+    if (verbose > 1)
+        message(paste("+++ before filtering, the data have",
+            nrow(feat), "features"))
 
     ### apply filters
     if (verbose > 2)
@@ -104,7 +139,7 @@ filter.features <- function(siamcat,
     if (filter.method == "abundance") {
         # remove features whose abundance is never above the threshold value
         # (e.g. 0.5%) in any of the samples
-        f.max <- rowMaxs(ra.feat)
+        f.max <- rowMaxs(feat)
         f.idx <- which(f.max >= cutoff)
     } else if (filter.method == "cum.abundance") {
         # remove features with very low abundance in all samples i.e. ones that
@@ -113,8 +148,8 @@ filter.features <- function(siamcat,
         f.idx <- vector("numeric", 0)
         # sort features per sample and apply cumsum to identify how many
         # collectively have weight K
-        for (s in seq_len(ncol(ra.feat))) {
-            srt <- sort(ra.feat[, s], index.return = TRUE)
+        for (s in seq_len(ncol(feat))) {
+            srt <- sort(feat[, s], index.return = TRUE)
             cs <- cumsum(srt$x)
             m <- max(which(cs < cutoff))
             f.idx <- union(f.idx, srt$ix[-(seq_len(m))])
@@ -127,7 +162,7 @@ filter.features <- function(siamcat,
         # 0 (undetected) in more than (1-cutoff)
         # proportion of samples
         f.idx <-
-            which(rowSums(ra.feat > 0) / ncol(ra.feat) > cutoff)
+            which(rowSums(feat > 0) / ncol(feat) > cutoff)
     }
 
 
@@ -136,31 +171,19 @@ filter.features <- function(siamcat,
     ### postprocessing and output generation
     if (rm.unmapped) {
         # remove 'unmapped' feature
-        names.unmapped <- c(
-            "UNMAPPED",
-            "-1",
-            "X.1",
-            "unmapped",
-            "UNCLASSIFIED",
-            "unclassified",
-            "UNASSIGNED",
-            "unassigned"
-        )
-        unm.idx <- rownames(features(siamcat)) %in% names.unmapped
+        names.unmapped <- c("UNMAPPED", "-1", "X.1", "unmapped",
+            "UNCLASSIFIED", "unclassified", "UNASSIGNED", "unassigned")
+
+        unm.idx <- rownames(feat) %in% names.unmapped
+
         if (any(unm.idx)) {
             f.idx <- f.idx[-which(f.idx %in% which(unm.idx))]
             if (verbose > 2)
-                message(paste(
-                    "+++ removing",
-                    rownames(features(siamcat))[unm.idx],
-                    "as unmapped reads"
-                ))
+                message(paste("+++ removing",
+                    rownames(feat)[unm.idx], "as unmapped reads"))
             if (verbose > 1)
-                message(paste(
-                    "+++ removed",
-                    sum(unm.idx),
-                    "features corresponding to UNMAPPED reads"
-                ))
+                message(paste("+++ removed", sum(unm.idx),
+                    "features corresponding to UNMAPPED reads"))
         } else {
             if (verbose > 1)
                 message(
@@ -168,32 +191,29 @@ filter.features <- function(siamcat,
                     them. Continue anyway."
                 )
         }
-        }
-    if (verbose > 2)
-        message("+++ applying prune_taxa")
+    }
+
     if (verbose > 1)
-        message(
-            paste0(
-                "+++ removed ",
-                nrow(features(siamcat)) - length(f.idx) - sum(unm.idx),
-                " features whose values did not exceed ",
-                cutoff,
-                " in any sample (retaining ",
-                length(f.idx),
-                ")"
-            )
-        )
-    f.names <- rownames(features(siamcat))[f.idx]
-    physeq(siamcat) <-
-        prune_taxa(x = physeq(siamcat), taxa = f.names)
+        message(paste0("+++ removed ",
+            nrow(feat) - length(f.idx) - sum(unm.idx),
+            " features whose values did not exceed ", cutoff,
+            " in any sample (retaining ", length(f.idx), ")" ))
+
+    f.names <- rownames(feat)[f.idx]
+
+    if (verbose > 2)
+        message("+++ saving filtered features")
+
+    filt_feat(siamcat) <- new("filt_feat", filt.feat=otu_table(feat[f.names,],
+            taxa_are_rows=TRUE), filt.param=param.set)
+
     e.time <- proc.time()[3]
     if (verbose > 1)
-        message(paste(
-            "+ finished filter.features in",
-            formatC(e.time - s.time, digits = 3),
-            "s"
-        ))
+        message(paste("+ finished filter.features in",
+            formatC(e.time - s.time, digits = 3), "s"))
+
     if (verbose == 1)
         message("Features successfully filtered")
+
     return(siamcat)
 }
