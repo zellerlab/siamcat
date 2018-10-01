@@ -27,12 +27,18 @@ This function validates the data by checking that labels are
     the number of samples per class is checked to ensure a minimum
     number. If metadata is available, the overlap between labels and
     metadata is checked as well.
+    This function is run when a \link{siamcat-class} object is created.
 }
 \examples{
 
     data(siamcat_example)
-    # simple working example
-    siamcat_validated <- validate.data(siamcat_example)
+    # validate.data should be run before completing the pipeline
+    # since the complete pipeline had been run on siamcat_example, we
+    # construct a new siamcat object for the example
+    feat <- orig_feat(siamcat_example)
+    label <- label(siamcat_example)
+    siamcat <- siamcat(feat=feat, label=label)
+    siamcat <- validate.data(siamcat)
 
 }
 \keyword{SIAMCAT}

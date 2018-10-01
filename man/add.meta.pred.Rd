@@ -4,8 +4,10 @@
 \alias{add.meta.pred}
 \title{Add metadata as predictors}
 \usage{
-add.meta.pred(siamcat, pred.names = NULL, std.meta =
-    TRUE, verbose = 1)
+add.meta.pred(siamcat, pred.names,
+    std.meta = TRUE,
+    feature.type='normalized',
+    verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -15,6 +17,10 @@ added to the feature matrix as predictors}
 
 \item{std.meta}{boolean, should added metadata features be standardized?,
 defaults to \code{TRUE}}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1} for
 only information about progress and success, \code{2} for normal level of
@@ -31,12 +37,12 @@ This function adds metadata to the feature matrix to be later
 \examples{
     data(siamcat_example)
     # Add the Age of the patients as potential predictor
-    siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('age'))
+    siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('Age'))
 
     # Add Age, BMI, and Gender as potential predictors
     # Additionally, prevent standardization of the added features
-    siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
-    'bmi', 'gender'), std.meta=FALSE)
+    siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('Age',
+    'BMI', 'Gender'), std.meta=FALSE)
 }
 \keyword{SIAMCAT}
 \keyword{add.meta.pred}

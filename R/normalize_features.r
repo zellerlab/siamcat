@@ -9,9 +9,12 @@
 #'     specified parameters.
 #'
 #' @usage normalize.features(siamcat,
-#' norm.method = c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr"),
-#' norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1, n.p = 2, norm.margin = 1),
-#' verbose = 1)
+#'     norm.method = c("rank.unit", "rank.std",
+#'         "log.std", "log.unit", "log.clr"),
+#'     norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
+#'         n.p = 2, norm.margin = 1),
+#'     feature.type='filtered',
+#'     verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'
@@ -20,6 +23,10 @@
 #'
 #' @param norm.param list, specifying the parameters of the different
 #'     normalization methods, see details for more information
+#'
+#' @param feature.type On which type of features should the function work? Can
+#'   be either "original", "filtered", or "normalized". Please only change this
+#'   paramter if you know what you are doing!
 #'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #'     for only information about progress and success, \code{2} for normal
@@ -48,9 +55,9 @@
 #'     distribution of standard deviations of all features that will be added
 #'     to the denominator during standardization in order to avoid
 #'     underestimation of the standard deviation, defaults to 0.1
-#'     \item \code{'clr'} requires \code{log.n0}, which is the pseudocount to be
-#'     added before log-transformation, defaults to \code{NULL} leading to
-#'     the estimation of \code{log.n0} from the data
+#'     \item \code{'log.clr'} requires \code{log.n0}, which is the pseudocount
+#'     to be added before log-transformation, defaults to \code{NULL} leading
+#'     to the estimation of \code{log.n0} from the data
 #'     \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
 #'     using the same default values
 #'     \item \code{'log.unit'} requires next to \code{log.n0} also the
@@ -79,9 +86,6 @@
 #' @examples
 #'     # Example data
 #'     data(siamcat_example)
-#'     # since the whole pipeline has been run in the example data, exchange the
-#'     # normalized features with the original features
-#'     siamcat_example <- reset.features(siamcat_example)
 #'
 #'     # Simple example
 #'     siamcat_norm <- normalize.features(siamcat_example,
@@ -107,34 +111,48 @@ normalize.features <- function(siamcat,
         n.p = 2,
         norm.margin = 1
     ),
+    feature.type='filtered',
     verbose = 1) {
     if (verbose > 1)
         message("+ starting normalize.features")
     s.time <- proc.time()[3]
-    feat <- get.features.matrix(siamcat)
+
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
+    }
+
+    # get the right features
+    if (feature.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+        if (verbose > 1) message('+ normalizing original features')
+    } else if (feature.type == 'filtered'){
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop('Features have not yet been filtered, exiting...\n')
+        }
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feature.type == 'normalized'){
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop('Features have not yet been normalized, exiting...\n')
+        }
+        warning(
+            paste('Normalizing features that have already been normalized!',
+            '\nPlease note that some functionalities may not work properly'))
+        feat <- get.norm_feat.matrix(siamcat)
+    }
 
     if (is.null(norm.param$norm.method)) {
         # de novo normalization
         if (verbose > 1)
-            message(paste(
-                "+++ performing de novo normalization using the ",
-                norm.method,
-                " method"
-            ))
+            message(paste( "+++ performing de novo normalization using the ",
+                norm.method, " method"))
         ### remove features with missing values
         keep.idx <- rowSums(is.na(feat)) == 0
         if (any(!keep.idx)) {
             feat.red.na <- feat[keep.idx,]
             if (verbose > 1) {
-                message(
-                    paste0(
-                        "+++ removed ",
-                        nrow(feat.red.na) - nrow(feat),
+                message(paste0("+++ removed ", nrow(feat.red.na) - nrow(feat),
                         " features with missing values (retaining ",
-                        nrow(feat.red.na),
-                        ")"
-                    )
-                )
+                        nrow(feat.red.na), ")"))
             }
         } else {
             feat.red.na <- feat
@@ -144,27 +162,19 @@ normalize.features <- function(siamcat,
         if (any(keep.idx.sd)) {
             feat.red <- feat.red.na[!keep.idx.sd,]
             if (verbose > 1) {
-                message(
-                    paste0(
-                        "+++ removed ",
-                        nrow(feat.red.na) -
-                            nrow(feat.red),
+                message(paste0("+++ removed ", nrow(feat.red.na)-nrow(feat.red),
                         " features with no variation across samples
-                        (retaining ",
-                        nrow(feat.red),
-                        ")"
-                    )
-                )
+                        (retaining ", nrow(feat.red), ")"))
             }
         } else {
             feat.red <- feat.red.na
         }
         ## check if one of the allowed norm.methods have been supplied
-        if (!norm.method %in% c("rank.unit",
-            "rank.std",
-            "log.std",
-            "log.unit",
-            "log.clr")) {
+        if (length(norm.method) != 1){
+            stop('Please supply only a single normalization method! Exiting...')
+        }
+        if (!norm.method %in%
+            c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")) {
             stop("Unknown normalization method! Exiting...")
         }
 
@@ -184,14 +194,19 @@ normalize.features <- function(siamcat,
                 not supplied. Exiting ..."
             )
         }
-        if (norm.method != "rank.std" &&
-                is.null(norm.param$log.n0)) {
-            warning(
-                "Pseudo-count before log-transformation not supplied!
-                Estimating it as 5% percentile...\n"
-            )
-            norm.param$log.n0 <-
-                quantile(feat.red[feat.red != 0], 0.05)
+        if (startsWith(norm.method, "log")){
+            if (any(feat.red < 0)){
+                stop('Can not perform log-transform on ',
+                    'negative data. Exiting...')
+            }
+            if (is.null(norm.param$log.n0)){
+                warning(
+                    "Pseudo-count before log-transformation not supplied!
+                    Estimating it as 5% percentile...\n"
+                )
+                norm.param$log.n0 <-
+                    quantile(feat.red[feat.red != 0], 0.05)
+            }
         }
         if (norm.method == "log.std" &&
                 (is.null(norm.param$sd.min.q))) {
@@ -296,7 +311,6 @@ normalize.features <- function(siamcat,
                 "%"
             ))
         stopifnot(!any(is.na(feat.norm)))
-        norm_param(siamcat) <- norm_param(par)
     } else {
         # frozen normalization
         if (verbose > 1)
@@ -413,9 +427,13 @@ normalize.features <- function(siamcat,
                 "%"
             ))
         stopifnot(!any(is.na(feat.norm)))
-
+        par <- norm.param
     }
-    features(siamcat) <- otu_table(feat.norm, taxa_are_rows = TRUE)
+
+    norm_feat(siamcat) <- new('norm_feat',
+        norm.feat=otu_table(feat.norm, taxa_are_rows=TRUE),
+        norm.param=par)
+
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste(

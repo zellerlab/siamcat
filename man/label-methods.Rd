@@ -5,26 +5,23 @@
 \alias{label}
 \alias{label,ANY-method}
 \alias{label,label-method}
-\alias{label}
 \alias{label,list-method}
-\alias{label}
-\alias{orig_feat,otu_table-method}
-\alias{label}
 \title{Retrieve a \link{label-class} object from object.}
 \usage{
-label(siamcat)
+label(siamcat, verbose=1)
 
-\S4method{label}{ANY}(siamcat)
+\S4method{label}{ANY}(siamcat, verbose = 1)
 
 \S4method{label}{label}(siamcat)
 
 \S4method{label}{list}(siamcat)
-
-\S4method{orig_feat}{otu_table}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
 that contains a label or instance of \link{label-class} or a list.}
+
+\item{verbose}{If the slot is empty, should a message be printed? values
+can be either 0 (no output) or 1 (print message)}
 }
 \value{
 The \link{label-class} object or NULL.

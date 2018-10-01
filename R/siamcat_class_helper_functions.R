@@ -3,22 +3,6 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' Reset features in siamcat@phylose@otu_table to those in siamcat@orig_feat
-#' @title reset.features
-#' @name reset.features
-#' @description Function reset features in siamcat@phylose@otu_table to those in
-#' siamcat@orig_feat in an object of class \link{siamcat-class}
-#' @param siamcat an object of class \link{siamcat-class}t
-#' @return A new \link{siamcat-class} object
-#' @export
-#' @examples
-#'     data(siamcat_example)
-#'     siamcat_example <- reset.features(siamcat_example)
-reset.features <- function(siamcat) {
-    features(siamcat) <- orig_feat(siamcat)
-    return(siamcat)
-}
-
 #' @title Filter samples from \code{siamcat@label}
 #' @description This functions filters \code{siamcat@label}.
 #' @param siamcat an object of class \link{siamcat-class}
@@ -32,29 +16,23 @@ reset.features <- function(siamcat) {
 #'
 #'     data(siamcat_example)
 #'     # simple working example
-#'     siamcat_filtered <- filter.label(siamcat_example, ids=c(1:10))
+#'     siamcat_filtered <- filter.label(siamcat_example, ids=c(1:20))
 #'
 filter.label <- function(siamcat, ids, verbose = 1) {
     label_old <- label(siamcat)
     labels_new <- list(
         label = label_old$label[ids],
-        header = label_old$header,
         info = label_old$info,
-        positive.lab = label_old$positive.lab,
-        negative.lab = label_old$negative.lab,
-        n.lab = label_old$n.lab,
-        p.lab = label_old$p.lab
+        type = label_old$type
     )
-    labels_new$n.idx <- labels_new$label == labels_new$negative.lab
-    labels_new$p.idx <- labels_new$label == labels_new$positive.lab
-    
-    if (verbose > 0)
+
+    if (verbose > 1)
         message(paste(
-            "Keeping labels of",
+            "+ Keeping labels of",
             length(labels_new$label),
             "sample(s)."
         ))
-    
+
     label(siamcat) <- label(labels_new)
     return(siamcat)
 }
@@ -67,145 +45,134 @@ filter.label <- function(siamcat, ids, verbose = 1) {
 #' @keywords internal
 setMethod("show", "siamcat", function(object) {
     cat("siamcat-class object", fill = TRUE)
+
+    # Label object
     if (!is.null(label(object)))
-        cat(
-            paste(
-                "label()                label:           ",
-                sum(label(object)$n.idx),
-                label(object)$n.lab,
-                "and",
-                sum(label(object)$p.idx),
-                label(object)$p.lab,
-                "samples",
-                sep = " "
-            ),
-            fill = TRUE
-        )
-    if (length(norm_param(object))) {
-        cat(
-            paste(
-                "norm_param()           norm_param:       Features normalized
-                using",
-                norm_param(object)$norm.method,
-                sep = " "
-            ),
-            fill = TRUE
-        )
+        label <- label(object)
+        type <- label$type
+        if (type == 'TEST'){
+            n <- length(label$label)
+            cat(paste("label()                Label object:        ",
+                "Test label for", n, "samples"), fill=TRUE)
+        } else {
+            p.lab <- names(which(label$info == max(label$info)))
+            n.lab <- setdiff(names(label$info), p.lab)
+            p.n <- length(which(label$label == max(label$info)))
+            n.n <- length(which(label$label == min(label$info)))
+            cat(paste("label()                Label object:        ",
+                n.n, n.lab, "and", p.n, p.lab, "samples", sep = " "),
+                fill = TRUE)
+        }
+
+    # filtered features
+    if (!is.null(filt_feat(object, verbose=0))){
+        temp <- filt_params(object)
+        filtering.methods <- vapply(temp, FUN=function(x){x$filter.method},
+            FUN.VALUE = character(1))
+        if (length(filtering.methods) <= 3){
+            cat(paste("filt_feat()            Filtered features:   ",
+                nrow(filt_feat(object)), 'features after',
+                paste(filtering.methods, collapse=', '), 'filtering'),
+                    fill=TRUE)
+        } else {
+            cat(paste("filt_feat()            Filtered features:   ",
+                nrow(filt_feat(object)), 'features after',
+                length(filtering.methods), 'filtering steps'), fill=TRUE)
+        }
+
     }
-    if (length(data_split(object)$num.folds)) {
-        cat(
-            paste(
-                "data_split()            data_split:       ",
-                data_split(object)$num.resample,
-                "cv rounds with",
-                data_split(object)$num.folds,
-                "folds",
-                sep = " "
-            ),
-            fill = TRUE
-        )
+
+    # assocations testing
+    if (!is.null(associations(object, verbose=0))){
+        alpha <- assoc_param(object)$alpha
+        temp.df <- associations(object)
+        cat(paste("associations()         Associations:         Results from",
+                "association testing\n                          ",
+                "                 ",
+                "with", length(which(temp.df$p.adj < alpha)),
+                'significant features at alpha', alpha,
+                sep=' '), fill=TRUE)
     }
-    if (length(model_type(object))) {
-        cat(paste(
-            "model_list()            model_list:       ",
-            length(models(object)) , model_type(object),
-                "models", sep = " "), fill = TRUE)
+
+    # normalizes features
+    if (!is.null(norm_feat(object, verbose=0))) {
+        cat(paste("norm_feat()            Normalized features: ",
+        nrow(norm_feat(object)), "features normalized",
+        "using", norm_params(object)$norm.method, sep = " "), fill = TRUE)
     }
-    if (nrow(pred_matrix(object))) {
-        cat(
-            paste(
-                "pred_matrix()           pred_matrix:       Predictions for",
-                nrow(pred_matrix(object)),
-                "samples from",
-                ncol(pred_matrix(object)),
-                "cv rounds",
-                sep = " "
-            ),
-            fill = TRUE
-        )
+
+    # data split
+    if (!is.null(data_split(object, verbose=0))) {
+        cat(paste("data_split()           Data split:          ",
+            data_split(object)$num.resample, "cv rounds with",
+            data_split(object)$num.folds, "folds", sep = " "), fill = TRUE)
     }
-    if (length(eval_data(object))) {
-        cat(paste(
-            "eval_data()             eval_data:         Average AUC:",
-            round(eval_data(object)$auc.average[[1]], 3),
-            sep = " "
-        ),
+
+    # model list
+    if (!is.null(model_type(object, verbose=0))) {
+        cat(paste("model_list()           Model list:          ",
+            length(models(object)) , model_type(object), "models", sep = " "),
             fill = TRUE)
     }
-    
+    # model list
+    if (!is.null(feature_weights(object, verbose=0))) {
+        cat(paste("feature_weights()      Feature weights:     ",
+            "Summary of feature weights [ see also weight_matrix() ]",
+            sep = " "),
+            fill = TRUE)
+    }
+
+    # predictions
+    if (!is.null(pred_matrix(object, verbose=0))) {
+        cat(paste("pred_matrix()          Prediction matrix:   ",
+            "Predictions for",
+            nrow(pred_matrix(object)), "samples from",
+            ncol(pred_matrix(object)), "cv rounds", sep = " "), fill = TRUE)
+    }
+
+    # evaluation data
+    if (!is.null(eval_data(object, verbose=0))) {
+        cat(paste( "eval_data()            Evaluation data:      Average AUC:",
+            round(eval_data(object)$auroc, 3), sep = " "),
+            fill = TRUE)
+    }
+
     # print otu_table (always there).
     cat("\ncontains phyloseq-class experiment-level object @phyloseq:",
         fill = TRUE)
-    cat(
-        paste(
-            "phyloseq@otu_table()   OTU Table:         [ ",
-            ntaxa(otu_table(physeq(object))),
-            " taxa and ",
-            nsamples(otu_table(physeq(object))),
-            " samples ]",
-            sep = ""
-        ),
-        fill = TRUE
-    )
-    
+    cat(paste("phyloseq@otu_table()   OTU Table:            [ ",
+        ntaxa(otu_table(physeq(object))), " taxa and ",
+        nsamples(otu_table(physeq(object))), " samples ]", sep = ""),
+        fill = TRUE)
+
     # print Sample Data if there
     if (!is.null(sample_data(physeq(object), FALSE))) {
-        cat(
-            paste(
-                "phyloseq@sam_data()    Sample Data:       [ ",
-                dim(sample_data(physeq(object)))[1],
-                " samples by ",
-                dim(sample_data(physeq(object)))[2],
-                " sample variables ]",
-                sep = ""
-            ),
-            fill = TRUE
-        )
+        cat(paste("phyloseq@sam_data()    Sample Data:          [ ",
+            nrow(sample_data(physeq(object))), " samples by ",
+            ncol(sample_data(physeq(object))), " sample variables ]",
+            sep = ""), fill = TRUE)
     }
-    
+
     # print tax Tab if there
     if (!is.null(tax_table(physeq(object), FALSE))) {
-        cat(
-            paste(
-                "phyloseq@tax_table()   Taxonomy Table:    [ ",
-                dim(tax_table(physeq(object)))[1],
-                " taxa by ",
-                dim(tax_table(physeq(object)))[2],
-                " taxonomic ranks ]",
-                sep = ""
-            ),
-            fill = TRUE
-        )
+        cat(paste("phyloseq@tax_table()   Taxonomy Table:       [ ",
+            nrow(tax_table(physeq(object))), " taxa by ",
+            ncol(tax_table(physeq(object))), " taxonomic ranks ]", sep = ""),
+            fill = TRUE)
     }
-    
+
     # print tree if there
     if (!is.null(phy_tree(physeq(object), FALSE))) {
-        cat(
-            paste(
-                "phyloseq@phy_tree()    Phylogenetic Tree: [ ",
-                ntaxa(phy_tree(physeq(object))),
-                " tips and ",
-                phy_tree(physeq(object))$Nnode,
-                " internal nodes ]",
-                sep = ""
-            ),
-            fill = TRUE
-        )
+        cat(paste("phyloseq@phy_tree()    Phylogenetic Tree:    [ ",
+            ntaxa(phy_tree(physeq(object))), " tips and ",
+            phy_tree(physeq(object))$Nnode, " internal nodes ]", sep = ""),
+            fill = TRUE)
     }
-    
+
     # print refseq summary if there
     if (!is.null(refseq(physeq(object), FALSE))) {
-        cat(
-            paste(
-                "phyloseq@refseq()      ",
-                class(refseq(physeq(object)))[1],
-                ":
-                [ ",
-                ntaxa(refseq(physeq(object))),
-                " reference sequences ]",
-                sep = ""
-            ),
-            fill = TRUE
-        )
+        cat(paste("phyloseq@refseq()      ", class(refseq(physeq(object)))[1],
+            ": [ ", ntaxa(refseq(physeq(object))), " reference sequences ]",
+            sep = ""), fill = TRUE)
     }
 })

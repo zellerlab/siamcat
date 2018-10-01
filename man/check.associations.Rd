@@ -4,10 +4,12 @@
 \alias{check.associations}
 \title{Check and visualize associations between features and classes}
 \usage{
-check.associations(siamcat,fn.plot,color.scheme = "RdYlBu",
-    alpha =0.05,mult.corr = "fdr", sort.by = "fc",detect.lim = 1e-06,
-    pr.cutoff = 1e-6, max.show = 50, plot.type = "quantile.box",
-    panels = c("fc","auroc"),verbose = 1)
+check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
+    alpha =0.05, mult.corr = "fdr", sort.by = "fc",
+    detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
+    plot.type = "quantile.box",
+    panels = c("fc","auroc"), prompt = TRUE,
+    feature.type = 'filtered', verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -43,6 +45,13 @@ defaults to \code{"quantile.box"}}
 transformed abundances, possible entries are \code{c("fc", "auroc",
 "prevalence")}, defaults to \code{c("fc", "auroc")}}
 
+\item{prompt}{boolean to turn on/off prompting user input when not plotting
+into a pdf-file, defaults to TRUE}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
+
 \item{verbose}{control output: \code{0} for no output at all, \code{1} for
 only information about progress and success, \code{2} for normal level of
 information and \code{3} for full debug information, defaults to \code{1}}
@@ -71,9 +80,6 @@ This function calculates for each feature a pseudo-fold change
 \examples{
 # Example data
     data(siamcat_example)
-# since the whole pipeline has been run in the example data, exchange the
-# normalized features with the original features
-    siamcat_example <- reset.features(siamcat_example)
 
 # Simple example
     check.associations(siamcat_example, './assoc_plot.pdf')

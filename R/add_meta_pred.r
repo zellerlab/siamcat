@@ -7,13 +7,18 @@
 #' @title Add metadata as predictors
 #' @description This function adds metadata to the feature matrix to be later
 #'     used as predictors
-#' @usage add.meta.pred(siamcat, pred.names = NULL, std.meta =
-#'     TRUE, verbose = 1)
+#' @usage add.meta.pred(siamcat, pred.names,
+#'     std.meta = TRUE,
+#'     feature.type='normalized',
+#'     verbose = 1)
 #' @param siamcat object of class \link{siamcat-class}
 #' @param pred.names vector of names of the variables within the metadata to be
 #'   added to the feature matrix as predictors
 #' @param std.meta boolean, should added metadata features be standardized?,
 #'   defaults to \code{TRUE}
+#' @param feature.type On which type of features should the function work? Can
+#'   be either "original", "filtered", or "normalized". Please only change this
+#'   paramter if you know what you are doing!
 #' @param verbose control output: \code{0} for no output at all, \code{1} for
 #'   only information about progress and success, \code{2} for normal level of
 #'   information and \code{3} for full debug information, defaults to \code{1}
@@ -24,17 +29,46 @@
 #' @examples
 #'     data(siamcat_example)
 #'     # Add the Age of the patients as potential predictor
-#'     siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('age'))
+#'     siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('Age'))
 #'
 #'     # Add Age, BMI, and Gender as potential predictors
 #'     # Additionally, prevent standardization of the added features
-#'     siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('age',
-#'     'bmi', 'gender'), std.meta=FALSE)
-add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
+#'     siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('Age',
+#'     'BMI', 'Gender'), std.meta=FALSE)
+add.meta.pred <- function(siamcat, pred.names,
+    std.meta = TRUE,
+    feature.type = 'normalized',
     verbose = 1) {
+
     if (verbose > 1)
     message("+ starting add.meta.pred")
     s.time <- proc.time()[3]
+
+    if (is.null(meta(siamcat))) {
+        stop('SIAMCAT object has no metadata. Exiting...')
+    }
+    if (!feature.type %in% c('original', 'filtered', 'normalized')){
+        stop("Unrecognised feature type, exiting...\n")
+    }
+    if (feature.type != 'normalized'){
+        warning('It is recommended to add a meta-predictor only',
+            ' after feature normalization.')
+    }
+    # get the right features
+    if (feature.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+    } else if (feature.type == 'filtered'){
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop('Features have not yet been filtered, exiting...\n')
+        }
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feature.type == 'normalized'){
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop('Features have not yet been normalized, exiting...\n')
+        }
+        feat <- get.norm_feat.matrix(siamcat)
+    }
+
     ### add metadata as predictors to the feature matrix
     cnt <- 0
 
@@ -47,6 +81,9 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
             if (!p %in% colnames(meta(siamcat))) {
                 stop("There is no metadata variable called ", p)
             }
+            if (paste0('META_', toupper(p)) %in% rownames(feat)){
+                stop("This meta-variable has already been added. Exiting...")
+            }
             idx <- which(colnames(meta(siamcat)) == p)
             if (length(idx) != 1)
             stop(p, "matches multiple columns in the metada")
@@ -55,7 +92,7 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
 
             # check if the meta-variable is a factor or numeric
             if (class(m) == 'factor'){
-                message(paste0('WARNING: the meta-variable is a factor and',
+                warning(paste0('WARNING: meta-variable ', p,' is a factor and',
                 ' not numeric...\n   The values will be converted to numerical',
                 ' values with "as.numeric()"\n'))
                 m <- as.numeric(m)
@@ -79,12 +116,21 @@ add.meta.pred <- function(siamcat, pred.names = NULL, std.meta = TRUE,
                 stopifnot(!m.sd == 0)
                 m <- (m - m.mean)/m.sd
             }
-            features.with.meta <- otu_table(rbind(features(siamcat),m),
+            features.with.meta <- otu_table(rbind(feat,m),
                 taxa_are_rows = TRUE)
             rownames(features.with.meta)[nrow(features.with.meta)] <- paste(
                 "META_", toupper(p), sep = "")
-            features(siamcat) <- features.with.meta
-
+            if (feature.type == 'original'){
+                orig_feat(siamcat) <- features.with.meta
+            } else if (feature.type == 'filtered'){
+                filt_feat(siamcat) <- new('filt_feat',
+                    filt.feat=features.with.meta,
+                    filt.param=filt_params(siamcat))
+            } else if (feature.type == 'normalized'){
+                norm_feat(siamcat) <- new("norm_feat",
+                    norm.feat=features.with.meta,
+                    norm.param=norm_params(siamcat))
+            }
             cnt <- cnt + 1
         }
         if (verbose > 1)

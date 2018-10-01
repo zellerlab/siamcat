@@ -32,23 +32,26 @@
 #'     the results will be saved in the \code{eval_data}-slot of the
 #'     supplied \link{siamcat-class}-object. The \code{eval_data}-slot
 #'     contains a list with several entries: \itemize{
-#'         \item \code{$roc.average} average ROC-curve across repeats or a
+#'         \item \code{$roc} average ROC-curve across repeats or a
 #'                 single ROC-curve on complete dataset;
-#'         \item \code{$auc.average} AUC value for the average ROC-curve;
-#'         \item \code{$ev.list} list of \code{length(num.folds)}, containing
-#'                 for different decision thresholds the number of false
-#'                 positives, false negatives, true negatives, and
-#'                 true positives;
-#'         \item \code{$pr.list} list of \code{length(num.folds)}, containing
-#'                 the positive predictive value (precision) and true positive
-#'                 rate (recall) values used to plot the PR curves.}
+#'         \item \code{$auroc} AUC value for the average ROC-curve;
+#'         \item \code{$prc} list containing the positive predictive value
+#'                 (precision) and true positive rate (recall) values used
+#'                 to plot the mean PR curve;
+#'         \item \code{$auprc} AUC value for the mean PR curve;
+#'         \item \code{$ev} list containing for different decision thresholds
+#'                 the number of false positives, false negatives, true
+#'                 negatives, and true positives.}
 #'     For the case of repeated cross-validation, the function will
 #'     additonally return \itemize{
 #'         \item \code{$roc.all} list of roc objects (see \link[pROC]{roc})
 #'                 for every repeat;
-#'         \item \code{$aucspr} vector of AUC values for the PR curves
+#'         \item \code{$auroc.all} vector of AUC values for the ROC curves
 #'                 for every repeat;
-#'         \item \code{$auc.all} vector of AUC values for the ROC curves
+#'         \item \code{$prc.all} list of PR curves for every repeat;
+#'         \item \code{$auprc.all} vector of AUC values for the PR curves
+#'                 for every repeat;
+#'         \item \code{$ev.all} list of \code{ev} lists (see above)
 #'                 for every repeat.}
 #'
 #' @export
@@ -65,8 +68,14 @@
 evaluate.predictions <- function(siamcat, verbose = 1) {
     if (verbose > 1)
         message("+ starting evaluate.predictions")
-    label  <- label(siamcat)
     s.time <- proc.time()[3]
+
+    label  <- label(siamcat)
+    if (label$type == 'TEST'){
+        stop('SIAMCAT can not evaluate the predictions on a TEST',
+            ' label. Exiting...')
+    }
+    summ.stat = "mean" # TODO make this a possible parameter?
     # TODO compare header to label make sure that label and prediction are in
     # the same order
     m <- match(names(label$label), rownames(pred_matrix(siamcat)))
@@ -74,80 +83,87 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     pred <- pred_matrix(siamcat)[m, , drop = FALSE]
     stopifnot(all(names(label$label) == rownames(pred)))
 
+    # ##########################################################################
     # ROC curve
     if (verbose > 2)
         message("+ calculating ROC")
     auroc = 0
     if (ncol(pred) > 1) {
-        rocc = list(NULL)
-        aucs = vector("numeric", ncol(pred))
+        roc.all = list()
+        auroc.all = vector("numeric", ncol(pred))
         for (c in seq_len(ncol(pred))) {
-            rocc[c] = list(roc(
+            roc.all[[c]] = roc(
                 response = label$label,
                 predictor = pred[, c],
                 ci = FALSE
-            ))
-            aucs[c] = rocc[[c]]$auc
+            )
+            auroc.all[c] = roc.all[[c]]$auc
         }
         l.vec = rep(label$label, ncol(pred))
     } else {
         l.vec = label$label
     }
     # average data for plotting one mean prediction curve
-    if (verbose > 2)
-        message("+ calculating mean ROC")
-    summ.stat = "mean"
-    rocsumm = list(roc(
+
+    roc.mean = roc(
         response = label$label,
         predictor = apply(pred, 1, summ.stat),
         ci = TRUE,
         of = "se",
         sp = seq(0, 1, 0.05)
-    ))
-    auroc = list(rocsumm[[1]]$auc)
-    # precision recall curve
-    pr = list(NULL)
-    ev = list(NULL)
+    )
+    auroc = roc.mean$auc
+
+    # ##########################################################################
+    # PR curve
+    prc = list()
+    ev = list()
+    auprc <- 0
     if (ncol(pred) > 1) {
-        aucspr = vector("numeric", dim(pred)[2])
+        auprc.all = vector("numeric", ncol(pred))
+        prc.all <- list()
+        ev.all <- list()
         for (c in seq_len(ncol(pred))) {
-            ev[[c]] = evaluate.classifier(pred[, c], label$label, label,
+            ev.all[[c]] = evaluate.classifier(pred[, c], label$label, label,
                 verbose = verbose)
-            pr[[c]] = evaluate.get.pr(ev[[c]], verbose = verbose)
-            aucspr[c] = evaluate.calc.aupr(ev[[c]], verbose = verbose)
+            prc.all[[c]] = evaluate.get.pr(ev.all[[c]], verbose = verbose)
+            auprc.all[c] = evaluate.calc.aupr(ev.all[[c]], verbose = verbose)
         }
-        ev = append(ev, list(evaluate.classifier(
+        ev = evaluate.classifier(
             apply(pred, 1, summ.stat),
-            label$label, label
-        )))
+            label$label, label)
     } else {
-        ev[[1]] = evaluate.classifier(as.vector(pred), label$label, label,
+        ev = evaluate.classifier(as.vector(pred), label$label, label,
             verbose = verbose)
-        pr[[1]] = evaluate.get.pr(ev[[1]], verbose = verbose)
     }
+
+    prc = evaluate.get.pr(ev, verbose = verbose)
+    auprc <- c(evaluate.calc.aupr(ev, verbose = verbose))
+
+
     if (ncol(pred) > 1) {
         if (verbose > 2)
             message("+ evaluating multiple predictions")
         eval_data(siamcat) <-
             eval_data(
                 list(
-                    roc.all = rocc,
-                    auc.all = aucs,
-                    roc.average = rocsumm,
-                    auc.average = auroc,
-                    ev.list = ev,
-                    pr.list = pr,
-                    aucspr = aucspr
+                    roc= roc.mean,
+                    roc.all = roc.all,
+                    auroc = auroc,
+                    auroc.all = auroc.all,
+                    prc = prc,
+                    prc.all = prc.all,
+                    auprc = auprc,
+                    auprc.all = auprc.all,
+                    ev = ev,
+                    ev.all = ev.all
                 )
             )
     } else {
         if (verbose > 2)
             message("+ evaluating single prediction")
         eval_data(siamcat) <- eval_data(list(
-            roc.average = rocsumm,
-            auc.average = auroc,
-            ev.list = ev,
-            pr.list = pr
+            roc=roc, auroc=auroc, prc=prc, auprc=auprc, ev=ev
         ))
     }
     e.time <- proc.time()[3]
@@ -190,7 +206,7 @@ evaluate.classifier <-
             tp = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$positive.lab
+                    sum(test.label == max(label$info)
                         & predictions > x)
                 },
                 USE.NAMES = FALSE,
@@ -199,7 +215,7 @@ evaluate.classifier <-
             fp = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$negative.lab
+                    sum(test.label == min(label$info)
                         & predictions > x)
                 },
                 USE.NAMES = FALSE,
@@ -208,7 +224,7 @@ evaluate.classifier <-
             tn = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$negative.lab
+                    sum(test.label == min(label$info)
                         & predictions < x)
                 },
                 USE.NAMES = FALSE,
@@ -217,7 +233,7 @@ evaluate.classifier <-
             fn = vapply(
                 thr,
                 FUN = function(x) {
-                    sum(test.label == label$positive.lab
+                    sum(test.label == max(label$info)
                         & predictions < x)
                 },
                 USE.NAMES = FALSE,
@@ -235,7 +251,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$positive.lab & y > x)
+                            sum(test.label == max(label$info) & y > x)
                         }
                     )
                 },
@@ -249,7 +265,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$negative.lab & y > x)
+                            sum(test.label == min(label$info) & y > x)
                         }
                     )
                 },
@@ -263,7 +279,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$negative.lab & y < x)
+                            sum(test.label == min(label$info) & y < x)
                         }
                     )
                 },
@@ -277,7 +293,7 @@ evaluate.classifier <-
                         predictions,
                         2,
                         FUN = function(y) {
-                            sum(test.label == label$positive.lab & y < x)
+                            sum(test.label == max(label$info) & y < x)
                         }
                     )
                 },
@@ -325,7 +341,7 @@ evaluate.get.pr <- function(eval, verbose = 0) {
     ppv[is.na(ppv)] = 1
     if (verbose > 2)
         message("+ finished evaluate.get.pr")
-    return(list(x = tpr, y = ppv))
+    return(list(recall = tpr, precision = ppv))
 }
 
 # calculates the area under the precision-recall curve (over the interval
@@ -337,8 +353,8 @@ evaluate.calc.aupr <- function(eval,
     if (verbose > 2)
         message("+ starting evaluate.calc.aupr")
     pr = evaluate.get.pr(eval, verbose = verbose)
-    idx = pr$x <= max.tpr
+    idx = pr$recall <= max.tpr
     if (verbose > 2)
         message("+ finished evaluate.calc.aupr")
-    return(evaluate.area.trapez(pr$x[idx], pr$y[idx]))
+    return(evaluate.area.trapez(pr$recall[idx], pr$precision[idx]))
 }

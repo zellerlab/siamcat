@@ -4,30 +4,55 @@
 \alias{summarize.features}
 \title{Summarize features}
 \usage{
-summarize.features(siamcat, level = "__g", verbose = 1)
+summarize.features(siamcat, level = 'g__',
+    keep.original.names=TRUE, feature.type='original',
+    verbose=1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
+
+\item{level}{at which level to summarize (g__ = genus)}
+
+\item{keep.original.names}{boolean, should the original names be kept?}
+
+\item{feature.type}{On which type of features should the function work? Can
+be either "original", "filtered", or "normalized". Please only change this
+paramter if you know what you are doing!}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
 for only information about progress and success, \code{2} for normal
 level of information and \code{3} for full debug information,
 defaults to \code{1}}
-
-\item{siamcat}{at which level to summarize (g__ = genus)}
 }
 \value{
-object of class \link{siamcat-class} with the
-    slot \code{eval_data} filled
+object of class \link{siamcat-class} with a summarized feature table
 }
 \description{
 Summarize features
 }
 \examples{
 
-    data(siamcat_example)
-    # simple working example
-    siamcat_evaluated <- summarize.features(siamcat_example)
-
+data("GlobalPatterns") ## phyloseq example data
+feat <- otu_table(GlobalPatterns)[1:500,]
+label <- create.label(meta=sample_data(GlobalPatterns),
+    label = "SampleType",
+    case = c("Freshwater",
+        "Freshwater (creek)",
+        "Ocean"))
+# rename features
+temp <- tax_table(GlobalPatterns)[1:500,]
+test <- apply(temp, 1, FUN=function(vec){
+    out <- ''
+    for (i in seq_along(vec)){
+        end <- ifelse(i == ncol(temp), '', ';')
+        x <- colnames(temp)[i]
+        x2 <- tolower(substr(x, 1, 1))
+        out <- paste0(out, x2, '__', vec[i], end)
+    }
+    return(out)})
+rownames(feat) <- test
+# run the constructor function
+siamcat <- siamcat(feat=feat, label=label)
+siamcat <- summarize.features(siamcat, level='g__', verbose=3)
 }
 \keyword{internal}

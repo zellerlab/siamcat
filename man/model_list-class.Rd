@@ -13,5 +13,7 @@ The S4 class for storing models.
 \item{\code{models}}{a list with models obtained from \link{train.model}}
 
 \item{\code{model.type}}{name of the method used by \link{train.model}}
+
+\item{\code{feature.type}}{which types of features used by \link{train.model}}
 }}
 

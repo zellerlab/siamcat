@@ -4,27 +4,27 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title create a MaAsLin input file from siamcat object
-#' 
-#' @description This function creates a MaAsLin merged PCL single input file 
+#'
+#' @description This function creates a MaAsLin merged PCL single input file
 #' from siamcat object
-#' 
+#'
 #' @param siamcat object of class \link{siamcat-class}
-#' 
+#'
 #' @param filename name of the input file to which data will be save
-#' 
+#'
 #' @keywords internal
-#' 
+#'
 #' @return nothing but data is written to a file
-#' 
+#'
 #' @examples
-#' 
+#'
 #' data(siamcat_example)
 #' siamcat.to.maaslin(siamcat_example)
-#' 
+#'
 #' @export
-#' 
+#'
 siamcat.to.maaslin <- function(siamcat, filename="siamcat_output.pcl") {
-    feat   <- get.features.matrix(siamcat)
+    feat   <- get.orig_feat.matrix(siamcat)
     label  <- label(siamcat)
     meta   <- NULL
     if(!is.null(meta(siamcat))) meta   <- t(meta(siamcat))
@@ -43,9 +43,9 @@ siamcat.to.maaslin <- function(siamcat, filename="siamcat_output.pcl") {
                             rownames(feat))
 
     write.table(results,
-                file = filename,   
-                quote = FALSE, 
-                sep = '\t', 
+                file = filename,
+                quote = FALSE,
+                sep = '\t',
                 row.names = TRUE,
                 col.names = FALSE)
 }
