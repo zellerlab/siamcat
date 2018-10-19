@@ -35,9 +35,6 @@ This function checks for associations between class labels and
 \examples{
     # Example data
     data(siamcat_example)
-    # since the whole pipeline has been run in the example data, exchange
-    # the normalized features with the original features
-    siamcat_example <- reset.features(siamcat_example)
 
     # Simple working example
     check.confounders(siamcat_example, './conf_plot.pdf')
