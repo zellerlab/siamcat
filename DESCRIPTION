@@ -50,7 +50,9 @@ Imports:
     scales,
     stats,
     stringr,
-    utils
+    utils,
+    infotheo,
+    corrplot
 License: GPL-3
 LazyData: true
 RoxygenNote: 6.1.0

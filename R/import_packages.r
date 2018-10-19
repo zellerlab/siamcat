@@ -21,5 +21,7 @@
 #' @importFrom scales alpha
 #' @importFrom utils write.table read.csv askYesNo
 #' @importFrom stringr str_extract_all
+#' @importFrom infotheo condentropy discretize
+#' @importFrom corrplot corrplot colorlegend
 
 NULL
