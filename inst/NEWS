@@ -1,9 +1,20 @@
-## Version 1.0.1
-- [x] updated function create.label.from.metadata to make it more flexible
-- [x] added transpose parameter to the read.features function
-- [x] added vignette describing how to read in your data and process it with 
-SIAMCAT
-- [x] added function read.lefse to read input files in LEfSe file format
-- [x] small bugfixes
-- [x] bugfix in add.meta.pred
-- [x] bugfix in validated.data
+
+CHANGES IN VERSION 1.0.1
+-------------------------
+
+USER-VISIBLE CHANGES
+
+  - Constructor function has been changed quite extensively:
+        - automatically runs validate.features in the beginning
+        - inputs have to be named
+        - more flexible label input
+  - Change in SIAMCAT object structure:
+        - new slots for filtered and normalized data
+        - new slots for assocation testing results
+        - original feature slot has been deprecated
+  - Pipeline versatility has been increased:
+        - almost every function takes as arguments on which type of feature it
+          should operate (original, filtered, normalized)
+  - Deprecation of read.features and read.meta functions
+  - New vignettes and update of old vignettes
+  - New functions to read in data in specialized formats
