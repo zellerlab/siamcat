@@ -68,7 +68,7 @@ Produces a plot consisting of \itemize{
 
     data(siamcat_example)
     # simple working example
-    model.interpretation.plot(siamcat_example, fn.plot='./interpretion,pdf',
+    model.interpretation.plot(siamcat_example, fn.plot='./interpretion.pdf',
     heatmap.type='zscore')
 
 }
