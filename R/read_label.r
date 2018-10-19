@@ -115,7 +115,7 @@ trim <- function(x) {
 }
 
 #' @title Parse label header
-#'A
+#'
 #' @description This function parses the header of a label file
 #'
 #' @param  label.header - string in the format: #<TYPE>:<L1>=<class1>;

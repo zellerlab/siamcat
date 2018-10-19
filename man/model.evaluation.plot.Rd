@@ -34,7 +34,7 @@ Produces two plots for model evaluation. The first plot shows
 
     data(siamcat_example)
     # simple working example
-    model.evaluation.plot(siamcat_example, fn.plot='./eval,pdf')
+    model.evaluation.plot(siamcat_example, fn.plot='./eval.pdf')
 
 }
 \keyword{SIAMCAT}

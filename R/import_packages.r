@@ -6,7 +6,7 @@
 #'           par plot plot.new polygon rect text title segments legend
 #' @importFrom stats coefficients cor median p.adjust rnorm qqplot
 #'           predict quantile runif sd wilcox.test addmargins na.omit
-#'           fisher.test
+#'           fisher.test binomial coef confint glm profile
 #' @importFrom utils head read.table setTxtProgressBar tail
 #'           txtProgressBar
 #' @importFrom PRROC pr.curve
@@ -21,5 +21,7 @@
 #' @importFrom scales alpha
 #' @importFrom utils write.table read.csv askYesNo
 #' @importFrom stringr str_extract_all
+#' @importFrom infotheo condentropy discretize
+#' @importFrom corrplot corrplot colorlegend
 
 NULL
