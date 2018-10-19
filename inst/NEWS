@@ -18,3 +18,4 @@ USER-VISIBLE CHANGES
   - Deprecation of read.features and read.meta functions
   - New vignettes and update of old vignettes
   - New functions to read in data in specialized formats
+  - Additional plots for the check.confounders module
