@@ -39,22 +39,22 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     label <- label(siamcat)
     meta <- meta(siamcat)
     if (is.null(meta)) {
-      stop('SIAMCAT object does not contain any metadata.\nExiting...')
+        stop('SIAMCAT object does not contain any metadata.\nExiting...')
     }
     meta <- factorize.metadata(meta) # creates data.frame
 
     # check validity of input metadata conditions
     if (!is.null(meta.in)){
-      if (!all(meta.in %in% colnames(meta))){
+    if (!all(meta.in %in% colnames(meta))){
         meta.in <- meta.in[which(meta.in %in% colnames(meta))]
         warning(paste0("Some specified metadata were not in metadata file.\n",
-                       "Continuing with: ",  paste(c(meta.in), collapse=" ")))
-      }
-      meta <- meta[,meta.in]
+                        "Continuing with: ",  paste(c(meta.in), collapse=" ")))
+    }
+        meta <- meta[,meta.in]
     }
     if (ncol(meta) > 10){
-      warning(paste0("The recommended number of metadata variables is 10.\n",
-                     "Please be aware that some visualizations may not work."))
+        warning(paste0("The recommended number of metadata variables is 10.\n",
+                    "Please be aware that some visualizations may not work."))
     }
 
     # remove nested variables
@@ -66,7 +66,7 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
                 paste(c(names(which(indep == 0))), collapse = " & "),
                 "\n++ are nested inside the label and ",
                 "have been removed from this analysis")
-      }
+    }
     meta <- meta[,names(which(indep != 0))]
 
     # FIRST PLOT - conditional entropies for metadata variables
@@ -76,7 +76,7 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
 
     # SECOND PLOT - glm regression coefficients + significance + AU-ROCs
     layout(matrix(c(1, 2, 3), nrow = 1, ncol = 3),
-           widths = c(0.5, 0.3, 0.2), heights = c(1, 1, 1))
+            widths = c(0.5, 0.3, 0.2), heights = c(1, 1, 1))
     if (verbose > 2)
         message("+++ building logistic regression classifiers for metadata")
     glm.data <- confounders.build.glms(meta, label)
@@ -97,13 +97,13 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     e.time <- proc.time()[3]
     if (verbose > 1) {
         message(paste("+ finished check.confounders in",
-                      formatC(e.time - s.time, digits = 3), "s"))
-      }
+                        formatC(e.time - s.time, digits = 3), "s"))
+    }
     if (verbose == 1) {
         message(paste("Finished checking metadata for confounders, results
-                      plotted to:", fn.plot))
-      }
+                        plotted to:", fn.plot))
     }
+}
 
 #'@keywords internal
 confounders.corrplot <- function(meta, label) {
@@ -111,14 +111,14 @@ confounders.corrplot <- function(meta, label) {
     meta.temp <- data.frame(meta, Label = label$label)
     entropies <- matrix(NA, nrow=ncol(meta)+1, ncol=ncol(meta)+1,
                         dimnames=list(c(colnames(meta), 'Label'),
-                                      c(colnames(meta), 'Label')))
+                                    c(colnames(meta), 'Label')))
 
     for (n in seq_along(colnames(meta.temp))) {
         entropies[,n] <- vapply(colnames(meta.temp), FUN=function(x) {
             idx <- intersect(which(!is.na(meta.temp[,n]) == TRUE),
-                             which(!is.na(meta.temp[,x]) == TRUE))
+                            which(!is.na(meta.temp[,x]) == TRUE))
             return(condentropy(discretize(meta.temp[,x][idx]),
-                               discretize(meta.temp[idx,n])))},
+                            discretize(meta.temp[idx,n])))},
             FUN.VALUE = numeric(1))}
 
     fix.names <- vapply(colnames(entropies), FUN=function(x) {
@@ -130,21 +130,16 @@ confounders.corrplot <- function(meta, label) {
     rownames(entropies) <- fix.names
 
     col = c(rev(colorRampPalette(brewer.pal(9, 'Reds'))(100)),
-            rev(colorRampPalette(brewer.pal(9, 'Blues'))(100)))
+                rev(colorRampPalette(brewer.pal(9, 'Blues'))(100)))
 
     corrplot(entropies,
-             is.corr = FALSE, order = 'FPC', method = 'color',
-             pch.cex = 0.9,
-             cl.lim = c(min(entropies), ceiling(max(entropies))),
-             tl.col = 'black', tl.srt = 45,
-             col=col,
-             # col = rev(col),
-             # gives warning:
-             # 1: In ind1:ind2 :
-             # numerical expression has 2 elements: only the first used
-             # must do c(col,col) to get dark blue/full range (corrplot quirk)
-             number.cex = 0.7, number.digits = 2, addCoef.col = 'black',
-             mar = c(3.1, 2.1, 5.1, 4.1))
+            is.corr = FALSE, order = 'FPC', method = 'color',
+            pch.cex = 0.9,
+            cl.lim = c(min(entropies), ceiling(max(entropies))),
+            tl.col = 'black', tl.srt = 45,
+            col=col,
+            number.cex = 0.7, number.digits = 2, addCoef.col = 'black',
+            mar = c(3.1, 2.1, 5.1, 4.1))
     title(main = 'Conditional Entropies\n H(Row | Col)', cex = 0.7)
 
 }
@@ -162,14 +157,12 @@ confounders.build.glms <- function(meta, label) {
     for (m in seq_along(colnames(meta))) {
         d <- data.frame(x = as.ordered(meta[,m]),
                         y = factor(label$label, levels = c(-1,1),
-                                   labels = c(0,1)))
+                                labels = c(0,1)))
 
         model <- glm(y ~ x, family = binomial("logit"), data = d)
 
         # check glms; conditional entropy should catch
         if (model$converged == TRUE) {
-            #reg.coef[m] <- exp(model$coefficients[2])
-            #reg.ci[[m]] <- exp(confint(model)[2,])
             reg.coef[m] <- model$coefficients[2]
             reg.ci[[m]] <- confint(profile(model))[2,]
             reg.pval[m] <- coef(summary(model))[2,4]
@@ -205,7 +198,7 @@ confounders.glm.reg.coef.plot <- function(glm.data) {
     margins <- c(floor(x.min), ceiling(x.max))
     x.ticks <- seq(margins[1], margins[2])
     if (length(x.ticks) < 10){
-      x.ticks <- seq(margins[1], margins[2], by=0.5)
+        x.ticks <- seq(margins[1], margins[2], by=0.5)
     }
     x.tick.labels <- formatC(x.ticks, digits=2)
     y.ticks <- seq(1, length(order))
@@ -213,30 +206,31 @@ confounders.glm.reg.coef.plot <- function(glm.data) {
     text.names <- vapply(order, FUN=function(x) {
         x <- tolower(x)
         return(gsub('[_.-]', ' ',
-                    paste(toupper(substring(x, 1, 1)),
-                          substring(x, 2), sep = "")))
+                        paste(toupper(substring(x, 1, 1)),
+                        substring(x, 2), sep = "")))
         }, FUN.VALUE = character(1))
 
     par(mar = c(5.1, 10.1, 4.1, 1.1))
     plot(NULL, xlab = '', ylab = '', xaxs = 'i', yaxs = 'i', axes = FALSE,
-         xlim = c(margins[1], margins[2]), ylim = c(0.5, length(order) + 0.5),
-         type = 'n')
+            xlim = c(margins[1], margins[2]), 
+            ylim = c(0.5, length(order) + 0.5),
+            type = 'n')
     abline(v = x.ticks, lty = 3, col = 'lightgrey')
     abline(v = 0, lty = 3, col = 'lightgrey')
     axis(side = 1, at = x.ticks, labels = x.tick.labels, cex.axis = 0.9)
     axis(side = 2, at = y.ticks, labels = text.names, las=2)
     title(main = 'Single Covariate Logistic Regression',
-          xlab = 'Coefficients', cex=0.9)
+            xlab = 'Coefficients', cex=0.9)
 
     for (i in seq_along(order)) {
         if (!is.na(glm.data$reg.coef[order[i]])) {
             segments(x0 = glm.data$reg.ci[[order[i]]][1],
-                     x1 = glm.data$reg.ci[[order[i]]][2],
-                     y0 = i, col = 'darkgrey', lwd = 1.5)
+                    x1 = glm.data$reg.ci[[order[i]]][2],
+                    y0 = i, col = 'darkgrey', lwd = 1.5)
             points(glm.data$reg.coef[order[i]], i, pch = 18,
-                   col=glm.data$colors[i])
+                    col=glm.data$colors[i])
             points(glm.data$reg.coef[order[i]], i, pch = 5,
-                   col=glm.data$colors[i])}}
+                    col=glm.data$colors[i])}}
 }
 
 #'@keywords internal
@@ -247,16 +241,16 @@ confounders.glm.reg.pval.plot <- function(glm.data) {
     x.max <- max(ceiling(abs(range(pvals.log, na.rm=TRUE, finite=TRUE))))
     x.ticks <- seq(0, x.max)
     x.tick.labels <- parse(text = paste0('10^',
-      signif(x.ticks*-1, digits = 2)))
+        signif(x.ticks*-1, digits = 2)))
 
     par(mar = c(5.1, 2.1, 4.1, 1.1))
     plot(NULL, xlab = '', ylab = '', xaxs = 'i', yaxs = 'i', axes = FALSE,
-         xlim = c(0,x.max), ylim = c(0.5, length(order) + 0.5),
-         type = 'n')
+        xlim = c(0,x.max), ylim = c(0.5, length(order) + 0.5),
+        stype = 'n')
     abline(v = x.ticks, lty = 3, col = 'lightgrey')
     axis(side = 1, at = x.ticks, labels = x.tick.labels, cex.axis = 0.9)
     title(main = 'Coefficient Significance',
-          xlab = 'P Value', cex=0.9)
+        xlab = 'P Value', cex=0.9)
 
     for (i in seq_along(pvals.log)) {
         if (!is.na(pvals.log[i])) {
@@ -273,7 +267,7 @@ confounders.glm.auroc.plot <- function(glm.data) {
 
     par(mar = c(5.1, 2.1, 4.1, 4.1))
     plot(NULL, xlab = '', ylab = '', xaxs = 'i', yaxs = 'i', axes = FALSE,
-         xlim = c(0,1), ylim = c(0.5, length(order) + 0.5), type = 'n')
+        xlim = c(0,1), ylim = c(0.5, length(order) + 0.5), type = 'n')
     abline(v = x.ticks, lty = 3, col = 'lightgrey')
     abline(v = 0.5, lty = 1, col = 'darkgrey')
     axis(side = 1, at = x.ticks, labels = x.tick.labels, cex.axis = 0.9)
@@ -282,12 +276,12 @@ confounders.glm.auroc.plot <- function(glm.data) {
     for (i in seq_along(order)) {
         if (!is.na(glm.data$aucs[order[i]])) {
             segments(x0 = glm.data$rocs[[order[i]]]$ci[1],
-                     x1 = glm.data$rocs[[order[i]]]$ci[3],
-                     y0 = i, col = 'lightgrey', lwd = 1.5)
+                    x1 = glm.data$rocs[[order[i]]]$ci[3],
+                    y0 = i, col = 'lightgrey', lwd = 1.5)
             points(glm.data$rocs[[order[i]]]$ci[2], i, pch = 18,
-                   col=glm.data$colors[i])
+                    col=glm.data$colors[i])
             points(glm.data$rocs[[order[i]]]$ci[2], i, pch = 5,
-                   col=glm.data$colors[i])}}
+                    col=glm.data$colors[i])}}
 }
 
 #'@keywords internal
@@ -302,7 +296,7 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
     for (m in seq_along(meta)) {
         mname <- gsub("[_.-]", " ", colnames(meta)[m])
         mname <-
-            paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
+              paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
                   sep = "")
         if (verbose > 1)
             message(paste("+++ checking",mname,"as a potential confounder"))
@@ -324,13 +318,13 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
             ct <- vapply(u.val, FUN = function(x) {
                 # deal with NAs...?
                 return(c(length(intersect(which(mvar == x), controls)),
-                         length(intersect(which(mvar == x), cases))))},
+                        length(intersect(which(mvar == x), cases))))},
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(2))
 
             freq <- t(ct / rowSums(ct))
             mvar <- factor(mvar, levels = unique(na.omit(mvar)),
-                           labels = var.level.names[[m]])
+                            labels = var.level.names[[m]])
 
             if (verbose > 2)
                 message("++++ plotting barplot")
@@ -345,12 +339,12 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
             bar.plot <- barplot(freq, ylim = c(0, 1), main = mname,
                                 names.arg = names(label$info), col = colors)
             legend(2.5, 1, legend = var.level.names[[m]],
-                   xpd = NA, lwd = 2, col = colors,
-                   inset = 0.5, bg = "grey96", cex = 0.8)
+                    xpd = NA, lwd = 2, col = colors,
+                    inset = 0.5, bg = "grey96", cex = 0.8)
             ifelse(length(u.val) > 4,
-                   p.val <- fisher.test(ct, simulate.p.value = TRUE,
+                    p.val <- fisher.test(ct, simulate.p.value = TRUE,
                                         B = 2000)$p.value,
-                   p.val <- fisher.test(ct)$p.value)
+                    p.val <- fisher.test(ct)$p.value)
             mtext(
                 paste("Fisher Test P Value:", format(p.val, digits = 4)),
                 cex = 0.8, side = 1, line = 2)
@@ -381,26 +375,26 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
             par(mar = c(4.5, 4.5, 2.5, 1.5), mgp = c(2.5, 1, 0))
             ax.int <- c(min(mvar, na.rm = TRUE), max(mvar, na.rm = TRUE))
             qqplot(mvar[controls], mvar[cases], xlim = ax.int,
-                   ylim = ax.int, pch = 16, cex = 0.6, xlab = n.lab,
-                   ylab = p.lab, main = paste("Q-Q plot for", mname))
+                    ylim = ax.int, pch = 16, cex = 0.6, xlab = n.lab,
+                    ylab = p.lab, main = paste("Q-Q plot for", mname))
             abline(0, 1, lty = 3)
             p.val <- wilcox.test(mvar[controls], mvar[cases],
-                                 exact = FALSE)$p.value
+                                exact = FALSE)$p.value
             text(ax.int[1] + 0.9 * (ax.int[2] - ax.int[1]),
-                 ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]),
-                 cex = 0.8,paste("MWW Test P Value:",
-                                 format(p.val, digits = 4)),
-                 pos = 2)
+                ax.int[1] + 0.1 * (ax.int[2] - ax.int[1]),
+                cex = 0.8,paste("MWW Test P Value:",
+                                format(p.val, digits = 4)),
+                pos = 2)
 
             if (verbose > 2)
                 message("++++ panel 2/4: X histogram")
             par(mar = c(4, 2.5, 3.5, 1.5))
             hist(mvar[controls], main = n.lab, xlab = mname,
-                 col = histcolors, breaks = seq(min(mvar, na.rm = TRUE),
+                col = histcolors, breaks = seq(min(mvar, na.rm = TRUE),
                                                 max(mvar, na.rm = TRUE),
                                                 length.out = 10))
             mtext(paste("N =", length(mvar[controls])), cex = 0.6,
-                  side = 3, adj = 1, line = 1)
+                    side = 3, adj = 1, line = 1)
 
             if (verbose > 2)
                 message("++++ panel 3/4: X boxplot")
@@ -410,17 +404,17 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
                     ylab = mname, main = paste("Boxplot for", mname),
                     col = histcolors, outpch = NA)
             stripchart(mvar ~ label$label, vertical = TRUE, add = TRUE,
-                       method = "jitter", pch = 20)
+                    method = "jitter", pch = 20)
 
             if (verbose > 2)
                 message("++++ panel 4/4: Y histogram")
             par(mar = c(4.5, 2.5, 3.5, 1.5))
             hist(mvar[cases], main = p.lab, xlab = mname,
-                 col = histcolors, breaks = seq(min(mvar, na.rm = TRUE),
+                    col = histcolors, breaks = seq(min(mvar, na.rm = TRUE),
                                                 max(mvar, na.rm = TRUE),
                                                 length.out = 10))
             mtext(paste("N =", length(mvar[cases])), cex = 0.6,
-                  side = 3, adj = 1, line = 1)
+                    side = 3, adj = 1, line = 1)
             par(mfrow = c(1, 1))
         }
             }
