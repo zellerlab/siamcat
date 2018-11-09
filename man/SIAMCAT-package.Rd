@@ -32,20 +32,19 @@ of intense research. For this, robust statistical modeling and biomarker
 extraction toolkits are crucially needed!
 }
 \author{
-\strong{Maintainer}: Konrad Zych 
-    \email{konrad.zych@embl.de}(0000-0001-7426-0516)
+\strong{Maintainer}: Konrad Zych \email{konrad.zych@embl.de} (0000-0001-7426-0516)
 
 Authors:
 \itemize{
-    \item Jakob Wirbel \email{jakob.wirbel@embl.de} (0000-0002-4073-3562)
-    \item Georg Zeller \email{zeller@embl.de} (0000-0003-1429-7485)
+  \item Jakob Wirbel \email{jakob.wirbel@embl.de} (0000-0002-4073-3562)
+  \item Georg Zeller \email{zeller@embl.de} (0000-0003-1429-7485)
 }
 
 Other contributors:
 \itemize{
-    \item Morgan Essex \email{morgan.essex@embl.de} [contributor]
-    \item Nicolai Karcher [contributor]
-    \item Kersten Breuer [contributor]
+  \item Morgan Essex \email{morgan.essex@embl.de} [contributor]
+  \item Nicolai Karcher [contributor]
+  \item Kersten Breuer [contributor]
 }
 
 }

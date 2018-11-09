@@ -1,4 +1,4 @@
-mew#' Documentation for the example siamcat object in the data folder
+#' Documentation for the example siamcat object in the data folder
 #'
 #' Reduced version of the CRC dataset in inst/extdata, containing 100 features
 #' (15 associated features at 5\% FDR in the original dataset and 85 random
