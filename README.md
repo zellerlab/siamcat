@@ -42,5 +42,5 @@ or by
 > Zych K, Wirbel J, Essex M, Breuer K, Karcher N, Costea PI, Sunagawa S, Bork P,
 Zeller G (2018). _SIAMCAT: Statistical Inference of Associations between Microbial
 Communities And host phenoTypes_. doi: 10.18129/B9.bioc.SIAMCAT (URL:
-http://doi.org/10.18129/B9.bioc.SIAMCAT), R package version 1.0.1, <URL:
-https://bioconductor.org/packages/SIAMCAT/>.
+http://doi.org/10.18129/B9.bioc.SIAMCAT), R package version 1.0.1, (URL:
+https://bioconductor.org/packages/SIAMCAT/).
