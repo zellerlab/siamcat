@@ -1042,10 +1042,10 @@ associations.quantile.box.plot <- function(data.mat, label, col,
 
     # get quantiles
     quant.probs <- c(0.05, 0.25, 0.5, 0.75, 0.95)
-    quantiles.pos = rowQuantiles(data.mat[, p.idx],
-        probs = quant.probs, na.rm = TRUE)
-    quantiles.neg = rowQuantiles(data.mat[, n.idx],
-        probs = quant.probs, na.rm = TRUE)
+    quantiles.pos = rowQuantiles(data.mat[, p.idx, drop=FALSE],
+        probs = quant.probs, na.rm = TRUE, drop=FALSE)
+    quantiles.neg = rowQuantiles(data.mat[, n.idx, drop=FALSE],
+        probs = quant.probs, na.rm = TRUE, drop=FALSE)
 
         # inter-quartile range
     associations.quantiles.plot(quantiles.pos, up = TRUE, pos.col)
@@ -1101,12 +1101,12 @@ associations.quantile.rect.plot <-
         p.idx <- which(label$label == p.label)
         n.idx <- which(label$label == n.label)
 
-        quantiles.pos = rowQuantiles(data.mat[, p.idx],
+        quantiles.pos = rowQuantiles(data.mat[, p.idx, drop=FALSE],
                                         probs = quant.probs,
-                                        na.rm = TRUE)
-        quantiles.neg = rowQuantiles(data.mat[, n.idx],
+                                        na.rm = TRUE, drop=FALSE)
+        quantiles.neg = rowQuantiles(data.mat[, n.idx, drop=FALSE],
                                         probs = quant.probs,
-                                        na.rm = TRUE)
+                                        na.rm = TRUE, drop=FALSE)
 
         p.mn <- min(data.mat, na.rm = TRUE)
         p.mx <- 0# max(data.mat, na.rm = TRUE)
