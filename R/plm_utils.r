@@ -27,17 +27,17 @@ train.plm <-
                 c(seq_len(nrow(data)))[-which(data$label == neg.lab)[1]]), ]
         }
         task <- makeClassifTask(data = data, target = "label")
-        
+
         ## 2) Define the learner Choose a specific algorithm (e.g. linear
         # discriminant analysis)
         cost <- 10 ^ seq(-2, 3, length = 6 + 5 + 10)
-        
+
         ### the most common learner defined here to remove redundancy
         cl <- "classif.cvglmnet"
         parameters <-
             get.parameters.from.param.set(param.set = param.set,
                 method = method, sqrt(nrow(data)))
-        
+
         if (method == "lasso") {
             lrn <-
                 makeLearner(
@@ -56,7 +56,7 @@ train.plm <-
                 )
         } else if (method == "enet") {
             lrn <- makeLearner(cl, predict.type = "prob", nlambda = 10)
-            
+
         } else if (method == "lasso_ll") {
             cl <- "classif.LiblineaRL1LogReg"
             class.weights <- c(5, 1)
@@ -84,7 +84,7 @@ train.plm <-
             lrn <- makeLearner(cl,
                 predict.type = "prob",
                 fix.factors.prediction = TRUE)
-            
+
         } else {
             stop(
                 method,
@@ -95,14 +95,14 @@ train.plm <-
         show.info <- FALSE
         if (verbose > 2)
             show.info <- TRUE
-        
+
         ## 3) Fit the model Train the learner on the task using a random subset
         ##of the data as training set
         if (!all(is.null(parameters))) {
             hyperPars <- tuneParams(
                 learner = lrn,
                 task = task,
-                resampling = makeResampleDesc("CV", iters = 5L, 
+                resampling = makeResampleDesc("CV", iters = 5L,
                                                 stratify = TRUE),
                 par.set = parameters,
                 control = makeTuneControlGrid(resolution = 10L),
@@ -112,7 +112,7 @@ train.plm <-
             lrn <- setHyperPars(lrn, par.vals = hyperPars$x)
         }
         model <- train(lrn, task)
-        
+
         if (cl == "classif.cvglmnet") {
             opt.lambda <- get.optimal.lambda.for.glmnet(model, task, measure,
                 min.nonzero.coeff)
@@ -135,7 +135,7 @@ train.plm <-
             model$feat.weights <- model$learner.model$importance
         }
         model$task <- task
-        
+
         return(model)
     }
 
@@ -175,10 +175,10 @@ get.optimal.lambda.for.glmnet <-
         # get optimal lambda in depence of the performance measure
         if (length(perf.measure) == 1) {
             if (perf.measure[[1]]$minimize == TRUE) {
-                opt.lambda <- lambdas[which(performances == 
+                opt.lambda <- lambdas[which(performances ==
                         min(performances))[1]]
             } else {
-                opt.lambda <- lambdas[which(performances == 
+                opt.lambda <- lambdas[which(performances ==
                         max(performances))[1]]
             }
         } else {
@@ -228,6 +228,10 @@ get.parameters.from.param.set <-
                         values = mtry)
                 )
         } else if (method == "enet") {
+            if (!all(is.null(param.set))) {
+                if ("alpha" %in% names(param.set))
+                    alpha <- param.set$alpha
+            }
             parameters <-
                 makeParamSet(makeNumericParam("alpha", lower = alpha[1],
                     upper = alpha[2]))
