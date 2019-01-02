@@ -244,6 +244,9 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         # extract relevant info for plotting
         temp <- get.plotting.idx(result.list$effect.size, alpha=alpha,
             sort.by=sort.by, max.show=max.show, verbose=verbose)
+        if (is.null(temp)){
+            return(siamcat)
+        }
         effect.size <- result.list$effect.size[temp$idx, , drop=FALSE]
         truncated <- temp$truncated
         detect.lim <- result.list$detect.lim
@@ -1332,10 +1335,12 @@ get.plotting.idx <- function(df.results, alpha, sort.by, max.show, verbose){
     idx <- which(df.results$p.adj < alpha)
 
     if (length(idx) == 0) {
-        stop('No significant associations found. Stopping.\n')
+        warning(paste0('No significant associations found.',
+        ' No plot will be produced.\n'))
+        return(NULL)
     } else if (length(idx) < 5) {
-        warning('Less than 5 associations found. Consider changing your alpha
-            value')
+        warning(paste0('Less than 5 associations found. Consider',
+        ' changing your alpha value.'))
     }
 
     idx <- idx[order(df.results$p.adj[idx], decreasing = TRUE)]
