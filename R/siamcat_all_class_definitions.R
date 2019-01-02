@@ -215,13 +215,6 @@ check.norm.feat <- function(object){
             errors <- c(errors, msg)
         }
     }
-    # log.clr
-    if (norm.method == 'log.clr'){
-        if (is.null(object@norm.param$geometric.mean)){
-            msg<-'Geometric means are missing!'
-            errors <- c(errors, msg)
-        }
-    }
     # log.unit n.p, norm.margin, norm.fun, feat.norm.denom
     if (norm.method == 'log.unit'){
         if (is.null(object@norm.param$n.p)){

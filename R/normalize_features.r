@@ -245,9 +245,8 @@ normalize.features <- function(siamcat,
             feat.norm <- t(t(feat.rank) / sqrt(colSums(feat.rank ^ 2)))
             dimnames(feat.norm) <- dimnames(feat.red)
         } else if (norm.method == "log.clr") {
-            gm <- exp(rowMeans(log(feat.red + norm.param$log.n0)))
-            feat.norm <- log((feat.red + norm.param$log.n0) / gm)
-            par$geometric.mean <- gm
+            gm <- exp(colMeans(log(feat.red + norm.param$log.n0)))
+            feat.norm <- log(t(t((feat.red + norm.param$log.n0)) / gm))
         } else if (norm.method == "rank.std") {
             feat.rank <- colRanks(feat.red,
                 preserveShape = TRUE,
@@ -343,16 +342,8 @@ normalize.features <- function(siamcat,
             dimnames(feat.norm) <- dimnames(feat.red)
 
         } else if (norm.param$norm.method == "log.clr") {
-            stopifnot(
-                !is.null(norm.param$log.n0) &&
-                    !is.null(norm.param$geometric.mean) &&
-                    all(
-                        names(norm.param$geometric.mean) ==
-                            row.names(feat.red)
-                    )
-            )
-            feat.log <- feat.red + norm.param$log.n0
-            feat.norm <- log(feat.log / norm.param$geometric.mean)
+            gm <- exp(colMeans(log(feat.red + norm.param$log.n0)))
+            feat.norm <- log(t(t((feat.red + norm.param$log.n0)) / gm))
 
         } else if (norm.param$norm.method == "rank.std") {
             stopifnot(
