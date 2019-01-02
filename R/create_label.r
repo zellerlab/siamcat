@@ -132,7 +132,7 @@ create.label <- function(label, case, meta=NULL, control = NULL,
         if(any(!groups%in%c(case, control))){
             label.vec <- label.vec[which(label.vec%in%c(case, control))]
             warning("Dropping values: ",
-                groups[which(!groups%in%c(case, control))])
+                groups[which(!groups%in%c(case, control))], '\n')
         }
     }
 
