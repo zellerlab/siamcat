@@ -183,8 +183,7 @@ normalize.features <- function(siamcat,
         par$norm.method <- norm.method
         par$retained.feat <- rownames(feat.red)
         if (verbose > 2)
-            message("+++ checking is parameters are compatible with
-                each other")
+            message("+++ checking if parameters are compatible with each other")
         # check if the right set of normalization parameters have been
         # supplied for the chosen norm.method
         if (norm.method == "rank.std" &&
