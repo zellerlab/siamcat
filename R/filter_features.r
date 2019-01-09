@@ -186,10 +186,8 @@ filter.features <- function(siamcat,
                     "features corresponding to UNMAPPED reads"))
         } else {
             if (verbose > 1)
-                message(
-                    "+++ tried to remove unmapped reads, but could not find
-                    them. Continue anyway."
-                )
+                message(paste0("+++ tried to remove unmapped reads",
+                    "but could not find them. Continue anyway."))
         }
     }
 
