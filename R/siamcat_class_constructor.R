@@ -259,7 +259,10 @@ validate.features <- function(feat){
     }
     # check class of feature input
     if (class(feat) == 'otu_table'){
-        # can either be an otu_table (then do nothing)
+        # can either be an otu_table (only check that taxa_are_rows == TRUE)
+        if (!taxa_are_rows(feat)){
+            feat <- otu_table(t(feat@.Data), taxa_are_rows=TRUE)
+        }
         return(feat)
     } else if (class(feat) == 'matrix'){
         # or a matrix (then check if it is numeric or not)
