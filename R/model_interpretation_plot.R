@@ -886,8 +886,8 @@ model.interpretation.select.features <-
                     index.return = TRUE)
             # restrict to plot at maximum fifty features
             if (length(sel.idx) > max.show) {
-                warning("WARNING: restricting amount of features to
-                    be plotted to 50")
+                warning(paste0("WARNING: restricting amount of features",
+                    " to be plotted to 50"))
                 median.sorted.features.abs <- sort(
                     abs(feature.weights$median.rel.weight),
                     decreasing = TRUE,
