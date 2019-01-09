@@ -27,14 +27,14 @@
 #' @details This functions creates a SIAMCAT object (see \link{siamcat-class}).
 #' In order to do so, the function needs \itemize{
 #' \item feat the feature information for SIAMCAT, should be either a matrix,
-#' a data.frame, or a \link[phyloseq]{otu_table}. The columns should
+#' a data.frame, or a \link[phyloseq]{otu_table-class}. The columns should
 #' correspond to the different samples (e.g. patients) and the rows the
 #' different features (e.g. taxa). Columns and rows should be named.
 #' \item meta metadata information for the different samples in the feature
 #' matrix. Metadata is optional for the SIAMCAT workflow. Should be
 #' either a data.frame (with the rownames corresponding to the sample
 #' names of the feature matrix) or an object of class
-#' \link[phyloseq]{sample_data}
+#' \link[phyloseq]{sample_data-class}
 #' \item phyloseq Alternatively to supplying both feat and meta, SIAMCAT can
 #' also work with a phyloseq object containing an otu_table and other
 #' optional slots (like sample_data for meta-variables).}
