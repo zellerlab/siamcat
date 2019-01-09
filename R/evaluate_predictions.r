@@ -163,7 +163,7 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
         if (verbose > 2)
             message("+ evaluating single prediction")
         eval_data(siamcat) <- eval_data(list(
-            roc=roc, auroc=auroc, prc=prc, auprc=auprc, ev=ev
+            roc=roc.mean, auroc=auroc, prc=prc, auprc=auprc, ev=ev
         ))
     }
     e.time <- proc.time()[3]
