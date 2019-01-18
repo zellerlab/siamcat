@@ -20,7 +20,7 @@
 #' @importFrom matrixStats rowQuantiles rowMaxs rowSds colRanks rowMedians
 #' @importFrom scales alpha
 #' @importFrom utils write.table read.csv askYesNo
-#' @importFrom stringr str_extract_all
+#' @importFrom stringr str_extract_all str_split
 #' @importFrom infotheo condentropy discretize
 #' @importFrom corrplot corrplot colorlegend
 
