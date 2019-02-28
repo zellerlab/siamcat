@@ -395,8 +395,7 @@ model.interpretation.plot <-
             ))
         if (verbose == 1 & !is.null(fn.plot))
             message(paste(
-                "Plotted associations between features and label
-                successfully to:",
+                "Successfully plotted model interpretation plot to:",
                 fn.plot
             ))
         }
