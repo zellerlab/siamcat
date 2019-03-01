@@ -8,32 +8,48 @@ hosted at [EMBL](https://www.embl.org) by the groups of
 out more at [EMBL-microbiome tools](http://microbiome-tools.embl.de/).
 
 ## Starting with SIAMCAT
+
+### Installation
+
 In order to start with SIAMCAT, you need to install it from Bioconductor:
-```
-source("https://bioconductor.org/biocLite.R")
-biocLite("SIAMCAT")
+```R
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SIAMCAT", version = "3.8")
 ```
 
-There are few manuals that will kick-start you and help you analyse your
-data with SIAMCAT:
+Alternatively, you can install the current development version via `devtools`:
+```R
+require("devtools")
+devtools::install_github(repo = 'zellerlab/siamcat')
 ```
+
+### Quick start
+
+There are a few manuals that will kick-start you and help you analyse your
+data with SIAMCAT. You can find links to those on the
+[Bioconductor website of SIAMCAT](https://bioconductor.org/packages/release/bioc/html/SIAMCAT.html)
+or you can type into `R`:
+```R
 browseVignettes("SIAMCAT")
 ```
+> Please note:  
+`browseVignettes` only works if `SIAMCAT` has been installed via Bioconductor
 
-## Contact 
+## Contact
 
 If you run into any issue:
-- mail Georg Zeller (mailto: zeller@embl.de)
-or
-- create an issue in this repository
-or
-- ask at the [SIAMCAT support group](https://groups.google.com/forum/#!forum/siamcat-users)
+- create an 
+[issue in this repository](https://github.com/zellerlab/siamcat/issues/new) or
+- mail Georg Zeller (mailto: zeller@embl.de) or
+- ask at the
+[SIAMCAT support group](https://groups.google.com/forum/#!forum/siamcat-users)
 
 ## Citation
 
 If you use `SIAMCAT`, please cite us by using
 
-```
+```R
 citation("SIAMCAT")
 ```
 
