@@ -13,8 +13,6 @@ summarize.features(siamcat, level = 'g__',
 
 \item{level}{at which level to summarize (g__ = genus)}
 
-\item{keep.original.names}{boolean, should the original names be kept?}
-
 \item{feature.type}{On which type of features should the function work? Can
 be either "original", "filtered", or "normalized". Please only change this
 paramter if you know what you are doing!}
