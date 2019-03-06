@@ -1,8 +1,10 @@
 # SIAMCAT <img src="man/figures/logo.png" align="right" width="120" />
 
+[![Build Status](https://travis-ci.com/zellerlab/siamcat.svg?branch=master)](https://travis-ci.com/zellerlab/siamcat)
+
 ## Overview
 `SIAMCAT` is an R package for Statistical Inference of Associations
-between Microbial Communities And host phenoType. It is part of the suite of 
+between Microbial Communities And host phenoType. It is part of the suite of
 computational microbiome analysis tools hosted at [EMBL](https://www.embl.org)
 by the groups of
 [Peer Bork](https://www.embl.de/research/units/scb/bork/index.html) and
