@@ -22,9 +22,9 @@ This functions filters \code{siamcat@label}.
 }
 \examples{
 
-    data(siamcat_example)
-    # simple working example
-    siamcat_filtered <- filter.label(siamcat_example, ids=c(1:20))
+data(siamcat_example)
+# simple working example
+siamcat_filtered <- filter.label(siamcat_example, ids=c(1:20))
 
 }
 \keyword{filter.label}
