@@ -26,7 +26,7 @@
 #'
 #' @keywords internal
 #'
-#' @export
+#' @export summarize.features
 #'
 #' @return object of class \link{siamcat-class} with a summarized feature table
 #'

@@ -10,13 +10,13 @@
 #' @param verbose control output: \code{0} for no output at all, \code{1}
 #' for more information about progress and success, defaults to \code{1}
 #' @keywords filter.label
-#' @export
+#' @export filter.label
 #' @return siamcat an object of class \link{siamcat-class}
 #' @examples
 #'
-#'     data(siamcat_example)
-#'     # simple working example
-#'     siamcat_filtered <- filter.label(siamcat_example, ids=c(1:20))
+#' data(siamcat_example)
+#' # simple working example
+#' siamcat_filtered <- filter.label(siamcat_example, ids=c(1:20))
 #'
 filter.label <- function(siamcat, ids, verbose = 1) {
     label_old <- label(siamcat)

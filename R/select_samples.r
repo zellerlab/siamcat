@@ -29,7 +29,7 @@
 #'
 #' @keywords SIAMCAT select.samples
 #'
-#' @export
+#' @export select.samples
 #'
 #' @return an object of class \link{siamcat-class} with labels and metadata
 #'         filtered in order to contain only allowed values

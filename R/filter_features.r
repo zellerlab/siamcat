@@ -58,7 +58,7 @@
 #'     filtering.
 #'     However, if a filtering method has already been applied to the dataset,
 #'     SIAMCAT will default back on the original features for filtering.
-#' @export
+#' @export filter.features
 #'
 #' @return siamcat an object of class \link{siamcat-class}
 #'
