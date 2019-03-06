@@ -1,0 +1,15 @@
+# Taken from https://github.com/joey711/phyloseq
+
+language: r
+bioc_required: true
+warnings_are_errors: true
+sudo: required
+
+env:
+ global:
+   - CRAN: http://cran.rstudio.com
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
