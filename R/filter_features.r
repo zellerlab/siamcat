@@ -83,7 +83,7 @@ filter.features <- function(siamcat,
 
     # checks
     if (!filter.method %in% c("abundance", "cum.abundance",
-                              "prevalence", "variance")) {
+                                "prevalence", "variance")) {
         stop("Unrecognized filter.method, exiting!\n")
     }
     if (!feature.type %in% c('original', 'filtered', 'normalized')){
@@ -208,7 +208,7 @@ filter.features <- function(siamcat,
     f.names <- rownames(feat)[f.idx]
     if (length(f.idx) == 0){
         stop('No features retained after filtering!',
-             ' Try changing your cutoff. Exiting...\n')
+            ' Try changing your cutoff. Exiting...\n')
     }
 
 

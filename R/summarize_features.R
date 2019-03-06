@@ -7,8 +7,8 @@
 #'
 #' @description Summarize features
 #'
-#' @usage summarize.features(siamcat, level = 'g__', feature.type='original',
-#'                           verbose=1)
+#' @usage summarize.features(siamcat, level = 'g__',
+#'                     feature.type='original', verbose=1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'

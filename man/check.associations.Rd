@@ -90,19 +90,17 @@ data(siamcat_example)
 # Simple example
 check.associations(siamcat_example, './assoc_plot.pdf')
 
-# Plot associations as bean plot
-check.associations(siamcat_example, './assoc_plot_bean.pdf',
-                   plot.type='bean')
+# Plot associations as box plot
+check.associations(siamcat_example, './assoc_plot_box.pdf', plot.type='box')
 
-# Plot assocations as box plot
 # Additionally, sort by p-value instead of by fold change
-check.associations(siamcat_example, './assoc_plot_fc.pdf',
-                   plot.type='box', sort.by='p.val')
+check.associations(siamcat_example, './assoc_plot_fc.pdf', plot.type='box',
+                    sort.by='p.val')
 
 # Custom colors
 check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
-                   plot.type='box', color.scheme=c('cornflowerblue',
-                   '#ffc125'))
+                    plot.type='box', color.scheme=c('cornflowerblue',
+                    '#ffc125'))
 }
 \keyword{SIAMCAT}
 \keyword{check.associations}

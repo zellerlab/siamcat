@@ -212,7 +212,7 @@ confounders.glm.reg.coef.plot <- function(glm.data) {
 
     par(mar = c(5.1, 10.1, 4.1, 1.1))
     plot(NULL, xlab = '', ylab = '', xaxs = 'i', yaxs = 'i', axes = FALSE,
-            xlim = c(margins[1], margins[2]), 
+            xlim = c(margins[1], margins[2]),
             ylim = c(0.5, length(order) + 0.5),
             type = 'n')
     abline(v = x.ticks, lty = 3, col = 'lightgrey')
@@ -295,9 +295,8 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
 
     for (m in seq_along(meta)) {
         mname <- gsub("[_.-]", " ", colnames(meta)[m])
-        mname <-
-              paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
-                  sep = "")
+        mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
+            sep = "")
         if (verbose > 1)
             message(paste("+++ checking",mname,"as a potential confounder"))
 

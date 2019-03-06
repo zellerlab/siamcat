@@ -92,19 +92,17 @@
 #' # Simple example
 #' check.associations(siamcat_example, './assoc_plot.pdf')
 #'
-#' # Plot associations as bean plot
-#' check.associations(siamcat_example, './assoc_plot_bean.pdf',
-#'                    plot.type='bean')
+#' # Plot associations as box plot
+#' check.associations(siamcat_example, './assoc_plot_box.pdf', plot.type='box')
 #'
-#' # Plot assocations as box plot
 #' # Additionally, sort by p-value instead of by fold change
-#' check.associations(siamcat_example, './assoc_plot_fc.pdf',
-#'                    plot.type='box', sort.by='p.val')
+#' check.associations(siamcat_example, './assoc_plot_fc.pdf', plot.type='box',
+#'                     sort.by='p.val')
 #'
 #' # Custom colors
 #' check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
-#'                    plot.type='box', color.scheme=c('cornflowerblue',
-#'                    '#ffc125'))
+#'                     plot.type='box', color.scheme=c('cornflowerblue',
+#'                     '#ffc125'))
 
 check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
     alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 1e-06,
@@ -335,7 +333,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
 
         # plot title
         xlab <- ifelse(feature.type=='normalized',
-                       'Normalized abundance', 'Abundance (log10-scale)')
+                    'Normalized abundance', 'Abundance (log10-scale)')
         if (!truncated) {
             title(main = 'Differentially abundant features', xlab = xlab)
         } else {
@@ -1057,7 +1055,7 @@ associations.quantile.box.plot <- function(data.mat, label, take.log=TRUE, col,
     tck = p.min:p.max
     if (take.log){
         axis(1, tck, formatC(10 ^ tck, format='E', digits=0),
-             las=1, cex.axis=0.7)
+            las=1, cex.axis=0.7)
     } else {
         axis(1, tck, las=1, cex.axis=0.7)
     }
@@ -1159,7 +1157,7 @@ associations.quantile.rect.plot <-
         tck = p.min:p.max
         if (take.log){
             axis(1, tck, formatC(10^tck, format='E', digits=0),
-                 las=1, cex.axis=0.7)
+                las=1, cex.axis=0.7)
         } else {
             axis(1, tck, las=1, cex.axis=0.7)
         }
