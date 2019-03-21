@@ -15,8 +15,7 @@ data preprocessing, statistical association testing, statistical modeling
 of these models (such as cross validation, parameter selection, ROC analysis
 and diagnostic model plots).
 
-<a href='https://microbiome-tools.embl.de'>
-<img src="man/figures/embl_microbiome_tools_logo.png" align="right" width="200">
+<a href='https://microbiome-tools.embl.de'> <img src="man/figures/embl_microbiome_tools_logo.png" align="right" width="200"> </a>
 
 `SIAMCAT` is developed in the
 [Zeller group](https://www.embl.de/research/units/scb/zeller/index.html)
