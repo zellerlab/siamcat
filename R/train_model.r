@@ -14,7 +14,7 @@
 #'     stratify = TRUE, modsel.crit = list("auc"),
 #'     min.nonzero.coeff = 1, param.set = NULL,
 #'     perform.fs = FALSE,
-#'     param.fs = list(thres.fs = 100, method.fs = "AUC"),
+#'     param.fs = list(thres.fs = 100, method.fs = "AUC", direction='absolute'),
 #'     feature.type='normalized',
 #'     verbose = 1)
 #'
@@ -33,33 +33,40 @@
 #'
 #' @param min.nonzero.coeff integer number of minimum nonzero coefficients that
 #'     should be present in the model (only for \code{'lasso'},
-#'     \code{'ridge'}, and \code{'enet'}, defaults to \code{1}
+#'     \code{'ridge'}, and \code{'enet'}), defaults to \code{1}
 #'
-#' @param param.set a list of extra parameters for mlr run, may contain:
+#' @param param.set list, set of extra parameters for mlr run, may contain:
 #'     \itemize{
 #'     \item \code{cost} - for lasso_ll and ridge_ll
-#'     \item \code{alpha} for enet
-#'     \item \code{ntree} and \code{mtry} for RandomForrest.
+#'     \item \code{alpha} - for enet
+#'     \item \code{ntree} and \code{mtry} - for RandomForrest.
 #'     } Defaults to \code{NULL}
 #'
 #' @param perform.fs boolean, should feature selection be performed?
 #'     Defaults to \code{FALSE}
 #'
-#' @param param.fs a list of parameters for the feature selection, must contain:
+#' @param param.fs list, parameters for the feature selection, must contain:
 #'     \itemize{
 #'     \item \code{thres.fs} - threshold for the feature selection,
 #'     \item \code{method.fs} - method for the feature selection, may be
-#'     \code{AUC}, \code{FC}, or \code{Wilcoxon}
+#'     \code{AUC}, \code{gFC}, or \code{Wilcoxon}
+#'     \item \code{direction} - for \code{AUC} and \code{gFC}, select either
+#'     the top associated features (independent of the sign of enrichment),
+#'     the top positively associated featured, or the top negatively
+#'     associated features, may be \code{absolute}, \code{positive}, or
+#'     \code{negative}. Will be ignored for \code{Wilcoxon}.
 #'     } See Details for more information.
-#'     Defaults to \code{list(thres.fs=100, method.fs="AUC")}
+#'     Defaults to \code{list(thres.fs=100, method.fs="AUC",
+#'     direction='absolute')}
 #'
-#' @param feature.type On which type of features should the function work? Can
-#'   be either "original", "filtered", or "normalized". Please only change this
-#'   paramter if you know what you are doing!
+#' @param feature.type string, on which type of features should the function
+#'   work? Can be either \code{"original"}, \code{"filtered"}, or
+#'   \code{"normalized"}. Please only change this paramter if you know what
+#'   you are doing!
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'     for only information about progress and success, \code{2} for normal
-#'     level of information and \code{3} for full debug information,
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
 #'
 #' @export
@@ -81,33 +88,43 @@
 #'     are tuned with the function \link[mlr]{tuneParams} within the
 #'     \code{mlr}-package.
 #'
-#'     The methods \code{'lasso'}, \code{'enet'}, and \code{'ridge'} are
-#'     implemented as mlr-taks using the \code{'classif.cvglmnet'} Learner,
-#'     \code{'lasso_ll'} and \code{'ridge_ll'} use the
+#'     The different machine learning methods are implemented as mlr-tasks:
+#'     \itemize{
+#'     \item \code{'lasso'}, \code{'enet'}, and \code{'ridge'} use the
+#'     \code{'classif.cvglmnet'} Learner,
+#'     \item \code{'lasso_ll'} and \code{'ridge_ll'} use the
 #'     \code{'classif.LiblineaRL1LogReg'} and the
-#'     \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
-#'     \code{'randomForest'} method is implemented via the
+#'     \code{'classif.LiblineaRL2LogReg'} Learners respectively
+#'     \item \code{'randomForest'} is implemented via the
 #'     \code{'classif.randomForest'} Learner.
+#'     }
 #'
 #'     The function can also perform feature selection on each individual fold.
 #'     At the moment, three methods for feature selection are implemented:
 #'     \itemize{
-#'     \item \code{'AUC'} computes the Area Under the Receiver Operating
+#'     \item \code{'AUC'} - computes the Area Under the Receiver Operating
 #'         Characteristics Curve for each single feature and selects the top
 #'         \code{param.fs$thres.fs}, e.g. 100 features
-#'     \item \code{'FC'} computes the generalized Fold Change (see
+#'     \item \code{'gFC'} - computes the generalized Fold Change (see
 #'         \link{check.associations}) for each feature and likewise selects the
 #'         top \code{param.fs$thres.fs}, e.g. 100 features
-#'     \item \code{Wilcoxon} computes the p-Value for each single feature with
-#'         the Wilcoxon test and selects features with a p-Value smaller than
-#'         \code{param.fs$thres.fs}
+#'     \item \code{Wilcoxon} - computes the p-Value for each single feature
+#'         with the Wilcoxon test and selects features with a p-value smaller
+#'         than \code{param.fs$thres.fs}
 #'     }
+#'     For \code{AUC} and \code{gFC}, feature selection can also be directed,
+#'     that means that the features will be selected either based on the
+#'     overall association (\code{absolute} - \code{gFC} will be converted to
+#'     absolute values and \code{AUC} values below \code{0.5} will be
+#'     converted by \code{1 - AUC}), or on associations in a certain direction
+#'     (\code{positive} - positive enrichment as measured by positive values
+#'     of the \code{gFC} or \code{AUC} values higher than  \code{0.5} - and
+#'     reversely for \code{negative}).
 #' @examples
+#' data(siamcat_example)
 #'
-#'     data(siamcat_example)
-#'     # simple working example
-#'     siamcat_validated <- train.model(siamcat_example, method='lasso')
-#'
+#' # simple working example
+#' siamcat_example <- train.model(siamcat_example, method='lasso')
 train.model <- function(siamcat,
     method = c("lasso",
         "enet",
@@ -120,7 +137,7 @@ train.model <- function(siamcat,
     min.nonzero.coeff = 1,
     param.set = NULL,
     perform.fs = FALSE,
-    param.fs = list(thres.fs = 100, method.fs = "AUC"),
+    param.fs = list(thres.fs = 100, method.fs = "AUC", direction="absolute"),
     feature.type='normalized',
     verbose = 1) {
 
@@ -214,8 +231,17 @@ train.model <- function(siamcat,
         message(paste("+ training", method, "models on", num.runs,
             "training sets"))
 
+    if (verbose > 1 & perform.fs){
+        message('+ Performing feature selection ',
+            'with following parameters:')
+        for (i in seq_along(param.fs)) {
+            message(paste0('    ', names(param.fs)[i], ' = ',
+                ifelse(is.null(param.fs[[i]]), 'NULL', param.fs[[i]])))
+            }
+        }
+
     if (verbose == 1 || verbose == 2)
-        pb <- txtProgressBar(max = num.runs, style = 3)
+        pb <- progress_bar$new(total = num.runs)
 
     for (fold in seq_len(data.split$num.folds)) {
         if (verbose > 2)
@@ -247,21 +273,11 @@ train.model <- function(siamcat,
             #feature selection
             if (perform.fs) {
 
-                stopifnot(all(c('method.fs', 'thres.fs') %in% names(param.fs)))
+                stopifnot(all(c('method.fs', 'thres.fs', 'direction') %in%
+                    names(param.fs)))
 
-                if (verbose > 1) {
-                    message('+ Performing feature selection ',
-                        'with following parameters:')
-                }
-                if (verbose > 2) {
-                    for (i in seq_along(param.fs)) {
-                        message(paste0('    ', names(param.fs)[i], ' = ',
-                            ifelse(is.null(param.fs[[i]]), 'NULL',
-                                param.fs[[i]])))
-                        }
-                }
                 # test method.fs
-                if (!param.fs$method.fs %in% c('Wilcoxon', 'AUC', 'FC')) {
+                if (!param.fs$method.fs %in% c('Wilcoxon', 'AUC', 'gFC')) {
                     stop('Unrecognised feature selection method...\n')
                 }
 
@@ -290,19 +306,29 @@ train.model <- function(siamcat,
                                     label=train.label,
                                     pos=max(label$info),
                                     neg=min(label$info))
+                    if (param.fs$direction == 'absolute'){
+                        assoc[assoc < 0.5] <- 1 - assoc[assoc < 0.5]
+                    } else if (param.fs$direction == 'negative'){
+                        assoc <- 1 - assoc
+                    }
                     data <- data[,rank(-assoc) <= param.fs$thres.fs]
-                } else if (param.fs$method.fs == 'FC') {
+                } else if (param.fs$method.fs == 'gFC') {
                     assoc <- vapply(data,
                                     FUN=get.quantile.FC,
                                     FUN.VALUE = double(1),
                                     label=train.label,
                                     pos=max(label$info),
                                     neg=min(label$info))
-                    data <- data[,rank(-abs(assoc)) <= param.fs$thres.fs]
+                    if (param.fs$direction == 'absolute'){
+                        assoc <- abs(assoc)
+                    } else if (param.fs$direction == 'negative'){
+                        assoc <- -assoc
+                    }
+                    data <- data[,rank(-assoc) <= param.fs$thres.fs]
                 }
 
                 stopifnot(ncol(data) > 0)
-                if (verbose > 1) {
+                if (verbose > 2) {
                     message(paste0('++ retaining ', ncol(data),
                         ' features after feature selection with ',
                         param.fs$method.fs, '-threshold ',
@@ -331,11 +357,11 @@ train.model <- function(siamcat,
             }
 
             if (verbose == 1 || verbose == 2)
-                setTxtProgressBar(pb, bar)
+                pb$tick()
         }
     }
 
-    model_list(siamcat) <- new("model_list",
+    model_list(siamcat) <- list(
         models = models.list,
         model.type = method,
         feature.type = feature.type)
@@ -344,13 +370,13 @@ train.model <- function(siamcat,
 
     if (verbose > 1)
         message(paste(
-            "\n+ finished train.model in",
+            "+ finished train.model in",
             formatC(e.time - s.time,
                 digits = 3),
             "s"
         ))
     if (verbose == 1)
-        message(paste("\nTrained", method, "models successfully."))
+        message(paste("Trained", method, "models successfully."))
 
     return(siamcat)
 }
@@ -367,7 +393,6 @@ get.single.feat.AUC <- function(x, label, pos, neg) {
     x.p <- x[label == pos]
     x.n <- x[label == neg]
     temp.auc <- roc(cases=x.p, controls=x.n)$auc
-    if (temp.auc < 0.5) temp.auc <- 1 - temp.auc
     return(temp.auc)
 }
 
