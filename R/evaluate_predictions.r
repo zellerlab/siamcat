@@ -18,40 +18,40 @@
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'     for only information about progress and success, \code{2} for normal
-#'     level of information and \code{3} for full debug information,
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
 #'
 #' @keywords SIAMCAT evaluate.predictions
 #'
-#' @details This functions calculates for the predictions in the
-#'     \code{pred_matrix} -slot of the \link{siamcat-class}-object several
-#'     metrices. The Area Under the Receiver Operating Characteristic (ROC)
+#' @details This functions calculates several metrices for the predictions in
+#'     the \code{pred_matrix}-slot of the \link{siamcat-class}-object.
+#'     The Area Under the Receiver Operating Characteristic (ROC)
 #'     Curve (AU-ROC) and the Precision-Recall Curve will be evaluated and
 #'     the results will be saved in the \code{eval_data}-slot of the
 #'     supplied \link{siamcat-class}-object. The \code{eval_data}-slot
 #'     contains a list with several entries: \itemize{
-#'         \item \code{$roc} average ROC-curve across repeats or a
-#'                 single ROC-curve on complete dataset;
-#'         \item \code{$auroc} AUC value for the average ROC-curve;
-#'         \item \code{$prc} list containing the positive predictive value
+#'         \item \code{$roc} - average ROC-curve across repeats or a
+#'                 single ROC-curve on complete dataset (see \link[pROC]{roc});
+#'         \item \code{$auroc} - AUC value for the average ROC-curve;
+#'         \item \code{$prc} - list containing the positive predictive value
 #'                 (precision) and true positive rate (recall) values used
 #'                 to plot the mean PR curve;
-#'         \item \code{$auprc} AUC value for the mean PR curve;
-#'         \item \code{$ev} list containing for different decision thresholds
+#'         \item \code{$auprc} - AUC value for the mean PR curve;
+#'         \item \code{$ev} - list containing for different decision thresholds
 #'                 the number of false positives, false negatives, true
 #'                 negatives, and true positives.}
 #'     For the case of repeated cross-validation, the function will
 #'     additonally return \itemize{
-#'         \item \code{$roc.all} list of roc objects (see \link[pROC]{roc})
+#'         \item \code{$roc.all} - list of roc objects (see \link[pROC]{roc})
 #'                 for every repeat;
-#'         \item \code{$auroc.all} vector of AUC values for the ROC curves
+#'         \item \code{$auroc.all} - vector of AUC values for the ROC curves
 #'                 for every repeat;
-#'         \item \code{$prc.all} list of PR curves for every repeat;
-#'         \item \code{$auprc.all} vector of AUC values for the PR curves
+#'         \item \code{$prc.all} - list of PR curves for every repeat;
+#'         \item \code{$auprc.all} - vector of AUC values for the PR curves
 #'                 for every repeat;
-#'         \item \code{$ev.all} list of \code{ev} lists (see above)
+#'         \item \code{$ev.all} - list of \code{ev} lists (see above)
 #'                 for every repeat.}
 #'
 #' @export
@@ -60,11 +60,9 @@
 #'     slot \code{eval_data} filled
 #'
 #' @examples
+#' data(siamcat_example)
 #'
-#'     data(siamcat_example)
-#'     # simple working example
-#'     siamcat_evaluated <- evaluate.predictions(siamcat_example)
-#'
+#' siamcat_evaluated <- evaluate.predictions(siamcat_example)
 evaluate.predictions <- function(siamcat, verbose = 1) {
     if (verbose > 1)
         message("+ starting evaluate.predictions")
@@ -75,6 +73,12 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
         stop('SIAMCAT can not evaluate the predictions on a TEST',
             ' label. Exiting...')
     }
+
+    # check that predictions are present
+    if (is.null(pred_matrix(siamcat, verbose=0))){
+        stop('SIAMCAT object does not contain predictions. Exiting\n')
+    }
+
     summ.stat = "mean" # TODO make this a possible parameter?
     # TODO compare header to label make sure that label and prediction are in
     # the same order
@@ -144,27 +148,20 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
     if (ncol(pred) > 1) {
         if (verbose > 2)
             message("+ evaluating multiple predictions")
-        eval_data(siamcat) <-
-            eval_data(
-                list(
-                    roc= roc.mean,
-                    roc.all = roc.all,
-                    auroc = auroc,
-                    auroc.all = auroc.all,
-                    prc = prc,
-                    prc.all = prc.all,
-                    auprc = auprc,
-                    auprc.all = auprc.all,
-                    ev = ev,
-                    ev.all = ev.all
-                )
-            )
+        eval_data(siamcat) <- list(
+            roc= roc.mean, roc.all = roc.all,
+            auroc = auroc, auroc.all = auroc.all,
+            prc = prc, prc.all = prc.all,
+            auprc = auprc, auprc.all = auprc.all,
+            ev = ev, ev.all = ev.all
+        )
+
     } else {
         if (verbose > 2)
             message("+ evaluating single prediction")
-        eval_data(siamcat) <- eval_data(list(
+        eval_data(siamcat) <- list(
             roc=roc.mean, auroc=auroc, prc=prc, auprc=auprc, ev=ev
-        ))
+        )
     }
     e.time <- proc.time()[3]
     if (verbose > 1)
