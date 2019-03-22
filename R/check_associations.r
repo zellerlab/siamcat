@@ -5,22 +5,8 @@
 
 #'@title Check and visualize associations between features and classes
 #'
-#'@description This function calculates for each feature a pseudo-fold change
-#'     (geometrical mean of the difference between quantiles) between the
-#'     different classes found in labels.
-#'
-#'     Significance of the differences is computed for each feature using a
-#'     Wilcoxon test followed by multiple hypothesis testing correction.
-#'
-#'     Additionally, the Area Under the Receiver Operating Characteristic Curve
-#'     (AU-ROC) and a prevalence shift are computed for the features found to
-#'     be associated with the two different classes at a user-specified
-#'     significance level \code{alpha}.
-#'
-#'     Finally, the function produces a plot of the top \code{max.show}
-#'     associated features, showing the distribution of the log10-transformed
-#'     abundances for both classes, and user-selected panels for the effect
-#'     (AU-ROC, Prevalence Shift, and Fold Change)
+#'@description This function computes different measures of association between
+#'     features and the label and visualizes the results
 #'
 #'@usage check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
 #'     alpha =0.05, mult.corr = "fdr", sort.by = "fc",
@@ -68,10 +54,11 @@
 #'      into a pdf-file, defaults to TRUE
 #'
 #'@param feature.type string, on which type of features should the function
-#'   work? Can be either "original", "filtered", or "normalized". Please only
-#'   change this paramter if you know what you are doing! If
-#'   \code{feature.type} is \code{"normalized"}, the normalized abundances will
-#'   not be log10-transformed.
+#' work? Can be either \code{c()"original", "filtered", or "normalized")}.
+#' Please only change this paramter if you know what you are doing!
+#'
+#' If \code{feature.type} is \code{"normalized"}, the normalized abundances
+#' will not be log10-transformed.
 #'
 #' @param verbose integer, control output: \code{0} for no output at all,
 #'     \code{1} for only information about progress and success, \code{2} for
@@ -83,6 +70,26 @@
 #'
 #'@keywords SIAMCAT check.associations
 #'
+#'@details For each feature, this function calculates different measures of
+#'     association between the feature and the label. In detail, these
+#'     associations are: \itemize{
+#'     \item Significance as computed by a Wilcoxon test followed by multiple
+#'     hypothesis testing correction.
+#'     \item AUROC (Area Under the Receiver Operating Characteristics Curve)
+#'     as a non-parameteric measure of enrichment (corresponds to the effect
+#'     size of the Wilcoxon test).
+#'     \item The generalized Fold Change (gFC) is a pseudo fold change
+#'     which is calculated as geometric mean of the differences between the
+#'     quantiles for the different classes found in the label.
+#'     \item The prevalence shift between the two different classes found in
+#'     the label.
+#'     }
+#'
+#'     Finally, the function produces a plot of the top \code{max.show}
+#'     associated features at a user-specified significance level \code{alpha},
+#'     showing the distribution of the log10-transformed abundances for both
+#'     classes, and user-selected panels for the effect (AU-ROC, Prevalence
+#'     Shift, and Fold Change).
 #'@export
 #'
 #'@examples
@@ -90,19 +97,21 @@
 #' data(siamcat_example)
 #'
 #' # Simple example
-#' check.associations(siamcat_example, './assoc_plot.pdf')
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot.pdf')
 #'
 #' # Plot associations as box plot
-#' check.associations(siamcat_example, './assoc_plot_box.pdf', plot.type='box')
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot_box.pdf', plot.type='box')
 #'
 #' # Additionally, sort by p-value instead of by fold change
-#' check.associations(siamcat_example, './assoc_plot_fc.pdf', plot.type='box',
-#'                     sort.by='p.val')
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
 #'
 #' # Custom colors
-#' check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
-#'                     plot.type='box', color.scheme=c('cornflowerblue',
-#'                     '#ffc125'))
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot_blue_yellow.pdf', plot.type='box',
+#'     color.scheme=c('cornflowerblue', '#ffc125'))
 
 check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
     alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 1e-06,
@@ -207,7 +216,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 verbose = verbose
             )
             # update siamcat
-            associations(siamcat) <- new("associations",
+            associations(siamcat) <- list(
                 assoc.results=result.list$effect.size,
                 assoc.param=list(detect.lim=result.list$detect.lim,
                     pr.cutoff=pr.cutoff, probs.fc=probs.fc,
@@ -239,7 +248,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                     verbose = verbose
                 )
                 # update siamcat
-                associations(siamcat) <- new("associations",
+                associations(siamcat) <- list(
                     assoc.results=result.list$effect.size,
                     assoc.param=list(detect.lim=result.list$detect.lim,
                         pr.cutoff=pr.cutoff, probs.fc=probs.fc,
@@ -384,9 +393,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
             ))
         if (verbose == 1 & !is.null(fn.plot))
             message(paste(
-                "\nPlotted associations between features and label
-                successfully to:",
-                fn.plot
+                "Plotted associations between features and label",
+                "successfully to:", fn.plot
             ))
         return(siamcat)
     }
@@ -1273,7 +1281,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
     negative.label <- min(label$info)
 
     if (verbose)
-        pb = txtProgressBar(max = nrow(feat), style = 3)
+        pb <- progress_bar$new(total = nrow(feat))
 
     effect.size <- data.frame(t(apply(feat, 1, FUN = function(x) {
         # pseudo-fold change as differential quantile area
@@ -1306,7 +1314,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
             length(which(label$label == positive.label))
         pr.shift <- c(temp.p - temp.n, temp.n, temp.p)
         if (verbose)
-            setTxtProgressBar(pb, (pb$getVal() + 1))
+            pb$tick()
         return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2],
             'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
             'pr.shift' = pr.shift[1], 'pr.n' = pr.shift[2],
@@ -1337,7 +1345,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
     if (verbose > 1)
         message(
             paste(
-                '\n+++ found',
+                '+++ found',
                 sum(effect.size$p.adj < alpha,
                     na.rm = TRUE),
                 'significant associations at a significance level <',
