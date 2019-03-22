@@ -3,27 +3,26 @@
 \docType{methods}
 \name{meta}
 \alias{meta}
-\alias{meta,ANY-method}
-\alias{meta,sample_data-method}
-\title{Retrieve a \link[phyloseq]{sample_data-class} object from object.}
+\title{Retrieve the metadata from a SIAMCAT object}
 \usage{
 meta(siamcat)
-
-\S4method{meta}{ANY}(siamcat)
-
-\S4method{meta}{sample_data}(siamcat)
 }
 \arguments{
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a label or instance of \link[phyloseq]{sample_data-class}.}
+\item{siamcat}{(Required). A \link{siamcat-class} object}
 }
 \value{
-The \link[phyloseq]{sample_data-class} object or NULL.
+The metadata as \link[phyloseq]{sample_data-class} object
 }
 \description{
-Retrieve a \link[phyloseq]{sample_data-class} object from object.
+Retrieve the metadata from a SIAMCAT object
+}
+\details{
+This function will retrieve the metadata from a
+SIAMCAT object. The metadata is a object of the
+\link[phyloseq]{sample_data-class}.
 }
 \examples{
-    data(siamcat_example)
-    meta(siamcat_example)
+data(siamcat_example)
+temp <- meta(siamcat_example)
+head(temp)
 }

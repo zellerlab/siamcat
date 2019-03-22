@@ -3,27 +3,38 @@
 \docType{methods}
 \name{filt_feat}
 \alias{filt_feat}
-\alias{filt_feat,ANY-method}
-\title{Retrieve filtered features form object}
+\title{Retrieve the information stored in the \code{filt_feat} slot within
+a SIAMCAT object}
 \usage{
 filt_feat(siamcat, verbose=1)
-
-\S4method{filt_feat}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains an object in the filt_feat slot}
+that contains filtered features}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The filtered feature matrix or NULL.
+The list stored in the \code{filt_feat} slot of the SIAMCAT object
+or \code{NULL}
 }
 \description{
-Retrieve filtered features form object
+Function to retrieve the information stored in the
+\code{filt_feat} slot within a SIAMCAT object
+}
+\details{
+The function will return a list containing the information stored
+in the \code{filt_feat} slot of a SIAMCAT object. This list contains:
+\itemize{
+\item \code{filt.feat} - filtered features as matrix, see
+\link{get.filt_feat.matrix}
+\item \code{filt.param} - parameters used for feature filtering, see
+\link{get.filt_feat.matrix}
+}
 }
 \examples{
-    data(siamcat_example)
-    filt_feat(siamcat_example)
+data(siamcat_example)
+temp <- filt_feat(siamcat_example)
+names(temp)
 }

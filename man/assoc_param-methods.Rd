@@ -3,28 +3,31 @@
 \docType{methods}
 \name{assoc_param}
 \alias{assoc_param}
-\alias{assoc_param,ANY-method}
-\alias{assoc_param_param,ANY-method}
-\title{Retrieve parameters of association testing from object.}
+\title{Retrieve the list of parameters for association testing from
+a SIAMCAT object}
 \usage{
 assoc_param(siamcat, verbose=1)
-
-\S4method{assoc_param}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains an object in the associations slot}
+containing the results from association testing}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The parameters of the assocation testing or NULL
+A list of parameters for association testing or \code{NULL}
 }
 \description{
-Retrieve parameters of association testing from object.
+Function to retrieve the list of parameters for
+association testing
+}
+\details{
+The function returns the list of parameters used in association
+testing. See \link{check.associations} for more details.
 }
 \examples{
-    data(siamcat_example)
-    assoc_param(siamcat_example)
+data(siamcat_example)
+temp <- assoc_param(siamcat_example)
+names(temp)
 }

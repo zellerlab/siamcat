@@ -3,27 +3,28 @@
 \docType{methods}
 \name{models}
 \alias{models}
-\alias{models,ANY-method}
-\title{Retrieve list of models from object.}
+\title{Retrieve list of trained models from a SIAMCAT object}
 \usage{
 models(siamcat, verbose=1)
-
-\S4method{models}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a model_list or instance of \link{model_list-class}.}
+that contains trained models}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The list of models or NULL.
+The list of models or \code{NULL}
 }
 \description{
-Retrieve list of models from object.
+Function to retrieve the list of trained models
+}
+\details{
+The function extracts the list of trained models.
 }
 \examples{
-    data(siamcat_example)
-    models(siamcat_example)
+data(siamcat_example)
+temp <- models(siamcat_example)
+temp[[1]]
 }

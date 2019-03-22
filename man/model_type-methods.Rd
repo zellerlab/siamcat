@@ -3,27 +3,29 @@
 \docType{methods}
 \name{model_type}
 \alias{model_type}
-\alias{model_type,ANY-method}
-\title{Retrieve model_type from object.}
+\title{Retrieve the machine learning method from a SIAMCAT object}
 \usage{
 model_type(siamcat, verbose=1)
-
-\S4method{model_type}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a model_list or instance of \link{model_list-class}.}
+that contains trained models}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The string describing type of model used or NULL.
+The string describing the machine learning method or \code{NULL}
 }
 \description{
-Retrieve model_type from object.
+Function to retrieve information on which type of machine
+learning method was used for model training
+}
+\details{
+The function extracts the information on which type of machine
+learning method was used for model training.
 }
 \examples{
-    data(siamcat_example)
-    model_type(siamcat_example)
+data(siamcat_example)
+model_type(siamcat_example)
 }

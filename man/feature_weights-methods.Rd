@@ -3,27 +3,43 @@
 \docType{methods}
 \name{feature_weights}
 \alias{feature_weights}
-\alias{feature_weights,ANY-method}
-\title{Retrieve feature_weights from object.}
+\title{Retrieve the matrix of feature weights from a SIAMCAT object}
 \usage{
 feature_weights(siamcat, verbose=1)
-
-\S4method{feature_weights}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a model_list or instance of \link{model_list-class}.}
+\item{siamcat}{(Required). A \link{siamcat-class} object
+that contains trained models}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-A dataframe containing mean/median feature weight and additional info
+A dataframe containing mean/median feature weight and
+additional info or \code{NULL}
 }
 \description{
-Retrieve feature_weights from object.
+Function to extract the feature weights from a SIAMCAT object
+}
+\details{
+The function extracts the weight matrix from all trained models
+(see \link{weight_matrix}) and computes several metrics on the feature
+weights: \itemize{
+\item \code{mean.weight} - mean weight across trained models
+\item \code{median.weight} - median weight across trained models
+\item \code{sd.weight} - standard deviation of the weight across trained
+models
+\item \code{mean.rel.weight} - mean \strong{relative} weight across
+trained models (each model is normalized by the absolute of all weights)
+\item \code{median.rel.weight} - median \strong{relative} weight across
+trained models
+\item \code{sd.rel.weight} - standard deviation of the \strong{relative}
+weight across trained models
+\item \code{percentage} - percentage of models in which this feature was
+selected (i.e. non-zero)}
 }
 \examples{
-    data(siamcat_example)
-    feature_weights(siamcat_example)
+data(siamcat_example)
+temp <- feature_weights(siamcat_example)
+head(temp)
 }

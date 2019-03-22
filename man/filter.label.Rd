@@ -2,29 +2,41 @@
 % Please edit documentation in R/siamcat_class_helper_functions.R
 \name{filter.label}
 \alias{filter.label}
-\title{Filter samples from \code{siamcat@label}}
+\title{Filter the label of a SIMACAT object}
 \usage{
-\method{filter}{label}(siamcat, ids, verbose = 1)
+filter.label(siamcat, ids, verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
 
-\item{ids}{names of samples to be left in the \code{siamcat@label}}
+\item{ids}{vector, can contain either names or indices of samples to be
+retained}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for more information about progress and success, defaults to \code{1}}
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 siamcat an object of class \link{siamcat-class}
 }
 \description{
-This functions filters \code{siamcat@label}.
+This functions filters the label in a SIAMCAT object
+}
+\details{
+This function filters the label contained in a SIAMCAT object,
+based on the provided \code{ids}. The IDs can be either sample names or
+indices to be retained.
+
+Predominantly for internal use...
+
+\strong{Please note:} It makes sense to run \link{validate.data} after
+filtering the label.
 }
 \examples{
-
 data(siamcat_example)
+
 # simple working example
 siamcat_filtered <- filter.label(siamcat_example, ids=c(1:20))
-
 }
 \keyword{filter.label}

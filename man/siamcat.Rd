@@ -2,7 +2,7 @@
 % Please edit documentation in R/siamcat_class_constructor.R
 \name{siamcat}
 \alias{siamcat}
-\title{siamcat}
+\title{SIAMCAT constructor function}
 \usage{
 siamcat(..., feat=NULL, label=NULL, meta=NULL,
     phyloseq=NULL, validate=TRUE, verbose=3)
@@ -39,18 +39,18 @@ Build siamcat-class objects from their components.
 
 This functions creates a SIAMCAT object (see \link{siamcat-class}).
 In order to do so, the function needs \itemize{
-\item feat the feature information for SIAMCAT, should be either a matrix,
-a data.frame, or a \link[phyloseq]{otu_table-class}. The columns should
-correspond to the different samples (e.g. patients) and the rows the
+\item \code{feat} the feature information for SIAMCAT, should be either a
+matrix, a data.frame, or a \link[phyloseq]{otu_table-class}. The columns
+should correspond to the different samples (e.g. patients) and the rows the
 different features (e.g. taxa). Columns and rows should be named.
-\item meta metadata information for the different samples in the feature
-matrix. Metadata is optional for the SIAMCAT workflow. Should be
+\item \code{meta} metadata information for the different samples in the
+feature matrix. Metadata is optional for the SIAMCAT workflow. Should be
 either a data.frame (with the rownames corresponding to the sample
 names of the feature matrix) or an object of class
 \link[phyloseq]{sample_data-class}
-\item phyloseq Alternatively to supplying both feat and meta, SIAMCAT can
-also work with a phyloseq object containing an otu_table and other
-optional slots (like sample_data for meta-variables).}
+\item \code{phyloseq} Alternatively to supplying both feat and meta,
+SIAMCAT can also work with a phyloseq object containing an otu_table and
+other optional slots (like sample_data for meta-variables).}
 
 Notice: do supply \strong{either} the feature information as
 matrix/data.frame/otu_table (and optionally metadata) \strong{or} a
@@ -71,14 +71,14 @@ for the construction of a label to predict CRC status (which is encoded
 in the column \code{"DiseaseState"} of the metadata). For more control
 (e.g. specific labels for plotting or specific control state), the
 label can also be created outside of the \code{siamcat} function using
-the \link{create.label} function (see below).
+the \link{create.label} function.
 \item named vector: the label can also be supplied as named vector which
 encodes the label either as characters (e.g. "Healthy" and "Diseased"),
 as factor, or numerically (e.g. -1 and 1). The vector must be named
 with the names of samples (corresponding to the samples in features).
 Also here, the information about the positive group(s) is needed via
 the \code{case} parameter. Internally, the vector is given to the
-\link{create.label} function (see for more details).
+\link{create.label} function.
 \item label object: A label object can be created with the
 \link{create.label} function or by reading a dedicated label file
 with \link{read.label}.

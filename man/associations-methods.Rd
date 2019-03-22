@@ -3,27 +3,29 @@
 \docType{methods}
 \name{associations}
 \alias{associations}
-\alias{associations,ANY-method}
-\title{Retrieve associations from object.}
+\title{Retrieve the results of association testing from a SIAMCAT object}
 \usage{
 associations(siamcat, verbose=1)
-
-\S4method{associations}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains an object in the associations slot}
+containing the results of association testing}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The results of the association testing or NULL.
+A \code{data.frame} of association testing results or \code{NULL}
 }
 \description{
-Retrieve associations from object.
+Function to retrieve the results of association testing
+}
+\details{
+The function returns the results of the association testing
+procedure as dataframe. See \link{check.associations} for more details.
 }
 \examples{
-    data(siamcat_example)
-    associations(siamcat_example)
+data(siamcat_example)
+temp <- associations(siamcat_example)
+head(temp)
 }

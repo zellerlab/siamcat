@@ -2,23 +2,25 @@
 % Please edit documentation in R/siamcat_class_accessors.R
 \name{get.orig_feat.matrix}
 \alias{get.orig_feat.matrix}
-\title{get.orig_feat.matrix}
+\title{Retrieve the original features from a SIAMCAT object}
 \usage{
-get.orig_feat.matrix(siamcat)
+get.filt_feat.matrix(siamcat)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat-class}t}
+\item{siamcat}{(Required). An instance of \link{siamcat-class}}
 }
 \value{
-Original features as a matrix
+A matrix containing the original features
 }
 \description{
-Function to access original features in siamcat@orig_feat
+Function to retrieve the original features from a SIAMCAT
+object
 }
 \details{
-Access original features in siamcat@phyloseq as matrix
+The function returns the original features as matrix.
 }
 \examples{
-    data(siamcat_example)
-    orig_feat <- get.orig_feat.matrix(siamcat_example)
+data(siamcat_example)
+feat.original <- get.orig_feat.matrix(siamcat_example)
+feat.original[1:3, 1:3]
 }

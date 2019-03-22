@@ -31,11 +31,16 @@ Produces two plots for model evaluation. The first plot shows
     repetitions.
 }
 \examples{
+data(siamcat_example)
 
-    data(siamcat_example)
-    # simple working example
-    model.evaluation.plot(siamcat_example, fn.plot='./eval.pdf')
+# simple working example
+model.evaluation.plot(siamcat_example, fn.plot='./eval.pdf')
 
+# plot several named SIAMCAT object
+# (although we use only one example object here)
+model.evaluation.plot('Example_1'=siamcat_example,
+    'Example_2'=siamcat_example, colours=c('red', 'blue'),
+    fn.plot='./eval.pdf')
 }
 \keyword{SIAMCAT}
 \keyword{model.evaluation.plot}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_label.r
 \name{create.label}
 \alias{create.label}
-\title{create a label object from metadata or an atomic vector}
+\title{Create a label list}
 \usage{
 create.label(label, case,
     meta=NULL, control=NULL,
@@ -42,23 +42,35 @@ metadata should be retained. Please note that if this is set to
 \code{TRUE}, the function will return a list as result. Defaults to
 \code{FALSE}}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
 defaults to \code{1}}
 }
 \value{
-an object of class \link{label-class} OR a list with entries
-\code{meta} and \code{label}, if \code{remove.meta.column} is set to
-\code{TRUE}
+return either \itemize{
+\item a list to be used in a SIMCAT object \strong{OR}
+\item a list with entries \code{meta} and \code{label},
+if \code{remove.meta.column} is set to \code{TRUE}
+}
 }
 \description{
 This function creates a label object from metadata
 or an atomic vector
 }
-\examples{
-    data('meta_crc_zeller')
-    label <- create.label(label='Group', case='CRC', meta=meta.crc.zeller)
+\details{
+The function creates a list to be used as label in a SIAMCAT
+object. Mainly for interal use, but it can be used to customize your label
+(\code{p.lab} and \code{n.lab} will be used as labels during plotting,
+for example).
 
+The input for the function can be either a named vector encoding the label
+or the name of a column in the metadata (needs to be provided as well) which
+contains the label information.
+}
+\examples{
+data('meta_crc_zeller')
+
+label <- create.label(label='Group', case='CRC', meta=meta.crc.zeller)
 }
 \keyword{create.label}

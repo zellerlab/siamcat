@@ -3,27 +3,38 @@
 \docType{methods}
 \name{norm_feat}
 \alias{norm_feat}
-\alias{norm_feat,ANY-method}
-\title{Retrieve normalized features form object}
+\title{Retrieve the information stored in the \code{norm_feat} slot within
+a SIAMCAT object}
 \usage{
 norm_feat(siamcat, verbose=1)
-
-\S4method{norm_feat}{ANY}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains an object in the norm_feat slot}
+that contains normalized features}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The normalized feature matrix or NULL.
+The list stored in the \code{norm_feat} slot of the SIAMCAT object
+or \code{NULL}
 }
 \description{
-Retrieve normalized features form object
+Function to retrieve the information stored in the
+\code{norm_feat} slot within a SIAMCAT object
+}
+\details{
+The function will return a list containing the information stored
+in the \code{norm_feat} slot of a SIAMCAT object. This list contains:
+\itemize{
+\item \code{norm.feat} - normalized features as matrix, see
+\link{get.norm_feat.matrix}
+\item \code{norm.param} - parameters used for normalization, see
+\link{norm_param}
+}
 }
 \examples{
-    data(siamcat_example)
-    norm_feat(siamcat_example)
+data(siamcat_example)
+temp <- norm_feat(siamcat_example)
+names(temp)
 }

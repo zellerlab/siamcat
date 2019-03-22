@@ -4,23 +4,20 @@
 \name{model_list<-}
 \alias{model_list<-}
 \alias{assign-model_list}
-\alias{model_list<-,siamcat,model_list-method}
-\title{Assign a new model_list object to \code{x}}
+\title{Assign a new list containing trained models to a SIAMCAT object}
 \usage{
 model_list(x) <- value
-
-\S4method{model_list}{siamcat,model_list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}
 
-\item{value}{an object of class \link{model_list-class}}
+\item{value}{list containing trained models, type of models and of features}
 }
 \value{
 none
 }
 \description{
-Assign a new model_list object to \code{x}
+Assign a new list containing trained models to a SIAMCAT object
 }
 \examples{
 data(siamcat_example)

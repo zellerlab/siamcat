@@ -3,30 +3,31 @@
 \docType{methods}
 \name{pred_matrix}
 \alias{pred_matrix}
-\alias{pred_matrix,ANY-method}
-\alias{pred_matrix,matrix-method}
-\title{Retrieve pred_matrix from object.}
+\title{Retrieve the prediction matrix from a SIAMCAT object}
 \usage{
 pred_matrix(siamcat, verbose=1)
-
-\S4method{pred_matrix}{ANY}(siamcat, verbose = 1)
-
-\S4method{pred_matrix}{matrix}(siamcat)
 }
 \arguments{
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a pred_matrix}
+\item{siamcat}{(Required). A \link{siamcat-class} object
+that contains a prediction matrix}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The pred_matrix matrix or NULL.
+A matrix containing predictions or \code{NULL}
 }
 \description{
-Retrieve pred_matrix from object.
+Function to retrieve the prediction matrix from a SIAMCAT
+object
+}
+\details{
+The functions returns a matrix containing the predictions for all
+samples across the different cross-validation repeats. See
+\link{make.predictions} for more information.
 }
 \examples{
-    data(siamcat_example)
-    pred_matrix(siamcat_example)
+data(siamcat_example)
+temp <- pred_matrix(siamcat_example)
+head(temp)
 }

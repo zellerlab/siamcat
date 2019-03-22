@@ -17,15 +17,14 @@ which to make predictions, defaults to \code{NULL}}
 with a frozen normalization (see \link{normalize.features}) using the
 normalization parameters in \code{siamcat}?, defaults to \code{TRUE}}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-
-    for only information about progress and success, \code{2} for normal
-    level of information and \code{3} for full debug information,
-    defaults to \code{1}}
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 object of class \link{siamcat-class} with the slot \code{pred_matrix}
-    filled or a matrix containing the predictions for the holdout set
+    filled
 }
 \description{
 This function takes a \link{siamcat-class}-object containing
@@ -41,14 +40,14 @@ This functions uses the model in the \code{model_list}-slot of the
     the form of another \code{siamcat} object (\code{siamcat.holdout}).
 }
 \examples{
-    data(siamcat_example)
-    # Simple example
-    siamcat.pred <- make.predictions(siamcat_example)
+data(siamcat_example)
 
-    # Predictions on a holdout-set
-    \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
+# Simple example
+siamcat.pred <- make.predictions(siamcat_example)
+
+# Predictions on a holdout-set
+\dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
     normalize.holdout=TRUE)}
-
 }
 \keyword{SIAMCAT}
 \keyword{make.predictions}

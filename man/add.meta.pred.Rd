@@ -18,13 +18,15 @@ added to the feature matrix as predictors}
 \item{std.meta}{boolean, should added metadata features be standardized?,
 defaults to \code{TRUE}}
 
-\item{feature.type}{On which type of features should the function work? Can
-be either "original", "filtered", or "normalized". Please only change this
-paramter if you know what you are doing!}
+\item{feature.type}{string, on which type of features should the function
+work? Can be either \code{"original"}, \code{"filtered"}, or
+\code{"normalized"}. Please only change this paramter if you know what
+you are doing!}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1} for
-only information about progress and success, \code{2} for normal level of
-information and \code{3} for full debug information, defaults to \code{1}}
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 an object of class \link{siamcat-class} with metadata added to the
@@ -34,15 +36,31 @@ an object of class \link{siamcat-class} with metadata added to the
 This function adds metadata to the feature matrix to be later
     used as predictors
 }
-\examples{
-    data(siamcat_example)
-    # Add the Age of the patients as potential predictor
-    siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('Age'))
+\details{
+This functions adds one or several metadata variables to the set
+of features, so that they can be included for model training.
 
-    # Add Age, BMI, and Gender as potential predictors
-    # Additionally, prevent standardization of the added features
-    siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('Age',
-    'BMI', 'Gender'), std.meta=FALSE)
+Usually, this function should be called before \link{train.model}.
+
+Numerical meta-variables are added as z-scores to the feature matrix unless
+specified otherwise.
+
+Please be aware, that non-numerical metadata variables will be converted to
+numerical values by using \code{as.numeric()} and could therefore lead to
+errors. Thus, it makes sense to encode non-numerical metadata variables to
+numerically before you start the SIAMCAT workflow.
+}
+\examples{
+data(siamcat_example)
+
+# Add the Age of the patients as potential predictor
+siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('Age'))
+
+# Add Age and BMI as potential predictors
+# Additionally, prevent standardization of the added features
+siamcat_meta_added <- add.meta.pred(siamcat_example,
+    pred.names=c('Age', 'BMI'),
+    std.meta=FALSE)
 }
 \keyword{SIAMCAT}
 \keyword{add.meta.pred}

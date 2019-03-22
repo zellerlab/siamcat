@@ -12,33 +12,38 @@ check.confounders(siamcat, fn.plot, meta.in = NULL, verbose = 1)
 \item{fn.plot}{string, filename for the pdf-plot}
 
 \item{meta.in}{vector, specific metadata variable names to analyze,
-defaults to NULL}
+defaults to NULL (all metadata variables will be analyzed)}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1} for
-only information about progress and success, \code{2} for normal level
-of information and \code{3} for full debug information, defaults to
-\code{1}}
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 Does not return anything, but outputs plots to specified pdf file
 }
 \description{
+Checks potential confounders in the metadata and produces
+    some visualizations
+}
+\details{
 This function checks for associations between class labels and
-    potential confounders (e.g. age, sex, or BMI) that are present in the
+    potential confounders (e.g. Age, Sex, or BMI) that are present in the
     metadata. Statistical testing is performed with Fisher's exact test or
     Wilcoxon test, while associations are visualized either as barplot or
-    Q-Q plot, depending on the type of metadata. The conditional entropy
-    evaluates associations among metadata variables and generalized linear
-    models evaluate associations with the label, producing a correlation
-    heatmap and appropriate quantitative barplots, respectively.
+    Q-Q plot, depending on the type of metadata.
+
+    Additionally, it evaluates associations among metadata variables using
+    conditional entropy and associations with the label using generalized
+    linear models, producing a correlation heatmap and appropriate
+    quantitative barplots, respectively.
 }
 \examples{
-    # Example data
-    data(siamcat_example)
+# Example data
+data(siamcat_example)
 
-    # Simple working example
-    check.confounders(siamcat_example, './conf_plot.pdf')
-
+# Simple working example
+check.confounders(siamcat_example, './conf_plot.pdf')
 }
 \keyword{SIAMCAT}
 \keyword{check.confounders}

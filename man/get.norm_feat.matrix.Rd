@@ -2,23 +2,27 @@
 % Please edit documentation in R/siamcat_class_accessors.R
 \name{get.norm_feat.matrix}
 \alias{get.norm_feat.matrix}
-\title{get.norm_feat.matrix}
+\title{Retrieve the normalized features from a SIAMCAT object}
 \usage{
 get.norm_feat.matrix(siamcat)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat-class}}
+\item{siamcat}{(Required). An instance of \link{siamcat-class}
+containing normalized features}
 }
 \value{
-Normalized features as a matrix
+A matrix containing the normalized features
 }
 \description{
-Function to access features in siamcat@norm_feat@filt.feat
+Function to retrieve the normalized features from a SIAMCAT
+object
 }
 \details{
-Access features in siamcat@norm_feat@norm.feat as matrix
+The function returns the normalized features as matrix.
+See \link{normalize.features} for more details.
 }
 \examples{
-    data(siamcat_example)
-    feat <- get.norm_feat.matrix(siamcat_example)
+data(siamcat_example)
+feat.norm <- get.norm_feat.matrix(siamcat_example)
+feat.norm[1:3, 1:3]
 }

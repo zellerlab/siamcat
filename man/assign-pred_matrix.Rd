@@ -4,23 +4,20 @@
 \name{pred_matrix<-}
 \alias{pred_matrix<-}
 \alias{assign-pred_matrix}
-\alias{pred_matrix<-,siamcat,matrix-method}
-\title{Assign a new pred_matrix object to \code{x}}
+\title{Assign a new matrix with predictions to a SIAMCAT object}
 \usage{
 pred_matrix(x) <- value
-
-\S4method{pred_matrix}{siamcat,matrix}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}
 
-\item{value}{an pred_matrix matrix}
+\item{value}{a matrix containing predictions}
 }
 \value{
 none
 }
 \description{
-Assign a new pred_matrix object to \code{x}
+Assign a new matrix with predictions to a SIAMCAT object
 }
 \examples{
 data(siamcat_example)

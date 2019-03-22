@@ -3,33 +3,35 @@
 \docType{methods}
 \name{label}
 \alias{label}
-\alias{label,ANY-method}
-\alias{label,label-method}
-\alias{label,list-method}
-\title{Retrieve a \link{label-class} object from object.}
+\title{Retrieve the label from a SIAMCAT object}
 \usage{
 label(siamcat, verbose=1)
-
-\S4method{label}{ANY}(siamcat, verbose = 1)
-
-\S4method{label}{label}(siamcat)
-
-\S4method{label}{list}(siamcat)
 }
 \arguments{
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a label or instance of \link{label-class} or a list.}
+\item{siamcat}{(Required). A \link{siamcat-class} object}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The \link{label-class} object or NULL.
+The label or NULL.
 }
 \description{
-Retrieve a \link{label-class} object from object.
+Retrieve the label from a SIAMCAT object
+}
+\details{
+This function will retrieve the label information from a
+SIAMCAT object. The label will contain three entries: \itemize{
+\item \code{label}: The label as named vector, in which the classes are
+encoded numerically
+\item \code{info}: Information about the different classes
+\item \code{type}: What kind of label is it?
+}
 }
 \examples{
-    data(siamcat_example)
-    label(siamcat_example)
+data(siamcat_example)
+temp <- label(siamcat_example)
+head(temp$label)
+temp$info
+temp$type
 }

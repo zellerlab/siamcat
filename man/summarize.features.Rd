@@ -10,33 +10,48 @@ summarize.features(siamcat, level = 'g__',
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
-\item{level}{at which level to summarize (g__ = genus)}
+\item{level}{string, at which level to summarize (e.g. \code{g__} = genus)}
 
-\item{feature.type}{On which type of features should the function work? Can
-be either "original", "filtered", or "normalized". Please only change this
-paramter if you know what you are doing!}
+\item{feature.type}{string, on which type of features should the function
+work? Can be either \code{"original"}, \code{"filtered"}, or
+\code{"normalized"}. Please only change this paramter if you know what
+you are doing!}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
 defaults to \code{1}}
 }
 \value{
 object of class \link{siamcat-class} with a summarized feature table
 }
 \description{
-Summarize features
+This function summarize features on a specific taxonomic level
+}
+\details{
+This function will summarize features at different taxonomic
+levels, e.g. transform species-level relative abundance into genus-level
+taxonomic profiles.
+
+The function expects feature names which encode taxonomic information, e.g.
+
+\code{k__Bacteria;p__Actinobacteria;c__Actinobacteria;o__Acidimicrobiales;..}
+
+Then, for a given taxonomic level (e.g. \code{g__}), the function will
+sum up all the relative abundances of features belonging to the same group
+at that specific taxonomic level.
+
+\strong{Please note that this function is currently maturing and not
+necessarily reliable!!!}
 }
 \examples{
-
-data("GlobalPatterns") ## phyloseq example data
+## load the phyloseq example data
+data("GlobalPatterns")
 feat <- otu_table(GlobalPatterns)[1:500,]
 label <- create.label(meta=sample_data(GlobalPatterns),
     label = "SampleType",
-    case = c("Freshwater",
-        "Freshwater (creek)",
-        "Ocean"))
-# rename features
+    case = c("Freshwater", "Freshwater (creek)", "Ocean"))
+# rename features to create feature names containing taxonomic information
 temp <- tax_table(GlobalPatterns)[1:500,]
 test <- apply(temp, 1, FUN=function(vec){
     out <- ''
@@ -49,7 +64,7 @@ test <- apply(temp, 1, FUN=function(vec){
     return(out)})
 rownames(feat) <- test
 # run the constructor function
-siamcat <- siamcat(feat=feat, label=label)
+siamcat <- siamcat(feat=feat, label=label, verbose=1)
 siamcat <- summarize.features(siamcat, level='g__', verbose=3)
 }
 \keyword{internal}

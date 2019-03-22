@@ -3,9 +3,13 @@
 \docType{data}
 \name{meta.crc.zeller}
 \alias{meta.crc.zeller}
-\title{Documentation for the example metadata object in the data folder}
+\title{Example metadata matrix}
+\source{
+\url{http://msb.embopress.org/content/10/11/766}
+}
 \description{
-Metadata (as data.frame) for the CRC dataset, containing 6 variables (e.g.
-Age or BMI) for 141 samples.
+Metadata (as data.frame) of the CRC dataset from Zeller et
+al. MSB 2014 (see \url{http://msb.embopress.org/content/10/11/766}),
+containing 6 metadata variables variables (e.g. Age or BMI) for 141 samples.
 }
 \keyword{data}

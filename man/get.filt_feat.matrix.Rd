@@ -2,23 +2,27 @@
 % Please edit documentation in R/siamcat_class_accessors.R
 \name{get.filt_feat.matrix}
 \alias{get.filt_feat.matrix}
-\title{get.filt_feat.matrix}
+\title{Retrieve the filtered features from a SIAMCAT object}
 \usage{
 get.filt_feat.matrix(siamcat)
 }
 \arguments{
-\item{siamcat}{an object of class \link{siamcat-class}}
+\item{siamcat}{(Required). An instance of \link{siamcat-class}
+containing filtered features}
 }
 \value{
-Filtered features as a matrix
+A matrix containing the filtered features
 }
 \description{
-Function to access features in siamcat@filt_feat@filt.feat
+Function to retrieve the filtered features from a SIAMCAT
+object
 }
 \details{
-Access features in siamcat@filt_feat@filt.feat as matrix
+The function returns the filtered features as matrix.
+See \link{filter.features} for more details.
 }
 \examples{
-    data(siamcat_example)
-    feat <- get.filt_feat.matrix(siamcat_example)
+data(siamcat_example)
+feat.filt <- get.filt_feat.matrix(siamcat_example)
+feat.filt[1:3, 1:3]
 }
