@@ -26,8 +26,9 @@
 #'     \code{TRUE}
 #'
 #' @param feature.type string, on which type of features should the function
-#'     work? Can be either "original", "filtered", or "normalized". Please
-#'     only change this paramter if you know what you are doing!
+#'   work? Can be either \code{"original"}, \code{"filtered"}, or
+#'   \code{"normalized"}. Please only change this paramter if you know what
+#'   you are doing!
 #'
 #' @param verbose integer, control output: \code{0} for no output at all,
 #'     \code{1} for only information about progress and success, \code{2} for
@@ -40,16 +41,16 @@
 #'     object in a unsupervised manner.
 #'
 #'     The different filter methods work in the following way: \itemize{
-#'     \item \code{'abundace'} remove features whose maximum abundance is never
-#'     above the threshold value in any of the samples
-#'     \item \code{'cum.abundance'} remove features with very low abundance
+#'     \item \code{'abundace'} - remove features whose maximum abundance is
+#'     never above the threshold value in any of the samples
+#'     \item \code{'cum.abundance'} - remove features with very low abundance
 #'     in all samples, i.e. those that are never among the most abundant
 #'     entities that collectively make up (1-cutoff) of the reads in
 #'     any sample
-#'     \item \code{'prevalence'} remove features with low prevalence across
+#'     \item \code{'prevalence'} - remove features with low prevalence across
 #'     samples, i.e. those that are undetected (relative abundance of 0)
 #'     in more than \code{1 - cutoff} percent of samples.
-#'     \item \code{'variance'} remove features with low variance across
+#'     \item \code{'variance'} - remove features with low variance across
 #'     samples, i.e. those that have a variance lower than \code{cutoff}
 #'     }
 #'
@@ -71,6 +72,11 @@
 #'     filter.method='abundance',
 #'     cutoff=1e-03)
 #'
+#' # 5% prevalence filtering
+#' siamcat_filtered <- filter.features(siamcat_example,
+#'     filter.method='prevalence',
+#'     cutoff=0.05)
+
 filter.features <- function(siamcat,
     filter.method = "abundance",
     cutoff = 0.001,
@@ -215,8 +221,9 @@ filter.features <- function(siamcat,
     if (verbose > 2)
         message("+++ saving filtered features")
 
-    filt_feat(siamcat) <- new("filt_feat", filt.feat=otu_table(feat[f.names,],
-            taxa_are_rows=TRUE), filt.param=param.set)
+    filt_feat(siamcat) <- list(
+        filt.feat=feat[f.names,],
+        filt.param=param.set)
 
     e.time <- proc.time()[3]
     if (verbose > 1)
