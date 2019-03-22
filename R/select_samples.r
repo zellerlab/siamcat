@@ -5,10 +5,8 @@
 
 #' @title Select samples based on metadata
 #'
-#' @description This functions selects labels and metadata based on
-#'         a specific column in the metadata. Provided with a column-name in the
-#'         metadata and a range or a set of allowed values, the function will
-#'         filter the \link{siamcat-class} object accordingly.
+#' @description This function select samples based on information given in the
+#' metadata
 #'
 #' @usage select.samples(siamcat, filter, allowed.set = NULL,
 #'     allowed.range = NULL, verbose = 1)
@@ -22,10 +20,10 @@
 #'
 #' @param allowed.range a range of allowed values
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'         for only information about progress and success, \code{2} for normal
-#'         level of information and \code{3} for full debug information,
-#'         defaults to \code{1}
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
 #'
 #' @keywords SIAMCAT select.samples
 #'
@@ -34,17 +32,24 @@
 #' @return an object of class \link{siamcat-class} with labels and metadata
 #'         filtered in order to contain only allowed values
 #'
+#' @details This functions selects labels and metadata based on a specific
+#' column in the metadata. Provided with a column-name in the metadata and a
+#' range or a set of allowed values, the function will filter the
+#' \link{siamcat-class} object accordingly.
+#'
 #' @examples
-#'     data(siamcat_example)
-#'     # Select all samples that fall into an Age-range between 20 and 80 years
-#'     siamcat_selected <- select.samples(siamcat_example, 'Age',
-#'     allowed.range=c(20, 80))
+#' data(siamcat_example)
 #'
-#'     # Select all samples for which information about the gender is given
-#'     # Provide additional information with verbose
-#'     \dontrun{siamcat_selected <- select.samples(siamcat_example, 'Gender',
-#'     allowed.set=c('F'), verbose=2)}
+#' # Select all samples that fall into an Age-range between 25 and 80 years
+#' siamcat_selected <- select.samples(siamcat_example,
+#'     filter='Age',
+#'     allowed.range=c(25, 80))
 #'
+#' # Select only female samples
+#' siamcat_female <- select.samples(siamcat_example,
+#'     filter='Gender',
+#'     allowed.set=c('F'))
+
 select.samples <- function(siamcat, filter, allowed.set = NULL,
     allowed.range = NULL, verbose = 1) {
 
@@ -63,20 +68,23 @@ select.samples <- function(siamcat, filter, allowed.set = NULL,
         stop("Neither allowed.range nor allowed.set (or both at the same",
             " time) have been provided, exiting!")
     }
-    if (!is.null(filt_feat(siamcat, verbose=0)) |
-        !is.null(norm_feat(siamcat, verbose=0))){
-        warning("Selcting samples may affect the results of feature ",
-            "filtering and normalization\nFor sanity, filtered and/or",
-            " normalized features will be removed!")
-        filt_feat(siamcat) <- new('filt_feat')
-        norm_feat(siamcat) <- new('norm_feat')
-    }
     if (!is.null(data_split(siamcat, verbose=0)) |
         !is.null(eval_data(siamcat, verbose=0)) |
         !is.null(models(siamcat, verbose=0))){
-            warning("The machine learning pipeline may has to be run again
-                after filtering the samples")
+            warning("The machine learning pipeline has to be run again ",
+                "after filtering the samples")
     }
+    if (!is.null(filt_feat(siamcat, verbose=0)) |
+        !is.null(norm_feat(siamcat, verbose=0))){
+            warning("Selcting samples may affect the results of feature ",
+                "filtering and normalization\nFor sanity, results from",
+                "previous analyses (e.g. filtered features) will be removed!")
+        siamcat <- siamcat(
+            phyloseq=physeq(siamcat),
+            label=label(siamcat),
+            validate=FALSE, verbose=0)
+    }
+
 
 
     if (verbose > 2)
