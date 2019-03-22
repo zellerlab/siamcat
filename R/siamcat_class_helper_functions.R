@@ -3,23 +3,57 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' @title Filter samples from \code{siamcat@label}
-#' @description This functions filters \code{siamcat@label}.
-#' @param siamcat an object of class \link{siamcat-class}
-#' @param ids names of samples to be left in the \code{siamcat@label}
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#' for more information about progress and success, defaults to \code{1}
-#' @keywords filter.label
-#' @export filter.label
-#' @return siamcat an object of class \link{siamcat-class}
-#' @examples
+#' @title Filter the label of a SIMACAT object
 #'
+#' @description This functions filters the label in a SIAMCAT object
+#'
+#' @param siamcat an object of class \link{siamcat-class}
+#'
+#' @param ids vector, can contain either names or indices of samples to be
+#' retained
+#'
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
+#'
+#' @keywords filter.label
+#'
+#' @export filter.label
+#'
+#' @details This function filters the label contained in a SIAMCAT object,
+#' based on the provided \code{ids}. The IDs can be either sample names or
+#' indices to be retained.
+#'
+#' Predominantly for internal use...
+#'
+#' \strong{Please note:} It makes sense to run \link{validate.data} after
+#' filtering the label.
+#'
+#' @return siamcat an object of class \link{siamcat-class}
+#'
+#' @examples
 #' data(siamcat_example)
+#'
 #' # simple working example
 #' siamcat_filtered <- filter.label(siamcat_example, ids=c(1:20))
-#'
+
 filter.label <- function(siamcat, ids, verbose = 1) {
     label_old <- label(siamcat)
+    # check ids
+    if (all(is.numeric(ids))){
+        if (any(ids <= 0) | any(ids > length(label_old$label))){
+            stop('Provided IDs do not match the existing label! Exiting...\n')
+        }
+    } else if (all(is.character(ids))){
+        if (!all(ids %in% names(label_old$label))){
+            stop("Could not find all IDs in the label! Exiting...\n")
+        }
+    } else {
+        stop("Please provide only one kind of ID",
+            "(either sample names or indices)\n")
+    }
+
     labels_new <- list(
         label = label_old$label[ids],
         info = label_old$info,
@@ -33,7 +67,7 @@ filter.label <- function(siamcat, ids, verbose = 1) {
             "sample(s)."
         ))
 
-    label(siamcat) <- label(labels_new)
+    label(siamcat) <- labels_new
     return(siamcat)
 }
 
@@ -71,12 +105,12 @@ setMethod("show", "siamcat", function(object) {
             FUN.VALUE = character(1))
         if (length(filtering.methods) <= 3){
             cat(paste("filt_feat()            Filtered features:   ",
-                nrow(filt_feat(object)), 'features after',
+                nrow(get.filt_feat.matrix(object)), 'features after',
                 paste(filtering.methods, collapse=', '), 'filtering'),
                     fill=TRUE)
         } else {
             cat(paste("filt_feat()            Filtered features:   ",
-                nrow(filt_feat(object)), 'features after',
+                nrow(get.filt_feat.matrix(object)), 'features after',
                 length(filtering.methods), 'filtering steps'), fill=TRUE)
         }
 
@@ -97,7 +131,7 @@ setMethod("show", "siamcat", function(object) {
     # normalizes features
     if (!is.null(norm_feat(object, verbose=0))) {
         cat(paste("norm_feat()            Normalized features: ",
-        nrow(norm_feat(object)), "features normalized",
+        nrow(get.norm_feat.matrix(object)), "features normalized",
         "using", norm_params(object)$norm.method, sep = " "), fill = TRUE)
     }
 
