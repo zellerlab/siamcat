@@ -30,22 +30,8 @@ check.label <- function(object){
         msg <- 'Label info does not contain group names!'
         errors <- c(errors, msg)
     }
-    if (length(errors) == 0) TRUE else errors
+    if (length(errors) == 0) NULL else errors
 }
-
-#' The S4 class for storing label info.
-#' @name label-class
-#' @rdname label-class
-#' @slot .Data inherited from \code{\link{list}} class, contains
-#' a list with:
-#' \itemize{
-#'     \item \code{label} numeric vector, specifying to which category samples
-#'     belong, usualy 1 and -1
-#'     \item \code{type} contains information about the label type
-#'     \item \code{info} list with additional informations about the dataset
-#' }
-#' @exportClass label
-setClass("label", contains = "list", validity=check.label)
 
 # ##############################################################################
 # Filtered data/parameters
@@ -54,19 +40,23 @@ setClass("label", contains = "list", validity=check.label)
 #'@keywords internal
 check.filt.feat <- function(object){
     errors <- character()
+    if (is.null(object$filt.param)){
+        msg <- "Filtering parameters are missing!"
+        errors <- c(errors, msg)
+    }
     # check if all entries are lists
-    if (!all(vapply(object@filt.param, class,
+    if (!all(vapply(object$filt.param, class,
         FUN.VALUE = character(1)) == 'list')){
             msg <- "Filtering parameters are not in the right format!"
             errors <- c(errors, msg)
         }
     # check if each entry is of length 3
-    if (!all(vapply(object@filt.param, length, FUN.VALUE = numeric(1)) == 4)){
+    if (!all(vapply(object$filt.param, length, FUN.VALUE = numeric(1)) == 4)){
         msg <- "Filtering parameters are not in the right format!"
         errors <- c(errors, msg)
     }
     # check if they have the correct entries
-    if (!all(vapply(object@filt.param, names,
+    if (!all(vapply(object$filt.param, names,
         FUN.VALUE = character(4)) ==
         c('filter.method', 'cutoff', 'rm.unmapped', 'feature.type'))){
             msg <- "Filtering parameters do not contain all needed entries!"
@@ -74,24 +64,12 @@ check.filt.feat <- function(object){
         }
 
     # check that taxa are rows == TRUE
-    if (object@filt.feat@taxa_are_rows == FALSE){
-        msg <- "Filtered features do not have the taxa as rows!"
+    if (is.null(object$filt.feat)){
+        msg <- "Filtered features are missing!"
         errors <- c(errors, msg)
     }
-    if (length(errors) == 0) TRUE else errors
+    if (length(errors) == 0) NULL else errors
 }
-
-#' The S4 class for storing the filter features/paramters
-#' @name filt_feat-class
-#' @rdname filt_feat-class
-#' @slot filt.feat An object of class \link[phyloseq]{otu_table-class}
-#' storing the filtered features
-#' @slot filt.param A list storing the parameters of the feature filtering
-#' @exportClass filt_feat
-setClass("filt_feat", representation(filt.param= "list",
-        filt.feat="otu_table"),
-    validity=check.filt.feat, prototype(filt.param = list(),
-        filt.feat = otu_table(NA, taxa_are_rows=TRUE, errorIfNULL=FALSE)))
 
 # ##############################################################################
 # Associations
@@ -100,77 +78,73 @@ setClass("filt_feat", representation(filt.param= "list",
 #'@keywords internal
 check.assoc <- function(object){
     errors <- character()
+    if (is.null(object$assoc.param)){
+        msg <- "Association parameters are missing!"
+        errors <- c(errors, msg)
+    }
+    if (is.null(object$assoc.results)){
+        msg <- "Association results are missing!"
+        errors <- c(errors, msg)
+    }
     # check that assoc.param contains all entries
-    if (!all(names(object@assoc.param) == c('detect.lim', 'pr.cutoff',
+    if (!all(names(object$assoc.param) == c('detect.lim', 'pr.cutoff',
         'probs.fc', 'mult.corr', 'alpha', 'feature.type'))){
             msg <- 'Association testing parameters do not contain all entries!'
             errors <- c(errors, msg)
         }
     # check that all entries are valid and in the expected ranges
-    if (!all(vapply(object@assoc.param, class,
+    if (!all(vapply(object$assoc.param, class,
         FUN.VALUE=character(1)) == c('numeric', 'numeric', 'numeric',
             'character', 'numeric', 'character'))){
     msg<-'Association testing parameters do not contain the expected classes!'
     errors <- c(errors, msg)
     }
     # detect.lim
-    if (object@assoc.param$detect.lim > 1 | object@assoc.param$detect.lim < 0){
+    if (object$assoc.param$detect.lim > 1 | object$assoc.param$detect.lim < 0){
         msg<-'Detection limit (pseudocount) is not valid (not between 1 and 0)!'
         errors <- c(errors, msg)
     }
     # pr.cutoff
-    if (object@assoc.param$pr.cutoff > 1 | object@assoc.param$pr.cutoff < 0){
+    if (object$assoc.param$pr.cutoff > 1 | object$assoc.param$pr.cutoff < 0){
         msg<-'Prevalence cutoff is not valid (not between 1 and 0)!'
         errors <- c(errors, msg)
     }
     # probs.fc
-    if (any(object@assoc.param$probs.fc > 1) |
-        any(object@assoc.param$probs.fc < 0)){
+    if (any(object$assoc.param$probs.fc > 1) |
+        any(object$assoc.param$probs.fc < 0)){
         msg<-'Quantiles for FC calculation are not valid (not between 1 and 0)!'
         errors <- c(errors, msg)
     }
     # mult.corr
-    if (!object@assoc.param$mult.corr %in%
+    if (!object$assoc.param$mult.corr %in%
         c('none', 'bonferroni', 'holm', 'fdr', 'bhy')){
             msg<-'Multiple testing correction method not valid!'
             errors <- c(errors, msg)
     }
     # alpha
-    if (object@assoc.param$alpha > 1 | object@assoc.param$alpha < 0){
+    if (object$assoc.param$alpha > 1 | object$assoc.param$alpha < 0){
         msg<-'Significance level (alpha) is not valid (not between 1 and 0)!'
         errors <- c(errors, msg)
     }
     # feat.type
-    if (!object@assoc.param$feature.type %in%
+    if (!object$assoc.param$feature.type %in%
         c('filtered', 'original', 'normalized')){
         msg <- 'Feature type is not valid!
             (should be original, filtered, or normalized)'
         errors <- c(errors, msg)
     }
     # check that assoc.results contains all that it should
-    if (!all(colnames(object@assoc.results)==c("fc", "p.val", "auc",
+    if (!all(colnames(object$assoc.results)==c("fc", "p.val", "auc",
         "auc.ci.l", "auc.ci.h", "pr.shift", "pr.n", "pr.p", "bcol", "p.adj"))){
         msg <- 'Association results do not contain all needed entries!'
         errors <- c(errors, msg)
     }
-    if (nrow(object@assoc.results) < 1){
+    if (nrow(object$assoc.results) < 1){
         msg <- 'Association results are empty!'
         errors <- c(errors, msg)
     }
-    if (length(errors) == 0) TRUE else errors
+    if (length(errors) == 0) NULL else errors
 }
-
-#' The S4 class for storing the results of the association testing
-#' @name associations-class
-#' @rdname associations-class
-#' @slot assoc.results a data.frame containing the results of the
-#'  association testing
-#' @slot assoc.param a list containing the parameters for the association
-#' testing
-#' @exportClass associations
-setClass("associations", representation(assoc.results='data.frame',
-        assoc.param = "list"),
-    validity=check.assoc)
 
 # ##############################################################################
 # Normalization data/parameters
@@ -179,7 +153,11 @@ setClass("associations", representation(assoc.results='data.frame',
 #'@keywords internal
 check.norm.feat <- function(object){
     errors <- character()
-    norm.method <- object@norm.param$norm.method
+    if (is.null(object$norm.param)){
+        msg <- "Normalization parameters are missing!"
+        errors <- c(errors, msg)
+    }
+    norm.method <- object$norm.param$norm.method
     # check if norm method is there
     if (is.null(norm.method)){
         msg <- 'norm.method is NULL!'
@@ -191,17 +169,17 @@ check.norm.feat <- function(object){
             errors <- c(errors, msg)
         }
     # check if retained feat is there
-    if (is.null(object@norm.param$retained.feat)){
+    if (is.null(object$norm.param$retained.feat)){
         msg <- 'retained.feat is missing!'
         errors <- c(errors, msg)
     }
     # for each norm method, check additional entries
     if (startsWith(norm.method, 'log')){
-        if (is.null(object@norm.param$log.n0)){
+        if (is.null(object$norm.param$log.n0)){
             msg <- 'Detection limit (pseudocount) is missing!'
             errors <- c(errors, msg)
         }
-        if (object@norm.param$log.n0 > 1 | object@norm.param$log.n0 < 0){
+        if (object$norm.param$log.n0 > 1 | object$norm.param$log.n0 < 0){
             msg<-'Detection limit (pseudocount) is not between 0 and 1!'
             errors <- c(errors, msg)
         }
@@ -209,58 +187,37 @@ check.norm.feat <- function(object){
     # std
     if (endsWith(norm.method, 'std')){
         # feat.mean or feat.adj.sd
-        if (is.null(object@norm.param$feat.mean) |
-            is.null(object@norm.param$feat.adj.sd)){
+        if (is.null(object$norm.param$feat.mean) |
+            is.null(object$norm.param$feat.adj.sd)){
             msg<-'Needed entries for std-normalization are missing!'
             errors <- c(errors, msg)
         }
     }
     # log.unit n.p, norm.margin, norm.fun, feat.norm.denom
     if (norm.method == 'log.unit'){
-        if (is.null(object@norm.param$n.p)){
+        if (is.null(object$norm.param$n.p)){
             msg<-'Vector norm is missing!'
             errors <- c(errors, msg)
         }
-        if (is.null(object@norm.param$norm.fun)){
+        if (is.null(object$norm.param$norm.fun)){
             msg<-'Normalization function is missing!'
             errors <- c(errors, msg)
         }
-        if (is.null(object@norm.param$norm.margin)){
+        if (is.null(object$norm.param$norm.margin)){
             msg<-'Normalization margin is missing!'
             errors <- c(errors, msg)
         }
-        if (is.null(object@norm.param$feat.norm.denom)){
+        if (is.null(object$norm.param$feat.norm.denom)){
             msg<-'Feature specific denominator is missing!'
             errors <- c(errors, msg)
         }
     }
-    # check that taxa are rows == TRUE
-    if (object@norm.feat@taxa_are_rows == FALSE){
-        msg <- "Normalized features do not have the taxa as rows!"
+    if (is.null(object$norm.feat)){
+        msg <- "Normalized features are missing!"
         errors <- c(errors, msg)
     }
-    if (length(errors) == 0) TRUE else errors
+    if (length(errors) == 0) NULL else errors
 }
-
-#' The S4 class for storing the normalization data/parameters
-#' @name norm_feat-class
-#' @rdname norm_feat-class
-#' @slot norm.feat An object of class \link[phyloseq]{otu_table-class}
-#' storingthe normalized features
-#' @slot norm.param A list with:
-#'     \itemize{
-#'     \item \code{norm.method} the normalization method used
-#'     \item \code{retained.feat} the names of features retained after
-#'     filtering
-#'     \item \code{log.n0} pseudocount
-#'     \item \code{n.p} vector norm
-#'     \item \code{norm.margin} margin for the normalization
-#' } and additional entries depending on the normalization method used.
-#' @exportClass norm_feat
-setClass("norm_feat", representation(norm.param= "list",
-        norm.feat='otu_table'),
-    validity=check.norm.feat, prototype(norm.param = list(),
-        norm.feat = otu_table(NA, taxa_are_rows=TRUE, errorIfNULL=FALSE)))
 
 # ##############################################################################
 # Data split
@@ -328,23 +285,8 @@ check.data.split <- function(object){
     }
 
 
-    if (length(errors) == 0) TRUE else errors
+    if (length(errors) == 0) NULL else errors
 }
-
-#' The S4 class for storing data splits
-#' @name data_split-class
-#' @rdname data_split-class
-#' @slot .Data inherited from \code{\link{list}} class, contains
-#' a list with:
-#'     \itemize{
-#'     \item \code{training.folds} a list - for each cv fold contains ids of
-#' samples used for training
-#'     \item \code{test.folds} a list - for each cv fold contains ids of
-#' samples used for testing
-#'     \item \code{num.resample} number of repetition rounds for cv
-#'     \item \code{num.folds} number of folds for cv}
-#' @exportClass data_split
-setClass("data_split", contains = "list", validity=check.data.split)
 
 # ##############################################################################
 # Model list
@@ -353,51 +295,37 @@ setClass("data_split", contains = "list", validity=check.data.split)
 #'@keywords internal
 check.model.list <- function(object){
     errors <- character()
+    if (!all(c('model.type', 'feature.type', 'models') %in% names(object))){
+        msg <- 'Model list does not contain all needed entries!'
+        errors <- c(errors, msg)
+    }
     # check model.type
-    length.model.type <- length(object@model.type)
+    length.model.type <- length(object$model.type)
     if (length.model.type != 1){
         msg <- paste0('Model type is of length ', length.model.type, '.',
             ' Should be length 1!')
         errors <- c(errors, msg)
     }
     # check that all models in the list are mlr models
-    if (any(vapply(object@models, class,
+    if (any(vapply(object$models, class,
             FUN.VALUE = character(1)) != 'WrappedModel')){
         msg <- 'Models are supposed to be mlr-WrappedModels!'
         errors <- c(errors, msg)
     }
     # check feature type
-    if (!object@feature.type %in% c('original', 'filtered', 'normalized')){
-        msg <- paste0('Feature type ', object@feature.type,
+    if (!object$feature.type %in% c('original', 'filtered', 'normalized')){
+        msg <- paste0('Feature type ', object$feature.type,
             ' is not recognized!
             Should be either original, filtered, or normalized!')
         errors <- c(errors, msg)
     }
-    if (length(errors) == 0) TRUE else errors
+    if (length(errors) == 0) NULL else errors
 }
-
-#' The S4 class for storing models.
-#' @name model_list-class
-#' @rdname model_list-class
-#' @slot models a list with models obtained from \link{train.model}
-#' @slot model.type name of the method used by \link{train.model}
-#' @slot feature.type which types of features used by \link{train.model}
-#' @exportClass model_list
-setClass("model_list", representation(models = "list",
-        model.type = "character", feature.type = 'character'),
-    validity=check.model.list)
-
 
 # ##############################################################################
 # Prediction matrix
 
-#' The S4 class for storing predictions.
-#' @name pred_matrix-class
-#' @rdname pred_matrix-class
-#' @slot .Data inherited from \code{\link{matrix}} class, contains
-#' a matrix with predictions made by \link{make.predictions} function
-#' @exportClass pred_matrix
-setClass("pred_matrix", contains = "matrix")
+# check.prediction.matrix function
 
 # ##############################################################################
 # Evaluation data
@@ -464,67 +392,123 @@ check.eval.data <- function(object){
         }
         ### MORE CHECKS FOR EVAL_DATA WITH MULTIPLE REPEATS?
     }
+    if (length(errors) == 0) NULL else errors
+}
+
+# ##############################################################################
+# check siamcat object for validity
+#'@keywords internal
+check.siamcat <- function(object){
+    errors <- character()
+    temp <- check.label(label(object))
+    if (!is.null(temp)){
+        errors <- c(errors, temp)
+    }
+    if (!is.null(filt_feat(object, verbose=0))){
+        temp <- check.filt.feat(filt_feat(object))
+        if (!is.null(temp)){
+            errors <- c(errors, temp)
+        }
+    }
+    if (!is.null(associations(object, verbose=0))){
+        temp <- check.assoc(object@associations)
+        if (!is.null(temp)){
+            errors <- c(errors, temp)
+        }
+    }
+    if (!is.null(norm_feat(object, verbose=0))){
+        temp <- check.norm.feat(norm_feat(object))
+        if (!is.null(temp)){
+            errors <- c(errors, temp)
+        }
+    }
+    if (!is.null(data_split(object, verbose=0))){
+        temp <- check.data.split(data_split(object))
+        if (!is.null(temp)){
+            errors <- c(errors, temp)
+        }
+    }
+    if (!is.null(model_list(object, verbose=0))){
+        temp <- check.model.list(model_list(object))
+        if (!is.null(temp)){
+            errors <- c(errors, temp)
+        }
+    }
+    if (!is.null(eval_data(object, verbose=0))){
+        temp <- check.eval.data(eval_data(object))
+        if (!is.null(temp)){
+            errors <- c(errors, temp)
+        }
+    }
     if (length(errors) == 0) TRUE else errors
 }
 
-#' The S4 class for storing evaluation data.
-#' @name eval_data-class
-#' @rdname eval_data-class
-#' @slot .Data inherited from \code{\link{list}} class, contains
-#' a list with:
-#'     \itemize{
-#'     \item \code{$roc} average ROC-curve across repeats or a single
-#'     ROC-curve on the complete dataset (object of class \link[pROC]{roc});
-#'     \item \code{$auroc} AUC value for the average ROC-curve;
-#'     \item \code{$prc} average Precision Recall curve across repeats or
-#'     a single PR-curve on the complete dataset;
-#'     \item \code{$auprc} AUC value for the average PR-curve;
-#'     \item \code{$ev} list containing for different decision thresholds the
-#'     number of false positives, false negatives, true negatives, and
-#'     true positives;
-#' }. If \code{prediction} had more than one column, i.e. if the models has
-#'     been trained with several repeats, the function will additonally
-#'     return \itemize{
-#'     \item \code{$roc.all} list of roc objects (see \link[pROC]{roc}) for
-#'     every repeat;
-#'     \item \code{$auroc.all} vector of AUC values for the ROC curves for
-#'     every repeat;
-#'     \item \code{$prc.all} list of PR curves for every repeat;
-#'     \item \code{$auprc.all} vector of AUC values for the PR curves for every
-#'     repeat;
-#'     \item \code{$ev.all} list of false positive, false negatives, true
-#'     negatives, true positives, and thresholds for the different repeats.
-#'}
-#' @exportClass eval_data
-setClass("eval_data", contains = "list", validity=check.eval.data)
 
 # ##############################################################################
 # SIAMCAT object
 
-#' The S4 class for storing taxa-abundance information and models.
+#' The S4 SIAMCAT class
+#'
 #' @name siamcat-class
 #' @rdname siamcat-class
+#'
+#' @description The SIAMCAT class
+#'
+#' @details The S4 SIAMCAT class stores the results from the SIAMCAT
+#' workflow in different slots. The different slots will be filled by
+#' different functions (referenced in the description below).
+#'
+#' In order to contruct a SIAMCAT class object, please refer to the
+#' documentation of the construction function \link{siamcat}.
+#'
+#' The SIAMCAT class is based on the \link[phyloseq]{phyloseq-class}. Therefore,
+#' you can easily import a \code{phyloseq} object into SIAMCAT.
+#'
+#'
 #' @slot phyloseq object of class \link[phyloseq]{phyloseq-class}
-#' @slot label an object of class \link{label-class}
-#' @slot filt_feat an object of class \link{filt_feat-class}
-#' @slot associations an object of class \link{associations-class}
-#' @slot norm_feat an object of class \link{norm_feat-class}
-#' @slot data_split an object of class \link{data_split-class}
-#' @slot model_list an object of class \link{model_list-class}
-#' @slot eval_data an object of class \link{eval_data-class}
-#' @slot pred_matrix an object of class \link{pred_matrix-class}
+#'
+#' @slot label list containing the label information for the samples and
+#' some metadata about the label, created by \link{create.label} or when
+#' creating the \link{siamcat-class} object by calling \link{siamcat}
+#'
+#' @slot filt_feat list containing the filtered features as matrix and
+#' the list of filtering parameters, created by calling the
+#' \link{filter.features} function
+#'
+#' @slot associations list containing the parameters for association
+#' testing and the results of association testing with these parameters in
+#' a dataframe, created by calling the \link{check.associations} function
+#'
+#' @slot norm_feat list containing the normalized features as matrix and
+#' the list of normalziation parameters (for frozen normalization), created by
+#' calling the \link{normalize.features} function
+#'
+#' @slot data_split list containing cross-validation instances, created by
+#' calling the \link{create.data.split} function
+#'
+#' @slot model_list list containing the trained models, the type of model
+#' that was trained, and on which kind of features it was trained, created by
+#' calling the \link{train.model} function
+#'
+#' @slot pred_matrix matrix of predictions, created by calling the
+#' \link{make.predictions} function
+#'
+#' @slot eval_data list containing different evaluation metrics, created by
+#' calling the \link{evaluate.predictions} function
+#'
 #' @exportClass siamcat
 setClass(
     "siamcat",
     representation(
         phyloseq = "phyloseq",
-        label = "label",
-        filt_feat = "filt_feat",
-        associations = "associations",
-        norm_feat = "norm_feat",
-        data_split = "data_split",
-        model_list = "model_list",
+        label = "list",
+        filt_feat = "list",
+        associations = "list",
+        norm_feat = "list",
+        data_split = "list",
+        model_list = "list",
         pred_matrix = "matrix",
         eval_data = "list"
-    )
+    ),
+    validity=check.siamcat
 )
