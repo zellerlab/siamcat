@@ -72,6 +72,18 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
                 "have been removed from this analysis")
     }
     meta <- meta[,names(which(indep != 0))]
+    # remove metavariables with less than 2 levels
+    n.levels <- vapply(meta,
+        FUN = function(x){length(unique(x))},
+        FUN.VALUE = integer(1))
+    if (any(n.levels < 2)){
+        s.name <- names(which(n.levels < 2))
+        if (verbose >= 1){
+            message("++ remove metadata variables, since all ",
+                "subjects have the same value\n\t", s.name)
+        }
+        meta <- meta[,which(n.levels > 1)]
+    }
 
     # FIRST PLOT - conditional entropies for metadata variables
     if (verbose > 1)
@@ -95,7 +107,7 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     confounders.glm.auroc.plot(glm.data)
 
     # THIRD PLOT(S) - original confounder check descriptive stat plots
-    confounders.descriptive.plots(meta(siamcat)[,meta.in], label, verbose)
+    confounders.descriptive.plots(meta, label, verbose)
     dev.off()
 
     e.time <- proc.time()[3]
