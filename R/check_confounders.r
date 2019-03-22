@@ -95,7 +95,7 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     confounders.glm.auroc.plot(glm.data)
 
     # THIRD PLOT(S) - original confounder check descriptive stat plots
-    confounders.descriptive.plots(meta(siamcat), label, verbose)
+    confounders.descriptive.plots(meta(siamcat)[,meta.in], label, verbose)
     dev.off()
 
     e.time <- proc.time()[3]
@@ -303,8 +303,9 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
             sep = "")
         if (verbose > 1)
             message(paste("+++ checking",mname,"as a potential confounder"))
-
-        mvar <- as.numeric(meta[[m]])
+        mvar <- meta[[m]]
+        if (is.character(mvar)) mvar <- as.factor(mvar)
+        mvar <- as.numeric(mvar)
         names(mvar) <- rownames(meta)
         u.val <- unique(mvar)[!is.na(unique(mvar))]
         colors <- brewer.pal(6, "Spectral")
@@ -312,8 +313,8 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
 
         if (length(u.val) == 1) {
             if (verbose > 1) {
-                message("+++ skipped because all subjects have the same
-                        value")}}
+                message("+++ skipped because all subjects have the",
+                    "same value")}}
         else if (length(u.val) <= 6) {
             if (verbose > 1) message("++++ discrete variable, using a bar plot")
 
