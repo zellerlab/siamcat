@@ -145,13 +145,13 @@ siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.016 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.017 s</code></pre>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.039 s</code></pre>
+<pre><code>## + finished validate.data in 0.041 s</code></pre>
 <p>We can load the data from the Chinese study in a similar way and also create a <code>SIAMCAT</code> object for the holdout dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># features</span>
 feat.cn  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.table</a></span>(fn.feat.cn, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,
@@ -196,7 +196,7 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <pre><code>## +++ before filtering, the data have 1754 features</code></pre>
 <pre><code>## +++ removed 1 features corresponding to UNMAPPED reads</code></pre>
 <pre><code>## +++ removed 1538 features whose values did not exceed 0.001 in any sample (retaining 215)</code></pre>
-<pre><code>## + finished filter.features in 0.011 s</code></pre>
+<pre><code>## + finished filter.features in 0.004 s</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(
     siamcat.fr,
     <span class="dt">norm.method =</span> <span class="st">"log.std"</span>,
@@ -207,7 +207,7 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <pre><code>## +++ performing de novo normalization using the  log.std  method</code></pre>
 <pre><code>## + feature sparsity before normalization: 46.05%</code></pre>
 <pre><code>## +++ feature sparsity after normalization:      0 %</code></pre>
-<pre><code>## + finished normalize.features in 0.005 s</code></pre>
+<pre><code>## + finished normalize.features in 0.004 s</code></pre>
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">

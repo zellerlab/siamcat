@@ -190,7 +190,7 @@ necessarily reliable!!!</strong></p>
     <span class='kw'>case</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Freshwater"</span>, <span class='st'>"Freshwater (creek)"</span>, <span class='st'>"Ocean"</span>))</div><div class='output co'>#&gt; <span class='message'>Label used as case:</span>
 #&gt; <span class='message'>   Freshwater,Freshwater (creek),Ocean</span>
 #&gt; <span class='message'>Label used as control:</span>
-#&gt; <span class='message'>   rest</span></div><div class='output co'>#&gt; <span class='message'>+ finished create.label.from.metadata in 0.002 s</span></div><div class='input'><span class='co'># rename features to create feature names containing taxonomic information</span>
+#&gt; <span class='message'>   rest</span></div><div class='output co'>#&gt; <span class='message'>+ finished create.label.from.metadata in 0.001 s</span></div><div class='input'><span class='co'># rename features to create feature names containing taxonomic information</span>
 <span class='no'>temp</span> <span class='kw'>&lt;-</span> <span class='fu'>tax_table</span>(<span class='no'>GlobalPatterns</span>)[<span class='fl'>1</span>:<span class='fl'>500</span>,]
 <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>temp</span>, <span class='fl'>1</span>, <span class='kw'>FUN</span><span class='kw'>=</span><span class='kw'>function</span>(<span class='no'>vec</span>){
     <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='st'>''</span>

@@ -152,7 +152,7 @@
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.002 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
 <p>Now we have all the ingredients to create a <code>SIAMCAT</code> object. Please have a look at the <a href="SIAMCAT_read-in.html">vignette about input formats</a> for more information about supported formats and other ways to create a <code>SIAMCAT</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.crc.zeller,
     <span class="dt">label=</span>label.crc.zeller,
@@ -162,7 +162,7 @@
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.059 s</code></pre>
+<pre><code>## + finished validate.data in 0.058 s</code></pre>
 <p>A few information about the <code>siamcat</code> object can be accessed with the <code>show</code> function from <code>phyloseq</code> (<code>SIAMCAT</code> builds on the <code>phyloseq</code> data structure):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(siamcat)</code></pre></div>
 <pre><code>## siamcat-class object
@@ -248,12 +248,12 @@ models[[<span class="dv">1</span>]]</code></pre></div>
 pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pred_matrix-methods.html">pred_matrix</a></span>(siamcat)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(pred_matrix)</code></pre></div>
 <pre><code>##                       CV_rep1    CV_rep2
-## CCIS27304052ST-3-0 0.17999667 0.10482431
-## CCIS15794887ST-4-0 0.07828293 0.15561244
-## CCIS74726977ST-3-0 0.28385939 0.42531432
-## CCIS16561622ST-4-0 0.50588310 0.42954700
-## CCIS79210440ST-3-0 0.58730311 0.05195419
-## CCIS82507866ST-3-0 0.16591876 0.02419029</code></pre>
+## CCIS27304052ST-3-0 0.08397877 0.22313944
+## CCIS15794887ST-4-0 0.11591789 0.24628892
+## CCIS74726977ST-3-0 0.24259799 0.46323668
+## CCIS16561622ST-4-0 0.17808418 0.14350836
+## CCIS79210440ST-3-0 0.29915496 0.04573726
+## CCIS82507866ST-3-0 0.06268929 0.08591560</code></pre>
 </div>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level1">
