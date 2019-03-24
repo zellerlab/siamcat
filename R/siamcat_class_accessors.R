@@ -71,8 +71,8 @@ accessSlot <- function(siamcat, slot, verbose=1) {
 #' @rdname physeq-methods
 #' @docType methods
 #' @examples
-#'     data(siamcat_example)
-#'     physeq(siamcat_example)
+#' data(siamcat_example)
+#' physeq(siamcat_example)
 setGeneric("physeq", function(siamcat, verbose=1)
     standardGeneric("physeq"))
 #' @rdname physeq-methods
@@ -102,9 +102,13 @@ setMethod("physeq", "phyloseq", function(siamcat) {
 #' temp <- orig_feat(siamcat_example)
 setGeneric("orig_feat", function(siamcat)
     standardGeneric("orig_feat"))
-setMethod("orig_feat", "ANY", function(siamcat) {
+#' @rdname orig_feat-methods
+#' @aliases orig_feat
+setMethod("orig_feat", "siamcat", function(siamcat) {
     otu_table(physeq(siamcat))
 })
+#' @rdname orig_feat-methods
+#' @aliases orig_feat
 setMethod("orig_feat", "otu_table", function(siamcat) {
     return(siamcat)
 })
@@ -115,7 +119,7 @@ setMethod("orig_feat", "otu_table", function(siamcat) {
 #' @description Function to retrieve the original features from a SIAMCAT
 #' object
 #'
-#' @usage get.filt_feat.matrix(siamcat)
+#' @usage get.orig_feat.matrix(siamcat)
 #'
 #' @param siamcat (Required). An instance of \link{siamcat-class}
 #'
@@ -160,9 +164,13 @@ get.orig_feat.matrix <- function(siamcat) {
 #' head(temp)
 setGeneric("meta", function(siamcat)
     standardGeneric("meta"))
-setMethod("meta", "ANY", function(siamcat) {
+#' @rdname meta-methods
+#' @aliases meta
+setMethod("meta", "siamcat", function(siamcat) {
     sample_data(physeq(siamcat), errorIfNULL = FALSE)
 })
+#' @rdname meta-methods
+#' @aliases meta
 setMethod("meta", "sample_data", function(siamcat) {
     return(siamcat)
 })
@@ -203,6 +211,8 @@ setMethod("meta", "sample_data", function(siamcat) {
 #' temp$type
 setGeneric("label", function(siamcat, verbose=1)
     standardGeneric("label"))
+#' @rdname label-methods
+#' @aliases label
 setMethod("label", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "label", verbose)
 })
@@ -246,7 +256,9 @@ setMethod("label", "siamcat", function(siamcat, verbose=1) {
 #' names(temp)
 setGeneric("filt_feat", function(siamcat, verbose=1)
     standardGeneric("filt_feat"))
-setMethod("filt_feat", "ANY", function(siamcat, verbose=1) {
+#' @rdname filt_feat-methods
+#' @aliases filt_feat
+setMethod("filt_feat", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "filt_feat", verbose)
 })
 
@@ -310,7 +322,9 @@ get.filt_feat.matrix <- function(siamcat) {
 #' names(temp)
 setGeneric("filt_params", function(siamcat, verbose=1)
     standardGeneric("filt_params"))
-setMethod("filt_params", "ANY", function(siamcat, verbose=1) {
+#' @rdname filt_params-methods
+#' @aliases filt_params
+setMethod("filt_params", "siamcat", function(siamcat, verbose=1) {
     temp <- siamcat@filt_feat$filt.param
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0) {
@@ -349,7 +363,9 @@ setMethod("filt_params", "ANY", function(siamcat, verbose=1) {
 #' head(temp)
 setGeneric("associations", function(siamcat, verbose=1)
     standardGeneric("associations"))
-setMethod("associations", "ANY", function(siamcat, verbose=1) {
+#' @rdname associations-methods
+#' @aliases associations
+setMethod("associations", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "associations", verbose)
 })
 
@@ -385,7 +401,9 @@ setMethod("associations", "ANY", function(siamcat, verbose=1) {
 #' names(temp)
 setGeneric("assoc_param", function(siamcat, verbose=1)
     standardGeneric("assoc_param"))
-setMethod("assoc_param", "ANY", function(siamcat, verbose=1) {
+#' @rdname assoc_param-methods
+#' @aliases assoc_param_param
+setMethod("assoc_param", "siamcat", function(siamcat, verbose=1) {
     temp <- siamcat@associations$assoc.param
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
@@ -415,7 +433,7 @@ setMethod("assoc_param", "ANY", function(siamcat, verbose=1) {
 #' \item \code{norm.feat} - normalized features as matrix, see
 #' \link{get.norm_feat.matrix}
 #' \item \code{norm.param} - parameters used for normalization, see
-#' \link{norm_param}
+#' \link{normalize.features}
 #' }
 #'
 #' @return The list stored in the \code{norm_feat} slot of the SIAMCAT object
@@ -433,7 +451,9 @@ setMethod("assoc_param", "ANY", function(siamcat, verbose=1) {
 #' names(temp)
 setGeneric("norm_feat", function(siamcat, verbose=1)
     standardGeneric("norm_feat"))
-setMethod("norm_feat", "ANY", function(siamcat, verbose=1) {
+#' @rdname norm_feat-methods
+#' @aliases norm_feat
+setMethod("norm_feat", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "norm_feat", verbose)
 })
 
@@ -497,7 +517,9 @@ get.norm_feat.matrix <- function(siamcat) {
 #' names(temp)
 setGeneric("norm_params", function(siamcat, verbose=1)
     standardGeneric("norm_params"))
-setMethod("norm_params", "ANY", function(siamcat, verbose=1) {
+#' @rdname norm_params-methods
+#' @aliases norm_params
+setMethod("norm_params", "siamcat", function(siamcat, verbose=1) {
     temp <-  siamcat@norm_feat$norm.param
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
@@ -537,7 +559,9 @@ setMethod("norm_params", "ANY", function(siamcat, verbose=1) {
 #' names(temp)
 setGeneric("data_split", function(siamcat, verbose=1)
     standardGeneric("data_split"))
-setMethod("data_split", "ANY", function(siamcat, verbose=1) {
+#' @rdname data_split-methods
+#' @aliases data_split
+setMethod("data_split", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "data_split", verbose)
 })
 
@@ -580,7 +604,9 @@ setMethod("data_split", "ANY", function(siamcat, verbose=1) {
 #' names(temp)
 setGeneric("model_list", function(siamcat, verbose=1)
     standardGeneric("model_list"))
-setMethod("model_list", "ANY", function(siamcat, verbose=1) {
+#' @rdname model_list-methods
+#' @aliases model_list
+setMethod("model_list", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "model_list", verbose)
 })
 
@@ -614,7 +640,9 @@ setMethod("model_list", "ANY", function(siamcat, verbose=1) {
 #' temp[[1]]
 setGeneric("models", function(siamcat, verbose=1)
     standardGeneric("models"))
-setMethod("models", "ANY", function(siamcat, verbose=1) {
+#' @rdname models-methods
+#' @aliases models
+setMethod("models", "siamcat", function(siamcat, verbose=1) {
     temp <- siamcat@model_list$models
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
@@ -653,7 +681,9 @@ setMethod("models", "ANY", function(siamcat, verbose=1) {
 #' model_type(siamcat_example)
 setGeneric("model_type", function(siamcat, verbose=1)
     standardGeneric("model_type"))
-setMethod("model_type", "ANY", function(siamcat, verbose=1) {
+#' @rdname model_type-methods
+#' @aliases model_type
+setMethod("model_type", "siamcat", function(siamcat, verbose=1) {
     temp <- siamcat@model_list$model.type
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
@@ -695,7 +725,9 @@ setMethod("model_type", "ANY", function(siamcat, verbose=1) {
 #' feature_type(siamcat_example)
 setGeneric("feature_type", function(siamcat, verbose=1)
     standardGeneric("feature_type"))
-setMethod("feature_type", "ANY", function(siamcat, verbose=1) {
+#' @rdname feature_type-methods
+#' @aliases feature_type
+setMethod("feature_type", "siamcat", function(siamcat, verbose=1) {
     temp <- siamcat@model_list$feature.type
     if (length(temp) == 0) temp <- NULL
     if (is.null(temp) & verbose > 0){
@@ -735,7 +767,9 @@ setMethod("feature_type", "ANY", function(siamcat, verbose=1) {
 
 setGeneric("weight_matrix", function(siamcat, verbose=1)
     standardGeneric("weight_matrix"))
-setMethod("weight_matrix", "ANY", function(siamcat, verbose=1) {
+#' @rdname weight_matrix-methods
+#' @aliases weight_matrix
+setMethod("weight_matrix", "siamcat", function(siamcat, verbose=1) {
     temp <- siamcat@model_list$models
     if (length(temp) == 0){
         if (verbose > 0){
@@ -809,7 +843,9 @@ setMethod("weight_matrix", "ANY", function(siamcat, verbose=1) {
 #' head(temp)
 setGeneric("feature_weights", function(siamcat, verbose=1)
     standardGeneric("feature_weights"))
-setMethod("feature_weights", "ANY", function(siamcat, verbose=1) {
+#' @rdname feature_weights-methods
+#' @aliases feature_weights
+setMethod("feature_weights", "siamcat", function(siamcat, verbose=1) {
     feat.weights <- weight_matrix(siamcat, verbose=0)
     if (is.null(feat.weights)) {
         if(verbose > 0){
@@ -865,7 +901,9 @@ setMethod("feature_weights", "ANY", function(siamcat, verbose=1) {
 #' head(temp)
 setGeneric("pred_matrix", function(siamcat, verbose=1)
     standardGeneric("pred_matrix"))
-setMethod("pred_matrix", "ANY", function(siamcat, verbose=1) {
+#' @rdname pred_matrix-methods
+#' @aliases pred_matrix
+setMethod("pred_matrix", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "pred_matrix", verbose)
 })
 
@@ -902,6 +940,8 @@ setMethod("pred_matrix", "ANY", function(siamcat, verbose=1) {
 #' temp$auroc
 setGeneric("eval_data", function(siamcat, verbose=1)
     standardGeneric("eval_data"))
-setMethod("eval_data", "ANY", function(siamcat, verbose=1) {
+#' @rdname eval_data-methods
+#' @aliases eval_data
+setMethod("eval_data", "siamcat", function(siamcat, verbose=1) {
     accessSlot(siamcat, "eval_data", verbose)
 })
