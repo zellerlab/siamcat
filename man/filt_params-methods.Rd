@@ -3,10 +3,13 @@
 \docType{methods}
 \name{filt_params}
 \alias{filt_params}
+\alias{filt_params,siamcat-method}
 \title{Retrieve the list of parameters for feature filtering from a
 SIAMCAT object}
 \usage{
 filt_params(siamcat, verbose=1)
+
+\S4method{filt_params}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

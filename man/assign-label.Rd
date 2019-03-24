@@ -4,20 +4,23 @@
 \name{label<-}
 \alias{label<-}
 \alias{assign-label}
-\title{Assign a new label object to \code{x}}
+\alias{label<-,siamcat,list-method}
+\title{Assign a new label object to a SIAMCAT object}
 \usage{
 label(x) <- value
+
+\S4method{label}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}
 
-\item{value}{an object of class \link{label-class}}
+\item{value}{an list (in label format)}
 }
 \value{
 none
 }
 \description{
-Assign a new label object to \code{x}
+Assign a new label object to a SIAMCAT object
 }
 \examples{
 data(siamcat_example)

@@ -3,10 +3,13 @@
 \docType{methods}
 \name{model_list}
 \alias{model_list}
+\alias{model_list,siamcat-method}
 \title{Retrieve the information stored in the \code{model_list} slot within
 a SIAMCAT object}
 \usage{
 model_list(siamcat, verbose=1)
+
+\S4method{model_list}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

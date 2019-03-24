@@ -3,9 +3,12 @@
 \docType{methods}
 \name{feature_weights}
 \alias{feature_weights}
+\alias{feature_weights,siamcat-method}
 \title{Retrieve the matrix of feature weights from a SIAMCAT object}
 \usage{
 feature_weights(siamcat, verbose=1)
+
+\S4method{feature_weights}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). A \link{siamcat-class} object

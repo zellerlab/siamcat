@@ -3,9 +3,12 @@
 \docType{methods}
 \name{eval_data}
 \alias{eval_data}
+\alias{eval_data,siamcat-method}
 \title{Retrieve the evaluation metrics from a SIAMCAT object}
 \usage{
 eval_data(siamcat, verbose=1)
+
+\S4method{eval_data}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). A \link{siamcat-class} object

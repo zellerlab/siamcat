@@ -3,9 +3,15 @@
 \docType{methods}
 \name{meta}
 \alias{meta}
+\alias{meta,siamcat-method}
+\alias{meta,sample_data-method}
 \title{Retrieve the metadata from a SIAMCAT object}
 \usage{
 meta(siamcat)
+
+\S4method{meta}{siamcat}(siamcat)
+
+\S4method{meta}{sample_data}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). A \link{siamcat-class} object}

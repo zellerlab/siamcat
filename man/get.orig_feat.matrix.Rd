@@ -4,7 +4,7 @@
 \alias{get.orig_feat.matrix}
 \title{Retrieve the original features from a SIAMCAT object}
 \usage{
-get.filt_feat.matrix(siamcat)
+get.orig_feat.matrix(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}}

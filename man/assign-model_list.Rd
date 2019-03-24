@@ -4,9 +4,12 @@
 \name{model_list<-}
 \alias{model_list<-}
 \alias{assign-model_list}
+\alias{model_list<-,siamcat,list-method}
 \title{Assign a new list containing trained models to a SIAMCAT object}
 \usage{
 model_list(x) <- value
+
+\S4method{model_list}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}

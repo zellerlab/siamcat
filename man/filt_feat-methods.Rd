@@ -3,10 +3,13 @@
 \docType{methods}
 \name{filt_feat}
 \alias{filt_feat}
+\alias{filt_feat,siamcat-method}
 \title{Retrieve the information stored in the \code{filt_feat} slot within
 a SIAMCAT object}
 \usage{
 filt_feat(siamcat, verbose=1)
+
+\S4method{filt_feat}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

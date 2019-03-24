@@ -3,9 +3,12 @@
 \docType{methods}
 \name{label}
 \alias{label}
+\alias{label,siamcat-method}
 \title{Retrieve the label from a SIAMCAT object}
 \usage{
 label(siamcat, verbose=1)
+
+\S4method{label}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). A \link{siamcat-class} object}

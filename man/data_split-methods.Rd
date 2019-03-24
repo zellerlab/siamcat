@@ -3,9 +3,12 @@
 \docType{methods}
 \name{data_split}
 \alias{data_split}
+\alias{data_split,siamcat-method}
 \title{Retrieve the data split from a SIAMCAT object}
 \usage{
 data_split(siamcat, verbose=1)
+
+\S4method{data_split}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

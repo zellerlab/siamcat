@@ -3,10 +3,16 @@
 \docType{methods}
 \name{orig_feat}
 \alias{orig_feat}
+\alias{orig_feat,siamcat-method}
+\alias{orig_feat,otu_table-method}
 \title{Retrieve a \link[phyloseq]{otu_table-class} object from otu_table slot in
 the phyloseq slot in a siamcat object}
 \usage{
 orig_feat(siamcat)
+
+\S4method{orig_feat}{siamcat}(siamcat)
+
+\S4method{orig_feat}{otu_table}(siamcat)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

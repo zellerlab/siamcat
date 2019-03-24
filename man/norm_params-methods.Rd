@@ -3,10 +3,13 @@
 \docType{methods}
 \name{norm_params}
 \alias{norm_params}
+\alias{norm_params,siamcat-method}
 \title{Retrieve the list of parameters for feature normalization from a
 SIAMCAT object}
 \usage{
 norm_params(siamcat, verbose=1)
+
+\S4method{norm_params}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

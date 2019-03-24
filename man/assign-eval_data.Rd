@@ -4,9 +4,12 @@
 \name{eval_data<-}
 \alias{eval_data<-}
 \alias{assign-eval_data}
+\alias{eval_data<-,siamcat,list-method}
 \title{Assign a new list with evaluation data to a SIAMCAT object}
 \usage{
 eval_data(x) <- value
+
+\S4method{eval_data}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}

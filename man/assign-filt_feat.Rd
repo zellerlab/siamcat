@@ -4,9 +4,12 @@
 \name{filt_feat<-}
 \alias{filt_feat<-}
 \alias{assign-filt_feat}
+\alias{filt_feat<-,siamcat,list-method}
 \title{Assign a new filt_feat object to \code{x}}
 \usage{
 filt_feat(x) <- value
+
+\S4method{filt_feat}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}

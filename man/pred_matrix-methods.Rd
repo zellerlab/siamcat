@@ -3,9 +3,12 @@
 \docType{methods}
 \name{pred_matrix}
 \alias{pred_matrix}
+\alias{pred_matrix,siamcat-method}
 \title{Retrieve the prediction matrix from a SIAMCAT object}
 \usage{
 pred_matrix(siamcat, verbose=1)
+
+\S4method{pred_matrix}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). A \link{siamcat-class} object

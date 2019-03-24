@@ -3,9 +3,12 @@
 \docType{methods}
 \name{weight_matrix}
 \alias{weight_matrix}
+\alias{weight_matrix,siamcat-method}
 \title{Retrieve the weight matrix from a SIAMCAT object}
 \usage{
 weight_matrix(siamcat, verbose=1)
+
+\S4method{weight_matrix}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

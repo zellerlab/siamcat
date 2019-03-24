@@ -4,10 +4,13 @@
 \name{norm_feat<-}
 \alias{norm_feat<-}
 \alias{assign-norm_feat}
+\alias{norm_feat<-,siamcat,list-method}
 \title{Assign a new list containing normalziation parameters and normalized
 features to a SIAMCAT object}
 \usage{
 norm_feat(x) <- value
+
+\S4method{norm_feat}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}

@@ -3,9 +3,12 @@
 \docType{methods}
 \name{models}
 \alias{models}
+\alias{models,siamcat-method}
 \title{Retrieve list of trained models from a SIAMCAT object}
 \usage{
 models(siamcat, verbose=1)
+
+\S4method{models}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

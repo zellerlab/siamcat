@@ -3,10 +3,13 @@
 \docType{methods}
 \name{norm_feat}
 \alias{norm_feat}
+\alias{norm_feat,siamcat-method}
 \title{Retrieve the information stored in the \code{norm_feat} slot within
 a SIAMCAT object}
 \usage{
 norm_feat(siamcat, verbose=1)
+
+\S4method{norm_feat}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
@@ -30,7 +33,7 @@ in the \code{norm_feat} slot of a SIAMCAT object. This list contains:
 \item \code{norm.feat} - normalized features as matrix, see
 \link{get.norm_feat.matrix}
 \item \code{norm.param} - parameters used for normalization, see
-\link{norm_param}
+\link{normalize.features}
 }
 }
 \examples{

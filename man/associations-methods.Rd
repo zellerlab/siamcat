@@ -3,9 +3,12 @@
 \docType{methods}
 \name{associations}
 \alias{associations}
+\alias{associations,siamcat-method}
 \title{Retrieve the results of association testing from a SIAMCAT object}
 \usage{
 associations(siamcat, verbose=1)
+
+\S4method{associations}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

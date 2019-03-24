@@ -4,9 +4,12 @@
 \name{physeq<-}
 \alias{physeq<-}
 \alias{assign-physeq}
+\alias{physeq<-,siamcat,phyloseq-method}
 \title{Assign a new phyloseq object to \code{x}}
 \usage{
 physeq(x) <- value
+
+\S4method{physeq}{siamcat,phyloseq}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}

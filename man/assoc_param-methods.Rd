@@ -3,10 +3,14 @@
 \docType{methods}
 \name{assoc_param}
 \alias{assoc_param}
+\alias{assoc_param,siamcat-method}
+\alias{assoc_param_param}
 \title{Retrieve the list of parameters for association testing from
 a SIAMCAT object}
 \usage{
 assoc_param(siamcat, verbose=1)
+
+\S4method{assoc_param}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

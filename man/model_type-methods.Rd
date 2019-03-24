@@ -3,9 +3,12 @@
 \docType{methods}
 \name{model_type}
 \alias{model_type}
+\alias{model_type,siamcat-method}
 \title{Retrieve the machine learning method from a SIAMCAT object}
 \usage{
 model_type(siamcat, verbose=1)
+
+\S4method{model_type}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}

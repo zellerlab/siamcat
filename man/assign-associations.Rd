@@ -4,9 +4,12 @@
 \name{associations<-}
 \alias{associations<-}
 \alias{assign-associations}
+\alias{associations<-,siamcat,list-method}
 \title{Assign a new assocications object to \code{x}}
 \usage{
 associations(x) <- value
+
+\S4method{associations}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}

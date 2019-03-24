@@ -3,10 +3,13 @@
 \docType{methods}
 \name{feature_type}
 \alias{feature_type}
+\alias{feature_type,siamcat-method}
 \title{Retrieve the feature type used for model training from a SIAMCAT
 object}
 \usage{
 feature_type(siamcat, verbose=1)
+
+\S4method{feature_type}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
