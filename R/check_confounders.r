@@ -107,7 +107,8 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     confounders.glm.auroc.plot(glm.data)
 
     # THIRD PLOT(S) - original confounder check descriptive stat plots
-    confounders.descriptive.plots(meta, label, verbose)
+    confounders.descriptive.plots(meta(siamcat)[,colnames(meta)],
+        label, verbose)
     dev.off()
 
     e.time <- proc.time()[3]
