@@ -5,4 +5,7 @@ articles:
   SIAMCAT_holdout: SIAMCAT_holdout.html
   SIAMCAT_read-in: SIAMCAT_read-in.html
   SIAMCAT_vignette: SIAMCAT_vignette.html
+urls:
+  reference: http://siamcat.embl.de/reference
+  article: http://siamcat.embl.de/articles
 
