@@ -103,7 +103,7 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
         message("+ starting to add metadata predictors")
         for (p in pred.names) {
             if (verbose > 2)
-            message("+++ adding metadata predictor:", p)
+            message("+++ adding metadata predictor: ", p)
             if (!p %in% colnames(meta(siamcat))) {
                 stop("There is no metadata variable called ", p)
             }
@@ -142,23 +142,23 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
                 stopifnot(!m.sd == 0)
                 m <- (m - m.mean)/m.sd
             }
-            features.with.meta <- otu_table(rbind(feat,m),
-                taxa_are_rows = TRUE)
-            rownames(features.with.meta)[nrow(features.with.meta)] <- paste(
-                "META_", toupper(p), sep = "")
-            if (feature.type == 'original'){
-                orig_feat(siamcat) <- features.with.meta
-            } else if (feature.type == 'filtered'){
-                filt_feat(siamcat) <- list(
-                    filt.feat=features.with.meta,
-                    filt.param=filt_params(siamcat))
-            } else if (feature.type == 'normalized'){
-                norm_feat(siamcat) <- list(
-                    norm.feat=features.with.meta,
-                    norm.param=norm_params(siamcat))
-            }
+            feat <- rbind(feat, m)
+            rownames(feat)[nrow(feat)] <- paste0('META_', toupper(p))
             cnt <- cnt + 1
         }
+
+        if (feature.type == 'original'){
+            orig_feat(siamcat) <- otu_table(feat, taxa_are_rows=TRUE)
+        } else if (feature.type == 'filtered'){
+            filt_feat(siamcat) <- list(
+                filt.feat=feat,
+                filt.param=filt_params(siamcat))
+        } else if (feature.type == 'normalized'){
+            norm_feat(siamcat) <- list(
+                norm.feat=feat,
+                norm.param=norm_params(siamcat))
+        }
+
         if (verbose > 1)
         message(paste("+++ added", cnt,
             "meta-variables as predictor to the feature matrix"))
