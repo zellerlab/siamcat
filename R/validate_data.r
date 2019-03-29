@@ -53,7 +53,8 @@ validate.data <- function(siamcat, verbose = 1) {
     }
     # check for compositional data
     if (any(colSums(feat) > 1.01)) {
-        warning('\t### Warning: The data does not seem to be compositional!')
+        warning('### Warning: The data do not seem to consist ',
+            'of relative abundances!')
     }
 
     # Check if labels are available for all samples in features
