@@ -150,7 +150,15 @@ Heintz-Buschart A, Sunagawa S, Zeller G, Wilmes P, Bork P_
 eLife, (__2019__) 8:e42693  
 > See Figure 3 - figure supplement 1
 
+- __[Meta-analysis of fecal metagenomes reveals global microbial signatures
+that are specific for colorectal cancer](https://www.nature.com/articles/s41591-019-0406-6)__  
+_Wirbel J, Pyl PT, Kartal E, Zych K, Kashani A, Milanese A, Fleck JS, Voigt AY,
+Palleja A, Ponnudurai R, Sunagawa S, Coelho LP, Schrotz-King P, Vogtmann E,
+Habermann N, Niméus E, Thomas AM, Manghi P, Gandini S, Serrano D, Mizutani S,
+Shiroma H, Shiba S, Shibata T, Yachida S, Yamada T, Waldron L, Naccarati A,
+Segata N, Sinha R, Ulrich CM, Brenner H, Arumugam M, Bork P, Zeller G_  
+Nature Medicine, (__2019__) [Epub ahead of print]  
+> In this publication, `SIAMCAT` is used extensively for holdout testing
 
 If you used `SIAMCAT` in your publication,
 [let us know](mailto:zeller@embl.de)!
-   
