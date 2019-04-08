@@ -5,25 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Statistical Inference of Associations between Microbial
-    Communities And host phenoTypes • SIAMCAT</title>
+<title>Holdout Testing with SIAMCAT • SIAMCAT</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Statistical Inference of Associations between Microbial
-    Communities And host phenoTypes">
-<meta property="og:description" content="Pipeline for Statistical Inference of Associations between
-    Microbial Communities And host phenoTypes (SIAMCAT). A primary goal
-    of analyzing microbiome data is to determine changes in community
-    composition that are associated with environmental factors. In particular,
-    linking human microbiome composition to host phenotypes such as diseases
-    has become an area of intense research. For this, robust statistical
-    modeling and biomarker extraction toolkits are crucially needed. SIAMCAT
-    provides a full pipeline supporting data preprocessing, statistical
-    association testing, statistical modeling (LASSO logistic regression)
-    including tools for evaluation and interpretation of these models (such as
-    cross validation, parameter selection, ROC analysis and diagnostic
-    model plots).">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Holdout Testing with SIAMCAT">
+<meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -169,13 +156,13 @@ siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.016 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.015 s</code></pre>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.04 s</code></pre>
+<pre><code>## + finished validate.data in 0.039 s</code></pre>
 <p>We can load the data from the Chinese study in a similar way and also create a <code>SIAMCAT</code> object for the holdout dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># features</span>
 feat.cn  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.table</a></span>(fn.feat.cn, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,
@@ -200,7 +187,7 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <pre><code>## + Keeping labels of 128 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.04 s</code></pre>
+<pre><code>## + finished validate.data in 0.031 s</code></pre>
 </div>
 <div id="model-building-on-the-french-dataset" class="section level1">
 <h1 class="hasAnchor">
@@ -220,7 +207,7 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <pre><code>## +++ before filtering, the data have 1754 features</code></pre>
 <pre><code>## +++ removed 1 features corresponding to UNMAPPED reads</code></pre>
 <pre><code>## +++ removed 1538 features whose values did not exceed 0.001 in any sample (retaining 215)</code></pre>
-<pre><code>## + finished filter.features in 0.007 s</code></pre>
+<pre><code>## + finished filter.features in 0.003 s</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(
     siamcat.fr,
     <span class="dt">norm.method =</span> <span class="st">"log.std"</span>,
@@ -231,7 +218,7 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <pre><code>## +++ performing de novo normalization using the  log.std  method</code></pre>
 <pre><code>## + feature sparsity before normalization: 46.05%</code></pre>
 <pre><code>## +++ feature sparsity after normalization:      0 %</code></pre>
-<pre><code>## + finished normalize.features in 0.006 s</code></pre>
+<pre><code>## + finished normalize.features in 0.004 s</code></pre>
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">
@@ -275,7 +262,7 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <pre><code>## + performing frozen  log.std  normalization using the supplied parameters</code></pre>
 <pre><code>## + feature sparsity before normalization: 49.77%</code></pre>
 <pre><code>## + feature sparsity after normalization:     0%</code></pre>
-<pre><code>## + finished normalize.features in 0.004 s</code></pre>
+<pre><code>## + finished normalize.features in 0.005 s</code></pre>
 </div>
 <div id="holdout-predictions" class="section level2">
 <h2 class="hasAnchor">
