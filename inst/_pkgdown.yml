@@ -5,6 +5,7 @@ title: SIAMCAT
 template:
     params:
         bootswatch: cosmo
+    path: inst/templates
 
 navbar:
   title: "SIAMCAT"
