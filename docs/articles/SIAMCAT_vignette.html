@@ -16,7 +16,18 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<![endif]--><script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//tr-denbi.embl.de/heimdall/";
+    _paq.push(['setTrackerUrl', u+'p.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
 </head>
 <body>
     <div class="container template-article">
@@ -152,7 +163,7 @@
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.002 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
 <p>Now we have all the ingredients to create a <code>SIAMCAT</code> object. Please have a look at the <a href="SIAMCAT_read-in.html">vignette about input formats</a> for more information about supported formats and other ways to create a <code>SIAMCAT</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.crc.zeller,
     <span class="dt">label=</span>label.crc.zeller,
@@ -162,7 +173,7 @@
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.058 s</code></pre>
+<pre><code>## + finished validate.data in 0.057 s</code></pre>
 <p>A few information about the <code>siamcat</code> object can be accessed with the <code>show</code> function from <code>phyloseq</code> (<code>SIAMCAT</code> builds on the <code>phyloseq</code> data structure):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(siamcat)</code></pre></div>
 <pre><code>## siamcat-class object
@@ -247,13 +258,13 @@ models[[<span class="dv">1</span>]]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat)
 pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pred_matrix-methods.html">pred_matrix</a></span>(siamcat)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(pred_matrix)</code></pre></div>
-<pre><code>##                       CV_rep1    CV_rep2
-## CCIS27304052ST-3-0 0.19880497 0.09535739
-## CCIS15794887ST-4-0 0.25670422 0.16473066
-## CCIS74726977ST-3-0 0.59187395 0.63774235
-## CCIS16561622ST-4-0 0.54217795 0.09439314
-## CCIS79210440ST-3-0 0.28578571 0.23673264
-## CCIS82507866ST-3-0 0.08502265 0.07268986</code></pre>
+<pre><code>##                       CV_rep1   CV_rep2
+## CCIS27304052ST-3-0 0.05627524 0.1227390
+## CCIS15794887ST-4-0 0.06400252 0.0941945
+## CCIS74726977ST-3-0 0.41996493 0.2777645
+## CCIS16561622ST-4-0 0.34675575 0.2208130
+## CCIS79210440ST-3-0 0.44411220 0.1147398
+## CCIS82507866ST-3-0 0.07560513 0.0656949</code></pre>
 </div>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level1">
