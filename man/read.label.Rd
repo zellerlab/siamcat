@@ -18,11 +18,17 @@ file;
 }
 }
 \description{
-This file reads in the tsv file with labels and converts it
-into a label object.
+Read label information from a file
+}
+\details{
+This function reads in a tsv file with labels and converts it
+into a label.
 
-First row is expected to be \code{#BINARY:1=[label for cases];
+First row is expected to be
+
+\code{#BINARY:1=[label for cases];
 -1=[label for controls]}.
+
 Second row should contain the sample identifiers as tab-separated list
 (consistent with feature and metadata).
 
@@ -33,9 +39,10 @@ Note: Labels can take other numeric values (but not characters or strings);
 importantly, the label for cases has to be greater than the one for controls
 }
 \examples{
-    # run with example data
-fn.label <- system.file('extdata', 'label_crc_zeller_msb_mocat_specI.tsv',
+# run with example data
+fn.label <- system.file('extdata',
+    'label_crc_zeller_msb_mocat_specI.tsv',
     package = 'SIAMCAT')
 
-labels <- read.label(fn.label)
+crc.zeller.label <- read.label(fn.label)
 }

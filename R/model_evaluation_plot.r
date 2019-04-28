@@ -23,11 +23,16 @@
 #' @export
 #' @return Does not return anything, but produces the model evaluation plot.
 #' @examples
+#' data(siamcat_example)
 #'
-#'     data(siamcat_example)
-#'     # simple working example
-#'     model.evaluation.plot(siamcat_example, fn.plot='./eval.pdf')
+#' # simple working example
+#' model.evaluation.plot(siamcat_example, fn.plot='./eval.pdf')
 #'
+#' # plot several named SIAMCAT object
+#' # (although we use only one example object here)
+#' model.evaluation.plot('Example_1'=siamcat_example,
+#'     'Example_2'=siamcat_example, colours=c('red', 'blue'),
+#'     fn.plot='./eval.pdf')
 model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
         verbose = 1) {
     if (verbose > 1)
@@ -137,7 +142,7 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
 
     } else if (length(args) == 1) {
         # checks
-        if (!all(class(args[[1]]) == 'siamcat'))
+        if (!all(is(args[[1]], 'siamcat')))
             stop('Please supply a SIAMCAT object. Exiting...')
         if(is.null(eval_data(args[[1]]))){
             stop('SIAMCAT object has no evaluation data. Exiting...')

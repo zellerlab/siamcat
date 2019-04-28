@@ -4,12 +4,12 @@
 \name{associations<-}
 \alias{associations<-}
 \alias{assign-associations}
-\alias{associations<-,siamcat,associations-method}
+\alias{associations<-,siamcat,list-method}
 \title{Assign a new assocications object to \code{x}}
 \usage{
 associations(x) <- value
 
-\S4method{associations}{siamcat,associations}(x) <- value
+\S4method{associations}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}
@@ -24,7 +24,7 @@ Assign a new assocications object to \code{x}
 }
 \examples{
 data(siamcat_example)
-associations(siamcat_example) <- new("associations",
-    assoc.results=associations(siamcat_example),
-    assoc.param=assoc_param(siamcat_example))
+associations(siamcat_example) <- list(
+    'assoc.results'=associations(siamcat_example),
+    'assoc.param'=assoc_param(siamcat_example))
 }

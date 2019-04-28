@@ -4,12 +4,12 @@
 \name{filt_feat<-}
 \alias{filt_feat<-}
 \alias{assign-filt_feat}
-\alias{filt_feat<-,siamcat,filt_feat-method}
+\alias{filt_feat<-,siamcat,list-method}
 \title{Assign a new filt_feat object to \code{x}}
 \usage{
 filt_feat(x) <- value
 
-\S4method{filt_feat}{siamcat,filt_feat}(x) <- value
+\S4method{filt_feat}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}
@@ -24,7 +24,7 @@ Assign a new filt_feat object to \code{x}
 }
 \examples{
 data(siamcat_example)
-filt_feat(siamcat_example) <- new('filt_feat',
+filt_feat(siamcat_example) <- list(
     filt.feat=filt_feat(siamcat_example),
     filt.param=filt_params(siamcat_example))
 }

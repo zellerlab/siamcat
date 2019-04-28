@@ -3,9 +3,13 @@
 \docType{data}
 \name{feat.crc.zeller}
 \alias{feat.crc.zeller}
-\title{Documentation for the example feature object in the data folder}
+\title{Example feature matrix}
+\source{
+\url{http://msb.embopress.org/content/10/11/766}
+}
 \description{
-Feature matrix (as data.frame) for the CRC dataset, containing 141 samples
-and 1754 bacterial species (features).
+Feature matrix (as data.frame) of the CRC dataset from Zeller
+et al. MSB 2014 (see \url{http://msb.embopress.org/content/10/11/766}),
+containing 141 samples and 1754 bacterial species (features).
 }
 \keyword{data}

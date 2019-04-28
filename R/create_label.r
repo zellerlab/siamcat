@@ -3,7 +3,7 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' @title create a label object from metadata or an atomic vector
+#' @title Create a label list
 #'
 #' @description This function creates a label object from metadata
 #' or an atomic vector
@@ -45,22 +45,34 @@
 #'  \code{TRUE}, the function will return a list as result. Defaults to
 #'  \code{FALSE}
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'     for only information about progress and success, \code{2} for normal
-#'     level of information and \code{3} for full debug information,
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
 #'
 #' @keywords create.label
 #'
-#' @return an object of class \link{label-class} OR a list with entries
-#' \code{meta} and \code{label}, if \code{remove.meta.column} is set to
-#' \code{TRUE}
+#' @details The function creates a list to be used as label in a SIAMCAT
+#' object. Mainly for interal use, but it can be used to customize your label
+#' (\code{p.lab} and \code{n.lab} will be used as labels during plotting,
+#' for example).
 #'
-#' @examples
-#'     data('meta_crc_zeller')
-#'     label <- create.label(label='Group', case='CRC', meta=meta.crc.zeller)
+#' The input for the function can be either a named vector encoding the label
+#' or the name of a column in the metadata (needs to be provided as well) which
+#' contains the label information.
 #'
 #' @export
+#'
+#' @return return either \itemize{
+#' \item a list to be used in a SIMCAT object \strong{OR}
+#' \item a list with entries \code{meta} and \code{label},
+#' if \code{remove.meta.column} is set to \code{TRUE}
+#' }
+#'
+#' @examples
+#' data('meta_crc_zeller')
+#'
+#' label <- create.label(label='Group', case='CRC', meta=meta.crc.zeller)
 create.label <- function(label, case, meta=NULL, control = NULL,
     p.lab=NULL, n.lab=NULL, remove.meta.column=FALSE, verbose=1) {
     if (verbose > 1)
@@ -72,10 +84,10 @@ create.label <- function(label, case, meta=NULL, control = NULL,
     if (!is.null(meta) & length(label) == 1){
         if (!label %in% colnames(meta))
             stop("ERROR: Column ", label, " not found in the metadata\n")
-        if (class(meta) == 'sample_data'){
+        if (is(meta,'sample_data')){
             label.vec <- vapply(meta[, label], as.character,
                 FUN.VALUE = character(nrow(meta)))
-        } else if (class(meta) == 'data.frame'){
+        } else if (is.data.frame(meta)){
             label.vec <- vapply(meta[, label], as.character,
                 FUN.VALUE = character(1))
         } else {
@@ -132,7 +144,7 @@ create.label <- function(label, case, meta=NULL, control = NULL,
         if(any(!groups%in%c(case, control))){
             label.vec <- label.vec[which(label.vec%in%c(case, control))]
             warning("Dropping values: ",
-                groups[which(!groups%in%c(case, control))])
+                groups[which(!groups%in%c(case, control))], '\n')
         }
     }
 
@@ -162,7 +174,7 @@ create.label <- function(label, case, meta=NULL, control = NULL,
     label.new$info <- info
     label.new$type <- "BINARY"
 
-    label.new <- label(label.new)
+    label.new <- label.new
 
     e.time <- proc.time()[3]
     if (verbose > 0)

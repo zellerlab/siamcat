@@ -4,7 +4,7 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' Build siamcat-class objects from their components.
-#' @title siamcat
+#' @title SIAMCAT constructor function
 #' @name siamcat
 #' @description Function to construct an object of class \link{siamcat-class}
 #' @usage siamcat(..., feat=NULL, label=NULL, meta=NULL,
@@ -26,18 +26,18 @@
 #' @export
 #' @details This functions creates a SIAMCAT object (see \link{siamcat-class}).
 #' In order to do so, the function needs \itemize{
-#' \item feat the feature information for SIAMCAT, should be either a matrix,
-#' a data.frame, or a \link[phyloseq]{otu_table-class}. The columns should
-#' correspond to the different samples (e.g. patients) and the rows the
+#' \item \code{feat} the feature information for SIAMCAT, should be either a
+#' matrix, a data.frame, or a \link[phyloseq]{otu_table-class}. The columns
+#' should correspond to the different samples (e.g. patients) and the rows the
 #' different features (e.g. taxa). Columns and rows should be named.
-#' \item meta metadata information for the different samples in the feature
-#' matrix. Metadata is optional for the SIAMCAT workflow. Should be
+#' \item \code{meta} metadata information for the different samples in the
+#' feature matrix. Metadata is optional for the SIAMCAT workflow. Should be
 #' either a data.frame (with the rownames corresponding to the sample
 #' names of the feature matrix) or an object of class
 #' \link[phyloseq]{sample_data-class}
-#' \item phyloseq Alternatively to supplying both feat and meta, SIAMCAT can
-#' also work with a phyloseq object containing an otu_table and other
-#' optional slots (like sample_data for meta-variables).}
+#' \item \code{phyloseq} Alternatively to supplying both feat and meta,
+#' SIAMCAT can also work with a phyloseq object containing an otu_table and
+#' other optional slots (like sample_data for meta-variables).}
 #'
 #' Notice: do supply \strong{either} the feature information as
 #' matrix/data.frame/otu_table (and optionally metadata) \strong{or} a
@@ -58,14 +58,14 @@
 #' in the column \code{"DiseaseState"} of the metadata). For more control
 #' (e.g. specific labels for plotting or specific control state), the
 #' label can also be created outside of the \code{siamcat} function using
-#' the \link{create.label} function (see below).
+#' the \link{create.label} function.
 #' \item named vector: the label can also be supplied as named vector which
 #' encodes the label either as characters (e.g. "Healthy" and "Diseased"),
 #' as factor, or numerically (e.g. -1 and 1). The vector must be named
 #' with the names of samples (corresponding to the samples in features).
 #' Also here, the information about the positive group(s) is needed via
 #' the \code{case} parameter. Internally, the vector is given to the
-#' \link{create.label} function (see for more details).
+#' \link{create.label} function.
 #' \item label object: A label object can be created with the
 #' \link{create.label} function or by reading a dedicated label file
 #' with \link{read.label}.
@@ -118,7 +118,7 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
             stop(paste0('Both features matrix and phyloseq object provided. ',
                 'Please provide only one of them!'))
         }
-        if (class(phyloseq) != 'phyloseq'){
+        if (!is(phyloseq,'phyloseq')){
             stop('Please provide an object of class phyloseq for SIAMCAT!')
         }
         feat <- otu_table(phyloseq)
@@ -258,10 +258,13 @@ validate.features <- function(feat){
         stop('SIAMCAT needs features!!! Exiting...')
     }
     # check class of feature input
-    if (class(feat) == 'otu_table'){
-        # can either be an otu_table (then do nothing)
+    if (is(feat,'otu_table')){
+        # can either be an otu_table (only check that taxa_are_rows == TRUE)
+        if (!taxa_are_rows(feat)){
+            feat <- otu_table(t(feat@.Data), taxa_are_rows=TRUE)
+        }
         return(feat)
-    } else if (class(feat) == 'matrix'){
+    } else if (is(feat, 'matrix')){
         # or a matrix (then check if it is numeric or not)
         # and convert to otu_table
         if (any(!is.numeric(feat))){
@@ -270,7 +273,7 @@ validate.features <- function(feat){
         }
         feat <- otu_table(feat, taxa_are_rows=TRUE)
         return(feat)
-    } else if (class(feat) == 'data.frame'){
+    } else if (is.data.frame(feat)){
         # or a dataframe (then do the same as above)
         if (any(!is.numeric(unlist(feat)))){
             stop(paste0('SIAMCAT expects numerical features!.\n',
@@ -289,17 +292,17 @@ validate.label <- function(label, feat, meta, case, verbose){
         warning(paste0('No label information given! Generating SIAMCAT object ',
         'with placeholder label!\n\tThis SIAMCAT object is not suitable for ',
         'the complete workflow...'))
-        label <- label(list(label = rep(-1, ncol(feat)),
-            info=c('TEST'=-1), type="TEST"))
+        label <- list(label = rep(-1, ncol(feat)),
+            info=c('TEST'=-1), type="TEST")
         names(label$label) <- colnames(feat)
-    } else if (class(label) == "label"){
+    } else if (is.list(label)){
         label <- label
     } else if (is.character(label) & length(label) == 1){
         if(is.null(meta)) stop('Metadata needed to generate label! Exiting...')
         if(is.null(case)) stop('Case information needed! Exiting...')
         temp <- create.label(meta=meta, label=label, case=case,
             verbose=verbose, remove.meta.column=TRUE)
-        label <- label(temp$label)
+        label <- temp$label
         meta <- temp$meta
     } else if (is.atomic(label)) {
         if(is.null(case)) stop('Case information needed! Exiting...')
@@ -318,10 +321,10 @@ validate.metadata <- function(meta){
     if (is.null(meta)){
         return(NULL)
     }
-    if (class(meta) == 'sample_data'){
+    if (is(meta, 'sample_data')){
         return(meta)
     }
-    if (class(meta) == 'data.frame'){
+    if (is.data.frame(meta)){
         meta <- sample_data(meta)
         return(meta)
     }

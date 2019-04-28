@@ -3,27 +3,35 @@
 \docType{methods}
 \name{norm_params}
 \alias{norm_params}
-\alias{norm_params,ANY-method}
-\title{Retrieve the list of normalization parameters from object.}
+\alias{norm_params,siamcat-method}
+\title{Retrieve the list of parameters for feature normalization from a
+SIAMCAT object}
 \usage{
 norm_params(siamcat, verbose=1)
 
-\S4method{norm_params}{ANY}(siamcat, verbose = 1)
+\S4method{norm_params}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a norm_feat}
+containing normalized features}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The list of normalization parameters or NULL.
+A list of normalization parameters or \code{NULL}
 }
 \description{
-Retrieve the list of normalization parameters from object.
+Function to retrieve the list of parameters for feature
+normalization
+}
+\details{
+The function returns the list of normalization parameters used in
+the feature normalization procedure. See \link{normalize.features} for
+more details.
 }
 \examples{
-    data(siamcat_example)
-    norm_params(siamcat_example)
+data(siamcat_example)
+temp <- norm_params(siamcat_example)
+names(temp)
 }

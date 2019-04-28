@@ -16,20 +16,22 @@
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
-#' @param num.folds number of cross-validation folds (needs to be \code{>=2}),
-#'     defaults to \code{2}
+#' @param num.folds integer number of cross-validation folds (needs to be
+#'     \code{>=2}), defaults to \code{2}
 #'
-#' @param num.resample resampling rounds (values \code{<= 1} deactivate
-#'     resampling), defaults to \code{1}
+#' @param num.resample integer, resampling rounds (values \code{<= 1}
+#'     deactivate resampling), defaults to \code{1}
 #'
 #' @param stratify boolean, should the splits be stratified so that an equal
 #'     proportion of classes are present in each fold?, defaults to \code{TRUE}
 #'
-#' @param inseparable column name of metadata variable, defaults to \code{NULL}
+#' @param inseparable string, name of metadata variable to be inseparable,
+#'     defaults to \code{NULL}, see Details below
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1} for
-#'     only information about progress and success, \code{2} for normal level of
-#'     information and \code{3} for full debug information, defaults to \code{1}
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
 #'
 #' @keywords SIAMCAT create.data.split
 #'
@@ -44,26 +46,38 @@
 #'     cross-validation folds within a list in the \code{data_split}-slot of the
 #'     \link{siamcat-class} object, which is a list with four entries:
 #'     \itemize{
-#'     \item \code{num.folds} the number of cross-validation folds
-#'     \item \code{num.resample} the number of repetitions for the
+#'     \item \code{num.folds} - the number of cross-validation folds
+#'     \item \code{num.resample} - the number of repetitions for the
 #'     cross-validation
-#'     \item \code{training.folds} a list containing the indices for the
+#'     \item \code{training.folds} - a list containing the indices for the
 #'     training instances
-#'     \item \code{test.folds} a list containing the indices for the
+#'     \item \code{test.folds} - a list containing the indices for the
 #'     test instances }
 #'
+#'     If provided, the data split will take into account a metadata variable
+#'     for the data split (by providing the \code{inseparable} argument). For
+#'     example, if the data contains several samples for the same individual,
+#'     it would make sense to keep data from the same individual within the
+#'     same fold.
+#'     If \code{inseparable} is given, the \code{stratify} argument will be
+#'     ignored.
 #' @export
 #'
 #' @examples
+#' data(siamcat_example)
 #'
-#'     data(siamcat_example)
-#'     # simple working example
-#'     siamcat_split <- create.data.split(siamcat_example, num.folds=10,
-#'     num.resample=5, stratify=TRUE)
+#' # simple working example
+#' siamcat_split <- create.data.split(siamcat_example,
+#'     num.folds=10,
+#'     num.resample=5,
+#'     stratify=TRUE)
 #'
-#'     ## # example with a variable which is to be inseparable
-#'     ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,
-#'     ##  num.resample=5, stratify=FALSE, inseparable='Gender')
+#' # Inseparable data split
+#' \dontrun{siamcat_split <- create.data.split(siamcat,
+#'     num.folds=10,
+#'     num.resample=5,
+#'     inseparable='Individual_ID')}
+
 create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
     stratify = TRUE, inseparable = NULL, verbose = 1) {
 
@@ -131,7 +145,7 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
         if (!is.null(inseparable)) {
             if (is.numeric(inseparable) && length(inseparable) == 1) {
                 stopifnot(inseparable <= ncol(meta(siamcat)))
-            } else if (class(inseparable) == "character" &&
+            } else if (is.character(inseparable) &&
                     length(inseparable == 1)) {
                 stopifnot(inseparable %in% colnames(meta(siamcat)))
             } else {
@@ -202,15 +216,12 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
             test.list[[r]] <- test.temp
         }
 
-        data_split(siamcat) <-
-            data_split(
-                list(
-                    training.folds = train.list,
-                    test.folds = test.list,
-                    num.resample = num.resample,
-                    num.folds = num.folds
-                )
-            )
+        data_split(siamcat) <- list(
+            training.folds = train.list,
+            test.folds = test.list,
+            num.resample = num.resample,
+            num.folds = num.folds
+        )
         e.time <- proc.time()[3]
         if (verbose > 1)
             message(paste(

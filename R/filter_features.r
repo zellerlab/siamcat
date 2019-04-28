@@ -6,8 +6,8 @@
 #' @title Perform unsupervised feature filtering.
 #'
 #' @description This function performs unsupervised feature filtering. Features
-#'     can be filtered based on abundance or prevalence. Additionally,
-#'     unmapped reads may be removed.
+#'     can be filtered based on abundance, prevalence, or on variance.
+#'     Additionally, unmapped reads may be removed.
 #'
 #' @usage filter.features(siamcat, filter.method = "abundance",
 #'     cutoff = 0.001, rm.unmapped = TRUE,
@@ -15,22 +15,24 @@
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'
-#' @param filter.method method used for filtering the features, can be one of
-#'     these: \code{c('abundance', 'cum.abundance', 'prevalence')},
-#'     defaults to \code{'abundance'}
+#' @param filter.method string, method used for filtering the features, can be
+#'     one of these: \code{c('abundance', 'cum.abundance', 'prevalence',
+#'     'variance')}, defaults to \code{'abundance'}
 #'
-#' @param cutoff float, abundace or prevalence cutoff, default to \code{0.001}
+#' @param cutoff float, abundace, prevalence, or variance cutoff, defaults
+#'     to \code{0.001} (see Details below)
 #'
 #' @param rm.unmapped boolean, should unmapped reads be discarded?, defaults to
 #'     \code{TRUE}
 #'
-#' @param feature.type On which type of features should the function work? Can
-#'     be either "original", "filtered", or "normalized". Please only change
-#'     this paramter if you know what you are doing!
+#' @param feature.type string, on which type of features should the function
+#'   work? Can be either \code{"original"}, \code{"filtered"}, or
+#'   \code{"normalized"}. Please only change this paramter if you know what
+#'   you are doing!
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'     for only information about progress and success, \code{2} for normal
-#'     level of information and \code{3} for full debug information,
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
 #'
 #' @keywords SIAMCAT filter.features
@@ -39,15 +41,17 @@
 #'     object in a unsupervised manner.
 #'
 #'     The different filter methods work in the following way: \itemize{
-#'     \item \code{'abundace'} remove features whose maximum abundance is never
-#'     above the threshold value in any of the samples
-#'     \item \code{'cum.abundance'} remove features with very low abundance
-#'     in all samples i.e. ones that are never among the most abundant
+#'     \item \code{'abundace'} - remove features whose maximum abundance is
+#'     never above the threshold value in any of the samples
+#'     \item \code{'cum.abundance'} - remove features with very low abundance
+#'     in all samples, i.e. those that are never among the most abundant
 #'     entities that collectively make up (1-cutoff) of the reads in
 #'     any sample
-#'     \item \code{'prevalence'} remove features with low prevalence across
-#'     samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
-#'     proportion of samples.
+#'     \item \code{'prevalence'} - remove features with low prevalence across
+#'     samples, i.e. those that are undetected (relative abundance of 0)
+#'     in more than \code{1 - cutoff} percent of samples.
+#'     \item \code{'variance'} - remove features with low variance across
+#'     samples, i.e. those that have a variance lower than \code{cutoff}
 #'     }
 #'
 #'     Features can also be filtered repeatedly with different methods, e.g.
@@ -55,19 +59,24 @@
 #'     filtering.
 #'     However, if a filtering method has already been applied to the dataset,
 #'     SIAMCAT will default back on the original features for filtering.
-#' @export
+#' @export filter.features
 #'
 #' @return siamcat an object of class \link{siamcat-class}
 #'
 #' @examples
-#'     # Example dataset
-#'     data(siamcat_example)
+#' # Example dataset
+#' data(siamcat_example)
 #'
 #' # Simple examples
 #' siamcat_filtered <- filter.features(siamcat_example,
 #'     filter.method='abundance',
 #'     cutoff=1e-03)
 #'
+#' # 5% prevalence filtering
+#' siamcat_filtered <- filter.features(siamcat_example,
+#'     filter.method='prevalence',
+#'     cutoff=0.05)
+
 filter.features <- function(siamcat,
     filter.method = "abundance",
     cutoff = 0.001,
@@ -79,7 +88,8 @@ filter.features <- function(siamcat,
     s.time <- proc.time()[3]
 
     # checks
-    if (!filter.method %in% c("abundance", "cum.abundace", "prevalence")) {
+    if (!filter.method %in% c("abundance", "cum.abundance",
+                                "prevalence", "variance")) {
         stop("Unrecognized filter.method, exiting!\n")
     }
     if (!feature.type %in% c('original', 'filtered', 'normalized')){
@@ -163,6 +173,10 @@ filter.features <- function(siamcat,
         # proportion of samples
         f.idx <-
             which(rowSums(feat > 0) / ncol(feat) > cutoff)
+    } else if (filter.method == "variance"){
+        # remove features with very low variance
+        f.var <- rowVars(feat)
+        f.idx <- which(f.var >= cutoff)
     }
 
 
@@ -186,10 +200,8 @@ filter.features <- function(siamcat,
                     "features corresponding to UNMAPPED reads"))
         } else {
             if (verbose > 1)
-                message(
-                    "+++ tried to remove unmapped reads, but could not find
-                    them. Continue anyway."
-                )
+                message(paste0("+++ tried to remove unmapped reads ",
+                    "but could not find any. Continue anyway."))
         }
     }
 
@@ -200,12 +212,18 @@ filter.features <- function(siamcat,
             " in any sample (retaining ", length(f.idx), ")" ))
 
     f.names <- rownames(feat)[f.idx]
+    if (length(f.idx) == 0){
+        stop('No features retained after filtering!',
+            ' Try changing your cutoff. Exiting...\n')
+    }
+
 
     if (verbose > 2)
         message("+++ saving filtered features")
 
-    filt_feat(siamcat) <- new("filt_feat", filt.feat=otu_table(feat[f.names,],
-            taxa_are_rows=TRUE), filt.param=param.set)
+    filt_feat(siamcat) <- list(
+        filt.feat=feat[f.names,],
+        filt.param=param.set)
 
     e.time <- proc.time()[3]
     if (verbose > 1)

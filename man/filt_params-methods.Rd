@@ -3,27 +3,34 @@
 \docType{methods}
 \name{filt_params}
 \alias{filt_params}
-\alias{filt_params,ANY-method}
-\title{Retrieve the list of filtering parameters from object.}
+\alias{filt_params,siamcat-method}
+\title{Retrieve the list of parameters for feature filtering from a
+SIAMCAT object}
 \usage{
 filt_params(siamcat, verbose=1)
 
-\S4method{filt_params}{ANY}(siamcat, verbose = 1)
+\S4method{filt_params}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a filt_feat object}
+containing filtered features}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The list of filtering parameters or NULL.
+A list of feature filtering parameters or \code{NULL}
 }
 \description{
-Retrieve the list of filtering parameters from object.
+Function to retrieve the list of parameters for feature
+filtering
+}
+\details{
+The function returns the list of feature filtering parameters.
+See \link{filter.features} for more details.
 }
 \examples{
-    data(siamcat_example)
-    filt_params(siamcat_example)
+data(siamcat_example)
+temp <- filt_params(siamcat_example)
+names(temp)
 }

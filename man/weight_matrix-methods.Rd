@@ -3,27 +3,32 @@
 \docType{methods}
 \name{weight_matrix}
 \alias{weight_matrix}
-\alias{weight_matrix,ANY-method}
-\title{Retrieve weight_matrix from object.}
+\alias{weight_matrix,siamcat-method}
+\title{Retrieve the weight matrix from a SIAMCAT object}
 \usage{
 weight_matrix(siamcat, verbose=1)
 
-\S4method{weight_matrix}{ANY}(siamcat, verbose = 1)
+\S4method{weight_matrix}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a model_list or instance of \link{model_list-class}.}
+that contains trained models}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-A matrix containing the feature weights or NULL
+A matrix containing the feature weights or \code{NULL}
 }
 \description{
-Retrieve weight_matrix from object.
+Function to retrieve the feature weights from a SIAMCAT object
+}
+\details{
+The function extracts the feature weights from all trained models
+acorss all cross-validation folds and repeats.
 }
 \examples{
-    data(siamcat_example)
-    weight_matrix(siamcat_example)
+data(siamcat_example)
+temp <- weight_matrix(siamcat_example)
+temp[1:3, 1:3]
 }

@@ -3,30 +3,35 @@
 \docType{methods}
 \name{eval_data}
 \alias{eval_data}
-\alias{eval_data,ANY-method}
-\alias{eval_data,list-method}
-\title{Retrieve eval_data from object.}
+\alias{eval_data,siamcat-method}
+\title{Retrieve the evaluation metrics from a SIAMCAT object}
 \usage{
 eval_data(siamcat, verbose=1)
 
-\S4method{eval_data}{ANY}(siamcat, verbose = 1)
-
-\S4method{eval_data}{list}(siamcat)
+\S4method{eval_data}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
-\item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a eval_data..}
+\item{siamcat}{(Required). A \link{siamcat-class} object
+that contains evaluation data}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The eval_data list or NULL.
+The list of evaluation data or \code{NULL}
 }
 \description{
-Retrieve eval_data from object.
+Function to retrieve the evaluation metrics from a SIAMCAT
+object
+}
+\details{
+The functions returns a list containing the evaluation metrics from
+a SIAMCAT object. See \link{evaluate.predictions} for more information on
+evaluation data.
 }
 \examples{
-    data(siamcat_example)
-    eval_data(siamcat_example)
+data(siamcat_example)
+temp <- eval_data(siamcat_example)
+names(temp)
+temp$auroc
 }

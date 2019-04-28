@@ -3,27 +3,34 @@
 \docType{methods}
 \name{feature_type}
 \alias{feature_type}
-\alias{feature_type,ANY-method}
-\title{Retrieve feature_type from object.}
+\alias{feature_type,siamcat-method}
+\title{Retrieve the feature type used for model training from a SIAMCAT
+object}
 \usage{
 feature_type(siamcat, verbose=1)
 
-\S4method{feature_type}{ANY}(siamcat, verbose = 1)
+\S4method{feature_type}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a model_list or instance of \link{model_list-class}.}
+that contains trained models}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The string describing type of feature used for the model or NULL.
+The string describing type of feature used for the model training
+or \code{NULL}
 }
 \description{
-Retrieve feature_type from object.
+Function to retrieve information on which type of features the
+models were trained
+}
+\details{
+The function extracts the information on which type of features
+the models were trained.
 }
 \examples{
-    data(siamcat_example)
-    feature_type(siamcat_example)
+data(siamcat_example)
+feature_type(siamcat_example)
 }

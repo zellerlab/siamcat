@@ -4,27 +4,27 @@
 \name{norm_feat<-}
 \alias{norm_feat<-}
 \alias{assign-norm_feat}
-\alias{norm_feat<-,siamcat,norm_feat-method}
-\title{Assign a new norm_feat object to \code{x}}
+\alias{norm_feat<-,siamcat,list-method}
+\title{Assign a new list containing normalziation parameters and normalized
+features to a SIAMCAT object}
 \usage{
 norm_feat(x) <- value
 
-\S4method{norm_feat}{siamcat,norm_feat}(x) <- value
+\S4method{norm_feat}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}
 
-\item{value}{an norm_feat object}
+\item{value}{a list containing normaliation parameters and features}
 }
 \value{
 none
 }
 \description{
-Assign a new norm_feat object to \code{x}
+Assign a new list containing normalziation parameters and normalized
+features to a SIAMCAT object
 }
 \examples{
 data(siamcat_example)
-norm_feat(siamcat_example) <- new("norm_feat",
-    norm.feat=norm_feat(siamcat_example),
-    norm.param=norm_params(siamcat_example))
+norm_feat(siamcat_example) <- norm_feat(siamcat_example)
 }

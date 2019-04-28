@@ -3,33 +3,33 @@
 \docType{methods}
 \name{data_split}
 \alias{data_split}
-\alias{data_split,ANY-method}
-\alias{data_split,data_split-method}
-\alias{data_split,list-method}
-\title{Retrieve a \link{data_split-class} object from object.}
+\alias{data_split,siamcat-method}
+\title{Retrieve the data split from a SIAMCAT object}
 \usage{
 data_split(siamcat, verbose=1)
 
-\S4method{data_split}{ANY}(siamcat, verbose = 1)
-
-\S4method{data_split}{data_split}(siamcat)
-
-\S4method{data_split}{list}(siamcat)
+\S4method{data_split}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a label or instance of \link{data_split-class} or a list.}
+containing a data split}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The \link{data_split-class} object or NULL.
+A list containing the data split information or \code{NULL}
 }
 \description{
-Retrieve a \link{data_split-class} object from object.
+Function to retrieve the data split stored in the
+\code{data_split} slot within a SIAMCAT object
+}
+\details{
+The function returns a list containing information about the data
+split. See \link{create.data.split} for more details.
 }
 \examples{
-    data(siamcat_example)
-    data_split(siamcat_example)
+data(siamcat_example)
+temp <- data_split(siamcat_example)
+names(temp)
 }

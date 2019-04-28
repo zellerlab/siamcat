@@ -11,22 +11,24 @@ filter.features(siamcat, filter.method = "abundance",
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
 
-\item{filter.method}{method used for filtering the features, can be one of
-these: \code{c('abundance', 'cum.abundance', 'prevalence')},
-defaults to \code{'abundance'}}
+\item{filter.method}{string, method used for filtering the features, can be
+one of these: \code{c('abundance', 'cum.abundance', 'prevalence',
+'variance')}, defaults to \code{'abundance'}}
 
-\item{cutoff}{float, abundace or prevalence cutoff, default to \code{0.001}}
+\item{cutoff}{float, abundace, prevalence, or variance cutoff, defaults
+to \code{0.001} (see Details below)}
 
 \item{rm.unmapped}{boolean, should unmapped reads be discarded?, defaults to
 \code{TRUE}}
 
-\item{feature.type}{On which type of features should the function work? Can
-be either "original", "filtered", or "normalized". Please only change
-this paramter if you know what you are doing!}
+\item{feature.type}{string, on which type of features should the function
+work? Can be either \code{"original"}, \code{"filtered"}, or
+\code{"normalized"}. Please only change this paramter if you know what
+you are doing!}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
 defaults to \code{1}}
 }
 \value{
@@ -34,23 +36,25 @@ siamcat an object of class \link{siamcat-class}
 }
 \description{
 This function performs unsupervised feature filtering. Features
-    can be filtered based on abundance or prevalence. Additionally,
-    unmapped reads may be removed.
+    can be filtered based on abundance, prevalence, or on variance.
+    Additionally, unmapped reads may be removed.
 }
 \details{
 This function filters the features in a \link{siamcat-class}
     object in a unsupervised manner.
 
     The different filter methods work in the following way: \itemize{
-    \item \code{'abundace'} remove features whose maximum abundance is never
-    above the threshold value in any of the samples
-    \item \code{'cum.abundance'} remove features with very low abundance
-    in all samples i.e. ones that are never among the most abundant
+    \item \code{'abundace'} - remove features whose maximum abundance is
+    never above the threshold value in any of the samples
+    \item \code{'cum.abundance'} - remove features with very low abundance
+    in all samples, i.e. those that are never among the most abundant
     entities that collectively make up (1-cutoff) of the reads in
     any sample
-    \item \code{'prevalence'} remove features with low prevalence across
-    samples i.e. ones that are 0 (undetected) in more than (1-cutoff)
-    proportion of samples.
+    \item \code{'prevalence'} - remove features with low prevalence across
+    samples, i.e. those that are undetected (relative abundance of 0)
+    in more than \code{1 - cutoff} percent of samples.
+    \item \code{'variance'} - remove features with low variance across
+    samples, i.e. those that have a variance lower than \code{cutoff}
     }
 
     Features can also be filtered repeatedly with different methods, e.g.
@@ -60,14 +64,18 @@ This function filters the features in a \link{siamcat-class}
     SIAMCAT will default back on the original features for filtering.
 }
 \examples{
-    # Example dataset
-    data(siamcat_example)
+# Example dataset
+data(siamcat_example)
 
 # Simple examples
 siamcat_filtered <- filter.features(siamcat_example,
     filter.method='abundance',
     cutoff=1e-03)
 
+# 5\% prevalence filtering
+siamcat_filtered <- filter.features(siamcat_example,
+    filter.method='prevalence',
+    cutoff=0.05)
 }
 \keyword{SIAMCAT}
 \keyword{filter.features}

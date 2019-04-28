@@ -5,9 +5,13 @@
 
 #' @title Model Interpretation Plot
 #'
-#' @description Produces a plot for model interpretation, displaying feature
-#'     weights, robustness of feature weights, and features scores across
-#'     patients.
+#' @description This function produces a plot for model interpretation,
+#' displaying \itemize{
+#' \item the feature weights,
+#' \item the robustness of feature weights
+#' \item the features scores across samples,
+#' \item the distribution of metadata across samples, and
+#' \item the proportion of model weights shown.}
 #'
 #' @usage model.interpretation.plot(siamcat, fn.plot = NULL,
 #'     color.scheme = "BrBG",
@@ -23,14 +27,14 @@
 #'
 #' @param color.scheme color scheme for the heatmap, defaults to \code{'BrBG'}
 #'
-#' @param consens.thres minimal ratio of models incorporating a feature in order
-#'     to include it into the heatmap, defaults to \code{0.5}
+#' @param consens.thres float, minimal ratio of models incorporating a feature
+#'     in order to include it into the heatmap, defaults to \code{0.5}
 #'     Note that for \code{'randomForest'} models, this cutoff specifies the
 #'     minimum median Gini coefficient for a feature to be included and
 #'     should therefore be much lower, e.g. \code{0.01}
 #'
-#' @param heatmap.type type of the heatmap, can be either \code{'fc'} or
-#'     \code{'zscore'}, defaults to \code{'zscore'}
+#' @param heatmap.type string, type of the heatmap, can be either \code{'fc'}
+#'     or \code{'zscore'}, defaults to \code{'zscore'}
 #'
 #' @param limits vector, cutoff for extreme values in the heatmap,
 #'     defaults to \code{c(-3, 3)}
@@ -41,7 +45,7 @@
 #' @param max.show integer, maximum number of features to be shown in the model
 #'     interpretation plot, defaults to 50
 #'
-#'@param prompt boolean to turn on/off prompting user input when not plotting
+#'@param prompt boolean, turn on/off prompting user input when not plotting
 #'      into a pdf-file, defaults to TRUE
 #'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
@@ -67,12 +71,11 @@
 #'}
 #'
 #' @examples
+#' data(siamcat_example)
 #'
-#'     data(siamcat_example)
-#'     # simple working example
-#'     model.interpretation.plot(siamcat_example, fn.plot='./interpretion.pdf',
+#' # simple working example
+#' model.interpretation.plot(siamcat_example, fn.plot='./interpretion.pdf',
 #'     heatmap.type='zscore')
-#'
 model.interpretation.plot <-
     function(siamcat,
         fn.plot=NULL,
@@ -395,8 +398,7 @@ model.interpretation.plot <-
             ))
         if (verbose == 1 & !is.null(fn.plot))
             message(paste(
-                "Plotted associations between features and label
-                successfully to:",
+                "Successfully plotted model interpretation plot to:",
                 fn.plot
             ))
         }
@@ -886,8 +888,8 @@ model.interpretation.select.features <-
                     index.return = TRUE)
             # restrict to plot at maximum fifty features
             if (length(sel.idx) > max.show) {
-                warning("WARNING: restricting amount of features to
-                    be plotted to 50")
+                warning(paste0("WARNING: restricting amount of features",
+                    " to be plotted to 50"))
                 median.sorted.features.abs <- sort(
                     abs(feature.weights$median.rel.weight),
                     decreasing = TRUE,

@@ -5,40 +5,66 @@
 
 
 #' @title Add metadata as predictors
+#'
 #' @description This function adds metadata to the feature matrix to be later
 #'     used as predictors
+#'
 #' @usage add.meta.pred(siamcat, pred.names,
 #'     std.meta = TRUE,
 #'     feature.type='normalized',
 #'     verbose = 1)
+#'
 #' @param siamcat object of class \link{siamcat-class}
+#'
 #' @param pred.names vector of names of the variables within the metadata to be
 #'   added to the feature matrix as predictors
+#'
 #' @param std.meta boolean, should added metadata features be standardized?,
 #'   defaults to \code{TRUE}
-#' @param feature.type On which type of features should the function work? Can
-#'   be either "original", "filtered", or "normalized". Please only change this
-#'   paramter if you know what you are doing!
-#' @param verbose control output: \code{0} for no output at all, \code{1} for
-#'   only information about progress and success, \code{2} for normal level of
-#'   information and \code{3} for full debug information, defaults to \code{1}
+#'
+#' @param feature.type string, on which type of features should the function
+#'   work? Can be either \code{"original"}, \code{"filtered"}, or
+#'   \code{"normalized"}. Please only change this paramter if you know what
+#'   you are doing!
+#'
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
+#'
 #' @keywords SIAMCAT add.meta.pred
+#'
 #' @export
+#'
+#' @details This functions adds one or several metadata variables to the set
+#' of features, so that they can be included for model training.
+#'
+#' Usually, this function should be called before \link{train.model}.
+#'
+#' Numerical meta-variables are added as z-scores to the feature matrix unless
+#' specified otherwise.
+#'
+#' Please be aware, that non-numerical metadata variables will be converted to
+#' numerical values by using \code{as.numeric()} and could therefore lead to
+#' errors. Thus, it makes sense to encode non-numerical metadata variables to
+#' numerically before you start the SIAMCAT workflow.
+#'
 #' @return an object of class \link{siamcat-class} with metadata added to the
 #'     features
-#' @examples
-#'     data(siamcat_example)
-#'     # Add the Age of the patients as potential predictor
-#'     siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('Age'))
 #'
-#'     # Add Age, BMI, and Gender as potential predictors
-#'     # Additionally, prevent standardization of the added features
-#'     siamcat_meta_added <- add.meta.pred(siamcat_example, pred.names=c('Age',
-#'     'BMI', 'Gender'), std.meta=FALSE)
-add.meta.pred <- function(siamcat, pred.names,
-    std.meta = TRUE,
-    feature.type = 'normalized',
-    verbose = 1) {
+#' @examples
+#' data(siamcat_example)
+#'
+#' # Add the Age of the patients as potential predictor
+#' siamcat_age_added <- add.meta.pred(siamcat_example, pred.names=c('Age'))
+#'
+#' # Add Age and BMI as potential predictors
+#' # Additionally, prevent standardization of the added features
+#' siamcat_meta_added <- add.meta.pred(siamcat_example,
+#'     pred.names=c('Age', 'BMI'),
+#'     std.meta=FALSE)
+add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
+    feature.type = 'normalized', verbose = 1) {
 
     if (verbose > 1)
     message("+ starting add.meta.pred")
@@ -77,7 +103,7 @@ add.meta.pred <- function(siamcat, pred.names,
         message("+ starting to add metadata predictors")
         for (p in pred.names) {
             if (verbose > 2)
-            message("+++ adding metadata predictor:", p)
+            message("+++ adding metadata predictor: ", p)
             if (!p %in% colnames(meta(siamcat))) {
                 stop("There is no metadata variable called ", p)
             }
@@ -91,7 +117,7 @@ add.meta.pred <- function(siamcat, pred.names,
             m <- unlist(meta(siamcat)[, idx])
 
             # check if the meta-variable is a factor or numeric
-            if (class(m) == 'factor'){
+            if (is.factor(m)){
                 warning(paste0('WARNING: meta-variable ', p,' is a factor and',
                 ' not numeric...\n   The values will be converted to numerical',
                 ' values with "as.numeric()"\n'))
@@ -116,30 +142,30 @@ add.meta.pred <- function(siamcat, pred.names,
                 stopifnot(!m.sd == 0)
                 m <- (m - m.mean)/m.sd
             }
-            features.with.meta <- otu_table(rbind(feat,m),
-                taxa_are_rows = TRUE)
-            rownames(features.with.meta)[nrow(features.with.meta)] <- paste(
-                "META_", toupper(p), sep = "")
-            if (feature.type == 'original'){
-                orig_feat(siamcat) <- features.with.meta
-            } else if (feature.type == 'filtered'){
-                filt_feat(siamcat) <- new('filt_feat',
-                    filt.feat=features.with.meta,
-                    filt.param=filt_params(siamcat))
-            } else if (feature.type == 'normalized'){
-                norm_feat(siamcat) <- new("norm_feat",
-                    norm.feat=features.with.meta,
-                    norm.param=norm_params(siamcat))
-            }
+            feat <- rbind(feat, m)
+            rownames(feat)[nrow(feat)] <- paste0('META_', toupper(p))
             cnt <- cnt + 1
         }
+
+        if (feature.type == 'original'){
+            orig_feat(siamcat) <- otu_table(feat, taxa_are_rows=TRUE)
+        } else if (feature.type == 'filtered'){
+            filt_feat(siamcat) <- list(
+                filt.feat=feat,
+                filt.param=filt_params(siamcat))
+        } else if (feature.type == 'normalized'){
+            norm_feat(siamcat) <- list(
+                norm.feat=feat,
+                norm.param=norm_params(siamcat))
+        }
+
         if (verbose > 1)
-        message(paste("+++ added", cnt, "meta-variables as predictor to the
-            feature matrix"))
+        message(paste("+++ added", cnt,
+            "meta-variables as predictor to the feature matrix"))
         } else {
             if (verbose > 0)
-            message("+++ Not adding any of the meta-variables as predictor to
-                the feature matrix")
+            message("+++ Not adding any of the meta-variables as predictor",
+                " to the feature matrix")
         }
         e.time <- proc.time()[3]
         if (verbose > 1)

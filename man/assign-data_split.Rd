@@ -4,23 +4,25 @@
 \name{data_split<-}
 \alias{data_split<-}
 \alias{assign-data_split}
-\alias{data_split<-,siamcat,data_split-method}
-\title{Assign a new data_split object to \code{x}}
+\alias{data_split<-,siamcat,list-method}
+\title{Assign a new list containing a cross-validation split to a
+SIAMCAT object}
 \usage{
 data_split(x) <- value
 
-\S4method{data_split}{siamcat,data_split}(x) <- value
+\S4method{data_split}{siamcat,list}(x) <- value
 }
 \arguments{
 \item{x}{an object of class \link{siamcat-class}}
 
-\item{value}{an object of class \link{data_split-class}}
+\item{value}{list containing a cross-validation split}
 }
 \value{
 none
 }
 \description{
-Assign a new data_split object to \code{x}
+Assign a new list containing a cross-validation split to a
+SIAMCAT object
 }
 \examples{
 data(siamcat_example)

@@ -18,14 +18,14 @@ model.interpretation.plot(siamcat, fn.plot = NULL,
 
 \item{color.scheme}{color scheme for the heatmap, defaults to \code{'BrBG'}}
 
-\item{consens.thres}{minimal ratio of models incorporating a feature in order
-to include it into the heatmap, defaults to \code{0.5}
+\item{consens.thres}{float, minimal ratio of models incorporating a feature
+in order to include it into the heatmap, defaults to \code{0.5}
 Note that for \code{'randomForest'} models, this cutoff specifies the
 minimum median Gini coefficient for a feature to be included and
 should therefore be much lower, e.g. \code{0.01}}
 
-\item{heatmap.type}{type of the heatmap, can be either \code{'fc'} or
-\code{'zscore'}, defaults to \code{'zscore'}}
+\item{heatmap.type}{string, type of the heatmap, can be either \code{'fc'}
+or \code{'zscore'}, defaults to \code{'zscore'}}
 
 \item{limits}{vector, cutoff for extreme values in the heatmap,
 defaults to \code{c(-3, 3)}}
@@ -36,7 +36,7 @@ of features, defaults to \code{1e-06}}
 \item{max.show}{integer, maximum number of features to be shown in the model
 interpretation plot, defaults to 50}
 
-\item{prompt}{boolean to turn on/off prompting user input when not plotting
+\item{prompt}{boolean, turn on/off prompting user input when not plotting
 into a pdf-file, defaults to TRUE}
 
 \item{verbose}{control output: \code{0} for no output at all, \code{1}
@@ -48,9 +48,13 @@ defaults to \code{1}}
 Does not return anything, but produces the model interpretion plot.
 }
 \description{
-Produces a plot for model interpretation, displaying feature
-    weights, robustness of feature weights, and features scores across
-    patients.
+This function produces a plot for model interpretation,
+displaying \itemize{
+\item the feature weights,
+\item the robustness of feature weights
+\item the features scores across samples,
+\item the distribution of metadata across samples, and
+\item the proportion of model weights shown.}
 }
 \details{
 Produces a plot consisting of \itemize{
@@ -65,12 +69,11 @@ Produces a plot consisting of \itemize{
 }
 }
 \examples{
+data(siamcat_example)
 
-    data(siamcat_example)
-    # simple working example
-    model.interpretation.plot(siamcat_example, fn.plot='./interpretion.pdf',
+# simple working example
+model.interpretation.plot(siamcat_example, fn.plot='./interpretion.pdf',
     heatmap.type='zscore')
-
 }
 \keyword{SIAMCAT}
 \keyword{model.interpretation.plot}

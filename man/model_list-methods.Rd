@@ -3,39 +3,41 @@
 \docType{methods}
 \name{model_list}
 \alias{model_list}
-\alias{model_list,ANY-method}
-\alias{model_list,model_list-method}
-\alias{models,model_list-method}
-\alias{model_type,model_list-method}
-\alias{feature_type,model_list-method}
-\title{Retrieve \link{model_list-class} from object.}
+\alias{model_list,siamcat-method}
+\title{Retrieve the information stored in the \code{model_list} slot within
+a SIAMCAT object}
 \usage{
 model_list(siamcat, verbose=1)
 
-\S4method{model_list}{ANY}(siamcat, verbose = 1)
-
-\S4method{model_list}{model_list}(siamcat)
-
-\S4method{models}{model_list}(siamcat, verbose = 1)
-
-\S4method{model_type}{model_list}(siamcat, verbose = 1)
-
-\S4method{feature_type}{model_list}(siamcat, verbose = 1)
+\S4method{model_list}{siamcat}(siamcat, verbose = 1)
 }
 \arguments{
 \item{siamcat}{(Required). An instance of \link{siamcat-class}
-that contains a model_list or instance of \link{model_list-class}.}
+that contains trained models}
 
-\item{verbose}{If the slot is empty, should a message be printed? values
-can be either 0 (no output) or 1 (print message)}
+\item{verbose}{integer, if the slot is empty, should a message be printed?
+values can be either \code{0} (no output) or \code{1} (print message)}
 }
 \value{
-The \link{model_list-class} object or NULL.
+The list stored in the \code{model_list} slot of the SIAMCAT object
+or \code{NULL}
 }
 \description{
-Retrieve \link{model_list-class} from object.
+Function to retrieve the information stored in the
+\code{model_list} slot within a SIAMCAT object
+}
+\details{
+The function will return a list containing the information stored
+in the \code{model_list} slot of a SIAMCAT object. This list contains:
+\itemize{
+\item \code{models} - list of trained models
+\item \code{model_type} - machine learning method used for training
+\item \code{feature_type} - string describing on which type of features the
+models were trained
+}
 }
 \examples{
-    data(siamcat_example)
-    model_list(siamcat_example)
+data(siamcat_example)
+temp <- model_list(siamcat_example)
+names(temp)
 }

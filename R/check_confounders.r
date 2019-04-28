@@ -4,33 +4,37 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Check for potential confounders in the metadata
-#' @description This function checks for associations between class labels and
-#'     potential confounders (e.g. age, sex, or BMI) that are present in the
-#'     metadata. Statistical testing is performed with Fisher's exact test or
-#'     Wilcoxon test, while associations are visualized either as barplot or
-#'     Q-Q plot, depending on the type of metadata. The conditional entropy
-#'     evaluates associations among metadata variables and generalized linear
-#'     models evaluate associations with the label, producing a correlation
-#'     heatmap and appropriate quantitative barplots, respectively.
+#' @description Checks potential confounders in the metadata and produces
+#'     some visualizations
 #' @usage check.confounders(siamcat, fn.plot, meta.in = NULL, verbose = 1)
 #' @param siamcat an object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param meta.in vector, specific metadata variable names to analyze,
-#'     defaults to NULL
-#' @param verbose control output: \code{0} for no output at all, \code{1} for
-#'     only information about progress and success, \code{2} for normal level
-#'     of information and \code{3} for full debug information, defaults to
-#'     \code{1}
+#'     defaults to NULL (all metadata variables will be analyzed)
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
 #' @keywords SIAMCAT check.confounders
+#' @details This function checks for associations between class labels and
+#'     potential confounders (e.g. Age, Sex, or BMI) that are present in the
+#'     metadata. Statistical testing is performed with Fisher's exact test or
+#'     Wilcoxon test, while associations are visualized either as barplot or
+#'     Q-Q plot, depending on the type of metadata.
+#'
+#'     Additionally, it evaluates associations among metadata variables using
+#'     conditional entropy and associations with the label using generalized
+#'     linear models, producing a correlation heatmap and appropriate
+#'     quantitative barplots, respectively.
 #' @export
 #' @return Does not return anything, but outputs plots to specified pdf file
 #' @examples
-#'     # Example data
-#'     data(siamcat_example)
+#' # Example data
+#' data(siamcat_example)
 #'
-#'     # Simple working example
-#'     check.confounders(siamcat_example, './conf_plot.pdf')
-#'
+#' # Simple working example
+#' check.confounders(siamcat_example, './conf_plot.pdf')
+
 check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
 
     pdf(fn.plot, paper = 'special', height = 8.27, width = 11.69)
@@ -68,6 +72,18 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
                 "have been removed from this analysis")
     }
     meta <- meta[,names(which(indep != 0))]
+    # remove metavariables with less than 2 levels
+    n.levels <- vapply(meta,
+        FUN = function(x){length(unique(x))},
+        FUN.VALUE = integer(1))
+    if (any(n.levels < 2)){
+        s.name <- names(which(n.levels < 2))
+        if (verbose >= 1){
+            message("++ remove metadata variables, since all ",
+                "subjects have the same value\n\t", s.name)
+        }
+        meta <- meta[,which(n.levels > 1)]
+    }
 
     # FIRST PLOT - conditional entropies for metadata variables
     if (verbose > 1)
@@ -90,8 +106,9 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
         message("+++ plotting au-roc values")
     confounders.glm.auroc.plot(glm.data)
 
-    # SECOND PLOT(S) - original confounder check descriptive stat plots
-    confounders.descriptive.plots(meta(siamcat), label, verbose)
+    # THIRD PLOT(S) - original confounder check descriptive stat plots
+    confounders.descriptive.plots(meta(siamcat)[,colnames(meta)],
+        label, verbose)
     dev.off()
 
     e.time <- proc.time()[3]
@@ -100,8 +117,8 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
                         formatC(e.time - s.time, digits = 3), "s"))
     }
     if (verbose == 1) {
-        message(paste("Finished checking metadata for confounders, results
-                        plotted to:", fn.plot))
+        message(paste("Finished checking metadata for confounders,",
+            "results plotted to:", fn.plot))
     }
 }
 
@@ -212,7 +229,7 @@ confounders.glm.reg.coef.plot <- function(glm.data) {
 
     par(mar = c(5.1, 10.1, 4.1, 1.1))
     plot(NULL, xlab = '', ylab = '', xaxs = 'i', yaxs = 'i', axes = FALSE,
-            xlim = c(margins[1], margins[2]), 
+            xlim = c(margins[1], margins[2]),
             ylim = c(0.5, length(order) + 0.5),
             type = 'n')
     abline(v = x.ticks, lty = 3, col = 'lightgrey')
@@ -246,7 +263,7 @@ confounders.glm.reg.pval.plot <- function(glm.data) {
     par(mar = c(5.1, 2.1, 4.1, 1.1))
     plot(NULL, xlab = '', ylab = '', xaxs = 'i', yaxs = 'i', axes = FALSE,
         xlim = c(0,x.max), ylim = c(0.5, length(order) + 0.5),
-        stype = 'n')
+        type = 'n')
     abline(v = x.ticks, lty = 3, col = 'lightgrey')
     axis(side = 1, at = x.ticks, labels = x.tick.labels, cex.axis = 0.9)
     title(main = 'Coefficient Significance',
@@ -295,13 +312,13 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
 
     for (m in seq_along(meta)) {
         mname <- gsub("[_.-]", " ", colnames(meta)[m])
-        mname <-
-              paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
-                  sep = "")
+        mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
+            sep = "")
         if (verbose > 1)
             message(paste("+++ checking",mname,"as a potential confounder"))
-
-        mvar <- as.numeric(meta[[m]])
+        mvar <- meta[[m]]
+        if (is.character(mvar)) mvar <- as.factor(mvar)
+        mvar <- as.numeric(mvar)
         names(mvar) <- rownames(meta)
         u.val <- unique(mvar)[!is.na(unique(mvar))]
         colors <- brewer.pal(6, "Spectral")
@@ -309,8 +326,8 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
 
         if (length(u.val) == 1) {
             if (verbose > 1) {
-                message("+++ skipped because all subjects have the same
-                        value")}}
+                message("+++ skipped because all subjects have the",
+                    "same value")}}
         else if (length(u.val) <= 6) {
             if (verbose > 1) message("++++ discrete variable, using a bar plot")
 
@@ -452,7 +469,7 @@ factorize.bmi <- function(bmi) {
     # ranges taken from CDC
     # https://www.cdc.gov/healthyweight/assessing/bmi/adult_bmi/index.html
 
-    if (class(bmi) != 'matrix') bmi <- as.matrix(bmi)
+    if (!is.matrix(bmi)) bmi <- as.matrix(bmi)
     temp <- vapply(bmi, FUN=function(x) {
         if (is.na(x)) {return(as.character(NA))}
         else if (x < 18.5) {return("Underweight")}

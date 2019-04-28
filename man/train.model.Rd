@@ -10,7 +10,7 @@ train.model(siamcat,
     stratify = TRUE, modsel.crit = list("auc"),
     min.nonzero.coeff = 1, param.set = NULL,
     perform.fs = FALSE,
-    param.fs = list(thres.fs = 100, method.fs = "AUC"),
+    param.fs = list(thres.fs = 100, method.fs = "AUC", direction='absolute'),
     feature.type='normalized',
     verbose = 1)
 }
@@ -30,33 +30,40 @@ internal cross-validation, may contain these: \code{c('auc', 'f1',
 
 \item{min.nonzero.coeff}{integer number of minimum nonzero coefficients that
 should be present in the model (only for \code{'lasso'},
-\code{'ridge'}, and \code{'enet'}, defaults to \code{1}}
+\code{'ridge'}, and \code{'enet'}), defaults to \code{1}}
 
-\item{param.set}{a list of extra parameters for mlr run, may contain:
+\item{param.set}{list, set of extra parameters for mlr run, may contain:
 \itemize{
 \item \code{cost} - for lasso_ll and ridge_ll
-\item \code{alpha} for enet
-\item \code{ntree} and \code{mtry} for RandomForrest.
+\item \code{alpha} - for enet
+\item \code{ntree} and \code{mtry} - for RandomForrest.
 } Defaults to \code{NULL}}
 
 \item{perform.fs}{boolean, should feature selection be performed?
 Defaults to \code{FALSE}}
 
-\item{param.fs}{a list of parameters for the feature selection, must contain:
+\item{param.fs}{list, parameters for the feature selection, must contain:
 \itemize{
 \item \code{thres.fs} - threshold for the feature selection,
 \item \code{method.fs} - method for the feature selection, may be
-\code{AUC}, \code{FC}, or \code{Wilcoxon}
+\code{AUC}, \code{gFC}, or \code{Wilcoxon}
+\item \code{direction} - for \code{AUC} and \code{gFC}, select either
+the top associated features (independent of the sign of enrichment),
+the top positively associated featured, or the top negatively
+associated features, may be \code{absolute}, \code{positive}, or
+\code{negative}. Will be ignored for \code{Wilcoxon}.
 } See Details for more information.
-Defaults to \code{list(thres.fs=100, method.fs="AUC")}}
+Defaults to \code{list(thres.fs=100, method.fs="AUC",
+direction='absolute')}}
 
-\item{feature.type}{On which type of features should the function work? Can
-be either "original", "filtered", or "normalized". Please only change this
-paramter if you know what you are doing!}
+\item{feature.type}{string, on which type of features should the function
+work? Can be either \code{"original"}, \code{"filtered"}, or
+\code{"normalized"}. Please only change this paramter if you know what
+you are doing!}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1}
-for only information about progress and success, \code{2} for normal
-level of information and \code{3} for full debug information,
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
 defaults to \code{1}}
 }
 \value{
@@ -80,34 +87,44 @@ This functions performs the training of the machine learning model
     are tuned with the function \link[mlr]{tuneParams} within the
     \code{mlr}-package.
 
-    The methods \code{'lasso'}, \code{'enet'}, and \code{'ridge'} are
-    implemented as mlr-taks using the \code{'classif.cvglmnet'} Learner,
-    \code{'lasso_ll'} and \code{'ridge_ll'} use the
+    The different machine learning methods are implemented as mlr-tasks:
+    \itemize{
+    \item \code{'lasso'}, \code{'enet'}, and \code{'ridge'} use the
+    \code{'classif.cvglmnet'} Learner,
+    \item \code{'lasso_ll'} and \code{'ridge_ll'} use the
     \code{'classif.LiblineaRL1LogReg'} and the
-    \code{'classif.LiblineaRL2LogReg'} Learners respectively. The
-    \code{'randomForest'} method is implemented via the
+    \code{'classif.LiblineaRL2LogReg'} Learners respectively
+    \item \code{'randomForest'} is implemented via the
     \code{'classif.randomForest'} Learner.
+    }
 
     The function can also perform feature selection on each individual fold.
     At the moment, three methods for feature selection are implemented:
     \itemize{
-    \item \code{'AUC'} computes the Area Under the Receiver Operating
+    \item \code{'AUC'} - computes the Area Under the Receiver Operating
         Characteristics Curve for each single feature and selects the top
         \code{param.fs$thres.fs}, e.g. 100 features
-    \item \code{'FC'} computes the generalized Fold Change (see
+    \item \code{'gFC'} - computes the generalized Fold Change (see
         \link{check.associations}) for each feature and likewise selects the
         top \code{param.fs$thres.fs}, e.g. 100 features
-    \item \code{Wilcoxon} computes the p-Value for each single feature with
-        the Wilcoxon test and selects features with a p-Value smaller than
-        \code{param.fs$thres.fs}
+    \item \code{Wilcoxon} - computes the p-Value for each single feature
+        with the Wilcoxon test and selects features with a p-value smaller
+        than \code{param.fs$thres.fs}
     }
+    For \code{AUC} and \code{gFC}, feature selection can also be directed,
+    that means that the features will be selected either based on the
+    overall association (\code{absolute} - \code{gFC} will be converted to
+    absolute values and \code{AUC} values below \code{0.5} will be
+    converted by \code{1 - AUC}), or on associations in a certain direction
+    (\code{positive} - positive enrichment as measured by positive values
+    of the \code{gFC} or \code{AUC} values higher than  \code{0.5} - and
+    reversely for \code{negative}).
 }
 \examples{
+data(siamcat_example)
 
-    data(siamcat_example)
-    # simple working example
-    siamcat_validated <- train.model(siamcat_example, method='lasso')
-
+# simple working example
+siamcat_example <- train.model(siamcat_example, method='lasso')
 }
 \keyword{SIAMCAT}
 \keyword{plm.trainer}

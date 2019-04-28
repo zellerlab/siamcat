@@ -27,6 +27,6 @@ The \link[phyloseq]{phyloseq-class} object or NULL.
 Retrieve a \link[phyloseq]{phyloseq-class} object from object.
 }
 \examples{
-    data(siamcat_example)
-    physeq(siamcat_example)
+data(siamcat_example)
+physeq(siamcat_example)
 }

@@ -21,10 +21,9 @@
 #'     with a frozen normalization (see \link{normalize.features}) using the
 #'     normalization parameters in \code{siamcat}?, defaults to \code{TRUE}
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'
-#'     for only information about progress and success, \code{2} for normal
-#'     level of information and \code{3} for full debug information,
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
 #'
 #' @export
@@ -32,7 +31,7 @@
 #' @keywords SIAMCAT make.predictions
 #'
 #' @return object of class \link{siamcat-class} with the slot \code{pred_matrix}
-#'     filled or a matrix containing the predictions for the holdout set
+#'     filled
 #'
 #' @details This functions uses the model in the \code{model_list}-slot of the
 #'     \code{siamcat} object to make predictions on a given test set. The
@@ -42,14 +41,14 @@
 #'     the form of another \code{siamcat} object (\code{siamcat.holdout}).
 #'
 #' @examples
-#'     data(siamcat_example)
-#'     # Simple example
-#'     siamcat.pred <- make.predictions(siamcat_example)
+#' data(siamcat_example)
 #'
-#'     # Predictions on a holdout-set
-#'     \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
+#' # Simple example
+#' siamcat.pred <- make.predictions(siamcat_example)
+#'
+#' # Predictions on a holdout-set
+#' \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
 #'     normalize.holdout=TRUE)}
-#'
 make.predictions <- function(siamcat,
     siamcat.holdout = NULL,
     normalize.holdout = TRUE,
@@ -101,8 +100,7 @@ make.predictions <- function(siamcat,
                     seq_len(num.resample))))
         i = 1
         if (verbose == 1 || verbose == 2)
-            pb <-
-            txtProgressBar(max = num.folds * num.resample, style = 3)
+            pb <- progress_bar$new(total = num.folds * num.resample)
         for (f in seq_len(num.folds)) {
             for (r in seq_len(num.resample)) {
                 test.label <- label.fac[data.split$test.folds[[r]][[f]]]
@@ -138,11 +136,10 @@ make.predictions <- function(siamcat,
                 pred[names(p), r] <- p
                 i <- i + 1
                 if (verbose == 1 || verbose == 2)
-                    setTxtProgressBar(pb, i)
+                    pb$tick()
             }
         }
         stopifnot(!any(is.na(pred)))
-        pred <- pred_matrix(pred)
         pred_matrix(siamcat) <- pred
         r.object <- siamcat
     } else {
@@ -210,9 +207,8 @@ make.predictions <- function(siamcat,
                 dimnames = list(rownames(feat.test), paste0("Model_",
                     seq_len(num.models))))
         if (verbose == 1 || verbose == 2)
-            pb <-
-            txtProgressBar(max = data.split$num.folds*data.split$num.resample,
-            style = 3)
+            pb <- progress_bar$new(
+                total = data.split$num.folds*data.split$num.resample)
         for (i in seq_len(num.models)) {
             data <- as.data.frame(feat.test)
             model <- models[[i]]
@@ -233,9 +229,8 @@ make.predictions <- function(siamcat,
             pred[names(p), i] <- p
 
             if (verbose == 1 || verbose == 2)
-                setTxtProgressBar(pb, i)
+                pb$tick()
         }
-        pred <- pred_matrix(pred)
         pred_matrix(siamcat.holdout) <- pred
         r.object <- siamcat.holdout
     }
@@ -247,19 +242,19 @@ make.predictions <- function(siamcat,
     if (verbose > 1)
         message("Correlation between predictions from repeated CV:")
     if (verbose > 1)
-        message(paste("Min: ", min(correlation), ", Median: ",
-            median(correlation), ", Mean: ", mean(correlation)))
+        message(paste("\tMin: ", min(correlation), "\n\tMedian: ",
+            median(correlation), "\n\tMean: ", mean(correlation)))
 
     # print out time
     e.time <- proc.time()[3]
     if (verbose > 1)
         message(paste(
-            "\n+ finished make.predictions in",
+            "+ finished make.predictions in",
             formatC(e.time - s.time, digits = 3),
             "s"
         ))
     if (verbose == 1)
-        message("\nMade predictions successfully.")
+        message("Made predictions successfully.")
 
     return(r.object)
 }

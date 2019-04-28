@@ -3,29 +3,53 @@
 \docType{class}
 \name{siamcat-class}
 \alias{siamcat-class}
-\title{The S4 class for storing taxa-abundance information and models.}
+\title{The S4 SIAMCAT class}
 \description{
-The S4 class for storing taxa-abundance information and models.
+The SIAMCAT class
+}
+\details{
+The S4 SIAMCAT class stores the results from the SIAMCAT
+workflow in different slots. The different slots will be filled by
+different functions (referenced in the description below).
+
+In order to contruct a SIAMCAT class object, please refer to the
+documentation of the construction function \link{siamcat}.
+
+The SIAMCAT class is based on the \link[phyloseq]{phyloseq-class}. Therefore,
+you can easily import a \code{phyloseq} object into SIAMCAT.
 }
 \section{Slots}{
 
 \describe{
 \item{\code{phyloseq}}{object of class \link[phyloseq]{phyloseq-class}}
 
-\item{\code{label}}{an object of class \link{label-class}}
+\item{\code{label}}{list containing the label information for the samples and
+some metadata about the label, created by \link{create.label} or when
+creating the \link{siamcat-class} object by calling \link{siamcat}}
 
-\item{\code{filt_feat}}{an object of class \link{filt_feat-class}}
+\item{\code{filt_feat}}{list containing the filtered features as matrix and
+the list of filtering parameters, created by calling the
+\link{filter.features} function}
 
-\item{\code{associations}}{an object of class \link{associations-class}}
+\item{\code{associations}}{list containing the parameters for association
+testing and the results of association testing with these parameters in
+a dataframe, created by calling the \link{check.associations} function}
 
-\item{\code{norm_feat}}{an object of class \link{norm_feat-class}}
+\item{\code{norm_feat}}{list containing the normalized features as matrix and
+the list of normalziation parameters (for frozen normalization), created by
+calling the \link{normalize.features} function}
 
-\item{\code{data_split}}{an object of class \link{data_split-class}}
+\item{\code{data_split}}{list containing cross-validation instances, created by
+calling the \link{create.data.split} function}
 
-\item{\code{model_list}}{an object of class \link{model_list-class}}
+\item{\code{model_list}}{list containing the trained models, the type of model
+that was trained, and on which kind of features it was trained, created by
+calling the \link{train.model} function}
 
-\item{\code{eval_data}}{an object of class \link{eval_data-class}}
+\item{\code{pred_matrix}}{matrix of predictions, created by calling the
+\link{make.predictions} function}
 
-\item{\code{pred_matrix}}{an object of class \link{pred_matrix-class}}
+\item{\code{eval_data}}{list containing different evaluation metrics, created by
+calling the \link{evaluate.predictions} function}
 }}
 

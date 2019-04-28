@@ -10,20 +10,22 @@ create.data.split(siamcat, num.folds = 2, num.resample = 1,
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
-\item{num.folds}{number of cross-validation folds (needs to be \code{>=2}),
-defaults to \code{2}}
+\item{num.folds}{integer number of cross-validation folds (needs to be
+\code{>=2}), defaults to \code{2}}
 
-\item{num.resample}{resampling rounds (values \code{<= 1} deactivate
-resampling), defaults to \code{1}}
+\item{num.resample}{integer, resampling rounds (values \code{<= 1}
+deactivate resampling), defaults to \code{1}}
 
 \item{stratify}{boolean, should the splits be stratified so that an equal
 proportion of classes are present in each fold?, defaults to \code{TRUE}}
 
-\item{inseparable}{column name of metadata variable, defaults to \code{NULL}}
+\item{inseparable}{string, name of metadata variable to be inseparable,
+defaults to \code{NULL}, see Details below}
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1} for
-only information about progress and success, \code{2} for normal level of
-information and \code{3} for full debug information, defaults to \code{1}}
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
 object of class \link{siamcat-class} with the \code{data_split}-slot
@@ -43,24 +45,36 @@ This function splits the labels within a \link{siamcat-class} object
     cross-validation folds within a list in the \code{data_split}-slot of the
     \link{siamcat-class} object, which is a list with four entries:
     \itemize{
-    \item \code{num.folds} the number of cross-validation folds
-    \item \code{num.resample} the number of repetitions for the
+    \item \code{num.folds} - the number of cross-validation folds
+    \item \code{num.resample} - the number of repetitions for the
     cross-validation
-    \item \code{training.folds} a list containing the indices for the
+    \item \code{training.folds} - a list containing the indices for the
     training instances
-    \item \code{test.folds} a list containing the indices for the
+    \item \code{test.folds} - a list containing the indices for the
     test instances }
+
+    If provided, the data split will take into account a metadata variable
+    for the data split (by providing the \code{inseparable} argument). For
+    example, if the data contains several samples for the same individual,
+    it would make sense to keep data from the same individual within the
+    same fold.
+    If \code{inseparable} is given, the \code{stratify} argument will be
+    ignored.
 }
 \examples{
+data(siamcat_example)
 
-    data(siamcat_example)
-    # simple working example
-    siamcat_split <- create.data.split(siamcat_example, num.folds=10,
-    num.resample=5, stratify=TRUE)
+# simple working example
+siamcat_split <- create.data.split(siamcat_example,
+    num.folds=10,
+    num.resample=5,
+    stratify=TRUE)
 
-    ## # example with a variable which is to be inseparable
-    ## siamcat_split <- create.data.split(siamcat_example, num.folds=10,
-    ##  num.resample=5, stratify=FALSE, inseparable='Gender')
+# Inseparable data split
+\dontrun{siamcat_split <- create.data.split(siamcat,
+    num.folds=10,
+    num.resample=5,
+    inseparable='Individual_ID')}
 }
 \keyword{SIAMCAT}
 \keyword{create.data.split}

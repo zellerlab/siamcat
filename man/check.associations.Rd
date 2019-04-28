@@ -14,14 +14,15 @@ check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
 
-\item{fn.plot}{filename for the pdf-plot}
+\item{fn.plot}{string, filename for the pdf-plot. If \code{fn.plot} is
+\code{NULL}, the plot will be produced in the active graphics device.}
 
 \item{color.scheme}{valid R color scheme or vector of valid R colors (must be
 of the same length as the number of classes), defaults to \code{'RdYlBu'}}
 
 \item{alpha}{float, significance level, defaults to \code{0.05}}
 
-\item{mult.corr}{multiple hypothesis correction method, see
+\item{mult.corr}{string, multiple hypothesis correction method, see
 \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}}
 
 \item{sort.by}{string, sort features by p-value (\code{"p.val"}), by fold
@@ -29,7 +30,8 @@ change (\code{"fc"}) or by prevalence shift (\code{"pr.shift"}),
 defaults to \code{"fc"}}
 
 \item{detect.lim}{float, pseudocount to be added before log-transformation of
-the data, defaults to \code{1e-06}}
+the data, defaults to \code{1e-06}. Will be ignored if
+\code{feature.type} is \code{"normalized"}.}
 
 \item{pr.cutoff}{float, cutoff for the prevalence computation, defaults to
 \code{1e-06}}
@@ -41,61 +43,75 @@ defaults to \code{50}}
 one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")},
 defaults to \code{"quantile.box"}}
 
-\item{panels}{vector, name of the panels to be plotted next to the log10-
-transformed abundances, possible entries are \code{c("fc", "auroc",
+\item{panels}{vector, name of the panels to be plotted next to the
+abundances, possible entries are \code{c("fc", "auroc",
 "prevalence")}, defaults to \code{c("fc", "auroc")}}
 
-\item{prompt}{boolean to turn on/off prompting user input when not plotting
+\item{prompt}{boolean, turn on/off prompting user input when not plotting
 into a pdf-file, defaults to TRUE}
 
-\item{feature.type}{On which type of features should the function work? Can
-be either "original", "filtered", or "normalized". Please only change this
-paramter if you know what you are doing!}
+\item{feature.type}{string, on which type of features should the function
+work? Can be either \code{c()"original", "filtered", or "normalized")}.
+Please only change this paramter if you know what you are doing!
 
-\item{verbose}{control output: \code{0} for no output at all, \code{1} for
-only information about progress and success, \code{2} for normal level of
-information and \code{3} for full debug information, defaults to \code{1}}
+If \code{feature.type} is \code{"normalized"}, the normalized abundances
+will not be log10-transformed.}
+
+\item{verbose}{integer, control output: \code{0} for no output at all,
+\code{1} for only information about progress and success, \code{2} for
+normal level of information and \code{3} for full debug information,
+defaults to \code{1}}
 }
 \value{
-Does not return anything, but produces an association plot
+object of class \link{siamcat-class} with the slot
+    \code{associations} filled
 }
 \description{
-This function calculates for each feature a pseudo-fold change
-    (geometrical mean of the difference between quantiles) between the
-    different classes found in labels.
-
-    Significance of the differences is computed for each feature using a
-    Wilcoxon test followed by multiple hypothesis testing correction.
-
-    Additionally, the Area Under the Receiver Operating Characteristic Curve
-    (AU-ROC) and a prevalence shift are computed for the features found to be
-    associated with the two different classes at a user-specified
-    significance level \code{alpha}.
+This function computes different measures of association between
+    features and the label and visualizes the results
+}
+\details{
+For each feature, this function calculates different measures of
+    association between the feature and the label. In detail, these
+    associations are: \itemize{
+    \item Significance as computed by a Wilcoxon test followed by multiple
+    hypothesis testing correction.
+    \item AUROC (Area Under the Receiver Operating Characteristics Curve)
+    as a non-parameteric measure of enrichment (corresponds to the effect
+    size of the Wilcoxon test).
+    \item The generalized Fold Change (gFC) is a pseudo fold change
+    which is calculated as geometric mean of the differences between the
+    quantiles for the different classes found in the label.
+    \item The prevalence shift between the two different classes found in
+    the label.
+    }
 
     Finally, the function produces a plot of the top \code{max.show}
-    associated features, showing the distribution of the log10-transformed
-    abundances for both classes, and user-selected panels for the effect
-    (AU-ROC, Prevalence Shift, and Fold Change)
+    associated features at a user-specified significance level \code{alpha},
+    showing the distribution of the log10-transformed abundances for both
+    classes, and user-selected panels for the effect (AU-ROC, Prevalence
+    Shift, and Fold Change).
 }
 \examples{
 # Example data
-    data(siamcat_example)
+data(siamcat_example)
 
 # Simple example
-    check.associations(siamcat_example, './assoc_plot.pdf')
+siamcat_example <- check.associations(siamcat_example,
+    fn.plot='./assoc_plot.pdf')
 
-# Plot associations as bean plot
-    check.associations(siamcat_example, './assoc_plot_bean.pdf',
-    plot.type='bean')
+# Plot associations as box plot
+siamcat_example <- check.associations(siamcat_example,
+    fn.plot='./assoc_plot_box.pdf', plot.type='box')
 
-# Plot assocations as box plot
 # Additionally, sort by p-value instead of by fold change
-    check.associations(siamcat_example, './assoc_plot_fc.pdf',
-    plot.type='box', sort.by='p.val')
+siamcat_example <- check.associations(siamcat_example,
+    fn.plot='./assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
 
 # Custom colors
-    check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
-    plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
+siamcat_example <- check.associations(siamcat_example,
+    fn.plot='./assoc_plot_blue_yellow.pdf', plot.type='box',
+    color.scheme=c('cornflowerblue', '#ffc125'))
 }
 \keyword{SIAMCAT}
 \keyword{check.associations}

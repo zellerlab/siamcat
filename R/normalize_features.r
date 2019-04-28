@@ -24,26 +24,27 @@
 #' @param norm.param list, specifying the parameters of the different
 #'     normalization methods, see details for more information
 #'
-#' @param feature.type On which type of features should the function work? Can
-#'   be either "original", "filtered", or "normalized". Please only change this
-#'   paramter if you know what you are doing!
+#' @param feature.type string, on which type of features should the function
+#'   work? Can be either \code{"original"}, \code{"filtered"}, or
+#'   \code{"normalized"}. Please only change this paramter if you know what
+#'   you are doing!
 #'
-#' @param verbose control output: \code{0} for no output at all, \code{1}
-#'     for only information about progress and success, \code{2} for normal
-#'     level of information and \code{3} for full debug information,
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
 #'
 #' @details There are five different normalization methods available:
 #' \itemize{
-#'     \item \code{'rank.unit'} converts features to ranks and normalizes each
-#'     column (=sample) by the square root of the sum of ranks
-#'     \item \code{'rank.std'} converts features to ranks and applies z-score
+#'     \item \code{'rank.unit'} - converts features to ranks and normalizes
+#'     each column (=sample) by the square root of the sum of ranks
+#'     \item \code{'rank.std'} - converts features to ranks and applies z-score
 #'     standardization
-#'     \item \code{'log.clr'} centered log-ratio transformation (with the
+#'     \item \code{'log.clr'} - centered log-ratio transformation (with the
 #'     addition of pseudocounts)
-#'     \item \code{'log.std'} log-transforms features (after addition of
+#'     \item \code{'log.std'} - log-transforms features (after addition of
 #'     pseudocounts) and applies z-score standardization
-#'     \item \code{'log.unit'} log-transforms features (after addition of
+#'     \item \code{'log.unit'} - log-transforms features (after addition of
 #'     pseudocounts) and normalizes by features or samples with different
 #'     norms}
 #'
@@ -71,11 +72,14 @@
 #'}
 #'
 #' The function additionally allows to perform a frozen normalization on a
-#' different dataset. After normalizing the first dataset, the output list
-#' \code{$par} contains all parameters of the normalization. Supplying this list
-#' together with a new dataset will normalize the second dataset in a comparable
-#' way to the first dataset (e.g. by using the same mean for the features for
-#' z-score standardization)
+#' different dataset. After normalizing the first dataset, the \code{norm_feat}
+#' slot in the siamcat object contains all parameters of the normalization,
+#' which you can access via the \link{norm_params} accessor.
+#'
+#' In order to perform a frozen normalization of a new dataset, you can run the
+#' function supplying the normalization parameters as argument to
+#' \code{norm.param}:
+#' \code{norm.param=norm_params(siamcat_reference)}. See also the example below.
 #'
 #' @keywords SIAMCAT normalize.features
 #'
@@ -84,22 +88,26 @@
 #' @return an object of class \link{siamcat-class} with normalized features
 #'
 #' @examples
-#'     # Example data
-#'     data(siamcat_example)
+#' # Example data
+#' data(siamcat_example)
 #'
-#'     # Simple example
-#'     siamcat_norm <- normalize.features(siamcat_example,
+#' # Simple example
+#' siamcat_norm <- normalize.features(siamcat_example,
 #'     norm.method='rank.unit')
 #'
-#'     # log.unit example
-#'     siamcat_norm <- normalize.features(siamcat_example,
-#'     norm.method='log.unit', norm.param=list(log.n0=1e-05, n.p=1,
-#'     norm.margin=1))
+#' # log.unit example
+#' siamcat_norm <- normalize.features(siamcat_example,
+#'     norm.method='log.unit',
+#'     norm.param=list(log.n0=1e-05, n.p=1, norm.margin=1))
 #'
-#'     # log.std example
-#'     siamcat_norm <- normalize.features(siamcat_example,
-#'     norm.method='log.std', norm.param=list(log.n0=1e-05, sd.min.q=.1))
+#' # log.std example
+#' siamcat_norm <- normalize.features(siamcat_example,
+#'     norm.method='log.std',
+#'     norm.param=list(log.n0=1e-05, sd.min.q=.1))
 #'
+#' # Frozen normalization
+#' \dontrun{siamcat_norm <- normalize.features(siamcat,
+#'     norm.param=norm_params(siamcat_reference))}
 
 normalize.features <- function(siamcat,
     norm.method = c("rank.unit", "rank.std",
@@ -183,8 +191,7 @@ normalize.features <- function(siamcat,
         par$norm.method <- norm.method
         par$retained.feat <- rownames(feat.red)
         if (verbose > 2)
-            message("+++ checking is parameters are compatible with
-                each other")
+            message("+++ checking if parameters are compatible with each other")
         # check if the right set of normalization parameters have been
         # supplied for the chosen norm.method
         if (norm.method == "rank.std" &&
@@ -246,9 +253,8 @@ normalize.features <- function(siamcat,
             feat.norm <- t(t(feat.rank) / sqrt(colSums(feat.rank ^ 2)))
             dimnames(feat.norm) <- dimnames(feat.red)
         } else if (norm.method == "log.clr") {
-            gm <- exp(rowMeans(log(feat.red + norm.param$log.n0)))
-            feat.norm <- log((feat.red + norm.param$log.n0) / gm)
-            par$geometric.mean <- gm
+            gm <- exp(colMeans(log(feat.red + norm.param$log.n0)))
+            feat.norm <- log(t(t((feat.red + norm.param$log.n0)) / gm))
         } else if (norm.method == "rank.std") {
             feat.rank <- colRanks(feat.red,
                 preserveShape = TRUE,
@@ -344,16 +350,8 @@ normalize.features <- function(siamcat,
             dimnames(feat.norm) <- dimnames(feat.red)
 
         } else if (norm.param$norm.method == "log.clr") {
-            stopifnot(
-                !is.null(norm.param$log.n0) &&
-                    !is.null(norm.param$geometric.mean) &&
-                    all(
-                        names(norm.param$geometric.mean) ==
-                            row.names(feat.red)
-                    )
-            )
-            feat.log <- feat.red + norm.param$log.n0
-            feat.norm <- log(feat.log / norm.param$geometric.mean)
+            gm <- exp(colMeans(log(feat.red + norm.param$log.n0)))
+            feat.norm <- log(t(t((feat.red + norm.param$log.n0)) / gm))
 
         } else if (norm.param$norm.method == "rank.std") {
             stopifnot(
@@ -430,8 +428,8 @@ normalize.features <- function(siamcat,
         par <- norm.param
     }
 
-    norm_feat(siamcat) <- new('norm_feat',
-        norm.feat=otu_table(feat.norm, taxa_are_rows=TRUE),
+    norm_feat(siamcat) <- list(
+        norm.feat=feat.norm,
         norm.param=par)
 
     e.time <- proc.time()[3]

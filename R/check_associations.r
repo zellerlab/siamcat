@@ -5,22 +5,8 @@
 
 #'@title Check and visualize associations between features and classes
 #'
-#'@description This function calculates for each feature a pseudo-fold change
-#'     (geometrical mean of the difference between quantiles) between the
-#'     different classes found in labels.
-#'
-#'     Significance of the differences is computed for each feature using a
-#'     Wilcoxon test followed by multiple hypothesis testing correction.
-#'
-#'     Additionally, the Area Under the Receiver Operating Characteristic Curve
-#'     (AU-ROC) and a prevalence shift are computed for the features found to be
-#'     associated with the two different classes at a user-specified
-#'     significance level \code{alpha}.
-#'
-#'     Finally, the function produces a plot of the top \code{max.show}
-#'     associated features, showing the distribution of the log10-transformed
-#'     abundances for both classes, and user-selected panels for the effect
-#'     (AU-ROC, Prevalence Shift, and Fold Change)
+#'@description This function computes different measures of association between
+#'     features and the label and visualizes the results
 #'
 #'@usage check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
 #'     alpha =0.05, mult.corr = "fdr", sort.by = "fc",
@@ -31,14 +17,15 @@
 #'
 #'@param siamcat object of class \link{siamcat-class}
 #'
-#'@param fn.plot filename for the pdf-plot
+#'@param fn.plot string, filename for the pdf-plot. If \code{fn.plot} is
+#'     \code{NULL}, the plot will be produced in the active graphics device.
 #'
 #'@param color.scheme valid R color scheme or vector of valid R colors (must be
 #'     of the same length as the number of classes), defaults to \code{'RdYlBu'}
 #'
 #'@param alpha float, significance level, defaults to \code{0.05}
 #'
-#'@param mult.corr multiple hypothesis correction method, see
+#'@param mult.corr string, multiple hypothesis correction method, see
 #'     \code{\link[stats]{p.adjust}}, defaults to \code{"fdr"}
 #'
 #'@param sort.by string, sort features by p-value (\code{"p.val"}), by fold
@@ -46,7 +33,8 @@
 #'     defaults to \code{"fc"}
 #'
 #'@param detect.lim float, pseudocount to be added before log-transformation of
-#'     the data, defaults to \code{1e-06}
+#'     the data, defaults to \code{1e-06}. Will be ignored if
+#'     \code{feature.type} is \code{"normalized"}.
 #'
 #'@param pr.cutoff float, cutoff for the prevalence computation, defaults to
 #'     \code{1e-06}
@@ -58,46 +46,72 @@
 #'     one of these: \code{c("bean", "box", "quantile.box", "quantile.rect")},
 #'     defaults to \code{"quantile.box"}
 #'
-#'@param panels vector, name of the panels to be plotted next to the log10-
-#'     transformed abundances, possible entries are \code{c("fc", "auroc",
+#'@param panels vector, name of the panels to be plotted next to the
+#'     abundances, possible entries are \code{c("fc", "auroc",
 #'     "prevalence")}, defaults to \code{c("fc", "auroc")}
 #'
-#'@param prompt boolean to turn on/off prompting user input when not plotting
+#'@param prompt boolean, turn on/off prompting user input when not plotting
 #'      into a pdf-file, defaults to TRUE
 #'
-#'@param feature.type On which type of features should the function work? Can
-#'   be either "original", "filtered", or "normalized". Please only change this
-#'   paramter if you know what you are doing!
+#'@param feature.type string, on which type of features should the function
+#' work? Can be either \code{c()"original", "filtered", or "normalized")}.
+#' Please only change this paramter if you know what you are doing!
 #'
-#'@param verbose control output: \code{0} for no output at all, \code{1} for
-#'     only information about progress and success, \code{2} for normal level of
-#'     information and \code{3} for full debug information, defaults to \code{1}
+#' If \code{feature.type} is \code{"normalized"}, the normalized abundances
+#' will not be log10-transformed.
 #'
-#'@return Does not return anything, but produces an association plot
+#' @param verbose integer, control output: \code{0} for no output at all,
+#'     \code{1} for only information about progress and success, \code{2} for
+#'     normal level of information and \code{3} for full debug information,
+#'     defaults to \code{1}
+#'
+#'@return object of class \link{siamcat-class} with the slot
+#'     \code{associations} filled
 #'
 #'@keywords SIAMCAT check.associations
 #'
+#'@details For each feature, this function calculates different measures of
+#'     association between the feature and the label. In detail, these
+#'     associations are: \itemize{
+#'     \item Significance as computed by a Wilcoxon test followed by multiple
+#'     hypothesis testing correction.
+#'     \item AUROC (Area Under the Receiver Operating Characteristics Curve)
+#'     as a non-parameteric measure of enrichment (corresponds to the effect
+#'     size of the Wilcoxon test).
+#'     \item The generalized Fold Change (gFC) is a pseudo fold change
+#'     which is calculated as geometric mean of the differences between the
+#'     quantiles for the different classes found in the label.
+#'     \item The prevalence shift between the two different classes found in
+#'     the label.
+#'     }
+#'
+#'     Finally, the function produces a plot of the top \code{max.show}
+#'     associated features at a user-specified significance level \code{alpha},
+#'     showing the distribution of the log10-transformed abundances for both
+#'     classes, and user-selected panels for the effect (AU-ROC, Prevalence
+#'     Shift, and Fold Change).
 #'@export
 #'
 #'@examples
-#'# Example data
-#'     data(siamcat_example)
+#' # Example data
+#' data(siamcat_example)
 #'
-#'# Simple example
-#'     check.associations(siamcat_example, './assoc_plot.pdf')
+#' # Simple example
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot.pdf')
 #'
-#'# Plot associations as bean plot
-#'     check.associations(siamcat_example, './assoc_plot_bean.pdf',
-#'     plot.type='bean')
+#' # Plot associations as box plot
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot_box.pdf', plot.type='box')
 #'
-#'# Plot assocations as box plot
-#'# Additionally, sort by p-value instead of by fold change
-#'     check.associations(siamcat_example, './assoc_plot_fc.pdf',
-#'     plot.type='box', sort.by='p.val')
+#' # Additionally, sort by p-value instead of by fold change
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot_fc.pdf', plot.type='box', sort.by='p.val')
 #'
-#'# Custom colors
-#'     check.associations(siamcat_example, './assoc_plot_blue_yellow.pdf',
-#'     plot.type='box', color.scheme=c('cornflowerblue', '#ffc125'))
+#' # Custom colors
+#' siamcat_example <- check.associations(siamcat_example,
+#'     fn.plot='./assoc_plot_blue_yellow.pdf', plot.type='box',
+#'     color.scheme=c('cornflowerblue', '#ffc125'))
 
 check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
     alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 1e-06,
@@ -124,8 +138,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         if ((!plot.type %in%
                 c("bean", "box", "quantile.box", "quantile.rect")) ||
                 length(plot.type) != 1) {
-            warning("Plot type has not been specified properly! Continue with q
-                uantile.box.")
+            warning("Plot type has not been specified properly! Continue with",
+                    " quantile.box.")
             plot.type <- "quantile.box"
         }
         if (!feature.type %in% c('original', 'filtered', 'normalized')){
@@ -149,7 +163,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         if (any(is.na(feat))){
             stop('Features contain NAs. Exiting...')
         }
-        if (any(colSums(feat) > 1.01)){
+        if ((any(colSums(feat) > 1.01) | any(feat < -0.01)) &
+            feature.type != 'normalized'){
             stop('This function expects compositional data. Exiting...')
         }
         # check label
@@ -197,10 +212,11 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 mult.corr = mult.corr,
                 alpha = alpha,
                 probs.fc = probs.fc,
+                take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
                 verbose = verbose
             )
             # update siamcat
-            associations(siamcat) <- new("associations",
+            associations(siamcat) <- list(
                 assoc.results=result.list$effect.size,
                 assoc.param=list(detect.lim=result.list$detect.lim,
                     pr.cutoff=pr.cutoff, probs.fc=probs.fc,
@@ -228,10 +244,11 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                     mult.corr = mult.corr,
                     alpha = alpha,
                     probs.fc = probs.fc,
+                    take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
                     verbose = verbose
                 )
                 # update siamcat
-                associations(siamcat) <- new("associations",
+                associations(siamcat) <- list(
                     assoc.results=result.list$effect.size,
                     assoc.param=list(detect.lim=result.list$detect.lim,
                         pr.cutoff=pr.cutoff, probs.fc=probs.fc,
@@ -244,12 +261,20 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         # extract relevant info for plotting
         temp <- get.plotting.idx(result.list$effect.size, alpha=alpha,
             sort.by=sort.by, max.show=max.show, verbose=verbose)
+        if (is.null(temp)){
+            return(siamcat)
+        }
         effect.size <- result.list$effect.size[temp$idx, , drop=FALSE]
         truncated <- temp$truncated
         detect.lim <- result.list$detect.lim
         feat.red    <- feat[temp$idx, , drop=FALSE]
-        feat.red.log <- log10(feat.red + detect.lim)
 
+        if (feature.type == 'normalized'){
+            feat.plot <- feat.red
+        } else {
+            feat.red.log <- log10(feat.red + detect.lim)
+            feat.plot <- feat.red.log
+        }
         ########################################################################
         ### generate plots with significant associations between
         ##      features and labels
@@ -290,40 +315,43 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         if (verbose > 2)
             message("+++ plotting results")
         if (plot.type == "bean") {
-            associations.bean.plot(feat.red.log,
+            associations.bean.plot(feat.plot,
                 label,
                 col = col,
+                take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
                 verbose = verbose)
         } else if (plot.type == "box") {
-            associations.box.plot(feat.red.log,
+            associations.box.plot(feat.plot,
                 label,
+                take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
                 col = col,
                 verbose = verbose)
         } else if (plot.type == "quantile.box") {
-            associations.quantile.box.plot(feat.red.log,
+            associations.quantile.box.plot(feat.plot,
                 label,
                 col = col,
+                take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
                 verbose = verbose)
         } else if (plot.type == "quantile.rect") {
-            associations.quantile.rect.plot(feat.red.log,
+            associations.quantile.rect.plot(feat.plot,
                 label,
                 col = col,
+                take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
                 verbose = verbose)
         }
 
         # plot title
+        xlab <- ifelse(feature.type=='normalized',
+                    'Normalized abundance', 'Abundance (log10-scale)')
         if (!truncated) {
-            title(main = 'Differentially abundant features',
-                xlab = 'Abundance (log10-scale)')
+            title(main = 'Differentially abundant features', xlab = xlab)
         } else {
             title(
                 main = paste(
                     'Differentially abundant features\nshowing top',
                     max.show,
                     'features'
-                ),
-                xlab = 'Abundance (log10-scale)'
-            )
+                ), xlab = xlab)
         }
 
         ########################################################################
@@ -365,9 +393,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
             ))
         if (verbose == 1 & !is.null(fn.plot))
             message(paste(
-                "\nPlotted associations between features and label
-                successfully to:",
-                fn.plot
+                "Plotted associations between features and label",
+                "successfully to:", fn.plot
             ))
         return(siamcat)
     }
@@ -629,7 +656,7 @@ check.color.scheme <- function(color.scheme, label, verbose = 1) {
         length(unique(label$label)))
 
     if (length(color.scheme) == 1 &&
-            class(color.scheme) == 'character') {
+            is.character(color.scheme)) {
         if (n.classes == 2) {
     # if color scheme and binary label, make colors as before
             if (!color.scheme %in% row.names(brewer.pal.info)) {
@@ -826,7 +853,7 @@ associations.quantiles.plot <- function(quantiles, up = TRUE, col) {
 # BEAN PLOT
 #' @keywords internal
 associations.bean.plot <-
-    function(data.mat, label, col, verbose = 1) {
+    function(data.mat, label, col, take.log=TRUE, verbose = 1) {
         if (verbose > 2)
             message("+ starting associations.bean.plot")
 
@@ -849,8 +876,8 @@ associations.bean.plot <-
             levels = paste(rep(rownames(data.mat), each = 2),
                             names(label$info[order(label$info)])))
 
-        mn <- as.integer(c(min(bean.data$data)))
-        mx <- as.integer(c(max(bean.data$data)))
+        mn <- floor(c(min(bean.data$data)))
+        mx <- ceiling(c(max(bean.data$data)))
 
         plot(
             NULL,
@@ -869,13 +896,12 @@ associations.bean.plot <-
                 lty = 3,
                 col = 'lightgrey')
         }
-        tick.labels <- formatC(10 ^ ticks, format = 'E', digits = 0)
-        axis(
-            side = 1,
-            at = ticks,
-            labels = tick.labels,
-            cex.axis = 0.7
-        )
+        if (take.log){
+            tick.labels <- formatC(10 ^ ticks, format = 'E', digits = 0)
+            axis(side = 1,at = ticks,labels = tick.labels,cex.axis = 0.7)
+        } else {
+            axis(1, ticks, cex.axis=0.7)
+        }
 
         beanplot(
             data ~ factor,
@@ -912,7 +938,7 @@ associations.bean.plot <-
 # BOX PLOT
 #' @keywords internal
 associations.box.plot <-
-    function(data.mat, label, col, verbose = 1) {
+    function(data.mat, label, col, take.log=TRUE, verbose = 1) {
         if (verbose > 2)
             message("+ starting associations.box.plot")
         box.colors <- rep(c(col[1], col[2]), nrow(data.mat))
@@ -937,8 +963,8 @@ associations.box.plot <-
             levels = paste(rep(rownames(data.mat), each = 2),
                             names(label$info[order(label$info)])))
 
-        mn <- as.integer(c(min(data.mat)))
-        mx <- as.integer(c(max(data.mat)))
+        mn <- floor(c(min(data.mat)))
+        mx <- ceiling(c(max(data.mat)))
 
         plot(
             NULL,
@@ -970,13 +996,12 @@ associations.box.plot <-
         )
 
 
-        tick.labels <- formatC(10 ^ ticks, format = 'E', digits = 0)
-        axis(
-            side = 1,
-            at = ticks,
-            labels = tick.labels,
-            cex.axis = 0.7
-        )
+        if (take.log){
+            tick.labels <- formatC(10 ^ ticks, format = 'E', digits = 0)
+            axis(side = 1,at = ticks,labels = tick.labels,cex.axis = 0.7)
+        } else {
+            axis(1, ticks, cex.axis=0.7)
+        }
         legend(
             'topright',
             legend = c(names(which(label$info == p.label)),
@@ -994,7 +1019,7 @@ associations.box.plot <-
 # ##############################################################################
 # QUANTILE BOX PLOT
 #' @keywords internal
-associations.quantile.box.plot <- function(data.mat, label, col,
+associations.quantile.box.plot <- function(data.mat, label, take.log=TRUE, col,
     verbose = 1) {
     if (verbose > 2)
         message("+ starting associations.quantile.box.plot")
@@ -1009,40 +1034,46 @@ associations.quantile.box.plot <- function(data.mat, label, col,
     n.n <- length(which(label$label == n.label))
 
     n.spec <- nrow(data.mat)
-    p.m = min(data.mat, na.rm = TRUE)
+    if (take.log){
+        p.min <- floor(min(data.mat, na.rm = TRUE))
+        p.max <- 0
+    } else {
+        p.min <- floor(min(data.mat, na.rm = TRUE))
+        p.max <- ceiling(max(data.mat, na.rm = TRUE))
+    }
+
     plot(
-        rep(p.m, n.spec),
+        rep(p.min, n.spec),
         seq_len(n.spec),
         xlab = '',
         ylab = '',
         yaxs = 'i',
         axes = FALSE,
-        xlim = c(p.m, 0),
+        xlim = c(p.min, p.max),
         ylim = c(0.5, n.spec + 0.5),
         frame.plot = FALSE,
         type = 'n'
     )
-    for (v in seq(p.m, -1, 1)) {
+    for (v in seq(p.min, p.max, 1)) {
         abline(v = v,
             lty = 3,
             col = 'lightgrey')
     }
 
-    tck = floor(p.m):0
-    axis(
-        1,
-        tck,
-        formatC(10 ^ tck, format = 'E', digits = 0),
-        las = 1,
-        cex.axis = 0.7
-    )
+    tck = p.min:p.max
+    if (take.log){
+        axis(1, tck, formatC(10 ^ tck, format='E', digits=0),
+            las=1, cex.axis=0.7)
+    } else {
+        axis(1, tck, las=1, cex.axis=0.7)
+    }
 
     # get quantiles
     quant.probs <- c(0.05, 0.25, 0.5, 0.75, 0.95)
-    quantiles.pos = rowQuantiles(data.mat[, p.idx],
-        probs = quant.probs, na.rm = TRUE)
-    quantiles.neg = rowQuantiles(data.mat[, n.idx],
-        probs = quant.probs, na.rm = TRUE)
+    quantiles.pos = rowQuantiles(data.mat[, p.idx, drop=FALSE],
+        probs = quant.probs, na.rm = TRUE, drop=FALSE)
+    quantiles.neg = rowQuantiles(data.mat[, n.idx, drop=FALSE],
+        probs = quant.probs, na.rm = TRUE, drop=FALSE)
 
         # inter-quartile range
     associations.quantiles.plot(quantiles.pos, up = TRUE, pos.col)
@@ -1087,7 +1118,7 @@ associations.quantile.box.plot <- function(data.mat, label, col,
 # QUANTILE RECT PLOT
 #' @keywords internal
 associations.quantile.rect.plot <-
-    function(data.mat, label, col, verbose = 1) {
+    function(data.mat, label, col, take.log=TRUE, verbose = 1) {
         if (verbose > 2)
             message("+ starting associations.quantile.rect.plot")
         n.spec <- nrow(data.mat)
@@ -1098,42 +1129,46 @@ associations.quantile.rect.plot <-
         p.idx <- which(label$label == p.label)
         n.idx <- which(label$label == n.label)
 
-        quantiles.pos = rowQuantiles(data.mat[, p.idx],
+        quantiles.pos = rowQuantiles(data.mat[, p.idx, drop=FALSE],
                                         probs = quant.probs,
-                                        na.rm = TRUE)
-        quantiles.neg = rowQuantiles(data.mat[, n.idx],
+                                        na.rm = TRUE, drop=FALSE)
+        quantiles.neg = rowQuantiles(data.mat[, n.idx, drop=FALSE],
                                         probs = quant.probs,
-                                        na.rm = TRUE)
+                                        na.rm = TRUE, drop=FALSE)
 
-        p.mn <- min(data.mat, na.rm = TRUE)
-        p.mx <- 0# max(data.mat, na.rm = TRUE)
+        if (take.log){
+            p.min <- floor(min(data.mat, na.rm = TRUE))
+            p.max <- 0
+        } else {
+            p.min <- floor(min(data.mat, na.rm = TRUE))
+            p.max <- ceiling(max(data.mat, na.rm = TRUE))
+        }
 
         plot(
-            rep(p.mn, n.spec),
+            rep(p.min, n.spec),
             seq_len(n.spec),
             xlab = '',
             ylab = '',
             yaxs = 'i',
             axes = FALSE,
-            xlim = c(p.mn, p.mx),
+            xlim = c(p.min, p.max),
             ylim = c(0, n.spec),
             frame.plot = FALSE,
             type = 'n'
         )
-        for (v in seq(p.mn, 0, 1)) {
+        for (v in seq(p.min, p.max, 1)) {
             abline(v = v,
                 lty = 3,
                 col = 'lightgrey')
         }
 
-        tck = floor(p.mn):0
-        axis(
-            1,
-            tck,
-            formatC(10 ^ tck, format = 'E', digits = 0),
-            las = 1,
-            cex.axis = 0.7
-        )
+        tck = p.min:p.max
+        if (take.log){
+            axis(1, tck, formatC(10^tck, format='E', digits=0),
+                las=1, cex.axis=0.7)
+        } else {
+            axis(1, tck, las=1, cex.axis=0.7)
+        }
 
         # create different tints of the colours
         colors.p <-
@@ -1148,7 +1183,7 @@ associations.quantile.rect.plot <-
         associations.quantile.median.sub.plot(quantiles.pos, up = TRUE)
         associations.quantile.median.sub.plot(quantiles.neg, up = FALSE)
 
-        legend(0.3*p.mn, n.spec,
+        legend(0.3*p.min, n.spec,
             legend = c("Quantiles", "40%-60%", "30%-70%", "20%-80%", "10%-90%",
                 "median", "", "", "", "", ""),
             bty = 'n', cex = 1, fill = c('white', rev(colors.p), 'white',
@@ -1156,7 +1191,7 @@ associations.quantile.rect.plot <-
             lwd = 1.3, ncol = 2, border = c("white", "black", "black",
                 "black", "black", "white", "white", "black", "black", "black",
                 "black", "white"))
-        legend(0.3*p.mn + abs(0.016*p.mn), n.spec,
+        legend(0.3*p.min + abs(0.016*p.min), n.spec,
             legend = c("", "", "", "", "", ""), bty = 'n',
             lty = c(0, 0, 0, 0, 0, 0),
             # cap legend size for diamond (should look
@@ -1215,7 +1250,7 @@ associations.quantile.rect.sub.plot <-
 #' @keywords internal
 analyse.binary.marker <- function(feat, label, detect.lim, colors,
     pr.cutoff, mult.corr, alpha, max.show, sort.by, probs.fc = seq(.1, .9, .05),
-    verbose = 1) {
+    take.log=TRUE, verbose = 1) {
     if (verbose > 1)
         message("+ starting analyse.binary.marker")
     s.time <- proc.time()[3]
@@ -1224,14 +1259,14 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
     ############################################################################
     if (verbose > 1)
         message('+++ calculating effect size for each feature.')
-    if (is.null(detect.lim)) {
+    if (is.null(detect.lim) & take.log==TRUE) {
         warning(
             "Pseudo-count before log-transformation not supplied! Estimating it
             as 5% percentile.\n"
         )
         detect.lim <- quantile(feat[feat != 0], 0.05)
     }
-    if (any(feat[feat != 0] < detect.lim)){
+    if (any(feat[feat != 0] < detect.lim) & take.log==TRUE){
         cnt <- length(which(feat[feat!=0] < detect.lim))
         percentage <- (cnt/length(feat[feat!=0]))*100
         if (percentage >= 5){
@@ -1246,14 +1281,21 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
     negative.label <- min(label$info)
 
     if (verbose)
-        pb = txtProgressBar(max = nrow(feat), style = 3)
+        pb <- progress_bar$new(total = nrow(feat))
 
     effect.size <- data.frame(t(apply(feat, 1, FUN = function(x) {
         # pseudo-fold change as differential quantile area
-        q.p <- quantile(log10(x[which(label$label == positive.label)] +
-            detect.lim), probs = probs.fc)
-        q.n <- quantile(log10(x[which(label$label == negative.label)] +
-            detect.lim), probs = probs.fc)
+        if (take.log == TRUE){
+            q.p <- quantile(log10(x[which(label$label == positive.label)] +
+                detect.lim), probs = probs.fc)
+            q.n <- quantile(log10(x[which(label$label == negative.label)] +
+                detect.lim), probs = probs.fc)
+        } else {
+            q.p <- quantile(x[which(label$label == positive.label)],
+                probs = probs.fc)
+            q.n <- quantile(x[which(label$label == negative.label)],
+                probs = probs.fc)
+        }
         fc <- sum(q.p - q.n) / length(q.p)
 
         # wilcoxon
@@ -1272,7 +1314,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
             length(which(label$label == positive.label))
         pr.shift <- c(temp.p - temp.n, temp.n, temp.p)
         if (verbose)
-            setTxtProgressBar(pb, (pb$getVal() + 1))
+            pb$tick()
         return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2],
             'auc.ci.l' = aucs[1], 'auc.ci.h' = aucs[3],
             'pr.shift' = pr.shift[1], 'pr.n' = pr.shift[2],
@@ -1303,7 +1345,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
     if (verbose > 1)
         message(
             paste(
-                '\n+++ found',
+                '+++ found',
                 sum(effect.size$p.adj < alpha,
                     na.rm = TRUE),
                 'significant associations at a significance level <',
@@ -1332,10 +1374,12 @@ get.plotting.idx <- function(df.results, alpha, sort.by, max.show, verbose){
     idx <- which(df.results$p.adj < alpha)
 
     if (length(idx) == 0) {
-        stop('No significant associations found. Stopping.\n')
+        warning(paste0('No significant associations found.',
+        ' No plot will be produced.\n'))
+        return(NULL)
     } else if (length(idx) < 5) {
-        warning('Less than 5 associations found. Consider changing your alpha
-            value')
+        warning(paste0('Less than 5 associations found. Consider',
+        ' changing your alpha value.'))
     }
 
     idx <- idx[order(df.results$p.adj[idx], decreasing = TRUE)]
