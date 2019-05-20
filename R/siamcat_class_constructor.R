@@ -118,7 +118,7 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
             stop(paste0('Both features matrix and phyloseq object provided. ',
                 'Please provide only one of them!'))
         }
-        if (class(phyloseq) != 'phyloseq'){
+        if (!is(phyloseq,'phyloseq')){
             stop('Please provide an object of class phyloseq for SIAMCAT!')
         }
         feat <- otu_table(phyloseq)
@@ -258,13 +258,13 @@ validate.features <- function(feat){
         stop('SIAMCAT needs features!!! Exiting...')
     }
     # check class of feature input
-    if (class(feat) == 'otu_table'){
+    if (is(feat,'otu_table')){
         # can either be an otu_table (only check that taxa_are_rows == TRUE)
         if (!taxa_are_rows(feat)){
             feat <- otu_table(t(feat@.Data), taxa_are_rows=TRUE)
         }
         return(feat)
-    } else if (class(feat) == 'matrix'){
+    } else if (is(feat, 'matrix')){
         # or a matrix (then check if it is numeric or not)
         # and convert to otu_table
         if (any(!is.numeric(feat))){
@@ -273,7 +273,7 @@ validate.features <- function(feat){
         }
         feat <- otu_table(feat, taxa_are_rows=TRUE)
         return(feat)
-    } else if (class(feat) == 'data.frame'){
+    } else if (is.data.frame(feat)){
         # or a dataframe (then do the same as above)
         if (any(!is.numeric(unlist(feat)))){
             stop(paste0('SIAMCAT expects numerical features!.\n',
@@ -295,7 +295,7 @@ validate.label <- function(label, feat, meta, case, verbose){
         label <- list(label = rep(-1, ncol(feat)),
             info=c('TEST'=-1), type="TEST")
         names(label$label) <- colnames(feat)
-    } else if (class(label) == "list"){
+    } else if (is.list(label)){
         label <- label
     } else if (is.character(label) & length(label) == 1){
         if(is.null(meta)) stop('Metadata needed to generate label! Exiting...')
@@ -321,10 +321,10 @@ validate.metadata <- function(meta){
     if (is.null(meta)){
         return(NULL)
     }
-    if (class(meta) == 'sample_data'){
+    if (is(meta, 'sample_data')){
         return(meta)
     }
-    if (class(meta) == 'data.frame'){
+    if (is.data.frame(meta)){
         meta <- sample_data(meta)
         return(meta)
     }

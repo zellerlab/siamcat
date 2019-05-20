@@ -142,7 +142,7 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
 
     } else if (length(args) == 1) {
         # checks
-        if (!all(class(args[[1]]) == 'siamcat'))
+        if (!all(is(args[[1]], 'siamcat')))
             stop('Please supply a SIAMCAT object. Exiting...')
         if(is.null(eval_data(args[[1]]))){
             stop('SIAMCAT object has no evaluation data. Exiting...')

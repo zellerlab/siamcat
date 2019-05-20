@@ -234,17 +234,17 @@ check.data.split <- function(object){
     }
     # check that num.resample and num.folds are numbers
     if (length(object$num.resample) != 1 |
-        class(object$num.resample) != 'numeric'){
+        !is.numeric(object$num.resample)){
         msg <- 'num.resample should be numeric and of length 1!'
         errors <- c(errors, msg)
     }
     if (length(object$num.folds) != 1 |
-        class(object$num.folds) != 'numeric'){
+        !is.numeric(object$num.folds)){
         msg <- 'num.folds should be numeric and of length 1!'
         errors <- c(errors, msg)
     }
     # check that training.folds is a list (of the right length)
-    if (class(object$training.folds) != 'list'){
+    if (!is.list(object$training.folds)){
         msg <- 'training.folds should be a list!'
         errors <- c(errors, msg)
     }
@@ -258,7 +258,7 @@ check.data.split <- function(object){
         errors <- c(errors, msg)
     }
     # same for test.folds
-    if (class(object$test.folds) != 'list'){
+    if (!is.list(object$test.folds)){
         msg <- 'test.folds should be a list!'
         errors <- c(errors, msg)
     }
@@ -340,12 +340,12 @@ check.eval.data <- function(object){
         errors <- c(errors, msg)
     }
     # check roc
-    if (class(object$roc) != 'roc'){
+    if (!is(object$roc,'roc')){
         msg <- 'Entry for roc is not an object of class roc (from pROC)!'
         errors <- c(errors, msg)
     }
     # check prc
-    if (class(object$prc) != 'list' |
+    if (!is.list(object$prc)  |
         !all(names(object$prc) ==c('recall', 'precision')) |
         length(unique(vapply(object$prc, length, FUN.VALUE=numeric(1))))!=1){
         msg <- paste0('No valid entry for prc ',
@@ -353,7 +353,7 @@ check.eval.data <- function(object){
         errors <- c(errors, msg)
     }
     # check ev
-    if (class(object$ev) != 'list' |
+    if (!is.list(object$ev) |
         !all(names(object$ev) == c("tp", "tn", "fp", "fn", "thresholds"))){
         msg <- 'Not a valid entry for ev (missing entries or no list)!'
         errors <- c(errors, msg)

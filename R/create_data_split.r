@@ -145,7 +145,7 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
         if (!is.null(inseparable)) {
             if (is.numeric(inseparable) && length(inseparable) == 1) {
                 stopifnot(inseparable <= ncol(meta(siamcat)))
-            } else if (class(inseparable) == "character" &&
+            } else if (is.character(inseparable) &&
                     length(inseparable == 1)) {
                 stopifnot(inseparable %in% colnames(meta(siamcat)))
             } else {

@@ -84,10 +84,10 @@ create.label <- function(label, case, meta=NULL, control = NULL,
     if (!is.null(meta) & length(label) == 1){
         if (!label %in% colnames(meta))
             stop("ERROR: Column ", label, " not found in the metadata\n")
-        if (class(meta) == 'sample_data'){
+        if (is(meta,'sample_data')){
             label.vec <- vapply(meta[, label], as.character,
                 FUN.VALUE = character(nrow(meta)))
-        } else if (class(meta) == 'data.frame'){
+        } else if (is.data.frame(meta)){
             label.vec <- vapply(meta[, label], as.character,
                 FUN.VALUE = character(1))
         } else {

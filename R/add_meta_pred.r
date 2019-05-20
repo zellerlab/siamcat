@@ -117,7 +117,7 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
             m <- unlist(meta(siamcat)[, idx])
 
             # check if the meta-variable is a factor or numeric
-            if (class(m) == 'factor'){
+            if (is.factor(m)){
                 warning(paste0('WARNING: meta-variable ', p,' is a factor and',
                 ' not numeric...\n   The values will be converted to numerical',
                 ' values with "as.numeric()"\n'))

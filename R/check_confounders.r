@@ -469,7 +469,7 @@ factorize.bmi <- function(bmi) {
     # ranges taken from CDC
     # https://www.cdc.gov/healthyweight/assessing/bmi/adult_bmi/index.html
 
-    if (class(bmi) != 'matrix') bmi <- as.matrix(bmi)
+    if (!is.matrix(bmi)) bmi <- as.matrix(bmi)
     temp <- vapply(bmi, FUN=function(x) {
         if (is.na(x)) {return(as.character(NA))}
         else if (x < 18.5) {return("Underweight")}

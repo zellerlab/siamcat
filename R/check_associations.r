@@ -656,7 +656,7 @@ check.color.scheme <- function(color.scheme, label, verbose = 1) {
         length(unique(label$label)))
 
     if (length(color.scheme) == 1 &&
-            class(color.scheme) == 'character') {
+            is.character(color.scheme)) {
         if (n.classes == 2) {
     # if color scheme and binary label, make colors as before
             if (!color.scheme %in% row.names(brewer.pal.info)) {
