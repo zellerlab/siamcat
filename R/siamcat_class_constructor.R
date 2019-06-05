@@ -306,7 +306,7 @@ validate.label <- function(label, feat, meta, case, verbose){
         meta <- temp$meta
     } else if (is.atomic(label)) {
         if(is.null(case)) stop('Case information needed! Exiting...')
-        label <- create.label(label=label, case=case)
+        label <- create.label(label=label, case=case, verbose=verbose)
     } else {
         stop(paste0('Cannot interpret the label object!\nPlease ',
             'provide either a label object, a column in your metadata, or a
