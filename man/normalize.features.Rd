@@ -6,7 +6,7 @@
 \usage{
 normalize.features(siamcat,
     norm.method = c("rank.unit", "rank.std",
-        "log.std", "log.unit", "log.clr"),
+        "log.std", "log.unit", "log.clr", "pass"),
     norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
         n.p = 2, norm.margin = 1),
     feature.type='filtered',
@@ -16,7 +16,8 @@ normalize.features(siamcat,
 \item{siamcat}{an object of class \link{siamcat-class}}
 
 \item{norm.method}{string, normalization method, can be one of these:
-'\code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr')}}
+'\code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr',
+'pass')}}
 
 \item{norm.param}{list, specifying the parameters of the different
 normalization methods, see details for more information}
@@ -39,7 +40,7 @@ This function performs feature normalization according to user-
     specified parameters.
 }
 \details{
-There are five different normalization methods available:
+There are six different normalization methods available:
 \itemize{
     \item \code{'rank.unit'} - converts features to ranks and normalizes
     each column (=sample) by the square root of the sum of ranks
@@ -50,8 +51,9 @@ There are five different normalization methods available:
     \item \code{'log.std'} - log-transforms features (after addition of
     pseudocounts) and applies z-score standardization
     \item \code{'log.unit'} - log-transforms features (after addition of
-    pseudocounts) and normalizes by features or samples with different
-    norms}
+    pseudocounts) and normalizes by features or samples with different norms
+    \item \code{'pass'} - pass-through normalization will not change the
+    features}
 
 The list entries in \code{'norm.param'} specify the normalzation parameters,
 which are dependant on the normalization method of choice:
