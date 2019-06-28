@@ -164,7 +164,7 @@ check.norm.feat <- function(object){
         errors <- c(errors, msg)
     }
     if (!norm.method %in%
-        c('rank.std','rank.unit','log.unit','log.std','log.clr')){
+        c('rank.std','rank.unit','log.unit','log.std','log.clr', 'pass')){
             mgs <- paste0('norm.method ', norm.method, 'not recognized!')
             errors <- c(errors, msg)
         }

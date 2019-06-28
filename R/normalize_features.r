@@ -10,7 +10,7 @@
 #'
 #' @usage normalize.features(siamcat,
 #'     norm.method = c("rank.unit", "rank.std",
-#'         "log.std", "log.unit", "log.clr"),
+#'         "log.std", "log.unit", "log.clr", "pass"),
 #'     norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
 #'         n.p = 2, norm.margin = 1),
 #'     feature.type='filtered',
@@ -19,7 +19,8 @@
 #' @param siamcat an object of class \link{siamcat-class}
 #'
 #' @param norm.method string, normalization method, can be one of these:
-#'     '\code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr')}
+#'     '\code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr',
+#'     'pass')}
 #'
 #' @param norm.param list, specifying the parameters of the different
 #'     normalization methods, see details for more information
@@ -34,7 +35,7 @@
 #'     normal level of information and \code{3} for full debug information,
 #'     defaults to \code{1}
 #'
-#' @details There are five different normalization methods available:
+#' @details There are six different normalization methods available:
 #' \itemize{
 #'     \item \code{'rank.unit'} - converts features to ranks and normalizes
 #'     each column (=sample) by the square root of the sum of ranks
@@ -45,8 +46,9 @@
 #'     \item \code{'log.std'} - log-transforms features (after addition of
 #'     pseudocounts) and applies z-score standardization
 #'     \item \code{'log.unit'} - log-transforms features (after addition of
-#'     pseudocounts) and normalizes by features or samples with different
-#'     norms}
+#'     pseudocounts) and normalizes by features or samples with different norms
+#'     \item \code{'pass'} - pass-through normalization will not change the
+#'     features}
 #'
 #' The list entries in \code{'norm.param'} specify the normalzation parameters,
 #' which are dependant on the normalization method of choice:
@@ -112,7 +114,7 @@
 normalize.features <- function(siamcat,
     norm.method = c("rank.unit", "rank.std",
         "log.std", "log.unit",
-        "log.clr"),
+        "log.clr", "pass"),
     norm.param = list(
         log.n0 = 1e-06,
         sd.min.q = 0.1,
@@ -182,7 +184,8 @@ normalize.features <- function(siamcat,
             stop('Please supply only a single normalization method! Exiting...')
         }
         if (!norm.method %in%
-            c("rank.unit", "rank.std", "log.std", "log.unit", "log.clr")) {
+            c("rank.unit", "rank.std", "log.std", "log.unit",
+                "log.clr", "pass")) {
             stop("Unknown normalization method! Exiting...")
         }
 
@@ -309,6 +312,8 @@ normalize.features <- function(siamcat,
                     Exiting..."
                 )
             }
+        } else if (norm.method == "pass"){
+            feat.norm <- feat.red
         }
         if (verbose > 1)
             message(paste(
@@ -417,6 +422,8 @@ normalize.features <- function(siamcat,
             } else if (norm.param$norm.margin == 3) {
                 feat.norm <- feat.log / norm.param$global.norm
             }
+        } else if (norm.param$norm.method == "pass"){
+            feat.norm <- feat.red
         }
         if (verbose > 1)
             message(paste0(
