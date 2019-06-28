@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@
 
     <pre class="usage"><span class='fu'>normalize.features</span>(<span class='no'>siamcat</span>,
     <span class='kw'>norm.method</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"rank.unit"</span>, <span class='st'>"rank.std"</span>,
-        <span class='st'>"log.std"</span>, <span class='st'>"log.unit"</span>, <span class='st'>"log.clr"</span>),
+        <span class='st'>"log.std"</span>, <span class='st'>"log.unit"</span>, <span class='st'>"log.clr"</span>, <span class='st'>"pass"</span>),
     <span class='kw'>norm.param</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>log.n0</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>, <span class='kw'>sd.min.q</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
         <span class='kw'>n.p</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>norm.margin</span> <span class='kw'>=</span> <span class='fl'>1</span>),
     <span class='kw'>feature.type</span><span class='kw'>=</span><span class='st'>'filtered'</span>,
@@ -145,7 +145,8 @@
     <tr>
       <th>norm.method</th>
       <td><p>string, normalization method, can be one of these:
-'<code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr')</a></code></p></td>
+'<code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr',
+'pass')</a></code></p></td>
     </tr>
     <tr>
       <th>norm.param</th>
@@ -174,7 +175,7 @@ defaults to <code>1</code></p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There are five different normalization methods available:</p><ul>
+    <p>There are six different normalization methods available:</p><ul>
 <li><p><code>'rank.unit'</code> - converts features to ranks and normalizes
     each column (=sample) by the square root of the sum of ranks</p></li>
 <li><p><code>'rank.std'</code> - converts features to ranks and applies z-score
@@ -184,8 +185,9 @@ defaults to <code>1</code></p></td>
 <li><p><code>'log.std'</code> - log-transforms features (after addition of
     pseudocounts) and applies z-score standardization</p></li>
 <li><p><code>'log.unit'</code> - log-transforms features (after addition of
-    pseudocounts) and normalizes by features or samples with different
-    norms</p></li>
+    pseudocounts) and normalizes by features or samples with different norms</p></li>
+<li><p><code>'pass'</code> - pass-through normalization will not change the
+    features</p></li>
 </ul>
     <p>The list entries in <code>'norm.param'</code> specify the normalzation parameters,
 which are dependant on the normalization method of choice:</p><ul>

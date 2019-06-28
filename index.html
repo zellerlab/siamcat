@@ -55,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -134,7 +134,7 @@
 BiocManager<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/BiocManager/topics/install">install</a></span>(<span class="st">"SIAMCAT"</span>, <span class="dt">version =</span> <span class="st">"3.8"</span>)</code></pre></div>
 <p>Alternatively, you can install the current development version via <code>devtools</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(<span class="st">"devtools"</span>)
-devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="dt">repo =</span> <span class="st">'zellerlab/siamcat'</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="dt">repo =</span> <span class="st">'zellerlab/siamcat'</span>)</code></pre></div>
 </div>
 <div id="quick-start" class="section level3">
 <h3 class="hasAnchor">
@@ -177,7 +177,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <a href="#association-testing" class="anchor"></a>Association testing</h3>
 <p>The result of the <code>check.associations</code> function is an association plot. For significantly associated microbial features, the plot shows:</p>
 <ul>
-<li>the abundances of the features across the two different classes (CRC vs controls)</li>
+<li>the abundances of the features across the two different classes (CRC vs. controls)</li>
 <li>the significance of the enrichment calculated by a Wilcoxon test (after multiple hypothesis testing correction)</li>
 <li>the generalized fold change of each feature</li>
 <li>the prevalence shift between the two classes, and</li>

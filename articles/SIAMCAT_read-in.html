@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
 
@@ -315,7 +315,7 @@ feat[<span class="dv">110</span><span class="op">:</span><span class="dv">114</s
 ##    1
 ## Label used as control:
 ##    0</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.012 s</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">label<span class="op">$</span>info</code></pre></div>
 <pre><code>## healthy  cancer 
 ##      -1       1</code></pre>
@@ -423,7 +423,7 @@ feat &lt;-<span class="st"> </span>meta.and.features<span class="op">$</span>fea
 ##    cancer
 ## Label used as control:
 ##    healthy</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.016 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.019 s</code></pre>
 </div>
 <div id="metagenomeseq-format-files" class="section level2">
 <h2 class="hasAnchor">
@@ -475,7 +475,7 @@ siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sia
 <pre><code>## Data set has only 8 training examples of class Case .
 ## Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipeline.</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.443 s</code></pre>
+<pre><code>## + finished validate.data in 0.44 s</code></pre>
 </div>
 </div>
 <div id="creating-a-siamcat-class-object" class="section level1">
@@ -557,7 +557,7 @@ tax_tab &lt;-<span class="st"> </span><span class="kw">tax_table</span>(phyloseq
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/sessionInfo">sessionInfo</a></span>()</code></pre></div>
 <pre><code>## R version 3.5.3 (2019-03-11)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Mojave 10.14.3
+## Running under: macOS Mojave 10.14.5
 ## 
 ## Matrix products: default
 ## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -570,42 +570,42 @@ tax_tab &lt;-<span class="st"> </span><span class="kw">tax_table</span>(phyloseq
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_1.2.0     phyloseq_1.24.2   mlr_2.13          ParamHelpers_1.12
-## [5] BiocStyle_2.8.2  
+## [1] SIAMCAT_1.5.0     phyloseq_1.26.1   mlr_2.13          ParamHelpers_1.12
+## [5] BiocStyle_2.10.0 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-137        matrixStats_0.54.0  fs_1.2.6           
+##  [1] nlme_3.1-139        matrixStats_0.54.0  fs_1.2.7           
 ##  [4] RColorBrewer_1.1-2  progress_1.2.0.9000 PRROC_1.3.1        
-##  [7] rprojroot_1.3-2     tools_3.5.3         backports_1.1.3    
-## [10] R6_2.4.0            vegan_2.5-2         lazyeval_0.2.1     
-## [13] BiocGenerics_0.26.0 mgcv_1.8-27         colorspace_1.3-2   
-## [16] permute_0.9-4       ade4_1.7-11         tidyselect_0.2.4   
+##  [7] rprojroot_1.3-2     tools_3.5.3         backports_1.1.4    
+## [10] R6_2.4.0            vegan_2.5-4         lazyeval_0.2.2     
+## [13] BiocGenerics_0.28.0 mgcv_1.8-28         colorspace_1.4-1   
+## [16] permute_0.9-5       ade4_1.7-13         tidyselect_0.2.5   
 ## [19] gridExtra_2.3       prettyunits_1.0.2   compiler_3.5.3     
-## [22] parallelMap_1.3     glmnet_2.0-16       Biobase_2.40.0     
-## [25] xml2_1.2.0          desc_1.2.0          bookdown_0.7       
+## [22] parallelMap_1.3     glmnet_2.0-16       Biobase_2.42.0     
+## [25] xml2_1.2.0          desc_1.2.0          bookdown_0.9       
 ## [28] scales_1.0.0        checkmate_1.9.1     pkgdown_1.3.0      
-## [31] commonmark_1.5      stringr_1.4.0       digest_0.6.18      
-## [34] rmarkdown_1.10      XVector_0.20.0      pkgconfig_2.0.2    
-## [37] htmltools_0.3.6     rlang_0.3.1         rstudioapi_0.7     
-## [40] BBmisc_1.11         bindr_0.1.1         jsonlite_1.5       
-## [43] dplyr_0.7.6         magrittr_1.5        biomformat_1.8.0   
-## [46] Matrix_1.2-15       Rcpp_1.0.0          munsell_0.5.0      
-## [49] S4Vectors_0.18.3    Rhdf5lib_1.2.1      ape_5.1            
-## [52] infotheo_1.2.0      stringi_1.3.1       pROC_1.13.0        
-## [55] yaml_2.2.0          MASS_7.3-51.1       zlibbioc_1.26.0    
-## [58] rhdf5_2.24.0        plyr_1.8.4          grid_3.5.3         
-## [61] LiblineaR_2.10-8    parallel_3.5.3      crayon_1.3.4       
-## [64] lattice_0.20-38     Biostrings_2.48.0   splines_3.5.3      
-## [67] multtest_2.36.0     hms_0.4.2           knitr_1.20         
-## [70] beanplot_1.2        pillar_1.3.1        igraph_1.2.2       
-## [73] reshape2_1.4.3      codetools_0.2-16    stats4_3.5.3       
-## [76] fastmatch_1.1-0     glue_1.3.0          evaluate_0.11      
-## [79] data.table_1.12.0   foreach_1.4.4       gtable_0.2.0       
-## [82] purrr_0.2.5         assertthat_0.2.0    ggplot2_3.1.0      
-## [85] xfun_0.3            gridBase_0.4-7      roxygen2_6.1.0     
-## [88] survival_2.43-3     tibble_2.0.1        iterators_1.0.10   
-## [91] memoise_1.1.0       IRanges_2.14.10     bindrcpp_0.2.2     
-## [94] cluster_2.0.7-1     corrplot_0.84</code></pre>
+## [31] commonmark_1.7      stringr_1.4.0       digest_0.6.18      
+## [34] rmarkdown_1.12      XVector_0.22.0      pkgconfig_2.0.2    
+## [37] htmltools_0.3.6     rlang_0.3.4         rstudioapi_0.10    
+## [40] BBmisc_1.11         jsonlite_1.6        dplyr_0.8.0.1      
+## [43] magrittr_1.5        biomformat_1.10.1   Matrix_1.2-17      
+## [46] Rcpp_1.0.1          munsell_0.5.0       S4Vectors_0.20.1   
+## [49] Rhdf5lib_1.4.3      ape_5.3             infotheo_1.2.0     
+## [52] stringi_1.4.3       pROC_1.14.0         yaml_2.2.0         
+## [55] MASS_7.3-51.4       zlibbioc_1.28.0     rhdf5_2.26.2       
+## [58] plyr_1.8.4          grid_3.5.3          LiblineaR_2.10-8   
+## [61] parallel_3.5.3      crayon_1.3.4        lattice_0.20-38    
+## [64] Biostrings_2.50.2   splines_3.5.3       multtest_2.38.0    
+## [67] hms_0.4.2           knitr_1.22          beanplot_1.2       
+## [70] pillar_1.3.1        igraph_1.2.4        reshape2_1.4.3     
+## [73] codetools_0.2-16    stats4_3.5.3        fastmatch_1.1-0    
+## [76] glue_1.3.1          evaluate_0.13       data.table_1.12.2  
+## [79] BiocManager_1.30.4  foreach_1.4.4       gtable_0.3.0       
+## [82] purrr_0.3.2         assertthat_0.2.1    ggplot2_3.1.1      
+## [85] xfun_0.6            gridBase_0.4-7      roxygen2_6.1.1     
+## [88] survival_2.44-1.1   tibble_2.1.1        iterators_1.0.10   
+## [91] memoise_1.1.0       IRanges_2.16.0      cluster_2.0.8      
+## [94] corrplot_0.84</code></pre>
 </div>
 </div>
   </div>
