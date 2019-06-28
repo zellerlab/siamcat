@@ -144,19 +144,25 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
         # checks
         if (!all(is(args[[1]], 'siamcat')))
             stop('Please supply a SIAMCAT object. Exiting...')
-        if(is.null(eval_data(args[[1]]))){
+        if(is.null(eval_data(args[[1]], verbose=0))){
             stop('SIAMCAT object has no evaluation data. Exiting...')
         }
-
+        if(is.null(data_split(args[[1]], verbose=0))){
+            auc.text <- 'Mean-prediction AUC:'
+            pr.text <- 'Mean AUC:'
+        } else {
+            if (data_split(args[[1]])$num.resample == 1){
+                auc.text <- 'AUC:'
+                pr.text <- 'AUC:'
+            } else {
+                auc.text <- 'Mean-prediction AUC:'
+                pr.text <- 'Mean AUC:'
+            }
+        }
         # ROC
         if (is.null(colours)) colours <- 'black'
         auroc <- single.roc.plot(args[[1]], colours, verbose=verbose)
-        if (data_split(args[[1]])$num.resample == 1) {
-            text(0.7, 0.1, paste("AUC:", format(auroc, digits = 3)))
-        } else {
-            text(0.7, 0.1, paste("Mean-prediction AUC:",
-                    format(auroc, digits = 3)))
-        }
+        text(0.7, 0.1, paste(auc.text, format(auroc, digits = 3)))
 
         # PR
         if (verbose > 2)
@@ -174,11 +180,7 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
         abline(h = mean(label$label == max(label$info)),
             lty = 3)
         auprc <- single.pr.plot(args[[1]], colours, verbose=verbose)
-        if (data_split(args[[1]])$num.resample == 1) {
-            text(0.7, 0.1, paste("AUC:", format(auprc, digits = 3)))
-        } else {
-            text(0.7, 0.1, paste("Mean AUC:", format(auprc, digits = 3)))
-        }
+        text(0.7, 0.1, paste(pr.text, format(auprc, digits = 3)))
     } else {
         stop('No SIAMCAT object supplied. Exiting...')
     }
