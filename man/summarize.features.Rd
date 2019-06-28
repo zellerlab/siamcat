@@ -33,7 +33,9 @@ This function will summarize features at different taxonomic
 levels, e.g. transform species-level relative abundance into genus-level
 taxonomic profiles.
 
-The function expects feature names which encode taxonomic information, e.g.
+The function expects a SIAMCAT object that either contains an entry in the
+\link{phyloseq}{tax_table} slot of its \link{phyloseq} object, \strong{OR}
+a set of feature names which encode taxonomic information, e.g.
 
 \code{k__Bacteria;p__Actinobacteria;c__Actinobacteria;o__Acidimicrobiales;..}
 
@@ -47,24 +49,12 @@ necessarily reliable!!!}
 \examples{
 ## load the phyloseq example data
 data("GlobalPatterns")
-feat <- otu_table(GlobalPatterns)[1:500,]
+## create an example label
 label <- create.label(meta=sample_data(GlobalPatterns),
     label = "SampleType",
     case = c("Freshwater", "Freshwater (creek)", "Ocean"))
-# rename features to create feature names containing taxonomic information
-temp <- tax_table(GlobalPatterns)[1:500,]
-test <- apply(temp, 1, FUN=function(vec){
-    out <- ''
-    for (i in seq_along(vec)){
-        end <- ifelse(i == ncol(temp), '', ';')
-        x <- colnames(temp)[i]
-        x2 <- tolower(substr(x, 1, 1))
-        out <- paste0(out, x2, '__', vec[i], end)
-    }
-    return(out)})
-rownames(feat) <- test
 # run the constructor function
-siamcat <- siamcat(feat=feat, label=label, verbose=1)
-siamcat <- summarize.features(siamcat, level='g__', verbose=3)
+siamcat <- siamcat(phyloseq=GlobalPatterns, label=label, verbose=1)
+siamcat <- summarize.features(siamcat, level='Genus', verbose=3)
 }
 \keyword{internal}
