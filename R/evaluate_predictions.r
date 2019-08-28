@@ -99,6 +99,8 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
             roc.all[[c]] = roc(
                 response = label$label,
                 predictor = pred[, c],
+                direction = '<',
+                levels = label$info,
                 ci = FALSE
             )
             auroc.all[c] = roc.all[[c]]$auc
@@ -115,6 +117,8 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
         ci = TRUE,
         of = "se",
         sp = seq(0, 1, 0.05),
+        direction = '<',
+        levels = label$info,
         progress = 'none'
     )
     auroc = roc.mean$auc
