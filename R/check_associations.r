@@ -1304,7 +1304,7 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
 
         # AU-ROC
         temp <- roc(predictor = x, response = label$label, ci = TRUE,
-                    direction = '<')
+                    direction = '<', levels = label$info)
         aucs <- c(temp$ci)
 
         # prevalence shift
