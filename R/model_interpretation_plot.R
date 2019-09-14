@@ -349,7 +349,7 @@ model.interpretation.plot <-
                     roc(
                         predictor = f,
                         response = label$label,
-                        direction = "<"
+                        direction = "<", levels = label$info
                     )$auc
                 }
             )
