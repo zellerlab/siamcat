@@ -17,7 +17,7 @@
 #'
 #' @param filter.method string, method used for filtering the features, can be
 #'     one of these: \code{c('abundance', 'cum.abundance', 'prevalence',
-#'     'variance')}, defaults to \code{'abundance'}
+#'     'variance', 'pass')}, defaults to \code{'abundance'}
 #'
 #' @param cutoff float, abundace, prevalence, or variance cutoff, defaults
 #'     to \code{0.001} (see Details below)
@@ -52,6 +52,8 @@
 #'     in more than \code{1 - cutoff} percent of samples.
 #'     \item \code{'variance'} - remove features with low variance across
 #'     samples, i.e. those that have a variance lower than \code{cutoff}
+#'     \item \code{'pass'} - pass-through filtering will not change the
+#'     features
 #'     }
 #'
 #'     Features can also be filtered repeatedly with different methods, e.g.
@@ -89,7 +91,7 @@ filter.features <- function(siamcat,
 
     # checks
     if (!filter.method %in% c("abundance", "cum.abundance",
-                                "prevalence", "variance")) {
+                                "prevalence", "variance", "pass")) {
         stop("Unrecognized filter.method, exiting!\n")
     }
     if (!feature.type %in% c('original', 'filtered', 'normalized')){
@@ -177,13 +179,17 @@ filter.features <- function(siamcat,
         # remove features with very low variance
         f.var <- rowVars(feat)
         f.idx <- which(f.var >= cutoff)
+    } else if (filter.method == 'pass'){
+        f.idx <- seq_len(nrow(feat))
+        rm.unmapped <- FALSE
     }
 
 
-    if (verbose > 2)
-        message("+++ checking for unmapped reads")
+
     ### postprocessing and output generation
     if (rm.unmapped) {
+        if (verbose > 2)
+            message("+++ checking for unmapped reads")
         # remove 'unmapped' feature
         names.unmapped <- c("UNMAPPED", "-1", "X.1", "unmapped",
             "UNCLASSIFIED", "unclassified", "UNASSIGNED", "unassigned")
@@ -207,7 +213,7 @@ filter.features <- function(siamcat,
 
     if (verbose > 1)
         message(paste0("+++ removed ",
-            nrow(feat) - length(f.idx) - sum(unm.idx),
+            nrow(feat) - length(f.idx),
             " features whose values did not exceed ", cutoff,
             " in any sample (retaining ", length(f.idx), ")" ))
 
