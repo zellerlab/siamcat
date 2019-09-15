@@ -17,12 +17,11 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="Check and visualize associations between features and classes — check.associations" />
-
 <meta property="og:description" content="This function computes different measures of association between
     features and the label and visualizes the results" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -42,6 +41,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -89,7 +89,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -110,6 +109,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -121,19 +121,17 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function computes different measures of association between
     features and the label and visualizes the results</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>check.associations</span>(<span class='no'>siamcat</span>, <span class='kw'>fn.plot</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
     <span class='kw'>alpha</span> <span class='kw'>=</span><span class='fl'>0.05</span>, <span class='kw'>mult.corr</span> <span class='kw'>=</span> <span class='st'>"fdr"</span>, <span class='kw'>sort.by</span> <span class='kw'>=</span> <span class='st'>"fc"</span>,
     <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>, <span class='kw'>pr.cutoff</span> <span class='kw'>=</span> <span class='fl'>1e-6</span>, <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>,
     <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"quantile.box"</span>,
-    <span class='kw'>panels</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"fc"</span>,<span class='st'>"auroc"</span>), <span class='kw'>prompt</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <span class='kw'>panels</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"fc"</span>,<span class='st'>"auroc"</span>), <span class='kw'>prompt</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
     <span class='kw'>feature.type</span> <span class='kw'>=</span> <span class='st'>'filtered'</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -158,7 +156,7 @@ of the same length as the number of classes), defaults to <code>'RdYlBu'</code><
     <tr>
       <th>mult.corr</th>
       <td><p>string, multiple hypothesis correction method, see
-<code><a href='https://www.rdocumentation.org/packages/stats/topics/p.adjust'>p.adjust</a></code>, defaults to <code>"fdr"</code></p></td>
+<code><a href='https://rdrr.io/r/stats/p.adjust.html'>p.adjust</a></code>, defaults to <code>"fdr"</code></p></td>
     </tr>
     <tr>
       <th>sort.by</th>
@@ -185,14 +183,14 @@ defaults to <code>50</code></p></td>
     <tr>
       <th>plot.type</th>
       <td><p>string, specify how the abundance should be plotted, must be
-one of these: <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("bean", "box", "quantile.box", "quantile.rect")</a></code>,
+one of these: <code><a href='https://rdrr.io/r/base/c.html'>c("bean", "box", "quantile.box", "quantile.rect")</a></code>,
 defaults to <code>"quantile.box"</code></p></td>
     </tr>
     <tr>
       <th>panels</th>
       <td><p>vector, name of the panels to be plotted next to the
-abundances, possible entries are <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("fc", "auroc",
-"prevalence")</a></code>, defaults to <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("fc", "auroc")</a></code></p></td>
+abundances, possible entries are <code><a href='https://rdrr.io/r/base/c.html'>c("fc", "auroc",
+"prevalence")</a></code>, defaults to <code><a href='https://rdrr.io/r/base/c.html'>c("fc", "auroc")</a></code></p></td>
     </tr>
     <tr>
       <th>prompt</th>
@@ -215,12 +213,11 @@ normal level of information and <code>3</code> for full debug information,
 defaults to <code>1</code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the slot
     <code>associations</code> filled</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>For each feature, this function calculates different measures of
@@ -237,16 +234,16 @@ defaults to <code>1</code></p></td>
 <li><p>The prevalence shift between the two different classes found in
     the label.</p></li>
 </ul>
-    <p>Finally, the function produces a plot of the top <code>max.show</code>
+
+<p>Finally, the function produces a plot of the top <code>max.show</code>
     associated features at a user-specified significance level <code>alpha</code>,
     showing the distribution of the log10-transformed abundances for both
     classes, and user-selected panels for the effect (AU-ROC, Prevalence
     Shift, and Fold Change).</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Example data</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>siamcat_example</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
 
 <span class='co'># Simple example</span>
 <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'>check.associations</span>(<span class='no'>siamcat_example</span>,
@@ -260,22 +257,20 @@ defaults to <code>1</code></p></td>
 <span class='co'># Custom colors</span>
 <span class='no'>siamcat_example</span> <span class='kw'>&lt;-</span> <span class='fu'>check.associations</span>(<span class='no'>siamcat_example</span>,
     <span class='kw'>fn.plot</span><span class='kw'>=</span><span class='st'>'./assoc_plot_blue_yellow.pdf'</span>, <span class='kw'>plot.type</span><span class='kw'>=</span><span class='st'>'box'</span>,
-    <span class='kw'>color.scheme</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'cornflowerblue'</span>, <span class='st'>'#ffc125'</span>))</div><div class='output co'>#&gt; <span class='message'>Plotted associations between features and label successfully to: ./assoc_plot_blue_yellow.pdf</span></div></pre>
+    <span class='kw'>color.scheme</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'cornflowerblue'</span>, <span class='st'>'#ffc125'</span>))</div><div class='output co'>#&gt; <span class='message'>Plotted associations between features and label successfully to: ./assoc_plot_blue_yellow.pdf</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -288,11 +283,14 @@ defaults to <code>1</code></p></td>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

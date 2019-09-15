@@ -17,12 +17,11 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="Perform feature normalization — normalize.features" />
-
 <meta property="og:description" content="This function performs feature normalization according to user-
     specified parameters." />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -42,6 +41,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -89,7 +89,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -110,6 +109,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -121,20 +121,18 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function performs feature normalization according to user-
     specified parameters.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>normalize.features</span>(<span class='no'>siamcat</span>,
-    <span class='kw'>norm.method</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"rank.unit"</span>, <span class='st'>"rank.std"</span>,
-        <span class='st'>"log.std"</span>, <span class='st'>"log.unit"</span>, <span class='st'>"log.clr"</span>, <span class='st'>"pass"</span>),
-    <span class='kw'>norm.param</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>log.n0</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>, <span class='kw'>sd.min.q</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+    <span class='kw'>norm.method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"rank.unit"</span>, <span class='st'>"rank.std"</span>,
+        <span class='st'>"log.std"</span>, <span class='st'>"log.unit"</span>, <span class='st'>"log.clr"</span>, <span class='st'>"std"</span>, <span class='st'>"pass"</span>),
+    <span class='kw'>norm.param</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>log.n0</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>, <span class='kw'>sd.min.q</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
         <span class='kw'>n.p</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>norm.margin</span> <span class='kw'>=</span> <span class='fl'>1</span>),
     <span class='kw'>feature.type</span><span class='kw'>=</span><span class='st'>'filtered'</span>,
     <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -145,8 +143,8 @@
     <tr>
       <th>norm.method</th>
       <td><p>string, normalization method, can be one of these:
-'<code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr',
-'pass')</a></code></p></td>
+'<code><a href='https://rdrr.io/r/base/c.html'>c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr',
+'std', 'pass')</a></code></p></td>
     </tr>
     <tr>
       <th>norm.param</th>
@@ -168,14 +166,13 @@ normal level of information and <code>3</code> for full debug information,
 defaults to <code>1</code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object of class <a href='siamcat-class.html'>siamcat-class</a> with normalized features</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There are six different normalization methods available:</p><ul>
+    <p>There are seven different normalization methods available:</p><ul>
 <li><p><code>'rank.unit'</code> - converts features to ranks and normalizes
     each column (=sample) by the square root of the sum of ranks</p></li>
 <li><p><code>'rank.std'</code> - converts features to ranks and applies z-score
@@ -186,15 +183,18 @@ defaults to <code>1</code></p></td>
     pseudocounts) and applies z-score standardization</p></li>
 <li><p><code>'log.unit'</code> - log-transforms features (after addition of
     pseudocounts) and normalizes by features or samples with different norms</p></li>
+<li><p><code>'std'</code> - z-score standardization without any other
+    transformation</p></li>
 <li><p><code>'pass'</code> - pass-through normalization will not change the
     features</p></li>
 </ul>
-    <p>The list entries in <code>'norm.param'</code> specify the normalzation parameters,
+
+<p>The list entries in <code>'norm.param'</code> specify the normalzation parameters,
 which are dependant on the normalization method of choice:</p><ul>
-<li><p><code>'rank.unit'</code> does not require any other parameters</p></li>
-<li><p><code>'rank.std'</code> requires <code>sd.min.q</code>, quantile of the
-    distribution of standard deviations of all features that will be added
-    to the denominator during standardization in order to avoid
+<li><p><code>'rank.unit' or 'pass'</code> does not require any other parameters</p></li>
+<li><p><code>'rank.std' and 'std'</code> requires <code>sd.min.q</code>, quantile
+    of the distribution of standard deviations of all features that will
+    be added to the denominator during standardization in order to avoid
     underestimation of the standard deviation, defaults to 0.1</p></li>
 <li><p><code>'log.clr'</code> requires <code>log.n0</code>, which is the pseudocount
     to be added before log-transformation, defaults to <code>NULL</code> leading
@@ -210,7 +210,8 @@ which are dependant on the normalization method of choice:</p><ul>
     over features, <code>2</code> over samples, and <code>3</code> for normalization
     by the global maximum.</p></li>
 </ul>
-    <p>The function additionally allows to perform a frozen normalization on a
+
+<p>The function additionally allows to perform a frozen normalization on a
 different dataset. After normalizing the first dataset, the <code>norm_feat</code>
 slot in the siamcat object contains all parameters of the normalization,
 which you can access via the <a href='norm_params-methods.html'>norm_params</a> accessor.</p>
@@ -218,11 +219,10 @@ which you can access via the <a href='norm_params-methods.html'>norm_params</a> 
 function supplying the normalization parameters as argument to
 <code>norm.param</code>:
 <code>norm.param=norm_params(siamcat_reference)</code>. See also the example below.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Example data</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>siamcat_example</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
 
 <span class='co'># Simple example</span>
 <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>,
@@ -230,31 +230,27 @@ function supplying the normalization parameters as argument to
 <span class='co'># log.unit example</span>
 <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>,
     <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'log.unit'</span>,
-    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>n.p</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>norm.margin</span><span class='kw'>=</span><span class='fl'>1</span>))</div><div class='output co'>#&gt; <span class='message'>Features normalized successfully.</span></div><div class='input'>
+    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>n.p</span><span class='kw'>=</span><span class='fl'>1</span>, <span class='kw'>norm.margin</span><span class='kw'>=</span><span class='fl'>1</span>))</div><div class='output co'>#&gt; <span class='message'>Features normalized successfully.</span></div><div class='input'>
 <span class='co'># log.std example</span>
 <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat_example</span>,
     <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'log.std'</span>,
-    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>sd.min.q</span><span class='kw'>=</span><span class='fl'>.1</span>))</div><div class='output co'>#&gt; <span class='message'>Features normalized successfully.</span></div><div class='input'>
-# Frozen normalization
-</div><span class='co'># NOT RUN {</span>
-<span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat</span>,
-    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='norm_params-methods.html'>norm_params</a></span>(<span class='no'>siamcat_reference</span>))
-<span class='co'># }</span></pre>
+    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>sd.min.q</span><span class='kw'>=</span><span class='fl'>.1</span>))</div><div class='output co'>#&gt; <span class='message'>Features normalized successfully.</span></div><div class='input'>
+<span class='co'># Frozen normalization</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat</span>,
+    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='norm_params-methods.html'>norm_params</a></span>(<span class='no'>siamcat_reference</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -267,11 +263,14 @@ function supplying the normalization parameters as argument to
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

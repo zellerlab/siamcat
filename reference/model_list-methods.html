@@ -19,12 +19,11 @@ a SIAMCAT object — model_list • SIAMCAT</title>
 
 <meta property="og:title" content="Retrieve the information stored in the <code>model_list</code> slot within
 a SIAMCAT object — model_list" />
-
 <meta property="og:description" content="Function to retrieve the information stored in the
 model_list slot within a SIAMCAT object" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -44,6 +43,7 @@ model_list slot within a SIAMCAT object" />
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -91,7 +91,6 @@ model_list slot within a SIAMCAT object" />
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -112,6 +111,7 @@ model_list slot within a SIAMCAT object" />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -124,17 +124,15 @@ a SIAMCAT object</h1>
     </div>
 
     <div class="ref-description">
-    
     <p>Function to retrieve the information stored in the
 <code>model_list</code> slot within a SIAMCAT object</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>model_list</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>1</span>)
 
 <span class='co'># S4 method for siamcat</span>
 <span class='fu'>model_list</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -149,12 +147,11 @@ that contains trained models</p></td>
 values can be either <code>0</code> (no output) or <code>1</code> (print message)</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The list stored in the <code>model_list</code> slot of the SIAMCAT object
 or <code>NULL</code></p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The function will return a list containing the information stored
@@ -164,27 +161,25 @@ in the <code>model_list</code> slot of a SIAMCAT object. This list contains:</p>
 <li><p><code>feature_type</code> - string describing on which type of features the
 models were trained</p></li>
 </ul>
-    
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>siamcat_example</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
 <span class='no'>temp</span> <span class='kw'>&lt;-</span> <span class='fu'>model_list</span>(<span class='no'>siamcat_example</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>temp</span>)</div><div class='output co'>#&gt; [1] "models"       "model.type"   "feature.type"</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>temp</span>)</div><div class='output co'>#&gt; [1] "models"       "model.type"   "feature.type"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -197,11 +192,14 @@ models were trained</p></li>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

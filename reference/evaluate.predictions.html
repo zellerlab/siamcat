@@ -17,7 +17,6 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="Evaluate prediction results — evaluate.predictions" />
-
 <meta property="og:description" content="This function takes the correct labels and predictions for all
     samples and evaluates the results using the
 Area Under the Receiver Operating Characteristic (ROC)
@@ -27,9 +26,9 @@ as metric. Predictions can be supplied either for a single case or as
     matrix after resampling of the dataset.
 Prediction results are usually produced with the function
     make.predictions." />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -49,6 +48,7 @@ Prediction results are usually produced with the function
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -96,7 +96,6 @@ Prediction results are usually produced with the function
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -117,6 +116,7 @@ Prediction results are usually produced with the function
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -128,7 +128,6 @@ Prediction results are usually produced with the function
     </div>
 
     <div class="ref-description">
-    
     <p>This function takes the correct labels and predictions for all
     samples and evaluates the results using the</p><ul>
 <li><p>Area Under the Receiver Operating Characteristic (ROC)
@@ -138,11 +137,10 @@ Prediction results are usually produced with the function
     matrix after resampling of the dataset.</p>
 <p>Prediction results are usually produced with the function
     <a href='make.predictions.html'>make.predictions</a>.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>evaluate.predictions</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -158,12 +156,11 @@ normal level of information and <code>3</code> for full debug information,
 defaults to <code>1</code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with the
     slot <code>eval_data</code> filled</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This functions calculates several metrices for the predictions in
@@ -174,7 +171,7 @@ defaults to <code>1</code></p></td>
     supplied <a href='siamcat-class.html'>siamcat-class</a>-object. The <code>eval_data</code>-slot
     contains a list with several entries:</p><ul>
 <li><p><code>$roc</code> - average ROC-curve across repeats or a
-                single ROC-curve on complete dataset (see <a href='https://www.rdocumentation.org/packages/pROC/topics/roc'>roc</a>);</p></li>
+                single ROC-curve on complete dataset (see <a href='https://rdrr.io/pkg/pROC/man/roc.html'>roc</a>);</p></li>
 <li><p><code>$auroc</code> - AUC value for the average ROC-curve;</p></li>
 <li><p><code>$prc</code> - list containing the positive predictive value
                 (precision) and true positive rate (recall) values used
@@ -185,7 +182,7 @@ defaults to <code>1</code></p></td>
                 negatives, and true positives.</p></li>
 </ul><p>For the case of repeated cross-validation, the function will
     additonally return</p><ul>
-<li><p><code>$roc.all</code> - list of roc objects (see <a href='https://www.rdocumentation.org/packages/pROC/topics/roc'>roc</a>)
+<li><p><code>$roc.all</code> - list of roc objects (see <a href='https://rdrr.io/pkg/pROC/man/roc.html'>roc</a>)
                 for every repeat;</p></li>
 <li><p><code>$auroc.all</code> - vector of AUC values for the ROC curves
                 for every repeat;</p></li>
@@ -195,10 +192,10 @@ defaults to <code>1</code></p></td>
 <li><p><code>$ev.all</code> - list of <code>ev</code> lists (see above)
                 for every repeat.</p></li>
 </ul>
-    
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>siamcat_example</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
 
 <span class='no'>siamcat_evaluated</span> <span class='kw'>&lt;-</span> <span class='fu'>evaluate.predictions</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt; <span class='message'>Evaluated predictions successfully.</span></div></pre>
   </div>
@@ -206,16 +203,14 @@ defaults to <code>1</code></p></td>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -228,11 +223,14 @@ defaults to <code>1</code></p></td>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

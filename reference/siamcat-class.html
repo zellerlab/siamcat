@@ -17,11 +17,10 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="The S4 SIAMCAT class — siamcat-class" />
-
 <meta property="og:description" content="The SIAMCAT class" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -41,6 +40,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -88,7 +88,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -109,6 +108,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -120,12 +120,11 @@
     </div>
 
     <div class="ref-description">
-    
     <p>The SIAMCAT class</p>
-    
     </div>
 
-        
+
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The S4 SIAMCAT class stores the results from the SIAMCAT
@@ -133,50 +132,57 @@ workflow in different slots. The different slots will be filled by
 different functions (referenced in the description below).</p>
 <p>In order to contruct a SIAMCAT class object, please refer to the
 documentation of the construction function <a href='siamcat.html'>siamcat</a>.</p>
-<p>The SIAMCAT class is based on the <a href='https://www.rdocumentation.org/packages/phyloseq/topics/phyloseq-class'>phyloseq-class</a>. Therefore,
+<p>The SIAMCAT class is based on the <a href='https://rdrr.io/pkg/phyloseq/man/phyloseq-class.html'>phyloseq-class</a>. Therefore,
 you can easily import a <code>phyloseq</code> object into SIAMCAT.</p>
-    
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
     
-    <dl class='dl-horizontal'>
-<dt><code>phyloseq</code></dt><dd><p>object of class <a href='https://www.rdocumentation.org/packages/phyloseq/topics/phyloseq-class'>phyloseq-class</a></p></dd>
-    <dt><code>label</code></dt><dd><p>list containing the label information for the samples and
+
+<dl class='dl-horizontal'>
+<dt><code>phyloseq</code></dt><dd><p>object of class <a href='https://rdrr.io/pkg/phyloseq/man/phyloseq-class.html'>phyloseq-class</a></p></dd>
+
+<dt><code>label</code></dt><dd><p>list containing the label information for the samples and
 some metadata about the label, created by <a href='create.label.html'>create.label</a> or when
 creating the siamcat-class object by calling <a href='siamcat.html'>siamcat</a></p></dd>
-    <dt><code>filt_feat</code></dt><dd><p>list containing the filtered features as matrix and
+
+<dt><code>filt_feat</code></dt><dd><p>list containing the filtered features as matrix and
 the list of filtering parameters, created by calling the
 <a href='filter.features.html'>filter.features</a> function</p></dd>
-    <dt><code>associations</code></dt><dd><p>list containing the parameters for association
+
+<dt><code>associations</code></dt><dd><p>list containing the parameters for association
 testing and the results of association testing with these parameters in
 a dataframe, created by calling the <a href='check.associations.html'>check.associations</a> function</p></dd>
-    <dt><code>norm_feat</code></dt><dd><p>list containing the normalized features as matrix and
+
+<dt><code>norm_feat</code></dt><dd><p>list containing the normalized features as matrix and
 the list of normalziation parameters (for frozen normalization), created by
 calling the <a href='normalize.features.html'>normalize.features</a> function</p></dd>
-    <dt><code>data_split</code></dt><dd><p>list containing cross-validation instances, created by
+
+<dt><code>data_split</code></dt><dd><p>list containing cross-validation instances, created by
 calling the <a href='create.data.split.html'>create.data.split</a> function</p></dd>
-    <dt><code>model_list</code></dt><dd><p>list containing the trained models, the type of model
+
+<dt><code>model_list</code></dt><dd><p>list containing the trained models, the type of model
 that was trained, and on which kind of features it was trained, created by
 calling the <a href='train.model.html'>train.model</a> function</p></dd>
-    <dt><code>pred_matrix</code></dt><dd><p>matrix of predictions, created by calling the
+
+<dt><code>pred_matrix</code></dt><dd><p>matrix of predictions, created by calling the
 <a href='make.predictions.html'>make.predictions</a> function</p></dd>
-    <dt><code>eval_data</code></dt><dd><p>list containing different evaluation metrics, created by
+
+<dt><code>eval_data</code></dt><dd><p>list containing different evaluation metrics, created by
 calling the <a href='evaluate.predictions.html'>evaluate.predictions</a> function</p></dd>
+
 </dl>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
       <li><a href="#details">Details</a></li>
-
       <li><a href="#slots">Slots</a></li>
-          </ul>
+    </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -189,11 +195,14 @@ calling the <a href='evaluate.predictions.html'>evaluate.predictions</a> functio
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

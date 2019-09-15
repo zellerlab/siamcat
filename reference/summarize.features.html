@@ -17,11 +17,10 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="Summarize features — summarize.features" />
-
 <meta property="og:description" content="This function summarize features on a specific taxonomic level" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -41,6 +40,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -88,7 +88,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -109,6 +108,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -120,14 +120,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function summarize features on a specific taxonomic level</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>summarize.features</span>(<span class='no'>siamcat</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='st'>'g__'</span>,
                     <span class='kw'>feature.type</span><span class='kw'>=</span><span class='st'>'original'</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>1</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -154,64 +152,51 @@ normal level of information and <code>3</code> for full debug information,
 defaults to <code>1</code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>object of class <a href='siamcat-class.html'>siamcat-class</a> with a summarized feature table</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function will summarize features at different taxonomic
 levels, e.g. transform species-level relative abundance into genus-level
 taxonomic profiles.</p>
-<p>The function expects feature names which encode taxonomic information, e.g.</p>
+<p>The function expects a SIAMCAT object that either contains an entry in the
+phyloseqtax_table slot of its phyloseq object, <strong>OR</strong>
+a set of feature names which encode taxonomic information, e.g.</p>
 <p><code>k__Bacteria;p__Actinobacteria;c__Actinobacteria;o__Acidimicrobiales;..</code></p>
 <p>Then, for a given taxonomic level (e.g. <code>g__</code>), the function will
 sum up all the relative abundances of features belonging to the same group
 at that specific taxonomic level.</p>
 <p><strong>Please note that this function is currently maturing and not
 necessarily reliable!!!</strong></p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## load the phyloseq example data</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='st'>"GlobalPatterns"</span>)
-<span class='no'>feat</span> <span class='kw'>&lt;-</span> <span class='fu'>otu_table</span>(<span class='no'>GlobalPatterns</span>)[<span class='fl'>1</span>:<span class='fl'>500</span>,]
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"GlobalPatterns"</span>)
+<span class='co'>## create an example label</span>
 <span class='no'>label</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create.label.html'>create.label</a></span>(<span class='kw'>meta</span><span class='kw'>=</span><span class='fu'>sample_data</span>(<span class='no'>GlobalPatterns</span>),
     <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"SampleType"</span>,
-    <span class='kw'>case</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Freshwater"</span>, <span class='st'>"Freshwater (creek)"</span>, <span class='st'>"Ocean"</span>))</div><div class='output co'>#&gt; <span class='message'>Label used as case:</span>
+    <span class='kw'>case</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Freshwater"</span>, <span class='st'>"Freshwater (creek)"</span>, <span class='st'>"Ocean"</span>))</div><div class='output co'>#&gt; <span class='message'>Label used as case:</span>
 #&gt; <span class='message'>   Freshwater,Freshwater (creek),Ocean</span>
 #&gt; <span class='message'>Label used as control:</span>
-#&gt; <span class='message'>   rest</span></div><div class='output co'>#&gt; <span class='message'>+ finished create.label.from.metadata in 0.002 s</span></div><div class='input'><span class='co'># rename features to create feature names containing taxonomic information</span>
-<span class='no'>temp</span> <span class='kw'>&lt;-</span> <span class='fu'>tax_table</span>(<span class='no'>GlobalPatterns</span>)[<span class='fl'>1</span>:<span class='fl'>500</span>,]
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>temp</span>, <span class='fl'>1</span>, <span class='kw'>FUN</span><span class='kw'>=</span><span class='kw'>function</span>(<span class='no'>vec</span>){
-    <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='st'>''</span>
-    <span class='kw'>for</span> (<span class='no'>i</span> <span class='kw'>in</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq_along</a></span>(<span class='no'>vec</span>)){
-        <span class='no'>end</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/ifelse'>ifelse</a></span>(<span class='no'>i</span> <span class='kw'>==</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>ncol</a></span>(<span class='no'>temp</span>), <span class='st'>''</span>, <span class='st'>';'</span>)
-        <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>colnames</a></span>(<span class='no'>temp</span>)[<span class='no'>i</span>]
-        <span class='no'>x2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/chartr'>tolower</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/substr'>substr</a></span>(<span class='no'>x</span>, <span class='fl'>1</span>, <span class='fl'>1</span>))
-        <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>out</span>, <span class='no'>x2</span>, <span class='st'>'__'</span>, <span class='no'>vec</span>[<span class='no'>i</span>], <span class='no'>end</span>)
-    }
-    <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/function'>return</a></span>(<span class='no'>out</span>)})
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>rownames</a></span>(<span class='no'>feat</span>) <span class='kw'>&lt;-</span> <span class='no'>test</span>
-<span class='co'># run the constructor function</span>
-<span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='siamcat.html'>siamcat</a></span>(<span class='kw'>feat</span><span class='kw'>=</span><span class='no'>feat</span>, <span class='kw'>label</span><span class='kw'>=</span><span class='no'>label</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: ### Warning: The data do not seem to consist of relative abundances!</span></div><div class='output co'>#&gt; <span class='message'>Data set has only 8 training examples of class Case .</span>
-#&gt; <span class='message'>Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipeline.</span></div><div class='output co'>#&gt; <span class='message'>Data succesfully validated</span></div><div class='input'><span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'>summarize.features</span>(<span class='no'>siamcat</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='st'>'g__'</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='message'>+ starting summarize.features</span></div><div class='output co'>#&gt; <span class='message'>+++ summarizing on level: g__</span></div><div class='output co'>#&gt; <span class='message'>+++ summarized features table contains: 33 features</span></div><div class='output co'>#&gt; <span class='message'>+ finished summarize.features in 0.026 s</span></div></pre>
+#&gt; <span class='message'>   rest</span></div><div class='output co'>#&gt; <span class='message'>+ finished create.label.from.metadata in 0.002 s</span></div><div class='input'><span class='co'># run the constructor function</span>
+<span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='siamcat.html'>siamcat</a></span>(<span class='kw'>phyloseq</span><span class='kw'>=</span><span class='no'>GlobalPatterns</span>, <span class='kw'>label</span><span class='kw'>=</span><span class='no'>label</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: ### Warning: The data do not seem to consist of relative abundances! (values ranging between 0 and 1)</span></div><div class='output co'>#&gt; <span class='message'>Data set has only 8 training examples of class Case .</span>
+#&gt; <span class='message'>Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipeline.</span></div><div class='output co'>#&gt; <span class='message'>Data succesfully validated</span></div><div class='input'><span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'>summarize.features</span>(<span class='no'>siamcat</span>, <span class='kw'>level</span><span class='kw'>=</span><span class='st'>'Genus'</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='message'>+ starting summarize.features</span></div><div class='output co'>#&gt; <span class='message'>+++ summarizing on level: Genus</span></div><div class='output co'>#&gt; <span class='message'>+++ summarized features table contains: 984 features</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Tax table does not seem to be consistent in all cases...</span>
+#&gt; <span class='warning'>Will be collapsed at level Genus</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Phylogenetic tree in original SIAMCAT object had to be deleted...</span></div><div class='output co'>#&gt; <span class='message'>+ finished summarize.features in 0.706 s</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -224,11 +209,14 @@ necessarily reliable!!!</strong></p>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

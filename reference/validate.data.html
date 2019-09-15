@@ -17,12 +17,11 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="Validate samples in labels, features, and metadata — validate.data" />
-
 <meta property="og:description" content="This function checks if labels are available for all samples in
     features. Additionally validates metadata, if available." />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -42,6 +41,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -89,7 +89,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -110,6 +109,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -121,14 +121,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function checks if labels are available for all samples in
     features. Additionally validates metadata, if available.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>validate.data</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -144,11 +142,10 @@ normal level of information and <code>3</code> for full debug information,
 defaults to <code>1</code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object of class <a href='siamcat-class.html'>siamcat-class</a></p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function validates the data by checking that labels are
@@ -157,10 +154,9 @@ defaults to <code>1</code></p></td>
     number. If metadata is available, the overlap between labels and
     metadata is checked as well.</p>
 <p>This function is run when a <a href='siamcat-class.html'>siamcat-class</a> object is created.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>siamcat_example</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
 
 <span class='co'># validate.data should be run before completing the pipeline</span>
 <span class='co'># since the complete pipeline had been run on siamcat_example, we</span>
@@ -168,22 +164,20 @@ defaults to <code>1</code></p></td>
 <span class='no'>feat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='orig_feat-methods.html'>orig_feat</a></span>(<span class='no'>siamcat_example</span>)
 <span class='no'>label</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='label-methods.html'>label</a></span>(<span class='no'>siamcat_example</span>)
 <span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='siamcat.html'>siamcat</a></span>(<span class='kw'>feat</span><span class='kw'>=</span><span class='no'>feat</span>, <span class='kw'>label</span><span class='kw'>=</span><span class='no'>label</span>, <span class='kw'>validate</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: ### Not validating the SIAMCAT object!!!</span>
-#&gt; <span class='warning'>	Please be advised that some functions may not work correctly!</span></div><div class='input'><span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'>validate.data</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>+ starting validate.data</span></div><div class='output co'>#&gt; <span class='message'>+ Keeping labels of 141 sample(s).</span></div><div class='output co'>#&gt; <span class='message'>+ finished validate.data in 0.011 s</span></div></pre>
+#&gt; <span class='warning'>	Please be advised that some functions may not work correctly!</span></div><div class='input'><span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'>validate.data</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>+ starting validate.data</span></div><div class='output co'>#&gt; <span class='message'>+ Keeping labels of 141 sample(s).</span></div><div class='output co'>#&gt; <span class='message'>+ finished validate.data in 0.006 s</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -196,11 +190,14 @@ defaults to <code>1</code></p></td>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

@@ -6,18 +6,17 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parse label header — parse.label.header • SIAMCAT</title>
+<title>Page not found (404) • SIAMCAT</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 <!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script>
 
-<meta property="og:title" content="Parse label header — parse.label.header" />
-<meta property="og:description" content="This function parses the header of a label file" />
+<meta property="og:title" content="Page not found (404)" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -44,7 +43,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -56,7 +55,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">SIAMCAT</a>
+        <a class="navbar-link" href="index.html">SIAMCAT</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
       </span>
     </div>
@@ -64,7 +63,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../articles/SIAMCAT_vignette.html">Get Started</a>
+  <a href="articles/SIAMCAT_vignette.html">Get Started</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -74,18 +73,18 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
+      <a href="articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+      <a href="articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../reference/index.html">Functions</a>
+  <a href="reference/index.html">Functions</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,51 +111,17 @@
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-    <h1>Parse label header</h1>
-    
-    <div class="hidden name"><code>parse.label.header.Rd</code></div>
+      <h1>Page not found (404)</h1>
     </div>
 
-    <div class="ref-description">
-    <p>This function parses the header of a label file</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>parse.label.header</span>(<span class='no'>label.header</span>)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>label.header</th>
-      <td><p>- string in the format: #&lt;TYPE&gt;:&lt;L1&gt;=&lt;class1&gt;;
-&lt;L2&gt;=&lt;class2&gt;[;&lt;L3&gt;=&lt;class3&gt;] where &lt;TYPE&gt; is a string specifying the type
-of label variable such as BINARY (for binary classification), CATEGORICAL
-(for multi-class classification), or CONTINUOUS (for regression)
-&lt;L1&gt; is a short numeric label for the first class with description &lt;class1&gt;
-(similarly for the other classes)</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>a list with tow items</p><ul>
-<li><p><code>$type</code> type of the label: BINARY CONTINUOUS or CATEGORICAL</p></li>
-<li><p><code>$class.descr</code> lables and information on what do they mean</p></li>
-</ul>
-
+Content not found. Please use links in the navbar.
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-    </ul>
 
-  </div>
 </div>
+
 
 
       <footer>

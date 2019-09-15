@@ -17,11 +17,10 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="Retrieve the results of association testing from a SIAMCAT object — associations" />
-
 <meta property="og:description" content="Function to retrieve the results of association testing" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -41,6 +40,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -88,7 +88,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -109,6 +108,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -120,16 +120,14 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Function to retrieve the results of association testing</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>associations</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>1</span>)
 
 <span class='co'># S4 method for siamcat</span>
 <span class='fu'>associations</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -144,21 +142,19 @@ containing the results of association testing</p></td>
 values can be either <code>0</code> (no output) or <code>1</code> (print message)</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A <code>data.frame</code> of association testing results or <code>NULL</code></p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The function returns the results of the association testing
 procedure as dataframe. See <a href='check.associations.html'>check.associations</a> for more details.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>siamcat_example</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
 <span class='no'>temp</span> <span class='kw'>&lt;-</span> <span class='fu'>associations</span>(<span class='no'>siamcat_example</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>temp</span>)</div><div class='output co'>#&gt;                                                 fc        p.val       auc
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>temp</span>)</div><div class='output co'>#&gt;                                                 fc        p.val       auc
 #&gt; unclassified Fusobacterium [c:1482]      0.6455199 9.835836e-11 0.7497856
 #&gt; unclassified Fusobacterium [c:1481]      0.8870737 2.999095e-08 0.7310249
 #&gt; Pseudoflavonifractor capillosus [h:1579] 0.3248662 1.454894e-05 0.7184820
@@ -191,16 +187,14 @@ procedure as dataframe. See <a href='check.associations.html'>check.associations
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -213,11 +207,14 @@ procedure as dataframe. See <a href='check.associations.html'>check.associations
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

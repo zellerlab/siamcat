@@ -17,11 +17,10 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="Read label file — read.label" />
-
 <meta property="og:description" content="Read label information from a file" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -41,6 +40,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -88,7 +88,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -109,6 +108,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -120,13 +120,11 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Read label information from a file</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>read.label</span>(<span class='no'>fn.in.label</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -135,7 +133,7 @@
       <td><p>name of the tsv file containing labels</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>label object containing several entries:</p><ul>
@@ -145,7 +143,6 @@ file;</p></li>
 <li><p><code>$type</code> information about the label type (e.g. <code>BINARY</code>);</p></li>
 </ul>
 
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function reads in a tsv file with labels and converts it
@@ -159,11 +156,10 @@ into a label.</p>
 <code>1</code> for each case and <code>-1</code> for each control.</p>
 <p>Note: Labels can take other numeric values (but not characters or strings);
 importantly, the label for cases has to be greater than the one for controls</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># run with example data</span>
-<span class='no'>fn.label</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>'extdata'</span>,
+<span class='no'>fn.label</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>'extdata'</span>,
     <span class='st'>'label_crc_zeller_msb_mocat_specI.tsv'</span>,
     <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>'SIAMCAT'</span>)
 
@@ -173,16 +169,14 @@ importantly, the label for cases has to be greater than the one for controls</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -195,11 +189,14 @@ importantly, the label for cases has to be greater than the one for controls</p>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

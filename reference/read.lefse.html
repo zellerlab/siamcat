@@ -17,11 +17,10 @@
 <script src="../pkgdown.js"></script>
 
 <meta property="og:title" content="read an input file in a LEfSe input format — read.lefse" />
-
 <meta property="og:description" content="This reads an input file in a LEfSe input format" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -41,6 +40,7 @@
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'p.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
+
   </head>
 
   <body>
@@ -88,7 +88,6 @@
   <a href="../reference/index.html">Functions</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
@@ -109,6 +108,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -120,13 +120,11 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This reads an input file in a LEfSe input format</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>read.lefse</span>(<span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"data.txt"</span>, <span class='kw'>rows.meta</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>row.samples</span> <span class='kw'>=</span> <span class='fl'>2</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -143,7 +141,7 @@
       <td><p>specifies in which row sample names are stored</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a list with two elements:</p><ul>
@@ -151,11 +149,10 @@
 <li><p><code>meta</code> a metadate matrix</p></li>
 </ul>
 
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>fn.in.lefse</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>,
+<span class='no'>fn.in.lefse</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>,
 <span class='st'>"LEfSe_crc_zeller_msb_mocat_specI.tsv"</span>,<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"SIAMCAT"</span>)
 <span class='no'>meta.and.features</span> <span class='kw'>&lt;-</span> <span class='fu'>read.lefse</span>(<span class='no'>fn.in.lefse</span>, <span class='kw'>rows.meta</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>6</span>,
 <span class='kw'>row.samples</span> <span class='kw'>=</span> <span class='fl'>7</span>)
@@ -164,21 +161,20 @@
 <span class='no'>label</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create.label.html'>create.label</a></span>(<span class='kw'>meta</span><span class='kw'>=</span><span class='no'>meta</span>, <span class='kw'>label</span><span class='kw'>=</span><span class='st'>"label"</span>, <span class='kw'>case</span> <span class='kw'>=</span> <span class='st'>"cancer"</span>)</div><div class='output co'>#&gt; <span class='message'>Label used as case:</span>
 #&gt; <span class='message'>   cancer</span>
 #&gt; <span class='message'>Label used as control:</span>
-#&gt; <span class='message'>   healthy</span></div><div class='output co'>#&gt; <span class='message'>+ finished create.label.from.metadata in 0.001 s</span></div><div class='input'><span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='siamcat.html'>siamcat</a></span>(<span class='kw'>feat</span><span class='kw'>=</span><span class='no'>feat</span>, <span class='kw'>label</span><span class='kw'>=</span><span class='no'>label</span>, <span class='kw'>meta</span><span class='kw'>=</span><span class='no'>meta</span>)</div><div class='output co'>#&gt; <span class='message'>+ starting validate.data</span></div><div class='output co'>#&gt; <span class='message'>+++ checking overlap between labels and features</span></div><div class='output co'>#&gt; <span class='message'>+ Keeping labels of 141 sample(s).</span></div><div class='output co'>#&gt; <span class='message'>+++ checking sample number per class</span></div><div class='output co'>#&gt; <span class='message'>+++ checking overlap between samples and metadata</span></div><div class='output co'>#&gt; <span class='message'>+ finished validate.data in 0.065 s</span></div><div class='input'>
+#&gt; <span class='message'>   healthy</span></div><div class='output co'>#&gt; <span class='message'>+ finished create.label.from.metadata in 0.002 s</span></div><div class='input'><span class='no'>siamcat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='siamcat.html'>siamcat</a></span>(<span class='kw'>feat</span><span class='kw'>=</span><span class='no'>feat</span>, <span class='kw'>label</span><span class='kw'>=</span><span class='no'>label</span>, <span class='kw'>meta</span><span class='kw'>=</span><span class='no'>meta</span>)</div><div class='output co'>#&gt; <span class='message'>+ starting validate.data</span></div><div class='output co'>#&gt; <span class='message'>+++ checking overlap between labels and features</span></div><div class='output co'>#&gt; <span class='message'>+ Keeping labels of 141 sample(s).</span></div><div class='output co'>#&gt; <span class='message'>+++ checking sample number per class</span></div><div class='output co'>#&gt; <span class='message'>+++ checking overlap between samples and metadata</span></div><div class='output co'>#&gt; <span class='message'>+ finished validate.data in 0.347 s</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -191,11 +187,14 @@
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
