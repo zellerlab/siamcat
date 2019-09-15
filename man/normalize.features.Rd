@@ -6,7 +6,7 @@
 \usage{
 normalize.features(siamcat,
     norm.method = c("rank.unit", "rank.std",
-        "log.std", "log.unit", "log.clr", "pass"),
+        "log.std", "log.unit", "log.clr", "std", "pass"),
     norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
         n.p = 2, norm.margin = 1),
     feature.type='filtered',
@@ -17,7 +17,7 @@ normalize.features(siamcat,
 
 \item{norm.method}{string, normalization method, can be one of these:
 '\code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr',
-'pass')}}
+'std', 'pass')}}
 
 \item{norm.param}{list, specifying the parameters of the different
 normalization methods, see details for more information}
@@ -40,7 +40,7 @@ This function performs feature normalization according to user-
     specified parameters.
 }
 \details{
-There are six different normalization methods available:
+There are seven different normalization methods available:
 \itemize{
     \item \code{'rank.unit'} - converts features to ranks and normalizes
     each column (=sample) by the square root of the sum of ranks
@@ -52,16 +52,18 @@ There are six different normalization methods available:
     pseudocounts) and applies z-score standardization
     \item \code{'log.unit'} - log-transforms features (after addition of
     pseudocounts) and normalizes by features or samples with different norms
+    \item \code{'std'} - z-score standardization without any other
+    transformation
     \item \code{'pass'} - pass-through normalization will not change the
     features}
 
 The list entries in \code{'norm.param'} specify the normalzation parameters,
 which are dependant on the normalization method of choice:
 \itemize{
-    \item \code{'rank.unit'} does not require any other parameters
-    \item \code{'rank.std'} requires \code{sd.min.q}, quantile of the
-    distribution of standard deviations of all features that will be added
-    to the denominator during standardization in order to avoid
+    \item \code{'rank.unit' or 'pass'} does not require any other parameters
+    \item \code{'rank.std' and 'std'} requires \code{sd.min.q}, quantile
+    of the distribution of standard deviations of all features that will
+    be added to the denominator during standardization in order to avoid
     underestimation of the standard deviation, defaults to 0.1
     \item \code{'log.clr'} requires \code{log.n0}, which is the pseudocount
     to be added before log-transformation, defaults to \code{NULL} leading

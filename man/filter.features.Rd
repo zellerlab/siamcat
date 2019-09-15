@@ -13,7 +13,7 @@ filter.features(siamcat, filter.method = "abundance",
 
 \item{filter.method}{string, method used for filtering the features, can be
 one of these: \code{c('abundance', 'cum.abundance', 'prevalence',
-'variance')}, defaults to \code{'abundance'}}
+'variance', 'pass')}, defaults to \code{'abundance'}}
 
 \item{cutoff}{float, abundace, prevalence, or variance cutoff, defaults
 to \code{0.001} (see Details below)}
@@ -55,6 +55,8 @@ This function filters the features in a \link{siamcat-class}
     in more than \code{1 - cutoff} percent of samples.
     \item \code{'variance'} - remove features with low variance across
     samples, i.e. those that have a variance lower than \code{cutoff}
+    \item \code{'pass'} - pass-through filtering will not change the
+    features
     }
 
     Features can also be filtered repeatedly with different methods, e.g.
