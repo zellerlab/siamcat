@@ -88,17 +88,18 @@ summarize.features <- function(siamcat, level = "g__",
         warning(paste0("Tax_table slot is empty! Will try to infer the tax",
             " table from the feature names"))
         # make sure that seperating characters are dots
-        rownames(feat) <- make.names(rownames(feat))
+        taxa.names <- make.names(rownames(feat))
         # TODO
         # checks and balances
         # check that all feature names are on the same taxonomic Level
 
         # check that desired level is in the names
-        tax.table <- str_split(rownames(feat),
+        tax.table <- str_split(taxa.names,
             pattern='(\\.[a-z]__)|(^[a-z]__)',
             simplify = TRUE)[,-1]
-        colnames(tax.table) <- str_extract_all(rownames(feat)[1],
+        colnames(tax.table) <- str_extract_all(taxa.names[1],
             '[a-z]__')[[1]]
+        rownames(tax.table) <- rownames(feat)
         tax_table(physeq(siamcat)) <- tax.table
     } else {
         tax.table <- tax_table(physeq(siamcat))
