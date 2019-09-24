@@ -37,7 +37,7 @@
 
 check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
 
-    pdf(fn.plot, paper = 'special', height = 8.27, width = 11.69)
+    
     if (verbose > 1) message("+ starting check.confounders")
     s.time <- proc.time()[3]
     label <- label(siamcat)
@@ -45,7 +45,7 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     if (is.null(meta)) {
         stop('SIAMCAT object does not contain any metadata.\nExiting...')
     }
-    meta <- factorize.metadata(meta) # creates data.frame
+    meta <- factorize.metadata(meta, verbose) # creates data.frame
 
     # check validity of input metadata conditions
     if (!is.null(meta.in)){
@@ -55,10 +55,6 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
                         "Continuing with: ",  paste(c(meta.in), collapse=" ")))
     }
         meta <- meta[,meta.in]
-    }
-    if (ncol(meta) > 10){
-        warning(paste0("The recommended number of metadata variables is 10.\n",
-                    "Please be aware that some visualizations may not work."))
     }
 
     # remove nested variables
@@ -72,6 +68,7 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
                 "have been removed from this analysis")
     }
     meta <- meta[,names(which(indep != 0))]
+    
     # remove metavariables with less than 2 levels
     n.levels <- vapply(meta,
         FUN = function(x){length(unique(x))},
@@ -84,7 +81,13 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
         }
         meta <- meta[,which(n.levels > 1)]
     }
-
+    
+    if (ncol(meta) > 10){
+      warning(paste0("The recommended number of metadata variables is 10.\n",
+                     "Please be aware that some visualizations may not work."))
+    }
+    
+    pdf(fn.plot, paper = 'special', height = 8.27, width = 11.69)
     # FIRST PLOT - conditional entropies for metadata variables
     if (verbose > 1)
         message("+++ plotting conditional entropies for metadata variables")
@@ -109,6 +112,11 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     # THIRD PLOT(S) - original confounder check descriptive stat plots
     confounders.descriptive.plots(meta(siamcat)[,colnames(meta)],
         label, verbose)
+    
+    # FOURTH PLOT(S) - variance explained by label versus variance explained by 
+    # metadata plots
+    variance.plots(meta, label, get.filt_feat.matrix(siamcat), verbose)
+    
     dev.off()
 
     e.time <- proc.time()[3]
@@ -183,7 +191,8 @@ confounders.build.glms <- function(meta, label) {
             reg.coef[m] <- model$coefficients[2]
             reg.ci[[m]] <- confint(profile(model))[2,]
             reg.pval[m] <- coef(summary(model))[2,4]
-            rocs[[m]]   <- roc(y ~ x, data=d, direction='<', ci=TRUE, auc=TRUE)
+            rocs[[m]]   <- roc(y ~ x, data=d, direction='<', 
+                               ci=TRUE, auc=TRUE, levels=c(0,1))
             aucs[m]     <- as.numeric(rocs[[m]]$auc)}
         else {rm <- c(rm, colnames(meta)[m])}}
 
@@ -320,15 +329,15 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
         if (is.character(mvar)) mvar <- as.factor(mvar)
         mvar <- as.numeric(mvar)
         names(mvar) <- rownames(meta)
-        u.val <- unique(mvar)[!is.na(unique(mvar))]
+        u.val <- sort(unique(mvar)[!is.na(unique(mvar))])
         colors <- brewer.pal(6, "Spectral")
         histcolors <- brewer.pal(9, "YlGnBu")
 
         if (length(u.val) == 1) {
             if (verbose > 1) {
                 message("+++ skipped because all subjects have the",
-                    "same value")}}
-        else if (length(u.val) <= 6) {
+                    "same value")}
+        } else if (length(u.val) <= 6) {
             if (verbose > 1) message("++++ discrete variable, using a bar plot")
 
             # create contingency table
@@ -340,7 +349,7 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
                 FUN.VALUE = integer(2))
 
             freq <- t(ct / rowSums(ct))
-            mvar <- factor(mvar, levels = unique(na.omit(mvar)),
+            mvar <- factor(mvar, levels = sort(unique(na.omit(mvar))),
                             labels = var.level.names[[m]])
 
             if (verbose > 2)
@@ -380,8 +389,8 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
             t <- addmargins(table(mvar, niceLabel, dnn = c(mname, "Label")))
             grid.table(t, theme = ttheme_minimal())
             popViewport()
-            par(mfrow = c(1, 1), bty = "o")}
-        else {
+            par(mfrow = c(1, 1), bty = "o")
+          } else {
             if (verbose > 1)
                 message("++++ continuous variable, using a Q-Q plot")
 
@@ -448,7 +457,7 @@ get.names <- function(meta) {
 }
 
 #'@keywords internal
-factorize.metadata <- function(meta) {
+factorize.metadata <- function(meta, verbose) {
 
     if ('BMI' %in% toupper(colnames(meta))) {
         idx <- match('BMI', toupper(colnames(meta)))
@@ -459,8 +468,22 @@ factorize.metadata <- function(meta) {
             quart <- quantile(x, probs = seq(0, 1, 0.25), na.rm = TRUE)
             temp <- cut(x, unique(quart), include.lowest = TRUE)
             return(factor(temp, labels = seq_along(levels(temp))))}
-        else (return(as.factor(x)))}))
+        else {(return(as.factor(x)))}}))
     rownames(factorized) <- rownames(meta)
+    
+    # check for IDs and other metavariable with too many levels
+    n.levels <- vapply(colnames(factorized), FUN=function(x){
+      length(levels(factorized[[x]]))}, FUN.VALUE = integer(1))
+    if (any(n.levels > 0.9*nrow(meta))){
+      remove.meta <- names(which(n.levels > 0.9*nrow(meta)))
+      if (verbose > 1){
+        message("++ metadata variables:\n\t",
+                paste(remove.meta, collapse = " & "),
+                "\n++ have too many levels and ",
+                "have been removed from this analysis")
+      }
+      factorized <- factorized[,-which(colnames(factorized) %in% remove.meta)]
+    }
     return(factorized)
 }
 
@@ -480,3 +503,49 @@ factorize.bmi <- function(bmi) {
     #names(temp) <- rownames(bmi)
     return(as.factor(temp))
 }
+
+#'@keywords internal
+variance.plots <- function(meta, label, feat, verbose){
+  if (verbose > 2){message('+++ computing variance explained by label')}
+  stopifnot(all(colnames(feat)==names(label$label)))
+  var.label <- vapply(rownames(feat), FUN=function(x){
+    x <- feat[x,]
+    x <- rank(x)/length(x)
+    ss.tot <- sum((x - mean(x))^2)/length(x)
+    ss.o.i <- sum(vapply(unique(label$label), function(s){
+      sum((x[label$label==s] - mean(x[label$label==s]))^2)
+    }, FUN.VALUE = double(1)))/length(x)
+    return(1-ss.o.i/ss.tot)
+  }, FUN.VALUE = double(1))
+  if (any(is.infinite(var.label))){
+    var.label[is.infinite(var.label)] <- NA
+  }
+  par(mfrow=c(2,2), mar=c(4.1, 4.1, 2.1, 2.1))
+  for (variable in colnames(meta)){
+    if (verbose > 2){message('+++ computing variance explained by ', variable)}
+    temp <- meta[[variable]]
+    names(temp) <- rownames(meta)
+    if (any(is.na(temp))){
+      temp <- temp[!is.na(temp)]
+    }
+    var.batch <- vapply(rownames(feat), FUN=function(x){
+      x <- feat[x,names(temp)]
+      x <- rank(x)/length(x)
+      ss.tot <- sum((x - mean(x))^2)/length(x)
+      ss.o.i <- sum(vapply(levels(temp), function(s){
+        sum((x[temp==s] - mean(x[temp==s]))^2)
+      }, FUN.VALUE = double(1)))/length(x)
+      return(1-ss.o.i/ss.tot)
+    }, FUN.VALUE = double(1))
+    if (any(is.infinite(var.batch))){
+      var.batch[is.infinite(var.batch)] <- NA
+    }
+  lim <- round(max(var.label, var.batch, na.rm=TRUE), digits = 2)
+  plot(var.label, var.batch, 
+       xlab='Variance explained by label', 
+       ylab=paste0('Variance expained by ', variable), 
+       xlim=c(0,lim), ylim=c(0,lim))
+  abline(0,1, lty=3, col='darkgrey')
+  }
+}
+
