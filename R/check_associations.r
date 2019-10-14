@@ -302,7 +302,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         # PANEL 2: P-VALUES
         # print p-values in second panel of the plot
         associations.pvals.plot(p.vals = effect.size$p.adj,
-            alpha = alpha,
+            alpha = alpha, mult.corr = mult.corr,
             verbose = verbose)
 
         ########################################################################
@@ -570,7 +570,7 @@ associations.pr.shift.plot <-
 # ##############################################################################
 # P-VALUES
 #' @keywords internal
-associations.pvals.plot <- function(p.vals, alpha,    verbose = 1) {
+associations.pvals.plot <- function(p.vals, alpha,  mult.corr,  verbose = 1) {
     if (verbose > 2)
         message("+ starting associations.pvals.plot")
     # margins
@@ -619,7 +619,12 @@ associations.pvals.plot <- function(p.vals, alpha,    verbose = 1) {
         labels = tick.labels,
         cex.axis = 0.7
     )
-    title(main = 'Significance', xlab = '-log10(adj. p value)')
+    if (mult.corr != 'none'){
+        title(main = 'Significance', xlab = '-log10(adj. p value)')
+    } else {
+        title(main='Significance', xlab='-log10(p value)')
+    }
+
     if (verbose > 2)
         message("+ finished associations.pvals.plot")
 }
@@ -1326,8 +1331,8 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
         ifelse(effect.size[, 'auc'] >= 0.5, colors[2], colors[1])
 
     ### Apply multi-hypothesis testing correction
-    if (!tolower(mult.corr) %in%
-        c('none', 'bonferroni', 'holm', 'fdr', 'bhy')) {
+    if (!tolower(mult.corr) %in% c("holm", "hochberg", "hommel", "bonferroni",
+        "BH", "BY", "fdr", "none")) {
         stop(
             "! Unknown multiple testing correction method:', mult.corr,'
             Stopping!\n Must of one of c('none','bonferroni', 'holm','fdr',
