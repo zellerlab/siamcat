@@ -192,6 +192,7 @@ filter.features <- function(siamcat,
             message("+++ checking for unmapped reads")
         # remove 'unmapped' feature
         names.unmapped <- c("UNMAPPED", "-1", "X.1", "unmapped",
+            "Unclassified", "Unassigned",
             "UNCLASSIFIED", "unclassified", "UNASSIGNED", "unassigned")
 
         unm.idx <- rownames(feat) %in% names.unmapped
