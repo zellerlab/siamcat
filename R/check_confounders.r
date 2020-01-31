@@ -6,11 +6,15 @@
 #' @title Check for potential confounders in the metadata
 #' @description Checks potential confounders in the metadata and produces
 #'     some visualizations
-#' @usage check.confounders(siamcat, fn.plot, meta.in = NULL, verbose = 1)
+#' @usage check.confounders(siamcat, fn.plot, meta.in = NULL,
+#' feature.type='filtered', verbose = 1)
 #' @param siamcat an object of class \link{siamcat-class}
 #' @param fn.plot string, filename for the pdf-plot
 #' @param meta.in vector, specific metadata variable names to analyze,
 #'     defaults to NULL (all metadata variables will be analyzed)
+#'@param feature.type string, on which type of features should the function
+#' work? Can be either \code{c()"original", "filtered", or "normalized")}.
+#' Please only change this paramter if you know what you are doing!
 #' @param verbose integer, control output: \code{0} for no output at all,
 #'     \code{1} for only information about progress and success, \code{2} for
 #'     normal level of information and \code{3} for full debug information,
@@ -35,13 +39,28 @@
 #' # Simple working example
 #' check.confounders(siamcat_example, './conf_plot.pdf')
 
-check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
+check.confounders <- function(siamcat, fn.plot, meta.in = NULL,
+    feature.type='filtered', verbose = 1) {
 
-    
+
     if (verbose > 1) message("+ starting check.confounders")
     s.time <- proc.time()[3]
     label <- label(siamcat)
     meta <- meta(siamcat)
+    # get features
+    if (feature.type == 'original'){
+        feat <- get.orig_feat.matrix(siamcat)
+    } else if (feature.type == 'filtered'){
+        if (is.null(filt_feat(siamcat, verbose=0))){
+            stop('Features have not yet been filtered, exiting...\n')
+        }
+        feat <- get.filt_feat.matrix(siamcat)
+    } else if (feature.type == 'normalized'){
+        if (is.null(norm_feat(siamcat, verbose=0))){
+            stop('Features have not yet been normalized, exiting...\n')
+        }
+        feat <- get.norm_feat.matrix(siamcat)
+    }
     if (is.null(meta)) {
         stop('SIAMCAT object does not contain any metadata.\nExiting...')
     }
@@ -68,7 +87,7 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
                 "have been removed from this analysis")
     }
     meta <- meta[,names(which(indep != 0))]
-    
+
     # remove metavariables with less than 2 levels
     n.levels <- vapply(meta,
         FUN = function(x){length(unique(x))},
@@ -81,12 +100,12 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
         }
         meta <- meta[,which(n.levels > 1)]
     }
-    
+
     if (ncol(meta) > 10){
       warning(paste0("The recommended number of metadata variables is 10.\n",
                      "Please be aware that some visualizations may not work."))
     }
-    
+
     pdf(fn.plot, paper = 'special', height = 8.27, width = 11.69)
     # FIRST PLOT - conditional entropies for metadata variables
     if (verbose > 1)
@@ -112,11 +131,11 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL, verbose = 1) {
     # THIRD PLOT(S) - original confounder check descriptive stat plots
     confounders.descriptive.plots(meta(siamcat)[,colnames(meta)],
         label, verbose)
-    
-    # FOURTH PLOT(S) - variance explained by label versus variance explained by 
+
+    # FOURTH PLOT(S) - variance explained by label versus variance explained by
     # metadata plots
-    variance.plots(meta, label, get.filt_feat.matrix(siamcat), verbose)
-    
+    variance.plots(meta, label, feat, verbose)
+
     dev.off()
 
     e.time <- proc.time()[3]
@@ -191,7 +210,7 @@ confounders.build.glms <- function(meta, label) {
             reg.coef[m] <- model$coefficients[2]
             reg.ci[[m]] <- confint(profile(model))[2,]
             reg.pval[m] <- coef(summary(model))[2,4]
-            rocs[[m]]   <- roc(y ~ x, data=d, direction='<', 
+            rocs[[m]]   <- roc(y ~ x, data=d, direction='<',
                                ci=TRUE, auc=TRUE, levels=c(0,1))
             aucs[m]     <- as.numeric(rocs[[m]]$auc)}
         else {rm <- c(rm, colnames(meta)[m])}}
@@ -470,7 +489,7 @@ factorize.metadata <- function(meta, verbose) {
             return(factor(temp, labels = seq_along(levels(temp))))}
         else {(return(as.factor(x)))}}))
     rownames(factorized) <- rownames(meta)
-    
+
     # check for IDs and other metavariable with too many levels
     n.levels <- vapply(colnames(factorized), FUN=function(x){
       length(levels(factorized[[x]]))}, FUN.VALUE = integer(1))
@@ -541,11 +560,14 @@ variance.plots <- function(meta, label, feat, verbose){
       var.batch[is.infinite(var.batch)] <- NA
     }
   lim <- round(max(var.label, var.batch, na.rm=TRUE), digits = 2)
-  plot(var.label, var.batch, 
-       xlab='Variance explained by label', 
-       ylab=paste0('Variance expained by ', variable), 
+  r.mean <- rowMeans(log10(feat+1e-05))
+  mean.size <- (r.mean + 5) * 8/5 + 1
+  plot(var.label, var.batch, type='n',
+       xlab='Variance explained by label',
+       ylab=paste0('Variance expained by ', variable),
        xlim=c(0,lim), ylim=c(0,lim))
-  abline(0,1, lty=3, col='darkgrey')
+  symbols(x=var.label, y=var.batch, circles=mean.size, inches=1/9,
+        bg=alpha("darkgrey", 0.4), fg=alpha('black', 0.7), add=TRUE)
+  abline(0,1, lty=3, col='black')
   }
 }
-
