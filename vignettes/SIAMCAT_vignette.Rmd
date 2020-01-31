@@ -238,9 +238,11 @@ To plot the results of the evaluation, we can use the function
 `model.evaluation.plot`, which produces a pdf-file showing the ROC and PR
 Curves for the different resamples runs as well as the mean ROC and PR Curve.
 
-```{r eval_plot, fig.height=6, fig.width=6, fig.align='left', message=FALSE}
+```{r eval_plot, eval=FALSE}
 model.evaluation.plot(siamcat)
 ```
+
+![](./eval_plot.png)
 
 ## Interpretation Plot
 
