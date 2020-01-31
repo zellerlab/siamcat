@@ -4,7 +4,8 @@
 \alias{check.confounders}
 \title{Check for potential confounders in the metadata}
 \usage{
-check.confounders(siamcat, fn.plot, meta.in = NULL, verbose = 1)
+check.confounders(siamcat, fn.plot, meta.in = NULL,
+feature.type='filtered', verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}
@@ -13,6 +14,10 @@ check.confounders(siamcat, fn.plot, meta.in = NULL, verbose = 1)
 
 \item{meta.in}{vector, specific metadata variable names to analyze,
 defaults to NULL (all metadata variables will be analyzed)}
+
+\item{feature.type}{string, on which type of features should the function
+work? Can be either \code{c()"original", "filtered", or "normalized")}.
+Please only change this paramter if you know what you are doing!}
 
 \item{verbose}{integer, control output: \code{0} for no output at all,
 \code{1} for only information about progress and success, \code{2} for

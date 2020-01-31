@@ -109,7 +109,7 @@ siamcat_norm <- normalize.features(siamcat_example,
     norm.param=list(log.n0=1e-05, sd.min.q=.1))
 
 # Frozen normalization
-\dontrun{siamcat_norm <- normalize.features(siamcat,
+\donttest{siamcat_norm <- normalize.features(siamcat,
     norm.param=norm_params(siamcat_reference))}
 }
 \keyword{SIAMCAT}
