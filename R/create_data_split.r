@@ -73,7 +73,7 @@
 #'     stratify=TRUE)
 #'
 #' # Inseparable data split
-#' \dontrun{siamcat_split <- create.data.split(siamcat,
+#' \donttest{siamcat_split <- create.data.split(siamcat,
 #'     num.folds=10,
 #'     num.resample=5,
 #'     inseparable='Individual_ID')}
