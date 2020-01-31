@@ -224,7 +224,8 @@ abline(a = 0, b = 1, lty = 3)
 legend.val <- c()
 for (i in 1:length(args)) {
     legend.val <- c(legend.val,
-        as.numeric(SIAMCAT:::single.roc.plot(args[[i]], colours[i],verbose=0)))
+        as.numeric(SIAMCAT:::single.roc.plot(args[[i]], colours[i],
+                                             show.all=FALSE, verbose=0)))
 }
 
 legend('bottomright',
