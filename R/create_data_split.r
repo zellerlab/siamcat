@@ -133,10 +133,10 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
         }
         if (num.folds >= length(labelNum)) {
             if (verbose > 1)
-                message("+++ Performing un-stratified leave-one-out (LOO)
-                    cross-validation")
+                message("+++ Performing un-stratified",
+                        "leave-one-out (LOO) cross-validation")
             stratify <- FALSE
-            num.folds <- length(labelNum) - 1
+            num.folds <- length(labelNum)
         }
         if (!is.null(inseparable) && is.null(meta(siamcat))) {
             stop("Meta-data must be provided if the inseparable parameter is not
@@ -257,7 +257,7 @@ assign.fold <-
                 stop(
                     "+++ Number of CV folds is too large for this data set to
                     maintain stratification. Reduce num.folds or turn
-                    stratificationoff. Exiting."
+                    stratification off. Exiting."
                 )
             }
             for (c in seq_along(classes)) {
@@ -268,12 +268,12 @@ assign.fold <-
             } else {
                 # If stratify is not TRUE, make sure that num.sample is not
                 # bigger than number.folds
-                if (length(label) <= num.folds) {
+                if (length(label) < num.folds) {
                     warning(
-                        "+++ num.samples is exceeding number of folds, setting
-                        CV to (k-1) unstratified CV"
+                        "+++ num.samples is exceeding number of folds,",
+                        " setting CV to (k-1) unstratified CV"
                     )
-                    num.folds <- length(label) - 1
+                    num.folds <- length(label)
                 }
                 if (!is.null(inseparable)) {
                     strata <- unique(meta[[inseparable]])
