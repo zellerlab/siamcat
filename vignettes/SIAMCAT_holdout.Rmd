@@ -208,32 +208,7 @@ model.evaluation.plot('FR-CRC'=siamcat.fr,
     colours=c('dimgrey', 'orange'))
 ```
 
-
-```{r eval_plot_hidden, fig.width = 6, fig.asp=1, fig.align="left", echo=FALSE}
-
-args <- list('FR-CRC'=siamcat.fr, 'CN-CRC'=siamcat.cn)
-
-colours=c('dimgrey', 'orange')
-
-plot(NULL, xlim = c(0, 1), ylim = c(0, 1),
-    xlab = "False positive rate", ylab = "True positive rate",
-    type = "n")
-title(paste("ROC curve for the model", sep = " "))
-abline(a = 0, b = 1, lty = 3)
-
-legend.val <- c()
-for (i in 1:length(args)) {
-    legend.val <- c(legend.val,
-        as.numeric(SIAMCAT:::single.roc.plot(args[[i]], colours[i],verbose=0)))
-}
-
-legend('bottomright',
-    legend= paste0(names(args),
-        ' AUC: ' ,
-        format(legend.val, digits=3)),
-    col=colours, lty=1, lwd=2, cex=0.8, y.intersp=1.5)
-
-```
+![](./eval_plot_holdout.png)
 
 # Session Info
 

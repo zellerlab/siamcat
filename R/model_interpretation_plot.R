@@ -349,7 +349,7 @@ model.interpretation.plot <-
                     roc(
                         predictor = f,
                         response = label$label,
-                        direction = "<"
+                        direction = "<", levels = label$info
                     )$auc
                 }
             )
@@ -889,7 +889,7 @@ model.interpretation.select.features <-
             # restrict to plot at maximum fifty features
             if (length(sel.idx) > max.show) {
                 warning(paste0("WARNING: restricting amount of features",
-                    " to be plotted to 50"))
+                    " to be plotted to ", max.show))
                 median.sorted.features.abs <- sort(
                     abs(feature.weights$median.rel.weight),
                     decreasing = TRUE,

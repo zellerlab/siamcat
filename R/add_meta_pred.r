@@ -98,7 +98,7 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
     ### add metadata as predictors to the feature matrix
     cnt <- 0
 
-    if (pred.names != "" && !is.null(pred.names)) {
+    if (all(pred.names != "") && all(!is.null(pred.names))) {
         if (verbose > 2)
         message("+ starting to add metadata predictors")
         for (p in pred.names) {

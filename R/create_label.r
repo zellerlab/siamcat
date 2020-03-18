@@ -144,7 +144,8 @@ create.label <- function(label, case, meta=NULL, control = NULL,
         if(any(!groups%in%c(case, control))){
             label.vec <- label.vec[which(label.vec%in%c(case, control))]
             warning("Dropping values: ",
-                groups[which(!groups%in%c(case, control))], '\n')
+                paste(groups[which(!groups%in%c(case, control))],
+                    collapse=', '), '\n')
         }
     }
 
@@ -156,9 +157,9 @@ create.label <- function(label, case, meta=NULL, control = NULL,
     # create new label.object
     label.new <- list(label = rep(-1, length(label.vec)))
 
-    n.lab <- ifelse(is.null(n.lab), gsub("[_.-]", " ", control), n.lab)
+    n.lab <- ifelse(is.null(n.lab), gsub("[_.-]", ".", control), n.lab)
     p.lab <- ifelse(is.null(p.lab),
-        ifelse(length(case) > 1, 'Case', gsub("[_.-]", " ", case)), p.lab)
+        ifelse(length(case) > 1, 'Case', gsub("[_.-]", ".", case)), p.lab)
 
     info <- c(-1, 1)
     names(info) <- c(n.lab, p.lab)

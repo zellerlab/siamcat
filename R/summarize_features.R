@@ -32,7 +32,9 @@
 #' levels, e.g. transform species-level relative abundance into genus-level
 #' taxonomic profiles.
 #'
-#' The function expects feature names which encode taxonomic information, e.g.
+#' The function expects a SIAMCAT object that either contains an entry in the
+#' \link{phyloseq}{tax_table} slot of its \link{phyloseq} object, \strong{OR}
+#' a set of feature names which encode taxonomic information, e.g.
 #'
 #' \code{k__Bacteria;p__Actinobacteria;c__Actinobacteria;o__Acidimicrobiales;..}
 #'
@@ -48,25 +50,13 @@
 #' @examples
 #' ## load the phyloseq example data
 #' data("GlobalPatterns")
-#' feat <- otu_table(GlobalPatterns)[1:500,]
+#' ## create an example label
 #' label <- create.label(meta=sample_data(GlobalPatterns),
 #'     label = "SampleType",
 #'     case = c("Freshwater", "Freshwater (creek)", "Ocean"))
-#' # rename features to create feature names containing taxonomic information
-#' temp <- tax_table(GlobalPatterns)[1:500,]
-#' test <- apply(temp, 1, FUN=function(vec){
-#'     out <- ''
-#'     for (i in seq_along(vec)){
-#'         end <- ifelse(i == ncol(temp), '', ';')
-#'         x <- colnames(temp)[i]
-#'         x2 <- tolower(substr(x, 1, 1))
-#'         out <- paste0(out, x2, '__', vec[i], end)
-#'     }
-#'     return(out)})
-#' rownames(feat) <- test
 #' # run the constructor function
-#' siamcat <- siamcat(feat=feat, label=label, verbose=1)
-#' siamcat <- summarize.features(siamcat, level='g__', verbose=3)
+#' siamcat <- siamcat(phyloseq=GlobalPatterns, label=label, verbose=1)
+#' siamcat <- summarize.features(siamcat, level='Genus', verbose=3)
 summarize.features <- function(siamcat, level = "g__",
     feature.type='original', verbose=1){
 
@@ -93,52 +83,94 @@ summarize.features <- function(siamcat, level = "g__",
         }
         feat <- get.norm_feat.matrix(siamcat)
     }
-    # make sure that seperating characters are dots
-    rownames(feat) <- make.names(rownames(feat))
 
-    # TODO
-    # checks and balances
-    # check that all feature names are on the same taxonomic Level
-    # check that desired level is in the names
+    if (is.null(tax_table(physeq(siamcat), errorIfNULL = FALSE))){
+        warning(paste0("Tax_table slot is empty! Will try to infer the tax",
+            " table from the feature names"))
+        # make sure that seperating characters are dots
+        taxa.names <- make.names(rownames(feat))
+        # TODO
+        # checks and balances
+        # check that all feature names are on the same taxonomic Level
 
+        # check that desired level is in the names
+        tax.table <- str_split(taxa.names,
+            pattern='(\\.[a-z]__)|(^[a-z]__)',
+            simplify = TRUE)[,-1]
+        colnames(tax.table) <- str_extract_all(taxa.names[1],
+            '[a-z]__')[[1]]
+        rownames(tax.table) <- rownames(feat)
+        tax_table(physeq(siamcat)) <- tax.table
+    } else {
+        tax.table <- tax_table(physeq(siamcat))
+    }
+
+    tax.table <- tax.table[rownames(feat),]
+    tax.table <- tax.table@.Data
     # search for bins
-    tax.table <- str_split(rownames(feat),
-        pattern='(\\.[a-z]__)|(^[a-z]__)',
-        simplify = TRUE)[,-1]
-    colnames(tax.table) <- str_extract_all(rownames(feat)[1], '[a-z]__')[[1]]
-
     idx <- match(level, colnames(tax.table))
     if (is.na(idx)){
         stop('Level ', level, ' not found in the feature names. Exiting...')
     }
     # rename unclassified features
     tax.table[tax.table[,idx] == '', idx] <- 'unclassified'
+    tax.table[is.na(tax.table[,idx]), idx] <- 'unclassified'
     bins.unique <- unique(tax.table[,idx])
 
     # make empty matrix
     summarized.feat <- matrix(NA, nrow=length(bins.unique), ncol=ncol(feat),
         dimnames=list(bins.unique, colnames(feat)))
 
-    if (verbose > 0) pb <- progress_bar$new(total=length(bins.unique))
+    if (verbose > 1) pb <- progress_bar$new(total=length(bins.unique))
     for (x in bins.unique){
         summarized.feat[x,] <- colSums(feat[which(tax.table[,idx] == x),,
             drop=FALSE])
-        if (verbose > 0) pb$tick()
+        if (verbose > 1) pb$tick()
     }
 
     if (verbose > 2) message("+++ summarized features table contains: ",
-        nrow(summarized.feat)," features\n")
-
-    e.time <- proc.time()[3]
-    if (verbose > 1)
-    message(paste("+ finished summarize.features in",
-        formatC(e.time - s.time, digits = 3), "s" ))
-
-    if (verbose == 1)
-        message("Summarized features successfully.")
+        nrow(summarized.feat)," features")
 
     if (feature.type == 'original'){
-        orig_feat(siamcat) <- otu_table(summarized.feat,taxa_are_rows = TRUE)
+        # adjust tax table and entire phyloseq object for reduced feat table
+        tax.table.red <- tax.table[,seq_len(idx), drop=FALSE]
+        tax.table.red <- tax.table.red[tax.table.red[,idx]!='unclassified',]
+        tax.table.red <- tax.table.red[!duplicated(tax.table.red),]
+        if (nrow(tax.table.red) > (nrow(summarized.feat)-1)){
+            warning(paste0("Tax table does not seem to be consistent in ",
+                "all cases...\nWill be collapsed at level ", level))
+            for (g in unique(tax.table.red[,idx])){
+                temp <- tax.table.red[tax.table.red[,idx]==g,,drop=FALSE]
+                if (nrow(temp)!=1){
+                    tax.table.red <- tax.table.red[-which(
+                        tax.table.red[,idx]==g),]
+                    temp <- vapply(colnames(temp), FUN=function(x){
+                        y=temp[,x]
+                        if(length(unique(y))==1){
+                            return(unique(y))
+                        } else {
+                            return(paste(y, collapse='|'))
+                        }
+                    }, FUN.VALUE=character(1))
+                    tax.table.red <- rbind(tax.table.red, temp)
+                }
+            }
+        }
+        # add unclassified again
+        tax.table.red <- rbind(tax.table.red, NA)
+        tax.table.red[nrow(tax.table.red), idx] <- 'unclassified'
+        rownames(tax.table.red) <- tax.table.red[,idx]
+        tax.table.red <- tax.table.red[rownames(summarized.feat),]
+        temp.phyloseq <- phyloseq(tax_table=tax_table(tax.table.red),
+            otu_table=otu_table(summarized.feat, taxa_are_rows=TRUE))
+        if (!is.null(sample_data(physeq(siamcat), errorIfNULL=FALSE))){
+            sample_data(temp.phyloseq) <- sample_data(physeq(siamcat))
+        }
+        if (!is.null(phy_tree(physeq(siamcat), errorIfNULL=FALSE))){
+            warning("Phylogenetic tree in original SIAMCAT object had ",
+                "to be deleted...")
+        }
+        physeq(siamcat) <- temp.phyloseq
     } else if (feature.type == 'filtered'){
         filt_feat(siamcat) <- list(
             filt.feat=otu_table(summarized.feat,taxa_are_rows = TRUE),
@@ -148,6 +180,14 @@ summarize.features <- function(siamcat, level = "g__",
             norm.feat=otu_table(summarized.feat,taxa_are_rows = TRUE),
             norm.param=norm_params(siamcat))
     }
+
+    e.time <- proc.time()[3]
+    if (verbose > 1)
+    message(paste("+ finished summarize.features in",
+        formatC(e.time - s.time, digits = 3), "s" ))
+
+    if (verbose == 1)
+        message("Summarized features successfully.")
 
     return(siamcat)
 }

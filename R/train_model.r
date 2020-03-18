@@ -311,7 +311,9 @@ train.model <- function(siamcat,
                     } else if (param.fs$direction == 'negative'){
                         assoc <- 1 - assoc
                     }
-                    data <- data[,rank(-assoc) <= param.fs$thres.fs]
+                    asso <- assoc[assoc > 0.5]
+                    data <- data[,names(which(
+                        rank(-assoc) <= param.fs$thres.fs))]
                 } else if (param.fs$method.fs == 'gFC') {
                     assoc <- vapply(data,
                                     FUN=get.quantile.FC,
@@ -324,7 +326,10 @@ train.model <- function(siamcat,
                     } else if (param.fs$direction == 'negative'){
                         assoc <- -assoc
                     }
-                    data <- data[,rank(-assoc) <= param.fs$thres.fs]
+                    assoc <- assoc[assoc > 0]
+                    data <- data[,names(which(
+                        rank(-assoc) <= param.fs$thres.fs))]
+
                 }
 
                 stopifnot(ncol(data) > 0)
@@ -392,7 +397,7 @@ measureAUPRC <- function(probs, truth, negative, positive) {
 get.single.feat.AUC <- function(x, label, pos, neg) {
     x.p <- x[label == pos]
     x.n <- x[label == neg]
-    temp.auc <- roc(cases=x.p, controls=x.n)$auc
+    temp.auc <- roc(cases=x.p, controls=x.n, direction='<')$auc
     return(temp.auc)
 }
 

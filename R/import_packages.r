@@ -3,7 +3,7 @@
 #' @importFrom grDevices col2rgb colorRampPalette dev.off gray pdf rgb
 #' @importFrom graphics abline arrows axis barplot box strheight strwidth
 #'           boxplot grid image layout lines mtext hist points stripchart
-#'           par plot plot.new polygon rect text title segments legend
+#'           par plot plot.new polygon rect text title segments legend symbols
 #' @importFrom stats coefficients cor median p.adjust rnorm qqplot
 #'           predict quantile runif sd wilcox.test addmargins na.omit
 #'           fisher.test binomial coef confint glm profile

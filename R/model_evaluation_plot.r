@@ -9,9 +9,11 @@
 #'     Precision-recall (PR)-curves for the different cross-validation
 #'     repetitions.
 #' @usage model.evaluation.plot(..., fn.plot = NULL,
-#'     colours=NULL, verbose = 1)
+#'     colours=NULL, show.all=FALSE, verbose = 1)
 #' @param ... one or more object of class \link{siamcat-class}, can be named
 #' @param fn.plot string, filename for the pdf-plot
+#' @param show.all boolean, Should all repeated cross-validation models be
+#'     plotted?
 #' @param colours colour specification for the different \link{siamcat-class}-
 #'     objects, defaults to \code{NULL} which will cause the colours to be
 #'     picked from the \code{'Set1'} palette
@@ -34,7 +36,7 @@
 #'     'Example_2'=siamcat_example, colours=c('red', 'blue'),
 #'     fn.plot='./eval.pdf')
 model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
-        verbose = 1) {
+        show.all = FALSE, verbose = 1) {
     if (verbose > 1)
         message("+ starting model.evaluation.plot")
     s.time <- proc.time()[3]
@@ -91,6 +93,7 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
             legend.val <- c(legend.val,
                             as.numeric(single.roc.plot(args[[i]],
                                                         colours[i],
+                                                        show.all=show.all,
                                                         verbose=verbose)))
         }
         if (!is.null(names(args))) {
@@ -125,6 +128,7 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
             legend.val <- c(legend.val,
                             as.numeric(single.pr.plot(args[[i]],
                                                         colours[i],
+                                                        show.all=show.all,
                                                         verbose=verbose)))
         }
         if (!is.null(names(args))) {
@@ -144,19 +148,26 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
         # checks
         if (!all(is(args[[1]], 'siamcat')))
             stop('Please supply a SIAMCAT object. Exiting...')
-        if(is.null(eval_data(args[[1]]))){
+        if(is.null(eval_data(args[[1]], verbose=0))){
             stop('SIAMCAT object has no evaluation data. Exiting...')
         }
-
+        if(is.null(data_split(args[[1]], verbose=0))){
+            auc.text <- 'Mean-prediction AUC:'
+            pr.text <- 'Mean AUC:'
+        } else {
+            if (data_split(args[[1]])$num.resample == 1){
+                auc.text <- 'AUC:'
+                pr.text <- 'AUC:'
+            } else {
+                auc.text <- 'Mean-prediction AUC:'
+                pr.text <- 'Mean AUC:'
+            }
+        }
         # ROC
         if (is.null(colours)) colours <- 'black'
-        auroc <- single.roc.plot(args[[1]], colours, verbose=verbose)
-        if (data_split(args[[1]])$num.resample == 1) {
-            text(0.7, 0.1, paste("AUC:", format(auroc, digits = 3)))
-        } else {
-            text(0.7, 0.1, paste("Mean-prediction AUC:",
-                    format(auroc, digits = 3)))
-        }
+        auroc <- single.roc.plot(args[[1]], colours,
+            show.all=show.all, verbose=verbose)
+        text(0.7, 0.1, paste(auc.text, format(auroc, digits = 3)))
 
         # PR
         if (verbose > 2)
@@ -173,12 +184,9 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
         label <- label(args[[1]])
         abline(h = mean(label$label == max(label$info)),
             lty = 3)
-        auprc <- single.pr.plot(args[[1]], colours, verbose=verbose)
-        if (data_split(args[[1]])$num.resample == 1) {
-            text(0.7, 0.1, paste("AUC:", format(auprc, digits = 3)))
-        } else {
-            text(0.7, 0.1, paste("Mean AUC:", format(auprc, digits = 3)))
-        }
+        auprc <- single.pr.plot(args[[1]], colours,
+            show.all=show.all, verbose=verbose)
+        text(0.7, 0.1, paste(pr.text, format(auprc, digits = 3)))
     } else {
         stop('No SIAMCAT object supplied. Exiting...')
     }
@@ -200,12 +208,12 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
 
 }
 
-single.pr.plot <- function(siamcat, colour, verbose) {
+single.pr.plot <- function(siamcat, colour, show.all, verbose) {
 
     eval.data <- eval_data(siamcat)
 
     # pr curves for resampling
-    if (!is.null(eval.data$prc.all)) {
+    if (!is.null(eval.data$prc.all) & show.all) {
         aucspr.all = eval.data$auprc.all
         for (c in seq_len(length(eval.data$prc.all))) {
             pr = eval.data$prc.all[[c]]
@@ -246,11 +254,11 @@ single.pr.plot <- function(siamcat, colour, verbose) {
     return(auprc)
 }
 
-single.roc.plot <- function(siamcat, colour, verbose) {
+single.roc.plot <- function(siamcat, colour, show.all, verbose) {
 
     eval.data <- eval_data(siamcat)
 
-    if (!is.null(eval.data$roc.all)){
+    if (!is.null(eval.data$roc.all) & show.all){
         aucs = eval.data$auroc.all
         for (c in seq_along(eval.data$roc.all)) {
             roc.c = eval.data$roc.all[[c]]

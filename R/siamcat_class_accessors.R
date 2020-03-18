@@ -794,6 +794,7 @@ setMethod("weight_matrix", "siamcat", function(siamcat, verbose=1) {
         m.idx <- match(temp[[i]]$features, make.names(rownames(weight.mat)))
         weight.mat[m.idx, i] <- temp[[i]]$feat.weights
     }
+    weight.mat[is.na(weight.mat)] <- 0
 
     return(weight.mat)
 })

@@ -89,7 +89,7 @@ train.plm <-
             stop(
                 method,
                 " is not a valid method, currently supported: lasso,
-                enet, ridge, libLineaR, randomForest.\n"
+                enet, ridge, lasso_ll, randomForest.\n"
             )
         }
         show.info <- FALSE

@@ -29,7 +29,7 @@ Description: Pipeline for Statistical Inference of Associations between
     cross validation, parameter selection, ROC analysis and diagnostic
     model plots).
 Depends:
-    R (>= 3.5.0),
+    R (>= 3.6.0),
     mlr,
     phyloseq
 Imports:
@@ -56,7 +56,7 @@ Imports:
     corrplot
 License: GPL-3
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 biocViews: ImmunoOncology, Metagenomics, Classification, Microbiome, 
     Sequencing, Preprocessing, Clustering, FeatureExtraction, 
     GeneticVariability, MultipleComparison,Regression

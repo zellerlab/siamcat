@@ -32,8 +32,8 @@ of intense research. For this, robust statistical modeling and biomarker
 extraction toolkits are crucially needed!
 }
 \author{
-\strong{Maintainer}: Konrad Zych 
-    \email{konrad.zych@embl.de} (0000-0001-7426-0516)
+\strong{Maintainer}: Konrad Zych
+                    \email{konrad.zych@embl.de} (0000-0001-7426-0516)
 
 Authors:
 \itemize{

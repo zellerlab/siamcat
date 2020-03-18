@@ -52,9 +52,9 @@ validate.data <- function(siamcat, verbose = 1) {
         stop('### The features contain missing data! Exiting...')
     }
     # check for compositional data
-    if (any(colSums(feat) > 1.01)) {
+    if (any(colSums(feat) > 1.01) | any(feat < 0)) {
         warning('### Warning: The data do not seem to consist ',
-            'of relative abundances!')
+            'of relative abundances! (values ranging between 0 and 1)')
     }
 
     # Check if labels are available for all samples in features

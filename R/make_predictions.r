@@ -47,7 +47,7 @@
 #' siamcat.pred <- make.predictions(siamcat_example)
 #'
 #' # Predictions on a holdout-set
-#' \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
+#' \donttest{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
 #'     normalize.holdout=TRUE)}
 make.predictions <- function(siamcat,
     siamcat.holdout = NULL,
@@ -105,7 +105,8 @@ make.predictions <- function(siamcat,
             for (r in seq_len(num.resample)) {
                 test.label <- label.fac[data.split$test.folds[[r]][[f]]]
                 data <-
-                    as.data.frame(feat[data.split$test.folds[[r]][[f]], ])
+                    as.data.frame(feat[data.split$test.folds[[r]][[f]], ,
+                                    drop=FALSE])
 
                 # assert stuff
                 stopifnot(nrow(data) == length(test.label))
@@ -128,7 +129,8 @@ make.predictions <- function(siamcat,
                         num.resample * num.folds, ")..."))
 
                 task <-
-                    makeClassifTask(data = data, target = "label")
+                    makeClassifTask(data = data, target = "label",
+                                    fixup.data='quiet', check.data=FALSE)
                 pdata <- predict(model, task = task)
 
                 p <- pdata$data[, 4]
@@ -221,7 +223,8 @@ make.predictions <- function(siamcat,
                     " on complete external dataset", " (", i, " of ",
                     num.models, ")..."))
 
-            task <- makeClassifTask(data = data, target = "label")
+            task <- makeClassifTask(data = data, target = "label",
+                                    fixup.data='quiet', check.data=FALSE)
             pdata <- predict(model, task = task)
 
             p <- pdata$data[, 4]
