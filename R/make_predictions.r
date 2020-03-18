@@ -105,7 +105,8 @@ make.predictions <- function(siamcat,
             for (r in seq_len(num.resample)) {
                 test.label <- label.fac[data.split$test.folds[[r]][[f]]]
                 data <-
-                    as.data.frame(feat[data.split$test.folds[[r]][[f]], ,drop=FALSE])
+                    as.data.frame(feat[data.split$test.folds[[r]][[f]], ,
+                                    drop=FALSE])
 
                 # assert stuff
                 stopifnot(nrow(data) == length(test.label))
