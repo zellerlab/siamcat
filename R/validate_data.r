@@ -95,7 +95,6 @@ validate.data <- function(siamcat, verbose = 1) {
                     paste0(names(group.numbers)[2], "\t", group.numbers[2]),
                     "\nNote that a dataset this small/skewed is not",
                     "necessarily suitable for analysis in this pipeline."))
-            }
         }
     }
 
