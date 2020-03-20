@@ -94,11 +94,11 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
                                         sum(label$label == x)},
                                     FUN.VALUE = integer(1))
             if (any(group.numbers <= 5)){
-                stop("Data set has only:\n ",
+                stop("Data set has only:\n",
                     paste0(names(group.numbers)[1], "\t", group.numbers[1]),
                     "\n",
                     paste0(names(group.numbers)[2], "\t", group.numbers[2]),
-                    "\nThis is not enough for SIAMCAT to proceed"
+                    "\nThis is not enough for SIAMCAT to proceed!"
                 )
             }
         }
