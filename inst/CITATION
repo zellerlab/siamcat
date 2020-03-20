@@ -1,28 +1,15 @@
-year <-2018
-note <- sprintf("R package version %s", meta$Version)
+citHeader("To cite SIAMCAT in publications, please use:")
 
-bibentry(bibtype = "Manual",
-         title = "SIAMCAT: Statistical Inference of Associations between 
-                    Microbial Communities And host phenoTypes",
-         author = c(person("Konrad", "Zych"),
-                    person("Jakob", "Wirbel"),
-                    person("Morgan", "Essex"),
-                    person("Kersten", "Breuer"),
-                    person("Nicolai", "Karcher"),
-                    person(c("Paul", "Igor"), "Costea"),
-                    person("Shinichi", "Sunagawa"),
-                    person("Peer", "Bork"),
-                    person("Georg", "Zeller")
-                    ),
-         year = year,
-         doi = "10.18129/B9.bioc.SIAMCAT",
-         note = note,
-         url = "https://bioconductor.org/packages/SIAMCAT/")
-
-textVersion = paste0("Konrad Zych, Jakob Wirbel, Morgan Essex, 
-                Nicolai Karcher, Kersten Breuer, Nicolai Karcher, 
-                Paul I. Costea, Shinichi Sunagawa, Peer Bork, Georg Zeller (",
-                year,
-                "). SIAMCAT: Statistical Inference of Associations between 
-                Microbial Communities And host phenoTypes ",
-                note, ".")
+citEntry(entry = "article",
+  author = "Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P,
+  Sunagawa S, Zeller G",
+  title = "SIAMCAT: user-friendly and versatile machine learning workflows for
+  statistically rigorous microbiome analyses",
+  year = "2020",
+  url = "https://doi.org/10.1101/2020.02.06.931808",
+  journal = 'bioRxiv',
+  textVersion = "Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G,
+  Bork P, Sunagawa S, Zeller G (2020) SIAMCAT: user-friendly and versatile
+  machine learning workflows for statistically rigorous microbiome analyses
+  bioRxiv 2020.02.06.931808; doi: https://doi.org/10.1101/2020.02.06.931808"
+)
