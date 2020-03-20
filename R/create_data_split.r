@@ -86,6 +86,25 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
         s.time <- proc.time()[3]
 
         label    <- label(siamcat)
+        if (label$type != 'BINARY'){
+            stop("SIAMCAT only works with binary labels at the moment!")
+        } else {
+            group.numbers <- vapply(label$info,
+                                    FUN = function(x){
+                                        sum(label$label == x)},
+                                    FUN.VALUE = integer(1))
+            if (any(group.numbers <= 5)){
+                stop("Data set has only:\n ",
+                    paste0(names(group.numbers)[1], "\t", group.numbers[1]),
+                    "\n",
+                    paste0(names(group.numbers)[2], "\t", group.numbers[2]),
+                    "\nThis is not enough for SIAMCAT to proceed"
+                )
+            }
+        }
+
+
+
         labelNum <- as.numeric(label$label)
         names(labelNum) <- names(label$label)
         exm.ids <- names(labelNum)

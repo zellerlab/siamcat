@@ -83,18 +83,17 @@ validate.data <- function(siamcat, verbose = 1) {
     if (label$type == 'BINARY'){
         if (verbose > 2)
             message("+++ checking sample number per class")
-        for (i in seq_along(label$info)) {
-            if (sum(label$label == label$info[i]) <= 5) {
-                stop("Data set has only ", sum(label$label == label$info[i]),
-                    " training examples of class ", names(label$info)[i],
-                    "\nThis is not enough for SIAMCAT to proceed"
-                )
-            }
-            if (sum(label$label == label$info[i]) < 10) {
-                message(paste("Data set has only",
-                    sum(label$label == label$info[i]),
-                    "training examples of class", names(label$info)[i],
-                    ".\nNote that a dataset this small/skewed is not",
+        group.numbers <- vapply(label$info,
+                                FUN = function(x){
+                                    sum(label$label == x)},
+                                FUN.VALUE = integer(1))
+        if (any(group.numbers < 10)) {
+            message(
+                paste("Data set has a limited number of training examples:\n",
+                    paste0(names(group.numbers)[1], "\t", group.numbers[1]),
+                    "\n",
+                    paste0(names(group.numbers)[2], "\t", group.numbers[2]),
+                    "\nNote that a dataset this small/skewed is not",
                     "necessarily suitable for analysis in this pipeline."))
             }
         }
