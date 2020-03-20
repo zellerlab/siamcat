@@ -73,11 +73,10 @@ citation("SIAMCAT")
 
 or by
 
-> Zych K, Wirbel J, Essex M, Breuer K, Karcher N, Costea PI, Sunagawa S,
-Bork P, Zeller G (2018). _SIAMCAT: Statistical Inference of Associations
-between Microbial Communities And host phenoTypes_.
-doi: 10.18129/B9.bioc.SIAMCAT (URL: http://doi.org/10.18129/B9.bioc.SIAMCAT),
-R package version 1.0.1, (URL: https://bioconductor.org/packages/SIAMCAT/).
+> Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P,
+Sunagawa S, Zeller G (2020) _SIAMCAT: user-friendly and versatile machine
+learning workflows for statistically rigorous microbiome analyses_
+bioRxiv 2020.02.06.931808; doi: https://doi.org/10.1101/2020.02.06.931808
 
 ## Examples of primary package output
 
