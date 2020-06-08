@@ -3,10 +3,10 @@ Type: Package
 Title: Statistical Inference of Associations between Microbial
     Communities And host phenoTypes
 Version: 1.9.0
-Authors@R: c(person("Konrad", "Zych", role = c("aut", "cre"),
+Authors@R: c(person("Konrad", "Zych", role = c("aut"),
                 email = "konrad.zych@embl.de",
                 comment = c(ORCID = "0000-0001-7426-0516")),
-            person("Jakob", "Wirbel", role = c("aut"),
+            person("Jakob", "Wirbel", role = c("aut", "cre"),
                 email = "jakob.wirbel@embl.de",
                 comment = c(ORCID = "0000-0002-4073-3562")),
             person("Georg", "Zeller", role = c("aut"),
