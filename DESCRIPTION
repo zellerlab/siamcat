@@ -2,11 +2,11 @@ Package: SIAMCAT
 Type: Package
 Title: Statistical Inference of Associations between Microbial
     Communities And host phenoTypes
-Version: 1.7.0
-Authors@R: c(person("Konrad", "Zych", role = c("aut", "cre"),
+Version: 1.9.0
+Authors@R: c(person("Konrad", "Zych", role = c("aut"),
                 email = "konrad.zych@embl.de",
                 comment = c(ORCID = "0000-0001-7426-0516")),
-            person("Jakob", "Wirbel", role = c("aut"),
+            person("Jakob", "Wirbel", role = c("aut", "cre"),
                 email = "jakob.wirbel@embl.de",
                 comment = c(ORCID = "0000-0002-4073-3562")),
             person("Georg", "Zeller", role = c("aut"),
@@ -57,8 +57,8 @@ Imports:
 License: GPL-3
 LazyData: true
 RoxygenNote: 6.1.1
-biocViews: ImmunoOncology, Metagenomics, Classification, Microbiome, 
-    Sequencing, Preprocessing, Clustering, FeatureExtraction, 
+biocViews: ImmunoOncology, Metagenomics, Classification, Microbiome,
+    Sequencing, Preprocessing, Clustering, FeatureExtraction,
     GeneticVariability, MultipleComparison,Regression
 Suggests:
     BiocStyle,
