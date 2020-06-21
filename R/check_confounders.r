@@ -211,11 +211,7 @@ confounders.build.glms <- function(meta, label) {
             reg.ci[[m]] <- confint(profile(model))[2,]
             reg.pval[m] <- coef(summary(model))[2,4]
             rocs[[m]]   <- roc(y ~ x, data=d, direction='<',
-<<<<<<< HEAD
-                               ci=TRUE, auc=TRUE, levels=c(0,1))
-=======
                                 ci=TRUE, auc=TRUE, levels=c(0,1))
->>>>>>> bioconductor/master
             aucs[m]     <- as.numeric(rocs[[m]]$auc)}
         else {rm <- c(rm, colnames(meta)[m])}}
 
@@ -413,11 +409,7 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
             grid.table(t, theme = ttheme_minimal())
             popViewport()
             par(mfrow = c(1, 1), bty = "o")
-<<<<<<< HEAD
-          } else {
-=======
         } else {
->>>>>>> bioconductor/master
             if (verbose > 1)
                 message("++++ continuous variable, using a Q-Q plot")
 
@@ -500,18 +492,6 @@ factorize.metadata <- function(meta, verbose) {
 
     # check for IDs and other metavariable with too many levels
     n.levels <- vapply(colnames(factorized), FUN=function(x){
-<<<<<<< HEAD
-      length(levels(factorized[[x]]))}, FUN.VALUE = integer(1))
-    if (any(n.levels > 0.9*nrow(meta))){
-      remove.meta <- names(which(n.levels > 0.9*nrow(meta)))
-      if (verbose > 1){
-        message("++ metadata variables:\n\t",
-                paste(remove.meta, collapse = " & "),
-                "\n++ have too many levels and ",
-                "have been removed from this analysis")
-      }
-      factorized <- factorized[,-which(colnames(factorized) %in% remove.meta)]
-=======
         length(levels(factorized[[x]]))}, FUN.VALUE = integer(1))
     if (any(n.levels > 0.9*nrow(meta))){
         remove.meta <- names(which(n.levels > 0.9*nrow(meta)))
@@ -522,7 +502,6 @@ factorize.metadata <- function(meta, verbose) {
                 "have been removed from this analysis")
         }
         factorized <- factorized[,-which(colnames(factorized) %in% remove.meta)]
->>>>>>> bioconductor/master
     }
     return(factorized)
 }
@@ -546,53 +525,6 @@ factorize.bmi <- function(bmi) {
 
 #'@keywords internal
 variance.plots <- function(meta, label, feat, verbose){
-<<<<<<< HEAD
-  if (verbose > 2){message('+++ computing variance explained by label')}
-  stopifnot(all(colnames(feat)==names(label$label)))
-  var.label <- vapply(rownames(feat), FUN=function(x){
-    x <- feat[x,]
-    x <- rank(x)/length(x)
-    ss.tot <- sum((x - mean(x))^2)/length(x)
-    ss.o.i <- sum(vapply(unique(label$label), function(s){
-      sum((x[label$label==s] - mean(x[label$label==s]))^2)
-    }, FUN.VALUE = double(1)))/length(x)
-    return(1-ss.o.i/ss.tot)
-  }, FUN.VALUE = double(1))
-  if (any(is.infinite(var.label))){
-    var.label[is.infinite(var.label)] <- NA
-  }
-  par(mfrow=c(2,2), mar=c(4.1, 4.1, 2.1, 2.1))
-  for (variable in colnames(meta)){
-    if (verbose > 2){message('+++ computing variance explained by ', variable)}
-    temp <- meta[[variable]]
-    names(temp) <- rownames(meta)
-    if (any(is.na(temp))){
-      temp <- temp[!is.na(temp)]
-    }
-    var.batch <- vapply(rownames(feat), FUN=function(x){
-      x <- feat[x,names(temp)]
-      x <- rank(x)/length(x)
-      ss.tot <- sum((x - mean(x))^2)/length(x)
-      ss.o.i <- sum(vapply(levels(temp), function(s){
-        sum((x[temp==s] - mean(x[temp==s]))^2)
-      }, FUN.VALUE = double(1)))/length(x)
-      return(1-ss.o.i/ss.tot)
-    }, FUN.VALUE = double(1))
-    if (any(is.infinite(var.batch))){
-      var.batch[is.infinite(var.batch)] <- NA
-    }
-  lim <- round(max(var.label, var.batch, na.rm=TRUE), digits = 2)
-  r.mean <- rowMeans(log10(feat+1e-05))
-  mean.size <- (r.mean + 5) * 8/5 + 1
-  plot(var.label, var.batch, type='n',
-       xlab='Variance explained by label',
-       ylab=paste0('Variance expained by ', variable),
-       xlim=c(0,lim), ylim=c(0,lim))
-  symbols(x=var.label, y=var.batch, circles=mean.size, inches=1/9,
-        bg=alpha("darkgrey", 0.4), fg=alpha('black', 0.7), add=TRUE)
-  abline(0,1, lty=3, col='black')
-  }
-=======
     if (verbose > 2){message('+++ computing variance explained by label')}
     stopifnot(all(colnames(feat)==names(label$label)))
     var.label <- vapply(rownames(feat), FUN=function(x){
@@ -639,5 +571,4 @@ variance.plots <- function(meta, label, feat, verbose){
         bg=alpha("darkgrey", 0.4), fg=alpha('black', 0.7), add=TRUE)
     abline(0,1, lty=3, col='black')
     }
->>>>>>> bioconductor/master
 }
