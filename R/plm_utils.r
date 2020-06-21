@@ -127,6 +127,7 @@ train.plm <-
             coef <- coef[-bias.idx, ]
             model$feat.weights <-
                 (-1) * as.numeric(coef)  ### check!!!
+            model$learner.model$glmnet.fit$call <- NULL
         } else if (cl == "classif.LiblineaRL1LogReg") {
             model$feat.weights <-
                 model$learner.model$W[
