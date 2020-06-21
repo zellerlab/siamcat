@@ -195,10 +195,10 @@ filter.features <- function(siamcat,
             "Unclassified", "Unassigned",
             "UNCLASSIFIED", "unclassified", "UNASSIGNED", "unassigned")
 
-        unm.idx <- rownames(feat) %in% names.unmapped
+        unm.idx <- which(rownames(feat) %in% names.unmapped)
 
-        if (any(unm.idx)) {
-            f.idx <- f.idx[-which(f.idx %in% which(unm.idx))]
+        if (length(unm.idx) > 0) {
+            f.idx <- setdiff(f.idx, unm.idx)
             if (verbose > 2)
                 message(paste("+++ removing",
                     rownames(feat)[unm.idx], "as unmapped reads"))
