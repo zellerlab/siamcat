@@ -5,7 +5,7 @@ author:
 -   name: "Konrad Zych, Jakob Wirbel, and Georg Zeller"
     affiliation: "EMBL Heidelberg"
     email: "georg.zeller@embl.de"
-date: "Date last modified: 2018-09-24"
+date: "Date last modified: 2020-04-04"
 output: BiocStyle::html_document
 vignette: >
     %\VignetteIndexEntry{SIAMCAT basic vignette}
@@ -46,7 +46,7 @@ the potential of microbial species in fecal samples to distinguish patients
 with colorectal cancer (CRC) from healthy controls.
 
 ```{r load_files, message=FALSE}
-library(SIAMCAT)
+library("SIAMCAT")
 
 data("feat_crc_zeller", package="SIAMCAT")
 data("meta_crc_zeller", package="SIAMCAT")
@@ -88,23 +88,23 @@ look at the [vignette about input formats](SIAMCAT_read-in.html) for more
 information about supported formats and other ways to create a `SIAMCAT` object.
 
 ```{r start}
-siamcat <- siamcat(feat=feat.crc.zeller,
+sc.obj <- siamcat(feat=feat.crc.zeller,
     label=label.crc.zeller,
     meta=meta.crc.zeller)
 ```
 
-A few information about the `siamcat` object can be accessed with the `show`
+A few information about the `SIAMCAT` object can be accessed with the `show`
 function from `phyloseq` (`SIAMCAT` builds on the `phyloseq` data structure):
 
 ```{r show_siamcat}
-show(siamcat)
+show(sc.obj)
 ```
 
 Since we have quite a lot of microbial species in the dataset at the moment, we
 can perform unsupervised feature selection using the function `filter.features`.
 
 ```{r filter_feat}
-siamcat <- filter.features(siamcat,
+sc.obj <- filter.features(sc.obj,
     filter.method = 'abundance',
     cutoff = 0.001)
 ```
@@ -117,8 +117,8 @@ the significance using a non-parametric Wilcoxon test and different effect
 sizes for the association (e.g. AUC or fold change).
 
 ```{r check_associations, eval=FALSE}
-siamcat <- check.associations(
-    siamcat,
+sc.obj <- check.associations(
+    sc.obj,
     sort.by = 'fc',
     alpha = 0.05,
     mult.corr = "fdr",
@@ -148,8 +148,8 @@ we use the `log.unit` method, but several other methods and customization
 options are available (please check the documentation).
 
 ```{r normalize_feat}
-siamcat <- normalize.features(
-    siamcat,
+sc.obj <- normalize.features(
+    sc.obj,
     norm.method = "log.unit",
     norm.param = list(
         log.n0 = 1e-06,
@@ -165,12 +165,12 @@ Preparation of the cross-validation fold is a crucial step in machine learning.
 `SIAMCAT` greatly simplifies the set-up of cross-validation schemes, including
 stratification of samples or keeping samples inseperable based on metadata.
 For this small example, we choose a twice-repeated 5-fold cross-validation
-scheme. The data-split will be saved in the `data_split` slot of the `siamcat`
+scheme. The data-split will be saved in the `data_split` slot of the `SIAMCAT`
 object.
 
 ```{r data_split}
-siamcat <-  create.data.split(
-    siamcat,
+sc.obj <-  create.data.split(
+    sc.obj,
     num.folds = 5,
     num.resample = 2
 )
@@ -184,22 +184,22 @@ machine learning method to the measure for model selection or customizable
 parameter set for hyperparameter tuning.
 
 ```{r train_model, message=FALSE, results='hide'}
-siamcat <- train.model(
-    siamcat,
+sc.obj <- train.model(
+    sc.obj,
     method = "lasso"
 )
 ```
 
-The models are saved in the `model_list` slot of the `siamcat` object. The
+The models are saved in the `model_list` slot of the `SIAMCAT` object. The
 model building is performed using the `mlr` R package. All models can easily be
 accessed.
 
 ```{r show_models}
 # get information about the model type
-model_type(siamcat)
+model_type(sc.obj)
 
 # access the models
-models <- models(siamcat)
+models <- models(sc.obj)
 models[[1]]
 ```
 
@@ -208,11 +208,11 @@ models[[1]]
 Using the data-split and the models trained in previous step, we can use the
 function `make.predictions` in order to apply the models on the test instances
 in the data-split. The predictions will be saved in the `pred_matrix` slot of
-the `siamcat` object.
+the `SIAMCAT` object.
 
 ```{r make_predictions, message=FALSE, results='hide'}
-siamcat <- make.predictions(siamcat)
-pred_matrix <- pred_matrix(siamcat)
+sc.obj <- make.predictions(sc.obj)
+pred_matrix <- pred_matrix(sc.obj)
 ```
 ```{r pred_matrix_head}
 head(pred_matrix)
@@ -229,7 +229,7 @@ Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR)
 Curve for each resampled cross-validation run.
 
 ```{r eval_predictions}
-siamcat <-  evaluate.predictions(siamcat)
+sc.obj <-  evaluate.predictions(sc.obj)
 ```
 
 ## Evaluation Plot
@@ -239,7 +239,7 @@ To plot the results of the evaluation, we can use the function
 Curves for the different resamples runs as well as the mean ROC and PR Curve.
 
 ```{r eval_plot, eval=FALSE}
-model.evaluation.plot(siamcat)
+model.evaluation.plot(sc.obj)
 ```
 
 ![](./eval_plot.png)
@@ -265,7 +265,7 @@ plotting region.
 
 ```{r eval=FALSE}
 model.interpretation.plot(
-    siamcat,
+    sc.obj,
     fn.plot = 'interpretation.pdf',
     consens.thres = 0.5,
     norm.models = TRUE,
