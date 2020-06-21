@@ -672,12 +672,17 @@ model.interpretation.pred.and.meta.plot <-
             )
         }
         # mark missing values
+        x.increment <- 1/((nrow(img.data) - 1) * 2)
+        y.increment <- 1/((ncol(img.data) - 1) * 2)
         for (m in seq_len(ncol(img.data))) {
-            idx = which(is.na(img.data[, m]))
+            idx <- which(is.na(img.data[, m]))
             for (i in idx) {
-                x = (i - 1) / (dim(img.data)[1] - 1)
-                y = (m - 1) / (dim(img.data)[2] - 1)
-                text(x, y, "NA", col = "red", cex = 0.4)
+                x.left <- ((i-1) * x.increment * 2) - x.increment
+                x.right <- (i * x.increment * 2) - x.increment
+                y.bottom <- ((m-1) * y.increment * 2) - y.increment
+                y.top <-  (m * y.increment * 2) - y.increment
+                rect(x.left, y.bottom, x.right, y.top, col = "yellow",
+                     border=NA)
             }
         }
         if (verbose > 2)
