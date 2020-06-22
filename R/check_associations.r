@@ -229,8 +229,12 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 pr.cutoff=pr.cutoff, probs.fc=probs.fc,
                 mult.corr=mult.corr, alpha=alpha,
                 feature.type=feature.type)
+            check <- any(all.equal(new.params, old.params) == TRUE)
+            check <- all(check, nrow(associations(siamcat)) == nrow(feat))
+            check <- all(check, 
+                         all(rownames(associations(siamcat)) == rownames(feat)))
             # if the same, don't compute again but rather use the old resutls
-            if (any(all.equal(new.params, old.params) == TRUE)) {
+            if (check){
                 result.list <- list()
                 result.list$effect.size <- associations(siamcat)
                 result.list$detect.lim <- assoc_param(siamcat)$detect.lim
