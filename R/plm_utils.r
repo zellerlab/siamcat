@@ -55,19 +55,22 @@ train.plm <-
                     alpha = 0
                 )
         } else if (method == "enet") {
-            lrn <- makeLearner(cl, predict.type = "prob", nlambda = 10)
-
+            if (class(parameters)=='list'){
+              lrn <- makeLearner(cl, predict.type = 'prob',
+                                 nlambda=10, alpha=parameters$alpha)
+              parameters <- NULL
+              # TODO make enet with fixed alpha (if a single alpha is given)
+            } else {
+              lrn <- makeLearner(cl, predict.type = "prob", nlambda = 10)
+            }
         } else if (method == "lasso_ll") {
             cl <- "classif.LiblineaRL1LogReg"
-            class.weights <- c(5, 1)
-            names(class.weights) <- c(-1, 1)
             lrn <-
                 makeLearner(cl,
                     predict.type = "prob",
                     epsilon = 1e-08,
-                    wi = class.weights)
-            parameters <-
-                makeParamSet(makeDiscreteParam("cost", values = cost))
+                    wi = parameters$class.weights)
+            parameters <- parameters$cost
         } else if (method == "ridge_ll") {
             cl <- "classif.LiblineaRL2LogReg"
             lrn <-
@@ -75,10 +78,9 @@ train.plm <-
                     cl,
                     predict.type = "prob",
                     epsilon = 1e-08,
-                    type = 0
-                )
-            parameters <-
-                makeParamSet(makeDiscreteParam("cost", values = cost))
+                    type = 0,
+                    wi = parameters$class.weights)
+            parameters <- parameters$cost
         } else if (method == "randomForest") {
             cl <- "classif.randomForest"
             lrn <- makeLearner(cl,
@@ -89,7 +91,7 @@ train.plm <-
             stop(
                 method,
                 " is not a valid method, currently supported: lasso,
-                enet, ridge, lasso_ll, randomForest.\n"
+                enet, ridge, lasso_ll, ridge_ll, randomForest.\n"
             )
         }
         show.info <- FALSE
@@ -206,14 +208,20 @@ get.parameters.from.param.set <-
         mtry <-
             c(round(sqrt.mdim / 2), round(sqrt.mdim), round(sqrt.mdim * 2))
         alpha <- c(0, 1)
+        class.weights <- c(5, 1)
+        names(class.weights) <- c(-1, 1)
         parameters <- NULL
         if (method == "lasso_ll") {
             if (!all(is.null(param.set))) {
                 if ("cost" %in% names(param.set))
                     cost <- param.set$cost
+                if ("class.weights" %in% names(param.set)){
+                    class.weights <- param.set$class.weights
+                    names(class.weights) <- c(-1, 1)
+                }
             }
-            parameters <-
-                makeParamSet(makeDiscreteParam("cost", values = cost))
+            parameters <- list("class.weights"=class.weights,
+                'cost'=makeParamSet(makeDiscreteParam("cost", values = cost)))
         } else if (method == "randomForest") {
             if (!all(is.null(param.set))) {
                 if ("ntree" %in% names(param.set))
@@ -233,9 +241,15 @@ get.parameters.from.param.set <-
                 if ("alpha" %in% names(param.set))
                     alpha <- param.set$alpha
             }
-            parameters <-
+            if (length(alpha)==1){
+              parameters <- list(alpha=alpha)
+            } else if (length(alpha) == 2){
+              parameters <-
                 makeParamSet(makeNumericParam("alpha", lower = alpha[1],
                     upper = alpha[2]))
+            } else {
+              stop("'alpha' parameter can not have more than two entries!")
+            }
         }
         return(parameters)
 }
