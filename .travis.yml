@@ -8,6 +8,7 @@ sudo: required
 env:
  global:
    - CRAN: http://cran.rstudio.com
+    - _R_CHECK_DONTTEST_EXAMPLES_=FALSE
 
 notifications:
   email:
