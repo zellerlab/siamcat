@@ -155,7 +155,7 @@ The conditional entropy check primarily serves to remove nonsensical
 variables from subsequent checks. Conditional entropy quantifies the unique 
 information contained in one variable (row) respective to another (column). 
 Identical variables and derived variables which share the exact same information
-will have a value of zero and. In this example, the label was derived from the 
+will have a value of zero. In this example, the label was derived from the 
 Group variable which was determined from AJCC stage, so both are excluded.
 
 ![Conditional Entropy Plot](./confounder_entropy_plot.png)
