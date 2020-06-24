@@ -69,12 +69,6 @@ siamcat_split <- create.data.split(siamcat_example,
     num.folds=10,
     num.resample=5,
     stratify=TRUE)
-
-# Inseparable data split
-\donttest{siamcat_split <- create.data.split(siamcat,
-    num.folds=10,
-    num.resample=5,
-    inseparable='Individual_ID')}
 }
 \keyword{SIAMCAT}
 \keyword{create.data.split}

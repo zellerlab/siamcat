@@ -71,12 +71,6 @@
 #'     num.folds=10,
 #'     num.resample=5,
 #'     stratify=TRUE)
-#'
-#' # Inseparable data split
-#' \donttest{siamcat_split <- create.data.split(siamcat,
-#'     num.folds=10,
-#'     num.resample=5,
-#'     inseparable='Individual_ID')}
 
 create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
     stratify = TRUE, inseparable = NULL, verbose = 1) {
