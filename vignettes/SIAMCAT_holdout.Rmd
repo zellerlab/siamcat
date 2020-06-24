@@ -40,15 +40,15 @@ library(SIAMCAT)
 
 # this is data from Zeller et al., Mol. Syst. Biol. 2014
 fn.feat.fr  <-
-    'http://embl.de/download/zeller/FR-CRC/FR-CRC-N141_tax-ab-specI.tsv'
+    'https://www.embl.de/download/zeller/FR-CRC/FR-CRC-N141_tax-ab-specI.tsv'
 fn.meta.fr  <-
-    'http://embl.de/download/zeller/FR-CRC/FR-CRC-N141_metadata.tsv'
+    'https://www.embl.de/download/zeller/FR-CRC/FR-CRC-N141_metadata.tsv'
 
 # this is the external dataset from Yu et al., Gut 2017
 fn.feat.cn  <-
-    'http://embl.de/download/zeller/CN-CRC/CN-CRC-N128_tax-ab-specI.tsv'
+    'https://www.embl.de/download/zeller/CN-CRC/CN-CRC-N128_tax-ab-specI.tsv'
 fn.meta.cn  <-
-    'http://embl.de/download/zeller/CN-CRC/CN-CRC-N128_metadata.tsv'
+    'https://www.embl.de/download/zeller/CN-CRC/CN-CRC-N128_metadata.tsv'
 ```
 
 First of all, we build a `SIAMCAT` object using the data from the French study
