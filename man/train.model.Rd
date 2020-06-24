@@ -5,10 +5,10 @@
 \title{Model training}
 \usage{
 train.model(siamcat, method = c("lasso", "enet", "ridge", "lasso_ll",
-  "ridge_ll", "randomForest"), stratify = TRUE, modsel.crit = list("auc"),
-  min.nonzero.coeff = 1, param.set = NULL, perform.fs = FALSE, param.fs =
-  list(thres.fs = 100, method.fs = "AUC", direction='absolute'),
-  feature.type='normalized', verbose = 1)
+"ridge_ll", "randomForest"), stratify = TRUE, modsel.crit = list("auc"),
+min.nonzero.coeff = 1, param.set = NULL, perform.fs = FALSE, param.fs =
+list(thres.fs = 100, method.fs = "AUC", direction='absolute'),
+feature.type='normalized', verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -62,78 +62,78 @@ object of class \link{siamcat-class} with added \code{model_list}
 }
 \description{
 This function trains the a machine learning model on the
-  training data
+training data
 }
 \details{
 This functions performs the training of the machine learning model
-  and functions as an interface to the \code{mlr}-package.
+and functions as an interface to the \code{mlr}-package.
 
-  The function expects a \link{siamcat-class}-object with a prepared
-  cross-validation (see \link{create.data.split}) in the
-  \code{data_split}-slot of the object. It then trains a model for each fold
-  of the datasplit.
+The function expects a \link{siamcat-class}-object with a prepared
+cross-validation (see \link{create.data.split}) in the
+\code{data_split}-slot of the object. It then trains a model for each fold
+of the datasplit.
 
-  For the machine learning methods that require additional hyperparameters
-  (e.g. \code{lasso_ll}), the optimal hyperparameters are tuned with the
-  function \link[mlr]{tuneParams} within the \code{mlr}-package.
+For the machine learning methods that require additional hyperparameters
+(e.g. \code{lasso_ll}), the optimal hyperparameters are tuned with the
+function \link[mlr]{tuneParams} within the \code{mlr}-package.
 
-  The different machine learning methods are implemented as mlr-tasks:
-  \itemize{ \item \code{'lasso'}, \code{'enet'}, and \code{'ridge'} use the
-  \code{'classif.cvglmnet'} Learner, \item \code{'lasso_ll'} and
-  \code{'ridge_ll'} use the \code{'classif.LiblineaRL1LogReg'} and the
-  \code{'classif.LiblineaRL2LogReg'} Learners respectively \item
-  \code{'randomForest'} is implemented via the \code{'classif.randomForest'}
-  Learner. }
+The different machine learning methods are implemented as mlr-tasks:
+\itemize{ \item \code{'lasso'}, \code{'enet'}, and \code{'ridge'} use the
+\code{'classif.cvglmnet'} Learner, \item \code{'lasso_ll'} and
+\code{'ridge_ll'} use the \code{'classif.LiblineaRL1LogReg'} and the
+\code{'classif.LiblineaRL2LogReg'} Learners respectively \item
+\code{'randomForest'} is implemented via the \code{'classif.randomForest'}
+Learner. }
 
-  \strong{Hyperparameters} You also have additional control over the machine
-  learning procedure by supplying information through the \code{param.set}
-  parameter within the function. We encourage you to check out the excellent
-  \href{https://mlr.mlr-org.com/index.html}{mlr documentation} for more
-  in-depth information.
+\strong{Hyperparameters} You also have additional control over the machine
+learning procedure by supplying information through the \code{param.set}
+parameter within the function. We encourage you to check out the excellent
+\href{https://mlr.mlr-org.com/index.html}{mlr documentation} for more
+in-depth information.
 
-  Here is a short overview which parameters you can supply in which form:
-  \itemize{
-  \item enet The \strong{alpha} parameter describes the mixture between
-  lasso and ridge penalty and is -per default- determined using internal
-  cross-validation (the default would be equivalent to
-  \code{param.set=list('alpha'=c(0,1))}). You can supply either the limits of
-  the hyperparameter exploration (e.g. with limits 0.2 and 0.8:
-  \code{param.set=list('alpha'=c(0.2,0.8))}) or you can supply a fixed alpha
-  value as well (\code{param.set=list('alpha'=0.5)}).
-  \item lasso_ll/ridge_ll You can supply both \strong{class.weights} and 
-  the \strong{cost} parameter (cost of the constraints violation, see 
-  \link[LiblineaR]{LiblineaR} for more info). The default values would be 
-  equal to \code{param.set=list('class.weights'=c(5, 1), 
-  'cost'=c(10 ^ seq(-2, 3, length = 6 + 5 + 10))}.
-  \item randomForest You can supply the two parameters \strong{ntree} 
-  (Number of trees to grow) and \strong{mtry} (Number of variables randomly 
-  sampled as candidates at each split). See also 
-  \link[randomForest]{randomForest} for more info. The default values 
-  correspond to 
-  \code{param.set=list('ntree'=c(100, 1000), 'mtry'=
-  c(round(sqrt.mdim / 2), round(sqrt.mdim), round(sqrt.mdim * 2)))} with
-  \code{sqrt.mdim=sqrt(nrow(data))}.
-  }
+Here is a short overview which parameters you can supply in which form:
+\itemize{
+\item enet The \strong{alpha} parameter describes the mixture between
+lasso and ridge penalty and is -per default- determined using internal
+cross-validation (the default would be equivalent to
+\code{param.set=list('alpha'=c(0,1))}). You can supply either the limits of
+the hyperparameter exploration (e.g. with limits 0.2 and 0.8:
+\code{param.set=list('alpha'=c(0.2,0.8))}) or you can supply a fixed alpha
+value as well (\code{param.set=list('alpha'=0.5)}).
+\item lasso_ll/ridge_ll You can supply both \strong{class.weights} and
+the \strong{cost} parameter (cost of the constraints violation, see
+\link[LiblineaR]{LiblineaR} for more info). The default values would be
+equal to \code{param.set=list('class.weights'=c(5, 1),
+'cost'=c(10 ^ seq(-2, 3, length = 6 + 5 + 10))}.
+\item randomForest You can supply the two parameters \strong{ntree}
+(Number of trees to grow) and \strong{mtry} (Number of variables randomly
+sampled as candidates at each split). See also
+\link[randomForest]{randomForest} for more info. The default values
+correspond to
+\code{param.set=list('ntree'=c(100, 1000), 'mtry'=
+c(round(sqrt.mdim / 2), round(sqrt.mdim), round(sqrt.mdim * 2)))} with
+\code{sqrt.mdim=sqrt(nrow(data))}.
+}
 
 
-  \strong{Feature selection} The function can also perform feature selection
-  on each individual fold. At the moment, three methods for feature selection
-  are implemented: \itemize{ \item \code{'AUC'} - computes the Area Under the
-  Receiver Operating Characteristics Curve for each single feature and
-  selects the top \code{param.fs$thres.fs}, e.g. 100 features \item
-  \code{'gFC'} - computes the generalized Fold Change (see
-  \link{check.associations}) for each feature and likewise selects the top
-  \code{param.fs$thres.fs}, e.g. 100 features \item \code{Wilcoxon} -
-  computes the p-Value for each single feature with the Wilcoxon test and
-  selects features with a p-value smaller than \code{param.fs$thres.fs} } For
-  \code{AUC} and \code{gFC}, feature selection can also be directed, that
-  means that the features will be selected either based on the overall
-  association (\code{absolute} - \code{gFC} will be converted to absolute
-  values and \code{AUC} values below \code{0.5} will be converted by \code{1
-  - AUC}), or on associations in a certain direction (\code{positive} -
-  positive enrichment as measured by positive values of the \code{gFC} or
-  \code{AUC} values higher than  \code{0.5} - and reversely for
-  \code{negative}).
+\strong{Feature selection} The function can also perform feature selection
+on each individual fold. At the moment, three methods for feature selection
+are implemented: \itemize{ \item \code{'AUC'} - computes the Area Under the
+Receiver Operating Characteristics Curve for each single feature and
+selects the top \code{param.fs$thres.fs}, e.g. 100 features \item
+\code{'gFC'} - computes the generalized Fold Change (see
+\link{check.associations}) for each feature and likewise selects the top
+\code{param.fs$thres.fs}, e.g. 100 features \item \code{Wilcoxon} -
+computes the p-Value for each single feature with the Wilcoxon test and
+selects features with a p-value smaller than \code{param.fs$thres.fs} } For
+\code{AUC} and \code{gFC}, feature selection can also be directed, that
+means that the features will be selected either based on the overall
+association (\code{absolute} - \code{gFC} will be converted to absolute
+values and \code{AUC} values below \code{0.5} will be converted by \code{1
+- AUC}), or on associations in a certain direction (\code{positive} -
+positive enrichment as measured by positive values of the \code{gFC} or
+\code{AUC} values higher than  \code{0.5} - and reversely for
+\code{negative}).
 }
 \examples{
 data(siamcat_example)

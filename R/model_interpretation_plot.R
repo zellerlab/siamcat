@@ -682,7 +682,7 @@ model.interpretation.pred.and.meta.plot <-
                 y.bottom <- ((m-1) * y.increment * 2) - y.increment
                 y.top <-  (m * y.increment * 2) - y.increment
                 rect(x.left, y.bottom, x.right, y.top, col = "yellow",
-                     border=NA)
+                    border=NA)
             }
         }
         if (verbose > 2)

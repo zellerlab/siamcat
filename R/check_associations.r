@@ -231,8 +231,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 feature.type=feature.type)
             check <- any(all.equal(new.params, old.params) == TRUE)
             check <- all(check, nrow(associations(siamcat)) == nrow(feat))
-            check <- all(check, 
-                         all(rownames(associations(siamcat)) == rownames(feat)))
+            check <- all(check,
+                all(rownames(associations(siamcat)) == rownames(feat)))
             # if the same, don't compute again but rather use the old resutls
             if (check){
                 result.list <- list()

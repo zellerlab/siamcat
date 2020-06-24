@@ -55,13 +55,13 @@ train.plm <-
                     alpha = 0
                 )
         } else if (method == "enet") {
-            if (class(parameters)=='list'){
-              lrn <- makeLearner(cl, predict.type = 'prob',
-                                 nlambda=10, alpha=parameters$alpha)
-              parameters <- NULL
-              # TODO make enet with fixed alpha (if a single alpha is given)
+            if (is.list(parameters)){
+                lrn <- makeLearner(cl, predict.type = 'prob',
+                    nlambda=10, alpha=parameters$alpha)
+                parameters <- NULL
+                # TODO make enet with fixed alpha (if a single alpha is given)
             } else {
-              lrn <- makeLearner(cl, predict.type = "prob", nlambda = 10)
+                lrn <- makeLearner(cl, predict.type = "prob", nlambda = 10)
             }
         } else if (method == "lasso_ll") {
             cl <- "classif.LiblineaRL1LogReg"
@@ -242,13 +242,13 @@ get.parameters.from.param.set <-
                     alpha <- param.set$alpha
             }
             if (length(alpha)==1){
-              parameters <- list(alpha=alpha)
+                parameters <- list(alpha=alpha)
             } else if (length(alpha) == 2){
-              parameters <-
-                makeParamSet(makeNumericParam("alpha", lower = alpha[1],
-                    upper = alpha[2]))
+                parameters <-
+                    makeParamSet(makeNumericParam("alpha", lower = alpha[1],
+                        upper = alpha[2]))
             } else {
-              stop("'alpha' parameter can not have more than two entries!")
+                stop("'alpha' parameter can not have more than two entries!")
             }
         }
         return(parameters)
