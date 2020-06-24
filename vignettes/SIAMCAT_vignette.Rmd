@@ -132,6 +132,41 @@ landscape DIN-A4 layout, but can also used to plot on an active graphic device,
 e.g. in RStudio. The resulting plot then looks like that:
 ![Association Plot](./associations_plot.png)
 
+# Confounder Testing
+
+As many biological and technical factors beyond the primary phenotype of 
+interest can influence microbiome composition, simple association studies may
+suffer confounding by other variables, which can lead to spurious results. 
+The `check.confounders` function provides the option to test the associated
+metadata variables for potential confounding influence. No information is stored
+in the `SIAMCAT` object, but the different analyses are visualized and saved to
+a combined pdf file for qualitative interpretation.
+
+```{r check_confounders, eval=FALSE}
+sc.obj <- check.confounders(
+    sc.obj,
+    fn.plot = 'confounder_plots.pdf',
+    meta.in = NULL,
+    feature.type = 'filtered'
+)
+```
+
+The conditional entropy check primarily serves to remove nonsensical 
+variables from subsequent checks. Conditional entropy quantifies the unique 
+information contained in one variable (row) respective to another (column). 
+Identical variables and derived variables which share the exact same information
+will have a value of zero and. In this example, the label was derived from the 
+Group variable which was determined from AJCC stage, so both are excluded.
+
+![Conditional Entropy Plot](./confounder_entropy_plot.png)
+
+To better quantify potential confounding effects of metadata variables on 
+individual microbial features, `check.confounder` plots the variance explained 
+by the label in comparison with the variance explained by the metadata variable
+for each individual feature. Variables with many features in the upper left 
+corner might be confounding the label associations.
+
+![Variance Explained Plot](./confounder_anova_plot.png)
 
 # Model Building
 
