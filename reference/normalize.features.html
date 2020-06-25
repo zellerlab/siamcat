@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -87,6 +87,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -236,8 +239,8 @@ function supplying the normalization parameters as argument to
     <span class='kw'>norm.method</span><span class='kw'>=</span><span class='st'>'log.std'</span>,
     <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>log.n0</span><span class='kw'>=</span><span class='fl'>1e-05</span>, <span class='kw'>sd.min.q</span><span class='kw'>=</span><span class='fl'>.1</span>))</div><div class='output co'>#&gt; <span class='message'>Features normalized successfully.</span></div><div class='input'>
 <span class='co'># Frozen normalization</span>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat</span>,
-    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='norm_params-methods.html'>norm_params</a></span>(<span class='no'>siamcat_reference</span>))</div></pre>
+<span class='no'>siamcat_norm</span> <span class='kw'>&lt;-</span> <span class='fu'>normalize.features</span>(<span class='no'>siamcat</span>,
+    <span class='kw'>norm.param</span><span class='kw'>=</span><span class='fu'><a href='norm_params-methods.html'>norm_params</a></span>(<span class='no'>siamcat_reference</span>))</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("function"), new("standardGeneric", .Data = function (siamcat,     verbose = 1) standardGeneric("filt_feat"), generic = structure("filt_feat", package = "SIAMCAT"),     package = "SIAMCAT", group = list(), valueClass = character(0),     signature = c("siamcat", "verbose"), default = NULL, skeleton = (function (siamcat,         verbose = 1)     stop("invalid call in method dispatch to 'filt_feat' (no default method)",         domain = NA))(siamcat, verbose)), &lt;environment&gt;): unable to find an inherited method for function ‘filt_feat’ for signature ‘"function"’</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

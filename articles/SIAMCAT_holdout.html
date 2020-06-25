@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -71,6 +71,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -102,7 +105,7 @@
       <h1>Holdout Testing with SIAMCAT</h1>
                         <h4 class="author">Jakob Wirbel, Konrad Zych, and Georg Zeller</h4>
             <address class="author_afil">
-      EMBL Heidelberg<br><a class="author_email" href="mailto:#"></a><a href="mailto:georg.zeller@embl.de">georg.zeller@embl.de</a>
+      EMBL Heidelberg<br><a class="author_email" href="mailto:#"></a><a href="mailto:georg.zeller@embl.de" class="email">georg.zeller@embl.de</a>
       </address>
                   
             <h4 class="date">Date last modified: 2018-09-24</h4>
@@ -124,71 +127,71 @@
 <h1 class="hasAnchor">
 <a href="#load-the-data" class="anchor"></a>Load the Data</h1>
 <p>The datasets can be found on the web repository for public metagenomics datasets from the <a href="https://www.embl.de/research/units/scb/zeller/index.html">Zeller group</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(SIAMCAT)
-
-<span class="co"># this is data from Zeller et al., Mol. Syst. Biol. 2014</span>
-fn.feat.fr  &lt;-
-<span class="st">    'https://embl.de/download/zeller/FR-CRC/FR-CRC-N141_tax-ab-specI.tsv'</span>
-fn.meta.fr  &lt;-
-<span class="st">    'https://embl.de/download/zeller/FR-CRC/FR-CRC-N141_metadata.tsv'</span>
-
-<span class="co"># this is the external dataset from Yu et al., Gut 2017</span>
-fn.feat.cn  &lt;-
-<span class="st">    'https://embl.de/download/zeller/CN-CRC/CN-CRC-N128_tax-ab-specI.tsv'</span>
-fn.meta.cn  &lt;-
-<span class="st">    'https://embl.de/download/zeller/CN-CRC/CN-CRC-N128_metadata.tsv'</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(SIAMCAT)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># this is data from Zeller et al., Mol. Syst. Biol. 2014</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>fn.feat.fr  &lt;-</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="st">    'https://www.embl.de/download/zeller/FR-CRC/FR-CRC-N141_tax-ab-specI.tsv'</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>fn.meta.fr  &lt;-</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="st">    'https://www.embl.de/download/zeller/FR-CRC/FR-CRC-N141_metadata.tsv'</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co"># this is the external dataset from Yu et al., Gut 2017</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>fn.feat.cn  &lt;-</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="st">    'https://www.embl.de/download/zeller/CN-CRC/CN-CRC-N128_tax-ab-specI.tsv'</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>fn.meta.cn  &lt;-</span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="st">    'https://www.embl.de/download/zeller/CN-CRC/CN-CRC-N128_metadata.tsv'</span></span></code></pre></div>
 <p>First of all, we build a <code>SIAMCAT</code> object using the data from the French study in the same way that we have seen before in the main <code>SIAMCAT</code> vignette.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># features</span>
-<span class="co"># be vary of the defaults in R!!!</span>
-feat.fr  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.feat.fr, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,
-    <span class="dt">check.names =</span> <span class="ot">FALSE</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-<span class="co"># the features are counts, but we want to work with relative abundances</span>
-feat.fr.rel &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/prop.table.html">prop.table</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(feat.fr), <span class="dv">2</span>)
-
-<span class="co"># metadata</span>
-meta.fr  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.meta.fr, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,
-    <span class="dt">check.names=</span><span class="ot">FALSE</span>, <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)
-
-<span class="co"># create SIAMCAT object</span>
-siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.fr.rel, <span class="dt">meta=</span>meta.fr,
-    <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># features</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># be vary of the defaults in R!!!</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>feat.fr  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.feat.fr, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="dt">check.names =</span> <span class="ot">FALSE</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># the features are counts, but we want to work with relative abundances</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>feat.fr.rel &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/prop.table.html">prop.table</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(feat.fr), <span class="dv">2</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># metadata</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>meta.fr  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.meta.fr, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,</span>
+<span id="cb2-10"><a href="#cb2-10"></a>    <span class="dt">check.names=</span><span class="ot">FALSE</span>, <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</span>
+<span id="cb2-11"><a href="#cb2-11"></a></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># create SIAMCAT object</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.fr.rel, <span class="dt">meta=</span>meta.fr,</span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)</span></code></pre></div>
 <pre><code>## + starting create.label</code></pre>
 <pre><code>## Label used as case:
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.018 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.017 s</code></pre>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.032 s</code></pre>
+<pre><code>## + finished validate.data in 0.033 s</code></pre>
 <p>We can load the data from the Chinese study in a similar way and also create a <code>SIAMCAT</code> object for the holdout dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># features</span>
-feat.cn  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.feat.cn, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,
-    <span class="dt">check.names =</span> <span class="ot">FALSE</span>)
-feat.cn.rel &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/prop.table.html">prop.table</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(feat.cn), <span class="dv">2</span>)
-
-<span class="co"># metadata</span>
-meta.cn  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.meta.cn, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,
-    <span class="dt">check.names=</span><span class="ot">FALSE</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-
-<span class="co"># SIAMCAT object</span>
-siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.cn.rel, <span class="dt">meta=</span>meta.cn,
-        <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># features</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>feat.cn  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.feat.cn, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>    <span class="dt">check.names =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>feat.cn.rel &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/prop.table.html">prop.table</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(feat.cn), <span class="dv">2</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="co"># metadata</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a>meta.cn  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.meta.cn, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>, <span class="dt">quote=</span><span class="st">""</span>,</span>
+<span id="cb12-8"><a href="#cb12-8"></a>    <span class="dt">check.names=</span><span class="ot">FALSE</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb12-9"><a href="#cb12-9"></a></span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="co"># SIAMCAT object</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a>siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.cn.rel, <span class="dt">meta=</span>meta.cn,</span>
+<span id="cb12-12"><a href="#cb12-12"></a>        <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)</span></code></pre></div>
 <pre><code>## + starting create.label</code></pre>
 <pre><code>## Label used as case:
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.002 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 128 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.02 s</code></pre>
+<pre><code>## + finished validate.data in 0.019 s</code></pre>
 </div>
 <div id="model-building-on-the-french-dataset" class="section level1">
 <h1 class="hasAnchor">
@@ -197,53 +200,53 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <h2 class="hasAnchor">
 <a href="#preprocessing" class="anchor"></a>Preprocessing</h2>
 <p>With the French dataset, we perform the complete process of model building within <code>SIAMCAT</code>, including data preprocessing steps like data validation, filtering, and data normalization.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.features.html">filter.features</a></span>(
-    siamcat.fr,
-    <span class="dt">filter.method =</span> <span class="st">'abundance'</span>,
-    <span class="dt">cutoff =</span> <span class="fl">0.001</span>,
-    <span class="dt">rm.unmapped =</span> <span class="ot">TRUE</span>,
-    <span class="dt">verbose=</span><span class="dv">2</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.features.html">filter.features</a></span>(</span>
+<span id="cb22-2"><a href="#cb22-2"></a>    siamcat.fr,</span>
+<span id="cb22-3"><a href="#cb22-3"></a>    <span class="dt">filter.method =</span> <span class="st">'abundance'</span>,</span>
+<span id="cb22-4"><a href="#cb22-4"></a>    <span class="dt">cutoff =</span> <span class="fl">0.001</span>,</span>
+<span id="cb22-5"><a href="#cb22-5"></a>    <span class="dt">rm.unmapped =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb22-6"><a href="#cb22-6"></a>    <span class="dt">verbose=</span><span class="dv">2</span></span>
+<span id="cb22-7"><a href="#cb22-7"></a>)</span></code></pre></div>
 <pre><code>## + starting filter.features</code></pre>
 <pre><code>## +++ before filtering, the data have 1754 features</code></pre>
 <pre><code>## +++ removed 1 features corresponding to UNMAPPED reads</code></pre>
 <pre><code>## +++ removed 1539 features whose values did not exceed 0.001 in any sample (retaining 215)</code></pre>
 <pre><code>## + finished filter.features in 0.005 s</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(
-    siamcat.fr,
-    <span class="dt">norm.method =</span> <span class="st">"log.std"</span>,
-    <span class="dt">norm.param =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">log.n0 =</span> <span class="fl">1e-06</span>, <span class="dt">sd.min.q =</span> <span class="fl">0.1</span>),
-    <span class="dt">verbose =</span> <span class="dv">2</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(</span>
+<span id="cb28-2"><a href="#cb28-2"></a>    siamcat.fr,</span>
+<span id="cb28-3"><a href="#cb28-3"></a>    <span class="dt">norm.method =</span> <span class="st">"log.std"</span>,</span>
+<span id="cb28-4"><a href="#cb28-4"></a>    <span class="dt">norm.param =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">log.n0 =</span> <span class="fl">1e-06</span>, <span class="dt">sd.min.q =</span> <span class="fl">0.1</span>),</span>
+<span id="cb28-5"><a href="#cb28-5"></a>    <span class="dt">verbose =</span> <span class="dv">2</span></span>
+<span id="cb28-6"><a href="#cb28-6"></a>)</span></code></pre></div>
 <pre><code>## + starting normalize.features</code></pre>
 <pre><code>## +++ performing de novo normalization using the  log.std  method</code></pre>
 <pre><code>## + feature sparsity before normalization: 46.05%</code></pre>
 <pre><code>## +++ feature sparsity after normalization:      0 %</code></pre>
-<pre><code>## + finished normalize.features in 0.003 s</code></pre>
+<pre><code>## + finished normalize.features in 0.004 s</code></pre>
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-training" class="anchor"></a>Model Training</h2>
 <p>Now, we can build the statistical model. We use the same parameters as in the main <code>SIAMCAT</code> vignette, where the process is explained in more detail.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st">  </span><span class="kw"><a href="../reference/create.data.split.html">create.data.split</a></span>(
-    siamcat.fr,
-    <span class="dt">num.folds =</span> <span class="dv">5</span>,
-    <span class="dt">num.resample =</span> <span class="dv">2</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>siamcat.fr &lt;-<span class="st">  </span><span class="kw"><a href="../reference/create.data.split.html">create.data.split</a></span>(</span>
+<span id="cb34-2"><a href="#cb34-2"></a>    siamcat.fr,</span>
+<span id="cb34-3"><a href="#cb34-3"></a>    <span class="dt">num.folds =</span> <span class="dv">5</span>,</span>
+<span id="cb34-4"><a href="#cb34-4"></a>    <span class="dt">num.resample =</span> <span class="dv">2</span></span>
+<span id="cb34-5"><a href="#cb34-5"></a>)</span></code></pre></div>
 <pre><code>## Features splitted for cross-validation successfully.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(
-    siamcat.fr,
-    <span class="dt">method =</span> <span class="st">"lasso"</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(</span>
+<span id="cb36-2"><a href="#cb36-2"></a>    siamcat.fr,</span>
+<span id="cb36-3"><a href="#cb36-3"></a>    <span class="dt">method =</span> <span class="st">"lasso"</span></span>
+<span id="cb36-4"><a href="#cb36-4"></a>)</span></code></pre></div>
 <pre><code>## Trained lasso models successfully.</code></pre>
 </div>
 <div id="predictions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#predictions" class="anchor"></a>Predictions</h2>
 <p>Finally, we can make predictions for each cross-validation fold and evaluate the predictions as seen in the main <code>SIAMCAT</code> vignette.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat.fr)</code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>siamcat.fr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat.fr)</span></code></pre></div>
 <pre><code>## Made predictions successfully.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.fr &lt;-<span class="st">  </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat.fr)</code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>siamcat.fr &lt;-<span class="st">  </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat.fr)</span></code></pre></div>
 <pre><code>## Evaluated predictions successfully.</code></pre>
 </div>
 </div>
@@ -254,10 +257,10 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <div id="frozen-normalization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#frozen-normalization" class="anchor"></a>Frozen Normalization</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(siamcat.cn,
-    <span class="dt">norm.param=</span><span class="kw"><a href="../reference/norm_params-methods.html">norm_params</a></span>(siamcat.fr),
-    <span class="dt">feature.type=</span><span class="st">'original'</span>,
-    <span class="dt">verbose =</span> <span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(siamcat.cn,</span>
+<span id="cb42-2"><a href="#cb42-2"></a>    <span class="dt">norm.param=</span><span class="kw"><a href="../reference/norm_params-methods.html">norm_params</a></span>(siamcat.fr),</span>
+<span id="cb42-3"><a href="#cb42-3"></a>    <span class="dt">feature.type=</span><span class="st">'original'</span>,</span>
+<span id="cb42-4"><a href="#cb42-4"></a>    <span class="dt">verbose =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## + starting normalize.features</code></pre>
 <pre><code>## + normalizing original features</code></pre>
 <pre><code>## + performing frozen  log.std  normalization using the supplied parameters</code></pre>
@@ -269,40 +272,40 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <h2 class="hasAnchor">
 <a href="#holdout-predictions" class="anchor"></a>Holdout Predictions</h2>
 <p>Next, we apply the trained model to predict the holdout dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(
-    <span class="dt">siamcat =</span> siamcat.fr,
-    <span class="dt">siamcat.holdout =</span> siamcat.cn,
-    <span class="dt">normalize.holdout =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(</span>
+<span id="cb49-2"><a href="#cb49-2"></a>    <span class="dt">siamcat =</span> siamcat.fr,</span>
+<span id="cb49-3"><a href="#cb49-3"></a>    <span class="dt">siamcat.holdout =</span> siamcat.cn,</span>
+<span id="cb49-4"><a href="#cb49-4"></a>    <span class="dt">normalize.holdout =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre><code>## Warning in make.predictions(siamcat = siamcat.fr, siamcat.holdout =
 ## siamcat.cn, : WARNING: holdout set is not being normalized!</code></pre>
 <pre><code>## Made predictions successfully.</code></pre>
 <p>Note that the <code>make.predictions</code> function can also take care of the normalization of the holdout dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Alternative Code, not run here
-siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.cn.rel, <span class="dt">meta=</span>meta.cn,
-    <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)
-siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(<span class="dt">siamcat =</span> siamcat.fr,
-    <span class="dt">siamcat.holdout =</span> siamcat.cn,
-    <span class="dt">normalize.holdout =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="co">## Alternative Code, not run here</span></span>
+<span id="cb52-2"><a href="#cb52-2"></a>siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.cn.rel, <span class="dt">meta=</span>meta.cn,</span>
+<span id="cb52-3"><a href="#cb52-3"></a>    <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)</span>
+<span id="cb52-4"><a href="#cb52-4"></a>siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(<span class="dt">siamcat =</span> siamcat.fr,</span>
+<span id="cb52-5"><a href="#cb52-5"></a>    <span class="dt">siamcat.holdout =</span> siamcat.cn,</span>
+<span id="cb52-6"><a href="#cb52-6"></a>    <span class="dt">normalize.holdout =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>Again, we have to evaluate the predictions:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat.cn)</code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat.cn)</span></code></pre></div>
 </div>
 </div>
 <div id="model-evaluation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#model-evaluation" class="anchor"></a>Model Evaluation</h1>
 <p>Now, we can compare the performance of the classifier on the original and the holdout dataset by using the <code>model.evaluation.plot</code> function. Here, we can supply several <code>SIAMCAT</code> objects for which the model evaluation will be plotted in the same plot. Note that we can supply the objects as named objects in order to print the names in the legend.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/model.evaluation.plot.html">model.evaluation.plot</a></span>(<span class="st">'FR-CRC'</span>=siamcat.fr,
-    <span class="st">'CN-CRC'</span>=siamcat.cn,
-    <span class="dt">colours=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'dimgrey'</span>, <span class="st">'orange'</span>))</code></pre></div>
-<p><img src="SIAMCAT_holdout_files/figure-html/eval_plot_hidden-1.png" width="576" style="display: block; margin: auto auto auto 0;"></p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="kw"><a href="../reference/model.evaluation.plot.html">model.evaluation.plot</a></span>(<span class="st">'FR-CRC'</span>=siamcat.fr,</span>
+<span id="cb54-2"><a href="#cb54-2"></a>    <span class="st">'CN-CRC'</span>=siamcat.cn,</span>
+<span id="cb54-3"><a href="#cb54-3"></a>    <span class="dt">colours=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'dimgrey'</span>, <span class="st">'orange'</span>))</span></code></pre></div>
+<p><img src="eval_plot_holdout.png"></p>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</code></pre></div>
-<pre><code>## R version 3.6.1 (2019-07-05)
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</span></code></pre></div>
+<pre><code>## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Mojave 10.14.6
+## Running under: macOS Catalina 10.15.5
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
@@ -315,41 +318,41 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_1.5.0     phyloseq_1.28.0   mlr_2.15.0        ParamHelpers_1.12
+## [1] SIAMCAT_1.9.0     phyloseq_1.28.0   mlr_2.15.0        ParamHelpers_1.12
 ## [5] BiocStyle_2.12.0 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-141        matrixStats_0.55.0  fs_1.3.1           
+##  [1] nlme_3.1-144        matrixStats_0.55.0  fs_1.3.1           
 ##  [4] RColorBrewer_1.1-2  progress_1.2.2      PRROC_1.3.1        
-##  [7] rprojroot_1.3-2     tools_3.6.1         backports_1.1.4    
+##  [7] rprojroot_1.3-2     tools_3.6.3         backports_1.1.5    
 ## [10] R6_2.4.0            vegan_2.5-6         lazyeval_0.2.2     
-## [13] BiocGenerics_0.30.0 mgcv_1.8-28         colorspace_1.4-1   
+## [13] BiocGenerics_0.30.0 mgcv_1.8-31         colorspace_1.4-1   
 ## [16] permute_0.9-5       ade4_1.7-13         tidyselect_0.2.5   
-## [19] gridExtra_2.3       prettyunits_1.0.2   compiler_3.6.1     
+## [19] gridExtra_2.3       prettyunits_1.0.2   compiler_3.6.3     
 ## [22] parallelMap_1.4     glmnet_2.0-18       Biobase_2.44.0     
-## [25] desc_1.2.0          bookdown_0.13       scales_1.0.0       
+## [25] desc_1.2.0          bookdown_0.14       scales_1.0.0       
 ## [28] checkmate_1.9.4     pkgdown_1.4.1       stringr_1.4.0      
-## [31] digest_0.6.20       rmarkdown_1.15      XVector_0.24.0     
-## [34] pkgconfig_2.0.2     htmltools_0.3.6     rlang_0.4.0        
+## [31] digest_0.6.22       rmarkdown_1.16      XVector_0.24.0     
+## [34] pkgconfig_2.0.3     htmltools_0.4.0     rlang_0.4.0        
 ## [37] rstudioapi_0.10     BBmisc_1.11         jsonlite_1.6       
-## [40] dplyr_0.8.3         magrittr_1.5        biomformat_1.12.0  
-## [43] Matrix_1.2-17       Rcpp_1.0.2          munsell_0.5.0      
-## [46] S4Vectors_0.22.1    Rhdf5lib_1.6.1      ape_5.3            
+## [40] dplyr_0.8.3         magrittr_1.5        biomformat_1.7.0   
+## [43] Matrix_1.2-18       Rcpp_1.0.2          munsell_0.5.0      
+## [46] S4Vectors_0.22.1    Rhdf5lib_1.6.3      ape_5.3            
 ## [49] infotheo_1.2.0      stringi_1.4.3       pROC_1.15.3        
-## [52] yaml_2.2.0          MASS_7.3-51.4       zlibbioc_1.30.0    
-## [55] rhdf5_2.28.0        plyr_1.8.4          grid_3.6.1         
-## [58] LiblineaR_2.10-8    parallel_3.6.1      crayon_1.3.4       
-## [61] lattice_0.20-38     Biostrings_2.52.0   splines_3.6.1      
+## [52] yaml_2.2.0          MASS_7.3-51.5       zlibbioc_1.30.0    
+## [55] rhdf5_2.28.1        plyr_1.8.4          grid_3.6.3         
+## [58] LiblineaR_2.10-8    parallel_3.6.3      crayon_1.3.4       
+## [61] lattice_0.20-38     Biostrings_2.52.0   splines_3.6.3      
 ## [64] multtest_2.40.0     hms_0.5.1           zeallot_0.1.0      
-## [67] knitr_1.24          beanplot_1.2        pillar_1.4.2       
+## [67] knitr_1.25          beanplot_1.2        pillar_1.4.2       
 ## [70] igraph_1.2.4.1      reshape2_1.4.3      codetools_0.2-16   
-## [73] stats4_3.6.1        fastmatch_1.1-0     XML_3.98-1.20      
-## [76] glue_1.3.1          evaluate_0.14       data.table_1.12.2  
-## [79] BiocManager_1.30.4  vctrs_0.2.0         foreach_1.4.7      
-## [82] gtable_0.3.0        purrr_0.3.2         assertthat_0.2.1   
-## [85] ggplot2_3.2.1       xfun_0.9            gridBase_0.4-7     
-## [88] survival_2.44-1.1   tibble_2.1.3        iterators_1.0.12   
-## [91] memoise_1.1.0       IRanges_2.18.2      cluster_2.1.0      
+## [73] stats4_3.6.3        fastmatch_1.1-0     XML_3.98-1.20      
+## [76] glue_1.3.1          evaluate_0.14       data.table_1.12.6  
+## [79] BiocManager_1.30.9  vctrs_0.2.0         foreach_1.4.7      
+## [82] gtable_0.3.0        purrr_0.3.3         assertthat_0.2.1   
+## [85] ggplot2_3.2.1       xfun_0.10           gridBase_0.4-7     
+## [88] survival_3.1-8      tibble_2.1.3        iterators_1.0.12   
+## [91] memoise_1.1.0       IRanges_2.18.3      cluster_2.1.0      
 ## [94] corrplot_0.84</code></pre>
 </div>
   </div>
@@ -363,14 +366,16 @@ siamcat.cn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <li><a href="#introduction">Introduction</a></li>
       <li><a href="#load-the-data">Load the Data</a></li>
       <li>
-<a href="#model-building-on-the-french-dataset">Model Building on the French Dataset</a><ul class="nav nav-pills nav-stacked">
+<a href="#model-building-on-the-french-dataset">Model Building on the French Dataset</a>
+      <ul class="nav nav-pills nav-stacked">
 <li><a href="#preprocessing">Preprocessing</a></li>
       <li><a href="#model-training">Model Training</a></li>
       <li><a href="#predictions">Predictions</a></li>
       </ul>
 </li>
       <li>
-<a href="#application-on-the-holdout-dataset">Application on the Holdout Dataset</a><ul class="nav nav-pills nav-stacked">
+<a href="#application-on-the-holdout-dataset">Application on the Holdout Dataset</a>
+      <ul class="nav nav-pills nav-stacked">
 <li><a href="#frozen-normalization">Frozen Normalization</a></li>
       <li><a href="#holdout-predictions">Holdout Predictions</a></li>
       </ul>

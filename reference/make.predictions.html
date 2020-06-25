@@ -59,7 +59,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -88,6 +88,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -176,8 +179,8 @@ defaults to <code>1</code></p></td>
 <span class='co'># Simple example</span>
 <span class='no'>siamcat.pred</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat_example</span>)</div><div class='output co'>#&gt; <span class='message'>Made predictions successfully.</span></div><div class='input'>
 <span class='co'># Predictions on a holdout-set</span>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='no'>pred.mat</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat.trained</span>, <span class='no'>siamcat.holdout</span>,
-    <span class='kw'>normalize.holdout</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div></pre>
+<span class='no'>pred.mat</span> <span class='kw'>&lt;-</span> <span class='fu'>make.predictions</span>(<span class='no'>siamcat.trained</span>, <span class='no'>siamcat.holdout</span>,
+    <span class='kw'>normalize.holdout</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout = TRUE): object 'siamcat.holdout' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

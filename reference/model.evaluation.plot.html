@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -130,7 +133,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>model.evaluation.plot</span>(<span class='no'>...</span>, <span class='kw'>fn.plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-    <span class='kw'>colours</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <span class='kw'>colours</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>show.all</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,6 +151,11 @@
       <td><p>colour specification for the different <a href='siamcat-class.html'>siamcat-class</a>-
 objects, defaults to <code>NULL</code> which will cause the colours to be
 picked from the <code>'Set1'</code> palette</p></td>
+    </tr>
+    <tr>
+      <th>show.all</th>
+      <td><p>boolean, Should all repeated cross-validation models be
+plotted?</p></td>
     </tr>
     <tr>
       <th>verbose</th>

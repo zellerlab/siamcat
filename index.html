@@ -55,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
 <li>
   <a href="reference/index.html">Functions</a>
 </li>
+<li>
+  <a href="news/index.html">News</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -111,9 +114,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="siamcat" class="section level1">
+<div id="siamcat-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#siamcat" class="anchor"></a>SIAMCAT <img src="reference/figures/logo.png" align="right" width="120">
+<a href="#siamcat-" class="anchor"></a>SIAMCAT <img src="reference/figures/logo.png" align="right" width="120">
 </h1></div>
 
 <div id="overview" class="section level2">
@@ -130,20 +133,20 @@
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
 <p>In order to start with <code>SIAMCAT</code>, you need to install it from Bioconductor:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))
-    <span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
-BiocManager<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"SIAMCAT"</span>, <span class="dt">version =</span> <span class="st">"3.8"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>BiocManager<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"SIAMCAT"</span>, <span class="dt">version =</span> <span class="st">"3.8"</span>)</span></code></pre></div>
 <p>Alternatively, you can install the current development version via <code>devtools</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="st">"devtools"</span>)
-devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="dt">repo =</span> <span class="st">'zellerlab/siamcat'</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="st">"devtools"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="dt">repo =</span> <span class="st">'zellerlab/siamcat'</span>)</span></code></pre></div>
 </div>
 <div id="quick-start" class="section level3">
 <h3 class="hasAnchor">
 <a href="#quick-start" class="anchor"></a>Quick start</h3>
 <p>There are a few manuals that will kick-start you and help you analyse your data with <code>SIAMCAT</code>. You can find links to those on the <a href="https://bioconductor.org/packages/release/bioc/html/SIAMCAT.html">Bioconductor website of SIAMCAT</a> or you can type into <code>R</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"SIAMCAT"</span>)
-<span class="co"># Please Note:</span>
-<span class="co"># `browseVignettes` only works if `SIAMCAT` has been installed via Bioconductor</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"SIAMCAT"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># Please Note:</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co"># `browseVignettes` only works if `SIAMCAT` has been installed via Bioconductor</span></span></code></pre></div>
 </div>
 </div>
 <div id="contact" class="section level2">
@@ -162,10 +165,10 @@ devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>If you use <code>SIAMCAT</code>, please cite us by using</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span>(<span class="st">"SIAMCAT"</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span>(<span class="st">"SIAMCAT"</span>)</span></code></pre></div>
 <p>or by</p>
 <blockquote>
-<p>Zych K, Wirbel J, Essex M, Breuer K, Karcher N, Costea PI, Sunagawa S, Bork P, Zeller G (2018). <em>SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</em>. doi: 10.18129/B9.bioc.SIAMCAT (URL: <a href="http://doi.org/10.18129/B9.bioc.SIAMCAT" class="uri">http://doi.org/10.18129/B9.bioc.SIAMCAT</a>), R package version 1.0.1, (URL: <a href="https://bioconductor.org/packages/SIAMCAT/" class="uri">https://bioconductor.org/packages/SIAMCAT/</a>).</p>
+<p>Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P, Sunagawa S, Zeller G (2020) <em>SIAMCAT: user-friendly and versatile machine learning workflows for statistically rigorous microbiome analyses</em> bioRxiv 2020.02.06.931808; doi: <a href="https://doi.org/10.1101/2020.02.06.931808" class="uri">https://doi.org/10.1101/2020.02.06.931808</a></p>
 </blockquote>
 </div>
 <div id="examples-of-primary-package-output" class="section level2">
@@ -178,7 +181,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/
 <a href="#association-testing" class="anchor"></a>Association testing</h3>
 <p>The result of the <code>check.associations</code> function is an association plot. For significantly associated microbial features, the plot shows:</p>
 <ul>
-<li>the abundances of the features across the two different classes (CRC vs. controls)</li>
+<li>the abundances of the features across the two different classes (CRC vs. controls)</li>
 <li>the significance of the enrichment calculated by a Wilcoxon test (after multiple hypothesis testing correction)</li>
 <li>the generalized fold change of each feature</li>
 <li>the prevalence shift between the two classes, and</li>
@@ -266,8 +269,8 @@ Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]</p>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Konrad Zych <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-7426-0516" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
-<li>Jakob Wirbel <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4073-3562" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
+<li>Konrad Zych <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-7426-0516" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
+<li>Jakob Wirbel <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4073-3562" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 <li>Georg Zeller <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-1429-7485" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>

@@ -18,7 +18,7 @@
 
 <meta property="og:title" content="Model training — train.model" />
 <meta property="og:description" content="This function trains the a machine learning model on the
-    training data" />
+training data" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -87,6 +87,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -122,18 +125,14 @@
 
     <div class="ref-description">
     <p>This function trains the a machine learning model on the
-    training data</p>
+training data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>siamcat</span>,
-    <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
-        <span class='st'>"ridge_ll"</span>, <span class='st'>"randomForest"</span>),
-    <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"auc"</span>),
-    <span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>param.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-    <span class='kw'>perform.fs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-    <span class='kw'>param.fs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>thres.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>method.fs</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>, <span class='kw'>direction</span><span class='kw'>=</span><span class='st'>'absolute'</span>),
-    <span class='kw'>feature.type</span><span class='kw'>=</span><span class='st'>'normalized'</span>,
-    <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>train.model</span>(<span class='no'>siamcat</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"lasso"</span>, <span class='st'>"enet"</span>, <span class='st'>"ridge"</span>, <span class='st'>"lasso_ll"</span>,
+<span class='st'>"ridge_ll"</span>, <span class='st'>"randomForest"</span>), <span class='kw'>stratify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>modsel.crit</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"auc"</span>),
+<span class='kw'>min.nonzero.coeff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>param.set</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>perform.fs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>param.fs</span> <span class='kw'>=</span>
+<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>thres.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>method.fs</span> <span class='kw'>=</span> <span class='st'>"AUC"</span>, <span class='kw'>direction</span><span class='kw'>=</span><span class='st'>'absolute'</span>),
+<span class='kw'>feature.type</span><span class='kw'>=</span><span class='st'>'normalized'</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,27 +155,29 @@ stratified?, defaults to <code>TRUE</code></p></td>
     <tr>
       <th>modsel.crit</th>
       <td><p>list, specifies the model selection criterion during
-internal cross-validation, may contain these: <code><a href='https://rdrr.io/r/base/c.html'>c('auc', 'f1',
-'acc', 'pr')</a></code>, defaults to <code><a href='https://rdrr.io/r/base/list.html'>list('auc')</a></code></p></td>
+internal cross-validation, may contain these: <code><a href='https://rdrr.io/r/base/c.html'>c('auc', 'f1', 'acc',
+'pr')</a></code>, defaults to <code><a href='https://rdrr.io/r/base/list.html'>list('auc')</a></code></p></td>
     </tr>
     <tr>
       <th>min.nonzero.coeff</th>
       <td><p>integer number of minimum nonzero coefficients that
-should be present in the model (only for <code>'lasso'</code>,
-<code>'ridge'</code>, and <code>'enet'</code>), defaults to <code>1</code></p></td>
+should be present in the model (only for <code>'lasso'</code>, <code>'ridge'</code>,
+and <code>'enet'</code>), defaults to <code>1</code></p></td>
     </tr>
     <tr>
       <th>param.set</th>
       <td><p>list, set of extra parameters for mlr run, may contain:</p><ul>
-<li><p><code>cost</code> - for lasso_ll and ridge_ll</p></li>
+<li><p><code>cost</code> and <code>class.weights</code> - for lasso_ll and
+ridge_ll</p></li>
 <li><p><code>alpha</code> - for enet</p></li>
-<li><p><code>ntree</code> and <code>mtry</code> - for RandomForrest.</p></li>
-</ul><p>Defaults to <code>NULL</code></p></td>
+<li><p><code>ntree</code> and <code>mtry</code> -
+for RandomForrest.</p></li>
+</ul><p>See below for details. Defaults to <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>perform.fs</th>
-      <td><p>boolean, should feature selection be performed?
-Defaults to <code>FALSE</code></p></td>
+      <td><p>boolean, should feature selection be performed? Defaults to
+<code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>param.fs</th>
@@ -184,21 +185,21 @@ Defaults to <code>FALSE</code></p></td>
 <li><p><code>thres.fs</code> - threshold for the feature selection,</p></li>
 <li><p><code>method.fs</code> - method for the feature selection, may be
 <code>AUC</code>, <code>gFC</code>, or <code>Wilcoxon</code></p></li>
-<li><p><code>direction</code> - for <code>AUC</code> and <code>gFC</code>, select either
-the top associated features (independent of the sign of enrichment),
-the top positively associated featured, or the top negatively
-associated features, may be <code>absolute</code>, <code>positive</code>, or
-<code>negative</code>. Will be ignored for <code>Wilcoxon</code>.</p></li>
-</ul><p>See Details for more information.
-Defaults to <code><a href='https://rdrr.io/r/base/list.html'>list(thres.fs=100, method.fs="AUC",
-direction='absolute')</a></code></p></td>
+<li><p><code>direction</code> - for
+<code>AUC</code> and <code>gFC</code>, select either the top associated features
+(independent of the sign of enrichment), the top positively associated
+featured, or the top negatively associated features, may be
+<code>absolute</code>, <code>positive</code>, or <code>negative</code>. Will be ignored for
+<code>Wilcoxon</code>.</p></li>
+</ul><p>See Details for more information. Defaults to
+<code><a href='https://rdrr.io/r/base/list.html'>list(thres.fs=100, method.fs="AUC", direction='absolute')</a></code></p></td>
     </tr>
     <tr>
       <th>feature.type</th>
       <td><p>string, on which type of features should the function
 work? Can be either <code>"original"</code>, <code>"filtered"</code>, or
-<code>"normalized"</code>. Please only change this paramter if you know what
-you are doing!</p></td>
+<code>"normalized"</code>. Please only change this paramter if you know what you
+are doing!</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -215,44 +216,74 @@ defaults to <code>1</code></p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This functions performs the training of the machine learning model
-    and functions as an interface to the <code>mlr</code>-package.</p>
+and functions as an interface to the <code>mlr</code>-package.</p>
 <p>The function expects a <a href='siamcat-class.html'>siamcat-class</a>-object with a prepared
-    cross-validation (see <a href='create.data.split.html'>create.data.split</a>) in the
-    <code>data_split</code>-slot of the object. It then trains a model for
-    each fold of the datasplit.</p>
-<p>For the machine learning methods that require additional
-    hyperparameters (e.g. <code>lasso_ll</code>), the optimal hyperparameters
-    are tuned with the function <a href='https://rdrr.io/pkg/mlr/man/tuneParams.html'>tuneParams</a> within the
-    <code>mlr</code>-package.</p>
+cross-validation (see <a href='create.data.split.html'>create.data.split</a>) in the
+<code>data_split</code>-slot of the object. It then trains a model for each fold
+of the datasplit.</p>
+<p>For the machine learning methods that require additional hyperparameters
+(e.g. <code>lasso_ll</code>), the optimal hyperparameters are tuned with the
+function <a href='https://rdrr.io/pkg/mlr/man/tuneParams.html'>tuneParams</a> within the <code>mlr</code>-package.</p>
 <p>The different machine learning methods are implemented as mlr-tasks:</p><ul>
 <li><p><code>'lasso'</code>, <code>'enet'</code>, and <code>'ridge'</code> use the
-    <code>'classif.cvglmnet'</code> Learner,</p></li>
-<li><p><code>'lasso_ll'</code> and <code>'ridge_ll'</code> use the
-    <code>'classif.LiblineaRL1LogReg'</code> and the
-    <code>'classif.LiblineaRL2LogReg'</code> Learners respectively</p></li>
-<li><p><code>'randomForest'</code> is implemented via the
-    <code>'classif.randomForest'</code> Learner.</p></li>
+<code>'classif.cvglmnet'</code> Learner,</p></li>
+<li><p><code>'lasso_ll'</code> and
+<code>'ridge_ll'</code> use the <code>'classif.LiblineaRL1LogReg'</code> and the
+<code>'classif.LiblineaRL2LogReg'</code> Learners respectively</p></li>
+<li><p><code>'randomForest'</code> is implemented via the <code>'classif.randomForest'</code>
+Learner.</p></li>
 </ul>
 
-<p>The function can also perform feature selection on each individual fold.
-    At the moment, three methods for feature selection are implemented:</p><ul>
-<li><p><code>'AUC'</code> - computes the Area Under the Receiver Operating
-        Characteristics Curve for each single feature and selects the top
-        <code>param.fs$thres.fs</code>, e.g. 100 features</p></li>
+<p><strong>Hyperparameters</strong> You also have additional control over the machine
+learning procedure by supplying information through the <code>param.set</code>
+parameter within the function. We encourage you to check out the excellent
+<a href='https://mlr.mlr-org.com/index.html'>mlr documentation</a> for more
+in-depth information.</p>
+<p>Here is a short overview which parameters you can supply in which form:</p><ul>
+<li><p>enet The <strong>alpha</strong> parameter describes the mixture between
+lasso and ridge penalty and is -per default- determined using internal
+cross-validation (the default would be equivalent to
+<code>param.set=list('alpha'=c(0,1))</code>). You can supply either the limits of
+the hyperparameter exploration (e.g. with limits 0.2 and 0.8:
+<code>param.set=list('alpha'=c(0.2,0.8))</code>) or you can supply a fixed alpha
+value as well (<code>param.set=list('alpha'=0.5)</code>).</p></li>
+<li><p>lasso_ll/ridge_ll You can supply both <strong>class.weights</strong> and
+the <strong>cost</strong> parameter (cost of the constraints violation, see
+<a href='https://rdrr.io/pkg/LiblineaR/man/LiblineaR.html'>LiblineaR</a> for more info). The default values would be
+equal to <code>param.set=list('class.weights'=c(5, 1),
+'cost'=c(10 ^ seq(-2, 3, length = 6 + 5 + 10))</code>.</p></li>
+<li><p>randomForest You can supply the two parameters <strong>ntree</strong>
+(Number of trees to grow) and <strong>mtry</strong> (Number of variables randomly
+sampled as candidates at each split). See also
+<a href='https://rdrr.io/pkg/randomForest/man/randomForest.html'>randomForest</a> for more info. The default values
+correspond to
+<code>param.set=list('ntree'=c(100, 1000), 'mtry'=
+c(round(sqrt.mdim / 2), round(sqrt.mdim), round(sqrt.mdim * 2)))</code> with
+<code>sqrt.mdim=sqrt(nrow(data))</code>.</p></li>
+</ul>
+
+
+<p><strong>Feature selection</strong> The function can also perform feature selection
+on each individual fold. At the moment, three methods for feature selection
+are implemented:</p><ul>
+<li><p><code>'AUC'</code> - computes the Area Under the
+Receiver Operating Characteristics Curve for each single feature and
+selects the top <code>param.fs$thres.fs</code>, e.g. 100 features</p></li>
 <li><p><code>'gFC'</code> - computes the generalized Fold Change (see
-        <a href='check.associations.html'>check.associations</a>) for each feature and likewise selects the
-        top <code>param.fs$thres.fs</code>, e.g. 100 features</p></li>
-<li><p><code>Wilcoxon</code> - computes the p-Value for each single feature
-        with the Wilcoxon test and selects features with a p-value smaller
-        than <code>param.fs$thres.fs</code></p></li>
-</ul><p>For <code>AUC</code> and <code>gFC</code>, feature selection can also be directed,
-    that means that the features will be selected either based on the
-    overall association (<code>absolute</code> - <code>gFC</code> will be converted to
-    absolute values and <code>AUC</code> values below <code>0.5</code> will be
-    converted by <code>1 - AUC</code>), or on associations in a certain direction
-    (<code>positive</code> - positive enrichment as measured by positive values
-    of the <code>gFC</code> or <code>AUC</code> values higher than  <code>0.5</code> - and
-    reversely for <code>negative</code>).</p>
+<a href='check.associations.html'>check.associations</a>) for each feature and likewise selects the top
+<code>param.fs$thres.fs</code>, e.g. 100 features</p></li>
+<li><p><code>Wilcoxon</code> -
+computes the p-Value for each single feature with the Wilcoxon test and
+selects features with a p-value smaller than <code>param.fs$thres.fs</code></p></li>
+</ul><p>For
+<code>AUC</code> and <code>gFC</code>, feature selection can also be directed, that
+means that the features will be selected either based on the overall
+association (<code>absolute</code> - <code>gFC</code> will be converted to absolute
+values and <code>AUC</code> values below <code>0.5</code> will be converted by <code>1
+- AUC</code>), or on associations in a certain direction (<code>positive</code> -
+positive enrichment as measured by positive values of the <code>gFC</code> or
+<code>AUC</code> values higher than  <code>0.5</code> - and reversely for
+<code>negative</code>).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)

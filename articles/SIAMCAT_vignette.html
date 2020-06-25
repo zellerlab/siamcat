@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -72,6 +72,9 @@
 <li>
   <a href="../reference/index.html">Functions</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -99,13 +102,8 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</h1>
-                        <h4 class="author">Konrad Zych, Jakob Wirbel, and Georg Zeller</h4>
-            <address class="author_afil">
-      EMBL Heidelberg<br><a class="author_email" href="mailto:#"></a><a href="mailto:georg.zeller@embl.de">georg.zeller@embl.de</a>
-      </address>
-                  
-            <h4 class="date">Date last modified: 2018-09-24</h4>
+      <h1></h1>
+            
       
       
       <div class="hidden name"><code>SIAMCAT_vignette.Rmd</code></div>
@@ -129,12 +127,12 @@
 <h1 class="hasAnchor">
 <a href="#quick-start" class="anchor"></a>Quick Start</h1>
 <p>For this vignette, we use an example dataset included in the <code>SIAMCAT</code> package. As example dataset we use the data from the publication of <a href="http://europepmc.org/abstract/MED/25432777">Zeller et al</a>, which demonstrated the potential of microbial species in fecal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(SIAMCAT)
-
-<span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"feat_crc_zeller"</span>, <span class="dt">package=</span><span class="st">"SIAMCAT"</span>)
-<span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"meta_crc_zeller"</span>, <span class="dt">package=</span><span class="st">"SIAMCAT"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"SIAMCAT"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"feat_crc_zeller"</span>, <span class="dt">package=</span><span class="st">"SIAMCAT"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"meta_crc_zeller"</span>, <span class="dt">package=</span><span class="st">"SIAMCAT"</span>)</span></code></pre></div>
 <p>First, <code>SIAMCAT</code> needs a feature matrix (can be either a <code>matrix</code>, a <code>data.frame</code>, or a <code>phyloseq-otu_table</code>), which contains values of different features (in rows) for different samples (in columns). For example, the feature matrix included here contains relative abundances for bacterial species calculated with the <a href="motu-tool.org">mOTU profiler</a> for 141 samples:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feat.crc.zeller[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>feat.crc.zeller[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</span></code></pre></div>
 <pre><code>##                                  CCIS27304052ST-3-0 CCIS15794887ST-4-0
 ## UNMAPPED                                   0.589839          0.7142157
 ## Methanoculleus marisnigri [h:1]            0.000000          0.0000000
@@ -143,13 +141,13 @@
 ## UNMAPPED                                  0.7818674
 ## Methanoculleus marisnigri [h:1]           0.0000000
 ## Methanococcoides burtonii [h:10]          0.0000000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(feat.crc.zeller)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(feat.crc.zeller)</span></code></pre></div>
 <pre><code>## [1] 1754  141</code></pre>
 <blockquote>
 <p>Please note that <code>SIAMCAT</code> is supposed to work with <strong>relative abundances</strong>. Other types of data (e.g. counts) will also work, but not all functions of the package will result in meaningful outputs.</p>
 </blockquote>
 <p>Secondly, we also have metadata about the samples in another <code>data.frame</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(meta.crc.zeller)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(meta.crc.zeller)</span></code></pre></div>
 <pre><code>##                    Age BMI Gender AJCC_stage     FOBT Group
 ## CCIS27304052ST-3-0  52  20      F         -1 Negative   CTR
 ## CCIS15794887ST-4-0  37  18      F         -1 Negative   CTR
@@ -158,25 +156,25 @@
 ## CCIS79210440ST-3-0  65  30      M         -1 Positive   CTR
 ## CCIS82507866ST-3-0  57  24      M         -1 Negative   CTR</code></pre>
 <p>In order to tell <code>SIAMCAT</code>, which samples are cancer cases and which are healthy controls, we can construct a label object from the <code>Group</code> column in the metadata.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">label.crc.zeller &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create.label.html">create.label</a></span>(<span class="dt">meta=</span>meta.crc.zeller,
-    <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>label.crc.zeller &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create.label.html">create.label</a></span>(<span class="dt">meta=</span>meta.crc.zeller,</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    <span class="dt">label=</span><span class="st">'Group'</span>, <span class="dt">case=</span><span class="st">'CRC'</span>)</span></code></pre></div>
 <pre><code>## Label used as case:
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.002 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
 <p>Now we have all the ingredients to create a <code>SIAMCAT</code> object. Please have a look at the <a href="SIAMCAT_read-in.html">vignette about input formats</a> for more information about supported formats and other ways to create a <code>SIAMCAT</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.crc.zeller,
-    <span class="dt">label=</span>label.crc.zeller,
-    <span class="dt">meta=</span>meta.crc.zeller)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>sc.obj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat.crc.zeller,</span>
+<span id="cb11-2"><a href="#cb11-2"></a>    <span class="dt">label=</span>label.crc.zeller,</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    <span class="dt">meta=</span>meta.crc.zeller)</span></code></pre></div>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.295 s</code></pre>
-<p>A few information about the <code>siamcat</code> object can be accessed with the <code>show</code> function from <code>phyloseq</code> (<code>SIAMCAT</code> builds on the <code>phyloseq</code> data structure):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">show</span>(siamcat)</code></pre></div>
+<pre><code>## + finished validate.data in 0.307 s</code></pre>
+<p>A few information about the <code>SIAMCAT</code> object can be accessed with the <code>show</code> function from <code>phyloseq</code> (<code>SIAMCAT</code> builds on the <code>phyloseq</code> data structure):</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">show</span>(sc.obj)</span></code></pre></div>
 <pre><code>## siamcat-class object
 ## label()                Label object:         88 CTR and 53 CRC samples
 ## 
@@ -184,24 +182,43 @@
 ## phyloseq@otu_table()   OTU Table:            [ 1754 taxa and 141 samples ]
 ## phyloseq@sam_data()    Sample Data:          [ 141 samples by 6 sample variables ]</code></pre>
 <p>Since we have quite a lot of microbial species in the dataset at the moment, we can perform unsupervised feature selection using the function <code>filter.features</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.features.html">filter.features</a></span>(siamcat,
-    <span class="dt">filter.method =</span> <span class="st">'abundance'</span>,
-    <span class="dt">cutoff =</span> <span class="fl">0.001</span>)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>sc.obj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/filter.features.html">filter.features</a></span>(sc.obj,</span>
+<span id="cb20-2"><a href="#cb20-2"></a>    <span class="dt">filter.method =</span> <span class="st">'abundance'</span>,</span>
+<span id="cb20-3"><a href="#cb20-3"></a>    <span class="dt">cutoff =</span> <span class="fl">0.001</span>)</span></code></pre></div>
 <pre><code>## Features successfully filtered</code></pre>
 </div>
 <div id="association-testing" class="section level1">
 <h1 class="hasAnchor">
 <a href="#association-testing" class="anchor"></a>Association Testing</h1>
 <p>Associations between microbial species and the label can be tested with the <code>check.associations</code> function. The function computes for each species the significance using a non-parametric Wilcoxon test and different effect sizes for the association (e.g. AUC or fold change).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check.associations.html">check.associations</a></span>(
-    siamcat,
-    <span class="dt">sort.by =</span> <span class="st">'fc'</span>,
-    <span class="dt">alpha =</span> <span class="fl">0.05</span>,
-    <span class="dt">mult.corr =</span> <span class="st">"fdr"</span>,
-    <span class="dt">detect.lim =</span> <span class="dv">10</span> <span class="op">^-</span><span class="dv">6</span>,
-    <span class="dt">plot.type =</span> <span class="st">"quantile.box"</span>,
-    <span class="dt">panels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span>))</code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>sc.obj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check.associations.html">check.associations</a></span>(</span>
+<span id="cb22-2"><a href="#cb22-2"></a>    sc.obj,</span>
+<span id="cb22-3"><a href="#cb22-3"></a>    <span class="dt">sort.by =</span> <span class="st">'fc'</span>,</span>
+<span id="cb22-4"><a href="#cb22-4"></a>    <span class="dt">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb22-5"><a href="#cb22-5"></a>    <span class="dt">mult.corr =</span> <span class="st">"fdr"</span>,</span>
+<span id="cb22-6"><a href="#cb22-6"></a>    <span class="dt">detect.lim =</span> <span class="dv">10</span> <span class="op">^-</span><span class="dv">6</span>,</span>
+<span id="cb22-7"><a href="#cb22-7"></a>    <span class="dt">plot.type =</span> <span class="st">"quantile.box"</span>,</span>
+<span id="cb22-8"><a href="#cb22-8"></a>    <span class="dt">panels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span>))</span></code></pre></div>
 <p>The function produces a pdf file as output, since the plot is optimized for a landscape DIN-A4 layout, but can also used to plot on an active graphic device, e.g. in RStudio. The resulting plot then looks like that: <img src="associations_plot.png" alt="Association Plot"></p>
+</div>
+<div id="confounder-testing" class="section level1">
+<h1 class="hasAnchor">
+<a href="#confounder-testing" class="anchor"></a>Confounder Testing</h1>
+<p>As many biological and technical factors beyond the primary phenotype of interest can influence microbiome composition, simple association studies may suffer confounding by other variables, which can lead to spurious results. The <code>check.confounders</code> function provides the option to test the associated metadata variables for potential confounding influence. No information is stored in the <code>SIAMCAT</code> object, but the different analyses are visualized and saved to a combined pdf file for qualitative interpretation.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>sc.obj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/check.confounders.html">check.confounders</a></span>(</span>
+<span id="cb23-2"><a href="#cb23-2"></a>    sc.obj,</span>
+<span id="cb23-3"><a href="#cb23-3"></a>    <span class="dt">fn.plot =</span> <span class="st">'confounder_plots.pdf'</span>,</span>
+<span id="cb23-4"><a href="#cb23-4"></a>    <span class="dt">meta.in =</span> <span class="ot">NULL</span>,</span>
+<span id="cb23-5"><a href="#cb23-5"></a>    <span class="dt">feature.type =</span> <span class="st">'filtered'</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a>)</span></code></pre></div>
+<p>The conditional entropy check primarily serves to remove nonsensical variables from subsequent checks. Conditional entropy quantifies the unique information contained in one variable (row) respective to another (column). Identical variables and derived variables which share the exact same information will have a value of zero. In this example, the label was derived from the Group variable which was determined from AJCC stage, so both are excluded.</p>
+<div class="figure">
+<img src="confounder_entropy_plot.png" alt=""><p class="caption">Conditional Entropy Plot</p>
+</div>
+<p>To better quantify potential confounding effects of metadata variables on individual microbial features, <code>check.confounder</code> plots the variance explained by the label in comparison with the variance explained by the metadata variable for each individual feature. Variables with many features in the upper left corner might be confounding the label associations.</p>
+<div class="figure">
+<img src="confounder_anova_plot.png" alt=""><p class="caption">Variance Explained Plot</p>
+</div>
 </div>
 <div id="model-building" class="section level1">
 <h1 class="hasAnchor">
@@ -211,43 +228,43 @@
 <h2 class="hasAnchor">
 <a href="#data-normalization" class="anchor"></a>Data Normalization</h2>
 <p>Data normalization is performed with the <code>normalize.features</code> function. Here, we use the <code>log.unit</code> method, but several other methods and customization options are available (please check the documentation).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(
-    siamcat,
-    <span class="dt">norm.method =</span> <span class="st">"log.unit"</span>,
-    <span class="dt">norm.param =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-        <span class="dt">log.n0 =</span> <span class="fl">1e-06</span>,
-        <span class="dt">n.p =</span> <span class="dv">2</span>,
-        <span class="dt">norm.margin =</span> <span class="dv">1</span>
-    )
-)</code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>sc.obj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/normalize.features.html">normalize.features</a></span>(</span>
+<span id="cb24-2"><a href="#cb24-2"></a>    sc.obj,</span>
+<span id="cb24-3"><a href="#cb24-3"></a>    <span class="dt">norm.method =</span> <span class="st">"log.unit"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4"></a>    <span class="dt">norm.param =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</span>
+<span id="cb24-5"><a href="#cb24-5"></a>        <span class="dt">log.n0 =</span> <span class="fl">1e-06</span>,</span>
+<span id="cb24-6"><a href="#cb24-6"></a>        <span class="dt">n.p =</span> <span class="dv">2</span>,</span>
+<span id="cb24-7"><a href="#cb24-7"></a>        <span class="dt">norm.margin =</span> <span class="dv">1</span></span>
+<span id="cb24-8"><a href="#cb24-8"></a>    )</span>
+<span id="cb24-9"><a href="#cb24-9"></a>)</span></code></pre></div>
 <pre><code>## Features normalized successfully.</code></pre>
 </div>
 <div id="prepare-cross-validation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#prepare-cross-validation" class="anchor"></a>Prepare Cross-Validation</h2>
-<p>Preparation of the cross-validation fold is a crucial step in machine learning. <code>SIAMCAT</code> greatly simplifies the set-up of cross-validation schemes, including stratification of samples or keeping samples inseperable based on metadata. For this small example, we choose a twice-repeated 5-fold cross-validation scheme. The data-split will be saved in the <code>data_split</code> slot of the <code>siamcat</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/create.data.split.html">create.data.split</a></span>(
-    siamcat,
-    <span class="dt">num.folds =</span> <span class="dv">5</span>,
-    <span class="dt">num.resample =</span> <span class="dv">2</span>
-)</code></pre></div>
+<p>Preparation of the cross-validation fold is a crucial step in machine learning. <code>SIAMCAT</code> greatly simplifies the set-up of cross-validation schemes, including stratification of samples or keeping samples inseperable based on metadata. For this small example, we choose a twice-repeated 5-fold cross-validation scheme. The data-split will be saved in the <code>data_split</code> slot of the <code>SIAMCAT</code> object.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>sc.obj &lt;-<span class="st">  </span><span class="kw"><a href="../reference/create.data.split.html">create.data.split</a></span>(</span>
+<span id="cb26-2"><a href="#cb26-2"></a>    sc.obj,</span>
+<span id="cb26-3"><a href="#cb26-3"></a>    <span class="dt">num.folds =</span> <span class="dv">5</span>,</span>
+<span id="cb26-4"><a href="#cb26-4"></a>    <span class="dt">num.resample =</span> <span class="dv">2</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a>)</span></code></pre></div>
 <pre><code>## Features splitted for cross-validation successfully.</code></pre>
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-training" class="anchor"></a>Model Training</h2>
 <p>The actual model training is performed using the function <code>train.model</code>. Again, multiple options for customization are available, ranging from the machine learning method to the measure for model selection or customizable parameter set for hyperparameter tuning.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(
-    siamcat,
-    <span class="dt">method =</span> <span class="st">"lasso"</span>
-)</code></pre></div>
-<p>The models are saved in the <code>model_list</code> slot of the <code>siamcat</code> object. The model building is performed using the <code>mlr</code> R package. All models can easily be accessed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get information about the model type</span>
-<span class="kw"><a href="../reference/model_type-methods.html">model_type</a></span>(siamcat)</code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>sc.obj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/train.model.html">train.model</a></span>(</span>
+<span id="cb28-2"><a href="#cb28-2"></a>    sc.obj,</span>
+<span id="cb28-3"><a href="#cb28-3"></a>    <span class="dt">method =</span> <span class="st">"lasso"</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a>)</span></code></pre></div>
+<p>The models are saved in the <code>model_list</code> slot of the <code>SIAMCAT</code> object. The model building is performed using the <code>mlr</code> R package. All models can easily be accessed.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># get information about the model type</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="kw"><a href="../reference/model_type-methods.html">model_type</a></span>(sc.obj)</span></code></pre></div>
 <pre><code>## [1] "lasso"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># access the models</span>
-models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/models-methods.html">models</a></span>(siamcat)
-models[[<span class="dv">1</span>]]</code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># access the models</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/models-methods.html">models</a></span>(sc.obj)</span>
+<span id="cb31-3"><a href="#cb31-3"></a>models[[<span class="dv">1</span>]]</span></code></pre></div>
 <pre><code>## Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
 ## Trained on: task.id = data; obs = 112; features = 207
 ## Hyperparameters: nlambda=100,alpha=1</code></pre>
@@ -255,31 +272,31 @@ models[[<span class="dv">1</span>]]</code></pre></div>
 <div id="make-predictions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#make-predictions" class="anchor"></a>Make Predictions</h2>
-<p>Using the data-split and the models trained in previous step, we can use the function <code>make.predictions</code> in order to apply the models on the test instances in the data-split. The predictions will be saved in the <code>pred_matrix</code> slot of the <code>siamcat</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(siamcat)
-pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pred_matrix-methods.html">pred_matrix</a></span>(siamcat)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(pred_matrix)</code></pre></div>
+<p>Using the data-split and the models trained in previous step, we can use the function <code>make.predictions</code> in order to apply the models on the test instances in the data-split. The predictions will be saved in the <code>pred_matrix</code> slot of the <code>SIAMCAT</code> object.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>sc.obj &lt;-<span class="st"> </span><span class="kw"><a href="../reference/make.predictions.html">make.predictions</a></span>(sc.obj)</span>
+<span id="cb33-2"><a href="#cb33-2"></a>pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pred_matrix-methods.html">pred_matrix</a></span>(sc.obj)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(pred_matrix)</span></code></pre></div>
 <pre><code>##                       CV_rep1    CV_rep2
-## CCIS27304052ST-3-0 0.03388945 0.08968604
-## CCIS15794887ST-4-0 0.13050640 0.30004235
-## CCIS74726977ST-3-0 0.48124100 0.50199056
-## CCIS16561622ST-4-0 0.36926603 0.52134762
-## CCIS79210440ST-3-0 0.10635830 0.12938514
-## CCIS82507866ST-3-0 0.07653870 0.14891073</code></pre>
+## CCIS27304052ST-3-0 0.05768338 0.07567273
+## CCIS15794887ST-4-0 0.24060947 0.12323866
+## CCIS74726977ST-3-0 0.77884363 0.45070454
+## CCIS16561622ST-4-0 0.26678077 0.30690441
+## CCIS79210440ST-3-0 0.30205941 0.18210777
+## CCIS82507866ST-3-0 0.05034615 0.07400649</code></pre>
 </div>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#model-evaluation-and-interpretation" class="anchor"></a>Model Evaluation and Interpretation</h1>
 <p>In the final part, we want to find out how well the model performed and which microbial species had been selected in the model. In order to do so, we first calculate how well the predictions fit the real data using the function <code>evaluate.predictions</code>. This function calculates the Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR) Curve for each resampled cross-validation run.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">siamcat &lt;-<span class="st">  </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(siamcat)</code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>sc.obj &lt;-<span class="st">  </span><span class="kw"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span>(sc.obj)</span></code></pre></div>
 <pre><code>## Evaluated predictions successfully.</code></pre>
 <div id="evaluation-plot" class="section level2">
 <h2 class="hasAnchor">
 <a href="#evaluation-plot" class="anchor"></a>Evaluation Plot</h2>
 <p>To plot the results of the evaluation, we can use the function <code>model.evaluation.plot</code>, which produces a pdf-file showing the ROC and PR Curves for the different resamples runs as well as the mean ROC and PR Curve.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/model.evaluation.plot.html">model.evaluation.plot</a></span>(siamcat)</code></pre></div>
-<p><img src="SIAMCAT_vignette_files/figure-html/eval_plot-1.png" width="576" style="display: block; margin: auto auto auto 0;"><img src="SIAMCAT_vignette_files/figure-html/eval_plot-2.png" width="576" style="display: block; margin: auto auto auto 0;"></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw"><a href="../reference/model.evaluation.plot.html">model.evaluation.plot</a></span>(sc.obj)</span></code></pre></div>
+<p><img src="eval_plot.png"></p>
 </div>
 <div id="interpretation-plot" class="section level2">
 <h2 class="hasAnchor">
@@ -292,24 +309,24 @@ pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 </ul>
 <p>Additionally, the distribution of metadata is shown in a heatmap below.</p>
 <p>The function again produces a pdf-file optimized for a landscape DIN-A4 plotting region.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/model.interpretation.plot.html">model.interpretation.plot</a></span>(
-    siamcat,
-    <span class="dt">fn.plot =</span> <span class="st">'interpretation.pdf'</span>,
-    <span class="dt">consens.thres =</span> <span class="fl">0.5</span>,
-    <span class="dt">norm.models =</span> <span class="ot">TRUE</span>,
-    <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>),
-    <span class="dt">heatmap.type =</span> <span class="st">'zscore'</span>,
-)</code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw"><a href="../reference/model.interpretation.plot.html">model.interpretation.plot</a></span>(</span>
+<span id="cb39-2"><a href="#cb39-2"></a>    sc.obj,</span>
+<span id="cb39-3"><a href="#cb39-3"></a>    <span class="dt">fn.plot =</span> <span class="st">'interpretation.pdf'</span>,</span>
+<span id="cb39-4"><a href="#cb39-4"></a>    <span class="dt">consens.thres =</span> <span class="fl">0.5</span>,</span>
+<span id="cb39-5"><a href="#cb39-5"></a>    <span class="dt">norm.models =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb39-6"><a href="#cb39-6"></a>    <span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb39-7"><a href="#cb39-7"></a>    <span class="dt">heatmap.type =</span> <span class="st">'zscore'</span>,</span>
+<span id="cb39-8"><a href="#cb39-8"></a>)</span></code></pre></div>
 <p>The resulting plot looks like this: <img src="interpretation_plot.png" alt="Model Interpretation Plot"></p>
 </div>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</code></pre></div>
-<pre><code>## R version 3.6.1 (2019-07-05)
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</span></code></pre></div>
+<pre><code>## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Mojave 10.14.6
+## Running under: macOS Catalina 10.15.5
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
@@ -322,41 +339,41 @@ pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_1.5.0     phyloseq_1.28.0   mlr_2.15.0        ParamHelpers_1.12
+## [1] SIAMCAT_1.9.0     phyloseq_1.28.0   mlr_2.15.0        ParamHelpers_1.12
 ## [5] BiocStyle_2.12.0 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-141        matrixStats_0.55.0  fs_1.3.1           
+##  [1] nlme_3.1-144        matrixStats_0.55.0  fs_1.3.1           
 ##  [4] RColorBrewer_1.1-2  progress_1.2.2      PRROC_1.3.1        
-##  [7] rprojroot_1.3-2     tools_3.6.1         backports_1.1.4    
+##  [7] rprojroot_1.3-2     tools_3.6.3         backports_1.1.5    
 ## [10] R6_2.4.0            vegan_2.5-6         lazyeval_0.2.2     
-## [13] BiocGenerics_0.30.0 mgcv_1.8-28         colorspace_1.4-1   
+## [13] BiocGenerics_0.30.0 mgcv_1.8-31         colorspace_1.4-1   
 ## [16] permute_0.9-5       ade4_1.7-13         tidyselect_0.2.5   
-## [19] gridExtra_2.3       prettyunits_1.0.2   compiler_3.6.1     
+## [19] gridExtra_2.3       prettyunits_1.0.2   compiler_3.6.3     
 ## [22] parallelMap_1.4     glmnet_2.0-18       Biobase_2.44.0     
-## [25] desc_1.2.0          bookdown_0.13       scales_1.0.0       
+## [25] desc_1.2.0          bookdown_0.14       scales_1.0.0       
 ## [28] checkmate_1.9.4     pkgdown_1.4.1       stringr_1.4.0      
-## [31] digest_0.6.20       rmarkdown_1.15      XVector_0.24.0     
-## [34] pkgconfig_2.0.2     htmltools_0.3.6     rlang_0.4.0        
+## [31] digest_0.6.22       rmarkdown_1.16      XVector_0.24.0     
+## [34] pkgconfig_2.0.3     htmltools_0.4.0     rlang_0.4.0        
 ## [37] rstudioapi_0.10     BBmisc_1.11         jsonlite_1.6       
-## [40] dplyr_0.8.3         magrittr_1.5        biomformat_1.12.0  
-## [43] Matrix_1.2-17       Rcpp_1.0.2          munsell_0.5.0      
-## [46] S4Vectors_0.22.1    Rhdf5lib_1.6.1      ape_5.3            
+## [40] dplyr_0.8.3         magrittr_1.5        biomformat_1.7.0   
+## [43] Matrix_1.2-18       Rcpp_1.0.2          munsell_0.5.0      
+## [46] S4Vectors_0.22.1    Rhdf5lib_1.6.3      ape_5.3            
 ## [49] infotheo_1.2.0      stringi_1.4.3       pROC_1.15.3        
-## [52] yaml_2.2.0          MASS_7.3-51.4       zlibbioc_1.30.0    
-## [55] rhdf5_2.28.0        plyr_1.8.4          grid_3.6.1         
-## [58] LiblineaR_2.10-8    parallel_3.6.1      crayon_1.3.4       
-## [61] lattice_0.20-38     Biostrings_2.52.0   splines_3.6.1      
+## [52] yaml_2.2.0          MASS_7.3-51.5       zlibbioc_1.30.0    
+## [55] rhdf5_2.28.1        plyr_1.8.4          grid_3.6.3         
+## [58] LiblineaR_2.10-8    parallel_3.6.3      crayon_1.3.4       
+## [61] lattice_0.20-38     Biostrings_2.52.0   splines_3.6.3      
 ## [64] multtest_2.40.0     hms_0.5.1           zeallot_0.1.0      
-## [67] knitr_1.24          beanplot_1.2        pillar_1.4.2       
+## [67] knitr_1.25          beanplot_1.2        pillar_1.4.2       
 ## [70] igraph_1.2.4.1      reshape2_1.4.3      codetools_0.2-16   
-## [73] stats4_3.6.1        fastmatch_1.1-0     XML_3.98-1.20      
-## [76] glue_1.3.1          evaluate_0.14       data.table_1.12.2  
-## [79] BiocManager_1.30.4  vctrs_0.2.0         foreach_1.4.7      
-## [82] gtable_0.3.0        purrr_0.3.2         assertthat_0.2.1   
-## [85] ggplot2_3.2.1       xfun_0.9            gridBase_0.4-7     
-## [88] survival_2.44-1.1   tibble_2.1.3        iterators_1.0.12   
-## [91] memoise_1.1.0       IRanges_2.18.2      cluster_2.1.0      
+## [73] stats4_3.6.3        fastmatch_1.1-0     XML_3.98-1.20      
+## [76] glue_1.3.1          evaluate_0.14       data.table_1.12.6  
+## [79] BiocManager_1.30.9  vctrs_0.2.0         foreach_1.4.7      
+## [82] gtable_0.3.0        purrr_0.3.3         assertthat_0.2.1   
+## [85] ggplot2_3.2.1       xfun_0.10           gridBase_0.4-7     
+## [88] survival_3.1-8      tibble_2.1.3        iterators_1.0.12   
+## [91] memoise_1.1.0       IRanges_2.18.3      cluster_2.1.0      
 ## [94] corrplot_0.84</code></pre>
 </div>
   </div>
@@ -371,8 +388,10 @@ pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference
       <li><a href="#introduction">Introduction</a></li>
       <li><a href="#quick-start">Quick Start</a></li>
       <li><a href="#association-testing">Association Testing</a></li>
+      <li><a href="#confounder-testing">Confounder Testing</a></li>
       <li>
-<a href="#model-building">Model Building</a><ul class="nav nav-pills nav-stacked">
+<a href="#model-building">Model Building</a>
+      <ul class="nav nav-pills nav-stacked">
 <li><a href="#data-normalization">Data Normalization</a></li>
       <li><a href="#prepare-cross-validation">Prepare Cross-Validation</a></li>
       <li><a href="#model-training">Model Training</a></li>
@@ -380,7 +399,8 @@ pred_matrix &lt;-<span class="st"> </span><span class="kw"><a href="../reference
       </ul>
 </li>
       <li>
-<a href="#model-evaluation-and-interpretation">Model Evaluation and Interpretation</a><ul class="nav nav-pills nav-stacked">
+<a href="#model-evaluation-and-interpretation">Model Evaluation and Interpretation</a>
+      <ul class="nav nav-pills nav-stacked">
 <li><a href="#evaluation-plot">Evaluation Plot</a></li>
       <li><a href="#interpretation-plot">Interpretation Plot</a></li>
       </ul>
