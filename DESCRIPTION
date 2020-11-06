@@ -65,5 +65,6 @@ Suggests:
     optparse,
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyverse
 VignetteBuilder: knitr
