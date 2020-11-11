@@ -7,7 +7,7 @@ author:
 date: "Date last modified: 2018-09-24"
 output: BiocStyle::html_document
 vignette: >
-    %\VignetteIndexEntry{SIAMCAT holdout testing vignette}
+    %\VignetteIndexEntry{SIAMCAT holdout testing}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{ASCII}
 ---
