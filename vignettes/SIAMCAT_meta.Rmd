@@ -50,9 +50,7 @@ data.location <- 'https://www.embl.de/download/zeller/'
 # datasets
 datasets <- c('metaHIT', 'Lewis_2015', 'He_2017', 'Franzosa_2019', 'HMP2')
 # metadata
-meta.all <- read.table(paste0(data.location, 'CD_meta/meta_all.tsv'),
-                       check.names = FALSE, stringsAsFactors = FALSE, 
-                       header = TRUE, sep='\t')
+meta.all <- read_tsv(paste0(data.location, 'CD_meta/meta_all.tsv'))
 # features
 feat <- read.table(paste0(data.location, 'CD_meta/feat_genus.tsv'), 
                    check.names = FALSE, stringsAsFactors = FALSE, quote = '', 
