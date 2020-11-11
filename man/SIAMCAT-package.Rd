@@ -7,7 +7,7 @@
 \title{SIAMCAT: Statistical Inference of Associations between Microbial
     Communities And host phenoTypes}
 \description{
-\if{html}{\figure{logo.png}{options: align='right'}}
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
 Pipeline for Statistical Inference of Associations between
     Microbial Communities And host phenoTypes (SIAMCAT). A primary goal
@@ -32,20 +32,19 @@ of intense research. For this, robust statistical modeling and biomarker
 extraction toolkits are crucially needed!
 }
 \author{
-\strong{Maintainer}: Jakob Wirbel
-    \email{jakob.wirbel@embl.de} (0000-0002-4073-3562)
+\strong{Maintainer}: Jakob Wirbel \email{jakob.wirbel@embl.de} (\href{https://orcid.org/0000-0002-4073-3562}{ORCID})
 
 Authors:
 \itemize{
-    \item Konrad Zych \email{konrad.zych@embl.de} (0000-0001-7426-0516)
-    \item Georg Zeller \email{zeller@embl.de} (0000-0003-1429-7485)
+  \item Konrad Zych \email{konrad.zych@embl.de} (\href{https://orcid.org/0000-0001-7426-0516}{ORCID})
+  \item Georg Zeller \email{zeller@embl.de} (\href{https://orcid.org/0000-0003-1429-7485}{ORCID})
 }
 
 Other contributors:
 \itemize{
-    \item Morgan Essex \email{morgan.essex@embl.de} [contributor]
-    \item Nicolai Karcher [contributor]
-    \item Kersten Breuer [contributor]
+  \item Morgan Essex \email{morgan.essex@embl.de} [contributor]
+  \item Nicolai Karcher [contributor]
+  \item Kersten Breuer [contributor]
 }
 
 }

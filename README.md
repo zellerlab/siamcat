@@ -51,17 +51,26 @@ browseVignettes("SIAMCAT")
 # `browseVignettes` only works if `SIAMCAT` has been installed via Bioconductor
 ```
 
-## Contact
+## Feedback and Contact
 
-If you run into any issue:
+If you have any question about `SIAMCAT`, if you run into any issue,
+or if you would like to make a feature request, please:
 - create an
 [issue in this repository](https://github.com/zellerlab/siamcat/issues/new) or
 - mail [Georg Zeller](mailto:zeller@embl.de) or
 - ask at the
 [SIAMCAT support group](https://groups.google.com/forum/#!forum/siamcat-users)
 
-If you found `SIAMCAT` useful, please consider giving us
+If you have a more general question (that could be useful to several other
+users), please do not hesitate to post it on a dedicated forums such as
+Stackoverflow or Biostars. If you let us know about the question, we will
+answer it swiftly.
+
+
+Please consider giving us
 [feedback](https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&tool=siamcat).
+(This feedback is useful for us to justify the funding we get for developing
+and maintaining this package.)
 
 ## Citation
 
