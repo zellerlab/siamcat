@@ -66,5 +66,6 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    tidyverse
+    tidyverse,
+    ggpubr
 VignetteBuilder: knitr
