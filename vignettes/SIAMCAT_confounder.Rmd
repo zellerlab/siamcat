@@ -19,7 +19,7 @@ knitr::opts_chunk$set(collapse=TRUE)
 # About This Vignette
 
 Here, we demonstrate the standard workflow of the `SIAMCAT` package using as
-an example the dataset from [Nielsen et al. _Nat Biotechnol_ 
+an example the dataset from [Nielsen et al. _Nat Biotechnol_
 2014](https://www.ncbi.nlm.nih.gov/pubmed/24997787).
 This dataset contains samples from patients with inflammatory bowel disease and
 from controls.  
@@ -39,17 +39,17 @@ library("SIAMCAT")
 library("ggpubr")
 ```
 
-# Preparations 
+# Preparations
 
-There are two different ways to access the data for our example dataset. On 
+There are two different ways to access the data for our example dataset. On
 the one hand, it is available through the `curatedMetagenomicsData` R package.
-However, using it here would create many more dependencies for the `SIAMCAT` 
+However, using it here would create many more dependencies for the `SIAMCAT`
 package.  
-Therefore, we here use data available through the EMBL cluster. 
+Therefore, we here use data available through the EMBL cluster.
 
 In the `SIAMCAT` paper, we performed the presented analyses on the datasets
-available through `curatedMetagenomicsData`. If you want to reproduce the 
-analysis from the `SIAMCAT` paper, you can execute the code chunks in 
+available through `curatedMetagenomicsData`. If you want to reproduce the
+analysis from the `SIAMCAT` paper, you can execute the code chunks in
 the `curatedMetageomicsData` section, otherwise execute the code in the
 mOTUs2 section.
 
@@ -69,7 +69,7 @@ meta.nielsen.full <- combined_metadata %>%
   filter(dataset_name=='NielsenHB_2014')
 ```
 
-One thing we have to keep in mind are repeated samples per subject (see also 
+One thing we have to keep in mind are repeated samples per subject (see also
 the **Machine learning pitfalls** vignette).
 
 ```{r reason_meta_clean_2, eval=FALSE}
@@ -101,20 +101,20 @@ meta.nielsen <- meta.nielsen.full %>%
                          TRUE~disease_subtype))
 ```
 
-Now, we can restrict our metadata to samples with `UC` and healthy control 
+Now, we can restrict our metadata to samples with `UC` and healthy control
 samples:
 ```{r clean_metadata_4, eval=FALSE}
-meta.nielsen <- meta.nielsen %>% 
+meta.nielsen <- meta.nielsen %>%
   filter(Group %in% c('UC', 'CTR'))
 ```
 
-As a last step, we can adjust the column names for the metadata so that they 
+As a last step, we can adjust the column names for the metadata so that they
 agree with the data available from the EMBL cluster. Also, we add rownames to
-the dataframe since `SIAMCAT` needs rownames to match samples across metadata 
+the dataframe since `SIAMCAT` needs rownames to match samples across metadata
 and features.
 
 ```{r clean_metadata_3, eval=FALSE}
-meta.nielsen <- meta.nielsen %>% 
+meta.nielsen <- meta.nielsen %>%
   mutate(Country=country)
 meta.nielsen <- as.data.frame(meta.nielsen)
 rownames(meta.nielsen) <- meta.nielsen$sampleID
@@ -162,16 +162,16 @@ data.location <- 'https://www.embl.de/download/zeller/metaHIT/'
 ## metadata
 meta.nielsen <- read_tsv(paste0(data.location, 'meta_Nielsen.tsv'))
 # also here, we have to remove repeated samplings and CD samples
-meta.nielsen <- meta.nielsen %>% 
-  filter(Group %in% c('CTR', 'UC')) %>% 
-  group_by(Individual_ID) %>% 
-  filter(Sampling_day==min(Sampling_day)) %>% 
-  ungroup() %>% 
+meta.nielsen <- meta.nielsen %>%
+  filter(Group %in% c('CTR', 'UC')) %>%
+  group_by(Individual_ID) %>%
+  filter(Sampling_day==min(Sampling_day)) %>%
+  ungroup() %>%
   as.data.frame()
 rownames(meta.nielsen) <- meta.nielsen$Sample_ID
 
 ## features
-feat <- read.table('../../paper_stuff/data/features/motus/metaHIT_motus.tsv', 
+feat <- read.table(paste0(data.location, 'metaHIT_motus.tsv'), 
                    stringsAsFactors = FALSE, sep='\t',
                    check.names = FALSE, quote = '', comment.char = '')
 feat <- feat[,colSums(feat) > 0]
@@ -187,7 +187,7 @@ Now, we have everything ready to create a `SIAMCAT` object which stores
 the feature matrix, the meta-variables, and the label. Here, the label is
 created using the information in the metadata.  
 To demonstrate the normal `SIAMCAT` workflow, we remove the confounding factor
-by only looking at samples from Spain. Below, we have a look what would have 
+by only looking at samples from Spain. Below, we have a look what would have
 happened if we had not removed them.
 
 ```{r siamcat}
@@ -326,7 +326,7 @@ check.confounders(sc.obj.full, fn.plot = './confounders_dnk.pdf')
 
 ## Association Testing
 
-First, we can use `SIAMCAT` to test for associations including the Danish 
+First, we can use `SIAMCAT` to test for associations including the Danish
 samples.
 
 ```{r assoc_plot_2, warning=FALSE, message=FALSE}
@@ -376,7 +376,7 @@ label.dnk <- label(sc.obj.full)$label
 country <- meta(sc.obj.full)$Country
 names(country) <- rownames(meta(sc.obj.full))
 
-df.plot <- tibble(dorea=log10(feat.dnk[str_detect(rownames(feat.dnk), 
+df.plot <- tibble(dorea=log10(feat.dnk[str_detect(rownames(feat.dnk),
                                                   'formicigenerans'),
                                        names(label.dnk)] + 1e-05),
                   label=label.dnk, country=country) %>%
