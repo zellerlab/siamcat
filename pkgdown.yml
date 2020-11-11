@@ -1,8 +1,12 @@
 pandoc: 2.9.2.1
-pkgdown: 1.4.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  SIAMCAT_confounder: SIAMCAT_confounder.html
   SIAMCAT_holdout: SIAMCAT_holdout.html
+  SIAMCAT_meta: SIAMCAT_meta.html
+  SIAMCAT_ml_pitfalls: SIAMCAT_ml_pitfalls.html
   SIAMCAT_read-in: SIAMCAT_read-in.html
   SIAMCAT_vignette: SIAMCAT_vignette.html
+last_built: 2020-11-11T16:00Z
 

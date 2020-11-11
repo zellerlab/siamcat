@@ -51,7 +51,7 @@ the proportion of model weights shown.
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -65,7 +65,7 @@ the proportion of model weights shown.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -85,10 +85,19 @@ the proportion of model weights shown.
       <a href="../articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="../articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="../articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -142,12 +151,12 @@ displaying</p><ul>
 
     </div>
 
-    <pre class="usage"><span class='fu'>model.interpretation.plot</span>(<span class='no'>siamcat</span>, <span class='kw'>fn.plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-    <span class='kw'>color.scheme</span> <span class='kw'>=</span> <span class='st'>"BrBG"</span>,
-    <span class='kw'>consens.thres</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-    <span class='kw'>heatmap.type</span> <span class='kw'>=</span> <span class='st'>"zscore"</span>,
-    <span class='kw'>limits</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>3</span>, <span class='fl'>3</span>), <span class='kw'>detect.lim</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
-    <span class='kw'>max.show</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>prompt</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>model.interpretation.plot</span><span class='op'>(</span><span class='va'>siamcat</span>, fn.plot <span class='op'>=</span> <span class='cn'>NULL</span>,
+    color.scheme <span class='op'>=</span> <span class='st'>"BrBG"</span>,
+    consens.thres <span class='op'>=</span> <span class='fl'>0.5</span>,
+    heatmap.type <span class='op'>=</span> <span class='st'>"zscore"</span>,
+    limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>3</span>, <span class='fl'>3</span><span class='op'>)</span>, detect.lim <span class='op'>=</span> <span class='fl'>1e-06</span>,
+    max.show <span class='op'>=</span> <span class='fl'>50</span>, prompt<span class='op'>=</span><span class='cn'>TRUE</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -224,21 +233,17 @@ defaults to <code>1</code></p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
 
 <span class='co'># simple working example</span>
-<span class='fu'>model.interpretation.plot</span>(<span class='no'>siamcat_example</span>, <span class='kw'>fn.plot</span><span class='kw'>=</span><span class='st'>'./interpretion.pdf'</span>,
-    <span class='kw'>heatmap.type</span><span class='kw'>=</span><span class='st'>'zscore'</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully plotted model interpretation plot to: ./interpretion.pdf</span></div></pre>
+<span class='fu'>model.interpretation.plot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, fn.plot<span class='op'>=</span><span class='st'>'./interpretion.pdf'</span>,
+    heatmap.type<span class='op'>=</span><span class='st'>'zscore'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully plotted model interpretation plot to: ./interpretion.pdf</span></div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

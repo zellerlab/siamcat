@@ -10,7 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="SIAMCAT input files formats">
-<meta property="og:description" content="">
+<meta property="og:description" content="SIAMCAT">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -29,7 +29,7 @@
   })();
 </script>
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -62,10 +62,19 @@
       <a href="../articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="../articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="../articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -99,10 +108,11 @@
 
       
 
-      </header><div class="row">
+      </header><script src="SIAMCAT_read-in_files/header-attrs-2.5/header-attrs.js"></script><script src="SIAMCAT_read-in_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="SIAMCAT_read-in_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="SIAMCAT_read-in_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>SIAMCAT input files formats</h1>
+      <h1 data-toc-skip>SIAMCAT input files formats</h1>
                         <h4 class="author">Konrad Zych, Jakob Wirbel, and Georg Zeller</h4>
             <address class="author_afil">
       EMBL Heidelberg<br><a class="author_email" href="mailto:#"></a><a href="mailto:georg.zeller@embl.de" class="email">georg.zeller@embl.de</a>
@@ -191,19 +201,21 @@
 <p>Please note that <code>SIAMCAT</code> is supposed to work with <strong>relative abundances</strong>. Other types of data (e.g. counts) will also work, but not all functions of the package will result in meaningful outputs.</p>
 </blockquote>
 <p>An example of a typical feature file is attached to the <code>SIAMCAT</code> package, containing data from a publication investigating the microbiome in colorectal cancer (CRC) patients and controls (the study can be found here: <a href="http://europepmc.org/abstract/MED/25432777">Zeller et al</a>). The metagenomics data were processed with the <a href="http://mocat.embl.de/">MOCAT</a> pipeline, returning taxonomic profiles on the species levels (<code>specI</code>):</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(SIAMCAT)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>fn.in.feat  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(</span>
-<span id="cb1-3"><a href="#cb1-3"></a>    <span class="st">"extdata"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>    <span class="st">"feat_crc_zeller_msb_mocat_specI.tsv"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5"></a>    <span class="dt">package =</span> <span class="st">"SIAMCAT"</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">SIAMCAT</span><span class="op">)</span>
+<span class="va">fn.in.feat</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>
+    <span class="st">"extdata"</span>,
+    <span class="st">"feat_crc_zeller_msb_mocat_specI.tsv"</span>,
+    package <span class="op">=</span> <span class="st">"SIAMCAT"</span>
+<span class="op">)</span></code></pre></div>
 <p>One way to load such data into <code>R</code> could be the use of <code>read.table</code></p>
 <p><em>(Beware of the defaults in R! They are not always useful…)</em></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>feat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.in.feat, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>,</span>
-<span id="cb2-2"><a href="#cb2-2"></a>    <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">quote=</span><span class="st">''</span>,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>    <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>, <span class="dt">check.names =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># look at some features</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>feat[<span class="dv">110</span><span class="op">:</span><span class="dv">114</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="va">fn.in.feat</span>, sep<span class="op">=</span><span class="st">'\t'</span>,
+    header<span class="op">=</span><span class="cn">TRUE</span>, quote<span class="op">=</span><span class="st">''</span>,
+    stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co"># look at some features</span>
+<span class="va">feat</span><span class="op">[</span><span class="fl">110</span><span class="op">:</span><span class="fl">114</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></code></pre></div>
 <pre><code>##                                CCIS27304052ST-3-0 CCIS15794887ST-4-0
 ## Bacteroides caccae [h:1096]          1.557937e-03       1.761949e-03
 ## Bacteroides eggerthii [h:1097]       2.734527e-05       4.146882e-05
@@ -258,16 +270,18 @@
 </table>
 <p>The <code>rownames</code> of the metadata should match the <code>colnames</code> of the feature matrix.</p>
 <p>Again, an example of such a file is attached to the <code>SIAMCAT</code> package, taken from the same study:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>fn.in.meta  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(</span>
-<span id="cb4-2"><a href="#cb4-2"></a>    <span class="st">"extdata"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3"></a>    <span class="st">"num_metadata_crc_zeller_msb_mocat_specI.tsv"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">package =</span> <span class="st">"SIAMCAT"</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fn.in.meta</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>
+    <span class="st">"extdata"</span>,
+    <span class="st">"num_metadata_crc_zeller_msb_mocat_specI.tsv"</span>,
+    package <span class="op">=</span> <span class="st">"SIAMCAT"</span>
+<span class="op">)</span></code></pre></div>
 <p>Also here, the <code>read.table</code> can be used to load the data into <code>R</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>meta &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.in.meta, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>,</span>
-<span id="cb5-2"><a href="#cb5-2"></a>    <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">quote=</span><span class="st">''</span>,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>, <span class="dt">check.names =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(meta)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="va">fn.in.meta</span>, sep<span class="op">=</span><span class="st">'\t'</span>,
+    header<span class="op">=</span><span class="cn">TRUE</span>, quote<span class="op">=</span><span class="st">''</span>,
+    stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">meta</span><span class="op">)</span></code></pre></div>
 <pre><code>##                    age gender bmi diagnosis localization crc_stage fobt
 ## CCIS27304052ST-3-0  52      1  20         0           NA         0    0
 ## CCIS15794887ST-4-0  37      1  18         0           NA         0    0
@@ -309,18 +323,21 @@
 </li>
 </ul>
 <p>For our example dataset, we can create the label object out of the metadata column called <code>diagnosis</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create.label.html">create.label</a></span>(<span class="dt">meta=</span>meta, <span class="dt">label=</span><span class="st">"diagnosis"</span>,</span>
-<span id="cb7-2"><a href="#cb7-2"></a>    <span class="dt">case =</span> <span class="dv">1</span>, <span class="dt">control=</span><span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create.label.html">create.label</a></span><span class="op">(</span>meta<span class="op">=</span><span class="va">meta</span>, label<span class="op">=</span><span class="st">"diagnosis"</span>,
+    case <span class="op">=</span> <span class="fl">1</span>, control<span class="op">=</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p>When we later plot the results, it might be nicer to have names for the different groups stored in the label object (instead of <code>1</code> and <code>0</code>). We can also supply them to the <code>create.label</code> function:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create.label.html">create.label</a></span>(<span class="dt">meta=</span>meta, <span class="dt">label=</span><span class="st">"diagnosis"</span>,</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    <span class="dt">case =</span> <span class="dv">1</span>, <span class="dt">control=</span><span class="dv">0</span>,</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    <span class="dt">p.lab =</span> <span class="st">'cancer'</span>, <span class="dt">n.lab =</span> <span class="st">'healthy'</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create.label.html">create.label</a></span><span class="op">(</span>meta<span class="op">=</span><span class="va">meta</span>, label<span class="op">=</span><span class="st">"diagnosis"</span>,
+    case <span class="op">=</span> <span class="fl">1</span>, control<span class="op">=</span><span class="fl">0</span>,
+    p.lab <span class="op">=</span> <span class="st">'cancer'</span>, n.lab <span class="op">=</span> <span class="st">'healthy'</span><span class="op">)</span></code></pre></div>
 <pre><code>## Label used as case:
 ##    1
 ## Label used as control:
 ##    0</code></pre>
 <pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>label<span class="op">$</span>info</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">label</span><span class="op">$</span><span class="va">info</span></code></pre></div>
 <pre><code>## healthy  cancer 
 ##      -1       1</code></pre>
 <blockquote>
@@ -411,23 +428,26 @@ If you have no label information for your dataset, you can still create a <code>
 </tbody>
 </table>
 <p>An example of such a file is attached to the <code>SIAMCAT</code> package:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>fn.in.lefse&lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(</span>
-<span id="cb13-2"><a href="#cb13-2"></a>    <span class="st">"extdata"</span>,</span>
-<span id="cb13-3"><a href="#cb13-3"></a>    <span class="st">"LEfSe_crc_zeller_msb_mocat_specI.tsv"</span>,</span>
-<span id="cb13-4"><a href="#cb13-4"></a>    <span class="dt">package =</span> <span class="st">"SIAMCAT"</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fn.in.lefse</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>
+    <span class="st">"extdata"</span>,
+    <span class="st">"LEfSe_crc_zeller_msb_mocat_specI.tsv"</span>,
+    package <span class="op">=</span> <span class="st">"SIAMCAT"</span>
+<span class="op">)</span></code></pre></div>
 <p><code>SIAMCAT</code> has a dedicated function to read LEfSe format files. The <code>read.lefse</code> function will read in the input file and extract metadata and features:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>meta.and.features &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read.lefse.html">read.lefse</a></span>(fn.in.lefse,</span>
-<span id="cb14-2"><a href="#cb14-2"></a>    <span class="dt">rows.meta =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">row.samples =</span> <span class="dv">7</span>)</span>
-<span id="cb14-3"><a href="#cb14-3"></a>meta &lt;-<span class="st"> </span>meta.and.features<span class="op">$</span>meta</span>
-<span id="cb14-4"><a href="#cb14-4"></a>feat &lt;-<span class="st"> </span>meta.and.features<span class="op">$</span>feat</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">meta.and.features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read.lefse.html">read.lefse</a></span><span class="op">(</span><span class="va">fn.in.lefse</span>,
+    rows.meta <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, row.samples <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>
+<span class="va">meta</span> <span class="op">&lt;-</span> <span class="va">meta.and.features</span><span class="op">$</span><span class="va">meta</span>
+<span class="va">feat</span> <span class="op">&lt;-</span> <span class="va">meta.and.features</span><span class="op">$</span><span class="va">feat</span></code></pre></div>
 <p>We can then create a label object from one of the columns of the meta object and create a <code>siamcat</code> object:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create.label.html">create.label</a></span>(<span class="dt">meta=</span>meta, <span class="dt">label=</span><span class="st">"label"</span>, <span class="dt">case =</span> <span class="st">"cancer"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create.label.html">create.label</a></span><span class="op">(</span>meta<span class="op">=</span><span class="va">meta</span>, label<span class="op">=</span><span class="st">"label"</span>, case <span class="op">=</span> <span class="st">"cancer"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Label used as case:
 ##    cancer
 ## Label used as control:
 ##    healthy</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.294 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.021 s</code></pre>
 </div>
 <div id="metagenomeseq-format-files" class="section level2">
 <h2 class="hasAnchor">
@@ -437,15 +457,16 @@ If you have no label information for your dataset, you can still create a <code>
 <ol style="list-style-type: lower-alpha">
 <li>two files, one for metadata and one for features - those can be used in <code>SIAMCAT</code> just like described in <a href="#SIAMCAT-input">SIAMCAT input</a> with <code>read.table</code>:</li>
 </ol>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>fn.in.feat  &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(</span>
-<span id="cb18-2"><a href="#cb18-2"></a>    <span class="st">"extdata"</span>,</span>
-<span id="cb18-3"><a href="#cb18-3"></a>    <span class="st">"CHK_NAME.otus.count.csv"</span>,</span>
-<span id="cb18-4"><a href="#cb18-4"></a>    <span class="dt">package =</span> <span class="st">"metagenomeSeq"</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a>)</span>
-<span id="cb18-6"><a href="#cb18-6"></a>feat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span>(fn.in.feat, <span class="dt">sep=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>,</span>
-<span id="cb18-7"><a href="#cb18-7"></a>    <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">quote=</span><span class="st">''</span>, <span class="dt">row.names =</span> <span class="dv">1</span>,</span>
-<span id="cb18-8"><a href="#cb18-8"></a>    <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>, <span class="dt">check.names =</span> <span class="ot">FALSE</span></span>
-<span id="cb18-9"><a href="#cb18-9"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fn.in.feat</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>
+    <span class="st">"extdata"</span>,
+    <span class="st">"CHK_NAME.otus.count.csv"</span>,
+    package <span class="op">=</span> <span class="st">"metagenomeSeq"</span>
+<span class="op">)</span>
+<span class="va">feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="va">fn.in.feat</span>, sep<span class="op">=</span><span class="st">'\t'</span>,
+    header<span class="op">=</span><span class="cn">TRUE</span>, quote<span class="op">=</span><span class="st">''</span>, row.names <span class="op">=</span> <span class="fl">1</span>,
+    stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>
 <code>BIOM</code> format file, that can be used in <code>SIAMCAT</code> as described in the <a href="BIOM-format-files">following section</a>
@@ -461,17 +482,19 @@ If you have no label information for your dataset, you can still create a <code>
 <h2 class="hasAnchor">
 <a href="#creating-a-siamcat-object-of-a-phyloseq-object" class="anchor"></a>Creating a siamcat object of a phyloseq object</h2>
 <p>The <code>siamcat</code> object extends on the <code>phyloseq</code> object. Therefore, creating a <code>siamcat</code> object from a <code>phyloseq</code> object is really straightforward. This can be done with the <code>siamcat</code> constructor function. First, however, we need to create a label object:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"GlobalPatterns"</span>) <span class="co">## phyloseq example data</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a>label &lt;-<span class="st"> </span><span class="kw"><a href="../reference/create.label.html">create.label</a></span>(<span class="dt">meta=</span><span class="kw">sample_data</span>(GlobalPatterns),</span>
-<span id="cb19-3"><a href="#cb19-3"></a>    <span class="dt">label =</span> <span class="st">"SampleType"</span>,</span>
-<span id="cb19-4"><a href="#cb19-4"></a>    <span class="dt">case =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Freshwater"</span>, <span class="st">"Freshwater (creek)"</span>, <span class="st">"Ocean"</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"GlobalPatterns"</span><span class="op">)</span> <span class="co">## phyloseq example data</span>
+<span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create.label.html">create.label</a></span><span class="op">(</span>meta<span class="op">=</span><span class="fu">sample_data</span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">)</span>,
+    label <span class="op">=</span> <span class="st">"SampleType"</span>,
+    case <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Freshwater"</span>, <span class="st">"Freshwater (creek)"</span>, <span class="st">"Ocean"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Label used as case:
 ##    Freshwater,Freshwater (creek),Ocean
 ## Label used as control:
 ##    rest</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.004 s</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># run the constructor function</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a>siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">phyloseq=</span>GlobalPatterns, <span class="dt">label=</span>label)</span></code></pre></div>
+<pre><code>## + finished create.label.from.metadata in 0.003 s</code></pre>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># run the constructor function</span>
+<span class="va">siamcat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>phyloseq<span class="op">=</span><span class="va">GlobalPatterns</span>, label<span class="op">=</span><span class="va">label</span><span class="op">)</span></code></pre></div>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 26 sample(s).</code></pre>
@@ -481,7 +504,7 @@ If you have no label information for your dataset, you can still create a <code>
 ##  Case    8 
 ## Note that a dataset this small/skewed is not necessarily suitable for analysis in this pipeline.</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.108 s</code></pre>
+<pre><code>## + finished validate.data in 0.389 s</code></pre>
 </div>
 </div>
 <div id="creating-a-siamcat-class-object" class="section level1">
@@ -493,11 +516,13 @@ If you have no label information for your dataset, you can still create a <code>
 <ul>
 <li>
 <p><strong>Features</strong>: You can provide a feature <code>matrix</code>, <code>data.frame</code>, or <code>otu_table</code> to the function (together with label and metadata information):</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">feat=</span>feat, <span class="dt">label=</span>label, <span class="dt">meta=</span>meta)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">siamcat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, label<span class="op">=</span><span class="va">label</span>, meta<span class="op">=</span><span class="va">meta</span><span class="op">)</span></code></pre></div>
 </li>
 <li>
 <p><strong>phyloseq</strong>: The alternative is to create a <code>siamcat</code> object directly out of a <code>phyloseq</code> object:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>siamcat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/siamcat.html">siamcat</a></span>(<span class="dt">phyloseq=</span>phyloseq, <span class="dt">label=</span>label)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">siamcat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>phyloseq<span class="op">=</span><span class="va">phyloseq</span>, label<span class="op">=</span><span class="va">label</span><span class="op">)</span></code></pre></div>
 </li>
 </ul>
 <p>Please note that you <strong>have to</strong> provide either <code>feat</code> or <code>phyloseq</code> and that you <strong>cannot</strong> provide both.</p>
@@ -507,12 +532,12 @@ If you have no label information for your dataset, you can still create a <code>
 <a href="#phyloseq-label-and-orig_feat-slots" class="anchor"></a>phyloseq, label and orig_feat slots</h2>
 <p>The phyloseq and label slots are obligatory.</p>
 <ul>
-<li>The phyloseq slot is an object of class <code>phyloseq</code>, which is described in the help file of the <code>phyloseq</code> class. Help can be accessed by typing into R console: <code><a href="https://rdrr.io/r/utils/help.html">help('phyloseq-class')</a></code>.
+<li>The phyloseq slot is an object of class <code>phyloseq</code>, which is described in the help file of the <code>phyloseq</code> class. Help can be accessed by typing into R console: <code>help('phyloseq-class')</code>.
 <ul>
-<li>The <code>otu_table</code> slot in <code>phyloseq</code> -see <code><a href="https://rdrr.io/r/utils/help.html">help('otu_table-class')</a></code>- stores the original feature table. For <code>SIAMCAT</code>, this slot can be accessed by <code>orig_feat</code>.</li>
+<li>The <code>otu_table</code> slot in <code>phyloseq</code> -see <code>help('otu_table-class')</code>- stores the original feature table. For <code>SIAMCAT</code>, this slot can be accessed by <code>orig_feat</code>.</li>
 </ul>
 </li>
-<li>The label slot contains a list. This list has a specific set of entries -see <code><a href="https://rdrr.io/r/utils/help.html">help('label-class')</a></code>- that are automatically generated by the <code>read.label</code> or <code>create.label</code> functions.</li>
+<li>The label slot contains a list. This list has a specific set of entries -see <code>help('label-class')</code>- that are automatically generated by the <code>read.label</code> or <code>create.label</code> functions.</li>
 </ul>
 <p>The <code>phyloseq</code>, label and orig_feat are filled when the <code>siamcat</code> object is first created with the constructor function. <img src="allCr.png" alt="construction"></p>
 </div>
@@ -527,47 +552,51 @@ If you have no label information for your dataset, you can still create a <code>
 <p>Each slot in <code>siamcat</code> can be accessed by typing</p>
 <pre><code>slot_name(siamcat)</code></pre>
 <p>e.g. for the <code>eval_data</code> slot you can types</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="kw"><a href="../reference/eval_data-methods.html">eval_data</a></span>(siamcat)</span></code></pre></div>
-<p>There is one notable exception: the phyloseq slot has to be accessed with <code><a href="../reference/physeq-methods.html">physeq(siamcat)</a></code> due to technical reasons.</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/eval_data.html">eval_data</a></span><span class="op">(</span><span class="va">siamcat</span><span class="op">)</span></code></pre></div>
+<p>There is one notable exception: the phyloseq slot has to be accessed with <code><a href="../reference/physeq.html">physeq(siamcat)</a></code> due to technical reasons.</p>
 <p>Slots will be filled during the <code>SIAMCAT</code> workflow by the package’s functions. However, if for any reason a slot needs to be assigned outside of the workflow, the following formula can be used:</p>
 <pre><code>slot_name(siamcat) &lt;- object_to_assign</code></pre>
 <p>e.g. to assign a <code>new_label</code> object to the <code>label</code> slot:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw"><a href="../reference/label-methods.html">label</a></span>(siamcat) &lt;-<span class="st"> </span>new_label</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span><span class="va">siamcat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">new_label</span></code></pre></div>
 <p><em>Please note that this may lead to unforeseen consequences…</em></p>
 </div>
 <div id="slots-inside-the-slots" class="section level2">
 <h2 class="hasAnchor">
 <a href="#slots-inside-the-slots" class="anchor"></a>Slots inside the slots</h2>
-<p>There are two slots that have slots inside of them. First, the <code>model_list</code> slot has a <code>models</code> slot that contains the actual list of <a href="https://mlr-org.github.io/mlr-tutorial/devel/html/index.html">mlr</a> models -can be accessed via <code><a href="../reference/models-methods.html">models(siamcat)</a></code>- and <code>model.type</code> which is a character with the name of the method used to train the model: <code><a href="../reference/model_type-methods.html">model_type(siamcat)</a></code>.</p>
-<p>The phyloseq slot has a complex structure. However, unless the phyloseq object is created outside of the <code>SIAMCAT</code> workflow, only two slots of phyloseq slot will be occupied: the <code>otu_table</code> slot containing the features table and the <code>sam_data</code> slot containing metadata information. Both can be accessed by typing either <code>features(siamcat)</code> or <code><a href="../reference/meta-methods.html">meta(siamcat)</a></code>.</p>
+<p>There are two slots that have slots inside of them. First, the <code>model_list</code> slot has a <code>models</code> slot that contains the actual list of <a href="https://mlr-org.github.io/mlr-tutorial/devel/html/index.html">mlr</a> models -can be accessed via <code><a href="../reference/models.html">models(siamcat)</a></code>- and <code>model.type</code> which is a character with the name of the method used to train the model: <code><a href="../reference/model_type.html">model_type(siamcat)</a></code>.</p>
+<p>The phyloseq slot has a complex structure. However, unless the phyloseq object is created outside of the <code>SIAMCAT</code> workflow, only two slots of phyloseq slot will be occupied: the <code>otu_table</code> slot containing the features table and the <code>sam_data</code> slot containing metadata information. Both can be accessed by typing either <code>features(siamcat)</code> or <code><a href="../reference/meta.html">meta(siamcat)</a></code>.</p>
 <p>Additional slots inside the phyloseq slots do not have dedicated accessors, but can easily be reached once the phyloseq object is exported from the <code>siamcat</code> object:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>phyloseq &lt;-<span class="st"> </span><span class="kw"><a href="../reference/physeq-methods.html">physeq</a></span>(siamcat)</span>
-<span id="cb36-2"><a href="#cb36-2"></a>tax_tab &lt;-<span class="st"> </span><span class="kw">tax_table</span>(phyloseq)</span>
-<span id="cb36-3"><a href="#cb36-3"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(tax_tab)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">phyloseq</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/physeq.html">physeq</a></span><span class="op">(</span><span class="va">siamcat</span><span class="op">)</span>
+<span class="va">tax_tab</span> <span class="op">&lt;-</span> <span class="fu">tax_table</span><span class="op">(</span><span class="va">phyloseq</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">tax_tab</span><span class="op">)</span></code></pre></div>
 <pre><code>## Taxonomy Table:     [6 taxa by 7 taxonomic ranks]:
-##        Kingdom   Phylum          Class          Order         
-## 549322 "Archaea" "Crenarchaeota" "Thermoprotei" NA            
-## 522457 "Archaea" "Crenarchaeota" "Thermoprotei" NA            
-## 951    "Archaea" "Crenarchaeota" "Thermoprotei" "Sulfolobales"
-## 244423 "Archaea" "Crenarchaeota" "Sd-NA"        NA            
-## 586076 "Archaea" "Crenarchaeota" "Sd-NA"        NA            
-## 246140 "Archaea" "Crenarchaeota" "Sd-NA"        NA            
-##        Family          Genus        Species                   
-## 549322 NA              NA           NA                        
-## 522457 NA              NA           NA                        
-## 951    "Sulfolobaceae" "Sulfolobus" "Sulfolobusacidocaldarius"
-## 244423 NA              NA           NA                        
-## 586076 NA              NA           NA                        
-## 246140 NA              NA           NA</code></pre>
+##        Kingdom   Phylum          Class          Order          Family         
+## 549322 "Archaea" "Crenarchaeota" "Thermoprotei" NA             NA             
+## 522457 "Archaea" "Crenarchaeota" "Thermoprotei" NA             NA             
+## 951    "Archaea" "Crenarchaeota" "Thermoprotei" "Sulfolobales" "Sulfolobaceae"
+## 244423 "Archaea" "Crenarchaeota" "Sd-NA"        NA             NA             
+## 586076 "Archaea" "Crenarchaeota" "Sd-NA"        NA             NA             
+## 246140 "Archaea" "Crenarchaeota" "Sd-NA"        NA             NA             
+##        Genus        Species                   
+## 549322 NA           NA                        
+## 522457 NA           NA                        
+## 951    "Sulfolobus" "Sulfolobusacidocaldarius"
+## 244423 NA           NA                        
+## 586076 NA           NA                        
+## 246140 NA           NA</code></pre>
 <p>If you want to find out more about the phyloseq data structure, head over to the <a href="https://bioconductor.org/packages/release/bioc/html/phyloseq.html">phyloseq</a> BioConductor page. # Session Info</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</span></code></pre></div>
-<pre><code>## R version 3.6.3 (2020-02-29)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS Catalina 10.15.5
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -576,74 +605,52 @@ If you have no label information for your dataset, you can still create a <code>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_1.9.0     phyloseq_1.28.0   mlr_2.15.0        ParamHelpers_1.12
-## [5] BiocStyle_2.12.0 
+## [1] SIAMCAT_1.11.0    phyloseq_1.32.0   mlr_2.18.0        ParamHelpers_1.14
+## [5] BiocStyle_2.16.1 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Biobase_2.44.0      jsonlite_1.6        splines_3.6.3      
-##  [4] foreach_1.4.7       PRROC_1.3.1         LiblineaR_2.10-8   
-##  [7] assertthat_0.2.1    BiocManager_1.30.9  stats4_3.6.3       
-## [10] progress_1.2.2      yaml_2.2.0          corrplot_0.84      
-## [13] pillar_1.4.2        backports_1.1.5     lattice_0.20-38    
-## [16] glue_1.3.1          pROC_1.15.3         digest_0.6.22      
-## [19] RColorBrewer_1.1-2  XVector_0.24.0      checkmate_1.9.4    
-## [22] colorspace_1.4-1    htmltools_0.4.0     Matrix_1.2-18      
-## [25] plyr_1.8.4          pkgconfig_2.0.3     bookdown_0.14      
-## [28] zlibbioc_1.30.0     purrr_0.3.3         scales_1.0.0       
-## [31] parallelMap_1.4     tibble_2.1.3        beanplot_1.2       
-## [34] mgcv_1.8-31         IRanges_2.18.3      ggplot2_3.2.1      
-## [37] infotheo_1.2.0      BiocGenerics_0.30.0 lazyeval_0.2.2     
-## [40] survival_3.1-8      magrittr_1.5        crayon_1.3.4       
-## [43] memoise_1.1.0       evaluate_0.14       fs_1.3.1           
-## [46] nlme_3.1-144        MASS_7.3-51.5       vegan_2.5-6        
-## [49] prettyunits_1.0.2   tools_3.6.3         data.table_1.12.6  
-## [52] hms_0.5.1           matrixStats_0.55.0  gridBase_0.4-7     
-## [55] BBmisc_1.11         stringr_1.4.0       Rhdf5lib_1.6.3     
-## [58] S4Vectors_0.22.1    glmnet_2.0-18       munsell_0.5.0      
-## [61] cluster_2.1.0       Biostrings_2.52.0   ade4_1.7-13        
-## [64] compiler_3.6.3      pkgdown_1.4.1       rlang_0.4.0        
-## [67] rhdf5_2.28.1        grid_3.6.3          iterators_1.0.12   
-## [70] biomformat_1.7.0    rstudioapi_0.10     igraph_1.2.4.1     
-## [73] rmarkdown_1.16      gtable_0.3.0        codetools_0.2-16   
-## [76] multtest_2.40.0     reshape2_1.4.3      R6_2.4.0           
-## [79] gridExtra_2.3       knitr_1.25          dplyr_0.8.3        
-## [82] zeallot_0.1.0       fastmatch_1.1-0     rprojroot_1.3-2    
-## [85] permute_0.9-5       desc_1.2.0          ape_5.3            
-## [88] stringi_1.4.3       parallel_3.6.3      Rcpp_1.0.2         
-## [91] vctrs_0.2.0         tidyselect_0.2.5    xfun_0.10</code></pre>
+##  [1] nlme_3.1-150        matrixStats_0.57.0  fs_1.5.0           
+##  [4] RColorBrewer_1.1-2  progress_1.2.2      PRROC_1.3.1        
+##  [7] rprojroot_1.3-2     tools_4.0.2         backports_1.2.0    
+## [10] R6_2.5.0            vegan_2.5-6         BiocGenerics_0.34.0
+## [13] mgcv_1.8-33         colorspace_2.0-0    permute_0.9-5      
+## [16] ade4_1.7-16         tidyselect_1.1.0    gridExtra_2.3      
+## [19] prettyunits_1.1.1   compiler_4.0.2      parallelMap_1.5.0  
+## [22] glmnet_4.0-2        textshaping_0.1.2   Biobase_2.48.0     
+## [25] desc_1.2.0          bookdown_0.21       scales_1.1.1       
+## [28] checkmate_2.0.0     pkgdown_1.6.1       systemfonts_0.3.2  
+## [31] stringr_1.4.0       digest_0.6.27       rmarkdown_2.5      
+## [34] XVector_0.28.0      pkgconfig_2.0.3     htmltools_0.5.0    
+## [37] rlang_0.4.8         rstudioapi_0.12     BBmisc_1.11        
+## [40] shape_1.4.5         generics_0.1.0      jsonlite_1.7.1     
+## [43] dplyr_1.0.2         magrittr_1.5        biomformat_1.16.0  
+## [46] Matrix_1.2-18       Rcpp_1.0.5          munsell_0.5.0      
+## [49] S4Vectors_0.26.1    Rhdf5lib_1.10.1     ape_5.4-1          
+## [52] lifecycle_0.2.0     infotheo_1.2.0      pROC_1.16.2        
+## [55] stringi_1.5.3       yaml_2.2.1          MASS_7.3-53        
+## [58] zlibbioc_1.34.0     rhdf5_2.32.4        plyr_1.8.6         
+## [61] grid_4.0.2          LiblineaR_2.10-8    parallel_4.0.2     
+## [64] crayon_1.3.4        lattice_0.20-41     Biostrings_2.56.0  
+## [67] splines_4.0.2       multtest_2.44.0     hms_0.5.3          
+## [70] knitr_1.30          beanplot_1.2        pillar_1.4.6       
+## [73] igraph_1.2.6        reshape2_1.4.4      codetools_0.2-18   
+## [76] stats4_4.0.2        fastmatch_1.1-0     glue_1.4.2         
+## [79] evaluate_0.14       data.table_1.13.2   BiocManager_1.30.10
+## [82] vctrs_0.3.4         foreach_1.5.1       gtable_0.3.0       
+## [85] purrr_0.3.4         assertthat_0.2.1    ggplot2_3.3.2      
+## [88] xfun_0.19           gridBase_0.4-7      ragg_0.4.0         
+## [91] survival_3.2-7      tibble_3.0.4        iterators_1.0.13   
+## [94] memoise_1.1.0       IRanges_2.22.2      cluster_2.1.0      
+## [97] corrplot_0.84       ellipsis_0.3.1</code></pre>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
-      <li>
-<a href="#loading-your-data-into-r">Loading your data into R</a>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#siamcat-input">SIAMCAT input</a></li>
-      <li><a href="#lefse-format-files">LEfSe format files</a></li>
-      <li><a href="#metagenomeseq-format-files">metagenomeSeq format files</a></li>
-      <li><a href="#biom-format-files">BIOM format files</a></li>
-      <li><a href="#creating-a-siamcat-object-of-a-phyloseq-object">Creating a siamcat object of a phyloseq object</a></li>
-      </ul>
-</li>
-      <li>
-<a href="#creating-a-siamcat-class-object">Creating a siamcat-class object</a>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#phyloseq-label-and-orig_feat-slots">phyloseq, label and orig_feat slots</a></li>
-      <li><a href="#all-the-other-slots">All the other slots</a></li>
-      <li><a href="#accessing-and-assigning-slots">Accessing and assigning slots</a></li>
-      <li><a href="#slots-inside-the-slots">Slots inside the slots</a></li>
-      </ul>
-</li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 

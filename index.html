@@ -42,7 +42,7 @@
   })();
 </script>
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -55,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -75,10 +75,19 @@
       <a href="articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -133,39 +142,44 @@
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
 <p>In order to start with <code>SIAMCAT</code>, you need to install it from Bioconductor:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb1-2"><a href="#cb1-2"></a>    <span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>BiocManager<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"SIAMCAT"</span>, <span class="dt">version =</span> <span class="st">"3.8"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span>, version <span class="op">=</span> <span class="st">"3.8"</span><span class="op">)</span></code></pre></div>
 <p>Alternatively, you can install the current development version via <code>devtools</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="st">"devtools"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="dt">repo =</span> <span class="st">'zellerlab/siamcat'</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/">"devtools"</a></span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">'zellerlab/siamcat'</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="quick-start" class="section level3">
 <h3 class="hasAnchor">
 <a href="#quick-start" class="anchor"></a>Quick start</h3>
 <p>There are a few manuals that will kick-start you and help you analyse your data with <code>SIAMCAT</code>. You can find links to those on the <a href="https://bioconductor.org/packages/release/bioc/html/SIAMCAT.html">Bioconductor website of SIAMCAT</a> or you can type into <code>R</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"SIAMCAT"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># Please Note:</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="co"># `browseVignettes` only works if `SIAMCAT` has been installed via Bioconductor</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span>
+<span class="co"># Please Note:</span>
+<span class="co"># `browseVignettes` only works if `SIAMCAT` has been installed via Bioconductor</span></code></pre></div>
 </div>
 </div>
-<div id="contact" class="section level2">
+<div id="feedback-and-contact" class="section level2">
 <h2 class="hasAnchor">
-<a href="#contact" class="anchor"></a>Contact</h2>
-<p>If you run into any issue:</p>
+<a href="#feedback-and-contact" class="anchor"></a>Feedback and Contact</h2>
+<p>If you have any question about <code>SIAMCAT</code>, if you run into any issue, or if you would like to make a feature request, please:</p>
 <ul>
 <li>create an <a href="https://github.com/zellerlab/siamcat/issues/new">issue in this repository</a> or</li>
 <li>mail <a href="mailto:zeller@embl.de">Georg Zeller</a> or</li>
 <li>ask at the <a href="https://groups.google.com/forum/#!forum/siamcat-users">SIAMCAT support group</a>
 </li>
 </ul>
-<p>If you found <code>SIAMCAT</code> useful, please consider giving us <a href="https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&amp;tool=siamcat">feedback</a>.</p>
+<p>If you have a more general question (that could be useful to several other users), please do not hesitate to post it on a dedicated forums such as Stackoverflow or Biostars. If you let us know about the question, we will answer it swiftly.</p>
+<p>Please consider giving us <a href="https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&amp;tool=siamcat">feedback</a>. (This feedback is useful for us to justify the funding we get for developing and maintaining this package.)</p>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>If you use <code>SIAMCAT</code>, please cite us by using</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span>(<span class="st">"SIAMCAT"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
 <p>or by</p>
 <blockquote>
 <p>Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P, Sunagawa S, Zeller G (2020) <em>SIAMCAT: user-friendly and versatile machine learning workflows for statistically rigorous microbiome analyses</em> bioRxiv 2020.02.06.931808; doi: <a href="https://doi.org/10.1101/2020.02.06.931808" class="uri">https://doi.org/10.1101/2020.02.06.931808</a></p>
@@ -242,7 +256,7 @@ Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]</p>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
@@ -269,9 +283,9 @@ Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]</p>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Konrad Zych <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-7426-0516" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
-<li>Jakob Wirbel <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4073-3562" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
-<li>Georg Zeller <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-1429-7485" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
+<li>Konrad Zych <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-7426-0516" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Jakob Wirbel <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4073-3562" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Georg Zeller <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-1429-7485" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>

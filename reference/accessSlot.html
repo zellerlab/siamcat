@@ -43,7 +43,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -57,7 +57,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -77,10 +77,19 @@
       <a href="../articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="../articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="../articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -126,7 +135,7 @@
     <p>This function is used internally by many accessors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>accessSlot</span>(<span class='no'>siamcat</span>, <span class='no'>slot</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat</span>, <span class='va'>slot</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,8 +163,9 @@ can be either 0 (no output) or 1 (print message)</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
-<span class='fu'>accessSlot</span>(<span class='no'>siamcat_example</span>, <span class='st'>"label"</span>)</div><div class='output co'>#&gt; $label
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
+<span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, <span class='st'>"label"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $label
 #&gt;  CCIS27304052ST-3-0  CCIS15794887ST-4-0  CCIS74726977ST-3-0  CCIS16561622ST-4-0 
 #&gt;                  -1                  -1                  -1                  -1 
 #&gt;  CCIS79210440ST-3-0  CCIS82507866ST-3-0  CCIS98482370ST-3-0  CCIS00281083ST-3-0 
@@ -235,7 +245,8 @@ can be either 0 (no output) or 1 (print message)</p></td>
 #&gt; 
 #&gt; $type
 #&gt; [1] "BINARY"
-#&gt; </div><div class='input'><span class='fu'>accessSlot</span>(<span class='no'>siamcat_example</span>, <span class='st'>"model_list"</span>)</div><div class='output co'>#&gt; $models
+#&gt; </div><div class='input'><span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, <span class='st'>"model_list"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $models
 #&gt; $models[[1]]
 #&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
 #&gt; Trained on: task.id = data; obs = 112; features = 28
@@ -294,14 +305,10 @@ can be either 0 (no output) or 1 (print message)</p></td>
 #&gt; [1] "normalized"
 #&gt; </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

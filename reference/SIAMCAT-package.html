@@ -57,7 +57,7 @@ Pipeline for Statistical Inference of Associations between
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -71,7 +71,7 @@ Pipeline for Statistical Inference of Associations between
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -91,10 +91,19 @@ Pipeline for Statistical Inference of Associations between
       <a href="../articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="../articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="../articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -138,7 +147,7 @@ Pipeline for Statistical Inference of Associations between
     </div>
 
     <div class="ref-description">
-    <p><img src='figures/logo.png' align='right' /></p>
+    <p><img src='figures/logo.png' align='right' alt='logo' width='120' /></p>
 <p>Pipeline for Statistical Inference of Associations between
     Microbial Communities And host phenoTypes (SIAMCAT). A primary goal
     of analyzing microbiome data is to determine changes in community
@@ -164,20 +173,12 @@ associated with environmental factors. In particular, linking human
 microbiome composition to host phenotypes such as diseases has become an area
 of intense research. For this, robust statistical modeling and biomarker
 extraction toolkits are crucially needed!</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-  </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#details">Details</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p><strong>Maintainer</strong>: Jakob Wirbel
-    <a href='mailto:jakob.wirbel@embl.de'>jakob.wirbel@embl.de</a> (0000-0002-4073-3562)</p>
+    <p><strong>Maintainer</strong>: Jakob Wirbel <a href='mailto:jakob.wirbel@embl.de'>jakob.wirbel@embl.de</a> (<a href='https://orcid.org/0000-0002-4073-3562'>ORCID</a>)</p>
 <p>Authors:</p><ul>
-<li><p>Konrad Zych <a href='mailto:konrad.zych@embl.de'>konrad.zych@embl.de</a> (0000-0001-7426-0516)</p></li>
-<li><p>Georg Zeller <a href='mailto:zeller@embl.de'>zeller@embl.de</a> (0000-0003-1429-7485)</p></li>
+<li><p>Konrad Zych <a href='mailto:konrad.zych@embl.de'>konrad.zych@embl.de</a> (<a href='https://orcid.org/0000-0001-7426-0516'>ORCID</a>)</p></li>
+<li><p>Georg Zeller <a href='mailto:zeller@embl.de'>zeller@embl.de</a> (<a href='https://orcid.org/0000-0003-1429-7485'>ORCID</a>)</p></li>
 </ul>
 
 <p>Other contributors:</p><ul>
@@ -187,6 +188,12 @@ extraction toolkits are crucially needed!</p>
 </ul>
 
 
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

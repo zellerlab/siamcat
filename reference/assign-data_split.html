@@ -46,7 +46,7 @@ SIAMCAT object" />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -60,7 +60,7 @@ SIAMCAT object" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -80,10 +80,19 @@ SIAMCAT object" />
       <a href="../articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="../articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="../articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -131,10 +140,10 @@ SIAMCAT object</h1>
 SIAMCAT object</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='data_split-methods.html'>data_split</a></span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+    <pre class="usage"><span class='fu'><a href='data_split.html'>data_split</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for siamcat,list</span>
-<span class='fu'><a href='data_split-methods.html'>data_split</a></span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+<span class='fu'><a href='data_split.html'>data_split</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,17 +163,14 @@ SIAMCAT object</p>
     <p>none</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
-<span class='fu'><a href='data_split-methods.html'>data_split</a></span>(<span class='no'>siamcat_example</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='data_split-methods.html'>data_split</a></span>(<span class='no'>siamcat_example</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
+<span class='fu'><a href='data_split.html'>data_split</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='data_split.html'>data_split</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

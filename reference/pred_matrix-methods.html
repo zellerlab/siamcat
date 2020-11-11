@@ -44,7 +44,7 @@ object" />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -58,7 +58,7 @@ object" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -78,10 +78,19 @@ object" />
       <a href="../articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="../articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="../articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="../articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -128,10 +137,10 @@ object" />
 object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pred_matrix</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>1</span>)
+    <pre class="usage"><span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 
 <span class='co'># S4 method for siamcat</span>
-<span class='fu'>pred_matrix</span>(<span class='no'>siamcat</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
+<span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,9 +167,10 @@ samples across the different cross-validation repeats. See
 <a href='make.predictions.html'>make.predictions</a> for more information.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>siamcat_example</span>)
-<span class='no'>temp</span> <span class='kw'>&lt;-</span> <span class='fu'>pred_matrix</span>(<span class='no'>siamcat_example</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>temp</span>)</div><div class='output co'>#&gt;                        CV_rep1      CV_rep2
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
+<span class='va'>temp</span> <span class='op'>&lt;-</span> <span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>temp</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                        CV_rep1      CV_rep2
 #&gt; CCIS27304052ST-3-0 0.012996378 4.018433e-05
 #&gt; CCIS15794887ST-4-0 0.028338574 2.510548e-01
 #&gt; CCIS74726977ST-3-0 0.760802351 9.849912e-01
@@ -168,15 +178,10 @@ samples across the different cross-validation repeats. See
 #&gt; CCIS79210440ST-3-0 0.170263425 2.269210e-01
 #&gt; CCIS82507866ST-3-0 0.062054480 6.437584e-05</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

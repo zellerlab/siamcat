@@ -42,7 +42,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-citation-authors">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -56,7 +56,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
       </span>
     </div>
 
@@ -76,10 +76,19 @@
       <a href="articles/SIAMCAT_vignette.html">Introduction to SIAMCAT</a>
     </li>
     <li>
-      <a href="articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
+      <a href="articles/SIAMCAT_confounder.html">SIAMCAT example with confounders</a>
     </li>
     <li>
       <a href="articles/SIAMCAT_holdout.html">Holdout testing with SIAMCAT</a>
+    </li>
+    <li>
+      <a href="articles/SIAMCAT_meta.html">SIAMCAT machine learning meta-analysis</a>
+    </li>
+    <li>
+      <a href="articles/SIAMCAT_ml_pitfalls.html">Machine learning pitfalls</a>
+    </li>
+    <li>
+      <a href="articles/SIAMCAT_read-in.html">SIAMCAT input formats</a>
     </li>
   </ul>
 </li>
@@ -120,12 +129,10 @@
       
     </div>
 
-    <p>J W, K Z, M E, N K, E K, G S, P B, S S, G Z (2020).
-&ldquo;SIAMCAT: user-friendly and versatile machine learning workflows for
-statistically rigorous microbiome analyses.&rdquo;
-<em>bioRxiv</em>.
-<a href="https://doi.org/10.1101/2020.02.06.931808">https://doi.org/10.1101/2020.02.06.931808</a>. 
-</p>
+    <p>Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G,
+  Bork P, Sunagawa S, Zeller G (2020) SIAMCAT: user-friendly and versatile
+  machine learning workflows for statistically rigorous microbiome analyses
+  bioRxiv 2020.02.06.931808; doi: https://doi.org/10.1101/2020.02.06.931808</p>
     <pre>@Article{,
   author = {Wirbel J and Zych K and Essex M and Karcher N and Kartal E and Salazar G and Bork P and Sunagawa S and Zeller G},
   title = {SIAMCAT: user-friendly and versatile machine learning workflows for
@@ -141,15 +148,15 @@ statistically rigorous microbiome analyses.&rdquo;
 
     <ul class="list-unstyled">
       <li>
-        <p><strong>Konrad Zych</strong>. Author. <a href='https://orcid.org/0000-0001-7426-0516' target='orcid.widget'><img src='https://members.orcid.org/sites/default/files/vector_iD_icon.svg' class='orcid' alt='ORCID'></a>
+        <p><strong>Konrad Zych</strong>. Author. <a href='https://orcid.org/0000-0001-7426-0516' target='orcid.widget' aria-label='ORCID'><span class='fab fa-orcid orcid' aria-hidden='true'></span></a>
         </p>
       </li>
       <li>
-        <p><strong>Jakob Wirbel</strong>. Author, maintainer. <a href='https://orcid.org/0000-0002-4073-3562' target='orcid.widget'><img src='https://members.orcid.org/sites/default/files/vector_iD_icon.svg' class='orcid' alt='ORCID'></a>
+        <p><strong>Jakob Wirbel</strong>. Author, maintainer. <a href='https://orcid.org/0000-0002-4073-3562' target='orcid.widget' aria-label='ORCID'><span class='fab fa-orcid orcid' aria-hidden='true'></span></a>
         </p>
       </li>
       <li>
-        <p><strong>Georg Zeller</strong>. Author. <a href='https://orcid.org/0000-0003-1429-7485' target='orcid.widget'><img src='https://members.orcid.org/sites/default/files/vector_iD_icon.svg' class='orcid' alt='ORCID'></a>
+        <p><strong>Georg Zeller</strong>. Author. <a href='https://orcid.org/0000-0003-1429-7485' target='orcid.widget' aria-label='ORCID'><span class='fab fa-orcid orcid' aria-hidden='true'></span></a>
         </p>
       </li>
       <li>
