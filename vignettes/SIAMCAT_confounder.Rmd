@@ -1,0 +1,460 @@
+---
+title: "Example dataset with Confoundering"
+author:
+-   name: "Jakob Wirbel and Georg Zeller"
+    affiliation: "EMBL Heidelberg"
+    email: "georg.zeller@embl.de"
+date: "Date last modified: 2020-11-11"
+output: BiocStyle::html_document
+vignette: >
+    %\VignetteIndexEntry{SIAMCAT confounder example}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{ASCII}
+---
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(collapse=TRUE)
+```
+
+# About This Vignette
+
+Here, we demonstrate the standard workflow of the `SIAMCAT` package using as
+an example the dataset from [Nielsen et al. _Nat Biotechnol_ 
+2014](https://www.ncbi.nlm.nih.gov/pubmed/24997787).
+This dataset contains samples from patients with inflammatory bowel disease and
+from controls.  
+More importantly, these samples have been collected in two different countries,
+Spain and Denmark. Together with technical differences between these samples,
+this introduces a potent confounding factor into the data. Here we are going
+to explore how `SIAMCAT` would identify the confounding factor and what the
+results would be if you account for the confounder or not.
+
+## Setup
+
+First, we load the packages needed to perform the analyses.
+
+```{r setup, warning=FALSE, message=FALSE}
+library("tidyverse")
+library("SIAMCAT")
+library("ggpubr")
+```
+
+# Preparations 
+
+There are two different ways to access the data for our example dataset. On 
+the one hand, it is available through the `curatedMetagenomicsData` R package.
+However, using it here would create many more dependencies for the `SIAMCAT` 
+package.  
+Therefore, we here use data available through the EMBL cluster. 
+
+In the `SIAMCAT` paper, we performed the presented analyses on the datasets
+available through `curatedMetagenomicsData`. If you want to reproduce the 
+analysis from the `SIAMCAT` paper, you can execute the code chunks in 
+the `curatedMetageomicsData` section, otherwise execute the code in the
+mOTUs2 section.
+
+## curatedMetagenomicsData
+
+First, we load the package:
+```{r curateMGD, eval=FALSE}
+library("curatedMetagenomciData")
+```
+
+### Metadata
+
+The data are part of the `combined_metadata`
+
+```{r get_metadata, eval=FALSE}
+meta.nielsen.full <- combined_metadata %>%
+  filter(dataset_name=='NielsenHB_2014')
+```
+
+One thing we have to keep in mind are repeated samples per subject (see also 
+the **Machine learning pitfalls** vignette).
+
+```{r reason_meta_clean_2, eval=FALSE}
+print(length(unique(meta.nielsen.full$subjectID)))
+print(nrow(meta.nielsen.full))
+```
+
+Some subjects (but not all) had been sampled multiple times.
+Therefore, we want to remove repeated samplings for the same subject, since
+the samples would otherwise not be indepdenent from another.
+
+The visit number is encoded in the `sampleID`. Therefore, we can use this
+information to extract when the samples have been taken and use only the
+first visit for each subject.
+
+```{r clean_metadata_1, eval=FALSE}
+meta.nielsen <- meta.nielsen.full %>%
+  select(sampleID, subjectID, study_condition, disease_subtype,
+         disease, age, country, number_reads, median_read_length, BMI) %>%
+  mutate(visit=str_extract(sampleID, '_[0-9]+$')) %>%
+  mutate(visit=str_remove(visit, '_')) %>%
+  mutate(visit=as.numeric(visit)) %>%
+  mutate(visit=case_when(is.na(visit)~0, TRUE~visit)) %>%
+  group_by(subjectID) %>%
+  filter(visit==min(visit)) %>%
+  ungroup() %>%
+  mutate(Sample_ID=sampleID) %>%
+  mutate(Group=case_when(disease=='healthy'~'CTR',
+                         TRUE~disease_subtype))
+```
+
+Now, we can restrict our metadata to samples with `UC` and healthy control 
+samples:
+```{r clean_metadata_4, eval=FALSE}
+meta.nielsen <- meta.nielsen %>% 
+  filter(Group %in% c('UC', 'CTR'))
+```
+
+As a last step, we can adjust the column names for the metadata so that they 
+agree with the data available from the EMBL cluster. Also, we add rownames to
+the dataframe since `SIAMCAT` needs rownames to match samples across metadata 
+and features.
+
+```{r clean_metadata_3, eval=FALSE}
+meta.nielsen <- meta.nielsen %>% 
+  mutate(Country=country)
+meta.nielsen <- as.data.frame(meta.nielsen)
+rownames(meta.nielsen) <- meta.nielsen$sampleID
+```
+
+
+### Taxonomic Profiles
+
+We can load the taxonomic profiles generated with MetaPhlAn2 via the
+_curatedMetagenomicsData_ R package.
+
+```{r tax_profiles, eval=FALSE}
+x <- 'NielsenHB_2014.metaphlan_bugs_list.stool'
+feat <- curatedMetagenomicData(x=x, dryrun=FALSE)
+feat <- feat[[x]]@assayData$exprs
+```
+
+The MetaPhlAn2 profiles contain information on different taxonomic levels.
+Therefore, we want to restrict them to species-level profiles. In a second step,
+we convert them into relative abundances (summing up to 1) instead of using
+the percentages (summing up to 100) that MetaPhlAn2 outputs.
+
+```{r clean_tax_profiles, eval=FALSE}
+feat <- feat[grep(x=rownames(feat), pattern='s__'),]
+feat <- feat[grep(x=rownames(feat),pattern='t__', invert = TRUE),]
+feat <- t(t(feat)/100)
+```
+
+The feature names are very long and may be a bit un-wieldy for plotting later
+on, so we shorten them to only the species name:
+
+```{r clean_feature_names, eval=FALSE}
+rownames(feat) <- str_extract(rownames(feat), 's__.*$')
+```
+
+
+
+## mOTUs2 Profiles
+
+Both metadata and features are available through the EMBL cluster:
+
+```{r load_motus}
+# base url for data download
+data.location <- 'https://www.embl.de/download/zeller/metaHIT/'
+## metadata
+meta.nielsen <- read_tsv(paste0(data.location, 'meta_Nielsen.tsv'))
+# also here, we have to remove repeated samplings and CD samples
+meta.nielsen <- meta.nielsen %>% 
+  filter(Group %in% c('CTR', 'UC')) %>% 
+  group_by(Individual_ID) %>% 
+  filter(Sampling_day==min(Sampling_day)) %>% 
+  ungroup() %>% 
+  as.data.frame()
+rownames(meta.nielsen) <- meta.nielsen$Sample_ID
+
+## features
+feat <- read.table('../../paper_stuff/data/features/motus/metaHIT_motus.tsv', 
+                   stringsAsFactors = FALSE, sep='\t',
+                   check.names = FALSE, quote = '', comment.char = '')
+feat <- feat[,colSums(feat) > 0]
+feat <- prop.table(as.matrix(feat), 2)
+```
+
+
+# SIAMCAT Workflow (without Confounders)
+
+## The SIAMCAT Object
+
+Now, we have everything ready to create a `SIAMCAT` object which stores
+the feature matrix, the meta-variables, and the label. Here, the label is
+created using the information in the metadata.  
+To demonstrate the normal `SIAMCAT` workflow, we remove the confounding factor
+by only looking at samples from Spain. Below, we have a look what would have 
+happened if we had not removed them.
+
+```{r siamcat}
+# remove Danish samples
+meta.nielsen.esp <- meta.nielsen[meta.nielsen$Country == 'ESP',]
+sc.obj <- siamcat(feat=feat, meta=meta.nielsen.esp, label='Group', case='UC')
+```
+
+## Filtering
+
+Now, we can filter feature with low overall abundance and prevalence.
+
+```{r feature_filtering}
+sc.obj <- filter.features(sc.obj, cutoff=1e-04,
+                          filter.method = 'abundance')
+sc.obj <- filter.features(sc.obj, cutoff=0.05,
+                          filter.method='prevalence',
+                          feature.type = 'filtered')
+```
+
+## Association Plot
+
+The `check.assocation` function calculates the significance of enrichment and
+metrics of association (such as generalized fold change and single-feautre
+AUROC).
+
+```{r assoc_plot, message=FALSE, warning=FALSE}
+sc.obj <- check.associations(sc.obj, detect.lim = 1e-06,
+                             alpha=0.1, max.show = 20,
+                             plot.type = 'quantile.rect',
+                             panels = c('fc'),
+                             fn.plot = './association_plot_nielsen.pdf')
+```
+
+![](./association_plot_nielsen.png)
+
+
+## Confounder Analysis
+
+We can also check the supplied meta-variables for potential confounding.
+
+```{r check_confounders, warning=FALSE}
+check.confounders(sc.obj, fn.plot = './confounders_nielsen.pdf')
+```
+
+![](./confounders_nielsen.png)
+
+The function produces one plot for each meta-variable. Here, we show only the
+example of the body mass index (BMI). The BMI distributions look very similar
+for both controls and UC cases, so it is unlikely that the BMI would
+confound the analyses.
+
+## Machine Learning Workflow
+
+The machine learning workflow can be easily implemented in `SIAMCAT`. It
+contains the following steps:
+
+* Feature normalization
+* Data splitting for cross-validation
+* Model training
+* Making model predictions (on left-out data)
+* Evaluating model predictions (using AUROC and AUPRC)
+
+```{r ml_workflow}
+sc.obj <- normalize.features(sc.obj, norm.method = 'log.std',
+                             norm.param = list(log.n0=1e-06, sd.min.q=0))
+sc.obj <- create.data.split(sc.obj, num.folds = 5, num.resample = 5)
+sc.obj <- train.model(sc.obj, method='lasso')
+sc.obj <- make.predictions(sc.obj)
+sc.obj <- evaluate.predictions(sc.obj)
+```
+
+### Model Evaluation Plot
+
+The model evaluation plot will produce one plot with the ROC curve and another
+one with the precision-recall curve (not shown here).
+
+```{r model_eval_plot}
+model.evaluation.plot(sc.obj, fn.plot = './eval_plot_nielsen.pdf')
+```
+![](./eval_plot_nielsen.png)
+
+
+### Model Interpretation Plot
+
+The model interpretation plot can give you additional information about the
+trained machine learning model. It will show you:
+
+* the feature importance as barplot,
+* the feature robustness (in how many of the models in the repeated
+cross-validation this feature has been selected into the model),
+* the normalized feature abundances across samples as heatmap,
+* the optional metadata as heatmap below, and
+* a boxplot showing the proportion of the model weight that is explained by  
+the selected features.
+
+```{r model_interpretation_plot}
+model.interpretation.plot(sc.obj, consens.thres = 0.8,
+                          fn.plot = './interpretation_nielsen.pdf')
+```
+
+![](./interpretation_nielsen.png)
+
+
+# Confounder Analysis
+
+As already mentioned above, the Nielsen dataset contains samples from both
+Spain and Denmark. How would `SIAMCAT` have alerted us to this?
+
+```{r confounders}
+table(meta.nielsen$Group, meta.nielsen$Country)
+```
+
+## Country Confounder
+
+First, we create a `SIAMCAT` object again, this time including the
+Danish controls:
+
+```{r conf_start}
+sc.obj.full <- siamcat(feat=feat, meta=meta.nielsen,
+                       label='Group', case='UC')
+sc.obj.full <- filter.features(sc.obj.full, cutoff=1e-04,
+                               filter.method = 'abundance')
+sc.obj.full <- filter.features(sc.obj.full, cutoff=0.05,
+                               filter.method='prevalence',
+                               feature.type = 'filtered')
+```
+
+The confounder plot would show us that the meta-variable "country" might be
+problematic:
+```{r conf_country, eval=FALSE}
+check.confounders(sc.obj.full, fn.plot = './confounders_dnk.pdf')
+```
+
+![](./confounders_dnk.png)
+
+## Association Testing
+
+First, we can use `SIAMCAT` to test for associations including the Danish 
+samples.
+
+```{r assoc_plot_2, warning=FALSE, message=FALSE}
+sc.obj.full <- check.associations(sc.obj.full, detect.lim = 1e-06,
+                                  alpha=0.1, max.show = 20,
+                                  plot.type = 'quantile.rect',
+                                  fn.plot = './association_plot_dnk.pdf')
+```
+
+Confounders can lead to biases in association testing. After using `SIAMCAT` to
+test for associations in both datasets (one time including the Danish samples,
+the other time restricted to samples from Spain only), we can extract the
+association metrics from both `SIAMCAT` objects and compare them in a
+scatter plot.
+
+```{r conf_assoc_plot, warning=FALSE}
+assoc.sp <- associations(sc.obj)
+assoc.sp$species <- rownames(assoc.sp)
+assoc.sp_dnk <- associations(sc.obj.full)
+assoc.sp_dnk$species <- rownames(assoc.sp_dnk)
+
+df.plot <- full_join(assoc.sp, assoc.sp_dnk, by='species')
+df.plot %>%
+  mutate(highlight=str_detect(species, 'formicigenerans')) %>%
+  ggplot(aes(x=-log10(p.adj.x), y=-log10(p.adj.y), col=highlight)) +
+    geom_point(alpha=0.3) +
+    xlab('Spanish samples only\n-log10(q)') +
+    ylab('Spanish and Danish samples only\n-log10(q)') +
+    theme_classic() +
+    theme(panel.grid.major = element_line(colour='lightgrey'),
+          aspect.ratio = 1.3) +
+    scale_colour_manual(values=c('darkgrey', '#D41645'), guide=FALSE) +
+    annotate('text', x=0.7, y=8, label='Dorea formicigenerans')
+```
+
+This result shows that several species are only signficant if the Danish
+control samples are included, but not when considering only the Spanish samples.
+
+As an example, we highlighted the species _"Dorea formicigenerans"_ in the plot
+above. The test is not significant in the Spanish cohort, but is highly
+significant when the Danish samples are included.
+
+```{r dorea_plot}
+# extract information out of the siamcat object
+feat.dnk <- get.filt_feat.matrix(sc.obj.full)
+label.dnk <- label(sc.obj.full)$label
+country <- meta(sc.obj.full)$Country
+names(country) <- rownames(meta(sc.obj.full))
+
+df.plot <- tibble(dorea=log10(feat.dnk[str_detect(rownames(feat.dnk), 
+                                                  'formicigenerans'),
+                                       names(label.dnk)] + 1e-05),
+                  label=label.dnk, country=country) %>%
+  mutate(label=case_when(label=='-1'~'CTR', TRUE~"UC")) %>%
+  mutate(x_value=paste0(country, '_', label))
+
+df.plot %>%
+  ggplot(aes(x=x_value, y=dorea)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(width = 0.08, stroke=0, alpha=0.2) +
+    theme_classic() +
+    xlab('') +
+    ylab("log10(Dorea formicigenerans)") +
+    stat_compare_means(comparisons = list(c('DNK_CTR', 'ESP_CTR'),
+                                          c('DNK_CTR', 'ESP_UC'),
+                                          c('ESP_CTR', 'ESP_UC')))
+```
+
+
+## Machine Learning
+
+The results from the machine learning workflows can also be biased by the
+differences between countries, leading to exaggerated performance estimates.
+
+```{r ml_workflow_dnk}
+sc.obj.full <- normalize.features(sc.obj.full, norm.method = 'log.std',
+                                  norm.param = list(log.n0=1e-06, sd.min.q=0))
+sc.obj.full <- create.data.split(sc.obj.full, num.folds = 5, num.resample = 5)
+sc.obj.full <- train.model(sc.obj.full, method='lasso')
+sc.obj.full <- make.predictions(sc.obj.full)
+sc.obj.full <- evaluate.predictions(sc.obj.full)
+```
+
+When we compare the performance of the two different models, the model with the
+Danish and Spanish samples included seems to perform better (higher AUROC
+value). However, the previous analysis suggests that this performance estimate
+is biased and exaggerated because differences between Spanish and Danish
+samples can be very large.
+
+```{r eval_plot_comp}
+model.evaluation.plot("Spanish samples only"=sc.obj,
+                      "Danish and Spanish samples"=sc.obj.full,
+                      fn.plot = './eval_plot_dnk.pdf')
+```
+
+![](./eval_plot_dnk.png)
+
+
+To demonstrate how machine learning models can exploit this confounding factor,
+we can train a model to distinguish between Spanish and Danish control samples.
+As you can see, the model can distinguish between the two countries with
+almost perfect accuracy.
+
+```{r ml_workflow_country, eval=FALSE}
+meta.nielsen.country <- meta.nielsen[meta.nielsen$Group=='CTR',]
+
+sc.obj.country <- siamcat(feat=feat, meta=meta.nielsen.country,
+                          label='Country', case='ESP')
+sc.obj.country <- filter.features(sc.obj.country, cutoff=1e-04,
+                              filter.method = 'abundance')
+sc.obj.country <- filter.features(sc.obj.country, cutoff=0.05,
+                              filter.method='prevalence',
+                              feature.type = 'filtered')
+sc.obj.country <- normalize.features(sc.obj.country, norm.method = 'log.std',
+                                     norm.param = list(log.n0=1e-06,
+                                                       sd.min.q=0))
+sc.obj.country <- create.data.split(sc.obj.country,
+                                    num.folds = 5, num.resample = 5)
+sc.obj.country <- train.model(sc.obj.country, method='lasso')
+sc.obj.country <- make.predictions(sc.obj.country)
+sc.obj.country <- evaluate.predictions(sc.obj.country)
+
+print(eval_data(sc.obj.country)$auroc)
+## Area under the curve: 0.9701
+```
+
+# Session Info
+
+```{r session_info}
+sessionInfo()
+```
