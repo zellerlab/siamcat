@@ -72,6 +72,11 @@ Please consider giving us
 (This feedback is useful for us to justify the funding we get for developing
 and maintaining this package.)
 
+## License
+
+SIAMCAT is distributed under the
+[GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
+
 ## Citation
 
 If you use `SIAMCAT`, please cite us by using
