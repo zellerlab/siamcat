@@ -10,7 +10,4 @@ SIAMCAT.RProj
 *.DS_Store*
 inst/doc
 *.pdf
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/master
+pkgdown
