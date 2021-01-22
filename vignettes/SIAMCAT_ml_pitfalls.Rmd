@@ -240,7 +240,7 @@ for (x in fs.cutoff){
   sc.obj.z <- make.predictions(sc.obj.t.fs, sc.obj.z)
   sc.obj.z <- evaluate.predictions(sc.obj.z)
   auroc.all <- auroc.all %>% 
-    add_row(cutoff=as.character(0), type='incorrect', 
+    add_row(cutoff=as.character(x), type='incorrect', 
             study.test='Zeller_2014', 
             AUC=as.numeric(sc.obj.z@eval_data$auroc))
 }
@@ -275,7 +275,7 @@ for (x in fs.cutoff){
   sc.obj.z <- make.predictions(sc.obj.t.fs, sc.obj.z)
   sc.obj.z <- evaluate.predictions(sc.obj.z)
   auroc.all <- auroc.all %>% 
-    add_row(as.character(x), type='correct', 
+    add_row(cutoff=as.character(x), type='correct', 
             study.test='Zeller_2014', 
             AUC=as.numeric(sc.obj.z@eval_data$auroc))
 }
