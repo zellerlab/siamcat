@@ -18,12 +18,20 @@ navbar:
       menu:
           - text: "Introduction to SIAMCAT"
             href: articles/SIAMCAT_vignette.html
-          - text: "SIAMCAT input formats"
-            href: articles/SIAMCAT_read-in.html
+          - text: "SIAMCAT example with confounders"
+            href: articles/SIAMCAT_confounder.html
           - text: "Holdout testing with SIAMCAT"
             href: articles/SIAMCAT_holdout.html
+          - text: "SIAMCAT machine learning meta-analysis"
+            href: articles/SIAMCAT_meta.html
+          - text: "Machine learning pitfalls"
+            href: articles/SIAMCAT_ml_pitfalls.html
+          - text: "SIAMCAT input formats"
+            href: articles/SIAMCAT_read-in.html
     - text: "Functions"
       href: reference/index.html
+    - text: "News"
+      href: news/index.html
   right:
    - icon: fa-twitter
      href: https://twitter.com/siamcat_dev
