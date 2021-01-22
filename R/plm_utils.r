@@ -55,11 +55,14 @@ train.plm <-
                     alpha = 0
                 )
         } else if (method == "enet") {
-            if (is.list(parameters)){
+            if ('alpha' %in% names(parameters)){
                 lrn <- makeLearner(cl, predict.type = 'prob',
                     nlambda=10, alpha=parameters$alpha)
                 parameters <- NULL
-                # TODO make enet with fixed alpha (if a single alpha is given)
+            } else if ('pars' %in% names(parameters)){
+                lrn <- makeLearner(cl, predict.type = "prob",
+                                   nlambda = 10, alpha=parameters$pars$alpha)
+                parameters <- NULL
             } else {
                 lrn <- makeLearner(cl, predict.type = "prob", nlambda = 10)
             }
