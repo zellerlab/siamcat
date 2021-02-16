@@ -251,13 +251,18 @@ contains the following steps:
 * Making model predictions (on left-out data)
 * Evaluating model predictions (using AUROC and AUPRC)
 
-```{r ml_workflow}
+```{r ml_workflow, eval=FALSE}
 sc.obj <- normalize.features(sc.obj, norm.method = 'log.std',
                              norm.param = list(log.n0=1e-06, sd.min.q=0))
+## Features normalized successfully.
 sc.obj <- create.data.split(sc.obj, num.folds = 5, num.resample = 5)
+## Features splitted for cross-validation successfully.
 sc.obj <- train.model(sc.obj, method='lasso')
+## Trained lasso models successfully.
 sc.obj <- make.predictions(sc.obj)
+## Made predictions successfully.
 sc.obj <- evaluate.predictions(sc.obj)
+## Evaluated predictions successfully.
 ```
 
 ### Model Evaluation Plot
@@ -265,8 +270,9 @@ sc.obj <- evaluate.predictions(sc.obj)
 The model evaluation plot will produce one plot with the ROC curve and another
 one with the precision-recall curve (not shown here).
 
-```{r model_eval_plot}
+```{r model_eval_plot, eval=FALSE}
 model.evaluation.plot(sc.obj, fn.plot = './eval_plot_nielsen.pdf')
+## Plotted evaluation of predictions successfully to: ./eval_plot_nielsen.pdf
 ```
 ![](./eval_plot_nielsen.png)
 
@@ -284,9 +290,10 @@ cross-validation this feature has been selected into the model),
 * a boxplot showing the proportion of the model weight that is explained by  
 the selected features.
 
-```{r model_interpretation_plot}
+```{r model_interpretation_plot, eval=FALSE}
 model.interpretation.plot(sc.obj, consens.thres = 0.8,
                           fn.plot = './interpretation_nielsen.pdf')
+## Successfully plotted model interpretation plot to: ./interpretation_nielsen.pdf
 ```
 
 ![](./interpretation_nielsen.png)
@@ -401,13 +408,18 @@ df.plot %>%
 The results from the machine learning workflows can also be biased by the
 differences between countries, leading to exaggerated performance estimates.
 
-```{r ml_workflow_dnk}
+```{r ml_workflow_dnk, eval=FALSE}
 sc.obj.full <- normalize.features(sc.obj.full, norm.method = 'log.std',
                                   norm.param = list(log.n0=1e-06, sd.min.q=0))
+## Features normalized successfully.
 sc.obj.full <- create.data.split(sc.obj.full, num.folds = 5, num.resample = 5)
+## Features splitted for cross-validation successfully.
 sc.obj.full <- train.model(sc.obj.full, method='lasso')
+## Trained lasso models successfully.
 sc.obj.full <- make.predictions(sc.obj.full)
+## Made predictions successfully.
 sc.obj.full <- evaluate.predictions(sc.obj.full)
+## Evaluated predictions successfully.
 ```
 
 When we compare the performance of the two different models, the model with the
@@ -416,10 +428,11 @@ value). However, the previous analysis suggests that this performance estimate
 is biased and exaggerated because differences between Spanish and Danish
 samples can be very large.
 
-```{r eval_plot_comp}
+```{r eval_plot_comp, eval=FALSE}
 model.evaluation.plot("Spanish samples only"=sc.obj,
                       "Danish and Spanish samples"=sc.obj.full,
                       fn.plot = './eval_plot_dnk.pdf')
+## Plotted evaluation of predictions successfully to: ./eval_plot_dnk.pdf
 ```
 
 ![](./eval_plot_dnk.png)
