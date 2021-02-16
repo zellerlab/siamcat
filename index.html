@@ -43,6 +43,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -55,7 +57,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
       </span>
     </div>
 
@@ -101,13 +103,13 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -164,15 +166,14 @@
 <div id="feedback-and-contact" class="section level2">
 <h2 class="hasAnchor">
 <a href="#feedback-and-contact" class="anchor"></a>Feedback and Contact</h2>
-<p>If you have any question about <code>SIAMCAT</code>, if you run into any issue, or if you would like to make a feature request, please:</p>
-<ul>
-<li>create an <a href="https://github.com/zellerlab/siamcat/issues/new">issue in this repository</a> or</li>
-<li>mail <a href="mailto:zeller@embl.de">Georg Zeller</a> or</li>
-<li>ask at the <a href="https://groups.google.com/forum/#!forum/siamcat-users">SIAMCAT support group</a>
-</li>
-</ul>
+<p>If you have any question about <code>SIAMCAT</code>, if you run into any issue, or if you would like to make a feature request, please: - create an <a href="https://github.com/zellerlab/siamcat/issues/new">issue in this repository</a> or - mail <a href="mailto:zeller@embl.de">Georg Zeller</a> or - ask at the <a href="https://groups.google.com/forum/#!forum/siamcat-users">SIAMCAT support group</a></p>
 <p>If you have a more general question (that could be useful to several other users), please do not hesitate to post it on a dedicated forums such as Stackoverflow or Biostars. If you let us know about the question, we will answer it swiftly.</p>
 <p>Please consider giving us <a href="https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&amp;tool=siamcat">feedback</a>. (This feedback is useful for us to justify the funding we get for developing and maintaining this package.)</p>
+</div>
+<div id="license" class="section level2">
+<h2 class="hasAnchor">
+<a href="#license" class="anchor"></a>License</h2>
+<p>SIAMCAT is distributed under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-3</a> license.</p>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
@@ -182,7 +183,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
 <p>or by</p>
 <blockquote>
-<p>Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P, Sunagawa S, Zeller G (2020) <em>SIAMCAT: user-friendly and versatile machine learning workflows for statistically rigorous microbiome analyses</em> bioRxiv 2020.02.06.931808; doi: <a href="https://doi.org/10.1101/2020.02.06.931808" class="uri">https://doi.org/10.1101/2020.02.06.931808</a></p>
+<p>Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P, Sunagawa S, Zeller G (2020) <em>SIAMCAT: user-friendly and versatile machine learning workflows for statistically rigorous microbiome analyses</em> bioRxiv 2020.02.06.931808; doi: https://doi.org/10.1101/2020.02.06.931808</p>
 </blockquote>
 </div>
 <div id="examples-of-primary-package-output" class="section level2">
@@ -193,28 +194,18 @@
 <div id="association-testing" class="section level3">
 <h3 class="hasAnchor">
 <a href="#association-testing" class="anchor"></a>Association testing</h3>
-<p>The result of the <code>check.associations</code> function is an association plot. For significantly associated microbial features, the plot shows:</p>
-<ul>
-<li>the abundances of the features across the two different classes (CRC vs. controls)</li>
-<li>the significance of the enrichment calculated by a Wilcoxon test (after multiple hypothesis testing correction)</li>
-<li>the generalized fold change of each feature</li>
-<li>the prevalence shift between the two classes, and</li>
-<li>the Area Under the Receiver Operating Characteristics Curve (AU-ROC) as non-parametric effect size measure.</li>
-</ul>
-<p><img src="reference/figures/associations_plot.png" alt="Association testing"></p>
+<p>The result of the <code>check.associations</code> function is an association plot. For significantly associated microbial features, the plot shows: - the abundances of the features across the two different classes (CRC vs. controls) - the significance of the enrichment calculated by a Wilcoxon test (after multiple hypothesis testing correction) - the generalized fold change of each feature - the prevalence shift between the two classes, and - the Area Under the Receiver Operating Characteristics Curve (AU-ROC) as non-parametric effect size measure.</p>
+<div class="figure">
+<img src="reference/figures/associations_plot.png" alt=""><p class="caption">Association testing</p>
+</div>
 </div>
 <div id="model-interpretation-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#model-interpretation-plot" class="anchor"></a>Model interpretation plot</h3>
-<p>After statistical models have been trained to distinguish cancer cases from controls, the models can be investigated by the function <code>model.interpretation.plot</code>. The plots shows:</p>
-<ul>
-<li>the median relative feature weight for selected features (barplot on the left)</li>
-<li>the robustness of features (i.e. in how many of the models the specific feature has been selected)</li>
-<li>the distribution of selected features across samples (central heatmap)</li>
-<li>which proportion of the weight of all different models are shown in the plot (boxplot on the right), and</li>
-<li>distribution of metadata across samples (heatmap below).</li>
-</ul>
-<p><img src="reference/figures/interpretation_plot.png" alt="Model interpretation plot"></p>
+<p>After statistical models have been trained to distinguish cancer cases from controls, the models can be investigated by the function <code>model.interpretation.plot</code>. The plots shows: - the median relative feature weight for selected features (barplot on the left) - the robustness of features (i.e. in how many of the models the specific feature has been selected) - the distribution of selected features across samples (central heatmap) - which proportion of the weight of all different models are shown in the plot (boxplot on the right), and - distribution of metadata across samples (heatmap below).</p>
+<div class="figure">
+<img src="reference/figures/interpretation_plot.png" alt=""><p class="caption">Model interpretation plot</p>
+</div>
 </div>
 </div>
 <div id="where-siamcat-has-been-used-already" class="section level2">
@@ -222,34 +213,17 @@
 <a href="#where-siamcat-has-been-used-already" class="anchor"></a>Where SIAMCAT has been used already</h2>
 <p>Several publications already used <code>SIAMCAT</code> (or previous versions thereof).</p>
 <ul>
-<li>
-<p><strong><a href="http://europepmc.org/abstract/MED/25432777">Potential of fecal microbiota for early-stage detection of colorectal cancer</a></strong><br><em>Zeller G, Tap J, Voigt AY, Sunagawa S, Kultima JR, Costea PI, Amiot A, Böhm J, Brunetti F, Habermann N, Hercog R, Koch M, Luciani A, Mende DR, Schneider MA, Schrotz-King P, Tournigand C, Tran Van Nhieu J, Yamada T, Zimmermann J, Benes V, Kloor M, Ulrich CM, von Knebel Doeberitz M, Sobhani I, Bork P</em><br>
-Molecular Systems Biology, (<strong>2014</strong>) 10, 766</p>
-<blockquote>
-<p>Original Publication that inspired <code>SIAMCAT</code></p>
-</blockquote>
-</li>
-<li>
-<p><strong><a href="https://doi.org/10.1016/j.ebiom.2016.01.032">Gut Microbiota Linked to Sexual Preference and HIV Infection</a></strong><br><em>Noguera-Julian M, Rocafort M, Guillén Y, Rivera J, Casadellà M, Nowak P, Hildebrand F, Zeller G, Parera M, Bellido R, Rodríguez C,Carrillo J, Mothe B, Coll J, Bravo I, Estany C, Herrero C, Saz J, Sirera G, Torrela A, Navarro J, Crespo M, Brander C, Negredo E, Blanco J, Guarner F, Calle ML, Bork P, Sönnerborgd A, Clotet B, Paredes R</em><br>
-EBioMedicine 5 (<strong>2016</strong>) 135-146</p>
-<blockquote>
-<p>See Figure 5</p>
-</blockquote>
-</li>
-<li>
-<p><strong><a href="https://elifesciences.org/articles/42693">Extensive transmission of microbes along the gastrointestinal tract</a></strong><br><em>Schmidt TSB, Hayward MR, Coelho LP, Li SS, Costea PI, Voigt AY, Wirbel J, Maistrenko OM, Alves RJC, Bergsten E, de Beaufort C, Sobhani I, Heintz-Buschart A, Sunagawa S, Zeller G, Wilmes P, Bork P</em><br>
-eLife, (<strong>2019</strong>) 8:e42693</p>
-<blockquote>
-<p>See Figure 3 - figure supplement 1</p>
-</blockquote>
-</li>
-<li>
-<p><strong><a href="https://www.nature.com/articles/s41591-019-0406-6">Meta-analysis of fecal metagenomes reveals global microbial signatures that are specific for colorectal cancer</a></strong><br><em>Wirbel J, Pyl PT, Kartal E, Zych K, Kashani A, Milanese A, Fleck JS, Voigt AY, Palleja A, Ponnudurai R, Sunagawa S, Coelho LP, Schrotz-King P, Vogtmann E, Habermann N, Niméus E, Thomas AM, Manghi P, Gandini S, Serrano D, Mizutani S, Shiroma H, Shiba S, Shibata T, Yachida S, Yamada T, Waldron L, Naccarati A, Segata N, Sinha R, Ulrich CM, Brenner H, Arumugam M, Bork P, Zeller G</em><br>
-Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]</p>
-<blockquote>
-<p>In this publication, <code>SIAMCAT</code> is used extensively for holdout testing</p>
-</blockquote>
-</li>
+<li><p><strong><a href="http://europepmc.org/abstract/MED/25432777">Potential of fecal microbiota for early-stage detection of colorectal cancer</a></strong><br><em>Zeller G, Tap J, Voigt AY, Sunagawa S, Kultima JR, Costea PI, Amiot A, Böhm J, Brunetti F, Habermann N, Hercog R, Koch M, Luciani A, Mende DR, Schneider MA, Schrotz-King P, Tournigand C, Tran Van Nhieu J, Yamada T, Zimmermann J, Benes V, Kloor M, Ulrich CM, von Knebel Doeberitz M, Sobhani I, Bork P</em><br>
+Molecular Systems Biology, (<strong>2014</strong>) 10, 766<br>
+&gt;Original Publication that inspired <code>SIAMCAT</code></p></li>
+<li><p><strong><a href="https://doi.org/10.1016/j.ebiom.2016.01.032">Gut Microbiota Linked to Sexual Preference and HIV Infection</a></strong><br><em>Noguera-Julian M, Rocafort M, Guillén Y, Rivera J, Casadellà M, Nowak P, Hildebrand F, Zeller G, Parera M, Bellido R, Rodríguez C,Carrillo J, Mothe B, Coll J, Bravo I, Estany C, Herrero C, Saz J, Sirera G, Torrela A, Navarro J, Crespo M, Brander C, Negredo E, Blanco J, Guarner F, Calle ML, Bork P, Sönnerborgd A, Clotet B, Paredes R</em><br>
+EBioMedicine 5 (<strong>2016</strong>) 135-146 &gt;See Figure 5</p></li>
+<li><p><strong><a href="https://elifesciences.org/articles/42693">Extensive transmission of microbes along the gastrointestinal tract</a></strong><br><em>Schmidt TSB, Hayward MR, Coelho LP, Li SS, Costea PI, Voigt AY, Wirbel J, Maistrenko OM, Alves RJC, Bergsten E, de Beaufort C, Sobhani I, Heintz-Buschart A, Sunagawa S, Zeller G, Wilmes P, Bork P</em><br>
+eLife, (<strong>2019</strong>) 8:e42693<br>
+&gt; See Figure 3 - figure supplement 1</p></li>
+<li><p><strong><a href="https://www.nature.com/articles/s41591-019-0406-6">Meta-analysis of fecal metagenomes reveals global microbial signatures that are specific for colorectal cancer</a></strong><br><em>Wirbel J, Pyl PT, Kartal E, Zych K, Kashani A, Milanese A, Fleck JS, Voigt AY, Palleja A, Ponnudurai R, Sunagawa S, Coelho LP, Schrotz-King P, Vogtmann E, Habermann N, Niméus E, Thomas AM, Manghi P, Gandini S, Serrano D, Mizutani S, Shiroma H, Shiba S, Shibata T, Yachida S, Yamada T, Waldron L, Naccarati A, Segata N, Sinha R, Ulrich CM, Brenner H, Arumugam M, Bork P, Zeller G</em><br>
+Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]<br>
+&gt; In this publication, <code>SIAMCAT</code> is used extensively for holdout testing</p></li>
 </ul>
 <p>If you used <code>SIAMCAT</code> in your publication, <a href="mailto:zeller@embl.de">let us know</a>!</p>
 </div>
@@ -260,43 +234,46 @@ Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]</p>
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Download from BIOC at <br><a href="https://www.bioconductor.org/packages/SIAMCAT">https://​www.bioconductor.org/​packages/​SIAMCAT</a>
+<li>The source code is available on Github: <a href="https://github.com/zellerlab/siamcat">https://github.com/zellerlab/siamcat</a>
 </li>
-<li>Check out the the source code at <br><a href="https://github.com/zellerlab/siamcat">https://​github.com/​zellerlab/​siamcat</a>
+<li>SIAMCAT is part of the EMBL microbiome tools. Find out more here: <a href="https://microbiome-tools.embl.de">https://microbiome-tools.embl.de</a>
 </li>
-<li>SIAMCAT is part of the EMBL microbiome tools. Find out more at <br><a href="https://microbiome-tools.embl.de">https://​microbiome-tools.embl.de</a>
-</li>
+<li><a href="https://microbiome-tools.embl.de"> <img src="reference/figures/embl_microbiome_tools_logo.png" width="50%" height="auto/"></a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.com/zellerlab/siamcat"><img src="https://travis-ci.com/zellerlab/siamcat.svg?branch=master" alt="Build Status"></a></li>
+</ul>
+</div>
+
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
 </ul>
 </div>
+
 <div class="citation">
 <h2>Citation</h2>
 <ul class="list-unstyled">
 <li><a href="authors.html">Citing SIAMCAT</a></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+<div class="funding">
+<h2>Funding</h2>
 <ul class="list-unstyled">
-<li>Konrad Zych <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-7426-0516" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Jakob Wirbel <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4073-3562" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Georg Zeller <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-1429-7485" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li>We are grateful for funding from the German ministry for education and research (BMBF):</li>
+<li><a href="https://www.bmbf.de"> <img src="reference/figures/BMBF.png" width="50%" height="auto/"></a></li>
+<li>SIAMCAT is also part of the de.NBI infrastructure:</li>
+<li><a href="https://www.denbi.de"> <img src="reference/figures/denbi.png" width="50%" height="auto/"></a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://travis-ci.com/zellerlab/siamcat"><img src="https://travis-ci.com/zellerlab/siamcat.svg?branch=master" alt="Build Status"></a></li>
-</ul>
-</div>
-</div>
+  </div>
 </div>
 
 
@@ -316,6 +293,8 @@ Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]</p>
 
   
 
+
+  
 
   </body>
 </html>

@@ -30,6 +30,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -42,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
       </span>
     </div>
 
@@ -88,13 +90,13 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fa fa-twitter"></span>
+    <span class="fas fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -108,17 +110,16 @@
 
       
 
-      </header><script src="SIAMCAT_holdout_files/header-attrs-2.5/header-attrs.js"></script><script src="SIAMCAT_holdout_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="SIAMCAT_holdout_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="SIAMCAT_holdout_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="SIAMCAT_holdout_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Holdout Testing with SIAMCAT</h1>
-                        <h4 class="author">Jakob Wirbel, Konrad Zych, and Georg Zeller</h4>
+                        <h4 data-toc-skip class="author">Jakob Wirbel, Konrad Zych, and Georg Zeller</h4>
             <address class="author_afil">
       EMBL Heidelberg<br><a class="author_email" href="mailto:#"></a><a href="mailto:georg.zeller@embl.de" class="email">georg.zeller@embl.de</a>
       </address>
                   
-            <h4 class="date">Date last modified: 2018-09-24</h4>
+            <h4 data-toc-skip class="date">Date last modified: 2018-09-24</h4>
       
       
       <div class="hidden name"><code>SIAMCAT_holdout.Rmd</code></div>
@@ -172,13 +173,13 @@
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.019 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.021 s</code></pre>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.307 s</code></pre>
+<pre><code>## + finished validate.data in 0.03 s</code></pre>
 <p>We can load the data from the Chinese study in a similar way and also create a <code>SIAMCAT</code> object for the holdout dataset.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># features</span>
@@ -198,13 +199,13 @@
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.002 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
 <pre><code>## + starting validate.data</code></pre>
 <pre><code>## +++ checking overlap between labels and features</code></pre>
 <pre><code>## + Keeping labels of 128 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.285 s</code></pre>
+<pre><code>## + finished validate.data in 0.026 s</code></pre>
 </div>
 <div id="model-building-on-the-french-dataset" class="section level1">
 <h1 class="hasAnchor">
@@ -343,43 +344,44 @@
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_1.11.0    phyloseq_1.32.0   mlr_2.18.0        ParamHelpers_1.14
+## [1] SIAMCAT_1.11.1    phyloseq_1.32.0   mlr_2.18.0        ParamHelpers_1.14
 ## [5] BiocStyle_2.16.1 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-150        matrixStats_0.57.0  fs_1.5.0           
-##  [4] RColorBrewer_1.1-2  progress_1.2.2      PRROC_1.3.1        
-##  [7] rprojroot_1.3-2     tools_4.0.2         backports_1.2.0    
-## [10] R6_2.5.0            vegan_2.5-6         BiocGenerics_0.34.0
-## [13] mgcv_1.8-33         colorspace_2.0-0    permute_0.9-5      
-## [16] ade4_1.7-16         tidyselect_1.1.0    gridExtra_2.3      
-## [19] prettyunits_1.1.1   compiler_4.0.2      parallelMap_1.5.0  
-## [22] glmnet_4.0-2        textshaping_0.1.2   Biobase_2.48.0     
-## [25] desc_1.2.0          bookdown_0.21       scales_1.1.1       
-## [28] checkmate_2.0.0     pkgdown_1.6.1       systemfonts_0.3.2  
-## [31] stringr_1.4.0       digest_0.6.27       rmarkdown_2.5      
-## [34] XVector_0.28.0      pkgconfig_2.0.3     htmltools_0.5.0    
-## [37] rlang_0.4.8         rstudioapi_0.12     BBmisc_1.11        
-## [40] shape_1.4.5         generics_0.1.0      jsonlite_1.7.1     
-## [43] dplyr_1.0.2         magrittr_1.5        biomformat_1.16.0  
-## [46] Matrix_1.2-18       Rcpp_1.0.5          munsell_0.5.0      
-## [49] S4Vectors_0.26.1    Rhdf5lib_1.10.1     ape_5.4-1          
-## [52] lifecycle_0.2.0     infotheo_1.2.0      pROC_1.16.2        
-## [55] stringi_1.5.3       yaml_2.2.1          MASS_7.3-53        
-## [58] zlibbioc_1.34.0     rhdf5_2.32.4        plyr_1.8.6         
-## [61] grid_4.0.2          LiblineaR_2.10-8    parallel_4.0.2     
-## [64] crayon_1.3.4        lattice_0.20-41     Biostrings_2.56.0  
-## [67] splines_4.0.2       multtest_2.44.0     hms_0.5.3          
-## [70] knitr_1.30          beanplot_1.2        pillar_1.4.6       
-## [73] igraph_1.2.6        reshape2_1.4.4      codetools_0.2-18   
-## [76] stats4_4.0.2        fastmatch_1.1-0     XML_3.99-0.5       
-## [79] glue_1.4.2          evaluate_0.14       data.table_1.13.2  
-## [82] BiocManager_1.30.10 vctrs_0.3.4         foreach_1.5.1      
-## [85] gtable_0.3.0        purrr_0.3.4         assertthat_0.2.1   
-## [88] ggplot2_3.3.2       xfun_0.19           gridBase_0.4-7     
-## [91] ragg_0.4.0          survival_3.2-7      tibble_3.0.4       
-## [94] iterators_1.0.13    memoise_1.1.0       IRanges_2.22.2     
-## [97] cluster_2.1.0       corrplot_0.84       ellipsis_0.3.1</code></pre>
+##   [1] nlme_3.1-152        matrixStats_0.58.0  fs_1.5.0           
+##   [4] RColorBrewer_1.1-2  progress_1.2.2      PRROC_1.3.1        
+##   [7] rprojroot_2.0.2     tools_4.0.2         backports_1.2.1    
+##  [10] R6_2.5.0            vegan_2.5-7         DBI_1.1.1          
+##  [13] BiocGenerics_0.34.0 mgcv_1.8-33         colorspace_2.0-0   
+##  [16] permute_0.9-5       ade4_1.7-16         gridExtra_2.3      
+##  [19] tidyselect_1.1.0    prettyunits_1.1.1   compiler_4.0.2     
+##  [22] parallelMap_1.5.0   glmnet_4.1          textshaping_0.3.0  
+##  [25] Biobase_2.48.0      desc_1.2.0          bookdown_0.21      
+##  [28] scales_1.1.1        checkmate_2.0.0     pkgdown_1.6.1.9000 
+##  [31] systemfonts_1.0.1   stringr_1.4.0       digest_0.6.27      
+##  [34] rmarkdown_2.6       XVector_0.28.0      pkgconfig_2.0.3    
+##  [37] htmltools_0.5.1.1   fastmap_1.1.0       rlang_0.4.10       
+##  [40] BBmisc_1.11         shape_1.4.5         generics_0.1.0     
+##  [43] jsonlite_1.7.2      dplyr_1.0.4         magrittr_2.0.1     
+##  [46] biomformat_1.16.0   Matrix_1.3-2        Rcpp_1.0.6         
+##  [49] munsell_0.5.0       S4Vectors_0.26.1    Rhdf5lib_1.10.1    
+##  [52] ape_5.4-1           infotheo_1.2.0      lifecycle_0.2.0    
+##  [55] pROC_1.17.0.1       stringi_1.5.3       yaml_2.2.1         
+##  [58] MASS_7.3-53.1       zlibbioc_1.34.0     rhdf5_2.32.4       
+##  [61] plyr_1.8.6          grid_4.0.2          LiblineaR_2.10-8   
+##  [64] parallel_4.0.2      crayon_1.4.1        lattice_0.20-41    
+##  [67] Biostrings_2.56.0   splines_4.0.2       multtest_2.44.0    
+##  [70] hms_1.0.0           beanplot_1.2        knitr_1.31         
+##  [73] pillar_1.4.7        igraph_1.2.6        reshape2_1.4.4     
+##  [76] codetools_0.2-18    stats4_4.0.2        fastmatch_1.1-0    
+##  [79] XML_3.99-0.5        glue_1.4.2          evaluate_0.14      
+##  [82] data.table_1.13.6   BiocManager_1.30.10 vctrs_0.3.6        
+##  [85] foreach_1.5.1       gtable_0.3.0        purrr_0.3.4        
+##  [88] assertthat_0.2.1    cachem_1.0.4        ggplot2_3.3.3      
+##  [91] gridBase_0.4-7      xfun_0.21           ragg_0.4.1         
+##  [94] survival_3.2-7      tibble_3.0.6        iterators_1.0.13   
+##  [97] memoise_2.0.0       IRanges_2.22.2      corrplot_0.84      
+## [100] cluster_2.1.1       ellipsis_0.3.1</code></pre>
 </div>
   </div>
 
@@ -409,6 +411,8 @@
 
   
 
+
+  
 
   </body>
 </html>
