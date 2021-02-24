@@ -64,10 +64,10 @@ footer:
     structure: [privacy]
     components:
       privacy: |
-        '<p><strong>Privacy:</strong> Usage of this site follows
+        '<strong>Privacy:</strong> Usage of this site follows
         <a href="https://www.embl.de/aboutus/privacy_policy/index.html">EMBL’s Privacy Policy</a><br/>
         In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
-        Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>'
+        Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.'
 
 reference:
     - title: Main Functions
