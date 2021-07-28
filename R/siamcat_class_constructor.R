@@ -274,6 +274,10 @@ validate.features <- function(feat){
         feat <- otu_table(feat, taxa_are_rows=TRUE)
         return(feat)
     } else if (is.data.frame(feat)){
+        if (is(feat, 'tbl')){
+            stop(paste0("Tibbles are not supported. Features need to be a",
+                        " numeric matrix or data.frame with rownames!"))
+        }
         # or a dataframe (then do the same as above)
         if (any(!is.numeric(unlist(feat)))){
             stop(paste0('SIAMCAT expects numerical features!.\n',
@@ -325,6 +329,10 @@ validate.metadata <- function(meta){
         return(meta)
     }
     if (is.data.frame(meta)){
+        if (is(meta, 'tbl')){
+            stop(paste0("Tibbles are not supported. Metadata needs to be",
+                        " a dataframe with rownames!"))
+        }
         meta <- sample_data(meta)
         return(meta)
     }
