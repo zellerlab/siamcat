@@ -1,15 +1,15 @@
 citHeader("To cite SIAMCAT in publications, please use:")
 
 citEntry(entry = "article",
-  author = "Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P,
-  Sunagawa S, Zeller G",
-  title = "SIAMCAT: user-friendly and versatile machine learning workflows for
-  statistically rigorous microbiome analyses",
-  year = "2020",
-  url = "https://doi.org/10.1101/2020.02.06.931808",
-  journal = 'bioRxiv',
-  textVersion = "Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G,
-  Bork P, Sunagawa S, Zeller G (2020) SIAMCAT: user-friendly and versatile
-  machine learning workflows for statistically rigorous microbiome analyses
-  bioRxiv 2020.02.06.931808; doi: https://doi.org/10.1101/2020.02.06.931808"
+  author = "Jakob Wirbel, Konrad Zych, Morgan Essex, Nicolai Karcher,
+  Ece Kartal, Guillem Salazar, Peer Bork, Shinichi Sunagawa, Georg Zeller",
+  title = "SMicrobiome meta-analysis and cross-disease comparison enabled by
+  the SIAMCAT machine learning toolbox",
+  year = "2021",
+  url = "https://doi.org/10.1186/s13059-021-02306-1",
+  journal = 'Genome Biology',
+  textVersion = "Wirbel, J., Zych, K., Essex, M. et al. Microbiome
+  meta-analysis and cross-disease comparison enabled by the SIAMCAT machine
+  learning toolbox. Genome Biol 22, 93 (2021).
+  https://doi.org/10.1186/s13059-021-02306-1"
 )
