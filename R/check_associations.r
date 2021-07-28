@@ -13,7 +13,7 @@
 #'     detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
 #'     plot.type = "quantile.box",
 #'     panels = c("fc","auroc"), prompt = TRUE,
-#'     feature.type = 'filtered', verbose = 1)
+#'     feature.type = 'filtered', paired=NULL, verbose = 1)
 #'
 #'@param siamcat object of class \link{siamcat-class}
 #'
@@ -59,7 +59,10 @@
 #'
 #' If \code{feature.type} is \code{"normalized"}, the normalized abundances
 #' will not be log10-transformed.
-#'
+#' 
+#'@param paired character, column name of the meta-variable containing 
+#' information for a paired test
+#'      
 #' @param verbose integer, control output: \code{0} for no output at all,
 #'     \code{1} for only information about progress and success, \code{2} for
 #'     normal level of information and \code{3} for full debug information,
@@ -117,7 +120,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
     alpha = 0.05, mult.corr = "fdr", sort.by = "fc", detect.lim = 1e-06,
     pr.cutoff = 1e-6, max.show = 50, plot.type = "quantile.box",
     panels = c("fc", "auroc"), prompt=TRUE, feature.type='filtered',
-    verbose = 1) {
+    paired=NULL, verbose = 1) {
 
         if (verbose > 1)
             message("+ starting check.associations")
@@ -169,10 +172,50 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         }
         # check label
         label <- label(siamcat)
+        meta <- meta(siamcat)
         if (label$type == 'TEST'){
             stop('Can not check assocations for a',
             ' SIAMCAT object with TEST label! Exiting...')
         }
+        # check paired information 
+        if (!is.null(paired)){
+            if (!paired %in% colnames(meta)){
+                stop(paste0("Column with pairing information not present in",
+                            " the metadata. Exiting..."))
+            }
+            # check that each entry in "paired" has two samples associated with 
+            # a different label, filter out the rest
+            groups <- unique(meta[[paired]])
+            if (verbose > 2) message("+++ Starting with ", length(groups), 
+                                     " pairings")
+            groups.red <- groups[vapply(groups, FUN = function(x){
+                temp <- label$label[rownames(meta[meta[[paired]]==x,])]
+                if (length(unique(temp))!=2){
+                    return(FALSE)
+                } else if (length(temp)!=2){
+                    return(FALSE)
+                }
+                return(TRUE)
+            }, FUN.VALUE = logical(1))]
+            if (length(groups.red) > 5){
+                if (verbose > 2) {
+                    message("+++ Keeping ", length(groups.red),
+                            " pairings with exactly two samples!")
+                }
+            } else {
+                stop(paste0("Per pairing, exactly 2 samples with different",
+                            " label are needed! Only ", length(groups.red), 
+                            " pairing fulfill this requirement."))
+            }
+            meta.red <- meta[meta[[paired]] %in% groups.red,]
+            pairing.info <- meta.red[[paired]]
+            names(pairing.info) <- rownames(meta.red)
+            feat <- feat[,names(pairing.info)]
+            label$label <- label$label[names(pairing.info)]
+        } else {
+            pairing.info <- NULL
+        }
+        
         # check fn.plot
         if (is.null(fn.plot)) {
             message(paste0('### WARNING: Not plotting to a pdf-file.\n',
@@ -213,6 +256,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 alpha = alpha,
                 probs.fc = probs.fc,
                 take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
+                pairing.info = pairing.info,
                 verbose = verbose
             )
             # update siamcat
@@ -221,14 +265,14 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                 assoc.param=list(detect.lim=result.list$detect.lim,
                     pr.cutoff=pr.cutoff, probs.fc=probs.fc,
                     mult.corr=mult.corr, alpha=alpha,
-                    feature.type=feature.type))
+                    feature.type=feature.type, paired=!is.null(paired)))
         } else {
             # if already existing, check parameters
             old.params <- assoc_param(siamcat)
             new.params <- list(detect.lim=detect.lim,
                 pr.cutoff=pr.cutoff, probs.fc=probs.fc,
                 mult.corr=mult.corr, alpha=alpha,
-                feature.type=feature.type)
+                feature.type=feature.type, paired=!is.null(paired))
             check <- any(all.equal(new.params, old.params) == TRUE)
             check <- all(check, nrow(associations(siamcat)) == nrow(feat))
             check <- all(check,
@@ -249,6 +293,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                     alpha = alpha,
                     probs.fc = probs.fc,
                     take.log=ifelse(feature.type == 'normalized', FALSE, TRUE),
+                    pairing.info = pairing.info,
                     verbose = verbose
                 )
                 # update siamcat
@@ -257,7 +302,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
                     assoc.param=list(detect.lim=result.list$detect.lim,
                         pr.cutoff=pr.cutoff, probs.fc=probs.fc,
                         mult.corr=mult.corr, alpha=alpha,
-                        feature.type=feature.type))
+                        feature.type=feature.type, paired=!is.null(paired)))
             }
         }
 
@@ -268,6 +313,7 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
         if (is.null(temp)){
             return(siamcat)
         }
+        
         effect.size <- result.list$effect.size[temp$idx, , drop=FALSE]
         truncated <- temp$truncated
         detect.lim <- result.list$detect.lim
@@ -1034,7 +1080,6 @@ associations.quantile.box.plot <- function(data.mat, label, take.log=TRUE, col,
         message("+ starting associations.quantile.box.plot")
     pos.col <- col[2]
     neg.col <- col[1]
-
     p.label <- max(label$info)
     n.label <- min(label$info)
     p.idx <- which(label$label == p.label)
@@ -1259,7 +1304,7 @@ associations.quantile.rect.sub.plot <-
 #' @keywords internal
 analyse.binary.marker <- function(feat, label, detect.lim, colors,
     pr.cutoff, mult.corr, alpha, max.show, sort.by, probs.fc = seq(.1, .9, .05),
-    take.log=TRUE, verbose = 1) {
+    take.log=TRUE, pairing.info=NULL, verbose = 1) {
     if (verbose > 1)
         message("+ starting analyse.binary.marker")
     s.time <- proc.time()[3]
@@ -1289,39 +1334,70 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
     positive.label <- max(label$info)
     negative.label <- min(label$info)
 
+    if (is.null(pairing.info)){
+        feat <- feat[,names(label$label)]
+    } else {
+        feat <- feat[,names(pairing.info)]
+    }
+    
     if (verbose)
         pb <- progress_bar$new(total = nrow(feat))
-
+    
     effect.size <- data.frame(t(apply(feat, 1, FUN = function(x) {
         # pseudo-fold change as differential quantile area
-        if (take.log == TRUE){
-            q.p <- quantile(log10(x[which(label$label == positive.label)] +
-                detect.lim), probs = probs.fc)
-            q.n <- quantile(log10(x[which(label$label == negative.label)] +
-                detect.lim), probs = probs.fc)
+        if (is.null(pairing.info)){
+            x.pos <- x[which(label$label==positive.label)]
+            x.neg <- x[which(label$label==negative.label)]
+            if (take.log == TRUE){
+                q.p <- quantile(log10(x.pos + detect.lim), probs = probs.fc)
+                q.n <- quantile(log10(x.neg + detect.lim), probs = probs.fc)
+            } else {
+                q.p <- quantile(x.pos, probs = probs.fc)
+                q.n <- quantile(x.neg, probs = probs.fc)
+            }
+            fc <- sum(q.p - q.n) / length(q.p)
+
+            # wilcoxon
+            p.val <- wilcox.test(x.pos, x.neg, exact = FALSE)$p.value
+            
+            # AU-ROC
+            temp <- roc(cases = x.pos, controls=x.neg, ci = TRUE,
+                        direction = '<')
+            aucs <- c(temp$ci)
+            
+            # prevalence shift
+            temp.n <- mean(x.neg >= pr.cutoff)
+            temp.p <- mean(x.pos >= pr.cutoff)
+            pr.shift <- c(temp.p - temp.n, temp.n, temp.p)
         } else {
-            q.p <- quantile(x[which(label$label == positive.label)],
-                probs = probs.fc)
-            q.n <- quantile(x[which(label$label == negative.label)],
-                probs = probs.fc)
+            pairing.info <- sort(pairing.info)
+            x.pos <- x[names(which(label$label[names(pairing.info)] == 
+                                       positive.label))]
+            x.neg <- x[names(which(label$label[names(pairing.info)] == 
+                                       negative.label))]
+            if (take.log == TRUE){
+                fc <- mean(log10(x.pos + detect.lim) - 
+                               log10(x.neg + detect.lim))
+            } else {
+                fc <- mean(x.pos-x.neg)
+            }
+            p.val <- wilcox.test(x.pos, x.neg, exact=FALSE, 
+                                 paired=TRUE)$p.value
+            # AU-ROC
+            temp <- roc(cases = x.pos, 
+                        controls = x.neg,
+                        ci = TRUE,
+                        direction = '<')
+            aucs <- c(temp$ci)
+            
+            # prevalence shift
+            temp.n <- mean(x.neg >= pr.cutoff)
+            temp.p <- mean(x.pos >= pr.cutoff)
+            pr.shift <- c(temp.p - temp.n, temp.n, temp.p)
+            
         }
-        fc <- sum(q.p - q.n) / length(q.p)
 
-        # wilcoxon
-        p.val <- wilcox.test(x[which(label$label == negative.label)],
-            x[which(label$label == positive.label)], exact = FALSE)$p.value
-
-        # AU-ROC
-        temp <- roc(predictor = x, response = label$label, ci = TRUE,
-                    direction = '<', levels = label$info)
-        aucs <- c(temp$ci)
-
-        # prevalence shift
-        temp.n <- sum(x[which(label$label == negative.label)] >= pr.cutoff) /
-            length(which(label$label == negative.label))
-        temp.p <- sum(x[which(label$label == positive.label)] >= pr.cutoff) /
-            length(which(label$label == positive.label))
-        pr.shift <- c(temp.p - temp.n, temp.n, temp.p)
+       
         if (verbose)
             pb$tick()
         return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2],
@@ -1335,20 +1411,18 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
         ifelse(effect.size[, 'auc'] >= 0.5, colors[2], colors[1])
 
     ### Apply multi-hypothesis testing correction
-    if (!tolower(mult.corr) %in% c("holm", "hochberg", "hommel", "bonferroni",
+    if (!mult.corr %in% c("holm", "hochberg", "hommel", "bonferroni",
         "BH", "BY", "fdr", "none")) {
-        stop(
-            "! Unknown multiple testing correction method:', mult.corr,'
-            Stopping!\n Must of one of c('none','bonferroni', 'holm','fdr',
-            'bhy')"
-        )
+        stop("Unknown multiple testing correction method: '", mult.corr, 
+            "'. Exiting!\n  Must of one of c('holm', 'hochberg', 'hommel', ", 
+            "'bonferroni', 'BH', 'BY', 'fdr', none')")
     }
     if (mult.corr == 'none') {
         warning('WARNING: No multiple hypothesis testing performed.')
         effect.size$p.adj <- effect.size$p.val
     } else {
         effect.size$p.adj <-
-            p.adjust(effect.size$p.val, method = tolower(mult.corr))
+            p.adjust(effect.size$p.val, method = mult.corr)
     }
 
     if (verbose > 1)

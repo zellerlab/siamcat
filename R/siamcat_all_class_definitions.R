@@ -88,14 +88,14 @@ check.assoc <- function(object){
     }
     # check that assoc.param contains all entries
     if (!all(names(object$assoc.param) == c('detect.lim', 'pr.cutoff',
-        'probs.fc', 'mult.corr', 'alpha', 'feature.type'))){
+        'probs.fc', 'mult.corr', 'alpha', 'feature.type', 'paired'))){
             msg <- 'Association testing parameters do not contain all entries!'
             errors <- c(errors, msg)
         }
     # check that all entries are valid and in the expected ranges
     if (!all(vapply(object$assoc.param, class,
         FUN.VALUE=character(1)) == c('numeric', 'numeric', 'numeric',
-            'character', 'numeric', 'character'))){
+            'character', 'numeric', 'character', 'logical'))){
     msg<-'Association testing parameters do not contain the expected classes!'
     errors <- c(errors, msg)
     }
@@ -117,7 +117,8 @@ check.assoc <- function(object){
     }
     # mult.corr
     if (!object$assoc.param$mult.corr %in%
-        c('none', 'bonferroni', 'holm', 'fdr', 'bhy')){
+        c("holm", "hochberg", "hommel", "bonferroni",
+          "BH", "BY", "fdr", "none")){
             msg<-'Multiple testing correction method not valid!'
             errors <- c(errors, msg)
     }
