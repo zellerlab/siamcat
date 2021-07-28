@@ -9,7 +9,7 @@ check.associations(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
     detect.lim = 1e-06, pr.cutoff = 1e-6, max.show = 50,
     plot.type = "quantile.box",
     panels = c("fc","auroc"), prompt = TRUE,
-    feature.type = 'filtered', verbose = 1)
+    feature.type = 'filtered', paired=NULL, verbose = 1)
 }
 \arguments{
 \item{siamcat}{object of class \link{siamcat-class}}
@@ -56,6 +56,9 @@ Please only change this paramter if you know what you are doing!
 
 If \code{feature.type} is \code{"normalized"}, the normalized abundances
 will not be log10-transformed.}
+
+\item{paired}{character, column name of the meta-variable containing 
+information for a paired test}
 
 \item{verbose}{integer, control output: \code{0} for no output at all,
 \code{1} for only information about progress and success, \code{2} for
