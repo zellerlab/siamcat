@@ -65,8 +65,8 @@ library("curatedMetagenomciData")
 The data are part of the `combined_metadata`
 
 ```{r get_metadata, eval=FALSE}
-meta.nielsen.full <- combined_metadata %>%
-  filter(dataset_name=='NielsenHB_2014')
+meta.nielsen.full <- combined_metadata %>% 
+    filter(dataset_name=='NielsenHB_2014')
 ```
 
 One thing we have to keep in mind are repeated samples per subject (see also
@@ -87,25 +87,25 @@ first visit for each subject.
 
 ```{r clean_metadata_1, eval=FALSE}
 meta.nielsen <- meta.nielsen.full %>%
-  select(sampleID, subjectID, study_condition, disease_subtype,
-         disease, age, country, number_reads, median_read_length, BMI) %>%
-  mutate(visit=str_extract(sampleID, '_[0-9]+$')) %>%
-  mutate(visit=str_remove(visit, '_')) %>%
-  mutate(visit=as.numeric(visit)) %>%
-  mutate(visit=case_when(is.na(visit)~0, TRUE~visit)) %>%
-  group_by(subjectID) %>%
-  filter(visit==min(visit)) %>%
-  ungroup() %>%
-  mutate(Sample_ID=sampleID) %>%
-  mutate(Group=case_when(disease=='healthy'~'CTR',
-                         TRUE~disease_subtype))
+    select(sampleID, subjectID, study_condition, disease_subtype,
+        disease, age, country, number_reads, median_read_length, BMI) %>%
+    mutate(visit=str_extract(sampleID, '_[0-9]+$')) %>%
+    mutate(visit=str_remove(visit, '_')) %>%
+    mutate(visit=as.numeric(visit)) %>%
+    mutate(visit=case_when(is.na(visit)~0, TRUE~visit)) %>%
+    group_by(subjectID) %>%
+    filter(visit==min(visit)) %>%
+    ungroup() %>%
+    mutate(Sample_ID=sampleID) %>%
+    mutate(Group=case_when(disease=='healthy'~'CTR',
+                            TRUE~disease_subtype))
 ```
 
 Now, we can restrict our metadata to samples with `UC` and healthy control
 samples:
 ```{r clean_metadata_4, eval=FALSE}
 meta.nielsen <- meta.nielsen %>%
-  filter(Group %in% c('UC', 'CTR'))
+    filter(Group %in% c('UC', 'CTR'))
 ```
 
 As a last step, we can adjust the column names for the metadata so that they
@@ -115,7 +115,7 @@ and features.
 
 ```{r clean_metadata_3, eval=FALSE}
 meta.nielsen <- meta.nielsen %>%
-  mutate(Country=country)
+    mutate(Country=country)
 meta.nielsen <- as.data.frame(meta.nielsen)
 rownames(meta.nielsen) <- meta.nielsen$sampleID
 ```
@@ -163,17 +163,17 @@ data.location <- 'https://www.embl.de/download/zeller/metaHIT/'
 meta.nielsen <- read_tsv(paste0(data.location, 'meta_Nielsen.tsv'))
 # also here, we have to remove repeated samplings and CD samples
 meta.nielsen <- meta.nielsen %>%
-  filter(Group %in% c('CTR', 'UC')) %>%
-  group_by(Individual_ID) %>%
-  filter(Sampling_day==min(Sampling_day)) %>%
-  ungroup() %>%
-  as.data.frame()
+    filter(Group %in% c('CTR', 'UC')) %>%
+    group_by(Individual_ID) %>%
+    filter(Sampling_day==min(Sampling_day)) %>%
+    ungroup() %>%
+    as.data.frame()
 rownames(meta.nielsen) <- meta.nielsen$Sample_ID
 
 ## features
 feat <- read.table(paste0(data.location, 'metaHIT_motus.tsv'), 
-                   stringsAsFactors = FALSE, sep='\t',
-                   check.names = FALSE, quote = '', comment.char = '')
+                    stringsAsFactors = FALSE, sep='\t',
+                    check.names = FALSE, quote = '', comment.char = '')
 feat <- feat[,colSums(feat) > 0]
 feat <- prop.table(as.matrix(feat), 2)
 ```
@@ -202,10 +202,10 @@ Now, we can filter feature with low overall abundance and prevalence.
 
 ```{r feature_filtering}
 sc.obj <- filter.features(sc.obj, cutoff=1e-04,
-                          filter.method = 'abundance')
+                            filter.method = 'abundance')
 sc.obj <- filter.features(sc.obj, cutoff=0.05,
-                          filter.method='prevalence',
-                          feature.type = 'filtered')
+                            filter.method='prevalence',
+                            feature.type = 'filtered')
 ```
 
 ## Association Plot
@@ -215,11 +215,10 @@ metrics of association (such as generalized fold change and single-feautre
 AUROC).
 
 ```{r assoc_plot, message=FALSE, warning=FALSE}
-sc.obj <- check.associations(sc.obj, detect.lim = 1e-06,
-                             alpha=0.1, max.show = 20,
-                             plot.type = 'quantile.rect',
-                             panels = c('fc'),
-                             fn.plot = './association_plot_nielsen.pdf')
+sc.obj <- check.associations(sc.obj, detect.lim = 1e-06, alpha=0.1, 
+                            max.show = 20,plot.type = 'quantile.rect',
+                            panels = c('fc'),
+                            fn.plot = './association_plot_nielsen.pdf')
 ```
 
 ![](./association_plot_nielsen.png)
@@ -253,7 +252,7 @@ contains the following steps:
 
 ```{r ml_workflow, eval=FALSE}
 sc.obj <- normalize.features(sc.obj, norm.method = 'log.std',
-                             norm.param = list(log.n0=1e-06, sd.min.q=0))
+                            norm.param = list(log.n0=1e-06, sd.min.q=0))
 ## Features normalized successfully.
 sc.obj <- create.data.split(sc.obj, num.folds = 5, num.resample = 5)
 ## Features splitted for cross-validation successfully.
@@ -292,8 +291,8 @@ the selected features.
 
 ```{r model_interpretation_plot, eval=FALSE}
 model.interpretation.plot(sc.obj, consens.thres = 0.8,
-                          fn.plot = './interpretation_nielsen.pdf')
-## Successfully plotted model interpretation plot to: ./interpretation_nielsen.pdf
+                            fn.plot = './interpret_nielsen.pdf')
+## Successfully plotted model interpretation plot to: ./interpret_nielsen.pdf
 ```
 
 ![](./interpretation_nielsen.png)
@@ -315,12 +314,12 @@ Danish controls:
 
 ```{r conf_start}
 sc.obj.full <- siamcat(feat=feat, meta=meta.nielsen,
-                       label='Group', case='UC')
+                        label='Group', case='UC')
 sc.obj.full <- filter.features(sc.obj.full, cutoff=1e-04,
-                               filter.method = 'abundance')
+                                filter.method = 'abundance')
 sc.obj.full <- filter.features(sc.obj.full, cutoff=0.05,
-                               filter.method='prevalence',
-                               feature.type = 'filtered')
+                                filter.method='prevalence',
+                                feature.type = 'filtered')
 ```
 
 The confounder plot would show us that the meta-variable "country" might be
@@ -337,10 +336,10 @@ First, we can use `SIAMCAT` to test for associations including the Danish
 samples.
 
 ```{r assoc_plot_2, warning=FALSE, message=FALSE}
-sc.obj.full <- check.associations(sc.obj.full, detect.lim = 1e-06,
-                                  alpha=0.1, max.show = 20,
-                                  plot.type = 'quantile.rect',
-                                  fn.plot = './association_plot_dnk.pdf')
+sc.obj.full <- check.associations(sc.obj.full, detect.lim = 1e-06, alpha=0.1, 
+                                    max.show = 20,
+                                    plot.type = 'quantile.rect',
+                                    fn.plot = './association_plot_dnk.pdf')
 ```
 
 Confounders can lead to biases in association testing. After using `SIAMCAT` to
@@ -357,16 +356,16 @@ assoc.sp_dnk$species <- rownames(assoc.sp_dnk)
 
 df.plot <- full_join(assoc.sp, assoc.sp_dnk, by='species')
 df.plot %>%
-  mutate(highlight=str_detect(species, 'formicigenerans')) %>%
-  ggplot(aes(x=-log10(p.adj.x), y=-log10(p.adj.y), col=highlight)) +
+    mutate(highlight=str_detect(species, 'formicigenerans')) %>%
+    ggplot(aes(x=-log10(p.adj.x), y=-log10(p.adj.y), col=highlight)) +
     geom_point(alpha=0.3) +
-    xlab('Spanish samples only\n-log10(q)') +
-    ylab('Spanish and Danish samples only\n-log10(q)') +
-    theme_classic() +
-    theme(panel.grid.major = element_line(colour='lightgrey'),
-          aspect.ratio = 1.3) +
-    scale_colour_manual(values=c('darkgrey', '#D41645'), guide=FALSE) +
-    annotate('text', x=0.7, y=8, label='Dorea formicigenerans')
+        xlab('Spanish samples only\n-log10(q)') +
+        ylab('Spanish and Danish samples only\n-log10(q)') +
+        theme_classic() +
+        theme(panel.grid.major = element_line(colour='lightgrey'),
+            aspect.ratio = 1.3) +
+        scale_colour_manual(values=c('darkgrey', '#D41645'), guide=FALSE) +
+        annotate('text', x=0.7, y=8, label='Dorea formicigenerans')
 ```
 
 This result shows that several species are only signficant if the Danish
@@ -383,23 +382,23 @@ label.dnk <- label(sc.obj.full)$label
 country <- meta(sc.obj.full)$Country
 names(country) <- rownames(meta(sc.obj.full))
 
-df.plot <- tibble(dorea=log10(feat.dnk[str_detect(rownames(feat.dnk),
-                                                  'formicigenerans'),
-                                       names(label.dnk)] + 1e-05),
-                  label=label.dnk, country=country) %>%
-  mutate(label=case_when(label=='-1'~'CTR', TRUE~"UC")) %>%
-  mutate(x_value=paste0(country, '_', label))
+df.plot <- tibble(dorea=log10(feat.dnk[
+    str_detect(rownames(feat.dnk),'formicigenerans'),
+    names(label.dnk)] + 1e-05),
+    label=label.dnk, country=country) %>%
+    mutate(label=case_when(label=='-1'~'CTR', TRUE~"UC")) %>%
+    mutate(x_value=paste0(country, '_', label))
 
 df.plot %>%
-  ggplot(aes(x=x_value, y=dorea)) +
-    geom_boxplot(outlier.shape = NA) +
-    geom_jitter(width = 0.08, stroke=0, alpha=0.2) +
-    theme_classic() +
-    xlab('') +
-    ylab("log10(Dorea formicigenerans)") +
-    stat_compare_means(comparisons = list(c('DNK_CTR', 'ESP_CTR'),
-                                          c('DNK_CTR', 'ESP_UC'),
-                                          c('ESP_CTR', 'ESP_UC')))
+    ggplot(aes(x=x_value, y=dorea)) +
+        geom_boxplot(outlier.shape = NA) +
+        geom_jitter(width = 0.08, stroke=0, alpha=0.2) +
+        theme_classic() +
+        xlab('') +
+        ylab("log10(Dorea formicigenerans)") +
+        stat_compare_means(comparisons = list(c('DNK_CTR', 'ESP_CTR'),
+                                                c('DNK_CTR', 'ESP_UC'),
+                                                c('ESP_CTR', 'ESP_UC')))
 ```
 
 
@@ -410,7 +409,7 @@ differences between countries, leading to exaggerated performance estimates.
 
 ```{r ml_workflow_dnk, eval=FALSE}
 sc.obj.full <- normalize.features(sc.obj.full, norm.method = 'log.std',
-                                  norm.param = list(log.n0=1e-06, sd.min.q=0))
+                                norm.param = list(log.n0=1e-06, sd.min.q=0))
 ## Features normalized successfully.
 sc.obj.full <- create.data.split(sc.obj.full, num.folds = 5, num.resample = 5)
 ## Features splitted for cross-validation successfully.
@@ -430,8 +429,8 @@ samples can be very large.
 
 ```{r eval_plot_comp, eval=FALSE}
 model.evaluation.plot("Spanish samples only"=sc.obj,
-                      "Danish and Spanish samples"=sc.obj.full,
-                      fn.plot = './eval_plot_dnk.pdf')
+                    "Danish and Spanish samples"=sc.obj.full,
+                    fn.plot = './eval_plot_dnk.pdf')
 ## Plotted evaluation of predictions successfully to: ./eval_plot_dnk.pdf
 ```
 
@@ -447,16 +446,16 @@ almost perfect accuracy.
 meta.nielsen.country <- meta.nielsen[meta.nielsen$Group=='CTR',]
 
 sc.obj.country <- siamcat(feat=feat, meta=meta.nielsen.country,
-                          label='Country', case='ESP')
+                            label='Country', case='ESP')
 sc.obj.country <- filter.features(sc.obj.country, cutoff=1e-04,
-                              filter.method = 'abundance')
+                            filter.method = 'abundance')
 sc.obj.country <- filter.features(sc.obj.country, cutoff=0.05,
-                              filter.method='prevalence',
-                              feature.type = 'filtered')
+                            filter.method='prevalence',
+                            feature.type = 'filtered')
 sc.obj.country <- normalize.features(sc.obj.country, norm.method = 'log.std',
-                                     norm.param = list(log.n0=1e-06,
-                                                       sd.min.q=0))
-sc.obj.country <- create.data.split(sc.obj.country,
+                                    norm.param = list(log.n0=1e-06,
+                                        sd.min.q=0))
+sc.obj.country <- create.data.split(sc.obj.country, 
                                     num.folds = 5, num.resample = 5)
 sc.obj.country <- train.model(sc.obj.country, method='lasso')
 sc.obj.country <- make.predictions(sc.obj.country)

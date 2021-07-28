@@ -118,7 +118,7 @@ check.assoc <- function(object){
     # mult.corr
     if (!object$assoc.param$mult.corr %in%
         c("holm", "hochberg", "hommel", "bonferroni",
-          "BH", "BY", "fdr", "none")){
+            "BH", "BY", "fdr", "none")){
             msg<-'Multiple testing correction method not valid!'
             errors <- c(errors, msg)
     }
