@@ -30,7 +30,7 @@ In order to start with `SIAMCAT`, you need to install it from Bioconductor:
 ```R
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install("SIAMCAT", version = "3.8")
+BiocManager::install("SIAMCAT")
 ```
 
 Alternatively, you can install the current development version via `devtools`:
@@ -88,9 +88,15 @@ citation("SIAMCAT")
 or by
 
 > Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P,
-Sunagawa S, Zeller G (2020) _SIAMCAT: user-friendly and versatile machine
-learning workflows for statistically rigorous microbiome analyses_
-bioRxiv 2020.02.06.931808; doi: https://doi.org/10.1101/2020.02.06.931808
+Sunagawa S, Zeller G _Microbiome meta-analysis and cross-disease
+comparison enabled by the SIAMCAT machine learning toolbox_
+Genome Biol **22**, 93 (2021) https://doi.org/10.1186/s13059-021-02306-1
+
+
+In this publication, we analyzed a large set of case-control microbiome
+datasets. The metadata and taxonomic profiles of these studies are available
+through a [Zenodo repository](https://doi.org/10.5281/zenodo.4454489):
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4454489.svg)](https://doi.org/10.5281/zenodo.4454489).
 
 ## Examples of primary package output
 
