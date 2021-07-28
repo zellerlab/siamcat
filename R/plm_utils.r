@@ -61,7 +61,7 @@ train.plm <-
                 parameters <- NULL
             } else if ('pars' %in% names(parameters)){
                 lrn <- makeLearner(cl, predict.type = "prob",
-                                   nlambda = 10, alpha=parameters$pars$alpha)
+                    nlambda = 10, alpha=parameters$pars$alpha)
                 parameters <- NULL
             } else {
                 lrn <- makeLearner(cl, predict.type = "prob", nlambda = 10)
@@ -132,7 +132,7 @@ train.plm <-
             coef <- coef[-bias.idx, ]
             model$feat.weights <-
                 (-1) * as.numeric(coef)  ### check!!!
-            model$learner.model$glmnet.fit$call <- NULL
+            model$learner.model$call <- NULL
         } else if (cl == "classif.LiblineaRL1LogReg") {
             model$feat.weights <-
                 model$learner.model$W[
