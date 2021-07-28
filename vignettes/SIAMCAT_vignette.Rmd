@@ -1,8 +1,8 @@
 ---
-title: "SIAMCAT: Statistical Inference of Associations between Microbial
-Communities And host phenoTypes"
+title: "SIAMCAT: Statistical Inference of Associations between Microbial 
+    Communities And host phenoTypes"
 author:
--   name: "Konrad Zych, Jakob Wirbel, and Georg Zeller"
+    name: "Konrad Zych, Jakob Wirbel, and Georg Zeller"
     affiliation: "EMBL Heidelberg"
     email: "georg.zeller@embl.de"
 date: "Date last modified: 2020-04-04"
@@ -303,7 +303,6 @@ model.interpretation.plot(
     sc.obj,
     fn.plot = 'interpretation.pdf',
     consens.thres = 0.5,
-    norm.models = TRUE,
     limits = c(-3, 3),
     heatmap.type = 'zscore',
 )
