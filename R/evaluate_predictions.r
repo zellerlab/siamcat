@@ -118,8 +118,7 @@ evaluate.predictions <- function(siamcat, verbose = 1) {
         of = "se",
         sp = seq(0, 1, 0.05),
         direction = '<',
-        levels = label$info,
-        progress = 'none'
+        levels = label$info
     )
     auroc = roc.mean$auc
 
