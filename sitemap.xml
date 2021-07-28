@@ -1,204 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://siamcat.embl.de/index.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/SIAMCAT-package.html</loc>
+    <loc>/articles/SIAMCAT_confounder.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/accessSlot.html</loc>
+    <loc>/articles/SIAMCAT_holdout.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/add.meta.pred.html</loc>
+    <loc>/articles/SIAMCAT_meta.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-associations.html</loc>
+    <loc>/articles/SIAMCAT_ml_pitfalls.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-data_split.html</loc>
+    <loc>/articles/SIAMCAT_read-in.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-eval_data.html</loc>
+    <loc>/articles/SIAMCAT_vignette.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-filt_feat.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-label.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-meta.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-model_list.html</loc>
+    <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-norm_feat.html</loc>
+    <loc>/reference/SIAMCAT-package.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-orig_feat.html</loc>
+    <loc>/reference/accessSlot.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-physeq.html</loc>
+    <loc>/reference/add.meta.pred.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assign-pred_matrix.html</loc>
+    <loc>/reference/assign-associations.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/assoc_param-methods.html</loc>
+    <loc>/reference/assign-data_split.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/associations-methods.html</loc>
+    <loc>/reference/assign-eval_data.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/check.associations.html</loc>
+    <loc>/reference/assign-filt_feat.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/check.confounders.html</loc>
+    <loc>/reference/assign-label.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/create.data.split.html</loc>
+    <loc>/reference/assign-meta.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/create.label.html</loc>
+    <loc>/reference/assign-model_list.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/data_split-methods.html</loc>
+    <loc>/reference/assign-norm_feat.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/eval_data-methods.html</loc>
+    <loc>/reference/assign-orig_feat.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/evaluate.predictions.html</loc>
+    <loc>/reference/assign-physeq.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/feat.crc.zeller.html</loc>
+    <loc>/reference/assign-pred_matrix.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/feature_type-methods.html</loc>
+    <loc>/reference/assoc_param-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/feature_weights-methods.html</loc>
+    <loc>/reference/associations-class.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/filt_feat-methods.html</loc>
+    <loc>/reference/associations-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/filt_params-methods.html</loc>
+    <loc>/reference/check.associations.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/filter.features.html</loc>
+    <loc>/reference/check.confounders.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/filter.label.html</loc>
+    <loc>/reference/create.data.split.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/get.component.classes.html</loc>
+    <loc>/reference/create.label.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/get.filt_feat.matrix.html</loc>
+    <loc>/reference/data_split-class.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/get.norm_feat.matrix.html</loc>
+    <loc>/reference/data_split-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/get.orig_feat.matrix.html</loc>
+    <loc>/reference/eval_data-class.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/label-methods.html</loc>
+    <loc>/reference/eval_data-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/make.predictions.html</loc>
+    <loc>/reference/evaluate.predictions.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/meta-methods.html</loc>
+    <loc>/reference/feat.crc.zeller.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/meta.crc.zeller.html</loc>
+    <loc>/reference/feature_type-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/model.evaluation.plot.html</loc>
+    <loc>/reference/feature_weights-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/model.interpretation.plot.html</loc>
+    <loc>/reference/filt_feat-class.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/model_list-methods.html</loc>
+    <loc>/reference/filt_feat-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/model_type-methods.html</loc>
+    <loc>/reference/filt_params-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/models-methods.html</loc>
+    <loc>/reference/filter.features.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/norm_feat-methods.html</loc>
+    <loc>/reference/filter.label.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/norm_params-methods.html</loc>
+    <loc>/reference/get.component.classes.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/normalize.features.html</loc>
+    <loc>/reference/get.filt_feat.matrix.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/orig_feat-methods.html</loc>
+    <loc>/reference/get.norm_feat.matrix.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/parse.label.header.html</loc>
+    <loc>/reference/get.orig_feat.matrix.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/physeq-methods.html</loc>
+    <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/pred_matrix-methods.html</loc>
+    <loc>/reference/label-class.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/read.label.html</loc>
+    <loc>/reference/label-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/read.lefse.html</loc>
+    <loc>/reference/make.predictions.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/select.samples.html</loc>
+    <loc>/reference/meta-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/show-methods.html</loc>
+    <loc>/reference/meta.crc.zeller.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/siamcat-class.html</loc>
+    <loc>/reference/model.evaluation.plot.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/siamcat.html</loc>
+    <loc>/reference/model.interpretation.plot.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/siamcat.to.lefse.html</loc>
+    <loc>/reference/model_list-class.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/siamcat.to.maaslin.html</loc>
+    <loc>/reference/model_list-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/siamcat_example.html</loc>
+    <loc>/reference/model_type-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/summarize.features.html</loc>
+    <loc>/reference/models-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/train.model.html</loc>
+    <loc>/reference/norm_feat-class.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/validate.data.html</loc>
+    <loc>/reference/norm_feat-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/reference/weight_matrix-methods.html</loc>
+    <loc>/reference/norm_params-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/articles/SIAMCAT_holdout.html</loc>
+    <loc>/reference/normalize.features.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/articles/SIAMCAT_read-in.html</loc>
+    <loc>/reference/orig_feat-methods.html</loc>
   </url>
   <url>
-    <loc>http://siamcat.embl.de/articles/SIAMCAT_vignette.html</loc>
+    <loc>/reference/parse.label.header.html</loc>
+  </url>
+  <url>
+    <loc>/reference/physeq-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pred_matrix-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pred_matrix-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/read.label.html</loc>
+  </url>
+  <url>
+    <loc>/reference/read.lefse.html</loc>
+  </url>
+  <url>
+    <loc>/reference/select.samples.html</loc>
+  </url>
+  <url>
+    <loc>/reference/show-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/siamcat-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/siamcat.html</loc>
+  </url>
+  <url>
+    <loc>/reference/siamcat.to.lefse.html</loc>
+  </url>
+  <url>
+    <loc>/reference/siamcat.to.maaslin.html</loc>
+  </url>
+  <url>
+    <loc>/reference/siamcat_example.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summarize.features.html</loc>
+  </url>
+  <url>
+    <loc>/reference/train.model.html</loc>
+  </url>
+  <url>
+    <loc>/reference/validate.data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/weight_matrix-methods.html</loc>
   </url>
 </urlset>

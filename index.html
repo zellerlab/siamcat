@@ -57,7 +57,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -103,13 +103,13 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -127,73 +127,74 @@
   <div class="contents col-md-9">
 <div id="siamcat-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#siamcat-" class="anchor"></a>SIAMCAT <img src="reference/figures/logo.png" align="right" width="120">
+<a href="#siamcat-" class="anchor" aria-hidden="true"></a>SIAMCAT <img src="reference/figures/logo.png" align="right" width="120">
 </h1></div>
 
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h2>
+<a href="#overview" class="anchor" aria-hidden="true"></a>Overview</h2>
 <p><code>SIAMCAT</code> is a pipeline for Statistical Inference of Associations between Microbial Communities And host phenoTypes. A primary goal of analyzing microbiome data is to determine changes in community composition that are associated with environmental factors. In particular, linking human microbiome composition to host phenotypes such as diseases has become an area of intense research. For this, robust statistical modeling and biomarker extraction toolkits are crucially needed. <code>SIAMCAT</code> provides a full pipeline supporting data preprocessing, statistical association testing, statistical modeling (LASSO logistic regression) including tools for evaluation and interpretation of these models (such as cross validation, parameter selection, ROC analysis and diagnostic model plots).</p>
-<p><a href="https://microbiome-tools.embl.de"> <img src="reference/figures/embl_microbiome_tools_logo.png" align="right" width="200"></a></p>
-<p><code>SIAMCAT</code> is developed in the <a href="https://www.embl.de/research/units/scb/zeller/index.html">Zeller group</a> and is part of the suite of computational microbiome analysis tools hosted at <a href="https://www.embl.org/">EMBL</a>.</p>
+<p><a href="https://microbiome-tools.embl.de" class="external-link"> <img src="reference/figures/embl_microbiome_tools_logo.png" align="right" width="200"></a></p>
+<p><code>SIAMCAT</code> is developed in the <a href="https://www.embl.de/research/units/scb/zeller/index.html" class="external-link">Zeller group</a> and is part of the suite of computational microbiome analysis tools hosted at <a href="https://www.embl.org/" class="external-link">EMBL</a>.</p>
 </div>
 <div id="starting-with-siamcat" class="section level2">
 <h2 class="hasAnchor">
-<a href="#starting-with-siamcat" class="anchor"></a>Starting with SIAMCAT</h2>
+<a href="#starting-with-siamcat" class="anchor" aria-hidden="true"></a>Starting with SIAMCAT</h2>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h3>
+<a href="#installation" class="anchor" aria-hidden="true"></a>Installation</h3>
 <p>In order to start with <code>SIAMCAT</code>, you need to install it from Bioconductor:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span>, version <span class="op">=</span> <span class="st">"3.8"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
 <p>Alternatively, you can install the current development version via <code>devtools</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/">"devtools"</a></span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">'zellerlab/siamcat'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">'zellerlab/siamcat'</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="quick-start" class="section level3">
 <h3 class="hasAnchor">
-<a href="#quick-start" class="anchor"></a>Quick start</h3>
-<p>There are a few manuals that will kick-start you and help you analyse your data with <code>SIAMCAT</code>. You can find links to those on the <a href="https://bioconductor.org/packages/release/bioc/html/SIAMCAT.html">Bioconductor website of SIAMCAT</a> or you can type into <code>R</code>:</p>
+<a href="#quick-start" class="anchor" aria-hidden="true"></a>Quick start</h3>
+<p>There are a few manuals that will kick-start you and help you analyse your data with <code>SIAMCAT</code>. You can find links to those on the <a href="https://bioconductor.org/packages/release/bioc/html/SIAMCAT.html" class="external-link">Bioconductor website of SIAMCAT</a> or you can type into <code>R</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span>
 <span class="co"># Please Note:</span>
 <span class="co"># `browseVignettes` only works if `SIAMCAT` has been installed via Bioconductor</span></code></pre></div>
 </div>
 </div>
 <div id="feedback-and-contact" class="section level2">
 <h2 class="hasAnchor">
-<a href="#feedback-and-contact" class="anchor"></a>Feedback and Contact</h2>
-<p>If you have any question about <code>SIAMCAT</code>, if you run into any issue, or if you would like to make a feature request, please: - create an <a href="https://github.com/zellerlab/siamcat/issues/new">issue in this repository</a> or - mail <a href="mailto:zeller@embl.de">Georg Zeller</a> or - ask at the <a href="https://groups.google.com/forum/#!forum/siamcat-users">SIAMCAT support group</a></p>
+<a href="#feedback-and-contact" class="anchor" aria-hidden="true"></a>Feedback and Contact</h2>
+<p>If you have any question about <code>SIAMCAT</code>, if you run into any issue, or if you would like to make a feature request, please: - create an <a href="https://github.com/zellerlab/siamcat/issues/new" class="external-link">issue in this repository</a> or - mail <a href="mailto:zeller@embl.de">Georg Zeller</a> or - ask at the <a href="https://groups.google.com/forum/#!forum/siamcat-users" class="external-link">SIAMCAT support group</a></p>
 <p>If you have a more general question (that could be useful to several other users), please do not hesitate to post it on a dedicated forums such as Stackoverflow or Biostars. If you let us know about the question, we will answer it swiftly.</p>
-<p>Please consider giving us <a href="https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&amp;tool=siamcat">feedback</a>. (This feedback is useful for us to justify the funding we get for developing and maintaining this package.)</p>
+<p>Please consider giving us <a href="https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&amp;tool=siamcat" class="external-link">feedback</a>. (This feedback is useful for us to justify the funding we get for developing and maintaining this package.)</p>
 </div>
 <div id="license" class="section level2">
 <h2 class="hasAnchor">
-<a href="#license" class="anchor"></a>License</h2>
-<p>SIAMCAT is distributed under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-3</a> license.</p>
+<a href="#license" class="anchor" aria-hidden="true"></a>License</h2>
+<p>SIAMCAT is distributed under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" class="external-link">GPL-3</a> license.</p>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#citation" class="anchor"></a>Citation</h2>
+<a href="#citation" class="anchor" aria-hidden="true"></a>Citation</h2>
 <p>If you use <code>SIAMCAT</code>, please cite us by using</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
 <p>or by</p>
 <blockquote>
-<p>Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P, Sunagawa S, Zeller G (2020) <em>SIAMCAT: user-friendly and versatile machine learning workflows for statistically rigorous microbiome analyses</em> bioRxiv 2020.02.06.931808; doi: https://doi.org/10.1101/2020.02.06.931808</p>
+<p>Wirbel J, Zych K, Essex M, Karcher N, Kartal E, Salazar G, Bork P, Sunagawa S, Zeller G <em>Microbiome meta-analysis and cross-disease comparison enabled by the SIAMCAT machine learning toolbox</em> Genome Biol <strong>22</strong>, 93 (2021) <a href="https://doi.org/10.1186/s13059-021-02306-1" class="external-link uri">https://doi.org/10.1186/s13059-021-02306-1</a></p>
 </blockquote>
+<p>In this publication, we analyzed a large set of case-control microbiome datasets. The metadata and taxonomic profiles of these studies are available through a <a href="https://doi.org/10.5281/zenodo.4454489" class="external-link">Zenodo repository</a>: <a href="https://doi.org/10.5281/zenodo.4454489" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4454489.svg" alt="DOI"></a>.</p>
 </div>
 <div id="examples-of-primary-package-output" class="section level2">
 <h2 class="hasAnchor">
-<a href="#examples-of-primary-package-output" class="anchor"></a>Examples of primary package output</h2>
+<a href="#examples-of-primary-package-output" class="anchor" aria-hidden="true"></a>Examples of primary package output</h2>
 <p>To give you a small preview about the primary package output, here are some example plots taking from the main <code>SIAMCAT</code> vignette.</p>
-<p>In this vignette, we use an example dataset which is also included in the <code>SIAMCAT</code> package. The dataset is taken from the publication of <a href="http://europepmc.org/abstract/MED/25432777">Zeller et al</a>, which demonstrated the potential of microbial species in fecal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.</p>
+<p>In this vignette, we use an example dataset which is also included in the <code>SIAMCAT</code> package. The dataset is taken from the publication of <a href="http://europepmc.org/abstract/MED/25432777" class="external-link">Zeller et al</a>, which demonstrated the potential of microbial species in fecal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.</p>
 <div id="association-testing" class="section level3">
 <h3 class="hasAnchor">
-<a href="#association-testing" class="anchor"></a>Association testing</h3>
+<a href="#association-testing" class="anchor" aria-hidden="true"></a>Association testing</h3>
 <p>The result of the <code>check.associations</code> function is an association plot. For significantly associated microbial features, the plot shows: - the abundances of the features across the two different classes (CRC vs. controls) - the significance of the enrichment calculated by a Wilcoxon test (after multiple hypothesis testing correction) - the generalized fold change of each feature - the prevalence shift between the two classes, and - the Area Under the Receiver Operating Characteristics Curve (AU-ROC) as non-parametric effect size measure.</p>
 <div class="figure">
 <img src="reference/figures/associations_plot.png" alt=""><p class="caption">Association testing</p>
@@ -201,7 +202,7 @@
 </div>
 <div id="model-interpretation-plot" class="section level3">
 <h3 class="hasAnchor">
-<a href="#model-interpretation-plot" class="anchor"></a>Model interpretation plot</h3>
+<a href="#model-interpretation-plot" class="anchor" aria-hidden="true"></a>Model interpretation plot</h3>
 <p>After statistical models have been trained to distinguish cancer cases from controls, the models can be investigated by the function <code>model.interpretation.plot</code>. The plots shows: - the median relative feature weight for selected features (barplot on the left) - the robustness of features (i.e. in how many of the models the specific feature has been selected) - the distribution of selected features across samples (central heatmap) - which proportion of the weight of all different models are shown in the plot (boxplot on the right), and - distribution of metadata across samples (heatmap below).</p>
 <div class="figure">
 <img src="reference/figures/interpretation_plot.png" alt=""><p class="caption">Model interpretation plot</p>
@@ -210,18 +211,18 @@
 </div>
 <div id="where-siamcat-has-been-used-already" class="section level2">
 <h2 class="hasAnchor">
-<a href="#where-siamcat-has-been-used-already" class="anchor"></a>Where SIAMCAT has been used already</h2>
+<a href="#where-siamcat-has-been-used-already" class="anchor" aria-hidden="true"></a>Where SIAMCAT has been used already</h2>
 <p>Several publications already used <code>SIAMCAT</code> (or previous versions thereof).</p>
 <ul>
-<li><p><strong><a href="http://europepmc.org/abstract/MED/25432777">Potential of fecal microbiota for early-stage detection of colorectal cancer</a></strong><br><em>Zeller G, Tap J, Voigt AY, Sunagawa S, Kultima JR, Costea PI, Amiot A, Böhm J, Brunetti F, Habermann N, Hercog R, Koch M, Luciani A, Mende DR, Schneider MA, Schrotz-King P, Tournigand C, Tran Van Nhieu J, Yamada T, Zimmermann J, Benes V, Kloor M, Ulrich CM, von Knebel Doeberitz M, Sobhani I, Bork P</em><br>
+<li><p><strong><a href="http://europepmc.org/abstract/MED/25432777" class="external-link">Potential of fecal microbiota for early-stage detection of colorectal cancer</a></strong><br><em>Zeller G, Tap J, Voigt AY, Sunagawa S, Kultima JR, Costea PI, Amiot A, Böhm J, Brunetti F, Habermann N, Hercog R, Koch M, Luciani A, Mende DR, Schneider MA, Schrotz-King P, Tournigand C, Tran Van Nhieu J, Yamada T, Zimmermann J, Benes V, Kloor M, Ulrich CM, von Knebel Doeberitz M, Sobhani I, Bork P</em><br>
 Molecular Systems Biology, (<strong>2014</strong>) 10, 766<br>
 &gt;Original Publication that inspired <code>SIAMCAT</code></p></li>
-<li><p><strong><a href="https://doi.org/10.1016/j.ebiom.2016.01.032">Gut Microbiota Linked to Sexual Preference and HIV Infection</a></strong><br><em>Noguera-Julian M, Rocafort M, Guillén Y, Rivera J, Casadellà M, Nowak P, Hildebrand F, Zeller G, Parera M, Bellido R, Rodríguez C,Carrillo J, Mothe B, Coll J, Bravo I, Estany C, Herrero C, Saz J, Sirera G, Torrela A, Navarro J, Crespo M, Brander C, Negredo E, Blanco J, Guarner F, Calle ML, Bork P, Sönnerborgd A, Clotet B, Paredes R</em><br>
+<li><p><strong><a href="https://doi.org/10.1016/j.ebiom.2016.01.032" class="external-link">Gut Microbiota Linked to Sexual Preference and HIV Infection</a></strong><br><em>Noguera-Julian M, Rocafort M, Guillén Y, Rivera J, Casadellà M, Nowak P, Hildebrand F, Zeller G, Parera M, Bellido R, Rodríguez C,Carrillo J, Mothe B, Coll J, Bravo I, Estany C, Herrero C, Saz J, Sirera G, Torrela A, Navarro J, Crespo M, Brander C, Negredo E, Blanco J, Guarner F, Calle ML, Bork P, Sönnerborgd A, Clotet B, Paredes R</em><br>
 EBioMedicine 5 (<strong>2016</strong>) 135-146 &gt;See Figure 5</p></li>
-<li><p><strong><a href="https://elifesciences.org/articles/42693">Extensive transmission of microbes along the gastrointestinal tract</a></strong><br><em>Schmidt TSB, Hayward MR, Coelho LP, Li SS, Costea PI, Voigt AY, Wirbel J, Maistrenko OM, Alves RJC, Bergsten E, de Beaufort C, Sobhani I, Heintz-Buschart A, Sunagawa S, Zeller G, Wilmes P, Bork P</em><br>
+<li><p><strong><a href="https://elifesciences.org/articles/42693" class="external-link">Extensive transmission of microbes along the gastrointestinal tract</a></strong><br><em>Schmidt TSB, Hayward MR, Coelho LP, Li SS, Costea PI, Voigt AY, Wirbel J, Maistrenko OM, Alves RJC, Bergsten E, de Beaufort C, Sobhani I, Heintz-Buschart A, Sunagawa S, Zeller G, Wilmes P, Bork P</em><br>
 eLife, (<strong>2019</strong>) 8:e42693<br>
 &gt; See Figure 3 - figure supplement 1</p></li>
-<li><p><strong><a href="https://www.nature.com/articles/s41591-019-0406-6">Meta-analysis of fecal metagenomes reveals global microbial signatures that are specific for colorectal cancer</a></strong><br><em>Wirbel J, Pyl PT, Kartal E, Zych K, Kashani A, Milanese A, Fleck JS, Voigt AY, Palleja A, Ponnudurai R, Sunagawa S, Coelho LP, Schrotz-King P, Vogtmann E, Habermann N, Niméus E, Thomas AM, Manghi P, Gandini S, Serrano D, Mizutani S, Shiroma H, Shiba S, Shibata T, Yachida S, Yamada T, Waldron L, Naccarati A, Segata N, Sinha R, Ulrich CM, Brenner H, Arumugam M, Bork P, Zeller G</em><br>
+<li><p><strong><a href="https://www.nature.com/articles/s41591-019-0406-6" class="external-link">Meta-analysis of fecal metagenomes reveals global microbial signatures that are specific for colorectal cancer</a></strong><br><em>Wirbel J, Pyl PT, Kartal E, Zych K, Kashani A, Milanese A, Fleck JS, Voigt AY, Palleja A, Ponnudurai R, Sunagawa S, Coelho LP, Schrotz-King P, Vogtmann E, Habermann N, Niméus E, Thomas AM, Manghi P, Gandini S, Serrano D, Mizutani S, Shiroma H, Shiba S, Shibata T, Yachida S, Yamada T, Waldron L, Naccarati A, Segata N, Sinha R, Ulrich CM, Brenner H, Arumugam M, Bork P, Zeller G</em><br>
 Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]<br>
 &gt; In this publication, <code>SIAMCAT</code> is used extensively for holdout testing</p></li>
 </ul>
@@ -232,44 +233,42 @@ Nature Medicine, (<strong>2019</strong>) [Epub ahead of print]<br>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>The source code is available on Github: <a href="https://github.com/zellerlab/siamcat">https://github.com/zellerlab/siamcat</a>
-</li>
-<li>SIAMCAT is part of the EMBL microbiome tools. Find out more here: <a href="https://microbiome-tools.embl.de">https://microbiome-tools.embl.de</a>
-</li>
-<li><a href="https://microbiome-tools.embl.de"> <img src="reference/figures/embl_microbiome_tools_logo.png" width="50%" height="auto/"></a></li>
-</ul>
-</div>
-
-<div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://travis-ci.com/zellerlab/siamcat"><img src="https://travis-ci.com/zellerlab/siamcat.svg?branch=master" alt="Build Status"></a></li>
+<li><p>The source code is available on Github: <a href="https://github.com/zellerlab/siamcat" class="external-link">https://github.com/zellerlab/siamcat</a> SIAMCAT is part of the EMBL microbiome tools. Find out more here: <a href="https://microbiome-tools.embl.de" class="external-link">https://microbiome-tools.embl.de</a> <a href="https://microbiome-tools.embl.de" class="external-link"> <img src="reference/figures/embl_microbiome_tools_logo.png" width="50%" height="auto/"></a></p></li>
 </ul>
 </div>
 
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
 </ul>
 </div>
 
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.com/zellerlab/siamcat" class="external-link"><img src="https://travis-ci.com/zellerlab/siamcat.svg?branch=master" alt="Build Status"></a></li>
+</ul>
+</div>
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
 <li><a href="authors.html">Citing SIAMCAT</a></li>
 </ul>
 </div>
 
 <div class="funding">
-<h2>Funding</h2>
+<h2 data-toc-skip>Funding</h2>
 <ul class="list-unstyled">
-<li>We are grateful for funding from the German ministry for education and research (BMBF):</li>
-<li><a href="https://www.bmbf.de"> <img src="reference/figures/BMBF.png" width="50%" height="auto/"></a></li>
-<li>SIAMCAT is also part of the de.NBI infrastructure:</li>
-<li><a href="https://www.denbi.de"> <img src="reference/figures/denbi.png" width="50%" height="auto/"></a></li>
+<li>
+<p>We are grateful for funding from the Federal Ministry of Education and Research (BMBF):</p>
+<p><a href="https://www.bmbf.de" class="external-link"> <img src="reference/figures/BMBF.png" width="50%" height="auto/"></a></p>
+<p>SIAMCAT is also part of the de.NBI infrastructure:</p>
+<p><a href="https://www.denbi.de" class="external-link"> <img src="reference/figures/denbi.png" width="50%" height="auto/"></a></p>
+</li>
 </ul>
 </div>
 

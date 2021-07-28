@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -89,14 +89,14 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+  <a href="https://twitter.com/siamcat_dev" class="external-link">
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+  <a href="https://github.com/zellerlab/siamcat" class="external-link">
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -110,7 +110,7 @@
 
       
 
-      </header><script src="SIAMCAT_meta_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="SIAMCAT_meta_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Meta-analysis using SIAMCAT</h1>
@@ -130,39 +130,39 @@
     
 <div id="about-this-vignette" class="section level1">
 <h1 class="hasAnchor">
-<a href="#about-this-vignette" class="anchor"></a>About This Vignette</h1>
+<a href="#about-this-vignette" class="anchor" aria-hidden="true"></a>About This Vignette</h1>
 <p>In this vignette, we want to demonstrate how <code>SIAMCAT</code> can facilitate metagenomic meta-analyses, focussing both on association testing and ML workflows. As an example, we use five different studies of Crohn’s disease (CD), since we have taxonomic profiles from five different metagenomic datasets available. Those studies are:</p>
 <ol style="list-style-type: decimal">
 <li><a href="htpps://doi.org/10.1038/nbt.2939">metaHIT</a></li>
-<li><a href="https://doi.org/10.1016/j.chom.2015.09.008">Lewis et al. 2015</a></li>
-<li><a href="https://doi.org/10.1093/gigascience/gix050">He et al. 2017</a></li>
-<li><a href="https://doi.org/10.1038/s41564-018-0306-4">Franzosa et al. 2019</a></li>
-<li><a href="https://doi.org/10.1038/s41586-019-1237-9">HMP2</a></li>
+<li><a href="https://doi.org/10.1016/j.chom.2015.09.008" class="external-link">Lewis et al. 2015</a></li>
+<li><a href="https://doi.org/10.1093/gigascience/gix050" class="external-link">He et al. 2017</a></li>
+<li><a href="https://doi.org/10.1038/s41564-018-0306-4" class="external-link">Franzosa et al. 2019</a></li>
+<li><a href="https://doi.org/10.1038/s41586-019-1237-9" class="external-link">HMP2</a></li>
 </ol>
 <div id="setup" class="section level2">
 <h2 class="hasAnchor">
-<a href="#setup" class="anchor"></a>Setup</h2>
+<a href="#setup" class="anchor" aria-hidden="true"></a>Setup</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="http://tidyverse.tidyverse.org">"tidyverse"</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
-<p>First, we load the data for all studies, which are available for download from the EMBL cluster. The raw data have been preprocessed and taxonomically profiled with <a href="https://doi.org/10.1038/s41467-019-08844-4">mOTUs2</a> and were then aggregated at genus level.</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://tidyverse.tidyverse.org" class="external-link">"tidyverse"</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
+<p>First, we load the data for all studies, which are available for download from the EMBL cluster. The raw data have been preprocessed and taxonomically profiled with <a href="https://doi.org/10.1038/s41467-019-08844-4" class="external-link">mOTUs2</a> and were then aggregated at genus level.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># base url for data download</span>
 <span class="va">data.location</span> <span class="op">&lt;-</span> <span class="st">'https://www.embl.de/download/zeller/'</span>
 <span class="co"># datasets</span>
-<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'metaHIT'</span>, <span class="st">'Lewis_2015'</span>, <span class="st">'He_2017'</span>, <span class="st">'Franzosa_2019'</span>, <span class="st">'HMP2'</span><span class="op">)</span>
+<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'metaHIT'</span>, <span class="st">'Lewis_2015'</span>, <span class="st">'He_2017'</span>, <span class="st">'Franzosa_2019'</span>, <span class="st">'HMP2'</span><span class="op">)</span>
 <span class="co"># metadata</span>
-<span class="va">meta.all</span> <span class="op">&lt;-</span> <span class="fu">read_tsv</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">data.location</span>, <span class="st">'CD_meta/meta_all.tsv'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">meta.all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data.location</span>, <span class="st">'CD_meta/meta_all.tsv'</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># features</span>
-<span class="va">feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">data.location</span>, <span class="st">'CD_meta/feat_genus.tsv'</span><span class="op">)</span>, 
-                   check.names <span class="op">=</span> <span class="cn">FALSE</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, quote <span class="op">=</span> <span class="st">''</span>, 
-                   sep<span class="op">=</span><span class="st">'\t'</span><span class="op">)</span>
-<span class="va">feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">feat</span><span class="op">)</span>
+<span class="va">feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data.location</span>, <span class="st">'CD_meta/feat_genus.tsv'</span><span class="op">)</span>, 
+                check.names <span class="op">=</span> <span class="cn">FALSE</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, quote <span class="op">=</span> <span class="st">''</span>, 
+                sep<span class="op">=</span><span class="st">'\t'</span><span class="op">)</span>
+<span class="va">feat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">feat</span><span class="op">)</span>
 <span class="co"># check that metadata and features agree</span>
-<span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">feat</span><span class="op">)</span> <span class="op">==</span> <span class="va">meta.all</span><span class="op">$</span><span class="va">Sample_ID</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">feat</span><span class="op">)</span> <span class="op">==</span> <span class="va">meta.all</span><span class="op">$</span><span class="va">Sample_ID</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Let us have a look at the distribution of groups across the studies</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">meta.all</span><span class="op">$</span><span class="va">Study</span>, <span class="va">meta.all</span><span class="op">$</span><span class="va">Group</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">meta.all</span><span class="op">$</span><span class="va">Study</span>, <span class="va">meta.all</span><span class="op">$</span><span class="va">Group</span><span class="op">)</span>
 <span class="co">##                </span>
 <span class="co">##                  CD CTR</span>
 <span class="co">##   Franzosa_2019  88  56</span>
@@ -172,47 +172,44 @@
 <span class="co">##   metaHIT        21  71</span></code></pre></div>
 <p>Some of the studies contain more than one sample for the same subject. For example, the HMP2 publication focussed on the longitudinal aspect of CD. Therefore. we want to take this into account when training and evaluating the machine learning model (see the vignette about <strong>Machine learning pitfalls</strong>) and when performing the association testing. Thus, it will be convenient to create a second metadata table containing a single entry for each individual.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">meta.ind</span> <span class="op">&lt;-</span> <span class="va">meta.all</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Individual_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Timepoint</span><span class="op">==</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">Timepoint</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">meta.ind</span> <span class="op">&lt;-</span> <span class="va">meta.all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Individual_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Timepoint</span><span class="op">==</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">Timepoint</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="compare-associations" class="section level1">
 <h1 class="hasAnchor">
-<a href="#compare-associations" class="anchor"></a>Compare Associations</h1>
+<a href="#compare-associations" class="anchor" aria-hidden="true"></a>Compare Associations</h1>
 <div id="compute-associations-with-siamcat" class="section level2">
 <h2 class="hasAnchor">
-<a href="#compute-associations-with-siamcat" class="anchor"></a>Compute Associations with SIAMCAT</h2>
+<a href="#compute-associations-with-siamcat" class="anchor" aria-hidden="true"></a>Compute Associations with SIAMCAT</h2>
 <p>To test for associations, we can encapsulate each dataset into a different <code>SIAMCAT</code> object and use the <code>check.associations</code> function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">assoc.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">assoc.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">d</span> <span class="kw">in</span> <span class="va">datasets</span><span class="op">)</span><span class="op">{</span>
-  
-  <span class="co"># filter metadata and convert to dataframe</span>
-  <span class="va">meta.train</span> <span class="op">&lt;-</span> <span class="va">meta.ind</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="va">d</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">meta.train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.train</span><span class="op">$</span><span class="va">Sample_ID</span>
-  
-  <span class="co"># create SIAMCAT object</span>
-  <span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, meta<span class="op">=</span><span class="va">meta.train</span>, label<span class="op">=</span><span class="st">'Group'</span>, case<span class="op">=</span><span class="st">'CD'</span><span class="op">)</span>
-  <span class="co"># test for associations</span>
-  <span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check.associations.html">check.associations</a></span><span class="op">(</span><span class="va">sc.obj</span>, detect.lim <span class="op">=</span> <span class="fl">1e-05</span>,
-                               feature.type <span class="op">=</span> <span class="st">'original'</span>,
-                               fn.plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'./assoc_plot_'</span>, 
-                                                <span class="va">d</span>, <span class="st">'.pdf'</span><span class="op">)</span><span class="op">)</span>
-  <span class="co"># extract the associations and save them in the assoc.list</span>
-  <span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/associations.html">associations</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span>
-  <span class="va">temp</span><span class="op">$</span><span class="va">genus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span>
-  <span class="va">assoc.list</span><span class="op">[[</span><span class="va">d</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">temp</span> <span class="op">%&gt;%</span> 
-    <span class="fu">select</span><span class="op">(</span><span class="va">genus</span>, <span class="va">fc</span>, <span class="va">auc</span>, <span class="va">p.adj</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="va">d</span><span class="op">)</span>
+    <span class="co"># filter metadata and convert to dataframe</span>
+    <span class="va">meta.train</span> <span class="op">&lt;-</span> <span class="va">meta.ind</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="va">d</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
+    <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">meta.train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.train</span><span class="op">$</span><span class="va">Sample_ID</span>
+
+    <span class="co"># create SIAMCAT object</span>
+    <span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, meta<span class="op">=</span><span class="va">meta.train</span>, label<span class="op">=</span><span class="st">'Group'</span>, case<span class="op">=</span><span class="st">'CD'</span><span class="op">)</span>
+    <span class="co"># test for associations</span>
+    <span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check.associations.html">check.associations</a></span><span class="op">(</span><span class="va">sc.obj</span>, detect.lim <span class="op">=</span> <span class="fl">1e-05</span>,
+        feature.type <span class="op">=</span> <span class="st">'original'</span>,fn.plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">'./assoc_plot_'</span>, <span class="va">d</span>, <span class="st">'.pdf'</span><span class="op">)</span><span class="op">)</span>
+    <span class="co"># extract the associations and save them in the assoc.list</span>
+    <span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/associations-methods.html">associations</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span>
+    <span class="va">temp</span><span class="op">$</span><span class="va">genus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span>
+    <span class="va">assoc.list</span><span class="op">[[</span><span class="va">d</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">temp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">genus</span>, <span class="va">fc</span>, <span class="va">auc</span>, <span class="va">p.adj</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="va">d</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="co"># combine all associations</span>
-<span class="va">df.assoc</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="va">assoc.list</span><span class="op">)</span>
-<span class="va">df.assoc</span> <span class="op">&lt;-</span> <span class="va">df.assoc</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">genus</span><span class="op">!=</span><span class="st">'unclassified'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df.assoc</span><span class="op">)</span>
+<span class="va">df.assoc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">assoc.list</span><span class="op">)</span>
+<span class="va">df.assoc</span> <span class="op">&lt;-</span> <span class="va">df.assoc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">genus</span><span class="op">!=</span><span class="st">'unclassified'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df.assoc</span><span class="op">)</span>
 <span class="co">##                                             genus fc auc p.adj   Study</span>
 <span class="co">## 159730 Thermovenabulum...1 159730 Thermovenabulum  0 0.5   NaN metaHIT</span>
 <span class="co">## 42447 Anaerobranca...2         42447 Anaerobranca  0 0.5   NaN metaHIT</span>
@@ -223,47 +220,46 @@
 </div>
 <div id="plot-heatmap-for-interesting-genera" class="section level2">
 <h2 class="hasAnchor">
-<a href="#plot-heatmap-for-interesting-genera" class="anchor"></a>Plot Heatmap for Interesting Genera</h2>
+<a href="#plot-heatmap-for-interesting-genera" class="anchor" aria-hidden="true"></a>Plot Heatmap for Interesting Genera</h2>
 <p>Now, we can compare the associations stored in the <code>df.assoc</code> tibble. For example, we can extract features which are very strongly associated with the label (single-feature AUROC &gt; 0.75 or &lt; 0.25) in at least one of the studies and plot the generalized fold change as heatmap.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">genera.of.interest</span> <span class="op">&lt;-</span> <span class="va">df.assoc</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">genus</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">summarise</span><span class="op">(</span>m<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">auc</span><span class="op">)</span>, n.filt<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="va">auc</span> <span class="op">&lt;</span> <span class="fl">0.25</span> <span class="op">|</span> <span class="va">auc</span> <span class="op">&gt;</span> <span class="fl">0.75</span><span class="op">)</span>, 
-            .groups<span class="op">=</span><span class="st">'keep'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">n.filt</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">arrange</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">genera.of.interest</span> <span class="op">&lt;-</span> <span class="va">df.assoc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">genus</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>m<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">auc</span><span class="op">)</span>, n.filt<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">auc</span> <span class="op">&lt;</span> <span class="fl">0.25</span> <span class="op">|</span> <span class="va">auc</span> <span class="op">&gt;</span> <span class="fl">0.75</span><span class="op">)</span>, 
+        .groups<span class="op">=</span><span class="st">'keep'</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">n.filt</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></code></pre></div>
 <p>After we extracted the genera, we plot them:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df.assoc</span> <span class="op">%&gt;%</span> 
-  <span class="co"># take only genera of interest</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">genus</span> <span class="op">%in%</span> <span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># convert to factor to enforce an ordering by mean AUC</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>genus<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">genus</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># convert to factor to enforce ordering again</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">Study</span>, levels <span class="op">=</span> <span class="va">datasets</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># annotate the cells in the heatmap with stars</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>l<span class="op">=</span><span class="fu">case_when</span><span class="op">(</span><span class="va">p.adj</span> <span class="op">&lt;</span> <span class="fl">0.01</span><span class="op">~</span><span class="st">'*'</span>, <span class="cn">TRUE</span><span class="op">~</span><span class="st">''</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y<span class="op">=</span><span class="va">genus</span>, x<span class="op">=</span><span class="va">Study</span>, fill<span class="op">=</span><span class="va">fc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">geom_tile</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">scale_fill_gradient2</span><span class="op">(</span>low <span class="op">=</span> <span class="st">'#3B6FB6'</span>, high<span class="op">=</span><span class="st">'#D41645'</span>, mid <span class="op">=</span> <span class="st">'white'</span>, 
-                         limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2.7</span>, <span class="fl">2.7</span><span class="op">)</span>, 
-                         name<span class="op">=</span><span class="st">'Generalized\nfold change'</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label<span class="op">=</span><span class="va">l</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme</span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">xlab</span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme</span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size<span class="op">=</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">df.assoc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># take only genera of interest</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">genus</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># convert to factor to enforce an ordering by mean AUC</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>genus<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">genus</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># convert to factor to enforce ordering again</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Study</span>, levels <span class="op">=</span> <span class="va">datasets</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># annotate the cells in the heatmap with stars</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>l<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">p.adj</span> <span class="op">&lt;</span> <span class="fl">0.01</span><span class="op">~</span><span class="st">'*'</span>, <span class="cn">TRUE</span><span class="op">~</span><span class="st">''</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">genus</span>, x<span class="op">=</span><span class="va">Study</span>, fill<span class="op">=</span><span class="va">fc</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradient2</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">'#3B6FB6'</span>, high<span class="op">=</span><span class="st">'#D41645'</span>, mid <span class="op">=</span> <span class="st">'white'</span>, 
+            limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2.7</span>, <span class="fl">2.7</span><span class="op">)</span>, name<span class="op">=</span><span class="st">'Generalized\nfold change'</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label<span class="op">=</span><span class="va">l</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="SIAMCAT_meta_files/figure-html/heatmap-1.png" width="700"></p>
 </div>
 </div>
 <div id="study-as-confounding-factor" class="section level1">
 <h1 class="hasAnchor">
-<a href="#study-as-confounding-factor" class="anchor"></a>Study as Confounding Factor</h1>
+<a href="#study-as-confounding-factor" class="anchor" aria-hidden="true"></a>Study as Confounding Factor</h1>
 <p>Additionally, we can check how differences between studies might influence the variance of specific genera. To do so, we create a singel <code>SIAMCAT</code> object which holds the complete datasets and then we run the <code>check.confounder</code> function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df.meta</span> <span class="op">&lt;-</span> <span class="va">meta.ind</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">df.meta</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">df.meta</span><span class="op">$</span><span class="va">Sample_ID</span>
+<code class="sourceCode R"><span class="va">df.meta</span> <span class="op">&lt;-</span> <span class="va">meta.ind</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">df.meta</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">df.meta</span><span class="op">$</span><span class="va">Sample_ID</span>
 <span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, meta<span class="op">=</span><span class="va">df.meta</span>, label<span class="op">=</span><span class="st">'Group'</span>, case<span class="op">=</span><span class="st">'CD'</span><span class="op">)</span>
 <span class="co">## + starting create.label</span>
 <span class="co">## Label used as case:</span>
@@ -276,210 +272,210 @@
 <span class="co">## + Keeping labels of 504 sample(s).</span>
 <span class="co">## +++ checking sample number per class</span>
 <span class="co">## +++ checking overlap between samples and metadata</span>
-<span class="co">## + finished validate.data in 0.366 s</span>
+<span class="co">## + finished validate.data in 0.055 s</span>
 <span class="fu"><a href="../reference/check.confounders.html">check.confounders</a></span><span class="op">(</span><span class="va">sc.obj</span>, fn.plot <span class="op">=</span> <span class="st">'./confounder_plot_cd_meta.pdf'</span>,
-                  feature.type<span class="op">=</span><span class="st">'original'</span><span class="op">)</span>
+                feature.type<span class="op">=</span><span class="st">'original'</span><span class="op">)</span>
 <span class="co">## Finished checking metadata for confounders, results plotted to: ./confounder_plot_cd_meta.pdf</span></code></pre></div>
 <p><img src="confounder_plot_cd_meta.png"></p>
 <p>The resulting variance plot shows that some genera are strongly impacated by differences between studies, other genera not so much. Of note, the genera that vary most with the label (CD vs controls) do not show a lot of variance across studies.</p>
 </div>
 <div id="ml-meta-analysis" class="section level1">
 <h1 class="hasAnchor">
-<a href="#ml-meta-analysis" class="anchor"></a>ML Meta-analysis</h1>
+<a href="#ml-meta-analysis" class="anchor" aria-hidden="true"></a>ML Meta-analysis</h1>
 <div id="train-lasso-models" class="section level2">
 <h2 class="hasAnchor">
-<a href="#train-lasso-models" class="anchor"></a>Train LASSO Models</h2>
+<a href="#train-lasso-models" class="anchor" aria-hidden="true"></a>Train LASSO Models</h2>
 <p>Lastly, we can perform the machine learning (ML) meta-analysis: we first train one model for each datasets and then apply it to the other datasets using the holdout testing functionality of <code>SIAMCAT</code>. For datasets with repeated samples across subjects, we block the cross-validation for subjects in order not to bias the results (see also the vignette about <strong>Machine learning pitfalls</strong>).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create tibble to store all the predictions</span>
-<span class="va">auroc.all</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>study.train<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,
-                    study.test<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/character.html">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,
-                    AUC<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/double.html">double</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>
+<span class="va">auroc.all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>study.train<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, 
+                    study.test<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,
+                    AUC<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># and a list to save the trained SIAMCAT objects</span>
-<span class="va">sc.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">sc.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">datasets</span><span class="op">)</span><span class="op">{</span>
-  <span class="co"># restrict to a single study</span>
-  <span class="va">meta.train</span> <span class="op">&lt;-</span> <span class="va">meta.all</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="va">i</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">meta.train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.train</span><span class="op">$</span><span class="va">Sample_ID</span>
-  
-  <span class="co">## take into account repeated sampling by including a parameters</span>
-  <span class="co">## in the create.data.split function</span>
-  <span class="co">## For studies with repeated samples, we want to block the</span>
-  <span class="co">## cross validation by the column 'Individual_ID'</span>
-  <span class="va">block</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'metaHIT'</span>, <span class="st">'Lewis_2015'</span>, <span class="st">'HMP2'</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">block</span> <span class="op">&lt;-</span> <span class="st">'Individual_ID'</span>
-    <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">==</span> <span class="st">'HMP2'</span><span class="op">)</span><span class="op">{</span> 
-      <span class="co"># for the HMP2 dataset, the number of repeated sample per subject need </span>
-      <span class="co"># to be reduced, because some subjects have been sampled 20 times, </span>
-      <span class="co"># other only 5 times</span>
-      <span class="va">meta.train</span> <span class="op">&lt;-</span> <span class="va">meta.all</span> <span class="op">%&gt;%</span> 
-        <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="st">'HMP2'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Individual_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-        <span class="fu">sample_n</span><span class="op">(</span><span class="fl">5</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-        <span class="fu">distinct</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-        <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
-      <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">meta.train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.train</span><span class="op">$</span><span class="va">Sample_ID</span>
+    <span class="co"># restrict to a single study</span>
+    <span class="va">meta.train</span> <span class="op">&lt;-</span> <span class="va">meta.all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="va">i</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
+    <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">meta.train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.train</span><span class="op">$</span><span class="va">Sample_ID</span>
+
+    <span class="co">## take into account repeated sampling by including a parameters</span>
+    <span class="co">## in the create.data.split function</span>
+    <span class="co">## For studies with repeated samples, we want to block the</span>
+    <span class="co">## cross validation by the column 'Individual_ID'</span>
+    <span class="va">block</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'metaHIT'</span>, <span class="st">'Lewis_2015'</span>, <span class="st">'HMP2'</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+        <span class="va">block</span> <span class="op">&lt;-</span> <span class="st">'Individual_ID'</span>
+        <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">==</span> <span class="st">'HMP2'</span><span class="op">)</span><span class="op">{</span> 
+            <span class="co"># for the HMP2 dataset, the number of repeated sample per subject </span>
+            <span class="co"># need to be reduced, because some subjects have been sampled </span>
+            <span class="co"># 20 times, other only 5 times</span>
+            <span class="va">meta.train</span> <span class="op">&lt;-</span> <span class="va">meta.all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="st">'HMP2'</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Individual_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/sample_n.html" class="external-link">sample_n</a></span><span class="op">(</span><span class="fl">5</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
+            <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">meta.train</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.train</span><span class="op">$</span><span class="va">Sample_ID</span>
+        <span class="op">}</span>
     <span class="op">}</span>
-  <span class="op">}</span>
-  <span class="co"># create SIAMCAT object</span>
-  <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, meta<span class="op">=</span><span class="va">meta.train</span>, 
-                          label<span class="op">=</span><span class="st">'Group'</span>, case<span class="op">=</span><span class="st">'CD'</span><span class="op">)</span>
-  <span class="co"># normalize features</span>
-  <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/normalize.features.html">normalize.features</a></span><span class="op">(</span><span class="va">sc.obj.train</span>, norm.method <span class="op">=</span> <span class="st">'log.std'</span>,
-                                     norm.param<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>log.n0<span class="op">=</span><span class="fl">1e-05</span>, 
-                                                     sd.min.q<span class="op">=</span><span class="fl">0</span><span class="op">)</span>,
-                                     feature.type <span class="op">=</span> <span class="st">'original'</span><span class="op">)</span>
-  <span class="co"># Create data split</span>
-  <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create.data.split.html">create.data.split</a></span><span class="op">(</span><span class="va">sc.obj.train</span>,
-                                    num.folds <span class="op">=</span> <span class="fl">10</span>, num.resample <span class="op">=</span> <span class="fl">10</span>,
-                                    inseparable <span class="op">=</span> <span class="va">block</span><span class="op">)</span>
-  <span class="co"># train LASSO model</span>
-  <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/train.model.html">train.model</a></span><span class="op">(</span><span class="va">sc.obj.train</span>, method<span class="op">=</span><span class="st">'lasso'</span><span class="op">)</span>
-  
-  
-  <span class="co">## apply trained models to other datasets</span>
-  
-  <span class="co"># loop through datasets again</span>
-  <span class="kw">for</span> <span class="op">(</span><span class="va">i2</span> <span class="kw">in</span> <span class="va">datasets</span><span class="op">)</span><span class="op">{</span>
-    <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">==</span> <span class="va">i2</span><span class="op">)</span><span class="op">{</span>
-      <span class="co"># make and evaluate cross-validation predictions (on the same dataset)</span>
-      <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.predictions.html">make.predictions</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span>
-      <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span>
-      <span class="va">auroc.all</span> <span class="op">&lt;-</span> <span class="va">auroc.all</span> <span class="op">%&gt;%</span> 
-        <span class="fu">add_row</span><span class="op">(</span>study.train<span class="op">=</span><span class="va">i</span>, study.test<span class="op">=</span><span class="va">i</span>,
-                AUC<span class="op">=</span><span class="fu"><a href="../reference/eval_data.html">eval_data</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span><span class="op">$</span><span class="va">auroc</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html">as.double</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-      <span class="co"># make and evaluate on the external datasets</span>
-      <span class="co"># use meta.ind here, since we want only one sample per subject!</span>
-      <span class="va">meta.test</span> <span class="op">&lt;-</span> <span class="va">meta.ind</span> <span class="op">%&gt;%</span> 
-        <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="va">i2</span><span class="op">)</span> <span class="op">%&gt;%</span>
-        <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
-      <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">meta.test</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.test</span><span class="op">$</span><span class="va">Sample_ID</span>
-      <span class="va">sc.obj.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, meta<span class="op">=</span><span class="va">meta.test</span>,
-                             label<span class="op">=</span><span class="st">'Group'</span>, case<span class="op">=</span><span class="st">'CD'</span><span class="op">)</span>
-      <span class="co"># make holdout predictions</span>
-      <span class="va">sc.obj.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.predictions.html">make.predictions</a></span><span class="op">(</span><span class="va">sc.obj.train</span>, 
-                                      siamcat.holdout <span class="op">=</span> <span class="va">sc.obj.test</span><span class="op">)</span>
-      <span class="va">sc.obj.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span><span class="op">(</span><span class="va">sc.obj.test</span><span class="op">)</span>
-      <span class="va">auroc.all</span> <span class="op">&lt;-</span> <span class="va">auroc.all</span> <span class="op">%&gt;%</span> 
-        <span class="fu">add_row</span><span class="op">(</span>study.train<span class="op">=</span><span class="va">i</span>, study.test<span class="op">=</span><span class="va">i2</span>,
-                AUC<span class="op">=</span><span class="fu"><a href="../reference/eval_data.html">eval_data</a></span><span class="op">(</span><span class="va">sc.obj.test</span><span class="op">)</span><span class="op">$</span><span class="va">auroc</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html">as.double</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+    <span class="co"># create SIAMCAT object</span>
+    <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, meta<span class="op">=</span><span class="va">meta.train</span>, 
+                            label<span class="op">=</span><span class="st">'Group'</span>, case<span class="op">=</span><span class="st">'CD'</span><span class="op">)</span>
+    <span class="co"># normalize features</span>
+    <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/normalize.features.html">normalize.features</a></span><span class="op">(</span><span class="va">sc.obj.train</span>, norm.method <span class="op">=</span> <span class="st">'log.std'</span>,
+        norm.param<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>log.n0<span class="op">=</span><span class="fl">1e-05</span>, sd.min.q<span class="op">=</span><span class="fl">0</span><span class="op">)</span>,feature.type <span class="op">=</span> <span class="st">'original'</span><span class="op">)</span>
+    <span class="co"># Create data split</span>
+    <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create.data.split.html">create.data.split</a></span><span class="op">(</span><span class="va">sc.obj.train</span>,
+        num.folds <span class="op">=</span> <span class="fl">10</span>, num.resample <span class="op">=</span> <span class="fl">10</span>, inseparable <span class="op">=</span> <span class="va">block</span><span class="op">)</span>
+    <span class="co"># train LASSO model</span>
+    <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/train.model.html">train.model</a></span><span class="op">(</span><span class="va">sc.obj.train</span>, method<span class="op">=</span><span class="st">'lasso'</span><span class="op">)</span>
+
+    <span class="co">## apply trained models to other datasets</span>
+
+    <span class="co"># loop through datasets again</span>
+    <span class="kw">for</span> <span class="op">(</span><span class="va">i2</span> <span class="kw">in</span> <span class="va">datasets</span><span class="op">)</span><span class="op">{</span>
+        <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">==</span> <span class="va">i2</span><span class="op">)</span><span class="op">{</span>
+            <span class="co"># make and evaluate cross-validation predictions (same dataset)</span>
+            <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.predictions.html">make.predictions</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span>
+            <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span>
+            <span class="va">auroc.all</span> <span class="op">&lt;-</span> <span class="va">auroc.all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>study.train<span class="op">=</span><span class="va">i</span>, study.test<span class="op">=</span><span class="va">i</span>,
+                    AUC<span class="op">=</span><span class="fu"><a href="../reference/eval_data-methods.html">eval_data</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span><span class="op">$</span><span class="va">auroc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+            <span class="co"># make and evaluate on the external datasets</span>
+            <span class="co"># use meta.ind here, since we want only one sample per subject!</span>
+            <span class="va">meta.test</span> <span class="op">&lt;-</span> <span class="va">meta.ind</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Study</span><span class="op">==</span><span class="va">i2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+                <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
+            <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">meta.test</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">meta.test</span><span class="op">$</span><span class="va">Sample_ID</span>
+            <span class="va">sc.obj.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat</span>, meta<span class="op">=</span><span class="va">meta.test</span>,
+                                    label<span class="op">=</span><span class="st">'Group'</span>, case<span class="op">=</span><span class="st">'CD'</span><span class="op">)</span>
+            <span class="co"># make holdout predictions</span>
+            <span class="va">sc.obj.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.predictions.html">make.predictions</a></span><span class="op">(</span><span class="va">sc.obj.train</span>, 
+                                            siamcat.holdout <span class="op">=</span> <span class="va">sc.obj.test</span><span class="op">)</span>
+            <span class="va">sc.obj.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span><span class="op">(</span><span class="va">sc.obj.test</span><span class="op">)</span>
+            <span class="va">auroc.all</span> <span class="op">&lt;-</span> <span class="va">auroc.all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+                <span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>study.train<span class="op">=</span><span class="va">i</span>, study.test<span class="op">=</span><span class="va">i2</span>,
+                    AUC<span class="op">=</span><span class="fu"><a href="../reference/eval_data-methods.html">eval_data</a></span><span class="op">(</span><span class="va">sc.obj.test</span><span class="op">)</span><span class="op">$</span><span class="va">auroc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">}</span>
     <span class="op">}</span>
-  <span class="op">}</span>
-  <span class="co"># save the trained model</span>
-  <span class="va">sc.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">sc.obj.train</span>
+    <span class="co"># save the trained model</span>
+    <span class="va">sc.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">sc.obj.train</span>
 <span class="op">}</span></code></pre></div>
 <p>After we trained and applied all models, we can calculate the test average for each dataset:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">test.average</span> <span class="op">&lt;-</span> <span class="va">auroc.all</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">study.train</span><span class="op">!=</span><span class="va">study.test</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">study.test</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">summarise</span><span class="op">(</span>AUC<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">AUC</span><span class="op">)</span>, .groups<span class="op">=</span><span class="st">'drop'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>study.train<span class="op">=</span><span class="st">"Average"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">test.average</span> <span class="op">&lt;-</span> <span class="va">auroc.all</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">study.train</span><span class="op">!=</span><span class="va">study.test</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">study.test</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>AUC<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">AUC</span><span class="op">)</span>, .groups<span class="op">=</span><span class="st">'drop'</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>study.train<span class="op">=</span><span class="st">"Average"</span><span class="op">)</span></code></pre></div>
 <p>Now that we have the AUROC values, we can plot them into a nice heatmap:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># combine AUROC values with test average</span>
-<span class="fu">bind_rows</span><span class="op">(</span><span class="va">auroc.all</span>, <span class="va">test.average</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># highlight cross validation versus transfer results</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>CV<span class="op">=</span><span class="va">study.train</span> <span class="op">==</span> <span class="va">study.test</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="co"># for facetting later</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>split<span class="op">=</span><span class="fu">case_when</span><span class="op">(</span><span class="va">study.train</span><span class="op">==</span><span class="st">'Average'</span><span class="op">~</span><span class="st">'Average'</span>, 
-                         <span class="cn">TRUE</span><span class="op">~</span><span class="st">'none'</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>split<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">split</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'none'</span>, <span class="st">'Average'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># convert to factor to enforce ordering</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>study.train<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">study.train</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">datasets</span>, <span class="st">'Average'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>study.test<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">study.test</span>, levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">)</span>,<span class="st">'Average'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y<span class="op">=</span><span class="va">study.test</span>, x<span class="op">=</span><span class="va">study.train</span>, fill<span class="op">=</span><span class="va">AUC</span>, size<span class="op">=</span><span class="va">CV</span>, color<span class="op">=</span><span class="va">CV</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">geom_tile</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-    <span class="co"># text in tiles</span>
-    <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes_string</span><span class="op">(</span>label<span class="op">=</span><span class="st">"format(AUC, digits=2)"</span><span class="op">)</span>, 
-              col<span class="op">=</span><span class="st">'white'</span>, size<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">+</span>
-    <span class="co"># color scheme</span>
-    <span class="fu">scale_fill_gradientn</span><span class="op">(</span>colours<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'darkgreen'</span>,<span class="st">'forestgreen'</span>, 
-                                       <span class="st">'chartreuse3'</span>,<span class="st">'lawngreen'</span>, 
-                                       <span class="st">'yellow'</span><span class="op">)</span><span class="op">)</span>, limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="co"># axis position/remove boxes/ticks/facet background/etc.</span>
-    <span class="fu">scale_x_discrete</span><span class="op">(</span>position<span class="op">=</span><span class="st">'top'</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">theme</span><span class="op">(</span>axis.line<span class="op">=</span><span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-          axis.ticks <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-          axis.text.x.top <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle<span class="op">=</span><span class="fl">45</span>, hjust<span class="op">=</span><span class="fl">.1</span><span class="op">)</span>, 
-          panel.grid<span class="op">=</span><span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-          panel.border<span class="op">=</span><span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-          strip.background <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-          strip.text <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">xlab</span><span class="op">(</span><span class="st">'Training Set'</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">'Test Set'</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">scale_color_manual</span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'#FFFFFF00'</span>, <span class="st">'grey'</span><span class="op">)</span>, guide<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">scale_size_manual</span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, guide<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">facet_grid</span><span class="op">(</span><span class="op">~</span><span class="va">split</span>, scales <span class="op">=</span> <span class="st">'free'</span>, space <span class="op">=</span> <span class="st">'free'</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">auroc.all</span>, <span class="va">test.average</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># highlight cross validation versus transfer results</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>CV<span class="op">=</span><span class="va">study.train</span> <span class="op">==</span> <span class="va">study.test</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="co"># for facetting later</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>split<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">study.train</span><span class="op">==</span><span class="st">'Average'</span><span class="op">~</span><span class="st">'Average'</span>, <span class="cn">TRUE</span><span class="op">~</span><span class="st">'none'</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>split<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">split</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'none'</span>, <span class="st">'Average'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># convert to factor to enforce ordering</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>study.train<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">study.train</span>, levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">datasets</span>, <span class="st">'Average'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>study.test<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">study.test</span>, levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">)</span>,<span class="st">'Average'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">study.test</span>, x<span class="op">=</span><span class="va">study.train</span>, fill<span class="op">=</span><span class="va">AUC</span>, size<span class="op">=</span><span class="va">CV</span>, color<span class="op">=</span><span class="va">CV</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+        <span class="co"># text in tiles</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span>label<span class="op">=</span><span class="st">"format(AUC, digits=2)"</span><span class="op">)</span>, 
+            col<span class="op">=</span><span class="st">'white'</span>, size<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">+</span>
+        <span class="co"># color scheme</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span>colours<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'darkgreen'</span>,<span class="st">'forestgreen'</span>, 
+                                        <span class="st">'chartreuse3'</span>,<span class="st">'lawngreen'</span>, 
+                                        <span class="st">'yellow'</span><span class="op">)</span><span class="op">)</span>, limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="co"># axis position/remove boxes/ticks/facet background/etc.</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span>position<span class="op">=</span><span class="st">'top'</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.line<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+                axis.ticks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+                axis.text.x.top <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle<span class="op">=</span><span class="fl">45</span>, hjust<span class="op">=</span><span class="fl">.1</span><span class="op">)</span>, 
+                panel.grid<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+                panel.border<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+                strip.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+                strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">'Training Set'</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">'Test Set'</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#FFFFFF00'</span>, <span class="st">'grey'</span><span class="op">)</span>, guide<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_size_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, guide<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="op">~</span><span class="va">split</span>, scales <span class="op">=</span> <span class="st">'free'</span>, space <span class="op">=</span> <span class="st">'free'</span><span class="op">)</span>
+<span class="co">## Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please</span>
+<span class="co">## use `guide = "none"` instead.</span>
+
+<span class="co">## Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please</span>
+<span class="co">## use `guide = "none"` instead.</span></code></pre></div>
 <p><img src="SIAMCAT_meta_files/figure-html/plot_auroc-1.png" width="700"></p>
 </div>
 <div id="investigate-feature-weights" class="section level2">
 <h2 class="hasAnchor">
-<a href="#investigate-feature-weights" class="anchor"></a>Investigate Feature Weights</h2>
+<a href="#investigate-feature-weights" class="anchor" aria-hidden="true"></a>Investigate Feature Weights</h2>
 <p>Now that we the trained models (and we saved them in the <code>sc.list</code> object), we can also extract the model weights using <code>SIAMCAT</code> and compare to the associations we computed above.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">weight.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">weight.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">d</span> <span class="kw">in</span> <span class="va">datasets</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="va">sc.list</span><span class="op">[[</span><span class="va">d</span><span class="op">]</span><span class="op">]</span>
-  <span class="co"># extract the feature weights out of the SIAMCAT object</span>
-  <span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/feature_weights.html">feature_weights</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span>
-  <span class="va">temp</span><span class="op">$</span><span class="va">genus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span>
-  <span class="co"># save selected info in the weight.list</span>
-  <span class="va">weight.list</span><span class="op">[[</span><span class="va">d</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">temp</span> <span class="op">%&gt;%</span> 
-    <span class="fu">select</span><span class="op">(</span><span class="va">genus</span>, <span class="va">median.rel.weight</span>, <span class="va">mean.rel.weight</span>, <span class="va">percentage</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="va">d</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>r.med<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rank.html">rank</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">median.rel.weight</span><span class="op">)</span><span class="op">)</span>, 
-           r.mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rank.html">rank</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">mean.rel.weight</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="va">sc.obj.train</span> <span class="op">&lt;-</span> <span class="va">sc.list</span><span class="op">[[</span><span class="va">d</span><span class="op">]</span><span class="op">]</span>
+    <span class="co"># extract the feature weights out of the SIAMCAT object</span>
+    <span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/feature_weights-methods.html">feature_weights</a></span><span class="op">(</span><span class="va">sc.obj.train</span><span class="op">)</span>
+    <span class="va">temp</span><span class="op">$</span><span class="va">genus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">temp</span><span class="op">)</span>
+    <span class="co"># save selected info in the weight.list</span>
+    <span class="va">weight.list</span><span class="op">[[</span><span class="va">d</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">temp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">genus</span>, <span class="va">median.rel.weight</span>, <span class="va">mean.rel.weight</span>, <span class="va">percentage</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="va">d</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>r.med<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">median.rel.weight</span><span class="op">)</span><span class="op">)</span>, 
+            r.mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">mean.rel.weight</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="co"># combine all feature weights into a single tibble</span>
-<span class="va">df.weights</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="va">weight.list</span><span class="op">)</span>
-<span class="va">df.weights</span> <span class="op">&lt;-</span> <span class="va">df.weights</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">genus</span><span class="op">!=</span><span class="st">'unclassified'</span><span class="op">)</span></code></pre></div>
+<span class="va">df.weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">weight.list</span><span class="op">)</span>
+<span class="va">df.weights</span> <span class="op">&lt;-</span> <span class="va">df.weights</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">genus</span><span class="op">!=</span><span class="st">'unclassified'</span><span class="op">)</span></code></pre></div>
 <p>Using this, we can plot another heatmap with the weights, focussing on the genera of interest for which we plotted the associations as heatmap above.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute absolute feature weights</span>
-<span class="va">abs.weights</span> <span class="op">&lt;-</span> <span class="va">df.weights</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Study</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">summarise</span><span class="op">(</span>sum.median<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">median.rel.weight</span><span class="op">)</span><span class="op">)</span>,
-            sum.mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">mean.rel.weight</span><span class="op">)</span><span class="op">)</span>,
-            .groups<span class="op">=</span><span class="st">'drop'</span><span class="op">)</span>
+<span class="va">abs.weights</span> <span class="op">&lt;-</span> <span class="va">df.weights</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Study</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>sum.median<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">median.rel.weight</span><span class="op">)</span><span class="op">)</span>,
+                sum.mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">mean.rel.weight</span><span class="op">)</span><span class="op">)</span>,
+                .groups<span class="op">=</span><span class="st">'drop'</span><span class="op">)</span>
 
-<span class="va">df.weights</span> <span class="op">%&gt;%</span> 
-  <span class="fu">full_join</span><span class="op">(</span><span class="va">abs.weights</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># normalize by the absolute model size</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>median.rel.weight<span class="op">=</span><span class="va">median.rel.weight</span><span class="op">/</span><span class="va">sum.median</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># only include genera of interest</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">genus</span> <span class="op">%in%</span> <span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># highlight feature rank for the top 20 features</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>r.med<span class="op">=</span><span class="fu">case_when</span><span class="op">(</span><span class="va">r.med</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">~</span><span class="cn">NA_real_</span>, <span class="cn">TRUE</span><span class="op">~</span><span class="va">r.med</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="co"># enforce the correct ordering by converting to factors again</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>genus<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">genus</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">Study</span>, levels <span class="op">=</span> <span class="va">datasets</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y<span class="op">=</span><span class="va">genus</span>, x<span class="op">=</span><span class="va">Study</span>, fill<span class="op">=</span><span class="va">median.rel.weight</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">geom_tile</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">scale_fill_gradientn</span><span class="op">(</span>colours<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span>
-      <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'#007A53'</span>, <span class="st">'#009F4D'</span>, <span class="st">"#6CC24A"</span>, <span class="st">'white'</span>,
-        <span class="st">"#EFC06E"</span>, <span class="st">"#FFA300"</span>, <span class="st">'#BE5400'</span><span class="op">)</span><span class="op">)</span>, 
-      limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.15</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">geom_text</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>label<span class="op">=</span><span class="va">r.med</span><span class="op">)</span>, col<span class="op">=</span><span class="st">'black'</span>, size<span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme</span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-    <span class="fu">xlab</span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme</span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size<span class="op">=</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span>
+<span class="va">df.weights</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">full_join</a></span><span class="op">(</span><span class="va">abs.weights</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># normalize by the absolute model size</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>median.rel.weight<span class="op">=</span><span class="va">median.rel.weight</span><span class="op">/</span><span class="va">sum.median</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># only include genera of interest</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">genus</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="co"># highlight feature rank for the top 20 features</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>r.med<span class="op">=</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span><span class="va">r.med</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">~</span><span class="cn">NA_real_</span>, <span class="cn">TRUE</span><span class="op">~</span><span class="va">r.med</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="co"># enforce the correct ordering by converting to factors again</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>genus<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">genus</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="va">genera.of.interest</span><span class="op">$</span><span class="va">genus</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Study<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Study</span>, levels <span class="op">=</span> <span class="va">datasets</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">genus</span>, x<span class="op">=</span><span class="va">Study</span>, fill<span class="op">=</span><span class="va">median.rel.weight</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_fill_gradientn</a></span><span class="op">(</span>colours<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#007A53'</span>, <span class="st">'#009F4D'</span>, <span class="st">"#6CC24A"</span>, <span class="st">'white'</span>,
+            <span class="st">"#EFC06E"</span>, <span class="st">"#FFA300"</span>, <span class="st">'#BE5400'</span><span class="op">)</span><span class="op">)</span>, 
+            limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.15</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label<span class="op">=</span><span class="va">r.med</span><span class="op">)</span>, col<span class="op">=</span><span class="st">'black'</span>, size<span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">''</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## Joining, by = "Study"</span></code></pre></div>
 <p><img src="SIAMCAT_meta_files/figure-html/plot_weights_heatmap-1.png" width="700"></p>
 </div>
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session Info</h1>
+<a href="#session-info" class="anchor" aria-hidden="true"></a>Session Info</h1>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">## R version 4.0.2 (2020-06-22)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## R version 4.0.5 (2021-03-31)</span>
 <span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span>
-<span class="co">## Running under: macOS Catalina 10.15.5</span>
+<span class="co">## Running under: macOS Big Sur 10.16</span>
 <span class="co">## </span>
 <span class="co">## Matrix products: default</span>
 <span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span>
@@ -492,50 +488,53 @@
 <span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">## </span>
 <span class="co">## other attached packages:</span>
-<span class="co">##  [1] SIAMCAT_1.11.1    phyloseq_1.32.0   mlr_2.18.0        ParamHelpers_1.14</span>
-<span class="co">##  [5] forcats_0.5.1     stringr_1.4.0     dplyr_1.0.4       purrr_0.3.4      </span>
-<span class="co">##  [9] readr_1.4.0       tidyr_1.1.2       tibble_3.0.6      ggplot2_3.3.3    </span>
-<span class="co">## [13] tidyverse_1.3.0   BiocStyle_2.16.1 </span>
+<span class="co">##  [1] SIAMCAT_1.13.3    phyloseq_1.34.0   mlr_2.19.0        ParamHelpers_1.14</span>
+<span class="co">##  [5] forcats_0.5.1     stringr_1.4.0     dplyr_1.0.7       purrr_0.3.4      </span>
+<span class="co">##  [9] readr_2.0.0       tidyr_1.1.3       tibble_3.1.3      ggplot2_3.3.5    </span>
+<span class="co">## [13] tidyverse_1.3.1   BiocStyle_2.18.1 </span>
 <span class="co">## </span>
 <span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##   [1] colorspace_2.0-0    ellipsis_0.3.1      rprojroot_2.0.2    </span>
-<span class="co">##   [4] XVector_0.28.0      fs_1.5.0            rstudioapi_0.13    </span>
-<span class="co">##   [7] farver_2.0.3        lubridate_1.7.9.2   xml2_1.3.2         </span>
-<span class="co">##  [10] PRROC_1.3.1         codetools_0.2-18    splines_4.0.2      </span>
-<span class="co">##  [13] cachem_1.0.4        knitr_1.31          ade4_1.7-16        </span>
-<span class="co">##  [16] jsonlite_1.7.2      pROC_1.17.0.1       gridBase_0.4-7     </span>
-<span class="co">##  [19] broom_0.7.4         cluster_2.1.1       dbplyr_2.1.0       </span>
-<span class="co">##  [22] BiocManager_1.30.10 compiler_4.0.2      httr_1.4.2         </span>
-<span class="co">##  [25] backports_1.2.1     assertthat_0.2.1    Matrix_1.3-2       </span>
-<span class="co">##  [28] fastmap_1.1.0       cli_2.3.0           htmltools_0.5.1.1  </span>
-<span class="co">##  [31] prettyunits_1.1.1   tools_4.0.2         igraph_1.2.6       </span>
-<span class="co">##  [34] gtable_0.3.0        glue_1.4.2          LiblineaR_2.10-8   </span>
-<span class="co">##  [37] reshape2_1.4.4      fastmatch_1.1-0     Rcpp_1.0.6         </span>
-<span class="co">##  [40] parallelMap_1.5.0   Biobase_2.48.0      cellranger_1.1.0   </span>
-<span class="co">##  [43] pkgdown_1.6.1.9000  vctrs_0.3.6         Biostrings_2.56.0  </span>
-<span class="co">##  [46] multtest_2.44.0     ape_5.4-1           nlme_3.1-152       </span>
-<span class="co">##  [49] iterators_1.0.13    xfun_0.21           rvest_0.3.6        </span>
-<span class="co">##  [52] lifecycle_0.2.0     beanplot_1.2        zlibbioc_1.34.0    </span>
-<span class="co">##  [55] MASS_7.3-53.1       scales_1.1.1        ragg_0.4.1         </span>
-<span class="co">##  [58] hms_1.0.0           parallel_4.0.2      biomformat_1.16.0  </span>
-<span class="co">##  [61] rhdf5_2.32.4        RColorBrewer_1.1-2  BBmisc_1.11        </span>
-<span class="co">##  [64] curl_4.3            yaml_2.2.1          gridExtra_2.3      </span>
-<span class="co">##  [67] memoise_2.0.0       stringi_1.5.3       highr_0.8          </span>
-<span class="co">##  [70] S4Vectors_0.26.1    desc_1.2.0          corrplot_0.84      </span>
-<span class="co">##  [73] foreach_1.5.1       checkmate_2.0.0     permute_0.9-5      </span>
-<span class="co">##  [76] BiocGenerics_0.34.0 shape_1.4.5         matrixStats_0.58.0 </span>
-<span class="co">##  [79] rlang_0.4.10        pkgconfig_2.0.3     systemfonts_1.0.1  </span>
-<span class="co">##  [82] evaluate_0.14       lattice_0.20-41     Rhdf5lib_1.10.1    </span>
-<span class="co">##  [85] labeling_0.4.2      tidyselect_1.1.0    plyr_1.8.6         </span>
-<span class="co">##  [88] magrittr_2.0.1      bookdown_0.21       R6_2.5.0           </span>
-<span class="co">##  [91] IRanges_2.22.2      generics_0.1.0      DBI_1.1.1          </span>
-<span class="co">##  [94] pillar_1.4.7        haven_2.3.1         withr_2.4.1        </span>
-<span class="co">##  [97] mgcv_1.8-33         survival_3.2-7      modelr_0.1.8       </span>
-<span class="co">## [100] crayon_1.4.1        rmarkdown_2.6       progress_1.2.2     </span>
-<span class="co">## [103] grid_4.0.2          readxl_1.3.1        data.table_1.13.6  </span>
-<span class="co">## [106] vegan_2.5-7         infotheo_1.2.0      reprex_1.0.0       </span>
-<span class="co">## [109] digest_0.6.27       textshaping_0.3.0   glmnet_4.1         </span>
-<span class="co">## [112] stats4_4.0.2        munsell_0.5.0</span></code></pre></div>
+<span class="co">##   [1] colorspace_2.0-2    ellipsis_0.3.2      rprojroot_2.0.2    </span>
+<span class="co">##   [4] XVector_0.30.0      fs_1.5.0            rstudioapi_0.13    </span>
+<span class="co">##   [7] farver_2.1.0        bit64_4.0.5         fansi_0.5.0        </span>
+<span class="co">##  [10] lubridate_1.7.10    xml2_1.3.2          PRROC_1.3.1        </span>
+<span class="co">##  [13] codetools_0.2-18    splines_4.0.5       cachem_1.0.5       </span>
+<span class="co">##  [16] knitr_1.33          ade4_1.7-17         jsonlite_1.7.2     </span>
+<span class="co">##  [19] pROC_1.17.0.1       gridBase_0.4-7      broom_0.7.9        </span>
+<span class="co">##  [22] cluster_2.1.2       dbplyr_2.1.1        BiocManager_1.30.16</span>
+<span class="co">##  [25] compiler_4.0.5      httr_1.4.2          backports_1.2.1    </span>
+<span class="co">##  [28] assertthat_0.2.1    Matrix_1.3-4        fastmap_1.1.0      </span>
+<span class="co">##  [31] cli_3.0.1           prettyunits_1.1.1   htmltools_0.5.1.1  </span>
+<span class="co">##  [34] tools_4.0.5         igraph_1.2.6        gtable_0.3.0       </span>
+<span class="co">##  [37] glue_1.4.2          LiblineaR_2.10-12   reshape2_1.4.4     </span>
+<span class="co">##  [40] fastmatch_1.1-3     Rcpp_1.0.7          parallelMap_1.5.1  </span>
+<span class="co">##  [43] Biobase_2.50.0      cellranger_1.1.0    jquerylib_0.1.4    </span>
+<span class="co">##  [46] pkgdown_1.6.1.9001  vctrs_0.3.8         Biostrings_2.58.0  </span>
+<span class="co">##  [49] rhdf5filters_1.2.1  multtest_2.46.0     ape_5.5            </span>
+<span class="co">##  [52] nlme_3.1-152        iterators_1.0.13    xfun_0.24          </span>
+<span class="co">##  [55] rvest_1.0.1         lifecycle_1.0.0     beanplot_1.2       </span>
+<span class="co">##  [58] zlibbioc_1.36.0     MASS_7.3-54         scales_1.1.1       </span>
+<span class="co">##  [61] vroom_1.5.3         ragg_1.1.3          hms_1.1.0          </span>
+<span class="co">##  [64] parallel_4.0.5      biomformat_1.18.0   rhdf5_2.34.0       </span>
+<span class="co">##  [67] RColorBrewer_1.1-2  BBmisc_1.11         curl_4.3.2         </span>
+<span class="co">##  [70] yaml_2.2.1          gridExtra_2.3       memoise_2.0.0      </span>
+<span class="co">##  [73] sass_0.4.0          stringi_1.7.3       highr_0.9          </span>
+<span class="co">##  [76] S4Vectors_0.28.1    desc_1.3.0          corrplot_0.90      </span>
+<span class="co">##  [79] foreach_1.5.1       permute_0.9-5       checkmate_2.0.0    </span>
+<span class="co">##  [82] BiocGenerics_0.36.1 shape_1.4.6         matrixStats_0.60.0 </span>
+<span class="co">##  [85] rlang_0.4.11        pkgconfig_2.0.3     systemfonts_1.0.2  </span>
+<span class="co">##  [88] evaluate_0.14       lattice_0.20-44     Rhdf5lib_1.12.1    </span>
+<span class="co">##  [91] labeling_0.4.2      bit_4.0.4           tidyselect_1.1.1   </span>
+<span class="co">##  [94] plyr_1.8.6          magrittr_2.0.1      bookdown_0.22      </span>
+<span class="co">##  [97] R6_2.5.0            IRanges_2.24.1      generics_0.1.0     </span>
+<span class="co">## [100] DBI_1.1.1           mgcv_1.8-36         pillar_1.6.1       </span>
+<span class="co">## [103] haven_2.4.1         withr_2.4.2         survival_3.2-11    </span>
+<span class="co">## [106] modelr_0.1.8        crayon_1.4.1        utf8_1.2.2         </span>
+<span class="co">## [109] tzdb_0.1.2          rmarkdown_2.9       progress_1.2.2     </span>
+<span class="co">## [112] grid_4.0.5          readxl_1.3.1        data.table_1.14.0  </span>
+<span class="co">## [115] vegan_2.5-7         infotheo_1.2.0      reprex_2.0.0       </span>
+<span class="co">## [118] digest_0.6.27       textshaping_0.3.5   glmnet_4.1-2       </span>
+<span class="co">## [121] stats4_4.0.5        munsell_0.5.0       bslib_0.2.5.1</span></code></pre></div>
 </div>
   </div>
 
@@ -555,7 +554,7 @@
 
 <div class="privacy">
   <p><strong>Privacy:</strong> Usage of this site follows
-      <a href="https://www.embl.de/aboutus/privacy_policy/index.html">EMBL’s Privacy Policy</a><br>
+      <a href="https://www.embl.de/aboutus/privacy_policy/index.html" class="external-link">EMBL’s Privacy Policy</a><br>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>

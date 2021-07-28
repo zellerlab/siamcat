@@ -71,7 +71,7 @@ the proportion of model weights shown.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -117,13 +117,13 @@ the proportion of model weights shown.
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -157,12 +157,12 @@ displaying</p><ul>
 
     </div>
 
-    <pre class="usage"><span class='fu'>model.interpretation.plot</span><span class='op'>(</span><span class='va'>siamcat</span>, fn.plot <span class='op'>=</span> <span class='cn'>NULL</span>,
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>model.interpretation.plot</span><span class='op'>(</span><span class='va'>siamcat</span>, fn.plot <span class='op'>=</span> <span class='cn'>NULL</span>,
     color.scheme <span class='op'>=</span> <span class='st'>"BrBG"</span>,
     consens.thres <span class='op'>=</span> <span class='fl'>0.5</span>,
     heatmap.type <span class='op'>=</span> <span class='st'>"zscore"</span>,
     limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>3</span>, <span class='fl'>3</span><span class='op'>)</span>, detect.lim <span class='op'>=</span> <span class='fl'>1e-06</span>,
-    max.show <span class='op'>=</span> <span class='fl'>50</span>, prompt<span class='op'>=</span><span class='cn'>TRUE</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    max.show <span class='op'>=</span> <span class='fl'>50</span>, prompt<span class='op'>=</span><span class='cn'>TRUE</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,7 +195,7 @@ or <code>'zscore'</code>, defaults to <code>'zscore'</code></p></td>
     <tr>
       <th>limits</th>
       <td><p>vector, cutoff for extreme values in the heatmap,
-defaults to <code><a href='https://rdrr.io/r/base/c.html'>c(-3, 3)</a></code></p></td>
+defaults to <code>c(-3, 3)</code></p></td>
     </tr>
     <tr>
       <th>detect.lim</th>
@@ -239,12 +239,13 @@ defaults to <code>1</code></p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-
-<span class='co'># simple working example</span>
-<span class='fu'>model.interpretation.plot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, fn.plot<span class='op'>=</span><span class='st'>'./interpretion.pdf'</span>,
-    heatmap.type<span class='op'>=</span><span class='st'>'zscore'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Successfully plotted model interpretation plot to: ./interpretion.pdf</span></div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># simple working example</span></span>
+<span class='r-in'><span class='fu'>model.interpretation.plot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, fn.plot<span class='op'>=</span><span class='st'>'./interpretion.pdf'</span>,</span>
+<span class='r-in'>    heatmap.type<span class='op'>=</span><span class='st'>'zscore'</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Successfully plotted model interpretation plot to: ./interpretion.pdf</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

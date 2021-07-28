@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -89,14 +89,14 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+  <a href="https://twitter.com/siamcat_dev" class="external-link">
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+  <a href="https://github.com/zellerlab/siamcat" class="external-link">
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -110,11 +110,16 @@
 
       
 
-      </header><script src="SIAMCAT_vignette_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="SIAMCAT_vignette_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip></h1>
-            
+      <h1 data-toc-skip>SIAMCAT: Statistical Inference of Associations between Microbial Communities And host phenoTypes</h1>
+                        <h4 data-toc-skip class="author">Konrad Zych, Jakob Wirbel, and Georg Zeller</h4>
+            <address class="author_afil">
+      EMBL Heidelberg<br><a class="author_email" href="mailto:#"></a><a href="mailto:georg.zeller@embl.de" class="email">georg.zeller@embl.de</a>
+      </address>
+                  
+            <h4 data-toc-skip class="date">Date last modified: 2020-04-04</h4>
       
       
       <div class="hidden name"><code>SIAMCAT_vignette.Rmd</code></div>
@@ -123,65 +128,26 @@
 
     
     
-<table class="table"><tbody>
-<tr class="odd">
-<td>title: "SIAMCAT: Statistical Inference of Associations between Microbial</td>
-</tr>
-<tr class="even">
-<td>Communities And host phenoTypes"</td>
-</tr>
-<tr class="odd">
-<td>author:</td>
-</tr>
-<tr class="even">
-<td>- name: “Konrad Zych, Jakob Wirbel, and Georg Zeller”</td>
-</tr>
-<tr class="odd">
-<td>affiliation: “EMBL Heidelberg”</td>
-</tr>
-<tr class="even">
-<td>email: "<a href="mailto:georg.zeller@embl.de%22" class="email">georg.zeller@embl.de"</a>
-</td>
-</tr>
-<tr class="odd">
-<td>date: “Date last modified: 2020-04-04”</td>
-</tr>
-<tr class="even">
-<td>output: BiocStyle::html_document</td>
-</tr>
-<tr class="odd">
-<td>vignette: &gt;</td>
-</tr>
-<tr class="even">
-<td>%</td>
-</tr>
-<tr class="odd">
-<td>%</td>
-</tr>
-<tr class="even">
-<td>%</td>
-</tr>
-</tbody></table>
 <div id="about-this-vignette" class="section level1">
 <h1 class="hasAnchor">
-<a href="#about-this-vignette" class="anchor"></a>About This Vignette</h1>
-<p>This vignette aims to be a short tutorial for the main functionalities of <code>SIAMCAT</code>. Examples of additional workflows or more detailed tutorials can be found in other vignettes (see the <a href="https://bioconductor.org/packages/SIAMCAT">BioConductor page</a>).</p>
-<p><code>SIAMCAT</code> is part of the suite of computational microbiome analysis tools hosted at <a href="https://www.embl.org">EMBL</a> by the groups of <a href="https://www.embl.de/research/units/scb/bork/index.html">Peer Bork</a> and <a href="https://www.embl.de/research/units/scb/zeller/index.html">Georg Zeller</a>. Find out more at <a href="http://microbiome-tools.embl.de/">EMBL-microbiome tools</a>.</p>
+<a href="#about-this-vignette" class="anchor" aria-hidden="true"></a>About This Vignette</h1>
+<p>This vignette aims to be a short tutorial for the main functionalities of <code>SIAMCAT</code>. Examples of additional workflows or more detailed tutorials can be found in other vignettes (see the <a href="https://bioconductor.org/packages/SIAMCAT" class="external-link">BioConductor page</a>).</p>
+<p><code>SIAMCAT</code> is part of the suite of computational microbiome analysis tools hosted at <a href="https://www.embl.org" class="external-link">EMBL</a> by the groups of <a href="https://www.embl.de/research/units/scb/bork/index.html" class="external-link">Peer Bork</a> and <a href="https://www.embl.de/research/units/scb/zeller/index.html" class="external-link">Georg Zeller</a>. Find out more at <a href="http://microbiome-tools.embl.de/" class="external-link">EMBL-microbiome tools</a>.</p>
 </div>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
+<a href="#introduction" class="anchor" aria-hidden="true"></a>Introduction</h1>
 <p>Associations between microbiome and host phenotypes are ideally described by quantitative models able to predict host status from microbiome composition. <code>SIAMCAT</code> can do so for data from hundreds of thousands of microbial taxa, gene families, or metabolic pathways over hundreds of samples. <code>SIAMCAT</code> produces graphical output for convenient assessment of the quality of the input data and statistical associations, for model diagnostics and inference revealing the most predictive microbial biomarkers.</p>
 </div>
 <div id="quick-start" class="section level1">
 <h1 class="hasAnchor">
-<a href="#quick-start" class="anchor"></a>Quick Start</h1>
-<p>For this vignette, we use an example dataset included in the <code>SIAMCAT</code> package. As example dataset we use the data from the publication of <a href="http://europepmc.org/abstract/MED/25432777">Zeller et al</a>, which demonstrated the potential of microbial species in fecal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.</p>
+<a href="#quick-start" class="anchor" aria-hidden="true"></a>Quick Start</h1>
+<p>For this vignette, we use an example dataset included in the <code>SIAMCAT</code> package. As example dataset we use the data from the publication of <a href="http://europepmc.org/abstract/MED/25432777" class="external-link">Zeller et al</a>, which demonstrated the potential of microbial species in fecal samples to distinguish patients with colorectal cancer (CRC) from healthy controls.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"SIAMCAT"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"feat_crc_zeller"</span>, package<span class="op">=</span><span class="st">"SIAMCAT"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"meta_crc_zeller"</span>, package<span class="op">=</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"feat_crc_zeller"</span>, package<span class="op">=</span><span class="st">"SIAMCAT"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"meta_crc_zeller"</span>, package<span class="op">=</span><span class="st">"SIAMCAT"</span><span class="op">)</span></code></pre></div>
 <p>First, <code>SIAMCAT</code> needs a feature matrix (can be either a <code>matrix</code>, a <code>data.frame</code>, or a <code>phyloseq-otu_table</code>), which contains values of different features (in rows) for different samples (in columns). For example, the feature matrix included here contains relative abundances for bacterial species calculated with the <a href="motu-tool.org">mOTU profiler</a> for 141 samples:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">feat.crc.zeller</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></code></pre></div>
@@ -194,14 +160,14 @@
 ## Methanoculleus marisnigri [h:1]           0.0000000
 ## Methanococcoides burtonii [h:10]          0.0000000</code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">feat.crc.zeller</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">feat.crc.zeller</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 1754  141</code></pre>
 <blockquote>
 <p>Please note that <code>SIAMCAT</code> is supposed to work with <strong>relative abundances</strong>. Other types of data (e.g. counts) will also work, but not all functions of the package will result in meaningful outputs.</p>
 </blockquote>
 <p>Secondly, we also have metadata about the samples in another <code>data.frame</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">meta.crc.zeller</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">meta.crc.zeller</span><span class="op">)</span></code></pre></div>
 <pre><code>##                    Age BMI Gender AJCC_stage     FOBT Group
 ## CCIS27304052ST-3-0  52  20      F         -1 Negative   CTR
 ## CCIS15794887ST-4-0  37  18      F         -1 Negative   CTR
@@ -217,7 +183,7 @@
 ##    CRC
 ## Label used as control:
 ##    CTR</code></pre>
-<pre><code>## + finished create.label.from.metadata in 0.001 s</code></pre>
+<pre><code>## + finished create.label.from.metadata in 0.003 s</code></pre>
 <p>Now we have all the ingredients to create a <code>SIAMCAT</code> object. Please have a look at the <a href="SIAMCAT_read-in.html">vignette about input formats</a> for more information about supported formats and other ways to create a <code>SIAMCAT</code> object.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/siamcat.html">siamcat</a></span><span class="op">(</span>feat<span class="op">=</span><span class="va">feat.crc.zeller</span>,
@@ -228,7 +194,7 @@
 <pre><code>## + Keeping labels of 141 sample(s).</code></pre>
 <pre><code>## +++ checking sample number per class</code></pre>
 <pre><code>## +++ checking overlap between samples and metadata</code></pre>
-<pre><code>## + finished validate.data in 0.326 s</code></pre>
+<pre><code>## + finished validate.data in 0.053 s</code></pre>
 <p>A few information about the <code>SIAMCAT</code> object can be accessed with the <code>show</code> function from <code>phyloseq</code> (<code>SIAMCAT</code> builds on the <code>phyloseq</code> data structure):</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">show</span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span></code></pre></div>
@@ -247,7 +213,7 @@
 </div>
 <div id="association-testing" class="section level1">
 <h1 class="hasAnchor">
-<a href="#association-testing" class="anchor"></a>Association Testing</h1>
+<a href="#association-testing" class="anchor" aria-hidden="true"></a>Association Testing</h1>
 <p>Associations between microbial species and the label can be tested with the <code>check.associations</code> function. The function computes for each species the significance using a non-parametric Wilcoxon test and different effect sizes for the association (e.g. AUC or fold change).</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check.associations.html">check.associations</a></span><span class="op">(</span>
@@ -257,12 +223,12 @@
     mult.corr <span class="op">=</span> <span class="st">"fdr"</span>,
     detect.lim <span class="op">=</span> <span class="fl">10</span> <span class="op">^</span><span class="op">-</span><span class="fl">6</span>,
     plot.type <span class="op">=</span> <span class="st">"quantile.box"</span>,
-    panels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    panels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fc"</span>, <span class="st">"prevalence"</span>, <span class="st">"auroc"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>The function produces a pdf file as output, since the plot is optimized for a landscape DIN-A4 layout, but can also used to plot on an active graphic device, e.g. in RStudio. The resulting plot then looks like that: <img src="associations_plot.png" alt="Association Plot"></p>
 </div>
 <div id="confounder-testing" class="section level1">
 <h1 class="hasAnchor">
-<a href="#confounder-testing" class="anchor"></a>Confounder Testing</h1>
+<a href="#confounder-testing" class="anchor" aria-hidden="true"></a>Confounder Testing</h1>
 <p>As many biological and technical factors beyond the primary phenotype of interest can influence microbiome composition, simple association studies may suffer confounding by other variables, which can lead to spurious results. The <code>check.confounders</code> function provides the option to test the associated metadata variables for potential confounding influence. No information is stored in the <code>SIAMCAT</code> object, but the different analyses are visualized and saved to a combined pdf file for qualitative interpretation.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check.confounders.html">check.confounders</a></span><span class="op">(</span>
@@ -282,17 +248,17 @@
 </div>
 <div id="model-building" class="section level1">
 <h1 class="hasAnchor">
-<a href="#model-building" class="anchor"></a>Model Building</h1>
+<a href="#model-building" class="anchor" aria-hidden="true"></a>Model Building</h1>
 <p>One strength of <code>SIAMCAT</code> is the versatile but easy-to-use interface for the construction of machine learning models on the basis of microbial species. <code>SIAMCAT</code> contains functions for data normalization, splitting the data into cross-validation folds, training the model, and making predictions based on cross-validation instances and the trained models.</p>
 <div id="data-normalization" class="section level2">
 <h2 class="hasAnchor">
-<a href="#data-normalization" class="anchor"></a>Data Normalization</h2>
+<a href="#data-normalization" class="anchor" aria-hidden="true"></a>Data Normalization</h2>
 <p>Data normalization is performed with the <code>normalize.features</code> function. Here, we use the <code>log.unit</code> method, but several other methods and customization options are available (please check the documentation).</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/normalize.features.html">normalize.features</a></span><span class="op">(</span>
     <span class="va">sc.obj</span>,
     norm.method <span class="op">=</span> <span class="st">"log.unit"</span>,
-    norm.param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    norm.param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
         log.n0 <span class="op">=</span> <span class="fl">1e-06</span>,
         n.p <span class="op">=</span> <span class="fl">2</span>,
         norm.margin <span class="op">=</span> <span class="fl">1</span>
@@ -302,7 +268,7 @@
 </div>
 <div id="prepare-cross-validation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#prepare-cross-validation" class="anchor"></a>Prepare Cross-Validation</h2>
+<a href="#prepare-cross-validation" class="anchor" aria-hidden="true"></a>Prepare Cross-Validation</h2>
 <p>Preparation of the cross-validation fold is a crucial step in machine learning. <code>SIAMCAT</code> greatly simplifies the set-up of cross-validation schemes, including stratification of samples or keeping samples inseperable based on metadata. For this small example, we choose a twice-repeated 5-fold cross-validation scheme. The data-split will be saved in the <code>data_split</code> slot of the <code>SIAMCAT</code> object.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/create.data.split.html">create.data.split</a></span><span class="op">(</span>
@@ -314,7 +280,7 @@
 </div>
 <div id="model-training" class="section level2">
 <h2 class="hasAnchor">
-<a href="#model-training" class="anchor"></a>Model Training</h2>
+<a href="#model-training" class="anchor" aria-hidden="true"></a>Model Training</h2>
 <p>The actual model training is performed using the function <code>train.model</code>. Again, multiple options for customization are available, ranging from the machine learning method to the measure for model selection or customizable parameter set for hyperparameter tuning.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/train.model.html">train.model</a></span><span class="op">(</span>
@@ -324,11 +290,11 @@
 <p>The models are saved in the <code>model_list</code> slot of the <code>SIAMCAT</code> object. The model building is performed using the <code>mlr</code> R package. All models can easily be accessed.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get information about the model type</span>
-<span class="fu"><a href="../reference/model_type.html">model_type</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/model_type-methods.html">model_type</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "lasso"</code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># access the models</span>
-<span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/models.html">models</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span>
+<span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/models-methods.html">models</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span>
 <span class="va">models</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
 <pre><code>## Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
 ## Trained on: task.id = data; obs = 112; features = 207
@@ -336,32 +302,32 @@
 </div>
 <div id="make-predictions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#make-predictions" class="anchor"></a>Make Predictions</h2>
+<a href="#make-predictions" class="anchor" aria-hidden="true"></a>Make Predictions</h2>
 <p>Using the data-split and the models trained in previous step, we can use the function <code>make.predictions</code> in order to apply the models on the test instances in the data-split. The predictions will be saved in the <code>pred_matrix</code> slot of the <code>SIAMCAT</code> object.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.predictions.html">make.predictions</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span>
-<span class="va">pred_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pred_matrix.html">pred_matrix</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span></code></pre></div>
+<span class="va">pred_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pred_matrix-methods.html">pred_matrix</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pred_matrix</span><span class="op">)</span></code></pre></div>
-<pre><code>##                       CV_rep1    CV_rep2
-## CCIS27304052ST-3-0 0.14388333 0.10785457
-## CCIS15794887ST-4-0 0.06922223 0.08905031
-## CCIS74726977ST-3-0 0.51523795 0.35712806
-## CCIS16561622ST-4-0 0.37398390 0.28188105
-## CCIS79210440ST-3-0 0.19692317 0.12588182
-## CCIS82507866ST-3-0 0.04503173 0.03465467</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pred_matrix</span><span class="op">)</span></code></pre></div>
+<pre><code>##                      CV_rep1    CV_rep2
+## CCIS27304052ST-3-0 0.1256407 0.11186074
+## CCIS15794887ST-4-0 0.1355661 0.11285984
+## CCIS74726977ST-3-0 0.3254160 0.28796040
+## CCIS16561622ST-4-0 0.2447023 0.50927326
+## CCIS79210440ST-3-0 0.2089668 0.10911908
+## CCIS82507866ST-3-0 0.1091574 0.01605905</code></pre>
 </div>
 </div>
 <div id="model-evaluation-and-interpretation" class="section level1">
 <h1 class="hasAnchor">
-<a href="#model-evaluation-and-interpretation" class="anchor"></a>Model Evaluation and Interpretation</h1>
+<a href="#model-evaluation-and-interpretation" class="anchor" aria-hidden="true"></a>Model Evaluation and Interpretation</h1>
 <p>In the final part, we want to find out how well the model performed and which microbial species had been selected in the model. In order to do so, we first calculate how well the predictions fit the real data using the function <code>evaluate.predictions</code>. This function calculates the Area Under the Receiver Operating Characteristic (ROC) Curve (AU-ROC) and the Precision Recall (PR) Curve for each resampled cross-validation run.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sc.obj</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/evaluate.predictions.html">evaluate.predictions</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span></code></pre></div>
 <pre><code>## Evaluated predictions successfully.</code></pre>
 <div id="evaluation-plot" class="section level2">
 <h2 class="hasAnchor">
-<a href="#evaluation-plot" class="anchor"></a>Evaluation Plot</h2>
+<a href="#evaluation-plot" class="anchor" aria-hidden="true"></a>Evaluation Plot</h2>
 <p>To plot the results of the evaluation, we can use the function <code>model.evaluation.plot</code>, which produces a pdf-file showing the ROC and PR Curves for the different resamples runs as well as the mean ROC and PR Curve.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/model.evaluation.plot.html">model.evaluation.plot</a></span><span class="op">(</span><span class="va">sc.obj</span><span class="op">)</span></code></pre></div>
@@ -369,7 +335,7 @@
 </div>
 <div id="interpretation-plot" class="section level2">
 <h2 class="hasAnchor">
-<a href="#interpretation-plot" class="anchor"></a>Interpretation Plot</h2>
+<a href="#interpretation-plot" class="anchor" aria-hidden="true"></a>Interpretation Plot</h2>
 <p>The final plot produced by <code>SIAMCAT</code> is the model interpretation plot, created by the <code>model.interpretation.plot</code> function. The plot shows for the top selected features the</p>
 <ul>
 <li><p>model weights (and how robust they are) as a barplot,</p></li>
@@ -383,8 +349,7 @@
     <span class="va">sc.obj</span>,
     fn.plot <span class="op">=</span> <span class="st">'interpretation.pdf'</span>,
     consens.thres <span class="op">=</span> <span class="fl">0.5</span>,
-    norm.models <span class="op">=</span> <span class="cn">TRUE</span>,
-    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>,
+    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>,
     heatmap.type <span class="op">=</span> <span class="st">'zscore'</span>,
 <span class="op">)</span></code></pre></div>
 <p>The resulting plot looks like this: <img src="interpretation_plot.png" alt="Model Interpretation Plot"></p>
@@ -392,12 +357,12 @@
 </div>
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session Info</h1>
+<a href="#session-info" class="anchor" aria-hidden="true"></a>Session Info</h1>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## R version 4.0.2 (2020-06-22)
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## R version 4.0.5 (2021-03-31)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Catalina 10.15.5
+## Running under: macOS Big Sur 10.16
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
@@ -410,44 +375,46 @@
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] SIAMCAT_1.11.1    phyloseq_1.32.0   mlr_2.18.0        ParamHelpers_1.14
-## [5] BiocStyle_2.16.1 
+## [1] SIAMCAT_1.13.3    phyloseq_1.34.0   mlr_2.19.0        ParamHelpers_1.14
+## [5] BiocStyle_2.18.1 
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] nlme_3.1-152        matrixStats_0.58.0  fs_1.5.0           
-##   [4] RColorBrewer_1.1-2  progress_1.2.2      PRROC_1.3.1        
-##   [7] rprojroot_2.0.2     tools_4.0.2         backports_1.2.1    
-##  [10] R6_2.5.0            vegan_2.5-7         DBI_1.1.1          
-##  [13] BiocGenerics_0.34.0 mgcv_1.8-33         colorspace_2.0-0   
-##  [16] permute_0.9-5       ade4_1.7-16         gridExtra_2.3      
-##  [19] tidyselect_1.1.0    prettyunits_1.1.1   compiler_4.0.2     
-##  [22] parallelMap_1.5.0   glmnet_4.1          textshaping_0.3.0  
-##  [25] Biobase_2.48.0      desc_1.2.0          bookdown_0.21      
-##  [28] scales_1.1.1        checkmate_2.0.0     pkgdown_1.6.1.9000 
-##  [31] systemfonts_1.0.1   stringr_1.4.0       digest_0.6.27      
-##  [34] rmarkdown_2.6       XVector_0.28.0      pkgconfig_2.0.3    
-##  [37] htmltools_0.5.1.1   fastmap_1.1.0       rlang_0.4.10       
-##  [40] BBmisc_1.11         shape_1.4.5         generics_0.1.0     
-##  [43] jsonlite_1.7.2      dplyr_1.0.4         magrittr_2.0.1     
-##  [46] biomformat_1.16.0   Matrix_1.3-2        Rcpp_1.0.6         
-##  [49] munsell_0.5.0       S4Vectors_0.26.1    Rhdf5lib_1.10.1    
-##  [52] ape_5.4-1           infotheo_1.2.0      lifecycle_0.2.0    
-##  [55] pROC_1.17.0.1       stringi_1.5.3       yaml_2.2.1         
-##  [58] MASS_7.3-53.1       zlibbioc_1.34.0     rhdf5_2.32.4       
-##  [61] plyr_1.8.6          grid_4.0.2          LiblineaR_2.10-8   
-##  [64] parallel_4.0.2      crayon_1.4.1        lattice_0.20-41    
-##  [67] Biostrings_2.56.0   splines_4.0.2       multtest_2.44.0    
-##  [70] hms_1.0.0           beanplot_1.2        knitr_1.31         
-##  [73] pillar_1.4.7        igraph_1.2.6        reshape2_1.4.4     
-##  [76] codetools_0.2-18    stats4_4.0.2        fastmatch_1.1-0    
-##  [79] XML_3.99-0.5        glue_1.4.2          evaluate_0.14      
-##  [82] data.table_1.13.6   BiocManager_1.30.10 vctrs_0.3.6        
-##  [85] foreach_1.5.1       gtable_0.3.0        purrr_0.3.4        
-##  [88] assertthat_0.2.1    cachem_1.0.4        ggplot2_3.3.3      
-##  [91] gridBase_0.4-7      xfun_0.21           ragg_0.4.1         
-##  [94] survival_3.2-7      tibble_3.0.6        iterators_1.0.13   
-##  [97] memoise_2.0.0       IRanges_2.22.2      corrplot_0.84      
-## [100] cluster_2.1.1       ellipsis_0.3.1</code></pre>
+##   [1] nlme_3.1-152        matrixStats_0.60.0  fs_1.5.0           
+##   [4] progress_1.2.2      RColorBrewer_1.1-2  PRROC_1.3.1        
+##   [7] rprojroot_2.0.2     tools_4.0.5         backports_1.2.1    
+##  [10] bslib_0.2.5.1       utf8_1.2.2          R6_2.5.0           
+##  [13] vegan_2.5-7         DBI_1.1.1           BiocGenerics_0.36.1
+##  [16] mgcv_1.8-36         colorspace_2.0-2    permute_0.9-5      
+##  [19] rhdf5filters_1.2.1  ade4_1.7-17         prettyunits_1.1.1  
+##  [22] gridExtra_2.3       tidyselect_1.1.1    compiler_4.0.5     
+##  [25] parallelMap_1.5.1   glmnet_4.1-2        textshaping_0.3.5  
+##  [28] Biobase_2.50.0      desc_1.3.0          bookdown_0.22      
+##  [31] sass_0.4.0          scales_1.1.1        checkmate_2.0.0    
+##  [34] pkgdown_1.6.1.9001  systemfonts_1.0.2   stringr_1.4.0      
+##  [37] digest_0.6.27       rmarkdown_2.9       XVector_0.30.0     
+##  [40] pkgconfig_2.0.3     htmltools_0.5.1.1   fastmap_1.1.0      
+##  [43] rlang_0.4.11        BBmisc_1.11         shape_1.4.6        
+##  [46] jquerylib_0.1.4     generics_0.1.0      jsonlite_1.7.2     
+##  [49] dplyr_1.0.7         magrittr_2.0.1      biomformat_1.18.0  
+##  [52] Matrix_1.3-4        Rcpp_1.0.7          munsell_0.5.0      
+##  [55] S4Vectors_0.28.1    Rhdf5lib_1.12.1     fansi_0.5.0        
+##  [58] ape_5.5             infotheo_1.2.0      lifecycle_1.0.0    
+##  [61] pROC_1.17.0.1       stringi_1.7.3       yaml_2.2.1         
+##  [64] MASS_7.3-54         zlibbioc_1.36.0     rhdf5_2.34.0       
+##  [67] plyr_1.8.6          grid_4.0.5          LiblineaR_2.10-12  
+##  [70] parallel_4.0.5      crayon_1.4.1        lattice_0.20-44    
+##  [73] Biostrings_2.58.0   splines_4.0.5       multtest_2.46.0    
+##  [76] hms_1.1.0           beanplot_1.2        knitr_1.33         
+##  [79] pillar_1.6.1        igraph_1.2.6        reshape2_1.4.4     
+##  [82] codetools_0.2-18    stats4_4.0.5        fastmatch_1.1-3    
+##  [85] XML_3.99-0.6        glue_1.4.2          evaluate_0.14      
+##  [88] data.table_1.14.0   BiocManager_1.30.16 vctrs_0.3.8        
+##  [91] foreach_1.5.1       gtable_0.3.0        purrr_0.3.4        
+##  [94] assertthat_0.2.1    cachem_1.0.5        ggplot2_3.3.5      
+##  [97] gridBase_0.4-7      xfun_0.24           ragg_1.1.3         
+## [100] survival_3.2-11     tibble_3.1.3        iterators_1.0.13   
+## [103] memoise_2.0.0       IRanges_2.24.1      corrplot_0.90      
+## [106] cluster_2.1.2       ellipsis_0.3.2</code></pre>
 </div>
   </div>
 
@@ -467,7 +434,7 @@
 
 <div class="privacy">
   <p><strong>Privacy:</strong> Usage of this site follows
-      <a href="https://www.embl.de/aboutus/privacy_policy/index.html">EMBL’s Privacy Policy</a><br>
+      <a href="https://www.embl.de/aboutus/privacy_policy/index.html" class="external-link">EMBL’s Privacy Policy</a><br>
       In accordance with that policy, we use Matomo to collect anonymised data on visits to, downloads from, and searches of this site.
       Contact <a href="mailto:zeller@embl.de">Georg Zeller</a> for details.</p>
 </div>

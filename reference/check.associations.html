@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -110,13 +110,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -143,12 +143,12 @@
     features and the label and visualizes the results</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat</span>, fn.plot<span class='op'>=</span><span class='cn'>NULL</span>, color.scheme <span class='op'>=</span> <span class='st'>"RdYlBu"</span>,
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat</span>, fn.plot<span class='op'>=</span><span class='cn'>NULL</span>, color.scheme <span class='op'>=</span> <span class='st'>"RdYlBu"</span>,
     alpha <span class='op'>=</span><span class='fl'>0.05</span>, mult.corr <span class='op'>=</span> <span class='st'>"fdr"</span>, sort.by <span class='op'>=</span> <span class='st'>"fc"</span>,
     detect.lim <span class='op'>=</span> <span class='fl'>1e-06</span>, pr.cutoff <span class='op'>=</span> <span class='fl'>1e-6</span>, max.show <span class='op'>=</span> <span class='fl'>50</span>,
     plot.type <span class='op'>=</span> <span class='st'>"quantile.box"</span>,
     panels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"fc"</span>,<span class='st'>"auroc"</span><span class='op'>)</span>, prompt <span class='op'>=</span> <span class='cn'>TRUE</span>,
-    feature.type <span class='op'>=</span> <span class='st'>'filtered'</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    feature.type <span class='op'>=</span> <span class='st'>'filtered'</span>, paired<span class='op'>=</span><span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -201,14 +201,14 @@ defaults to <code>50</code></p></td>
     <tr>
       <th>plot.type</th>
       <td><p>string, specify how the abundance should be plotted, must be
-one of these: <code><a href='https://rdrr.io/r/base/c.html'>c("bean", "box", "quantile.box", "quantile.rect")</a></code>,
+one of these: <code>c("bean", "box", "quantile.box", "quantile.rect")</code>,
 defaults to <code>"quantile.box"</code></p></td>
     </tr>
     <tr>
       <th>panels</th>
       <td><p>vector, name of the panels to be plotted next to the
-abundances, possible entries are <code><a href='https://rdrr.io/r/base/c.html'>c("fc", "auroc",
-"prevalence")</a></code>, defaults to <code><a href='https://rdrr.io/r/base/c.html'>c("fc", "auroc")</a></code></p></td>
+abundances, possible entries are <code>c("fc", "auroc",
+"prevalence")</code>, defaults to <code>c("fc", "auroc")</code></p></td>
     </tr>
     <tr>
       <th>prompt</th>
@@ -222,6 +222,11 @@ work? Can be either <code>c()"original", "filtered", or "normalized")</code>.
 Please only change this paramter if you know what you are doing!</p>
 <p>If <code>feature.type</code> is <code>"normalized"</code>, the normalized abundances
 will not be log10-transformed.</p></td>
+    </tr>
+    <tr>
+      <th>paired</th>
+      <td><p>character, column name of the meta-variable containing 
+information for a paired test</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -260,26 +265,30 @@ defaults to <code>1</code></p></td>
     Shift, and Fold Change).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Example data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-
-<span class='co'># Simple example</span>
-<span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,
-    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot.pdf'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Plotted associations between features and label successfully to: ./assoc_plot.pdf</span></div><div class='input'>
-<span class='co'># Plot associations as box plot</span>
-<span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,
-    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot_box.pdf'</span>, plot.type<span class='op'>=</span><span class='st'>'box'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Plotted associations between features and label successfully to: ./assoc_plot_box.pdf</span></div><div class='input'>
-<span class='co'># Additionally, sort by p-value instead of by fold change</span>
-<span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,
-    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot_fc.pdf'</span>, plot.type<span class='op'>=</span><span class='st'>'box'</span>, sort.by<span class='op'>=</span><span class='st'>'p.val'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Plotted associations between features and label successfully to: ./assoc_plot_fc.pdf</span></div><div class='input'>
-<span class='co'># Custom colors</span>
-<span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,
-    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot_blue_yellow.pdf'</span>, plot.type<span class='op'>=</span><span class='st'>'box'</span>,
-    color.scheme<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'cornflowerblue'</span>, <span class='st'>'#ffc125'</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Plotted associations between features and label successfully to: ./assoc_plot_blue_yellow.pdf</span></div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='co'># Example data</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Simple example</span></span>
+<span class='r-in'><span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,</span>
+<span class='r-in'>    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot.pdf'</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Plotted associations between features and label successfully to: ./assoc_plot.pdf</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Plot associations as box plot</span></span>
+<span class='r-in'><span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,</span>
+<span class='r-in'>    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot_box.pdf'</span>, plot.type<span class='op'>=</span><span class='st'>'box'</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Plotted associations between features and label successfully to: ./assoc_plot_box.pdf</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Additionally, sort by p-value instead of by fold change</span></span>
+<span class='r-in'><span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,</span>
+<span class='r-in'>    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot_fc.pdf'</span>, plot.type<span class='op'>=</span><span class='st'>'box'</span>, sort.by<span class='op'>=</span><span class='st'>'p.val'</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Plotted associations between features and label successfully to: ./assoc_plot_fc.pdf</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Custom colors</span></span>
+<span class='r-in'><span class='va'>siamcat_example</span> <span class='op'>&lt;-</span> <span class='fu'>check.associations</span><span class='op'>(</span><span class='va'>siamcat_example</span>,</span>
+<span class='r-in'>    fn.plot<span class='op'>=</span><span class='st'>'./assoc_plot_blue_yellow.pdf'</span>, plot.type<span class='op'>=</span><span class='st'>'box'</span>,</span>
+<span class='r-in'>    color.scheme<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'cornflowerblue'</span>, <span class='st'>'#ffc125'</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Plotted associations between features and label successfully to: ./assoc_plot_blue_yellow.pdf</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

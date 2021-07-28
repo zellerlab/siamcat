@@ -64,7 +64,7 @@ metadata" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -110,13 +110,13 @@ metadata" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -143,8 +143,8 @@ metadata" />
 metadata</p>
     </div>
 
-    <pre class="usage"><span class='fu'>select.samples</span><span class='op'>(</span><span class='va'>siamcat</span>, <span class='va'>filter</span>, allowed.set <span class='op'>=</span> <span class='cn'>NULL</span>,
-    allowed.range <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>select.samples</span><span class='op'>(</span><span class='va'>siamcat</span>, <span class='va'>filter</span>, allowed.set <span class='op'>=</span> <span class='cn'>NULL</span>,
+    allowed.range <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -187,20 +187,26 @@ range or a set of allowed values, the function will filter the
 <a href='siamcat-class.html'>siamcat-class</a> object accordingly.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-
-<span class='co'># Select all samples that fall into an Age-range between 25 and 80 years</span>
-<span class='va'>siamcat_selected</span> <span class='op'>&lt;-</span> <span class='fu'>select.samples</span><span class='op'>(</span><span class='va'>siamcat_example</span>,
-    filter<span class='op'>=</span><span class='st'>'Age'</span>,
-    allowed.range<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>25</span>, <span class='fl'>80</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The machine learning pipeline has to be run again after filtering the samples</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Selcting samples may affect the results of feature filtering and normalization</span>
-#&gt; <span class='warning'>For sanity, results fromprevious analyses (e.g. filtered features) will be removed!</span></div><div class='output co'>#&gt; <span class='message'>Selecting samples finished</span></div><div class='input'>
-<span class='co'># Select only female samples</span>
-<span class='va'>siamcat_female</span> <span class='op'>&lt;-</span> <span class='fu'>select.samples</span><span class='op'>(</span><span class='va'>siamcat_example</span>,
-    filter<span class='op'>=</span><span class='st'>'Gender'</span>,
-    allowed.set<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'F'</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The machine learning pipeline has to be run again after filtering the samples</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Selcting samples may affect the results of feature filtering and normalization</span>
-#&gt; <span class='warning'>For sanity, results fromprevious analyses (e.g. filtered features) will be removed!</span></div><div class='output co'>#&gt; <span class='message'>Selecting samples finished</span></div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Select all samples that fall into an Age-range between 25 and 80 years</span></span>
+<span class='r-in'><span class='va'>siamcat_selected</span> <span class='op'>&lt;-</span> <span class='fu'>select.samples</span><span class='op'>(</span><span class='va'>siamcat_example</span>,</span>
+<span class='r-in'>    filter<span class='op'>=</span><span class='st'>'Age'</span>,</span>
+<span class='r-in'>    allowed.range<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>25</span>, <span class='fl'>80</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>The machine learning pipeline has to be run again after filtering the samples</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Selcting samples may affect the results of feature filtering and normalization</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> For sanity, results fromprevious analyses (e.g. filtered features) will be removed!</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Selecting samples finished</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Select only female samples</span></span>
+<span class='r-in'><span class='va'>siamcat_female</span> <span class='op'>&lt;-</span> <span class='fu'>select.samples</span><span class='op'>(</span><span class='va'>siamcat_example</span>,</span>
+<span class='r-in'>    filter<span class='op'>=</span><span class='st'>'Gender'</span>,</span>
+<span class='r-in'>    allowed.set<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'F'</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>The machine learning pipeline has to be run again after filtering the samples</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Selcting samples may affect the results of feature filtering and normalization</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> For sanity, results fromprevious analyses (e.g. filtered features) will be removed!</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Selecting samples finished</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

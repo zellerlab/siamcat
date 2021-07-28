@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -109,13 +109,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -141,7 +141,7 @@
     <p>This function is used internally by many accessors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat</span>, <span class='va'>slot</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat</span>, <span class='va'>slot</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,148 +168,150 @@ can be either 0 (no output) or 1 (print message)</p></td>
     Returns NULL if slot does not exist.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>#</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-<span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, <span class='st'>"label"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $label
-#&gt;  CCIS27304052ST-3-0  CCIS15794887ST-4-0  CCIS74726977ST-3-0  CCIS16561622ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS79210440ST-3-0  CCIS82507866ST-3-0  CCIS98482370ST-3-0  CCIS00281083ST-3-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS32452666ST-4-0  CCIS94417875ST-3-0  CCIS51667829ST-4-0  CCIS27927933ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS45571137ST-3-0  CCIS81139242ST-4-0  CCIS21126322ST-4-0  CCIS17669415ST-4-0 
-#&gt;                  -1                  -1                  -1                   1 
-#&gt;  CCIS44676181ST-4-0  CCIS29210128ST-4-0  CCIS48725289ST-4-0 CCIS64785924ST-20-0 
-#&gt;                  -1                  -1                   1                  -1 
-#&gt;  CCIS03473770ST-4-0  CCIS10706551ST-3-0  CCIS64773582ST-4-0  CCIS06260551ST-3-0 
-#&gt;                  -1                  -1                  -1                   1 
-#&gt;  CCIS40244499ST-3-0  CCIS85214191ST-3-0  CCIS08668806ST-3-0 CCIS50369211ST-20-0 
-#&gt;                   1                   1                  -1                  -1 
-#&gt;  CCIS87167916ST-4-0  CCIS94496512ST-4-0  CCIS58234805ST-4-0  CCIS91228662ST-4-0 
-#&gt;                   1                  -1                   1                   1 
-#&gt;  CCIS71301801ST-4-0  CCIS24898163ST-4-0  CCIS53355328ST-4-0  CCIS41222843ST-4-0 
-#&gt;                   1                  -1                   1                   1 
-#&gt;  CCIS81887263ST-4-0 CCIS29688262ST-20-0  CCIS87116798ST-4-0  CCIS87605453ST-4-0 
-#&gt;                   1                  -1                   1                   1 
-#&gt;  CCIS83870198ST-4-0  CCIS61287323ST-4-0  CCIS11362406ST-4-0  CCIS14449628ST-4-0 
-#&gt;                   1                   1                  -1                   1 
-#&gt;  CCIS21278152ST-4-0  CCIS25399172ST-4-0  CCIS34055159ST-4-0 CCIS76845094ST-20-0 
-#&gt;                   1                  -1                   1                   1 
-#&gt;  CCIS41548810ST-4-0  CCIS98512455ST-4-0  CCIS83445808ST-4-0  CCIS37250421ST-4-0 
-#&gt;                   1                   1                  -1                  -1 
-#&gt;  CCIS35092938ST-4-0  CCIS50148151ST-4-0  CCIS62605362ST-3-0  CCIS87252800ST-4-0 
-#&gt;                  -1                   1                   1                   1 
-#&gt; CCIS22958137ST-20-0  CCIS48507077ST-4-0  CCIS32105356ST-4-0 CCIS81710917ST-20-0 
-#&gt;                   1                  -1                  -1                  -1 
-#&gt;  CCIS16326685ST-4-0  CCIS53043478ST-4-0  CCIS98832363ST-4-0  CCIS02124300ST-4-0 
-#&gt;                  -1                   1                   1                  -1 
-#&gt;  CCIS44743950ST-4-0  CCIS10793554ST-4-0  CCIS59132091ST-4-0  CCIS96387239ST-4-0 
-#&gt;                  -1                  -1                   1                  -1 
-#&gt;  CCIS82146115ST-4-0 CCIS31434951ST-20-0  CCIS33816588ST-4-0  CCIS12656533ST-4-0 
-#&gt;                   1                  -1                   1                   1 
-#&gt;  CCIS41806458ST-4-0  CCIS53557295ST-4-0  CCIS47284573ST-4-0  CCIS76563044ST-4-0 
-#&gt;                  -1                  -1                   1                  -1 
-#&gt; CCIS93040568ST-20-0  CCIS45793747ST-4-0  CCIS95097901ST-4-0  CCIS80834637ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS63910149ST-4-0  CCIS84543192ST-4-0 CCIS38765456ST-20-0 CCIS82944710ST-20-0 
-#&gt;                  -1                   1                   1                  -1 
-#&gt;  CCIS55230578ST-4-0  CCIS24254057ST-4-0  CCIS78318719ST-4-0  CCIS44757994ST-4-0 
-#&gt;                   1                   1                   1                   1 
-#&gt;  CCIS65479369ST-4-0  CCIS62794166ST-4-0  CCIS77252613ST-4-0  CCIS11015875ST-4-0 
-#&gt;                   1                   1                   1                   1 
-#&gt;  CCIS55531770ST-4-0  CCIS70398272ST-4-0  CCIS35100175ST-4-0  CCIS22416007ST-4-0 
-#&gt;                  -1                  -1                   1                   1 
-#&gt;  CCIS41288781ST-4-0  CCIS59903910ST-4-0  CCIS12370844ST-4-0  CCIS72607085ST-4-0 
-#&gt;                   1                  -1                   1                   1 
-#&gt;  CCIS46047672ST-4-0 CCIS22906510ST-20-0  CCIS52370277ST-4-0  CCIS02379307ST-4-0 
-#&gt;                   1                  -1                   1                   1 
-#&gt;  CCIS48579360ST-4-0  CCIS46467422ST-4-0  CCIS54027808ST-4-0  CCIS15704761ST-4-0 
-#&gt;                  -1                   1                  -1                   1 
-#&gt;  CCIS11558985ST-4-0  CCIS13047523ST-4-0  CCIS94603952ST-4-0  CCIS02856720ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS07648107ST-4-0  CCIS34604008ST-4-0  CCIS63468405ST-4-0  CCIS16383318ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS36699628ST-4-0  CCIS95409808ST-4-0  CCIS74239020ST-4-0  CCIS05314658ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS71578391ST-4-0  CCIS50003399ST-4-0  CCIS36797902ST-4-0  CCIS11354283ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS50471204ST-4-0  CCIS20795251ST-4-0  CCIS07277498ST-4-0  CCIS90164298ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS23164343ST-4-0  CCIS03857607ST-4-0  CCIS63448910ST-4-0  CCIS88007743ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS51595129ST-4-0  CCIS09568613ST-4-0  CCIS07539127ST-4-0  CCIS41692898ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS44093303ST-4-0  CCIS00146684ST-4-0  CCIS78100604ST-4-0  CCIS48174381ST-4-0 
-#&gt;                  -1                  -1                  -1                  -1 
-#&gt;  CCIS88317640ST-4-0 
-#&gt;                  -1 
-#&gt; 
-#&gt; $info
-#&gt; CTR CRC 
-#&gt;  -1   1 
-#&gt; 
-#&gt; $type
-#&gt; [1] "BINARY"
-#&gt; </div><div class='input'><span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, <span class='st'>"model_list"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $models
-#&gt; $models[[1]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 112; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[2]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 112; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[3]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 112; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[4]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 112; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[5]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 112; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[6]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 112; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[7]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 114; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[8]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 114; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[9]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 114; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; $models[[10]]
-#&gt; Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet
-#&gt; Trained on: task.id = data; obs = 114; features = 28
-#&gt; Hyperparameters: nlambda=100,alpha=1
-#&gt; 
-#&gt; 
-#&gt; $model.type
-#&gt; [1] "lasso"
-#&gt; 
-#&gt; $feature.type
-#&gt; [1] "normalized"
-#&gt; </div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='co'>#</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, <span class='st'>"label"</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $label</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS27304052ST-3-0  CCIS15794887ST-4-0  CCIS74726977ST-3-0  CCIS16561622ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS79210440ST-3-0  CCIS82507866ST-3-0  CCIS98482370ST-3-0  CCIS00281083ST-3-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS32452666ST-4-0  CCIS94417875ST-3-0  CCIS51667829ST-4-0  CCIS27927933ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS45571137ST-3-0  CCIS81139242ST-4-0  CCIS21126322ST-4-0  CCIS17669415ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS44676181ST-4-0  CCIS29210128ST-4-0  CCIS48725289ST-4-0 CCIS64785924ST-20-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                   1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS03473770ST-4-0  CCIS10706551ST-3-0  CCIS64773582ST-4-0  CCIS06260551ST-3-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS40244499ST-3-0  CCIS85214191ST-3-0  CCIS08668806ST-3-0 CCIS50369211ST-20-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                   1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS87167916ST-4-0  CCIS94496512ST-4-0  CCIS58234805ST-4-0  CCIS91228662ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS71301801ST-4-0  CCIS24898163ST-4-0  CCIS53355328ST-4-0  CCIS41222843ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS81887263ST-4-0 CCIS29688262ST-20-0  CCIS87116798ST-4-0  CCIS87605453ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS83870198ST-4-0  CCIS61287323ST-4-0  CCIS11362406ST-4-0  CCIS14449628ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                   1                  -1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS21278152ST-4-0  CCIS25399172ST-4-0  CCIS34055159ST-4-0 CCIS76845094ST-20-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS41548810ST-4-0  CCIS98512455ST-4-0  CCIS83445808ST-4-0  CCIS37250421ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                   1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS35092938ST-4-0  CCIS50148151ST-4-0  CCIS62605362ST-3-0  CCIS87252800ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                   1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS22958137ST-20-0  CCIS48507077ST-4-0  CCIS32105356ST-4-0 CCIS81710917ST-20-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS16326685ST-4-0  CCIS53043478ST-4-0  CCIS98832363ST-4-0  CCIS02124300ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                   1                   1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS44743950ST-4-0  CCIS10793554ST-4-0  CCIS59132091ST-4-0  CCIS96387239ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                   1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS82146115ST-4-0 CCIS31434951ST-20-0  CCIS33816588ST-4-0  CCIS12656533ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS41806458ST-4-0  CCIS53557295ST-4-0  CCIS47284573ST-4-0  CCIS76563044ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                   1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS93040568ST-20-0  CCIS45793747ST-4-0  CCIS95097901ST-4-0  CCIS80834637ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS63910149ST-4-0  CCIS84543192ST-4-0 CCIS38765456ST-20-0 CCIS82944710ST-20-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                   1                   1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS55230578ST-4-0  CCIS24254057ST-4-0  CCIS78318719ST-4-0  CCIS44757994ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                   1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS65479369ST-4-0  CCIS62794166ST-4-0  CCIS77252613ST-4-0  CCIS11015875ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                   1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS55531770ST-4-0  CCIS70398272ST-4-0  CCIS35100175ST-4-0  CCIS22416007ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS41288781ST-4-0  CCIS59903910ST-4-0  CCIS12370844ST-4-0  CCIS72607085ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS46047672ST-4-0 CCIS22906510ST-20-0  CCIS52370277ST-4-0  CCIS02379307ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                   1                  -1                   1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS48579360ST-4-0  CCIS46467422ST-4-0  CCIS54027808ST-4-0  CCIS15704761ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                   1                  -1                   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS11558985ST-4-0  CCIS13047523ST-4-0  CCIS94603952ST-4-0  CCIS02856720ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS07648107ST-4-0  CCIS34604008ST-4-0  CCIS63468405ST-4-0  CCIS16383318ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS36699628ST-4-0  CCIS95409808ST-4-0  CCIS74239020ST-4-0  CCIS05314658ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS71578391ST-4-0  CCIS50003399ST-4-0  CCIS36797902ST-4-0  CCIS11354283ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS50471204ST-4-0  CCIS20795251ST-4-0  CCIS07277498ST-4-0  CCIS90164298ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS23164343ST-4-0  CCIS03857607ST-4-0  CCIS63448910ST-4-0  CCIS88007743ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS51595129ST-4-0  CCIS09568613ST-4-0  CCIS07539127ST-4-0  CCIS41692898ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS44093303ST-4-0  CCIS00146684ST-4-0  CCIS78100604ST-4-0  CCIS48174381ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1                  -1                  -1                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  CCIS88317640ST-4-0 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  -1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $info</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CTR CRC </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  -1   1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $type</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "BINARY"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>accessSlot</span><span class='op'>(</span><span class='va'>siamcat_example</span>, <span class='st'>"model_list"</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 112; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 112; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 112; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 112; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 112; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 112; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 114; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[8]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 114; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[9]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 114; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $models[[10]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Model for learner.id=classif.cvglmnet; learner.class=classif.cvglmnet</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Trained on: task.id = data; obs = 114; features = 28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hyperparameters: nlambda=100,alpha=1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $model.type</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "lasso"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $feature.type</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "normalized"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

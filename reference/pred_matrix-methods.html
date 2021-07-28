@@ -64,7 +64,7 @@ object" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -110,13 +110,13 @@ object" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -143,10 +143,10 @@ object" />
 object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 
 <span class='co'># S4 method for siamcat</span>
-<span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+<span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,16 +173,17 @@ samples across the different cross-validation repeats. See
 <a href='make.predictions.html'>make.predictions</a> for more information.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-<span class='va'>temp</span> <span class='op'>&lt;-</span> <span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>temp</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                        CV_rep1      CV_rep2
-#&gt; CCIS27304052ST-3-0 0.012996378 4.018433e-05
-#&gt; CCIS15794887ST-4-0 0.028338574 2.510548e-01
-#&gt; CCIS74726977ST-3-0 0.760802351 9.849912e-01
-#&gt; CCIS16561622ST-4-0 0.008365059 6.470416e-02
-#&gt; CCIS79210440ST-3-0 0.170263425 2.269210e-01
-#&gt; CCIS82507866ST-3-0 0.062054480 6.437584e-05</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>temp</span> <span class='op'>&lt;-</span> <span class='fu'>pred_matrix</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>temp</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                        CV_rep1    CV_rep2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS27304052ST-3-0 0.013826209 0.01250622</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS15794887ST-4-0 0.003308079 0.01174887</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS74726977ST-3-0 0.796261593 0.99644852</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS16561622ST-4-0 0.019947255 0.00478131</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS79210440ST-3-0 0.091392436 0.33659086</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> CCIS82507866ST-3-0 0.016429169 0.13891886</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

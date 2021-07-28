@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -109,13 +109,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -141,10 +141,10 @@
     <p>Function to extract the feature weights from a SIAMCAT object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>feature_weights</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>feature_weights</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 
 <span class='co'># S4 method for siamcat</span>
-<span class='fu'>feature_weights</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+<span class='fu'>feature_weights</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,7 +168,7 @@ additional info or <code>NULL</code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The function extracts the weight matrix from all trained models
-(see <a href='weight_matrix.html'>weight_matrix</a>) and computes several metrics on the feature
+(see <a href='weight_matrix-methods.html'>weight_matrix</a>) and computes several metrics on the feature
 weights:</p><ul>
 <li><p><code>mean.weight</code> - mean weight across trained models</p></li>
 <li><p><code>median.weight</code> - median weight across trained models</p></li>
@@ -186,30 +186,31 @@ selected (i.e. non-zero)</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-<span class='va'>temp</span> <span class='op'>&lt;-</span> <span class='fu'>feature_weights</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>temp</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                                          mean.weight median.weight sd.weight
-#&gt; unclassified Fusobacterium [c:1482]       -95.094987     0.5269887 257.30611
-#&gt; unclassified Fusobacterium [c:1481]        19.793839    29.2345090  32.48733
-#&gt; Pseudoflavonifractor capillosus [h:1579]  -21.451579    30.7454712 166.60164
-#&gt; Porphyromonas asaccharolytica [h:1056]     29.182380    28.4305549  41.46582
-#&gt; Prevotella nigrescens [h:1069]             36.933694    36.2547827  40.99035
-#&gt; Peptostreptococcus stomatis [h:1530]       -5.094556    21.3835589  80.62460
-#&gt;                                          mean.rel.weight median.rel.weight
-#&gt; unclassified Fusobacterium [c:1482]        -0.0301846342      0.0004570326
-#&gt; unclassified Fusobacterium [c:1481]        -0.0001278288      0.0195451964
-#&gt; Pseudoflavonifractor capillosus [h:1579]    0.0151405614      0.0252825304
-#&gt; Porphyromonas asaccharolytica [h:1056]      0.0063587682      0.0175983706
-#&gt; Prevotella nigrescens [h:1069]              0.0235607690      0.0338731179
-#&gt; Peptostreptococcus stomatis [h:1530]       -0.0027804450      0.0207560497
-#&gt;                                          sd.rel.weight percentage
-#&gt; unclassified Fusobacterium [c:1482]         0.04926960          1
-#&gt; unclassified Fusobacterium [c:1481]         0.04043017          1
-#&gt; Pseudoflavonifractor capillosus [h:1579]    0.03123462          1
-#&gt; Porphyromonas asaccharolytica [h:1056]      0.02792042          1
-#&gt; Prevotella nigrescens [h:1069]              0.02256343          1
-#&gt; Peptostreptococcus stomatis [h:1530]        0.04215574          1</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>temp</span> <span class='op'>&lt;-</span> <span class='fu'>feature_weights</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>temp</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                          mean.weight median.weight sd.weight</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1482]       -22.911573     -8.840574  33.90188</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1481]         6.531374      4.258957  26.13803</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pseudoflavonifractor capillosus [h:1579]   26.610582     27.392341  21.85843</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Porphyromonas asaccharolytica [h:1056]     13.051833     11.900938  14.93073</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Prevotella nigrescens [h:1069]             28.578953     23.931092  30.93435</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Peptostreptococcus stomatis [h:1530]        7.996267      1.586044  22.85606</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                          mean.rel.weight median.rel.weight</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1482]         -0.041840339      -0.014960815</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1481]         -0.008315680       0.003723249</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pseudoflavonifractor capillosus [h:1579]     0.023496680       0.028361676</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Porphyromonas asaccharolytica [h:1056]       0.008233728       0.015489473</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Prevotella nigrescens [h:1069]               0.032268581       0.036707175</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Peptostreptococcus stomatis [h:1530]        -0.002017143       0.002353617</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                          sd.rel.weight percentage</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1482]         0.05649630        0.9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1481]         0.03492352        1.0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pseudoflavonifractor capillosus [h:1579]    0.02528359        1.0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Porphyromonas asaccharolytica [h:1056]      0.01349503        1.0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Prevotella nigrescens [h:1069]              0.02671583        1.0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Peptostreptococcus stomatis [h:1530]        0.02660175        1.0</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -111,13 +111,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -145,8 +145,8 @@
     a given test-set.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make.predictions</span><span class='op'>(</span><span class='va'>siamcat</span>, siamcat.holdout <span class='op'>=</span> <span class='cn'>NULL</span>,
-    normalize.holdout <span class='op'>=</span> <span class='cn'>TRUE</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>make.predictions</span><span class='op'>(</span><span class='va'>siamcat</span>, siamcat.holdout <span class='op'>=</span> <span class='cn'>NULL</span>,
+    normalize.holdout <span class='op'>=</span> <span class='cn'>TRUE</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,15 +189,17 @@ defaults to <code>1</code></p></td>
     the form of another <code>siamcat</code> object (<code>siamcat.holdout</code>).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-
-<span class='co'># Simple example</span>
-<span class='va'>siamcat.pred</span> <span class='op'>&lt;-</span> <span class='fu'>make.predictions</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Made predictions successfully.</span></div><div class='input'>
-<span class='co'># Predictions on a holdout-set</span>
-<span class='va'>pred.mat</span> <span class='op'>&lt;-</span> <span class='fu'>make.predictions</span><span class='op'>(</span><span class='va'>siamcat.trained</span>, <span class='va'>siamcat.holdout</span>,
-    normalize.holdout<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout = TRUE): object 'siamcat.holdout' not found</span></div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Simple example</span></span>
+<span class='r-in'><span class='va'>siamcat.pred</span> <span class='op'>&lt;-</span> <span class='fu'>make.predictions</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Made predictions successfully.</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Predictions on a holdout-set</span></span>
+<span class='r-in'><span class='va'>pred.mat</span> <span class='op'>&lt;-</span> <span class='fu'>make.predictions</span><span class='op'>(</span><span class='va'>siamcat.trained</span>, <span class='va'>siamcat.holdout</span>,</span>
+<span class='r-in'>    normalize.holdout<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in make.predictions(siamcat.trained, siamcat.holdout, normalize.holdout = TRUE)</span> object 'siamcat.holdout' not found</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

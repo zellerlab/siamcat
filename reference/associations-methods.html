@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">SIAMCAT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -109,13 +109,13 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://twitter.com/siamcat_dev">
-    <span class="fas fa-twitter"></span>
+    <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
   <a href="https://github.com/zellerlab/siamcat">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -141,10 +141,10 @@
     <p>Function to retrieve the results of association testing</p>
     </div>
 
-    <pre class="usage"><span class='fu'>associations</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>associations</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 
 <span class='co'># S4 method for siamcat</span>
-<span class='fu'>associations</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+<span class='fu'>associations</span><span class='op'>(</span><span class='va'>siamcat</span>, verbose <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,37 +170,38 @@ values can be either <code>0</code> (no output) or <code>1</code> (print message
 procedure as dataframe. See <a href='check.associations.html'>check.associations</a> for more details.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-<span class='va'>temp</span> <span class='op'>&lt;-</span> <span class='fu'>associations</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>temp</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                                                 fc        p.val       auc
-#&gt; unclassified Fusobacterium [c:1482]      0.6455199 9.835836e-11 0.7497856
-#&gt; unclassified Fusobacterium [c:1481]      0.8870737 2.999095e-08 0.7310249
-#&gt; Pseudoflavonifractor capillosus [h:1579] 0.3248662 1.454894e-05 0.7184820
-#&gt; Porphyromonas asaccharolytica [h:1056]   0.4285522 1.914120e-05 0.6410806
-#&gt; Prevotella nigrescens [h:1069]           0.2672896 5.114510e-05 0.5988422
-#&gt; Peptostreptococcus stomatis [h:1530]     0.8778735 1.132256e-04 0.6861063
-#&gt;                                           auc.ci.l  auc.ci.h   pr.shift
-#&gt; unclassified Fusobacterium [c:1482]      0.6760295 0.8235417 0.44875643
-#&gt; unclassified Fusobacterium [c:1481]      0.6512266 0.8108232 0.39558319
-#&gt; Pseudoflavonifractor capillosus [h:1579] 0.6319394 0.8050246 0.03409091
-#&gt; Porphyromonas asaccharolytica [h:1056]   0.5708510 0.7113102 0.27144082
-#&gt; Prevotella nigrescens [h:1069]           0.5424919 0.6551925 0.19618353
-#&gt; Peptostreptococcus stomatis [h:1530]     0.5904339 0.7817787 0.16037736
-#&gt;                                                pr.n      pr.p      bcol
-#&gt; unclassified Fusobacterium [c:1482]      0.07954545 0.5283019 #A5002685
-#&gt; unclassified Fusobacterium [c:1481]      0.17045455 0.5660377 #A5002685
-#&gt; Pseudoflavonifractor capillosus [h:1579] 0.96590909 1.0000000 #A5002685
-#&gt; Porphyromonas asaccharolytica [h:1056]   0.06818182 0.3396226 #A5002685
-#&gt; Prevotella nigrescens [h:1069]           0.01136364 0.2075472 #A5002685
-#&gt; Peptostreptococcus stomatis [h:1530]     0.50000000 0.6603774 #A5002685
-#&gt;                                                 p.adj
-#&gt; unclassified Fusobacterium [c:1482]      2.754034e-09
-#&gt; unclassified Fusobacterium [c:1481]      4.198733e-07
-#&gt; Pseudoflavonifractor capillosus [h:1579] 1.339884e-04
-#&gt; Porphyromonas asaccharolytica [h:1056]   1.339884e-04
-#&gt; Prevotella nigrescens [h:1069]           2.864126e-04
-#&gt; Peptostreptococcus stomatis [h:1530]     5.283861e-04</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>temp</span> <span class='op'>&lt;-</span> <span class='fu'>associations</span><span class='op'>(</span><span class='va'>siamcat_example</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>temp</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                                 fc        p.val       auc</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1482]      0.6455199 9.835836e-11 0.7497856</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1481]      0.8870737 2.999095e-08 0.7310249</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pseudoflavonifractor capillosus [h:1579] 0.3248662 1.454894e-05 0.7184820</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Porphyromonas asaccharolytica [h:1056]   0.4285522 1.914120e-05 0.6410806</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Prevotella nigrescens [h:1069]           0.2672896 5.114510e-05 0.5988422</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Peptostreptococcus stomatis [h:1530]     0.8778735 1.132256e-04 0.6861063</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                           auc.ci.l  auc.ci.h   pr.shift</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1482]      0.6760295 0.8235417 0.44875643</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1481]      0.6512266 0.8108232 0.39558319</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pseudoflavonifractor capillosus [h:1579] 0.6319394 0.8050246 0.03409091</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Porphyromonas asaccharolytica [h:1056]   0.5708510 0.7113102 0.27144082</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Prevotella nigrescens [h:1069]           0.5424919 0.6551925 0.19618353</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Peptostreptococcus stomatis [h:1530]     0.5904339 0.7817787 0.16037736</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                                pr.n      pr.p      bcol</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1482]      0.07954545 0.5283019 #A5002685</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1481]      0.17045455 0.5660377 #A5002685</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pseudoflavonifractor capillosus [h:1579] 0.96590909 1.0000000 #A5002685</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Porphyromonas asaccharolytica [h:1056]   0.06818182 0.3396226 #A5002685</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Prevotella nigrescens [h:1069]           0.01136364 0.2075472 #A5002685</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Peptostreptococcus stomatis [h:1530]     0.50000000 0.6603774 #A5002685</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                                 p.adj</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1482]      2.754034e-09</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> unclassified Fusobacterium [c:1481]      4.198733e-07</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pseudoflavonifractor capillosus [h:1579] 1.339884e-04</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Porphyromonas asaccharolytica [h:1056]   1.339884e-04</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Prevotella nigrescens [h:1069]           2.864126e-04</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Peptostreptococcus stomatis [h:1530]     5.283861e-04</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
