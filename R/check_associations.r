@@ -186,8 +186,8 @@ check.associations <- function(siamcat, fn.plot=NULL, color.scheme = "RdYlBu",
             # check that each entry in "paired" has two samples associated with 
             # a different label, filter out the rest
             groups <- unique(meta[[paired]])
-            if (verbose > 2) message("+++ Starting with ", length(groups), 
-                                     " pairings")
+            if (verbose > 2) message("+++ Starting with ", 
+                                length(groups), " pairings")
             groups.red <- groups[vapply(groups, FUN = function(x){
                 temp <- label$label[rownames(meta[meta[[paired]]==x,])]
                 if (length(unique(temp))!=2){
@@ -1372,17 +1372,17 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
         } else {
             pairing.info <- sort(pairing.info)
             x.pos <- x[names(which(label$label[names(pairing.info)] == 
-                                       positive.label))]
+                positive.label))]
             x.neg <- x[names(which(label$label[names(pairing.info)] == 
-                                       negative.label))]
+                negative.label))]
             if (take.log == TRUE){
                 fc <- mean(log10(x.pos + detect.lim) - 
-                               log10(x.neg + detect.lim))
+                    log10(x.neg + detect.lim))
             } else {
                 fc <- mean(x.pos-x.neg)
             }
             p.val <- wilcox.test(x.pos, x.neg, exact=FALSE, 
-                                 paired=TRUE)$p.value
+                paired=TRUE)$p.value
             # AU-ROC
             temp <- roc(cases = x.pos, 
                         controls = x.neg,
@@ -1397,7 +1397,6 @@ analyse.binary.marker <- function(feat, label, detect.lim, colors,
             
         }
 
-       
         if (verbose)
             pb$tick()
         return(c('fc' = fc, 'p.val' = p.val, 'auc' = aucs[2],
