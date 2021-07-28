@@ -324,7 +324,7 @@ bind_rows(auroc.all, test.average) %>%
                 strip.text = element_blank()) + 
         xlab('Training Set') + ylab('Test Set') + 
         scale_color_manual(values=c('#FFFFFF00', 'grey'), guide=FALSE) + 
-        scale_size_manual(values=c(0, 1), gui    de=FALSE) + 
+        scale_size_manual(values=c(0, 1), guide=FALSE) + 
         facet_grid(~split, scales = 'free', space = 'free')
 ```
 
