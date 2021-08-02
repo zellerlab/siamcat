@@ -40,20 +40,20 @@ navbar:
 
 home:
   sidebar:
-   structure: [links, dev, license, citation, funding]
+   structure: [links, license, dev, citation, custom]
    components:
      links:
          title: Links
-         html:
+         text:
              - "The source code is available on Github: <a href=https://github.com/zellerlab/siamcat>https://github.com/zellerlab/siamcat</a>"
              - "SIAMCAT is part of the EMBL microbiome tools</a>. Find out more here: <a href=https://microbiome-tools.embl.de>https://microbiome-tools.embl.de</a>"
              - "<a href=https://microbiome-tools.embl.de> <img src='man/figures/embl_microbiome_tools_logo.png' width=50% height=auto/> </a>"
-     funding:
+     custom:
        title: Funding
-       html:
-           - "We are grateful for funding from the German ministry for education and research (BMBF):"
+       text:
+           - "We are grateful for funding from the Federal Ministry of Education and Research (BMBF):\n"
            - "<a href=https://www.bmbf.de> <img src='man/figures/BMBF.png' width=50% height=auto/> </a>"
-           - "SIAMCAT is also part of the de.NBI infrastructure:"
+           - "\nSIAMCAT is also part of the de.NBI infrastructure:\n"
            - "<a href=https://www.denbi.de> <img src='man/figures/denbi.png' width=50% height=auto/> </a>"
 
 reference:
