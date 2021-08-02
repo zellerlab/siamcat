@@ -77,7 +77,7 @@ select.samples <- function(siamcat, filter, allowed.set = NULL,
     if (!is.null(filt_feat(siamcat, verbose=0)) |
         !is.null(norm_feat(siamcat, verbose=0))){
             warning("Selcting samples may affect the results of feature ",
-                "filtering and normalization\nFor sanity, results from",
+                "filtering and normalization\nFor sanity, results from ",
                 "previous analyses (e.g. filtered features) will be removed!")
         siamcat <- siamcat(
             phyloseq=physeq(siamcat),
