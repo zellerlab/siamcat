@@ -42,7 +42,7 @@
 check.confounders <- function(siamcat, fn.plot, meta.in = NULL,
     feature.type='filtered', verbose = 1) {
 
-
+    if (is.null(fn.plot)) stop("Parameter 'fn.plot' is needed!")
     if (verbose > 1) message("+ starting check.confounders")
     s.time <- proc.time()[3]
     label <- label(siamcat)
@@ -174,12 +174,12 @@ confounders.corrplot <- function(meta, label) {
     rownames(entropies) <- fix.names
 
     col = c(rev(colorRampPalette(brewer.pal(9, 'Reds'))(100)),
-                rev(colorRampPalette(brewer.pal(9, 'Blues'))(100)))
+                colorRampPalette(brewer.pal(9, 'Blues'))(100))
 
     corrplot(entropies,
             is.corr = FALSE, order = 'FPC', method = 'color',
             pch.cex = 0.9,
-            cl.lim = c(min(entropies), ceiling(max(entropies))),
+            col.lim = c(min(entropies), ceiling(max(entropies))),
             tl.col = 'black', tl.srt = 45,
             col=col,
             number.cex = 0.7, number.digits = 2, addCoef.col = 'black',
@@ -210,7 +210,7 @@ confounders.build.glms <- function(meta, label) {
             reg.coef[m] <- model$coefficients[2]
             reg.ci[[m]] <- confint(profile(model))[2,]
             reg.pval[m] <- coef(summary(model))[2,4]
-            rocs[[m]]   <- roc(y ~ x, data=d, direction='<',
+            rocs[[m]]   <- roc(y ~ as.numeric(x), data=d, direction='<',
                                 ci=TRUE, auc=TRUE, levels=c(0,1))
             aucs[m]     <- as.numeric(rocs[[m]]$auc)}
         else {rm <- c(rm, colnames(meta)[m])}}
