@@ -173,7 +173,7 @@ model.interpretation.plot <-
                 verbose = verbose
             )
         num.sel.f <- length(sel.idx)
-
+        
         # ######################################################################
         # aggreate predictions and sort
         # patients by score aggregate predictions of several models if more than
@@ -251,6 +251,7 @@ model.interpretation.plot <-
         # Title of Feature Weights
         if (verbose > 2)
             message("+++ plotting titles")
+        
         par(mar = c(0, 1.1, 3.1, 1.1))
         plot(NULL, type = "n", xlim = c(-0.1, 0.1), xaxt = "n", xlab = "",
             ylim = c(-0.1, 0.1), yaxt = "n", ylab = "", bty = "n"
@@ -880,11 +881,13 @@ model.interpretation.select.features <-
         label,
         max.show,
         verbose = 0) {
+        
         if (verbose > 2) message("+ model.interpretation.select.features")
         # for linear models, select those that have been selected more than
         # consens.thres percent of the models
-        if (model.type != "RandomForest") {
+        if (model.type != "randomForest") {
             sel.idx = which(feature.weights$percentage > consens.thres)
+            names(sel.idx) <- rownames(feature.weights)[sel.idx]
             # normalize by model size and order features by
             #   relative model weight
             median.sorted.features <-
@@ -919,6 +922,7 @@ model.interpretation.select.features <-
             sel.idx <-
                 median.sorted.features$ix[which(median.sorted.features$x >=
                         consens.thres)]
+            names(sel.idx) <- rownames(feature.weights)[sel.idx]
 
             if (length(sel.idx) > max.show) {
                 sel.idx <- tail(sel.idx, n = max.show)
@@ -931,6 +935,7 @@ model.interpretation.select.features <-
                 length(sel.idx),
                 "selected features"
             ))
+        if (length(sel.idx)==0) stop("No features were selected for plotting!")
         if (verbose > 2)
             message("+ finished model.interpretation.select.features")
         return(sel.idx)
