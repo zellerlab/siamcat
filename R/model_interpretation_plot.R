@@ -334,7 +334,7 @@ model.interpretation.plot <-
         # Heatmap
         if (verbose > 2)
             message("+++ plotting heatmap")
-        if (model.type != "RandomForest") {
+        if (model.type != "randomForest") {
             model.interpretation.heatmap.plot(
                 image.data = img.data,
                 limits = limits,
@@ -359,7 +359,7 @@ model.interpretation.plot <-
                 image.data = img.data,
                 limits = limits,
                 color.scheme = color.scheme,
-                effect.size = NULL,
+                effect.size = bin.auroc.effect,
                 verbose = verbose
             )
         }
@@ -414,7 +414,7 @@ model.interpretation.feature.weights.plot <-
         verbose = 0) {
         if (verbose > 2)
             message("+ model.interpretation.feature.weights.plot")
-        if (mod.type != "RandomForest") {
+        if (mod.type != "randomForest") {
             relative.weights <- rel.weights[sel.idx, ]
         } else {
             relative.weights <- -rel.weights[sel.idx, ]
@@ -423,7 +423,7 @@ model.interpretation.feature.weights.plot <-
         low.qt <- rowQuantiles(relative.weights, probs = 0.25)
         upp.qt <- rowQuantiles(relative.weights, probs = 0.75)
 
-        if (mod.type != "RandomForest") {
+        if (mod.type != "randomForest") {
             par(mar = c(0.1, 1.1, 0, 1.1))
             mi = min(-med - (abs(low.qt - upp.qt)))
             mx = max(-med + (abs(low.qt - upp.qt)))
