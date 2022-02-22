@@ -2,7 +2,7 @@ Package: SIAMCAT
 Type: Package
 Title: Statistical Inference of Associations between Microbial
     Communities And host phenoTypes
-Version: 1.13.4
+Version: 1.99.1
 Authors@R: c(person("Konrad", "Zych", role = c("aut"),
                 email = "konrad.zych@embl.de",
                 comment = c(ORCID = "0000-0001-7426-0516")),
@@ -30,7 +30,7 @@ Description: Pipeline for Statistical Inference of Associations between
     model plots).
 Depends:
     R (>= 3.6.0),
-    mlr,
+    mlr3,
     phyloseq
 Imports:
     beanplot,
