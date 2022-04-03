@@ -5,21 +5,12 @@
 
 #' @title Model Interpretation Plot
 #'
-#' @description This function produces a plot for model interpretation,
-#' displaying \itemize{
-#' \item the feature weights,
-#' \item the robustness of feature weights
-#' \item the features scores across samples,
-#' \item the distribution of metadata across samples, and
-#' \item the proportion of model weights shown.}
+#' @description This function produces a plot for model interpretation
 #'
-#' @usage model.interpretation.plot(siamcat, fn.plot = NULL,
-#'     color.scheme = "BrBG",
-#'     consens.thres = 0.5,
-#'     heatmap.type = "zscore",
-#'     limits = c(-3, 3), detect.lim = 1e-06,
-#'     max.show = 50, prompt=TRUE, verbose = 1)
-#'
+#' @usage model.interpretation.plot(siamcat, fn.plot = NULL, 
+#' color.scheme = "BrBG", consens.thres = 0.5, heatmap.type = "zscore",
+#' limits = c(-3, 3), log.n0 = 1e-06, max.show = 50, prompt=TRUE, 
+#' verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
@@ -28,52 +19,55 @@
 #' @param color.scheme color scheme for the heatmap, defaults to \code{'BrBG'}
 #'
 #' @param consens.thres float, minimal ratio of models incorporating a feature
-#'     in order to include it into the heatmap, defaults to \code{0.5}
-#'     Note that for \code{'randomForest'} models, this cutoff specifies the
-#'     minimum median Gini coefficient for a feature to be included and
-#'     should therefore be much lower, e.g. \code{0.01}
+#' in order to include it into the heatmap, defaults to \code{0.5}
+#' \strong{Note that for \code{'randomForest'} models, this cutoff specifies the
+#' minimum median Gini coefficient for a feature to be included and
+#' should therefore be much lower, e.g. \code{0.01}}
 #'
 #' @param heatmap.type string, type of the heatmap, can be either \code{'fc'}
-#'     or \code{'zscore'}, defaults to \code{'zscore'}
+#' or \code{'zscore'}, defaults to \code{'zscore'}
 #'
 #' @param limits vector, cutoff for extreme values in the heatmap,
-#'     defaults to \code{c(-3, 3)}
+#' defaults to \code{c(-3, 3)}
 #'
-#' @param detect.lim float, pseudocount to be added before log-transformation
-#'     of features, defaults to \code{1e-06}
+#' @param log.n0 float, pseudocount to be added before log-transformation
+#' of features, defaults to \code{1e-06}
 #'
 #' @param max.show integer, maximum number of features to be shown in the model
-#'     interpretation plot, defaults to 50
+#' interpretation plot, defaults to 50
 #'
-#'@param prompt boolean, turn on/off prompting user input when not plotting
-#'      into a pdf-file, defaults to TRUE
+#' @param prompt boolean, turn on/off prompting user input when not plotting
+#' into a pdf-file, defaults to TRUE
 #'
 #' @param verbose control output: \code{0} for no output at all, \code{1}
-#'     for only information about progress and success, \code{2} for normal
-#'     level of information and \code{3} for full debug information,
-#'     defaults to \code{1}
+#' for only information about progress and success, \code{2} for normal
+#' level of information and \code{3} for full debug information,
+#' defaults to \code{1}
 #'
 #' @keywords SIAMCAT model.interpretation.plot
 #'
-#' @return Does not return anything, but produces the model interpretion plot.
+#' @return Does not return anything, but produces the model interpretation plot.
 #'
 #' @export
+#' 
+#' @encoding UTF-8
 #'
 #' @details Produces a plot consisting of \itemize{
-#'     \item a barplot showing the feature weights and their robustness (i.e. in
-#'     what proportion of models have they been incorporated)
-#'     \item a heatmap showing the z-scores of the metagenomic features across
-#'     patients
-#'     \item another heatmap displaying the metadata categories (if applicable)
-#'     \item a boxplot displaying the poportion of weight per model that is
-#'     actually shown for the features that are incorporated into more than
-#'     \code{consens.thres} percent of the models.
-#'}
+#' \item a barplot showing the feature weights and their robustness (i.e. in
+#' what proportion of models have they been incorporated)
+#' \item a heatmap showing the z-scores of the metagenomic features across
+#' samples
+#' \item another heatmap displaying the metadata categories (if applicable)
+#' \item a boxplot displaying the poportion of weight per model that is
+#' actually shown for the features that are incorporated into more than
+#' \code{consens.thres} percent of the models.
+#' }
 #'
 #' @examples
 #' data(siamcat_example)
 #'
 #' # simple working example
+#' siamcat_example <- train.model(siamcat_example, method='lasso')
 #' model.interpretation.plot(siamcat_example, fn.plot='./interpretion.pdf',
 #'     heatmap.type='zscore')
 model.interpretation.plot <-
@@ -83,41 +77,46 @@ model.interpretation.plot <-
         consens.thres = 0.5,
         heatmap.type = "zscore",
         limits = c(-3, 3),
-        detect.lim = 1e-06,
+        log.n0 = 1e-06,
         max.show = 50,
         prompt=TRUE,
         verbose = 1) {
 
         if (verbose > 1)
-            message("+ starting model.evaluation.plot")
+            message("+ starting model.interpretation.plot")
 
         s.time <- proc.time()[3]
 
         # ######################################################################
         # general checks
-        stopifnot(heatmap.type %in% c('zscore', 'fc'))
         stopifnot(length(heatmap.type) == 1)
+        stopifnot(heatmap.type %in% c('zscore', 'fc', 'log'))
 
         if (is.null(model_list(siamcat, verbose=0))){
             stop("SIAMCAT object does not contain any models. Exiting...")
         }
-        if (heatmap.type == 'fc'){
+        if (is.null(pred_matrix(siamcat, verbose=0))){
+            stop("SIAMCAT object does not contain any predictions. Exiting...")
+        }
+
+        if (heatmap.type %in% c('fc', 'log')){
             if (any(orig_feat(siamcat) < 0) |
                 any(colSums(orig_feat(siamcat)) > 1.01)){
                     stop("Original data should be compositional for ",
-                        "heatmap.type fc. Exiting...")
+                        "heatmap.type `fc` or `log`. Exiting...")
             }
+        }
+        label <- label(siamcat)
+        if (heatmap.type == 'fc' & label$type == "CONTINUOUS"){
+            stop("Regression-type model cannot be combined with fold-change ",
+                "heatmap! Exiting...")
         }
 
 
-        label <- label(siamcat)
         model.type <- model_type(siamcat)
         feature.type <- feature_type(siamcat)
-        models <- models(siamcat)
         feature.weights <- feature_weights(siamcat)
         weight.matrix <- weight_matrix(siamcat)
-
-        stopifnot(heatmap.type %in% c('zscore', 'fc'))
 
         # ######################################################################
         # check fn.plot
@@ -154,11 +153,17 @@ model.interpretation.plot <-
             )
             color.scheme <- "BrBG"
         }
-        color.scheme <-
-            rev(colorRampPalette(
-                brewer.pal(brewer.pal.info[color.scheme, "maxcolors"],
-                    color.scheme))(100))
-
+        if (brewer.pal.info[color.scheme, 'category'] == 'seq'){
+            color.scheme <- colorRampPalette(
+                    brewer.pal(brewer.pal.info[color.scheme, "maxcolors"],
+                                color.scheme))(100)
+        } else {
+            color.scheme <-
+                rev(colorRampPalette(
+                    brewer.pal(brewer.pal.info[color.scheme, "maxcolors"],
+                        color.scheme))(100))
+        }
+        #browser()
         # ######################################################################
         # preprocess models
         if (verbose > 2)
@@ -173,16 +178,20 @@ model.interpretation.plot <-
                 verbose = verbose
             )
         num.sel.f <- length(sel.idx)
-        
+
         # ######################################################################
-        # aggreate predictions and sort
+        # aggregate predictions and sort
         # patients by score aggregate predictions of several models if more than
         # one is given
         mean.agg.pred <- rowMeans(pred_matrix(siamcat))
         # idx to sort samples according to their class membership and prediction
         # score
-        srt.idx <-
-            sort(label$label + mean.agg.pred, index.return = TRUE)$ix
+        if (label$type=='BINARY'){
+            srt.idx <-
+                sort(label$label + mean.agg.pred, index.return = TRUE)$ix
+        } else if (label$type=='CONTINUOUS'){
+            srt.idx <- sort(label$label, index.return=TRUE)$ix
+        }
 
         # ######################################################################
         # prepare heatmap
@@ -199,16 +208,15 @@ model.interpretation.plot <-
             img.data <- model.interpretation.prepare.heatmap.zscore(
                 heatmap.data = feat[sel.idx, srt.idx],
                 limits = limits,
-                verbose = verbose
-            )
+                verbose = verbose)
         } else if (heatmap.type == "fc") {
             feat <- get.orig_feat.matrix(siamcat)
-            if (is.null(detect.lim)) {
+            if (is.null(log.n0)) {
                 warning(
                     "WARNING: Pseudo-count before log-transformation
                     not supplied! Estimating it as 5% percentile..."
                 )
-                detect.lim <- quantile(feat[feat != 0], 0.05)
+                log.n0 <- quantile(feat[feat != 0], 0.05)
             }
             img.data <- model.interpretation.prepare.heatmap.fc(
                 heatmap.data = feat[, srt.idx],
@@ -216,9 +224,24 @@ model.interpretation.plot <-
                 limits = limits,
                 meta = meta(siamcat),
                 label = label,
-                detect.lim = detect.lim,
-                verbose = verbose
-            )
+                log.n0 = log.n0,
+                verbose = verbose)
+        } else if (heatmap.type == 'log') {
+            feat <- get.orig_feat.matrix(siamcat)
+            if (is.null(log.n0)) {
+                warning(
+                    "WARNING: Pseudo-count before log-transformation
+                    not supplied! Estimating it as 5% percentile..."
+                )
+                log.n0 <- quantile(feat[feat != 0], 0.05)
+            }
+
+            img.data <- model.interpretation.prepare.heatmap.log(
+                heatmap.data = feat[names(sel.idx), srt.idx],
+                log.n0 = log.n0,
+                verbose = verbose)
+            limits[1] <- log10(log.n0)
+            limits[2] <- 0
         } else {
             stop("! unknown heatmap.type: ", heatmap.type)
         }
@@ -251,7 +274,7 @@ model.interpretation.plot <-
         # Title of Feature Weights
         if (verbose > 2)
             message("+++ plotting titles")
-        
+
         par(mar = c(0, 1.1, 3.1, 1.1))
         plot(NULL, type = "n", xlim = c(-0.1, 0.1), xaxt = "n", xlab = "",
             ylim = c(-0.1, 0.1), yaxt = "n", ylab = "", bty = "n"
@@ -266,18 +289,21 @@ model.interpretation.plot <-
         plot(NULL, type = "n", xlim = c(0, length(hm.label)), xaxs = "i",
             xaxt = "n", ylim = c(-0.5, 0.5), yaxs = "i", yaxt = "n",
             xlab = "", ylab = "", bty = "n")
-        ul <- unique(hm.label)
+        if (label$type=='BINARY'){
+            ul <- unique(hm.label)
 
-        for (l in seq_along(ul)) {
-            idx <- which(ul[l] == hm.label)
-            lines(c(idx[1] - 0.8, idx[length(idx)] - 0.2), c(0, 0))
-            lines(c(idx[1] - 0.8, idx[1] - 0.8), c(-0.2, 0))
-            lines(c(idx[length(idx)] - 0.2, idx[length(idx)] - 0.2), c(-0.2, 0))
-            h <- (idx[1] + idx[length(idx)]) / 2
-            t <- gsub("_", " ",
-                names(label$info)[label$info == ul[l]])
-            t <- paste(t, " (n=", length(idx), ")", sep = "")
-            mtext(t, side = 3, line = -0.5, at = h, cex = 0.7, adj = 0.5)
+            for (l in seq_along(ul)) {
+                idx <- which(ul[l] == hm.label)
+                lines(c(idx[1] - 0.8, idx[length(idx)] - 0.2), c(0, 0))
+                lines(c(idx[1] - 0.8, idx[1] - 0.8), c(-0.2, 0))
+                lines(c(idx[length(idx)] - 0.2, idx[length(idx)] - 0.2),
+                    c(-0.2, 0))
+                h <- (idx[1] + idx[length(idx)]) / 2
+                t <- gsub("_", " ",
+                    names(label$info)[label$info == ul[l]])
+                t <- paste(t, " (n=", length(idx), ")", sep = "")
+                mtext(t, side = 3, line = -0.5, at = h, cex = 0.7, adj = 0.5)
+            }
         }
         mtext("Metagenomic Features", side = 3, line = 2,
             at = length(hm.label) / 2, cex = 1, adj = 0.5)
@@ -303,6 +329,9 @@ model.interpretation.plot <-
         } else if (heatmap.type == "zscore") {
             key.ticks <- seq(limits[1], limits[2], length.out = 7)
             key.label <- "Feature z-score"
+        } else if (heatmap.type == 'log'){
+            key.ticks <- seq(limits[1], limits[2], length.out = 7)
+            key.label <- "Log10 relative abundance"
         }
         axis(side = 1, at = seq(0, 100, length.out = 7), labels = key.ticks)
         mtext(key.label, side = 3, line = 0.5, at = 50, cex = 0.7, adj = 0.5)
@@ -321,45 +350,40 @@ model.interpretation.plot <-
         # Feature weights ( model sensitive)
         if (verbose > 2)
             message("+++ plotting feature weights")
+        if (any(colSums(abs(weight.matrix)) == 0)){
+            stop("Some models do not contain any features!")
+        }
         rel.weights <- t(t(weight.matrix)/
             colSums(abs(weight.matrix), na.rm=TRUE))
         model.interpretation.feature.weights.plot(
             rel.weights = rel.weights,
             sel.idx = sel.idx,
             mod.type = model.type,
-            label = label
-        )
+            label = label, verbose=verbose)
 
         # ######################################################################
         # Heatmap
         if (verbose > 2)
             message("+++ plotting heatmap")
-        if (model.type != "RandomForest") {
+        if (model.type != "randomForest") {
             model.interpretation.heatmap.plot(
                 image.data = img.data,
                 limits = limits,
                 color.scheme = color.scheme,
                 effect.size = rowMedians(rel.weights[sel.idx,]),
-                verbose = verbose
-            )
+                verbose = verbose)
         } else {
-            auroc.effect <- apply(
-                img.data,
-                2,
+            auroc.effect <- apply(img.data, 2,
                 FUN = function(f) {
-                    roc(
-                        predictor = f,
-                        response = label$label,
-                        direction = "<", levels = label$info
-                    )$auc
-                }
-            )
+                    roc(predictor = f, response = label$label,
+                        direction = "<", levels = label$info)$auc
+                })
             bin.auroc.effect <- ifelse(auroc.effect >= 0.5, 1, 0)
             model.interpretation.heatmap.plot(
                 image.data = img.data,
                 limits = limits,
                 color.scheme = color.scheme,
-                effect.size = NULL,
+                effect.size = bin.auroc.effect,
                 verbose = verbose
             )
         }
@@ -414,191 +438,96 @@ model.interpretation.feature.weights.plot <-
         verbose = 0) {
         if (verbose > 2)
             message("+ model.interpretation.feature.weights.plot")
-        if (mod.type != "RandomForest") {
-            relative.weights <- rel.weights[sel.idx, ]
-        } else {
+        if (mod.type == 'randomForest'){
             relative.weights <- -rel.weights[sel.idx, ]
+        } else {
+            relative.weights <- rel.weights[sel.idx, ]
         }
         med <- rowMedians(relative.weights)
         low.qt <- rowQuantiles(relative.weights, probs = 0.25)
         upp.qt <- rowQuantiles(relative.weights, probs = 0.75)
 
-        if (mod.type != "RandomForest") {
+        if (mod.type != "randomForest") {
             par(mar = c(0.1, 1.1, 0, 1.1))
             mi = min(-med - (abs(low.qt - upp.qt)))
             mx = max(-med + (abs(low.qt - upp.qt)))
 
-            barplot(
-                -med,
-                horiz = TRUE,
-                width = 1,
-                space = 0,
-                yaxs = "i",
+            barplot(-med, horiz = TRUE, width = 1, space = 0, yaxs = "i",
                 col = "gray30",
                 xlim = c(-max(abs(mi), abs(mx)),
                     max(abs(mi), max(mx))),
                 ylim = c(0, dim(relative.weights)[1]),
-                xlab = "",
-                ylab = "",
-                yaxt = "n"
-            )
+                xlab = "", ylab = "", yaxt = "n")
             x <- par("usr")
             rect(x[1], x[3], x[2], x[4], col = "lightgray")
             # grid lines
             grid(NULL, NA, lty = 2, col = "gray99")
             # plot the barplot again due to the idiotic way of how to change the
             # background color of a plot in r
-            barplot(
-                -med,
-                horiz = TRUE,
-                width = 1,
-                space = 0,
-                yaxs = "i",
+            barplot(-med, horiz = TRUE, width = 1, space = 0, yaxs = "i",
                 col = "gray30",
                 xlim = c(-max(abs(mi), abs(mx)),
                     max(abs(mi), max(mx))),
                 ylim = c(0, dim(relative.weights)[1]),
-                xlab = "",
-                ylab = "",
-                yaxt = "n",
-                add = TRUE
-            )
+                xlab = "", ylab = "", yaxt = "n", xaxt = "n", add = TRUE)
 
             # error bars
-            arrows(
-                y0 = c(seq_along(med)) - 0.5,
-                x0 = -upp.qt,
-                x1 = -low.qt,
-                angle = 90,
-                code = 3,
-                length = 0.04
-            )
-            mtext(
-                "median relative feat. weight",
-                side = 1,
-                line = 2,
-                at = 0,
-                cex = 0.7,
-                adj = 0.5
-            )
+            arrows(y0 = c(seq_along(med)) - 0.5, x0 = -upp.qt, x1 = -low.qt,
+                angle = 90, code = 3, length = 0.04)
+            mtext("median relative feat. weight", side = 1, line = 2,
+                at = 0, cex = 0.7, adj = 0.5)
             # robustness indicated as percentage of models including a given
             # feature (to the right of the barplot)
             for (f in seq_along(sel.idx)) {
                 t = paste(format(
                     100 * sum(rel.weights[sel.idx[f], ] != 0) /
                         dim(rel.weights)[2],
-                    digits = 1,
-                    scientific = FALSE
-                ),
-                    "%",
-                    sep = "")
-                mtext(
-                    t,
-                    side = 4,
-                    line = 2.5,
-                    at = (f - 0.5),
+                    digits = 1, scientific = FALSE), "%", sep = "")
+                mtext(t, side = 4, line = 2.5, at = (f - 0.5),
                     cex = max(0.3, 0.8 - 0.01 * length(sel.idx)),
-                    las = 2,
-                    adj = 1
-                )
+                    las = 2, adj = 1)
+            }
+            if (label$type=='BINARY'){
+                # label positive/negative class
+                mtext(gsub("_", " ",
+                    names(which(label$info == min(label$info)))),
+                    side = 2, at = floor(length(sel.idx) / 2), line = -2)
+                mtext(gsub("_", " ",
+                    names(which(label$info == max(label$info)))),
+                    side = 4, at = floor(length(sel.idx) / 2), line = -2)
             }
 
-            # label positive/negative class
-            mtext(
-                gsub("_", " ", names(which(label$info == min(label$info)))),
-                side = 2,
-                at = floor(length(sel.idx) / 2),
-                line = -2
-            )
-            mtext(
-                gsub("_", " ", names(which(label$info == max(label$info)))),
-                side = 4,
-                at = floor(length(sel.idx) / 2),
-                line = -2
-            )
-
-            mtext(
-                "effect size",
-                side = 3,
-                line = 1,
-                at = (mx / 2),
-                cex = 0.7,
-                adj = 1
-            )
-            mtext(
-                "robustness",
-                side = 3,
-                line = 1,
-                at = mx,
-                cex = 0.7,
-                adj = 0
-            )
+            mtext("effect size", side = 3, line = 1, at = (mx / 2),
+                cex = 0.7, adj = 1)
+            mtext("robustness", side = 3, line = 1, at = mx, cex = 0.7,
+                adj = 0)
         } else {
             par(mar = c(0.1, 1.1, 0, 1.1))
             mx = max(-med + (abs(low.qt - upp.qt)))
 
-            barplot(
-                -med,
-                horiz = TRUE,
-                width = 1,
-                space = 0,
-                yaxs = "i",
-                col = "gray30",
-                xlim = c(0, mx),
-                ylim = c(0,
-                    dim(relative.weights)[1]),
-                xlab = "",
-                ylab = "",
-                yaxt = "n"
-            )
+            barplot(-med, horiz = TRUE, width = 1, space = 0, yaxs = "i",
+                col = "gray30", xlim = c(0, mx),
+                ylim = c(0, dim(relative.weights)[1]),
+                xlab = "", ylab = "", yaxt = "n")
             x <- par("usr")
             rect(x[1], x[3], x[2], x[4], col = "lightgray")
             # grid lines
             grid(NULL, NA, lty = 2, col = "gray99")
             # plot the barplot again due to the idiotic way of how to change the
             # background color of a plot in r
-            barplot(
-                -med,
-                horiz = TRUE,
-                width = 1,
-                space = 0,
-                yaxs = "i",
-                col = "gray30",
-                xlim = c(0, mx),
-                ylim = c(0,
-                    dim(relative.weights)[1]),
-                xlab = "",
-                ylab = "",
-                yaxt = "n",
-                add = TRUE
-            )
+            barplot(-med, horiz = TRUE, width = 1, space = 0, yaxs = "i",
+                col = "gray30", xlim = c(0, mx),
+                ylim = c(0, dim(relative.weights)[1]),
+                xlab = "", ylab = "", yaxt = "n", xaxt='n', add = TRUE)
 
             # error bars
-            arrows(
-                y0 = c(seq_along(med)) - 0.5,
-                x0 = -upp.qt,
-                x1 = -low.qt,
-                angle = 90,
-                code = 3,
-                length = 0.04
-            )
+            arrows(y0 = c(seq_along(med)) - 0.5, x0 = -upp.qt, x1 = -low.qt,
+                angle = 90, code = 3, length = 0.04)
             # labels
-            mtext(
-                "median relative Gini coefficient",
-                side = 1,
-                line = 2,
-                at = mx / 2,
-                cex = 0.7,
-                adj = 0.5
-            )
-            mtext(
-                "effect size",
-                side = 3,
-                line = 1,
-                at = (mx / 2),
-                cex = 0.7,
-                adj = 0.5
-            )
+            mtext("median relative Gini coefficient", side = 1, line = 2,
+                at = mx / 2, cex = 0.7, adj = 0.5)
+            mtext("effect size", side = 3, line = 1, 
+                at = (mx / 2), cex = 0.7, adj = 0.5)
         }
 
         box(lwd = 1)
@@ -609,15 +538,19 @@ model.interpretation.feature.weights.plot <-
 # function to plot the predictions and metadata
 #' @keywords internal
 model.interpretation.pred.and.meta.plot <-
-    function(prediction,
-        label,
-        meta = NULL,
-        verbose = 0) {
+    function(prediction, label, meta = NULL, verbose = 0) {
+
         if (verbose > 2)
             message("+ model.interpretation.pred.and.meta.plot")
         par(mar = c(1.1, 4.1, 0.3, 5.1))
-        img.data = as.matrix(prediction)
-        colnames(img.data) = "Classification result"
+        if (label$type == 'BINARY'){
+            img.data = as.matrix(prediction)
+            colnames(img.data) = "Classification result"
+        } else {
+            img.data = cbind(as.matrix(prediction),
+                            as.matrix(label$label[names(prediction)]))
+            colnames(img.data) <- c('Predicted value', 'True value')
+        }
         img.data.processed <- NULL
         if (!is.null(meta)) {
             img.data = cbind(meta[, ncol(meta):1], img.data)
@@ -654,10 +587,12 @@ model.interpretation.pred.and.meta.plot <-
             bty = "n"
         )
         box(lwd = 1)
-        # add deliminator between the different classes
-        abline(v = length(which(label$label == min(label$info))) /
-                length(label$label),
-            col = "red")
+        if (label$type == 'BINARY'){
+            # add deliminator between the different classes
+            abline(v = length(which(label$label == min(label$info))) /
+                    length(label$label),
+                col = "red")
+        }
 
         meta.cex = max(0.3, 0.7 - 0.01 * ncol(img.data))
         for (m in seq_len(ncol(img.data))) {
@@ -747,43 +682,24 @@ model.interpretation.heatmap.plot <-
         if (verbose > 2)
             message("+ model.interpretation.heatmap.plot")
         par(mar = c(0.1, 4.1, 0, 5.1))
-        image(
-            image.data,
-            zlim = limits,
-            col = color.scheme,
-            xaxt = "n",
-            yaxt = "n",
-            xlab = "",
-            ylab = "",
-            bty = "n"
-        )
+        image(image.data, zlim = limits, col = color.scheme, xaxt = "n",
+            yaxt = "n", xlab = "", ylab = "", bty = "n")
         if (!is.null(effect.size)) {
             for (f in seq_len(ncol(image.data))) {
-                mtext(
-                    colnames(image.data)[f],
-                    side = 4,
-                    line = 1,
-                    at = (f - 1) / (dim(image.data)[2] - 1),
-                    las = 2,
+                mtext(colnames(image.data)[f], side = 4, line = 1,
+                    at = (f - 1) / (dim(image.data)[2] - 1), las = 2,
                     cex = max(0.3, 0.8 - 0.01 * dim(image.data)[2]),
                     col = ifelse(effect.size[f] > 0,
-                        color.scheme[1 + 4], color.scheme[length(color.scheme) -
-                                4])
-                )
+                        color.scheme[1 + 4],
+                        color.scheme[length(color.scheme) - 4]))
             }
         } else {
             for (f in seq_len(ncol(image.data))) {
-                mtext(
-                    colnames(image.data)[f],
-                    side = 4,
-                    line = 1,
+                mtext(colnames(image.data)[f], side = 4, line = 1,
                     at = (f - 1) /
-                        (dim(image.data)[2] - 1),
-                    las = 2,
-                    cex = max(0.3,
-                        0.8 - 0.01 * dim(image.data)[2]),
-                    col = "black"
-                )
+                        (dim(image.data)[2] - 1), las = 2,
+                    cex = max(0.3, 0.8 - 0.01 * dim(image.data)[2]),
+                    col = "black")
             }
         }
         box(lwd = 1)
@@ -799,17 +715,17 @@ model.interpretation.prepare.heatmap.fc <-
         sel.feat,
         meta = NULL,
         label,
-        detect.lim,
+        log.n0,
         verbose = 0) {
         if (verbose > 2)
             message("+ model.interpretation.prepare.heatmap.fc")
         n.label <- min(label$info)
         n.idx <- which(label$label == n.label)
         if (!any(grepl("META", sel.feat))) {
-            feat.log <- log10(heatmap.data[sel.feat,] + detect.lim)
+            feat.log <- log10(heatmap.data[sel.feat,] + log.n0)
             img.data <- t(feat.log -
                     log10(rowMedians(heatmap.data[sel.feat, n.idx]) +
-                            detect.lim))
+                            log.n0))
         } else {
             img.data <- matrix(NA,
                 nrow = length(sel.feat),
@@ -825,8 +741,8 @@ model.interpretation.prepare.heatmap.fc <-
                         suppressWarnings(median(as.numeric(
                             heatmap.data[f, n.idx])))
                     img.data[f, ] <-
-                        log10(heatmap.data[f, ] + detect.lim) -
-                        log10(median.ctr + detect.lim)
+                        log10(heatmap.data[f, ] + log.n0) -
+                        log10(median.ctr + log.n0)
                 } else {
                     meta.data <- meta[, grep(
                         strsplit(f, "_")[[1]][2],
@@ -861,14 +777,25 @@ model.interpretation.prepare.heatmap.zscore <-
     function(heatmap.data, limits,
         verbose = 0) {
         if (verbose > 2)
-            message("+ model.interpretation.prepare.heatmap.zscore")
+            message("+ prepare.heatmap.zscore")
         # data is transposed and transformed to feature z-scores for display
         img.data <-
             (heatmap.data - rowMeans(heatmap.data)) / rowSds(heatmap.data)
         img.data[img.data < limits[1]] <- limits[1]
         img.data[img.data > limits[2]] <- limits[2]
         if (verbose > 2)
-            message("+ finished model.interpretation.heatmap.plot")
+            message("+ finished prepare.heatmap.zscore")
+        return(t(img.data))
+    }
+#' @keywords internal
+model.interpretation.prepare.heatmap.log <-
+    function(heatmap.data, log.n0, verbose = 0) {
+        if (verbose > 2)
+            message("+ prepare.heatmap.log")
+        # data is transposed and transformed to feature z-scores for display
+        img.data <- log10(heatmap.data + log.n0)
+        if (verbose > 2)
+            message("+ finished prepare.heatmap.log")
         return(t(img.data))
     }
 
@@ -881,7 +808,7 @@ model.interpretation.select.features <-
         label,
         max.show,
         verbose = 0) {
-        
+
         if (verbose > 2) message("+ model.interpretation.select.features")
         # for linear models, select those that have been selected more than
         # consens.thres percent of the models
@@ -930,12 +857,11 @@ model.interpretation.select.features <-
         }
 
         if (verbose > 2)
-            message(paste(
-                "+++ generating plot for a model with",
-                length(sel.idx),
-                "selected features"
-            ))
+            message(paste("+++ generating plot for a model with",
+                length(sel.idx), "selected features"))
         if (length(sel.idx)==0) stop("No features were selected for plotting!")
+        if (length(sel.idx)==1)
+            stop("Not enough features were selected for plotting!")
         if (verbose > 2)
             message("+ finished model.interpretation.select.features")
         return(sel.idx)
