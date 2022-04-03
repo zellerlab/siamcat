@@ -9,28 +9,30 @@
 #' metadata
 #'
 #' @usage select.samples(siamcat, filter, allowed.set = NULL,
-#'     allowed.range = NULL, verbose = 1)
+#' allowed.range = NULL, verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'
-#' @param filter string, name of the meta variable on which the selection
-#'         should be done
+#' @param filter string, name of the meta variable on which the selection 
+#' should be done
 #'
 #' @param allowed.set a vector of allowed values
 #'
 #' @param allowed.range a range of allowed values
 #'
 #' @param verbose integer, control output: \code{0} for no output at all,
-#'     \code{1} for only information about progress and success, \code{2} for
-#'     normal level of information and \code{3} for full debug information,
-#'     defaults to \code{1}
+#' \code{1} for only information about progress and success, \code{2} for
+#' normal level of information and \code{3} for full debug information,
+#' defaults to \code{1}
 #'
 #' @keywords SIAMCAT select.samples
 #'
 #' @export select.samples
 #'
-#' @return an object of class \link{siamcat-class} with labels and metadata
-#'         filtered in order to contain only allowed values
+#' @encoding UTF-8
+#'
+#' @return an object of class \link{siamcat-class} with labels and metadata 
+#' filtered in order to contain only allowed values
 #'
 #' @details This functions selects labels and metadata based on a specific
 #' column in the metadata. Provided with a column-name in the metadata and a
@@ -49,7 +51,6 @@
 #' siamcat_female <- select.samples(siamcat_example,
 #'     filter='Gender',
 #'     allowed.set=c('F'))
-
 select.samples <- function(siamcat, filter, allowed.set = NULL,
     allowed.range = NULL, verbose = 1) {
 

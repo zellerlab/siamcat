@@ -3,9 +3,9 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' @title create a lefse input file from siamcat object
+#' @title create a LEfSe input file from SIAMCAT object
 #'
-#' @description This function creates a lefse input file from siamcat object
+#' @description This function creates a LEfSe input file from SIAMCAT object
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
@@ -15,13 +15,14 @@
 #'
 #' @return nothing but data is written to a file
 #'
+#' @export
+#'
+#' @encoding UTF-8
+#'
 #' @examples
 #'
 #' data(siamcat_example)
 #' siamcat.to.lefse(siamcat_example)
-#'
-#' @export
-#'
 siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
     feat   <- get.orig_feat.matrix(siamcat)
     label  <- label(siamcat)

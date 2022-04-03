@@ -4,41 +4,57 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Check for potential confounders in the metadata
-#' @description Checks potential confounders in the metadata and produces
-#'     some visualizations
+#' 
+#' @description Checks potential confounders in the metadata and visualize the 
+#' results 
+#' 
 #' @usage check.confounders(siamcat, fn.plot, meta.in = NULL,
 #' feature.type='filtered', verbose = 1)
+#' 
 #' @param siamcat an object of class \link{siamcat-class}
+#' 
 #' @param fn.plot string, filename for the pdf-plot
-#' @param meta.in vector, specific metadata variable names to analyze,
-#'     defaults to NULL (all metadata variables will be analyzed)
-#'@param feature.type string, on which type of features should the function
+#' 
+#' @param meta.in vector, specific metadata variable names to analyze, 
+#' defaults to NULL (all metadata variables will be analyzed)
+#' 
+#' @param feature.type string, on which type of features should the function
 #' work? Can be either \code{c()"original", "filtered", or "normalized")}.
 #' Please only change this paramter if you know what you are doing!
-#' @param verbose integer, control output: \code{0} for no output at all,
-#'     \code{1} for only information about progress and success, \code{2} for
-#'     normal level of information and \code{3} for full debug information,
-#'     defaults to \code{1}
+#' 
+#' @param verbose integer, control output: \code{0} for no output at all, 
+#' \code{1} for only information about progress and success, \code{2} for 
+#' normal level of information and \code{3} for full debug information, 
+#' defaults to \code{1}
+#' 
 #' @keywords SIAMCAT check.confounders
-#' @details This function checks for associations between class labels and
-#'     potential confounders (e.g. Age, Sex, or BMI) that are present in the
-#'     metadata. Statistical testing is performed with Fisher's exact test or
-#'     Wilcoxon test, while associations are visualized either as barplot or
-#'     Q-Q plot, depending on the type of metadata.
-#'
-#'     Additionally, it evaluates associations among metadata variables using
-#'     conditional entropy and associations with the label using generalized
-#'     linear models, producing a correlation heatmap and appropriate
-#'     quantitative barplots, respectively.
+#' 
+#' @details This function checks for associations between class labels and 
+#' potential confounders (e.g. Age, Sex, or BMI) that are present in the 
+#' metadata. Statistical testing is performed with Fisher's exact test or 
+#' Wilcoxon test, while associations are visualized either as barplot or 
+#' Q-Q plot, depending on the type of metadata.
+#' 
+#' Additionally, it evaluates associations among metadata variables using
+#' conditional entropy and associations with the label using generalized 
+#' linear models, producing a correlation heatmap and appropriate
+#' quantitative barplots, respectively.
+#' 
+#' Please note that the confounder check is currently only available for binary
+#' classification problems!
+#' 
 #' @export
+#' 
+#' @encoding UTF-8
+#' 
 #' @return Does not return anything, but outputs plots to specified pdf file
+#' 
 #' @examples
 #' # Example data
 #' data(siamcat_example)
 #'
 #' # Simple working example
 #' check.confounders(siamcat_example, './conf_plot.pdf')
-
 check.confounders <- function(siamcat, fn.plot, meta.in = NULL,
     feature.type='filtered', verbose = 1) {
 
@@ -46,6 +62,10 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL,
     if (verbose > 1) message("+ starting check.confounders")
     s.time <- proc.time()[3]
     label <- label(siamcat)
+    if (label$type!='BINARY'){
+        stop("Confounder check is currently only possible for",
+            " classification tasks")
+    }
     meta <- meta(siamcat)
     # get features
     if (feature.type == 'original'){

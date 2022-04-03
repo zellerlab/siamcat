@@ -5,79 +5,71 @@
 
 #' @title Perform feature normalization
 #'
-#' @description This function performs feature normalization according to user-
-#'     specified parameters.
+#' @description This function performs feature normalization according to 
+#' user-specified parameters.
 #'
-#' @usage normalize.features(siamcat,
-#'     norm.method = c("rank.unit", "rank.std",
-#'         "log.std", "log.unit", "log.clr", "std", "pass"),
-#'     norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1,
-#'         n.p = 2, norm.margin = 1),
-#'     feature.type='filtered',
-#'     verbose = 1)
+#' @usage normalize.features(siamcat, norm.method = c("rank.unit", "rank.std",
+#' "log.std", "log.unit", "log.clr", "std", "pass"), 
+#' norm.param = list(log.n0 = 1e-06, sd.min.q = 0.1, n.p = 2, norm.margin = 1),
+#' feature.type='filtered', verbose = 1)
 #'
 #' @param siamcat an object of class \link{siamcat-class}
 #'
 #' @param norm.method string, normalization method, can be one of these:
-#'     '\code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr',
-#'     'std', 'pass')}
+#' \code{c('rank.unit', 'rank.std', 'log.std', 'log.unit', 'log.clr','std', 
+#' 'pass')}
 #'
-#' @param norm.param list, specifying the parameters of the different
-#'     normalization methods, see details for more information
+#' @param norm.param list, specifying the parameters of the different 
+#' normalization methods, see Details for more information
 #'
 #' @param feature.type string, on which type of features should the function
-#'   work? Can be either \code{"original"}, \code{"filtered"}, or
-#'   \code{"normalized"}. Please only change this paramter if you know what
-#'   you are doing!
+#' work? Can be either \code{"original"}, \code{"filtered"}, or
+#' \code{"normalized"}. Please only change this paramter if you know what
+#' you are doing!
 #'
 #' @param verbose integer, control output: \code{0} for no output at all,
-#'     \code{1} for only information about progress and success, \code{2} for
-#'     normal level of information and \code{3} for full debug information,
-#'     defaults to \code{1}
+#' \code{1} for only information about progress and success, \code{2} for
+#' normal level of information and \code{3} for full debug information,
+#' defaults to \code{1}
 #'
-#' @details There are seven different normalization methods available:
+#' @section Implemented methods:
+#' There are seven different normalization methods available, which 
+#' might need additional parameters, which are passed via the \code{norm.param}
+#' list:
 #' \itemize{
-#'     \item \code{'rank.unit'} - converts features to ranks and normalizes
-#'     each column (=sample) by the square root of the sum of ranks
-#'     \item \code{'rank.std'} - converts features to ranks and applies z-score
-#'     standardization
-#'     \item \code{'log.clr'} - centered log-ratio transformation (with the
-#'     addition of pseudocounts)
-#'     \item \code{'log.std'} - log-transforms features (after addition of
-#'     pseudocounts) and applies z-score standardization
-#'     \item \code{'log.unit'} - log-transforms features (after addition of
-#'     pseudocounts) and normalizes by features or samples with different norms
-#'     \item \code{'std'} - z-score standardization without any other
-#'     transformation
-#'     \item \code{'pass'} - pass-through normalization will not change the
-#'     features}
+#' \item \code{'rank.unit'} - converts features to ranks and normalizes 
+#' each column (=sample) by the square root of the sum of ranks
+#' This method does not require additional parameters.
+#' \item \code{'rank.std'} - converts features to ranks and applies z-score 
+#' standardization. 
+#' This method requires \code{sd.min.q} (minimum quantile of the standard 
+#' deviation to be added to all features in order to avoid underestimation of 
+#' standard deviation) as additional parameter.
+#' \item \code{'log.clr'} - centered log-ratio transformation.
+#' This methods requires a pseudocount (\code{log.n0}) before 
+#' log-transformation.
+#' \item \code{'log.std'} - log-transforms features and applies z-score 
+#' standardization.
+#' This method requires both a pseudocount (\code{log.n0}) and \code{sd.min.q}
+#' \item \code{'log.unit'} - log-transforms features and normalizes by 
+#' features or samples with different norms.
+#' This method requires a pseudocount (\code{log.n0}) and then additionally the
+#' parameters \code{norm.maring} (margin over which to normalize, similarly to 
+#' the \code{apply}-syntax: Allowed values are \code{1} for normalization 
+#' over features, \code{2} over samples, and \code{3} for normalization 
+#' by the global maximum) and the parameter \code{n.p} (vector norm to be 
+#' used, can be either \code{1} for \code{x/sum(x)} or \code{2} for 
+#' \code{x/sqrt(sum(x^2))}).
+#' \item \code{'std'} - z-score standardization without any other 
+#' transformation
+#' This method only requires the \code{sd.min.q} parameter
+#' \item \code{'pass'} - pass-through normalization will not change 
+#' the features}
 #'
-#' The list entries in \code{'norm.param'} specify the normalzation parameters,
-#' which are dependant on the normalization method of choice:
-#' \itemize{
-#'     \item \code{'rank.unit' or 'pass'} does not require any other parameters
-#'     \item \code{'rank.std' and 'std'} requires \code{sd.min.q}, quantile
-#'     of the distribution of standard deviations of all features that will
-#'     be added to the denominator during standardization in order to avoid
-#'     underestimation of the standard deviation, defaults to 0.1
-#'     \item \code{'log.clr'} requires \code{log.n0}, which is the pseudocount
-#'     to be added before log-transformation, defaults to \code{NULL} leading
-#'     to the estimation of \code{log.n0} from the data
-#'     \item \code{'log.std'} requires both \code{log.n0} and \code{sd.min.q},
-#'     using the same default values
-#'     \item \code{'log.unit'} requires next to \code{log.n0} also the
-#'     parameters \code{n.p} and \code{norm.margin}. \code{n.p} specifies the
-#'     vector norm to be used, can be either \code{1} for \code{x/sum(x)} or
-#'     \code{2} for \code{x/sqrt(sum(x^2))}. The parameter \code{norm.margin}
-#'     specifies the margin over which to normalize, similarly to the
-#'     \code{apply}-syntax: Allowed values are \code{1} for normalization
-#'     over features, \code{2} over samples, and \code{3} for normalization
-#'     by the global maximum.
-#'}
-#'
+#' @section Frozen normalization:
 #' The function additionally allows to perform a frozen normalization on a
 #' different dataset. After normalizing the first dataset, the \code{norm_feat}
-#' slot in the siamcat object contains all parameters of the normalization,
+#' slot in the SIAMCAT object contains all parameters of the normalization,
 #' which you can access via the \link{norm_params} accessor.
 #'
 #' In order to perform a frozen normalization of a new dataset, you can run the
@@ -88,6 +80,8 @@
 #' @keywords SIAMCAT normalize.features
 #'
 #' @export
+#'
+#' @encoding UTF-8
 #'
 #' @return an object of class \link{siamcat-class} with normalized features
 #'
@@ -112,7 +106,6 @@
 #' # Frozen normalization
 #' \donttest{siamcat_norm <- normalize.features(siamcat,
 #'     norm.param=norm_params(siamcat_reference))}
-
 normalize.features <- function(siamcat,
     norm.method = c("rank.unit", "rank.std",
         "log.std", "log.unit",
