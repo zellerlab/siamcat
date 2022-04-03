@@ -24,5 +24,6 @@ Assign a new list containing trained models to a SIAMCAT object
 }
 \examples{
 data(siamcat_example)
+siamcat_example <- train.model(siamcat_example, method='lasso')
 model_list(siamcat_example) <- model_list(siamcat_example)
 }

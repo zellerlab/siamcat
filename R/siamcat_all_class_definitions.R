@@ -16,18 +16,20 @@ check.label <- function(object){
         errors <- c(errors, msg)
     }
     # check that label is binary or test
-    if (object$type != 'BINARY' & object$type != 'TEST'){
-        msg <- 'Label object is neither binary nor a test label!'
-        errors <- c(errors, msg)
+    if (object$type == 'BINARY'){
+        # check that info and label match up
+        if (!all(sort(unique(object$label)) == object$info)){
+            msg <- 'label info does not match to label entries!'
+            errors <- c(errors, msg)
+        }
+        # check that info has names
+        if (is.null(names(object$info))){
+            msg <- 'Label info does not contain group names!'
+            errors <- c(errors, msg)
+        }
     }
-    # check that info and label match up
-    if (!all(sort(unique(object$label)) == object$info)){
-        msg <- 'label info does not match to label entries!'
-        errors <- c(errors, msg)
-    }
-    # check that info has names
-    if (is.null(names(object$info))){
-        msg <- 'Label info does not contain group names!'
+    if (!object$type %in% c('BINARY', 'TEST', 'CONTINUOUS')){
+        msg <- 'Label object is neither binary, regression, nor a test label!'
         errors <- c(errors, msg)
     }
     if (length(errors) == 0) NULL else errors
@@ -87,21 +89,16 @@ check.assoc <- function(object){
         errors <- c(errors, msg)
     }
     # check that assoc.param contains all entries
-    if (!all(names(object$assoc.param) == c('detect.lim', 'pr.cutoff',
-        'probs.fc', 'mult.corr', 'alpha', 'feature.type', 'paired'))){
+    if (!all(names(object$assoc.param) == c('formula', 'alpha', 'mult.corr',
+        'log.n0', 'pr.cutoff', 'test', 'feature.type', 'paired', 'probs.fc'))){
             msg <- 'Association testing parameters do not contain all entries!'
             errors <- c(errors, msg)
         }
     # check that all entries are valid and in the expected ranges
-    if (!all(vapply(object$assoc.param, class,
-        FUN.VALUE=character(1)) == c('numeric', 'numeric', 'numeric',
-            'character', 'numeric', 'character', 'logical'))){
-    msg<-'Association testing parameters do not contain the expected classes!'
-    errors <- c(errors, msg)
-    }
     # detect.lim
-    if (object$assoc.param$detect.lim > 1 | object$assoc.param$detect.lim < 0){
-        msg<-'Detection limit (pseudocount) is not valid (not between 1 and 0)!'
+    if (object$assoc.param$log.n0 > 1 | object$assoc.param$log.n0 < 0){
+        msg<-paste0("Parameter 'log.n0' (pseudocount) is not valid (not ",
+                    "between 1 and 0)!")
         errors <- c(errors, msg)
     }
     # pr.cutoff
@@ -135,11 +132,6 @@ check.assoc <- function(object){
         errors <- c(errors, msg)
     }
     # check that assoc.results contains all that it should
-    if (!all(colnames(object$assoc.results)==c("fc", "p.val", "auc",
-        "auc.ci.l", "auc.ci.h", "pr.shift", "pr.n", "pr.p", "bcol", "p.adj"))){
-        msg <- 'Association results do not contain all needed entries!'
-        errors <- c(errors, msg)
-    }
     if (nrow(object$assoc.results) < 1){
         msg <- 'Association results are empty!'
         errors <- c(errors, msg)
@@ -296,6 +288,14 @@ check.data.split <- function(object){
 # check model list for validity
 #'@keywords internal
 check.model.list <- function(object){
+    if (is(object$models[[1]], "WrappedModel")){
+        message("Legacy warning:\n",
+                "This SIAMCAT object seems to have been constructed with ",
+                "version 1.x, based on 'mlr'.\nYour current SIAMCAT version ",
+                "has been upgraded to use 'mlr3' internally.\nPlease consider ",
+                "re-training your SIAMCAT object or downgrading your SIAMCAT ",
+                "version in order to continue.")
+    }
     errors <- character()
     if (!all(c('model.type', 'feature.type', 'models') %in% names(object))){
         msg <- 'Model list does not contain all needed entries!'
@@ -306,12 +306,6 @@ check.model.list <- function(object){
     if (length.model.type != 1){
         msg <- paste0('Model type is of length ', length.model.type, '.',
             ' Should be length 1!')
-        errors <- c(errors, msg)
-    }
-    # check that all models in the list are mlr models
-    if (any(vapply(object$models, class,
-            FUN.VALUE = character(1)) != 'WrappedModel')){
-        msg <- 'Models are supposed to be mlr-WrappedModels!'
         errors <- c(errors, msg)
     }
     # check feature type
@@ -336,63 +330,69 @@ check.model.list <- function(object){
 #'@keywords internal
 check.eval.data <- function(object){
     errors <- character()
-    # check that all entries are there
-    if (!all(c('roc', 'auroc', 'prc', 'auprc', 'ev') %in% names(object))){
-        msg <- 'Not all needed entries are given!'
-        errors <- c(errors, msg)
-    }
-    # check roc
-    if (!is(object$roc,'roc')){
-        msg <- 'Entry for roc is not an object of class roc (from pROC)!'
-        errors <- c(errors, msg)
-    }
-    # check prc
-    if (!is.list(object$prc)  |
-        !all(names(object$prc) ==c('recall', 'precision')) |
-        length(unique(vapply(object$prc, length, FUN.VALUE=numeric(1))))!=1){
-        msg <- paste0('No valid entry for prc ',
-            '(missing entries or no list with entries of equal length)!')
-        errors <- c(errors, msg)
-    }
-    # check ev
-    if (!is.list(object$ev) |
-        !all(names(object$ev) == c("tp", "tn", "fp", "fn", "thresholds"))){
-        msg <- 'Not a valid entry for ev (missing entries or no list)!'
-        errors <- c(errors, msg)
-    }
-    # check that the lenghts of each entry in ev are the same
-    if (length(unique(vapply(object$ev, length, FUN.VALUE = numeric(1)))) != 1){
-        msg <- 'No concordance for the entries in ev (unequal length)!'
-        errors <- c(errors, msg)
-    }
-    # check concordance between ev and prc
-    if (length(object$prc$recall) != length(object$ev$thresholds)){
-        msg <- 'No concordance for the entries in ev and prc (unequal length)!'
-        errors <- c(errors, msg)
-    }
-
-    # for the case that there are multiple repeats
-    if (!is.null(object$roc.all)){
-        # check if all entries are there
-        if (!all(c('roc.all', 'auroc.all', 'prc.all', 'auprc.all', 'ev.all')
-            %in% names(object))){
-                msg <- 'Not all needed entries are given!'
-                errors <- c(errors, msg)
-        }
-        # test roc.all
-        if (!all(vapply(object$roc.all, class,
-            FUN.VALUE = character(1)) == 'roc')){
-                msg <- 'roc.all entries are not objects of class roc!'
-                errors <- c(errors, msg)
-            }
-        # test lenght concordance
-        if (length(unique(
-            vapply(object[grep('.all', names(object))], length,
-            FUN.VALUE = integer(1))))!=1){
-            msg<-'entries for individual repeats do not have concordant length!'
+    if ('auroc' %in% names(object)){
+        # check that all entries are there
+        if (!all(c('roc', 'auroc', 'prc', 'auprc', 'ev') %in% names(object))){
+            msg <- 'Not all needed entries are given!'
             errors <- c(errors, msg)
         }
-        ### MORE CHECKS FOR EVAL_DATA WITH MULTIPLE REPEATS?
+        # check roc
+        if (!is(object$roc,'roc')){
+            msg <- 'Entry for roc is not an object of class roc (from pROC)!'
+            errors <- c(errors, msg)
+        }
+        # check prc
+        if (!is.list(object$prc)  |
+            !all(names(object$prc) ==c('recall', 'precision')) |
+            length(unique(vapply(object$prc, length,
+                    FUN.VALUE=numeric(1))))!=1){
+            msg <- paste0('No valid entry for prc ',
+                '(missing entries or no list with entries of equal length)!')
+            errors <- c(errors, msg)
+        }
+        # check ev
+        if (!is.list(object$ev) |
+            !all(names(object$ev) == c("tp", "tn", "fp", "fn", "thresholds"))){
+            msg <- 'Not a valid entry for ev (missing entries or no list)!'
+            errors <- c(errors, msg)
+        }
+        # check that the lenghts of each entry in ev are the same
+        if (length(unique(vapply(object$ev, length,
+                            FUN.VALUE = numeric(1)))) != 1){
+            msg <- 'No concordance for the entries in ev (unequal length)!'
+            errors <- c(errors, msg)
+        }
+        # check concordance between ev and prc
+        if (length(object$prc$recall) != length(object$ev$thresholds)){
+            msg <- 'No concordance for the entries in ev and prc!'
+            errors <- c(errors, msg)
+        }
+
+        # for the case that there are multiple repeats
+        if (!is.null(object$roc.all)){
+            # check if all entries are there
+            if (!all(c('roc.all', 'auroc.all', 'prc.all',
+                            'auprc.all', 'ev.all')
+                %in% names(object))){
+                    msg <- 'Not all needed entries are given!'
+                    errors <- c(errors, msg)
+            }
+            # test roc.all
+            if (!all(vapply(object$roc.all, class,
+                FUN.VALUE = character(1)) == 'roc')){
+                    msg <- 'roc.all entries are not objects of class roc!'
+                    errors <- c(errors, msg)
+                }
+            # test lenght concordance
+            if (length(unique(
+                vapply(object[grep('.all', names(object))], length,
+                FUN.VALUE = integer(1))))!=1){
+                msg<- paste0('entries for individual repeats do not have ",
+                                "concordant length!')
+                errors <- c(errors, msg)
+            }
+            ### MORE CHECKS FOR EVAL_DATA WITH MULTIPLE REPEATS?
+        }
     }
     if (length(errors) == 0) NULL else errors
 }

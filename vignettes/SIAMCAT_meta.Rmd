@@ -99,8 +99,8 @@ for (d in datasets){
     # create SIAMCAT object
     sc.obj <- siamcat(feat=feat, meta=meta.train, label='Group', case='CD')
     # test for associations
-    sc.obj <- check.associations(sc.obj, detect.lim = 1e-05,
-        feature.type = 'original',fn.plot = paste0('./assoc_plot_', d, '.pdf'))
+    sc.obj <- check.associations(sc.obj, log.n0=1e-05, 
+                                feature.type = 'original')
     # extract the associations and save them in the assoc.list
     temp <- associations(sc.obj)
     temp$genus <- rownames(temp)
@@ -303,7 +303,8 @@ bind_rows(auroc.all, test.average) %>%
     mutate(split=factor(split, levels = c('none', 'Average'))) %>% 
     # convert to factor to enforce ordering
     mutate(study.train=factor(study.train, levels=c(datasets, 'Average'))) %>% 
-    mutate(study.test=factor(study.test, levels=c(rev(datasets),'Average'))) %>% 
+    mutate(study.test=factor(study.test, 
+                            levels=c(rev(datasets),'Average'))) %>% 
     ggplot(aes(y=study.test, x=study.train, fill=AUC, size=CV, color=CV)) +
         geom_tile() + theme_minimal() +
         # text in tiles

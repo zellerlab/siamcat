@@ -777,6 +777,15 @@ setMethod("weight_matrix", "siamcat", function(siamcat, verbose=1) {
         }
         return(NULL)
     }
+    if (is(temp[[1]], "WrappedModel")){
+        stop("Legacy warning:\n",
+                "This SIAMCAT object seems to have been constructed with ",
+                "version 1.x, based on 'mlr'.\nYour current SIAMCAT version ",
+                "has been upgraded to use 'mlr3' internally.\nPlease consider ",
+                "re-training your SIAMCAT object or downgrading your SIAMCAT ",
+                "version in order to continue.")
+
+    }
 
     feat.type <- feature_type(siamcat)
     if (feat.type == 'original'){
@@ -791,8 +800,9 @@ setMethod("weight_matrix", "siamcat", function(siamcat, verbose=1) {
         ncol=length(temp), dimnames=list(rownames(feat),
         paste0('Model_', seq_along(temp))))
     for (i in seq_along(temp)){
-        m.idx <- match(temp[[i]]$features, make.names(rownames(weight.mat)))
-        weight.mat[m.idx, i] <- temp[[i]]$feat.weights
+        m.idx <- match(names(temp[[i]]$features),
+            make.names(rownames(weight.mat)))
+        weight.mat[m.idx, i] <- temp[[i]]$features
     }
     weight.mat[is.na(weight.mat)] <- 0
 

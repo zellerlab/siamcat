@@ -81,7 +81,7 @@
 #'     case='CRC')
 siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         validate=TRUE, verbose=3) {
-
+    
     if (is.null(phyloseq) && is.null(feat)){
         stop(paste0('SIAMCAT needs either a feature matrix or a phyloseq',
             ' object!!! Exiting...'))
@@ -95,6 +95,11 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         case <- other.args$case
     } else {
         case <- NULL
+    }
+    if ('control' %in% names(other.args)){
+        control <- other.args$control
+    } else {
+        control <- NULL
     }
 
     # Remove names from arglist. Will replace them based on their class
@@ -139,7 +144,7 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
     # validate features and metadata
     feat <- validate.features(feat)
     meta <- validate.metadata(meta)
-
+    
     # make Phyloseq object properly
     if (any(vapply(names(other.args), is.component.class, "phyloseq",
         FUN.VALUE = logical(1)))){
@@ -155,7 +160,7 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         arglistphyloseq))
 
     # label object
-    temp <- validate.label(label, feat, meta, case, verbose)
+    temp <- validate.label(label, feat, meta, case, control, verbose)
     label <- temp$label
     if (!is.null(temp$meta)){
         sample_data(other.args$phyloseq) <- temp$meta
@@ -271,6 +276,9 @@ validate.features <- function(feat){
             stop(paste0('SIAMCAT expects numerical features!.\n',
             'Please check your feature matrix! Exiting...'))
         }
+        if (length(unique(rownames(feat))) != nrow(feat)){
+            stop(paste0("Features need unique identifiers!"))
+        }
         feat <- otu_table(feat, taxa_are_rows=TRUE)
         return(feat)
     } else if (is.data.frame(feat)){
@@ -283,6 +291,9 @@ validate.features <- function(feat){
             stop(paste0('SIAMCAT expects numerical features!.\n',
             'Please check your feature data.frame! Exiting...'))
         }
+        if (length(unique(rownames(feat))) != nrow(feat)){
+            stop(paste0("Features need unique identifiers!"))
+        }
         feat <- otu_table(feat, taxa_are_rows=TRUE)
         return(feat)
     }
@@ -290,7 +301,7 @@ validate.features <- function(feat){
 
 # check label object
 #' @keywords internal
-validate.label <- function(label, feat, meta, case, verbose){
+validate.label <- function(label, feat, meta, case, control, verbose){
     # if NA, return simple label object which contains only one class
     if (is.null(label)){
         warning(paste0('No label information given! Generating SIAMCAT object ',
@@ -303,14 +314,13 @@ validate.label <- function(label, feat, meta, case, verbose){
         label <- label
     } else if (is.character(label) & length(label) == 1){
         if(is.null(meta)) stop('Metadata needed to generate label! Exiting...')
-        if(is.null(case)) stop('Case information needed! Exiting...')
-        temp <- create.label(meta=meta, label=label, case=case,
+        temp <- create.label(meta=meta, label=label, case=case, control=control,
             verbose=verbose, remove.meta.column=TRUE)
         label <- temp$label
         meta <- temp$meta
     } else if (is.atomic(label)) {
-        if(is.null(case)) stop('Case information needed! Exiting...')
-        label <- create.label(label=label, case=case, verbose=verbose)
+        label <- create.label(label=label, case=case, control=control,
+                                verbose=verbose)
     } else {
         stop(paste0('Cannot interpret the label object!\nPlease ',
             'provide either a label object, a column in your metadata, or a

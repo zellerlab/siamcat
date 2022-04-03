@@ -4,23 +4,32 @@
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
 #' @title Validate samples in labels, features, and metadata
-#' @description This function checks if labels are available for all samples in
-#'     features. Additionally validates metadata, if available.
+#' 
+#' @description This function checks if labels are available for all samples 
+#' in features. Additionally validates metadata, if available.
+#' 
 #' @param siamcat an object of class \link{siamcat-class}
+#' 
 #' @param verbose integer, control output: \code{0} for no output at all,
-#'     \code{1} for only information about progress and success, \code{2} for
-#'     normal level of information and \code{3} for full debug information,
-#'     defaults to \code{1}
+#' \code{1} for only information about progress and success, \code{2} for
+#' normal level of information and \code{3} for full debug information,
+#' defaults to \code{1}
+#' 
 #' @keywords SIAMCAT validate.data
+#' 
 #' @export
-#' @details This function validates the data by checking that labels are
-#'     available for all samples in the feature matrix. Furthermore,
-#'     the number of samples per class is checked to ensure a minimum
-#'     number. If metadata is available, the overlap between labels and
-#'     metadata is checked as well.
+#' 
+#' @encoding UTF-8
 #'
-#'     This function is run when a \link{siamcat-class} object is created.
+#' @details This function validates the data by checking that labels are
+#' available for all samples in the feature matrix. Furthermore, the number 
+#' of samples per class is checked to ensure a minimum number. If metadata 
+#' is available, the overlap between labels and metadata is checked as well. 
+#' 
+#' This function is run when a \link{siamcat-class} object is created.
+#' 
 #' @return an object of class \link{siamcat-class}
+#' 
 #' @examples
 #' data(siamcat_example)
 #'
@@ -61,6 +70,7 @@ validate.data <- function(siamcat, verbose = 1) {
     if (verbose > 2) {
         message("+++ checking overlap between labels and features")
     }
+
     s.intersect <- intersect(names(label$label), colnames(feat))
     # check and re-order features
     s.removed <- ncol(feat) - length(s.intersect)

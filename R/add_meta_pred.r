@@ -3,38 +3,37 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-
 #' @title Add metadata as predictors
 #'
 #' @description This function adds metadata to the feature matrix to be later
-#'     used as predictors
+#' used as predictors
 #'
-#' @usage add.meta.pred(siamcat, pred.names,
-#'     std.meta = TRUE,
-#'     feature.type='normalized',
-#'     verbose = 1)
+#' @usage add.meta.pred(siamcat, pred.names, std.meta = TRUE, 
+#' feature.type='normalized', verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
-#' @param pred.names vector of names of the variables within the metadata to be
-#'   added to the feature matrix as predictors
+#' @param pred.names vector of names of the variables within the metadata to 
+#' be added to the feature matrix as predictors
 #'
 #' @param std.meta boolean, should added metadata features be standardized?,
-#'   defaults to \code{TRUE}
+#' defaults to \code{TRUE}
 #'
-#' @param feature.type string, on which type of features should the function
-#'   work? Can be either \code{"original"}, \code{"filtered"}, or
-#'   \code{"normalized"}. Please only change this paramter if you know what
-#'   you are doing!
+#' @param feature.type string, on which type of features should the function 
+#' work? Can be either \code{"original"}, \code{"filtered"}, or 
+#' \code{"normalized"}. Please only change this paramter if you know what
+#' you are doing!
 #'
-#' @param verbose integer, control output: \code{0} for no output at all,
-#'     \code{1} for only information about progress and success, \code{2} for
-#'     normal level of information and \code{3} for full debug information,
-#'     defaults to \code{1}
+#' @param verbose integer, control output: \code{0} for no output at all, 
+#' \code{1} for only information about progress and success, \code{2} for
+#' normal level of information and \code{3} for full debug information,
+#' defaults to \code{1}
 #'
 #' @keywords SIAMCAT add.meta.pred
 #'
 #' @export
+#' 
+#' @encoding UTF-8
 #'
 #' @details This functions adds one or several metadata variables to the set
 #' of features, so that they can be included for model training.
@@ -50,7 +49,7 @@
 #' numerically before you start the SIAMCAT workflow.
 #'
 #' @return an object of class \link{siamcat-class} with metadata added to the
-#'     features
+#' features
 #'
 #' @examples
 #' data(siamcat_example)
@@ -60,9 +59,8 @@
 #'
 #' # Add Age and BMI as potential predictors
 #' # Additionally, prevent standardization of the added features
-#' siamcat_meta_added <- add.meta.pred(siamcat_example,
-#'     pred.names=c('Age', 'BMI'),
-#'     std.meta=FALSE)
+#' siamcat_meta_added <- add.meta.pred(siamcat_example, 
+#' pred.names=c('Age', 'BMI'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
     feature.type = 'normalized', verbose = 1) {
 

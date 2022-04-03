@@ -7,33 +7,35 @@
 #'
 #' @description This function summarize features on a specific taxonomic level
 #'
-#' @usage summarize.features(siamcat, level = 'g__',
-#'                     feature.type='original', verbose=1)
+#' @usage summarize.features(siamcat, level = 'g__', 
+#' feature.type='original', verbose=1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
 #' @param level string, at which level to summarize (e.g. \code{g__} = genus)
 #'
 #' @param feature.type string, on which type of features should the function
-#'   work? Can be either \code{"original"}, \code{"filtered"}, or
-#'   \code{"normalized"}. Please only change this paramter if you know what
-#'   you are doing!
+#' work? Can be either \code{"original"}, \code{"filtered"}, or
+#' \code{"normalized"}. Please only change this paramter if you know what
+#' you are doing!
 #'
 #' @param verbose integer, control output: \code{0} for no output at all,
-#'     \code{1} for only information about progress and success, \code{2} for
-#'     normal level of information and \code{3} for full debug information,
-#'     defaults to \code{1}
+#' \code{1} for only information about progress and success, \code{2} for
+#' normal level of information and \code{3} for full debug information,
+#' defaults to \code{1}
 #'
 #' @keywords internal
 #'
 #' @export summarize.features
+#'
+#' @encoding UTF-8
 #'
 #' @details This function will summarize features at different taxonomic
 #' levels, e.g. transform species-level relative abundance into genus-level
 #' taxonomic profiles.
 #'
 #' The function expects a SIAMCAT object that either contains an entry in the
-#' \link{phyloseq}{tax_table} slot of its \link{phyloseq} object, \strong{OR}
+#' \link[phyloseq]{tax_table} slot of its \link{phyloseq} object, \strong{OR}
 #' a set of feature names which encode taxonomic information, e.g.
 #'
 #' \code{k__Bacteria;p__Actinobacteria;c__Actinobacteria;o__Acidimicrobiales;..}

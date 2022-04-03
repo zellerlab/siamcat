@@ -8,9 +8,7 @@
 #' @description Read label information from a file
 #'
 #' @param fn.in.label name of the tsv file containing labels
-#'
-#' @export
-#'
+#' 
 #' @return label object containing several entries:\itemize{
 #' \item \code{$label} named vector containing the numerical labels from the
 #' file;
@@ -34,6 +32,12 @@
 #'
 #' Note: Labels can take other numeric values (but not characters or strings);
 #' importantly, the label for cases has to be greater than the one for controls
+#' 
+#'
+#' @export
+#'
+#' @encoding UTF-8
+#'
 #' @examples
 #' # run with example data
 #' fn.label <- system.file('extdata',
@@ -41,7 +45,6 @@
 #'     package = 'SIAMCAT')
 #'
 #' crc.zeller.label <- read.label(fn.label)
-
 read.label <- function(fn.in.label) {
     if (is.null(fn.in.label))
         stop("Filename for labels file not provided!\n")

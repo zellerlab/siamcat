@@ -12,6 +12,8 @@
 #'
 #' Mainly used for running the examples in the function documentation.
 #'
+#' @encoding UTF-8
+#'
 #' @name siamcat_example
 #'
 #' @source \url{http://msb.embopress.org/content/10/11/766}
@@ -27,6 +29,8 @@ NULL
 #' et al. MSB 2014 (see \url{http://msb.embopress.org/content/10/11/766}),
 #' containing 141 samples and 1754 bacterial species (features).
 #'
+#' @encoding UTF-8
+#'
 #' @name feat.crc.zeller
 #'
 #' @source \url{http://msb.embopress.org/content/10/11/766}
@@ -41,6 +45,8 @@ NULL
 #' @description Metadata (as data.frame) of the CRC dataset from Zeller et
 #' al. MSB 2014 (see \url{http://msb.embopress.org/content/10/11/766}),
 #' containing 6 metadata variables variables (e.g. Age or BMI) for 141 samples.
+#'
+#' @encoding UTF-8
 #'
 #' @name meta.crc.zeller
 #'
