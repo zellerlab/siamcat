@@ -117,14 +117,9 @@ the significance using a non-parametric Wilcoxon test and different effect
 sizes for the association (e.g. AUC or fold change).
 
 ```{r check_associations, eval=FALSE}
-sc.obj <- check.associations(
-    sc.obj,
-    sort.by = 'fc',
-    alpha = 0.05,
-    mult.corr = "fdr",
-    detect.lim = 10 ^-6,
-    plot.type = "quantile.box",
-    panels = c("fc", "prevalence", "auroc"))
+sc.obj <- check.associations(sc.obj, log.n0 = 1e-06, alpha = 0.05)
+association.plot(sc.obj, sort.by = 'fc', 
+                panels = c('fc', 'prevalence', 'auroc'))
 ```
 
 The function produces a pdf file as output, since the plot is optimized for a
@@ -143,12 +138,8 @@ in the `SIAMCAT` object, but the different analyses are visualized and saved to
 a combined pdf file for qualitative interpretation.
 
 ```{r check_confounders, eval=FALSE}
-sc.obj <- check.confounders(
-    sc.obj,
-    fn.plot = 'confounder_plots.pdf',
-    meta.in = NULL,
-    feature.type = 'filtered'
-)
+check.confounders(sc.obj, fn.plot = 'confounder_plots.pdf',
+                    meta.in = NULL, feature.type = 'filtered')
 ```
 
 The conditional entropy check primarily serves to remove nonsensical 
@@ -183,15 +174,8 @@ we use the `log.unit` method, but several other methods and customization
 options are available (please check the documentation).
 
 ```{r normalize_feat}
-sc.obj <- normalize.features(
-    sc.obj,
-    norm.method = "log.unit",
-    norm.param = list(
-        log.n0 = 1e-06,
-        n.p = 2,
-        norm.margin = 1
-    )
-)
+sc.obj <- normalize.features(sc.obj, norm.method = "log.unit",
+    norm.param = list(log.n0 = 1e-06, n.p = 2,norm.margin = 1))
 ```
 
 ## Prepare Cross-Validation
@@ -204,11 +188,7 @@ scheme. The data-split will be saved in the `data_split` slot of the `SIAMCAT`
 object.
 
 ```{r data_split}
-sc.obj <-  create.data.split(
-    sc.obj,
-    num.folds = 5,
-    num.resample = 2
-)
+sc.obj <-  create.data.split(sc.obj, num.folds = 5, num.resample = 2)
 ```
 
 ## Model Training
@@ -219,10 +199,7 @@ machine learning method to the measure for model selection or customizable
 parameter set for hyperparameter tuning.
 
 ```{r train_model, message=FALSE, results='hide'}
-sc.obj <- train.model(
-    sc.obj,
-    method = "lasso"
-)
+sc.obj <- train.model(sc.obj, method = "lasso")
 ```
 
 The models are saved in the `model_list` slot of the `SIAMCAT` object. The
@@ -235,7 +212,7 @@ model_type(sc.obj)
 
 # access the models
 models <- models(sc.obj)
-models[[1]]
+models[[1]]$model
 ```
 
 ## Make Predictions
@@ -299,13 +276,8 @@ The function again produces a pdf-file optimized for a landscape DIN-A4
 plotting region.
 
 ```{r eval=FALSE}
-model.interpretation.plot(
-    sc.obj,
-    fn.plot = 'interpretation.pdf',
-    consens.thres = 0.5,
-    limits = c(-3, 3),
-    heatmap.type = 'zscore',
-)
+model.interpretation.plot(sc.obj, fn.plot = 'interpretation.pdf',
+    consens.thres = 0.5, limits = c(-3, 3), heatmap.type = 'zscore')
 ```
 
 The resulting plot looks like this:

@@ -42,22 +42,22 @@ library("ggpubr")
 # Preparations
 
 There are two different ways to access the data for our example dataset. On
-the one hand, it is available through the `curatedMetagenomicsData` R package.
+the one hand, it is available through the `curatedMetagenomicData` R package.
 However, using it here would create many more dependencies for the `SIAMCAT`
 package.  
 Therefore, we here use data available through the EMBL cluster.
 
 In the `SIAMCAT` paper, we performed the presented analyses on the datasets
-available through `curatedMetagenomicsData`. If you want to reproduce the
+available through `curatedMetagenomicData`. If you want to reproduce the
 analysis from the `SIAMCAT` paper, you can execute the code chunks in
-the `curatedMetageomicsData` section, otherwise execute the code in the
+the `curatedMetageomicData` section, otherwise execute the code in the
 mOTUs2 section.
 
 ## curatedMetagenomicsData
 
 First, we load the package:
 ```{r curateMGD, eval=FALSE}
-library("curatedMetagenomciData")
+library("curatedMetagenomicData")
 ```
 
 ### Metadata
@@ -211,14 +211,13 @@ sc.obj <- filter.features(sc.obj, cutoff=0.05,
 ## Association Plot
 
 The `check.assocation` function calculates the significance of enrichment and
-metrics of association (such as generalized fold change and single-feautre
+metrics of association (such as generalized fold change and single-feature
 AUROC).
 
 ```{r assoc_plot, message=FALSE, warning=FALSE}
-sc.obj <- check.associations(sc.obj, detect.lim = 1e-06, alpha=0.1, 
-                            max.show = 20,plot.type = 'quantile.rect',
-                            panels = c('fc'),
-                            fn.plot = './association_plot_nielsen.pdf')
+sc.obj <- check.associations(sc.obj, log.n0 = 1e-06, alpha=0.1)
+association.plot(sc.obj, fn.plot = './association_plot_nielsen.pdf', 
+                panels = c('fc'))
 ```
 
 ![](./association_plot_nielsen.png)
@@ -336,10 +335,7 @@ First, we can use `SIAMCAT` to test for associations including the Danish
 samples.
 
 ```{r assoc_plot_2, warning=FALSE, message=FALSE}
-sc.obj.full <- check.associations(sc.obj.full, detect.lim = 1e-06, alpha=0.1, 
-                                    max.show = 20,
-                                    plot.type = 'quantile.rect',
-                                    fn.plot = './association_plot_dnk.pdf')
+sc.obj.full <- check.associations(sc.obj.full, log.n0 = 1e-06, alpha=0.1) 
 ```
 
 Confounders can lead to biases in association testing. After using `SIAMCAT` to
@@ -364,7 +360,7 @@ df.plot %>%
         theme_classic() +
         theme(panel.grid.major = element_line(colour='lightgrey'),
             aspect.ratio = 1.3) +
-        scale_colour_manual(values=c('darkgrey', '#D41645'), guide=FALSE) +
+        scale_colour_manual(values=c('darkgrey', '#D41645'), guide='none') +
         annotate('text', x=0.7, y=8, label='Dorea formicigenerans')
 ```
 
