@@ -237,6 +237,7 @@ setReplaceMethod("data_split", c("siamcat", "list"), function(x, value) {
 #'
 #' @examples
 #' data(siamcat_example)
+#' siamcat_example <- train.model(siamcat_example, method='lasso')
 #' model_list(siamcat_example) <- model_list(siamcat_example)
 setGeneric("model_list<-", function(x, value)
     standardGeneric("model_list<-"))

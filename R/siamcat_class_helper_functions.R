@@ -80,6 +80,17 @@ filter.label <- function(siamcat, ids, verbose = 1) {
 setMethod("show", "siamcat", function(object) {
     cat("siamcat-class object", fill = TRUE)
 
+
+    # if it is a SIAMCAT.v1 model, print a warning
+    if (is(models(object, verbose=0)[[1]], "WrappedModel")){
+        message("Legacy warning:\n",
+                "This SIAMCAT object seems to have been constructed with ",
+                "version 1.x, based on 'mlr'.\nYour current SIAMCAT version ",
+                "has been upgraded to use 'mlr3' internally.\nPlease consider ",
+                "re-training your SIAMCAT object or downgrading your SIAMCAT ",
+                "version in order to continue.")
+        stop("Exiting...")
+    }
     # Label object
     if (!is.null(label(object)))
         label <- label(object)
@@ -88,13 +99,19 @@ setMethod("show", "siamcat", function(object) {
             n <- length(label$label)
             cat(paste("label()                Label object:        ",
                 "Test label for", n, "samples"), fill=TRUE)
-        } else {
+        } else if (type == 'BINARY'){
             p.lab <- names(which(label$info == max(label$info)))
             n.lab <- setdiff(names(label$info), p.lab)
             p.n <- length(which(label$label == max(label$info)))
             n.n <- length(which(label$label == min(label$info)))
             cat(paste("label()                Label object:        ",
                 n.n, n.lab, "and", p.n, p.lab, "samples", sep = " "),
+                fill = TRUE)
+        } else if (type=='CONTINUOUS'){
+            cat(paste("label()                Label object:        ",
+                    length(label$label), "samples, ranging from",
+                    sprintf(fmt='%.2f', label$info[1]), "to",
+                    sprintf(fmt='%.2f', label$info[2]), sep = " "),
                 fill = TRUE)
         }
 
@@ -166,9 +183,15 @@ setMethod("show", "siamcat", function(object) {
 
     # evaluation data
     if (!is.null(eval_data(object, verbose=0))) {
-        cat(paste( "eval_data()            Evaluation data:      Average AUC:",
-            round(eval_data(object)$auroc, 3), sep = " "),
-            fill = TRUE)
+        if ('auroc' %in% names(eval_data(object))){
+            cat(paste( "eval_data()            Evaluation data:     ",
+                        "Average AUC:", round(eval_data(object)$auroc, 3),
+                        sep = " "), fill = TRUE)
+        } else if ('r2' %in% names(eval_data(object))){
+            cat(paste("eval_data()            Evaluation data:     ",
+                    "Average R-squared:", round(eval_data(object)$r2, 3),
+                    sep = " "), fill = TRUE)
+        }
     }
 
     # print otu_table (always there).
