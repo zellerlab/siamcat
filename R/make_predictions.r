@@ -247,7 +247,8 @@ make.external.predictions <- function(siamcat.trained, siamcat.external,
                             " on complete external dataset", " (", i, " of ",
                             num.models, ")..."))
         if (label$type == 'BINARY'){
-            data$label <- as.factor(sample(c(0,1), size=nrow(data),
+            data$label <- as.factor(sample(unique(label$label), 
+                                        size=nrow(data),
                                         replace=TRUE))
             test.task <- TaskClassif$new(id='classif', backend=data,
                                         target='label')

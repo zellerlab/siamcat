@@ -5,9 +5,9 @@
 \alias{model.interpretation.plot}
 \title{Model Interpretation Plot}
 \usage{
-model.interpretation.plot(siamcat, fn.plot = NULL, 
+model.interpretation.plot(siamcat, fn.plot = NULL,
 color.scheme = "BrBG", consens.thres = 0.5, heatmap.type = "zscore",
-limits = c(-3, 3), log.n0 = 1e-06, max.show = 50, prompt=TRUE, 
+limits = c(-3, 3), log.n0 = 1e-06, max.show = 50, prompt=TRUE,
 verbose = 1)
 }
 \arguments{
