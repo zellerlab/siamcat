@@ -4,7 +4,7 @@
 \alias{filter.label}
 \title{Filter the label of a SIMACAT object}
 \usage{
-filter.label(siamcat, ids, verbose = 1)
+\method{filter}{label}(siamcat, ids, verbose = 1)
 }
 \arguments{
 \item{siamcat}{an object of class \link{siamcat-class}}

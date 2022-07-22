@@ -8,8 +8,8 @@
 #' @keywords internal
 create.mlr.learner <- function(method, nrow.data, param.set=NULL,
                                 type='BINARY'){
-    if (!method %in% c("lasso", "enet", "ridge", "lasso_ll", 
-            "ridge_ll", "randomForest")){
+    if (!method %in% c("lasso", "enet", "ridge", "lasso_ll",
+            "ridge_ll", "randomForest", "SVM", "LSVM")){
         stop("Unsupported method!")
     }
     standard.param.set <- list(
@@ -102,7 +102,7 @@ create.mlr.learner <- function(method, nrow.data, param.set=NULL,
             } else {
                 type <- 0
             }
-            learner <- lrn('classif.liblinear', type=type, 
+            learner <- lrn('classif.liblinear', type=type,
                 wi=use.param.set$class.weights,
                 epsilon=use.param.set$epsilon)
             learner$predict_type <- 'prob'
@@ -121,8 +121,34 @@ create.mlr.learner <- function(method, nrow.data, param.set=NULL,
         use.param.set$class.weights <- NULL
         use.param.set$epsilon <- NULL
         use.param.set$cost <- NULL
+    } else if (method == 'SVM'){
+        if (type == 'BINARY'){
+            learner <- lrn('classif.svm', kernel='radial')
+            learner$predict_type <- 'prob'
+            learner$param_set$values$type <- 'C-classification'
+            learner$param_set$values$cost <- to_tune(p_dbl(
+                lower=-5,
+                upper=16, trafo=.f_exp))
+            use.param.set$cost <- NULL
+            use.param.set$class.weights <- NULL
+        } else if (type == 'CONTINUOUS'){
+            stop("Methods not usable for regression tasks!")
+        }
+    } else if (method == 'LSVM'){
+        if (type == 'BINARY'){
+            learner <- lrn('classif.svm', kernel='linear')
+            learner$predict_type <- 'prob'
+            learner$param_set$values$type <- 'C-classification'
+            learner$param_set$values$cost <- to_tune(p_dbl(
+                lower=-5,
+                upper=16, trafo=.f_exp))
+            use.param.set$cost <- NULL
+            use.param.set$class.weights <- NULL
+        } else if (type == 'CONTINUOUS'){
+            stop("Methods not usable for regression tasks!")
+        }
     }
-
+    
     # try to set additional parameters, i hope that mlr catches errors here
     param.settable <- learner$param_set$ids()
     for (x in intersect(names(use.param.set), param.settable)){
@@ -140,7 +166,7 @@ create.mlr.learner <- function(method, nrow.data, param.set=NULL,
 # function to perform feature selection
 #' @keywords internal
 perform.feature.selection <- function(data, train.label, param.fs, verbose){
-    
+
     stopifnot(all(c('method', 'no_features', 'direction') %in%names(param.fs)))
 
     # test method.fs
@@ -148,7 +174,7 @@ perform.feature.selection <- function(data, train.label, param.fs, verbose){
         allowed.methods <- c('Wilcoxon', 'AUC', 'gFC')
         if (!param.fs$method %in% allowed.methods) {
             stop('Unrecognised feature selection method. ',
-                    'Must be one of those: {"', 
+                    'Must be one of those: {"',
                     paste(allowed.methods, collapse = '", "'), '"}')
         }
     } else if (is.numeric(train.label)){

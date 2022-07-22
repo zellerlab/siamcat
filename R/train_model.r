@@ -8,9 +8,8 @@
 #' @description This function trains the a machine learning model on the
 #' training data
 #'
-#' @usage train.model(siamcat, method = c("lasso", "enet", "ridge", 
-#' "lasso_ll", "ridge_ll", "randomForest"), measure = "classif.acc", 
-#' param.set = NULL, grid.size=11, min.nonzero=5, perform.fs = FALSE, 
+#' @usage train.model(siamcat, method = "lasso", measure = "classif.acc",
+#' param.set = NULL, grid.size=11, min.nonzero=5, perform.fs = FALSE,
 #' param.fs = list(no_features = 100, method = "AUC", direction="absolute"),
 #' feature.type='normalized', verbose = 1)
 #'
@@ -21,24 +20,24 @@
 #' 'randomForest')}
 #'
 #' @param measure character, specifies the model selection criterion during
-#' internal cross-validation, see \link[mlr3]{mlr_measures} for more details, 
+#' internal cross-validation, see \link[mlr3]{mlr_measures} for more details,
 #' defaults to \code{'classif.acc'}
 #'
-#' @param param.set list, set of extra parameters for mlr, see below for 
+#' @param param.set list, set of extra parameters for mlr, see below for
 #' details, defaults to \code{NULL}
-#' 
+#'
 #' @param grid.size integer, grid size for internal tuning (needed for some
-#' machine learning methods, for example \code{lasso_ll}), defaults to 
+#' machine learning methods, for example \code{lasso_ll}), defaults to
 #' \code{11}
-#' 
+#'
 #' @param min.nonzero integer number of minimum nonzero coefficients that
 #' should be present in the model (only for \code{'lasso'}, \code{'ridge'},
 #' and \code{'enet'}), defaults to \code{5}
 #'
-#' @param perform.fs boolean, should feature selection be performed? Defaults 
+#' @param perform.fs boolean, should feature selection be performed? Defaults
 #' to \code{FALSE}
 #'
-#' @param param.fs list, parameters for the feature selection, see Details, 
+#' @param param.fs list, parameters for the feature selection, see Details,
 #' defaults to \code{list(thres.fs=100, method.fs="AUC", direction='absolute')}
 #'
 #' @param feature.type string, on which type of features should the function
@@ -69,25 +68,25 @@
 #' cross-validation (see \link{create.data.split}) in the
 #' \code{data_split}-slot of the object. It then trains a model for each fold
 #' of the data split.
-#' 
+#'
 #' The different machine learning methods are implemented as Learners from the
 #' \link{mlr3learners} package:
-#' \itemize{ 
+#' \itemize{
 #' \item \code{'lasso'}, \code{'enet'}, and \code{'ridge'} use the
-#' \code{'classif.cv_glmnet'} or \code{'regr.cv_glmnet'} Learners, which 
-#' interface to the \link{glmnet} package, 
-#' \item \code{'lasso_ll'} and \code{'ridge_ll'} use a custom Learner, which 
+#' \code{'classif.cv_glmnet'} or \code{'regr.cv_glmnet'} Learners, which
+#' interface to the \link{glmnet} package,
+#' \item \code{'lasso_ll'} and \code{'ridge_ll'} use a custom Learner, which
 #' is only available for classification tasks. The underlying package is the
 #' \link{LiblineaR} packge.
 #' \item \code{'randomForest'} is implemented via the \code{'classif.ranger'}
-#' or \code{regr.ranger} Learners available trough the \link[ranger]{ranger} 
+#' or \code{regr.ranger} Learners available trough the \link[ranger]{ranger}
 #' package.}
-#' 
+#'
 #' @section Hyperparameter tuning:
-#' There is additional control over the machine learning procedure by 
-#' supplying information through the \code{param.set} parameter within the 
+#' There is additional control over the machine learning procedure by
+#' supplying information through the \code{param.set} parameter within the
 #' function. We encourage you to check out the excellent
-#' \href{https://mlr3book.mlr-org.com/optimization.html}{mlr documentation} 
+#' \href{https://mlr3book.mlr-org.com/optimization.html}{mlr documentation}
 #' for more in-depth information.
 #'
 #' Here is a short overview which parameters you can supply in which form:
@@ -113,35 +112,34 @@
 #' c(round(sqrt.mdim / 2), round(sqrt.mdim), round(sqrt.mdim * 2)))} with
 #' \code{sqrt.mdim=sqrt(nrow(data))}.
 #' }
-#' 
+#'
 #' @section Feature selection:
-#' If feature selection should be performed (for example for functional data 
+#' If feature selection should be performed (for example for functional data
 #' with a large number of features), the \code{param.fs} list should contain:
 #' \itemize{ \item \code{no_features} - Number of features to be retained after
 #' feature selection,
 #' \item \code{method} - method for the feature selection, may be
 #' \code{AUC}, \code{gFC}, or \code{Wilcoxon} for binary classification
-#' problems or \code{spearman}, \code{pearson}, or \code{MI} (mutual 
+#' problems or \code{spearman}, \code{pearson}, or \code{MI} (mutual
 #' information) for regression problems
-#' \item \code{direction} - indicates if the feature selection should be 
+#' \item \code{direction} - indicates if the feature selection should be
 #' performed in a single direction only. Can be either \itemize{
-#' \item \code{absolute} -  select the top associated features (independent of 
-#' the sign of enrichment), 
-#' \item \code{positive}the top positively associated featured (enriched in 
-#' the case group for binary classification or enriched in higher values 
-#' for regression), 
-#' \item \code{negative} the top negatively associated features (inverse of 
-#' positive)} Direction will be ignored for \code{Wilcoxon} and \code{MI}.} 
+#' \item \code{absolute} -  select the top associated features (independent of
+#' the sign of enrichment),
+#' \item \code{positive}the top positively associated featured (enriched in
+#' the case group for binary classification or enriched in higher values
+#' for regression),
+#' \item \code{negative} the top negatively associated features (inverse of
+#' positive)} Direction will be ignored for \code{Wilcoxon} and \code{MI}.}
 #'
 #' @examples
 #' data(siamcat_example)
 #'
 #' # simple working example
 #' siamcat_example <- train.model(siamcat_example, method='lasso')
-train.model <- function(siamcat, method = c("lasso", "enet", "ridge", 
-    "lasso_ll", "ridge_ll", "randomForest"), 
+train.model <- function(siamcat, method = "lasso",
     measure = "classif.acc", param.set = NULL,
-    grid.size=11, min.nonzero=5, perform.fs = FALSE, 
+    grid.size=11, min.nonzero=5, perform.fs = FALSE,
     param.fs = list(no_features = 100, method = "AUC", direction="absolute"),
     feature.type='normalized', verbose = 1) {
 
@@ -242,7 +240,7 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge",
             stopifnot(all(rownames(data) == names(train.label)))
 
             if (perform.fs){
-                data <- perform.feature.selection(data, train.label, 
+                data <- perform.feature.selection(data, train.label,
                     param.fs, verbose)
             }
 
@@ -288,6 +286,13 @@ train.model <- function(siamcat, method = c("lasso", "enet", "ridge",
                 feat.weights <- feat.weights[-idx.intercept]
             } else if (method == 'randomForest'){
                 feat.weights <- model$importance()
+            } else if (method == 'SVM'){
+                feat.weights <- rep(NA_real_, ncol(model$model$SV))
+                names(feat.weights) <- colnames(model$model$SV)
+            } else if (method == 'LSVM'){
+                feat.weights <- coef(model$model)
+                feat.weights <- feat.weights[-1]
+                names(feat.weights) <- colnames(model$model$SV)
             }
 
             # add feature weights to the model

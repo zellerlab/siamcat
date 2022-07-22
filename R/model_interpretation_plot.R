@@ -91,7 +91,7 @@ model.interpretation.plot <-
         # general checks
         stopifnot(length(heatmap.type) == 1)
         stopifnot(heatmap.type %in% c('zscore', 'fc', 'log'))
-
+            
         if (is.null(model_list(siamcat, verbose=0))){
             stop("SIAMCAT object does not contain any models. Exiting...")
         }
@@ -114,6 +114,9 @@ model.interpretation.plot <-
 
 
         model.type <- model_type(siamcat)
+        if (model.type=='SVM'){
+            stop("Interpretation heatmap not possible for kernel SVMs!")
+        }
         feature.type <- feature_type(siamcat)
         feature.weights <- feature_weights(siamcat)
         weight.matrix <- weight_matrix(siamcat)
