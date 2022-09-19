@@ -174,6 +174,9 @@ check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
                 stop(paste0("Column with pairing information not present in",
                             " the metadata. Exiting..."))
             }
+            if (is.null(meta)){
+                stop("Metadata is needed for paired testing!")
+            }
             # check that each entry in "paired" has two samples associated with
             # a different label, filter out the rest
             groups <- unique(meta[[paired]])
@@ -304,11 +307,15 @@ analyze.binary.markers <- function(feat, meta, label, param.list) {
 
     pb <- progress_bar$new(total = nrow(feat))
 
-    df.temp <- data.frame(lapply(names(meta),
-                FUN = function(x){meta@.Data[[which(names(meta)==x)]]}))
-    colnames(df.temp) <- names(meta)
-    rownames(df.temp) <- rownames(meta)
-    df.temp$label <- label$label
+    if (is.null(meta)){
+        df.temp <- data.frame(label=label$label)
+    } else {
+        df.temp <- data.frame(lapply(names(meta),
+                    FUN = function(x){meta@.Data[[which(names(meta)==x)]]}))
+        colnames(df.temp) <- names(meta)
+        rownames(df.temp) <- rownames(meta)
+        df.temp$label <- label$label
+    }
 
     effect.size <- t(vapply(rownames(feat), FUN = function(x){
 
@@ -416,11 +423,16 @@ analyze.continuous.markes <- function(feat, meta, label, param.list) {
 
     pb <- progress_bar$new(total = nrow(feat))
 
-    df.temp <- data.frame(lapply(names(meta), FUN = function(x){
-        meta@.Data[[which(names(meta)==x)]]}))
-    colnames(df.temp) <- names(meta)
-    rownames(df.temp) <- rownames(meta)
-    df.temp$label <- label$label[rownames(meta)]
+    if (is.null(meta)){
+        df.temp <- data.frame(label=label$label)
+    } else {
+        df.temp <- data.frame(lapply(names(meta),
+            FUN = function(x){meta@.Data[[which(names(meta)==x)]]}))
+        colnames(df.temp) <- names(meta)
+        rownames(df.temp) <- rownames(meta)
+        df.temp$label <- label$label[rownames(meta)]
+    }
+
 
     effect.size <- t(vapply(rownames(feat), FUN = function(x){
 
