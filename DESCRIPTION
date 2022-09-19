@@ -2,7 +2,7 @@ Package: SIAMCAT
 Type: Package
 Title: Statistical Inference of Associations between Microbial
     Communities And host phenoTypes
-Version: 2.1.0
+Version: 2.1.1
 Authors@R: c(person("Konrad", "Zych", role = c("aut"),
                 email = "konrad.zych@embl.de",
                 comment = c(ORCID = "0000-0001-7426-0516")),
