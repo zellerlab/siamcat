@@ -158,9 +158,9 @@ Both metadata and features are available through the EMBL cluster:
 
 ```{r load_motus}
 # base url for data download
-data.location <- 'https://www.embl.de/download/zeller/metaHIT/'
+data.loc <- 'https://zenodo.org/api/files/d81e429c-870f-44e0-a44a-2a4aa541b6c1/'
 ## metadata
-meta.nielsen <- read_tsv(paste0(data.location, 'meta_Nielsen.tsv'))
+meta.nielsen <- read_tsv(paste0(data.loc, 'meta_Nielsen.tsv'))
 # also here, we have to remove repeated samplings and CD samples
 meta.nielsen <- meta.nielsen %>%
     filter(Group %in% c('CTR', 'UC')) %>%
@@ -171,7 +171,7 @@ meta.nielsen <- meta.nielsen %>%
 rownames(meta.nielsen) <- meta.nielsen$Sample_ID
 
 ## features
-feat <- read.table(paste0(data.location, 'metaHIT_motus.tsv'), 
+feat <- read.table(paste0(data.loc, 'metaHIT_motus.tsv'), 
                     stringsAsFactors = FALSE, sep='\t',
                     check.names = FALSE, quote = '', comment.char = '')
 feat <- feat[,colSums(feat) > 0]

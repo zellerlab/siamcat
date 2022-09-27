@@ -40,19 +40,20 @@ library("SIAMCAT")
 ```
 
 First, we load the data for all studies, which are available for download 
-from the EMBL cluster. The raw data have been preprocessed and taxonomically
-profiled with [mOTUs2](https://doi.org/10.1038/s41467-019-08844-4) and were 
+from [Zenodo](https://doi.org/10.5281/zenodo.7117162). The raw data have been 
+preprocessed and taxonomically profiled with 
+[mOTUs2](https://doi.org/10.1038/s41467-019-08844-4) and were 
 then aggregated at genus level.
 
 ```{r load_data, message=FALSE}
 # base url for data download
-data.location <- 'https://www.embl.de/download/zeller/'
+data.loc <- 'https://zenodo.org/api/files/d81e429c-870f-44e0-a44a-2a4aa541b6c1/'
 # datasets
 datasets <- c('metaHIT', 'Lewis_2015', 'He_2017', 'Franzosa_2019', 'HMP2')
 # metadata
-meta.all <- read_tsv(paste0(data.location, 'CD_meta/meta_all.tsv'))
+meta.all <- read_tsv(paste0(data.loc, 'meta_all_cd.tsv'))
 # features
-feat <- read.table(paste0(data.location, 'CD_meta/feat_genus.tsv'), 
+feat <- read.table(paste0(data.loc, 'feat_genus_cd.tsv'), 
                 check.names = FALSE, stringsAsFactors = FALSE, quote = '', 
                 sep='\t')
 feat <- as.matrix(feat)

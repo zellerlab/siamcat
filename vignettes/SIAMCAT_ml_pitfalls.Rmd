@@ -338,13 +338,13 @@ vignette is not evaluated upon building of the package, but you should be
 able to execute it yourself.
 
 ```{r load_data_ibd}
-data.location <- 'https://www.embl.de/download/zeller/'
+data.loc <- 'https://zenodo.org/api/files/d81e429c-870f-44e0-a44a-2a4aa541b6c1/'
 
 # metadata
-meta.all <- read_tsv(paste0(data.location, 'CD_meta/meta_all.tsv'))
+meta.all <- read_tsv(paste0(data.loc, 'meta_all_cd.tsv'))
 
 # features
-feat.motus <- read.table(paste0(data.location, 'CD_meta/feat_rel_filt.tsv'),
+feat.motus <- read.table(paste0(data.loc, 'feat_rel_filt_cd.tsv'),
                         sep='\t', stringsAsFactors = FALSE,
                         check.names = FALSE)
 ```
