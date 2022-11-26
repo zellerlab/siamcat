@@ -20,7 +20,7 @@
 #' types \code{0}, \code{6}, and \code{7}.
 #' The default \code{epsilon} value depends on the \code{type} parameter, 
 #' see [LiblineaR::LiblineaR].
-#'
+#' 
 #' @encoding UTF-8
 # taken from https://github.com/mlr-org/mlr3extralearners
 LearnerClassifLiblineaR <- R6::R6Class("LearnerClassifLiblineaR",  
@@ -89,4 +89,3 @@ LearnerClassifLiblineaR <- R6::R6Class("LearnerClassifLiblineaR",
         }
     )
 )
-mlr_learners$add("classif.liblinear", LearnerClassifLiblineaR)
