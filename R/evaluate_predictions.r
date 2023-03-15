@@ -191,7 +191,7 @@ eval.binary <- function(siamcat, s.time, verbose=0){
 
     roc.mean = roc(response = label$label,
                     predictor = apply(pred, 1, summ.stat),
-                    #ci = TRUE, #of = "se",
+                    ci = TRUE, of = "se",
                     sp = seq(0, 1, 0.05), direction = '<', levels = label$info)
     auroc = roc.mean$auc
 
@@ -258,7 +258,7 @@ evaluate.classifier <-
     function(predictions, test.label, label, verbose = 0) {
         if (verbose > 2)
             message("+ starting evaluate.classifier")
-        stopifnot(dim(test.label) == NULL)
+        stopifnot(is.null(dim(test.label)))
         stopifnot(length(unique(test.label)) == 2)
         stopifnot(all(is.finite(predictions)))
         # calculate thresholds, one between each subsequent pair of sorted
