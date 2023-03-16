@@ -60,7 +60,7 @@
 #' # Add Age and BMI as potential predictors
 #' # Additionally, prevent standardization of the added features
 #' siamcat_meta_added <- add.meta.pred(siamcat_example, 
-#' pred.names=c('Age', 'BMI'), std.meta=FALSE)
+#'     pred.names=c('Age', 'BMI'), std.meta=FALSE)
 add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
     feature.type = 'normalized', verbose = 1) {
 
