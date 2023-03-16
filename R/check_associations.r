@@ -3,7 +3,7 @@
 ### Microbial Communities And host phenoTypes R flavor EMBL
 ### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' @title Check and visualize associations between features and classes
+#' @title Calculate associations between features and labels
 #'
 #' @description This function computes different measures of association 
 #' between features and the label and stores the results in the 
@@ -43,7 +43,7 @@
 #' information for a paired test, defaults to \code{NULL}
 #' 
 #' @param feature.type string, on which type of features should the function
-#' work? Can be either \code{c()"original", "filtered", or "normalized")}.
+#' work? Can be either \code{c("original", "filtered", or "normalized")}.
 #' Please only change this parameter if you know what you are doing!
 #'
 #' If \code{feature.type} is \code{"normalized"}, the normalized abundances
@@ -80,12 +80,18 @@
 #' function uses linear mixed effect models as implemented in the 
 #' \link{lmerTest} package. To do so, the test formula needs to be adjusted 
 #' to include the confounder. For example, when correcting for the metadata 
-#' information \code{Gender}, the formula would be: 
-#' \code{'feat~label+(1|Gender)'} (see also the example below).
+#' information \code{Sex}, the formula would be: 
+#' \code{'feat~label+(1|Sex)'} (see also the example below).
 #' 
 #' Please note that modifying the formula parameter in this function might
 #' lead to unexpected results!
 #'
+#' @section Paired testing:
+#' For paired testing, e.g. when the same patient has been sampled before and
+#' after an intervention, the `paired` parameter can be supplied to the 
+#' function. This indicated a column in the metadata table that holds the 
+#' information about pairing.
+#' 
 #' @return object of class \link{siamcat-class} with the slot 
 #' \code{associations} filled
 #'
@@ -100,13 +106,18 @@
 #' # Simple example
 #' siamcat_example <- check.associations(siamcat_example)
 #'
-#' # Confounder-corrected testing (corrected for Gender)
-#' siamcat_example <- check.associations(siamcat_example, 
-#'     formula='feat~label+(1|Gender)', test='lm')
+#'
+#' # Confounder-corrected testing (corrected for Sex)
+#' #
+#' # this is not run during checks
+#' # siamcat_example <- check.associations(siamcat_example, 
+#' #     formula='feat~label+(1|Sex)', test='lm')
 #' 
 #' # Paired testing
-#' \donttest{siamcat_paired <- check.associations(siamcat_paired, 
-#'     paired='Individual_ID')}
+#' #
+#' # this is not run during checks
+#' # siamcat_paired <- check.associations(siamcat_paired, 
+#' #     paired='Individual_ID')
 check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
     alpha=0.05, mult.corr="fdr", log.n0=1e-06, pr.cutoff=1e-06,
     probs.fc=seq(.1, .9, .05), paired=NULL, feature.type='filtered',
