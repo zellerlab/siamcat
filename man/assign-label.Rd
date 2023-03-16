@@ -26,3 +26,4 @@ Assign a new label object to a SIAMCAT object
 data(siamcat_example)
 label(siamcat_example) <- label(siamcat_example)
 }
+\keyword{internal}

@@ -33,4 +33,5 @@ label <- create.label(meta=meta, label="label", case = "cancer")
 siamcat <- siamcat(feat=feat, label=label, meta=meta)
 
 }
+\keyword{internal}
 \keyword{read.lefse}

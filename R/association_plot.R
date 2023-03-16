@@ -74,20 +74,17 @@
 #' # Plot associations as box plot
 #' association.plot(siamcat_example,
 #'     fn.plot = "./assoc_plot_box.pdf",
-#'     plot.type = "box"
-#' )
+#'     plot.type = "box")
 #'
 #' # Additionally, sort by p-value instead of by fold change
 #' association.plot(siamcat_example,
 #'     fn.plot = "./assoc_plot_fc.pdf",
-#'     plot.type = "box", sort.by = "p.val"
-#' )
+#'     plot.type = "box", sort.by = "p.val")
 #'
 #' # Custom colors
 #' association.plot(siamcat_example,
 #'     fn.plot = "./assoc_plot_blue_yellow.pdf",
-#'     plot.type = "box", color.scheme = c("cornflowerblue", "#ffc125")
-#' )
+#'     plot.type = "box", color.scheme = c("cornflowerblue", "#ffc125"))
 association.plot <- function(siamcat, fn.plot = NULL, color.scheme = "RdYlBu",
     sort.by = "fc", max.show = 50, plot.type = "quantile.box",
     panels = c("fc", "auroc"), prompt = TRUE, verbose = 1) {

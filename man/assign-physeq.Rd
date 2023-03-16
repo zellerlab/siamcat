@@ -26,3 +26,4 @@ Assign a new phyloseq object to \code{x}
 data(siamcat_example)
 physeq(siamcat_example) <- physeq(siamcat_example)
 }
+\keyword{internal}

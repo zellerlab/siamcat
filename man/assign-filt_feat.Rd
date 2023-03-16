@@ -28,3 +28,4 @@ filt_feat(siamcat_example) <- list(
     filt.feat=filt_feat(siamcat_example),
     filt.param=filt_params(siamcat_example))
 }
+\keyword{internal}

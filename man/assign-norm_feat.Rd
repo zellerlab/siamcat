@@ -28,3 +28,4 @@ features to a SIAMCAT object
 data(siamcat_example)
 norm_feat(siamcat_example) <- norm_feat(siamcat_example)
 }
+\keyword{internal}

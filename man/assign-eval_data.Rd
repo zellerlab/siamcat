@@ -26,3 +26,4 @@ Assign a new list with evaluation data to a SIAMCAT object
 data(siamcat_example)
 eval_data(siamcat_example) <- eval_data(siamcat_example)
 }
+\keyword{internal}

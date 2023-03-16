@@ -22,6 +22,7 @@
 #'     Returns NULL if slot does not exist.
 #'
 #' @export
+#' @keywords internal
 #' @examples #
 #' data(siamcat_example)
 #' accessSlot(siamcat_example, "label")
@@ -68,6 +69,7 @@ accessSlot <- function(siamcat, slot, verbose=1) {
 #'
 #' @return The \link[phyloseq]{phyloseq-class} object or NULL.
 #' @export
+#' @keywords internal
 #' @rdname physeq-methods
 #' @docType methods
 #' @examples
@@ -95,6 +97,7 @@ setMethod("physeq", "phyloseq", function(siamcat) {
 #' that contains a label or instance of \link[phyloseq]{otu_table-class}.
 #' @return The \link[phyloseq]{otu_table-class} object or NULL.
 #' @export
+#' @keywords internal
 #' @rdname orig_feat-methods
 #' @docType methods
 #' @examples
@@ -245,6 +248,7 @@ setMethod("label", "siamcat", function(siamcat, verbose=1) {
 #' or \code{NULL}
 #'
 #' @export
+#' @keywords internal
 #'
 #' @rdname filt_feat-methods
 #'
@@ -440,6 +444,7 @@ setMethod("assoc_param", "siamcat", function(siamcat, verbose=1) {
 #' or \code{NULL}
 #'
 #' @export
+#' @keywords internal
 #'
 #' @rdname norm_feat-methods
 #'
@@ -593,6 +598,7 @@ setMethod("data_split", "siamcat", function(siamcat, verbose=1) {
 #' or \code{NULL}
 #'
 #' @export
+#' @keywords internal
 #'
 #' @rdname model_list-methods
 #'

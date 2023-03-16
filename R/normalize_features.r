@@ -104,8 +104,12 @@
 #'     norm.param=list(log.n0=1e-05, sd.min.q=.1))
 #'
 #' # Frozen normalization
-#' \donttest{siamcat_norm <- normalize.features(siamcat,
-#'     norm.param=norm_params(siamcat_reference))}
+#' # normalize the object siamcat with the same parameters as used in 
+#' # siamcat_reference
+#' # 
+#' # this is not run
+#' # siamcat_norm <- normalize.features(siamcat,
+#' #   norm.param=norm_params(siamcat_reference))
 normalize.features <- function(siamcat,
     norm.method = c("rank.unit", "rank.std",
         "log.std", "log.unit",

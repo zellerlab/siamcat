@@ -41,3 +41,4 @@ data(siamcat_example)
 temp <- model_list(siamcat_example)
 names(temp)
 }
+\keyword{internal}

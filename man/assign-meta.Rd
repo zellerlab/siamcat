@@ -26,3 +26,4 @@ Assign a new sam_data object to \code{x}
 data(siamcat_example)
 meta(siamcat_example) <- meta(siamcat_example)
 }
+\keyword{internal}

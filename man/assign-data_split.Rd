@@ -28,3 +28,4 @@ SIAMCAT object
 data(siamcat_example)
 data_split(siamcat_example) <- data_split(siamcat_example)
 }
+\keyword{internal}

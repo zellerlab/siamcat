@@ -41,3 +41,4 @@ data(siamcat_example)
 temp <- filt_feat(siamcat_example)
 names(temp)
 }
+\keyword{internal}

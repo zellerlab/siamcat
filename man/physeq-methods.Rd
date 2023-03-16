@@ -30,3 +30,4 @@ Retrieve a \link[phyloseq]{phyloseq-class} object from object.
 data(siamcat_example)
 physeq(siamcat_example)
 }
+\keyword{internal}

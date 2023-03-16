@@ -26,3 +26,4 @@ Assign a new matrix with predictions to a SIAMCAT object
 data(siamcat_example)
 pred_matrix(siamcat_example) <- pred_matrix(siamcat_example)
 }
+\keyword{internal}

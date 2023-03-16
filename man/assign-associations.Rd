@@ -28,3 +28,4 @@ associations(siamcat_example) <- list(
     'assoc.results'=associations(siamcat_example),
     'assoc.param'=assoc_param(siamcat_example))
 }
+\keyword{internal}

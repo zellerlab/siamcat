@@ -22,6 +22,7 @@
 #' see [LiblineaR::LiblineaR].
 #' 
 #' @encoding UTF-8
+#' @keywords internal
 # taken from https://github.com/mlr-org/mlr3extralearners
 LearnerClassifLiblineaR <- R6::R6Class("LearnerClassifLiblineaR",  
     inherit = LearnerClassif, public = list(

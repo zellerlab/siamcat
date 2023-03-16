@@ -50,7 +50,7 @@
 #' siamcat.pred <- make.predictions(siamcat_example)
 #'
 #' # Predictions on a holdout-set
-#' \donttest{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
+#' \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
 #'     normalize.holdout=TRUE)}
 make.predictions <- function(siamcat, siamcat.holdout = NULL,
                                 normalize.holdout = TRUE, verbose = 1) {

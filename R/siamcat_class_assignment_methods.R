@@ -15,6 +15,7 @@
 #' @rdname assign-physeq
 #' @aliases assign-physeq
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -41,6 +42,7 @@ setReplaceMethod("physeq", c("siamcat", "phyloseq"), function(x, value) {
 #' @rdname assign-orig_feat
 #' @aliases assign-orig_feat
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -71,6 +73,7 @@ setMethod("orig_feat<-", c("siamcat", "otu_table"), function(x, value) {
 #' @rdname assign-meta
 #' @aliases assign-meta
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -96,6 +99,7 @@ setMethod("meta<-", c("siamcat", "sample_data"), function(x, value) {
 #' @rdname assign-label
 #' @aliases assign-label
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -122,6 +126,7 @@ setReplaceMethod("label", c("siamcat", "list"), function(x, value) {
 #' @rdname assign-filt_feat
 #' @aliases assign-filt_feat
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -151,6 +156,7 @@ setReplaceMethod("filt_feat", c("siamcat", "list"), function(x, value) {
 #' @rdname assign-associations
 #' @aliases assign-associations
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -181,6 +187,7 @@ setReplaceMethod("associations", c("siamcat", "list"), function(x, value) {
 #' @rdname assign-norm_feat
 #' @aliases assign-norm_feat
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -208,6 +215,7 @@ setReplaceMethod("norm_feat", c("siamcat", "list"), function(x, value) {
 #' @rdname assign-data_split
 #' @aliases assign-data_split
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -234,6 +242,7 @@ setReplaceMethod("data_split", c("siamcat", "list"), function(x, value) {
 #' @rdname assign-model_list
 #' @aliases assign-model_list
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -261,6 +270,7 @@ setReplaceMethod("model_list", c("siamcat", "list"), function(x, value) {
 #' @rdname assign-pred_matrix
 #' @aliases assign-pred_matrix
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)
@@ -288,6 +298,7 @@ setReplaceMethod("pred_matrix", c("siamcat", "matrix"), function(x, value) {
 #' @rdname assign-eval_data
 #' @aliases assign-eval_data
 #' @return none
+#' @keywords internal
 #'
 #' @examples
 #' data(siamcat_example)

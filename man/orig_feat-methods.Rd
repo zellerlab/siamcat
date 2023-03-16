@@ -29,3 +29,4 @@ the phyloseq slot in a siamcat object
 data(siamcat_example)
 temp <- orig_feat(siamcat_example)
 }
+\keyword{internal}

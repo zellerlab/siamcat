@@ -28,3 +28,4 @@ data(siamcat_example)
 accessSlot(siamcat_example, "label")
 accessSlot(siamcat_example, "model_list")
 }
+\keyword{internal}

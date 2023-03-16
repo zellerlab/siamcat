@@ -26,3 +26,4 @@ Assign a new otu_table object to \code{x} orig_feat slot
 data(siamcat_example)
 orig_feat(siamcat_example) <- orig_feat(siamcat_example)
 }
+\keyword{internal}

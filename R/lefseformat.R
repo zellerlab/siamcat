@@ -16,6 +16,7 @@
 #' @return nothing but data is written to a file
 #'
 #' @export
+#' @keywords internal
 #'
 #' @encoding UTF-8
 #'
@@ -57,6 +58,7 @@ siamcat.to.lefse <- function(siamcat, filename="siamcat_output.txt") {
 #' @param row.samples specifies in which row sample names are stored
 #'
 #' @keywords read.lefse
+#' @keywords internal
 #'
 #' @return a list with two elements: \itemize{
 #'     \item \code{feat} a features matrix

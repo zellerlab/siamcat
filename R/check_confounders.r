@@ -193,7 +193,7 @@ confounders.corrplot <- function(meta, label) {
     colnames(entropies) <- fix.names
     rownames(entropies) <- fix.names
 
-    col = c(rev(colorRampPalette(brewer.pal(9, 'Reds'))(100)),
+    col <- c(rev(colorRampPalette(brewer.pal(9, 'Reds'))(100)),
                 colorRampPalette(brewer.pal(9, 'Blues'))(100))
 
     corrplot(entropies,

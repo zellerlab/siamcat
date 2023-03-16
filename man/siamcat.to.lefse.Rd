@@ -23,4 +23,5 @@ This function creates a LEfSe input file from SIAMCAT object
 data(siamcat_example)
 siamcat.to.lefse(siamcat_example)
 }
+\keyword{internal}
 \keyword{siamcat.to.lefse}
