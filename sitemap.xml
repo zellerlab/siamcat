@@ -34,6 +34,9 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/LearnerClassifLiblineaR.html</loc>
+  </url>
+  <url>
     <loc>/reference/SIAMCAT-package.html</loc>
   </url>
   <url>
@@ -77,6 +80,9 @@
   </url>
   <url>
     <loc>/reference/assoc_param-methods.html</loc>
+  </url>
+  <url>
+    <loc>/reference/association.plot.html</loc>
   </url>
   <url>
     <loc>/reference/associations-class.html</loc>
@@ -245,6 +251,9 @@
   </url>
   <url>
     <loc>/reference/validate.data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/volcano.plot.html</loc>
   </url>
   <url>
     <loc>/reference/weight_matrix-methods.html</loc>
