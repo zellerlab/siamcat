@@ -71,23 +71,28 @@ make.predictions <- function(siamcat, siamcat.holdout = NULL,
     }
     pred <- pred_matrix(r.object)
     # print correlation matrix
-    if (verbose > 1)
-        message(paste("Total number of predictions made:", length(pred)))
+    if (verbose > 1){
+        msg <- paste("Total number of predictions made:", length(pred))
+        message(msg)
+    }
     correlation <- cor(pred, method = "spearman")
     if (verbose > 1)
         message("Correlation between predictions from repeated CV:")
-    if (verbose > 1)
-        message(paste("\tMin: ", min(correlation), "\n\tMedian: ",
-            median(correlation), "\n\tMean: ", mean(correlation)))
+    if (verbose > 1){
+        msg <- paste("\tMin: ", min(correlation), "\n\tMedian: ",
+            median(correlation), "\n\tMean: ", mean(correlation))
+        message(msg)
+    }
 
     # print out time
     e.time <- proc.time()[3]
-    if (verbose > 1)
-        message(paste(
+    if (verbose > 1){
+        msg <- paste(
             "+ finished make.predictions in",
             formatC(e.time - s.time, digits = 3),
-            "s"
-        ))
+            "s")
+        message(msg)
+    }
     if (verbose == 1)
         message("Made predictions successfully.")
 
@@ -151,10 +156,12 @@ make.interal.predictions <- function(siamcat, verbose){
 
             data$label <- test.label
 
-            if (verbose > 2)
-                message(paste0("Applying ", model_type(siamcat),
+            if (verbose > 2){
+                msg <- paste0("Applying ", model_type(siamcat),
                             " on cv_fold", f, "_rep", r, " (", i, " of ",
-                            num.resample * num.folds, ")..."))
+                            num.resample * num.folds, ")...")
+                message(msg)
+            }
             if (label$type == 'BINARY'){
                 test.task <- TaskClassif$new(id='classif', backend=data,
                                                 target='label')
@@ -242,10 +249,12 @@ make.external.predictions <- function(siamcat.trained, siamcat.external,
         model <- models[[i]]
 
         data <- data[, names(model$features)]
-        if (verbose > 2)
-            message(paste0("Applying ", model_type(siamcat.trained),
+        if (verbose > 2){
+            msg <- paste0("Applying ", model_type(siamcat.trained),
                             " on complete external dataset", " (", i, " of ",
-                            num.models, ")..."))
+                            num.models, ")...")
+            message(msg)
+        }
         if (label$type == 'BINARY'){
             data$label <- as.factor(c(unique(label$label),
                 sample(unique(label$label), 

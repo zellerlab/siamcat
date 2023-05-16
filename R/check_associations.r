@@ -182,8 +182,9 @@ check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
                 stop('Paired testing is only supported for binary labels!')
             }
             if (!paired %in% colnames(meta)){
-                stop(paste0("Column with pairing information not present in",
-                            " the metadata. Exiting..."))
+                msg <- paste0("Column with pairing information not present in",
+                    " the metadata. Exiting...")
+                stop(msg)
             }
             if (is.null(meta)){
                 stop("Metadata is needed for paired testing!")
@@ -208,9 +209,10 @@ check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
                             " pairings with exactly two samples!")
                 }
             } else {
-                stop(paste0("Per pairing, exactly 2 samples with different",
-                            " label are needed! Only ", length(groups.red),
-                            " pairing fulfill this requirement."))
+                msg <- paste0("Per pairing, exactly 2 samples with different",
+                    " label are needed! Only ", length(groups.red),
+                    " pairing fulfill this requirement.")
+                stop(msg)
             }
             meta.red <- meta[meta[[paired]] %in% groups.red,]
             feat <- feat[,rownames(meta.red)]
@@ -257,14 +259,18 @@ check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
                 assoc.param=param.list)
         }
 
-        if (verbose > 1)
-            message(paste('+++ found', sum(res$p.adj < alpha, na.rm = TRUE),
-                'significant associations at a significance level <', alpha))
+        if (verbose > 1){
+            msg <- paste('+++ found', sum(res$p.adj < alpha, na.rm = TRUE),
+                'significant associations at a significance level <', alpha)
+            message(msg)
+        }
 
         e.time <- proc.time()[3]
-        if (verbose > 1)
-            message(paste("+ finished check.associations in",
-                formatC(e.time - s.time, digits = 3), "s"))
+        if (verbose > 1){
+            msg <- paste("+ finished check.associations in",
+                formatC(e.time - s.time, digits = 3), "s")
+            message(msg)
+        }
         return(siamcat)
 }
 
@@ -300,10 +306,11 @@ analyze.binary.markers <- function(feat, meta, label, param.list) {
         cnt <- length(which(feat[feat!=0] < param.list$log.n0))
         percentage <- (cnt/length(feat[feat!=0]))*100
         if (percentage >= 5){
-            warning(paste0('### Some values (',cnt, ' or ',
-            formatC(percentage, digits=2),
-            '% of non-zero entries',
-            ') are smaller than the given detection limit!'))
+            msg <- paste0('### Some values (',cnt, ' or ',
+                formatC(percentage, digits=2),
+                '% of non-zero entries',
+                ') are smaller than the given detection limit!')
+            message(msg)
         }
     }
 
@@ -419,10 +426,11 @@ analyze.continuous.markes <- function(feat, meta, label, param.list) {
         cnt <- length(which(feat[feat!=0] < param.list$log.n0))
         percentage <- (cnt/length(feat[feat!=0]))*100
         if (percentage >= 5){
-            warning(paste0('### Some values (',cnt, ' or ',
+            msg <- paste0('### Some values (',cnt, ' or ',
                             formatC(percentage, digits=2),
                             '% of non-zero entries',
-                            ') are smaller than the given detection limit!'))
+                            ') are smaller than the given detection limit!')
+            message(msg)
         }
     }
 

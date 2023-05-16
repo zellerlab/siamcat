@@ -250,10 +250,11 @@ perform.feature.selection <- function(data, train.label, param.fs, verbose){
 
     stopifnot(ncol(data) > 0)
     if (verbose > 2) {
-        message(paste0('++ retaining ', ncol(data),
+        msg <- paste0('++ retaining ', ncol(data),
                 ' features after selection based on ',
                 param.fs$method, '; target number of features ',
-                param.fs$no_features))
+                param.fs$no_features)
+        message(msg)
     }
     return(data)
 }

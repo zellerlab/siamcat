@@ -86,17 +86,12 @@ read.label <- function(fn.in.label) {
                 SIAMCAT to proceed"
             )
         if (sum(label == i) < 10) {
-            message(
-                paste(
-                    "Data set has only",
-                    sum(label == i),
-                    "training examples of class",
-                    i,
-                    " . Note that a dataset this
-                    small/skewed is not necessarily suitable for analysis in
-                    this pipeline."
-                )
-                )
+            msg <- paste("Data set has only", sum(label == i), 
+                "training examples of class", i,  " . Note that a dataset", 
+                " this small/skewed is not necessarily suitable for analysis", 
+                " in this pipeline.")
+            message(msg)
+
         }
         }
 

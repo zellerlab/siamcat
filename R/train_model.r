@@ -199,15 +199,18 @@ train.model <- function(siamcat, method = "lasso",
     get_logger("bbotk")$set_threshold('off')
     # loop over the folds
     bar <- 0
-    if (verbose > 1)
-        message(paste("+ training", method, "models on", num.runs,
-            "training sets"))
+    if (verbose > 1){
+        msg <- paste("+ training", method, "models on", num.runs,
+            "training sets")
+        message(msg)
+    }
     if (verbose > 1 & perform.fs){
         message('+ Performing feature selection ',
                 'with following parameters:')
         for (i in seq_along(param.fs)) {
-            message(paste0('    ', names(param.fs)[i], ' = ',
-                ifelse(is.null(param.fs[[i]]), 'NULL', param.fs[[i]])))
+            msg <- paste0('    ', names(param.fs)[i], ' = ',
+                ifelse(is.null(param.fs[[i]]), 'NULL', param.fs[[i]]))
+            message(msg)
         }
     }
 
@@ -215,12 +218,16 @@ train.model <- function(siamcat, method = "lasso",
         pb <- progress_bar$new(total = num.runs)
 
     for (fold in seq_len(data.split$num.folds)) {
-        if (verbose > 2)
-            message(paste("+++ training on cv fold:", fold))
+        if (verbose > 2){
+            msg <- paste("+++ training on cv fold:", fold)
+            message(msg)
+        }
 
         for (resampling in seq_len(data.split$num.resample)) {
-            if (verbose > 2)
-                message(paste("++++ repetition:", resampling))
+            if (verbose > 2){
+                msg <- paste("++++ repetition:", resampling)
+                message(msg)
+            }
             ## Prepare data
             fold.name <- paste0("cv_fold", as.character(fold), "_rep",
                 as.character(resampling))
@@ -309,12 +316,15 @@ train.model <- function(siamcat, method = "lasso",
 
     e.time <- proc.time()[3]
 
-    if (verbose > 1)
-        message(paste(
-            "+ finished train.model in", formatC(e.time - s.time, digits = 3),
-            "s"))
-    if (verbose == 1)
-        message(paste("Trained", method, "models successfully."))
+    if (verbose > 1){
+        msg <- paste("+ finished train.model in", 
+            formatC(e.time - s.time, digits = 3), "s")
+        message(msg)
+    }
+    if (verbose == 1){
+        msg <- paste("Trained", method, "models successfully.")
+        message(msg)
+    }
 
     return(siamcat)
 }

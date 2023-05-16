@@ -60,12 +60,11 @@ filter.label <- function(siamcat, ids, verbose = 1) {
         type = label_old$type
     )
 
-    if (verbose > 1)
-        message(paste(
-            "+ Keeping labels of",
-            length(labels_new$label),
-            "sample(s)."
-        ))
+    if (verbose > 1){
+        msg <- paste("+ Keeping labels of", length(labels_new$label), 
+            "sample(s).")
+        message(msg)
+    }
 
     label(siamcat) <- labels_new
     return(siamcat)

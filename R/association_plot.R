@@ -145,12 +145,12 @@ create.regr.assoc.plot <- function(siamcat, fn.plot, color.scheme, sort.by,
     # check fn.plot
     if (is.null(fn.plot)) {
         if (verbose > 0) {
-            message(paste0(
+            msg <- paste0(
                 "### ATTENTION: Not plotting to a pdf-file.\n",
                 "### The plot is optimized for landscape DIN-A4 (or similar) ",
                 "layout.\n### Please make sure that your plotting region is",
-                " large enough!!!\n### Use at your own risk..."
-            ))
+                " large enough!!!\n### Use at your own risk...")
+            message(msg)
         }
         if (prompt == TRUE) {
             continue <- askYesNo(
@@ -240,16 +240,16 @@ create.regr.assoc.plot <- function(siamcat, fn.plot, color.scheme, sort.by,
         }
         e.time <- proc.time()[3]
         if (verbose > 1) {
-            message(paste(
+            msg <- paste(
                 "+ finished association.plot in",
-                formatC(e.time - s.time, digits = 3), "s"
-            ))
+                formatC(e.time - s.time, digits = 3), "s")
+            message(msg)
         }
         if (verbose == 1 & !is.null(fn.plot)) {
-            message(paste(
+            msg <- paste(
                 "Plotted associations between features and label",
-                "successfully to:", fn.plot
-            ))
+                "successfully to:", fn.plot)
+            message(msg)
         }
     }
 }
@@ -307,12 +307,12 @@ create.binary.assoc.plot <- function(siamcat, fn.plot, color.scheme,
     # check fn.plot
     if (is.null(fn.plot)) {
         if (verbose > 0) {
-            message(paste0(
+            msg <- paste0(
                 "### ATTENTION: Not plotting to a pdf-file.\n",
                 "### The plot is optimized for landscape DIN-A4 (or similar) ",
                 "layout.\n### Please make sure that your plotting region is",
-                " large enough!!!\n### Use at your own risk..."
-            ))
+                " large enough!!!\n### Use at your own risk...")
+            message(msg)
         }
         if (prompt == TRUE) {
             continue <- askYesNo(
@@ -474,16 +474,16 @@ create.binary.assoc.plot <- function(siamcat, fn.plot, color.scheme,
         }
         e.time <- proc.time()[3]
         if (verbose > 1) {
-            message(paste(
+            msg <- paste(
                 "+ finished association.plot in",
-                formatC(e.time - s.time, digits = 3), "s"
-            ))
+                formatC(e.time - s.time, digits = 3), "s")
+            message(msg)
         }
         if (verbose == 1 & !is.null(fn.plot)) {
-            message(paste(
+            msg <- paste(
                 "Plotted associations between features and label",
-                "successfully to:", fn.plot
-            ))
+                "successfully to:", fn.plot)
+            message(msg)
         }
     }
 }
@@ -1358,16 +1358,16 @@ get.plotting.idx <- function(df.results, alpha, sort.by, max.show, verbose) {
     idx <- which(df.results$p.adj < alpha)
 
     if (length(idx) == 0) {
-        warning(paste0(
+        msg <- paste0(
             "No significant associations found.",
-            " No plot will be produced.\n"
-        ))
+            " No plot will be produced.\n")
+        message(msg)
         return(NULL)
     } else if (length(idx) < 5) {
-        warning(paste0(
+        msg <- paste0(
             "Less than 5 associations found. Consider",
-            " changing your alpha value."
-        ))
+            " changing your alpha value.")
+        message(msg)
     }
 
     idx <- idx[order(df.results$p.adj[idx], decreasing = TRUE)]
@@ -1378,8 +1378,9 @@ get.plotting.idx <- function(df.results, alpha, sort.by, max.show, verbose) {
         truncated <- TRUE
         idx <- idx[(length(idx) - max.show + 1):length(idx)]
         if (verbose > 1) {
-            message(paste('+++ truncating the list of significant",
-                    "associations to the top', max.show))
+            msg <- paste('+++ truncating the list of significant",
+                    "associations to the top', max.show)
+            message(msg)
         }
     }
 

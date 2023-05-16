@@ -154,9 +154,11 @@ select.samples <- function(siamcat, filter, allowed.set = NULL,
     siamcat <- filter.label(siamcat, s.names, verbose = verbose)
 
     e.time <- proc.time()[3]
-    if (verbose > 1)
-        message(paste( "+ finished select.samples in",
-            formatC(e.time - s.time, digits = 3), "s"))
+    if (verbose > 1){
+        msg <- paste( "+ finished select.samples in",
+            formatC(e.time - s.time, digits = 3), "s")
+        message(msg)
+    }
 
     if (verbose == 1)
         message("Selecting samples finished")

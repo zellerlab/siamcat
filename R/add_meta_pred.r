@@ -116,25 +116,30 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
 
             # check if the meta-variable is a factor or numeric
             if (is.factor(m)){
-                warning(paste0('WARNING: meta-variable ', p,' is a factor and',
-                ' not numeric...\n   The values will be converted to numerical',
-                ' values with "as.numeric()"\n'))
+                msg <- paste0('WARNING: meta-variable ', p,' is a factor and',
+                    ' not numeric...\n   The values will be converted to ',
+                    'numerical values with "as.numeric()"\n')
+                warning(msg)
                 m <- as.numeric(m)
             }
             stopifnot(is.numeric(m))
 
             if (!all(is.finite(m))) {
                 na.cnt <- sum(!is.finite(m))
-                if (verbose > 1)
-                    message(paste("++++ filling in", na.cnt,
-                        "missing values by mean imputation"))
+                if (verbose > 1){
+                    msg <- paste("++++ filling in", na.cnt,
+                        "missing values by mean imputation")
+                    message(msg)
+                }
                 mn <- mean(m, na.rm = TRUE)
                 m[!is.finite(m)] <- mn
             }
 
             if (std.meta) {
-                if (verbose > 1)
-                message(paste("++++ standardizing metadata feature", p))
+                if (verbose > 1){
+                    msg <- paste("++++ standardizing metadata feature", p)
+                    message(msg)
+                }
                 m.mean <- mean(m, na.rm = TRUE)
                 m.sd <- sd(m, na.rm = TRUE)
                 stopifnot(!m.sd == 0)
@@ -157,18 +162,22 @@ add.meta.pred <- function(siamcat, pred.names, std.meta = TRUE,
                 norm.param=norm_params(siamcat))
         }
 
-        if (verbose > 1)
-        message(paste("+++ added", cnt,
-            "meta-variables as predictor to the feature matrix"))
+        if (verbose > 1){
+            msg <- paste("+++ added", cnt, 
+                "meta-variables as predictor to the feature matrix")
+            message(msg)
+            }
         } else {
             if (verbose > 0)
             message("+++ Not adding any of the meta-variables as predictor",
                 " to the feature matrix")
         }
         e.time <- proc.time()[3]
-        if (verbose > 1)
-        message(paste("+ finished add.meta.pred in", formatC(e.time - s.time,
-            digits = 3), "s"))
+        if (verbose > 1){
+            msg <- paste("+ finished add.meta.pred in", 
+                formatC(e.time - s.time, digits = 3), "s")
+            message(msg)
+        }
         if (verbose == 1)
         message("Adding metadata as predictor finished")
         return(siamcat)

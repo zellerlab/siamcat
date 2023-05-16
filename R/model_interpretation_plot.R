@@ -124,10 +124,11 @@ model.interpretation.plot <-
         # ######################################################################
         # check fn.plot
         if (is.null(fn.plot)) {
-            message(paste0('### ATTENTION: Not plotting to a pdf-file.\n',
+            msg <- paste0('### ATTENTION: Not plotting to a pdf-file.\n',
                 '### The plot is optimized for landscape DIN-A4 (or similar) ',
                 'layout.\n### Please make sure that your plotting region is',
-                ' large enough!!!\n### Use at your own risk...'))
+                ' large enough!!!\n### Use at your own risk...')
+            message(msg)
             if (prompt == TRUE){
                 continue <- askYesNo('Are you sure that you want to continue?',
                     default = TRUE,
@@ -265,9 +266,11 @@ model.interpretation.plot <-
         h_m <- ifelse(is.null(meta(siamcat)), 0.8,
             max(0.5, 0.7 - 0.01 * ncol(meta(siamcat))))
         h_b <- 1 - h_t - h_m
-        if (verbose >2)
-            message(paste0("+++ Layout height values: ", h_t,
-                ", ", h_m, ", ", h_b))
+        if (verbose >2){
+            msg <- paste0("+++ Layout height values: ", h_t,
+                ", ", h_m, ", ", h_b)
+            message(msg)
+        }
         layout(lmat, widths = c(0.14, 0.58, 0.1, 0.14),
             heights = c(h_t, h_m, h_b))
         par(oma = c(3, 4, 3, 4))
@@ -418,17 +421,16 @@ model.interpretation.plot <-
             par(par.old)
         }
         e.time <- proc.time()[3]
-        if (verbose > 1)
-            message(paste(
-                "+ finished model.interpretation.plot in",
-                formatC(e.time - s.time, digits = 3),
-                "s"
-            ))
-        if (verbose == 1 & !is.null(fn.plot))
-            message(paste(
-                "Successfully plotted model interpretation plot to:",
-                fn.plot
-            ))
+        if (verbose > 1){
+            msg <- paste("+ finished model.interpretation.plot in",
+                formatC(e.time - s.time, digits = 3), "s")
+            message(msg)
+        }
+        if (verbose == 1 & !is.null(fn.plot)){
+            msg <- paste(
+                "Successfully plotted model interpretation plot to:", fn.plot)
+            message(msg)
+        }
         }
 
 # function to plot the feature weights
@@ -737,8 +739,10 @@ model.interpretation.prepare.heatmap.fc <-
             if (verbose > 2)
                 message("+ Selected features:")
             for (f in sel.feat) {
-                if (verbose > 2)
-                    message(paste("+++", f))
+                if (verbose > 2){
+                    msg <- paste("+++", f)
+                    message(msg)
+                }
                 if (!grepl("META", f)) {
                     median.ctr <-
                         suppressWarnings(median(as.numeric(
@@ -826,8 +830,9 @@ model.interpretation.select.features <-
                     index.return = TRUE)
             # restrict to plot at maximum fifty features
             if (length(sel.idx) > max.show) {
-                warning(paste0("Restricting amount of features",
-                    " to be plotted to ", max.show))
+                msg <- paste0("Restricting amount of features",
+                    " to be plotted to ", max.show)
+                warning(msg)
                 median.sorted.features.abs <- sort(
                     abs(feature.weights$median.rel.weight),
                     decreasing = TRUE,
@@ -859,9 +864,11 @@ model.interpretation.select.features <-
             }
         }
 
-        if (verbose > 2)
-            message(paste("+++ generating plot for a model with",
-                length(sel.idx), "selected features"))
+        if (verbose > 2){
+            msg <- paste("+++ generating plot for a model with",
+                length(sel.idx), "selected features")
+            message(msg)
+        }
         if (length(sel.idx)==0) stop("No features were selected for plotting!")
         if (length(sel.idx)==1)
             stop("Not enough features were selected for plotting!")

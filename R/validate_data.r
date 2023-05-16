@@ -76,18 +76,22 @@ validate.data <- function(siamcat, verbose = 1) {
     s.removed <- ncol(feat) - length(s.intersect)
     orig_feat(siamcat) <- feat[,s.intersect]
     feat <- orig_feat(siamcat)
-    if (verbose > 1 & s.removed != 0)
-        message(paste0("+ Removed ", s.removed,
-            " samples from the feature matrix..."))
+    if (verbose > 1 & s.removed != 0){
+        msg <- paste0("+ Removed ", s.removed,
+            " samples from the feature matrix...")
+        message(msg)
+    }
     # check and re-order labels
     s.removed <- length(label$label) - length(s.intersect)
     ids <- match(s.intersect, names(label$label))
     siamcat <- filter.label(siamcat, ids=ids, verbose=verbose)
     label <- label(siamcat)
     stopifnot(all(names(label$label) == colnames(feat)))
-    if (verbose > 1 & s.removed != 0)
-        message(paste0("+ Removed ", s.removed,
-            " samples from the label object..."))
+    if (verbose > 1 & s.removed != 0){
+        msg <- paste0("+ Removed ", s.removed,
+            " samples from the label object...")
+        message(msg)
+    }
 
     # Check for sample number in the different classes
     if (label$type == 'BINARY'){
@@ -98,13 +102,13 @@ validate.data <- function(siamcat, verbose = 1) {
                                     sum(label$label == x)},
                                 FUN.VALUE = integer(1))
         if (any(group.numbers < 10)) {
-            message(
-                paste("Data set has a limited number of training examples:\n",
-                    paste0(names(group.numbers)[1], "\t", group.numbers[1]),
-                    "\n",
-                    paste0(names(group.numbers)[2], "\t", group.numbers[2]),
-                    "\nNote that a dataset this small/skewed is not",
-                    "necessarily suitable for analysis in this pipeline."))
+            msg <- paste(
+                "Data set has a limited number of training examples:\n",
+                paste0(names(group.numbers)[1], "\t", group.numbers[1]), "\n",
+                paste0(names(group.numbers)[2], "\t", group.numbers[2]),
+                "\nNote that a dataset this small/skewed is not",
+                "necessarily suitable for analysis in this pipeline.")
+            message(msg)
         }
     }
 
@@ -121,18 +125,19 @@ validate.data <- function(siamcat, verbose = 1) {
         # check and re-order metadata
         s.removed <- nrow(meta) - length(s.intersect)
         meta(siamcat) <- meta[s.intersect,]
-        if (verbose > 1 & s.removed != 0)
-            message(paste0("+ Removed ", s.removed,
-                " samples from the metadata..."))
+        if (verbose > 1 & s.removed != 0){
+            msg <- paste0("+ Removed ", s.removed, 
+                " samples from the metadata...")
+            message(msg)
+        }
         stopifnot(all(names(label$label) == rownames(meta(siamcat))))
     }
     e.time <- proc.time()[3]
-    if (verbose > 1)
-        message(paste(
-            "+ finished validate.data in",
-            formatC(e.time - s.time, digits = 3),
-            "s"
-        ))
+    if (verbose > 1){
+        msg <- paste("+ finished validate.data in", 
+            formatC(e.time - s.time, digits = 3), "s")
+        message(msg)
+    }
     if (verbose == 1)
         message("Data succesfully validated")
     return(siamcat)

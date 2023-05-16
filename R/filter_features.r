@@ -146,13 +146,17 @@ filter.features <- function(siamcat,
     if (any(is.na(feat))){
         stop("There are NAs in the feature matrix! Exiting...")
     }
-    if (verbose > 1)
-        message(paste("+++ before filtering, the data have",
-            nrow(feat), "features"))
+    if (verbose > 1){
+        msg <- paste("+++ before filtering, the data have",
+            nrow(feat), "features")
+        message(msg)
+    }
 
     ### apply filters
-    if (verbose > 2)
-        message(paste("+++ applying", filter.method, "filter"))
+    if (verbose > 2){
+        msg <- paste("+++ applying", filter.method, "filter")
+        message(msg)
+    }
     if (filter.method == "abundance") {
         # remove features whose abundance is never above the threshold value
         # (e.g. 0.5%) in any of the samples
@@ -204,24 +208,32 @@ filter.features <- function(siamcat,
 
         if (length(unm.idx) > 0) {
             f.idx <- setdiff(f.idx, unm.idx)
-            if (verbose > 2)
-                message(paste("+++ removing",
-                    rownames(feat)[unm.idx], "as unmapped reads"))
-            if (verbose > 1)
-                message(paste("+++ removed", sum(unm.idx),
-                    "features corresponding to UNMAPPED reads"))
+            if (verbose > 2){
+                msg <- paste("+++ removing",
+                    rownames(feat)[unm.idx], "as unmapped reads")
+                message(msg)
+            }
+            if (verbose > 1){
+                msg <- paste("+++ removed", sum(unm.idx),
+                    "features corresponding to UNMAPPED reads")
+                message(msg)
+            }
         } else {
-            if (verbose > 1)
-                message(paste0("+++ tried to remove unmapped reads ",
-                    "but could not find any. Continue anyway."))
+            if (verbose > 1){
+                msg <- paste0("+++ tried to remove unmapped reads ",
+                    "but could not find any. Continue anyway.")
+                message(msg)
+            }
         }
     }
 
-    if (verbose > 1)
-        message(paste0("+++ removed ",
+    if (verbose > 1){
+        msg <- paste0("+++ removed ",
             nrow(feat) - length(f.idx),
             " features whose values did not exceed ", cutoff,
-            " in any sample (retaining ", length(f.idx), ")" ))
+            " in any sample (retaining ", length(f.idx), ")" )
+        message(msg)
+    }
 
     f.names <- rownames(feat)[f.idx]
     if (length(f.idx) == 0){
@@ -238,9 +250,11 @@ filter.features <- function(siamcat,
         filt.param=param.set)
 
     e.time <- proc.time()[3]
-    if (verbose > 1)
-        message(paste("+ finished filter.features in",
-            formatC(e.time - s.time, digits = 3), "s"))
+    if (verbose > 1){
+        msg <- paste("+ finished filter.features in",
+            formatC(e.time - s.time, digits = 3), "s")
+        message(msg)
+    }
 
     if (verbose == 1)
         message("Features successfully filtered")

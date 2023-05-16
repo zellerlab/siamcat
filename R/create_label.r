@@ -87,8 +87,9 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
         } else if (is.data.frame(meta)){
             label.vec <- meta[, label]
         } else {
-            stop(paste0('Please provide the metadata either as a data.frame',
-                ' or a sample_data object!'))
+            msg <- paste0('Please provide the metadata either as a data.frame',
+                ' or a sample_data object!')
+            stop(msg)
         }
         names(label.vec) <- rownames(meta)
     #if the label is a vector
@@ -103,14 +104,19 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
             names(label.vec) <- names.old
         }
     } else {
-        stop(paste0('Could not interpret your input.\n Please provide ',
-        'either a column name and metadata or a label vector.\nExiting...!'))
+        msg <- paste0('Could not interpret your input.\n Please provide ',
+            'either a column name and metadata or a',
+            ' label vector.\nExiting...!')
+        stop(msg)
     }
 
     # remove NAs in the label
     if (any(is.na(label.vec))){
-        if (verbose > 1) message(paste0('+ removing ', sum(is.na(label.vec)),
-            ' instances of NA in the label'))
+        if (verbose > 1) {
+            msg <- paste0('+ removing ', sum(is.na(label.vec)), 
+                ' instances of NA in the label')
+            message(msg)
+        }
         label.vec <- label.vec[!is.na(label.vec)]
     }
 
@@ -188,8 +194,9 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
         label.new <- label.new
     } else if (is.double(label.vec)){
         if (!is.null(case) | !is.null(control)){
-            warning(paste0("Case and control parameters will be ignored for",
-                        " continuous labels!"))
+            msg <- paste0("Case and control parameters will be ignored for",
+                        " continuous labels!")
+            warning(msg)
         }
 
         label.new <- list(label=label.vec, info=range(label.vec), 
@@ -198,12 +205,11 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
     }
 
     e.time <- proc.time()[3]
-    if (verbose > 0)
-        message(paste(
-            "+ finished create.label.from.metadata in",
-            formatC(e.time - s.time, digits = 3),
-            "s"
-        ))
+    if (verbose > 0){
+        msg <- paste("+ finished create.label.from.metadata in",
+            formatC(e.time - s.time, digits = 3), "s")
+        message(msg)
+    }
     if (!remove.meta.column){
         return(label.new)
     } else {

@@ -89,12 +89,12 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
                                         sum(label$label == x)},
                                     FUN.VALUE = integer(1))
             if (any(group.numbers <= 5)){
-                stop("Data set has only:\n",
+                msg <- paste0("Data set has only:\n",
                     paste0(names(group.numbers)[1], "\t", group.numbers[1]),
                     "\n",
                     paste0(names(group.numbers)[2], "\t", group.numbers[2]),
-                    "\nThis is not enough for SIAMCAT to proceed!"
-                )
+                    "\nThis is not enough for SIAMCAT to proceed!")
+                stop(msg)
             }
         } else if (label$type == 'TEST'){
             stop("Cannot create data split for TEST object!")
@@ -118,24 +118,29 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
 
         ### check arguments
         if (num.resample < 1) {
-            if (verbose > 1)
-                message(paste0("+++ Resetting num.resample = 1 (",
-                        num.resample,
-                        " is an invalid number of resampling rounds)"))
+            if (verbose > 1){
+                msg <- paste0("+++ Resetting num.resample = 1 (", 
+                    num.resample, 
+                    " is an invalid number of resampling rounds)")
+                message(msg)
+            }
             num.resample <- 1
         }
         if (num.folds < 2) {
-            if (verbose > 1)
-                message(paste0("+++ Resetting num.folds = 2 (",
-                        num.folds,
-                        " is an invalid number of folds)"))
+            if (verbose > 1){
+                msg <- paste0("+++ Resetting num.folds = 2 (", 
+                    num.folds, " is an invalid number of folds)")
+                message(msg)
+            }
             num.folds <- 2
         }
         if (!is.null(inseparable) && stratify) {
-            if (verbose > 1)
-                message(paste0("+++ Resetting stratify to FALSE ",
+            if (verbose > 1){
+                msg <- paste0("+++ Resetting stratify to FALSE ",
                     "(Stratification is not supported when ",
-                    "inseparable is given"))
+                    "inseparable is given")
+                message(msg)
+            }
             stratify <- FALSE
         }
         if (num.folds >= length(labelNum)) {
@@ -194,8 +199,10 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
             train.temp <- list(NULL)
             test.temp <- list(NULL)
 
-            if (verbose > 1)
-                message(paste("+ resampling round", r))
+            if (verbose > 1){
+                msg <- paste("+ resampling round", r)
+                message(msg)
+            }
             for (f in seq_len(num.folds)) {
                 # make sure each fold contains examples from all classes for
                 # stratify==TRUE should be tested before assignment of
@@ -217,9 +224,11 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
                         == classes))
                 }
                 stopifnot(length(intersect(train.idx, test.idx)) == 0)
-                if (verbose > 2)
-                    message(paste("+++ fold ", f, " contains ",
-                        sum(foldid == f), " samples"))
+                if (verbose > 2){
+                    msg <- paste("+++ fold ", f, " contains ",
+                        sum(foldid == f), " samples")
+                    message(msg)
+                }
             }
             train.list[[r]] <- train.temp
             test.list[[r]] <- test.temp
@@ -232,9 +241,11 @@ create.data.split <- function(siamcat, num.folds = 2, num.resample = 1,
             num.folds = num.folds
         )
         e.time <- proc.time()[3]
-        if (verbose > 1)
-            message(paste("+ finished create.data.split in",
-                formatC(e.time - s.time, digits = 3),"s"))
+        if (verbose > 1){
+            msg <- paste("+ finished create.data.split in",
+                formatC(e.time - s.time, digits = 3),"s")
+            message(msg)
+        }
         if (verbose == 1)
             message("Features splitted for cross-validation successfully.")
         return(siamcat)

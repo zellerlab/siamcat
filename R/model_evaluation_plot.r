@@ -85,15 +85,17 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
         } else if (all(all.types == 'CONTINUOUS')){
             type <- 'regression'
         } else {
-            stop(paste0("All SIAMCAT objects need to be either binary",
-                            " classification or regression tasks"))
+            msg <- paste0("All SIAMCAT objects need to be either binary",
+                " classification or regression tasks")
+            stop(msg)
         }
         n <- length(args)
         if (is.null(colours)) {
             if (n > 9) {
                 colours <- colorRampPalette(brewer.pal(9, 'Set1'))(n)
-                warning(paste0('Consider plotting fewer',
-                                ' ROC-Curves into the same plot...'))
+                msg <- paste0('Consider plotting fewer',
+                    ' ROC-Curves into the same plot...')
+                warning(msg)
             } else if (n == 2) {
                 colours <- brewer.pal(3, 'Set1')[rev(seq_len(2))]
             } else {
@@ -114,8 +116,9 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
         } else if (label(args[[1]])$type == 'CONTINUOUS'){
             type <- 'regression'
         } else {
-            stop(paste0("SIAMCAT object needs to be either binary",
-                    " classification or regression task"))
+            msg <- paste0("SIAMCAT object needs to be either binary", 
+                " classification or regression task")
+            stop(msg)
         }
     } else {
         stop('No SIAMCAT object supplied. Exiting...')
@@ -205,17 +208,16 @@ model.evaluation.plot <- function(..., fn.plot=NULL, colours = NULL,
     if(!is.null(fn.plot)) tmp <- dev.off()
     if (is.null(fn.plot)) par(ask=FALSE)
     e.time <- proc.time()[3]
-    if (verbose > 1)
-        message(paste0(
-            "+ finished model.evaluation.plot in ",
-            formatC(e.time - s.time, digits = 3),
-            "s"
-        ))
-    if (verbose == 1 & !is.null(fn.plot))
-        message(paste(
-            "Plotted evaluation of predictions successfully to:",
-            fn.plot
-        ))
+    if (verbose > 1){
+        msg <- paste0("+ finished model.evaluation.plot in ", 
+            formatC(e.time - s.time, digits = 3), "s")
+        message(msg)
+    }
+    if (verbose == 1 & !is.null(fn.plot)){
+        msg <- paste("Plotted evaluation of predictions successfully to:", 
+            fn.plot)
+        message(msg)
+    }
 
 }
 
@@ -229,13 +231,11 @@ single.pr.plot <- function(siamcat, colour, show.all, verbose) {
         for (c in seq_len(length(eval.data$prc.all))) {
             pr <- eval.data$prc.all[[c]]
             lines(pr$recall, pr$precision, col = alpha(colour, alpha=0.5))
-            if (verbose > 2)
-                message(paste0(
-                    "+++ AU-PRC (resampled run ",
-                    c,
-                    "): ",
-                    format(aucspr.all[c], digits = 3)
-                ))
+            if (verbose > 2){
+                msg <- paste0("+++ AU-PRC (resampled run ", c, "): ",
+                    format(aucspr.all[c], digits = 3))
+                message(msg)
+            }
         }
     }
 
@@ -245,17 +245,14 @@ single.pr.plot <- function(siamcat, colour, show.all, verbose) {
 
 
     if (!is.null(eval.data$roc.all)) {
-        if (verbose > 1)
-            message(
-                paste(
-                    "+ AU-PRC:\n+++ mean-prediction:",
-                    format(auprc, digits = 3),
-                    "\n+++ averaged       :",
-                    format(mean(aucspr.all), digits = 3),
-                    "\n+++ sd             :",
-                    format(sd(aucspr.all), digits = 4)
-                )
-            )
+        if (verbose > 1){
+                msg <- paste("+ AU-PRC:\n+++ mean-prediction:", 
+                    format(auprc, digits = 3), "\n+++ averaged       :",
+                    format(mean(aucspr.all), digits = 3), 
+                    "\n+++ sd             :", 
+                    format(sd(aucspr.all), digits = 4))
+            message(msg)
+        }
 
 
     } else {
@@ -276,8 +273,9 @@ single.roc.plot <- function(siamcat, colour, show.all, verbose) {
             lines(1 - roc.c$specificities, roc.c$sensitivities,
                 col = alpha(colour, alpha=0.5))
             if (verbose > 2) {
-                message(paste0('+++ AU-ROC (resampled run ',
-                                c, "): ", format(aucs[c], digits=3)))
+                msg <- paste0('+++ AU-ROC (resampled run ', c, "): ", 
+                    format(aucs[c], digits=3))
+                message(msg)
             }
         }
     }
@@ -296,20 +294,18 @@ single.roc.plot <- function(siamcat, colour, show.all, verbose) {
         border = NA)
 
     if (!is.null(eval.data$roc.all)){
-        if (verbose > 1)
-            message(
-                paste(
-                    "+ AU-ROC:\n+++ mean-prediction:",
-                    format(auroc, digits = 3),
-                    "\n+++ averaged       :",
-                    format(mean(aucs), digits = 3),
-                    "\n+++ sd             :",
-                    format(sd(aucs), digits = 4)
-                )
-            )
+        if (verbose > 1){
+            msg <- paste("+ AU-ROC:\n+++ mean-prediction:", 
+                format(auroc, digits = 3),
+                "\n+++ averaged       :", format(mean(aucs), digits = 3),
+                "\n+++ sd             :", format(sd(aucs), digits = 4))
+            message(msg)
+        }
     } else {
-        if (verbose > 1)
-            message(paste("+ AU-ROC:", format(auroc, digits = 3)))
+        if (verbose > 1){
+            msg <- paste("+ AU-ROC:", format(auroc, digits = 3))
+            message(msg)
+        }
     }
 
     return(as.numeric(auroc))

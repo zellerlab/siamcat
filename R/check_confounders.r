@@ -122,8 +122,9 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL,
     }
 
     if (ncol(meta) > 10){
-        warning(paste0("The recommended number of metadata variables is 10.\n",
-                    "Please be aware that some visualizations may not work."))
+        msg <- paste0("The recommended number of metadata variables is 10.\n",
+            "Please be aware that some visualizations may not work.")
+        message(msg)
     }
 
     pdf(fn.plot, paper = 'special', height = 8.27, width = 11.69)
@@ -160,12 +161,14 @@ check.confounders <- function(siamcat, fn.plot, meta.in = NULL,
 
     e.time <- proc.time()[3]
     if (verbose > 1) {
-        message(paste("+ finished check.confounders in",
-                        formatC(e.time - s.time, digits = 3), "s"))
+        msg <- paste("+ finished check.confounders in", 
+            formatC(e.time - s.time, digits = 3), "s")
+        message(msg)
     }
     if (verbose == 1) {
-        message(paste("Finished checking metadata for confounders,",
-            "results plotted to:", fn.plot))
+        msg <- paste("Finished checking metadata for confounders,",
+            "results plotted to:", fn.plot)
+        message(msg)
     }
 }
 
@@ -362,8 +365,10 @@ confounders.descriptive.plots <- function(meta, label, verbose) {
         mname <- gsub("[_.-]", " ", colnames(meta)[m])
         mname <- paste(toupper(substring(mname, 1, 1)), substring(mname, 2),
             sep = "")
-        if (verbose > 1)
-            message(paste("+++ checking",mname,"as a potential confounder"))
+        if (verbose > 1){
+            msg <- paste("+++ checking",mname,"as a potential confounder")
+            message(msg)
+        }
         mvar <- meta[[m]]
         if (is.character(mvar)) mvar <- as.factor(mvar)
         mvar <- as.numeric(mvar)

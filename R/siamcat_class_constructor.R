@@ -83,8 +83,9 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         validate=TRUE, verbose=3) {
     
     if (is.null(phyloseq) && is.null(feat)){
-        stop(paste0('SIAMCAT needs either a feature matrix or a phyloseq',
-            ' object!!! Exiting...'))
+        msg <- paste0('SIAMCAT needs either a feature matrix or a phyloseq',
+            ' object!!! Exiting...')
+        stop(msg)
     }
 
     # optional arguments
@@ -120,8 +121,9 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
     # if phyloseq object has been given
     if (!is.null(phyloseq)){
         if (!is.null(feat)){
-            stop(paste0('Both features matrix and phyloseq object provided. ',
-                'Please provide only one of them!'))
+            msg <- paste0('Both features matrix and phyloseq object provided. ',
+                'Please provide only one of them!')
+            stop(msg)
         }
         if (!is(phyloseq,'phyloseq')){
             stop('Please provide an object of class phyloseq for SIAMCAT!')
@@ -181,8 +183,10 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
         sc <- validate.data(sc, verbose=verbose)
     } else {
         if (verbose > 0){
-            warning(paste0('### Not validating the SIAMCAT object!!!\n',
-            '\tPlease be advised that some functions may not work correctly!'))
+            msg <- paste0('### Not validating the SIAMCAT object!!!\n',
+                '\tPlease be advised that some functions may not',
+                ' work correctly!')
+            warning(msg)
         }
     }
 
@@ -273,26 +277,29 @@ validate.features <- function(feat){
         # or a matrix (then check if it is numeric or not)
         # and convert to otu_table
         if (any(!is.numeric(feat))){
-            stop(paste0('SIAMCAT expects numerical features!.\n',
-            'Please check your feature matrix! Exiting...'))
+            msg <- paste0('SIAMCAT expects numerical features!.\n',
+                'Please check your feature matrix! Exiting...')
+            stop(msg)
         }
         if (length(unique(rownames(feat))) != nrow(feat)){
-            stop(paste0("Features need unique identifiers!"))
+            stop("Features need unique identifiers!")
         }
         feat <- otu_table(feat, taxa_are_rows=TRUE)
         return(feat)
     } else if (is.data.frame(feat)){
         if (is(feat, 'tbl')){
-            stop(paste0("Tibbles are not supported. Features need to be a",
-                        " numeric matrix or data.frame with rownames!"))
+            msg <- paste0("Tibbles are not supported. Features need to be a",
+                " numeric matrix or data.frame with rownames!")
+            stop(msg)
         }
         # or a dataframe (then do the same as above)
         if (any(!is.numeric(unlist(feat)))){
-            stop(paste0('SIAMCAT expects numerical features!.\n',
-            'Please check your feature data.frame! Exiting...'))
+            msg <- paste0('SIAMCAT expects numerical features!.\n',
+                'Please check your feature data.frame! Exiting...')
+            stop(msg)
         }
         if (length(unique(rownames(feat))) != nrow(feat)){
-            stop(paste0("Features need unique identifiers!"))
+            stop("Features need unique identifiers!")
         }
         feat <- otu_table(feat, taxa_are_rows=TRUE)
         return(feat)
@@ -304,9 +311,10 @@ validate.features <- function(feat){
 validate.label <- function(label, feat, meta, case, control, verbose){
     # if NA, return simple label object which contains only one class
     if (is.null(label)){
-        warning(paste0('No label information given! Generating SIAMCAT object ',
+        msg <- paste0('No label information given! Generating SIAMCAT object ',
         'with placeholder label!\n\tThis SIAMCAT object is not suitable for ',
-        'the complete workflow...'))
+        'the complete workflow...')
+        warning(msg)
         label <- list(label = rep(-1, ncol(feat)),
             info=c('TEST'=-1), type="TEST")
         names(label$label) <- colnames(feat)
@@ -322,9 +330,10 @@ validate.label <- function(label, feat, meta, case, control, verbose){
         label <- create.label(label=label, case=case, control=control,
                                 verbose=verbose)
     } else {
-        stop(paste0('Cannot interpret the label object!\nPlease ',
-            'provide either a label object, a column in your metadata, or a
-            vector to distinguish cases and controls!.'))
+        msg <- paste0('Cannot interpret the label object!\nPlease ',
+            'provide either a label object, a column in your metadata, or a',
+            'vector to distinguish cases and controls!.')
+        stop(msg)
     }
     return(list(label=label, meta=meta))
 }
@@ -340,8 +349,9 @@ validate.metadata <- function(meta){
     }
     if (is.data.frame(meta)){
         if (is(meta, 'tbl')){
-            stop(paste0("Tibbles are not supported. Metadata needs to be",
-                        " a dataframe with rownames!"))
+            msg <- paste0("Tibbles are not supported. Metadata needs to be",
+                        " a dataframe with rownames!")
+            stop(msg)
         }
         meta <- sample_data(meta)
         return(meta)

@@ -87,8 +87,9 @@ summarize.features <- function(siamcat, level = "g__",
     }
 
     if (is.null(tax_table(physeq(siamcat), errorIfNULL = FALSE))){
-        warning(paste0("Tax_table slot is empty! Will try to infer the tax",
-            " table from the feature names"))
+        msg <- paste0("Tax_table slot is empty! Will try to infer the tax",
+            " table from the feature names")
+        warning(msg)
         # make sure that seperating characters are dots
         taxa.names <- make.names(rownames(feat))
         # TODO
@@ -139,8 +140,9 @@ summarize.features <- function(siamcat, level = "g__",
         tax.table.red <- tax.table.red[tax.table.red[,idx]!='unclassified',]
         tax.table.red <- tax.table.red[!duplicated(tax.table.red),]
         if (nrow(tax.table.red) > (nrow(summarized.feat)-1)){
-            warning(paste0("Tax table does not seem to be consistent in ",
-                "all cases...\nWill be collapsed at level ", level))
+            msg <- paste0("Tax table does not seem to be consistent in ",
+                "all cases...\nWill be collapsed at level ", level)
+            warning(msg)
             for (g in unique(tax.table.red[,idx])){
                 temp <- tax.table.red[tax.table.red[,idx]==g,,drop=FALSE]
                 if (nrow(temp)!=1){
@@ -184,10 +186,11 @@ summarize.features <- function(siamcat, level = "g__",
     }
 
     e.time <- proc.time()[3]
-    if (verbose > 1)
-    message(paste("+ finished summarize.features in",
-        formatC(e.time - s.time, digits = 3), "s" ))
-
+    if (verbose > 1){
+        msg <- paste("+ finished summarize.features in", 
+            formatC(e.time - s.time, digits = 3), "s" )
+        message(msg)
+    }
     if (verbose == 1)
         message("Summarized features successfully.")
 
