@@ -392,7 +392,7 @@ analyze.binary.markers <- function(feat, meta, label, param.list) {
     ### Apply multi-hypothesis testing correction
 
     if (param.list$mult.corr == 'none') {
-        warning('WARNING: No multiple hypothesis testing performed.')
+        warning('No multiple hypothesis testing performed.')
         effect.size$p.adj <- effect.size$p.val
     } else {
         effect.size$p.adj <-
@@ -476,7 +476,7 @@ analyze.continuous.markes <- function(feat, meta, label, param.list) {
     ### Apply multi-hypothesis testing correction
 
     if (param.list$mult.corr == 'none') {
-        warning('WARNING: No multiple hypothesis testing performed.')
+        warning('No multiple hypothesis testing performed.')
         effect.size$p.adj <- effect.size$p.val
     } else {
         effect.size$p.adj <-

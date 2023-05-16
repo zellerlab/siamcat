@@ -83,7 +83,7 @@ setMethod("show", "siamcat", function(object) {
 
     # if it is a SIAMCAT.v1 model, print a warning
     if (is(models(object, verbose=0)[[1]], "WrappedModel")){
-        message("Legacy warning:\n",
+        message("Attention:\n",
                 "This SIAMCAT object seems to have been constructed with ",
                 "version 1.x, based on 'mlr'.\nYour current SIAMCAT version ",
                 "has been upgraded to use 'mlr3' internally.\nPlease consider ",

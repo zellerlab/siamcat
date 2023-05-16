@@ -81,7 +81,7 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
     #if metadata has been supplied and the label is of length 1
     if (!is.null(meta) & length(label) == 1){
         if (!label %in% colnames(meta))
-            stop("ERROR: Column ", label, " not found in the metadata\n")
+            stop("Column ", label, " not found in the metadata\n")
         if (is(meta,'sample_data')){
             label.vec <- as.matrix(as.data.frame(meta[,label]))[,1]
         } else if (is.data.frame(meta)){

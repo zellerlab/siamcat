@@ -124,7 +124,7 @@ model.interpretation.plot <-
         # ######################################################################
         # check fn.plot
         if (is.null(fn.plot)) {
-            message(paste0('### WARNING: Not plotting to a pdf-file.\n',
+            message(paste0('### ATTENTION: Not plotting to a pdf-file.\n',
                 '### The plot is optimized for landscape DIN-A4 (or similar) ',
                 'layout.\n### Please make sure that your plotting region is',
                 ' large enough!!!\n### Use at your own risk...'))
@@ -216,7 +216,7 @@ model.interpretation.plot <-
             feat <- get.orig_feat.matrix(siamcat)
             if (is.null(log.n0)) {
                 warning(
-                    "WARNING: Pseudo-count before log-transformation
+                    "Pseudo-count before log-transformation
                     not supplied! Estimating it as 5% percentile..."
                 )
                 log.n0 <- quantile(feat[feat != 0], 0.05)
@@ -233,7 +233,7 @@ model.interpretation.plot <-
             feat <- get.orig_feat.matrix(siamcat)
             if (is.null(log.n0)) {
                 warning(
-                    "WARNING: Pseudo-count before log-transformation
+                    "Pseudo-count before log-transformation
                     not supplied! Estimating it as 5% percentile..."
                 )
                 log.n0 <- quantile(feat[feat != 0], 0.05)
@@ -826,7 +826,7 @@ model.interpretation.select.features <-
                     index.return = TRUE)
             # restrict to plot at maximum fifty features
             if (length(sel.idx) > max.show) {
-                warning(paste0("WARNING: restricting amount of features",
+                warning(paste0("Restricting amount of features",
                     " to be plotted to ", max.show))
                 median.sorted.features.abs <- sort(
                     abs(feature.weights$median.rel.weight),

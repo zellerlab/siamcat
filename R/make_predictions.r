@@ -49,9 +49,9 @@
 #' siamcat_example <- train.model(siamcat_example, method='lasso')
 #' siamcat.pred <- make.predictions(siamcat_example)
 #'
-#' # Predictions on a holdout-set
-#' \dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
-#'     normalize.holdout=TRUE)}
+#' # Predictions on a holdout-set (not run)
+#' # pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
+#' #     normalize.holdout=TRUE)
 make.predictions <- function(siamcat, siamcat.holdout = NULL,
                                 normalize.holdout = TRUE, verbose = 1) {
     s.time <- proc.time()[3]
@@ -198,7 +198,7 @@ make.external.predictions <- function(siamcat.trained, siamcat.external,
                 siamcat.external, norm.param = norm_params(siamcat.trained),
                 feature.type='original', verbose = verbose)
         } else {
-            warning("WARNING: holdout set is not being normalized!")
+            warning("holdout set is not being normalized!")
             if (is.null(norm_feat(siamcat.external, verbose=0))){
                 stop('Holdout set has not been normalized yet!')
             }

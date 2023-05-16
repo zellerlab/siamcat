@@ -784,7 +784,7 @@ setMethod("weight_matrix", "siamcat", function(siamcat, verbose=1) {
         return(NULL)
     }
     if (is(temp[[1]], "WrappedModel")){
-        stop("Legacy warning:\n",
+        stop("Attention:\n",
                 "This SIAMCAT object seems to have been constructed with ",
                 "version 1.x, based on 'mlr'.\nYour current SIAMCAT version ",
                 "has been upgraded to use 'mlr3' internally.\nPlease consider ",

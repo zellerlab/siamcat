@@ -146,7 +146,7 @@ create.regr.assoc.plot <- function(siamcat, fn.plot, color.scheme, sort.by,
     if (is.null(fn.plot)) {
         if (verbose > 0) {
             message(paste0(
-                "### WARNING: Not plotting to a pdf-file.\n",
+                "### ATTENTION: Not plotting to a pdf-file.\n",
                 "### The plot is optimized for landscape DIN-A4 (or similar) ",
                 "layout.\n### Please make sure that your plotting region is",
                 " large enough!!!\n### Use at your own risk..."
@@ -308,7 +308,7 @@ create.binary.assoc.plot <- function(siamcat, fn.plot, color.scheme,
     if (is.null(fn.plot)) {
         if (verbose > 0) {
             message(paste0(
-                "### WARNING: Not plotting to a pdf-file.\n",
+                "### ATTENTION: Not plotting to a pdf-file.\n",
                 "### The plot is optimized for landscape DIN-A4 (or similar) ",
                 "layout.\n### Please make sure that your plotting region is",
                 " large enough!!!\n### Use at your own risk..."
