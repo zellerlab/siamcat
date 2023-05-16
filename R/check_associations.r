@@ -246,6 +246,7 @@ check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
                 associations(siamcat) <- list(
                     assoc.results=associations(siamcat),
                     assoc.param=param.list)
+                res <- associations(siamcat)
             } else {
                 res <- analyze.markers(feat, meta, label, param.list)
                 associations(siamcat) <- list(

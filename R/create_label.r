@@ -192,7 +192,7 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
         label.new$type <- "BINARY"
 
         label.new <- label.new
-    } else if (is.double(label.vec)){
+    } else if (is.double(label.vec) | is.integer(label.vec)){
         if (!is.null(case) | !is.null(control)){
             msg <- paste0("Case and control parameters will be ignored for",
                         " continuous labels!")
