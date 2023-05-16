@@ -146,12 +146,13 @@ eval.regr <- function(siamcat, s.time, verbose=0){
         eval_data(siamcat) <- list(r2=r2, mae=mae, mse=mse)
     }
     e.time <- proc.time()[3]
-    if (verbose > 1)
+    if (verbose > 1){
         msg <- paste(
             "+ finished evaluate.predictions in",
             formatC(e.time - s.time, digits = 3),
             "s")
         message(msg)
+    }
     if (verbose == 1)
         message("Evaluated predictions successfully.")
     return(siamcat)
@@ -238,12 +239,13 @@ eval.binary <- function(siamcat, s.time, verbose=0){
         )
     }
     e.time <- proc.time()[3]
-    if (verbose > 1)
+    if (verbose > 1){
         msg <- paste(
             "+ finished evaluate.predictions in",
             formatC(e.time - s.time, digits = 3),
             "s")
         message(msg)
+    }
     if (verbose == 1)
         message("Evaluated predictions successfully.")
     return(siamcat)

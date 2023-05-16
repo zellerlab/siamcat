@@ -47,9 +47,9 @@ data(siamcat_example)
 siamcat_example <- train.model(siamcat_example, method='lasso')
 siamcat.pred <- make.predictions(siamcat_example)
 
-# Predictions on a holdout-set
-\dontrun{pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
-    normalize.holdout=TRUE)}
+# Predictions on a holdout-set (not run)
+# pred.mat <- make.predictions(siamcat.trained, siamcat.holdout,
+#     normalize.holdout=TRUE)
 }
 \keyword{SIAMCAT}
 \keyword{make.predictions}
