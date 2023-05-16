@@ -129,7 +129,7 @@ make.interal.predictions <- function(siamcat, verbose){
     pred <- matrix(NA, ncol = num.resample, nrow = length(label.fac),
                     dimnames = list(names(label.fac),
                                     paste0("CV_rep", seq_len(num.resample))))
-    i = 1
+    i <- 1
     if (verbose == 1 || verbose == 2)
         pb <- progress_bar$new(total = num.folds * num.resample)
     for (f in seq_len(num.folds)) {

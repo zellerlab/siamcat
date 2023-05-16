@@ -265,7 +265,7 @@ train.model <- function(siamcat, method = "lasso",
             ## Train model
             any.tuner <- unlist(lapply(lrn$param_set$values, FUN=class))
             if (any(any.tuner=='TuneToken')){
-                instance = tune(tnr("grid_search", resolution=grid.size),
+                instance <- tune(tnr("grid_search", resolution=grid.size),
                     task = task,
                     learner = lrn.fold,
                     resampling = rsmp("cv", folds = 5),

@@ -452,8 +452,8 @@ model.interpretation.feature.weights.plot <-
 
         if (mod.type != "randomForest") {
             par(mar = c(0.1, 1.1, 0, 1.1))
-            mi = min(-med - (abs(low.qt - upp.qt)))
-            mx = max(-med + (abs(low.qt - upp.qt)))
+            mi <- min(-med - (abs(low.qt - upp.qt)))
+            mx <- max(-med + (abs(low.qt - upp.qt)))
 
             barplot(-med, horiz = TRUE, width = 1, space = 0, yaxs = "i",
                 col = "gray30",
@@ -482,7 +482,7 @@ model.interpretation.feature.weights.plot <-
             # robustness indicated as percentage of models including a given
             # feature (to the right of the barplot)
             for (f in seq_along(sel.idx)) {
-                t = paste(format(
+                t <- paste(format(
                     100 * sum(rel.weights[sel.idx[f], ] != 0) /
                         dim(rel.weights)[2],
                     digits = 1, scientific = FALSE), "%", sep = "")
@@ -506,7 +506,7 @@ model.interpretation.feature.weights.plot <-
                 adj = 0)
         } else {
             par(mar = c(0.1, 1.1, 0, 1.1))
-            mx = max(-med + (abs(low.qt - upp.qt)))
+            mx <- max(-med + (abs(low.qt - upp.qt)))
 
             barplot(-med, horiz = TRUE, width = 1, space = 0, yaxs = "i",
                 col = "gray30", xlim = c(0, mx),
@@ -547,16 +547,16 @@ model.interpretation.pred.and.meta.plot <-
             message("+ model.interpretation.pred.and.meta.plot")
         par(mar = c(1.1, 4.1, 0.3, 5.1))
         if (label$type == 'BINARY'){
-            img.data = as.matrix(prediction)
-            colnames(img.data) = "Classification result"
+            img.data <- as.matrix(prediction)
+            colnames(img.data) <- "Classification result"
         } else {
-            img.data = cbind(as.matrix(prediction),
+            img.data <- cbind(as.matrix(prediction),
                             as.matrix(label$label[names(prediction)]))
             colnames(img.data) <- c('Predicted value', 'True value')
         }
         img.data.processed <- NULL
         if (!is.null(meta)) {
-            img.data = cbind(meta[, ncol(meta):1], img.data)
+            img.data <- cbind(meta[, ncol(meta):1], img.data)
             ### transform any categorial column into a numeric one
             for (m in seq_len(ncol(img.data))) {
                 cur.processed.data <- NULL
@@ -566,10 +566,10 @@ model.interpretation.pred.and.meta.plot <-
                     temp.metadata <- factor(temp.metadata)
                     temp.metadata <- as.numeric(temp.metadata)
                 }
-                cur.processed.data = (temp.metadata - min(temp.metadata,
+                cur.processed.data <- (temp.metadata - min(temp.metadata,
                         na.rm = TRUE))
                 if (max(temp.metadata, na.rm = TRUE) != 0) {
-                    cur.processed.data = cur.processed.data /
+                    cur.processed.data <- cur.processed.data /
                         max(cur.processed.data, na.rm = TRUE)
                 }
                 img.data.processed <-
@@ -579,7 +579,7 @@ model.interpretation.pred.and.meta.plot <-
             img.data.processed <- img.data
         }
 
-        grays = rev(gray(seq(0, 1, length.out = 100)))
+        grays <- rev(gray(seq(0, 1, length.out = 100)))
         image(
             as.matrix(img.data.processed),
             col = grays,
@@ -597,10 +597,10 @@ model.interpretation.pred.and.meta.plot <-
                 col = "red")
         }
 
-        meta.cex = max(0.3, 0.7 - 0.01 * ncol(img.data))
+        meta.cex <- max(0.3, 0.7 - 0.01 * ncol(img.data))
         for (m in seq_len(ncol(img.data))) {
-            t = colnames(img.data)[m]
-            t = gsub("\\.|_", " ", t)
+            t <- colnames(img.data)[m]
+            t <- gsub("\\.|_", " ", t)
             mtext(
                 t,
                 side = 4,
@@ -766,8 +766,8 @@ model.interpretation.prepare.heatmap.fc <-
             }
             img.data <- t(img.data)
         }
-        img.data[img.data < limits[1]] = limits[1]
-        img.data[img.data > limits[2]] = limits[2]
+        img.data[img.data < limits[1]] <- limits[1]
+        img.data[img.data > limits[2]] <- limits[2]
 
         if (verbose > 2)
             message("+ finished model.interpretation.heatmap.plot")
@@ -816,7 +816,7 @@ model.interpretation.select.features <-
         # for linear models, select those that have been selected more than
         # consens.thres percent of the models
         if (model.type != "randomForest") {
-            sel.idx = which(feature.weights$percentage > consens.thres)
+            sel.idx <- which(feature.weights$percentage > consens.thres)
             names(sel.idx) <- rownames(feature.weights)[sel.idx]
             # normalize by model size and order features by
             #   relative model weight
@@ -839,7 +839,7 @@ model.interpretation.select.features <-
                     index.return = TRUE)
                 sel.idx <- idx[median.sorted.features$ix]
             } else {
-                sel.idx = sel.idx[median.sorted.features$ix]
+                sel.idx <- sel.idx[median.sorted.features$ix]
             }
         } else {
         # for Random Forest, caluclate relative median feature weights and sort

@@ -29,7 +29,7 @@ LearnerClassifLiblineaR <- R6::R6Class("LearnerClassifLiblineaR",
         #' @description
         #' #' Creates a new instance of this [R6][R6::R6Class] class.
         initialize = function() {
-            ps = ps(
+            ps <- ps(
                 type = p_int(default = 0, lower = 0, upper = 7, tags = "train"),
                 cost = p_dbl(default = 1, lower = 0, tags = "train"),
                 epsilon = p_dbl(lower = 0, tags = "train"),
@@ -56,21 +56,21 @@ LearnerClassifLiblineaR <- R6::R6Class("LearnerClassifLiblineaR",
     ),
     private = list(
         .train = function(task) {
-            pars = self$param_set$get_values(tags = "train")
-            data = task$data()
-            train = task$data(cols = task$feature_names)
-            target = task$truth()
+            pars <- self$param_set$get_values(tags = "train")
+            data <- task$data()
+            train <- task$data(cols = task$feature_names)
+            target <- task$truth()
             
-            type = ifelse(is.null(pars$type), 0, pars$type)
-            pars = pars[names(pars) != "type"]
+            type <- ifelse(is.null(pars$type), 0, pars$type)
+            pars <- pars[names(pars) != "type"]
             
             mlr3misc::invoke(LiblineaR::LiblineaR, data = train, 
                 target = target, type = type, .args = pars)
         },
         .predict = function(task) {
-            newdata = task$data(cols = task$feature_names)
+            newdata <- task$data(cols = task$feature_names)
             
-            type = ifelse(is.null(self$param_set$values$type), 0, 
+            type <- ifelse(is.null(self$param_set$values$type), 0, 
                 self$param_set$values$type)
             
             if (!type %in% c(0, 6, 7) && self$predict_type == "prob") {

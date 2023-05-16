@@ -34,7 +34,7 @@ accessSlot <- function(siamcat, slot, verbose=1) {
         out <- siamcat@associations$assoc.results
     } else {
         # By elimination, must be valid. Access slot
-        out = eval(parse(text = paste("siamcat@", slot, sep = "")))
+        out <- eval(parse(text = paste("siamcat@", slot, sep = "")))
     }
 
     # make sure that NULL is returned when the object is empty

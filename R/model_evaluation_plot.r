@@ -227,7 +227,7 @@ single.pr.plot <- function(siamcat, colour, show.all, verbose) {
     if (!is.null(eval.data$prc.all) & show.all) {
         
         for (c in seq_len(length(eval.data$prc.all))) {
-            pr = eval.data$prc.all[[c]]
+            pr <- eval.data$prc.all[[c]]
             lines(pr$recall, pr$precision, col = alpha(colour, alpha=0.5))
             if (verbose > 2)
                 message(paste0(
@@ -239,9 +239,9 @@ single.pr.plot <- function(siamcat, colour, show.all, verbose) {
         }
     }
 
-    pr = eval.data$prc
+    pr <- eval.data$prc
     lines(pr$recall, pr$precision, col = colour, lwd = 2)
-    auprc = eval.data$auprc
+    auprc <- eval.data$auprc
 
 
     if (!is.null(eval.data$roc.all)) {
@@ -272,7 +272,7 @@ single.roc.plot <- function(siamcat, colour, show.all, verbose) {
     
     if (!is.null(eval.data$roc.all) & show.all){
         for (c in seq_along(eval.data$roc.all)) {
-            roc.c = eval.data$roc.all[[c]]
+            roc.c <- eval.data$roc.all[[c]]
             lines(1 - roc.c$specificities, roc.c$sensitivities,
                 col = alpha(colour, alpha=0.5))
             if (verbose > 2) {
@@ -282,15 +282,15 @@ single.roc.plot <- function(siamcat, colour, show.all, verbose) {
         }
     }
 
-    roc.summ = eval.data$roc
+    roc.summ <- eval.data$roc
     lines(1 - roc.summ$specificities, roc.summ$sensitivities,
         col = colour, lwd = 2)
-    auroc = eval.data$auroc
+    auroc <- eval.data$auroc
 
     # plot CI
-    x = as.numeric(rownames(roc.summ$ci))
-    yl = roc.summ$ci[, 1]
-    yu = roc.summ$ci[, 3]
+    x <- as.numeric(rownames(roc.summ$ci))
+    yl <- roc.summ$ci[, 1]
+    yu <-  roc.summ$ci[, 3]
     polygon(1 - c(x, rev(x)), c(yl, rev(yu)),
        col = alpha(colour, alpha=0.1),
        border = NA)

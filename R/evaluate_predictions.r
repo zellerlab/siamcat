@@ -161,7 +161,7 @@ eval.regr <- function(siamcat, s.time, verbose=0){
 eval.binary <- function(siamcat, s.time, verbose=0){
     label  <- label(siamcat)
 
-    summ.stat = "mean" # TODO make this a possible parameter?
+    summ.stat <- "mean" # TODO make this a possible parameter?
     # TODO compare header to label make sure that label and prediction are in
     # the same order
     m <- match(names(label$label), rownames(pred_matrix(siamcat)))
@@ -173,50 +173,50 @@ eval.binary <- function(siamcat, s.time, verbose=0){
     # ROC curve
     if (verbose > 2)
         message("+ calculating ROC")
-    auroc = 0
+    auroc <- 0
     if (ncol(pred) > 1) {
-        roc.all = list()
-        auroc.all = vector("numeric", ncol(pred))
+        roc.all <- list()
+        auroc.all <- vector("numeric", ncol(pred))
         for (c in seq_len(ncol(pred))) {
-            roc.all[[c]] = roc(response = label$label, predictor = pred[, c],
+            roc.all[[c]] <- roc(response = label$label, predictor = pred[, c],
                         direction = '<', levels = label$info, ci = FALSE)
-            auroc.all[c] = roc.all[[c]]$auc
+            auroc.all[c] <- roc.all[[c]]$auc
         }
-        l.vec = rep(label$label, ncol(pred))
+        l.vec <- rep(label$label, ncol(pred))
     } else {
-        l.vec = label$label
+        l.vec <- label$label
     }
 
     # average data for plotting one mean prediction curve
 
-    roc.mean = roc(response = label$label,
+    roc.mean <- roc(response = label$label,
                     predictor = apply(pred, 1, summ.stat),
                     ci = TRUE, of = "se",
                     sp = seq(0, 1, 0.05), direction = '<', levels = label$info)
-    auroc = roc.mean$auc
+    auroc <- roc.mean$auc
 
     # ##########################################################################
     # PR curve
-    prc = list()
-    ev = list()
+    prc <- list()
+    ev <- list()
     auprc <- 0
     if (ncol(pred) > 1) {
-        auprc.all = vector("numeric", ncol(pred))
+        auprc.all <- vector("numeric", ncol(pred))
         prc.all <- list()
         ev.all <- list()
         for (c in seq_len(ncol(pred))) {
-            ev.all[[c]] = evaluate.classifier(pred[, c], label$label, label,
+            ev.all[[c]] <- evaluate.classifier(pred[, c], label$label, label,
                                             verbose = verbose)
-            prc.all[[c]] = evaluate.get.pr(ev.all[[c]], verbose = verbose)
-            auprc.all[c] = evaluate.calc.aupr(ev.all[[c]], verbose = verbose)
+            prc.all[[c]] <- evaluate.get.pr(ev.all[[c]], verbose = verbose)
+            auprc.all[c] <- evaluate.calc.aupr(ev.all[[c]], verbose = verbose)
         }
-        ev = evaluate.classifier(apply(pred, 1, summ.stat), label$label, label)
+        ev <- evaluate.classifier(apply(pred, 1, summ.stat), label$label, label)
     } else {
-        ev = evaluate.classifier(as.vector(pred), label$label, label,
+        ev <- evaluate.classifier(as.vector(pred), label$label, label,
                                 verbose = verbose)
     }
 
-    prc = evaluate.get.pr(ev, verbose = verbose)
+    prc <- evaluate.get.pr(ev, verbose = verbose)
     auprc <- c(evaluate.calc.aupr(ev, verbose = verbose))
 
     if (ncol(pred) > 1) {
@@ -274,7 +274,7 @@ evaluate.classifier <-
             # assuming that a single model was applied to predict the data set
             stopifnot(length(test.label) == length(predictions))
             # actual evaluations per threshold value
-            tp = vapply(
+            tp <- vapply(
                 thr,
                 FUN = function(x) {
                     sum(test.label == max(label$info)
@@ -283,7 +283,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(1)
             )
-            fp = vapply(
+            fp <- vapply(
                 thr,
                 FUN = function(x) {
                     sum(test.label == min(label$info)
@@ -292,7 +292,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(1)
             )
-            tn = vapply(
+            tn <- vapply(
                 thr,
                 FUN = function(x) {
                     sum(test.label == min(label$info)
@@ -301,7 +301,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(1)
             )
-            fn = vapply(
+            fn <- vapply(
                 thr,
                 FUN = function(x) {
                     sum(test.label == max(label$info)
@@ -315,7 +315,7 @@ evaluate.classifier <-
             # and predictions of each model occupy one
             # column
             stopifnot(length(test.label) == nrow(predictions))
-            tp = t(vapply(
+            tp <- t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(
@@ -329,7 +329,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(2)
             ))
-            fp = t(vapply(
+            fp <- t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(
@@ -343,7 +343,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(2)
             ))
-            tn = t(vapply(
+            tn <- t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(
@@ -357,7 +357,7 @@ evaluate.classifier <-
                 USE.NAMES = FALSE,
                 FUN.VALUE = integer(2)
             ))
-            fn = t(vapply(
+            fn <- t(vapply(
                 thr,
                 FUN = function(x) {
                     apply(
@@ -389,11 +389,11 @@ evaluate.area.trapez <- function(x, y, verbose = 0) {
     if (verbose > 2)
         message("+ starting evaluate.area.trapez")
     if (x[1] > x[length(x)]) {
-        x = rev(x)
-        y = rev(y)
+        x <- rev(x)
+        y <- rev(y)
     }
-    xd = x[-1] - x[-length(x)]
-    ym = 0.5 * (y[-1] + y[-length(y)])
+    xd <- x[-1] - x[-length(x)]
+    ym <- 0.5 * (y[-1] + y[-length(y)])
     if (verbose > 2)
         message("+ finished evaluate.area.trapez")
     return(xd %*% ym)
@@ -404,12 +404,12 @@ evaluate.area.trapez <- function(x, y, verbose = 0) {
 evaluate.get.pr <- function(eval, verbose = 0) {
     if (verbose > 2)
         message("+ starting evaluate.get.pr")
-    tpr = eval$tp / (eval$tp + eval$fn)
-    ppv = eval$tp / (eval$tp + eval$fp)
+    tpr <- eval$tp / (eval$tp + eval$fn)
+    ppv <- eval$tp / (eval$tp + eval$fp)
     # at thresholds where the classifier makes no positive predictions at all,
     # we (somewhat arbitrarily) set its
     # precision to 1
-    ppv[is.na(ppv)] = 1
+    ppv[is.na(ppv)] <- 1
     if (verbose > 2)
         message("+ finished evaluate.get.pr")
     return(list(recall = tpr, precision = ppv))
@@ -423,8 +423,8 @@ evaluate.calc.aupr <- function(eval,
     verbose = 0) {
     if (verbose > 2)
         message("+ starting evaluate.calc.aupr")
-    pr = evaluate.get.pr(eval, verbose = verbose)
-    idx = pr$recall <= max.tpr
+    pr <- evaluate.get.pr(eval, verbose = verbose)
+    idx <- pr$recall <= max.tpr
     if (verbose > 2)
         message("+ finished evaluate.calc.aupr")
     return(evaluate.area.trapez(pr$recall[idx], pr$precision[idx]))

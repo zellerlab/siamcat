@@ -151,8 +151,8 @@ siamcat <- function(..., feat=NULL, label=NULL, meta=NULL, phyloseq=NULL,
             arglistphyloseq <- other.args[vapply(names(other.args),
                 is.component.class,
                 "phyloseq", FUN.VALUE = logical(1))]
-            arglistphyloseq$otu_table = feat
-            arglistphyloseq$sam_data = meta
+            arglistphyloseq$otu_table <- feat
+            arglistphyloseq$sam_data <- meta
     } else {
         arglistphyloseq <- list('otu_table'=feat, 'sam_data'=meta)
     }
@@ -251,7 +251,7 @@ get.component.classes <- function(class) {
 
 # Returns TRUE if x is a component class, FALSE otherwise.
 #' @keywords internal
-is.component.class = function(x, class) {
+is.component.class <- function(x, class) {
     x %in% get.component.classes(class)
 }
 

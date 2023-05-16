@@ -147,7 +147,7 @@ summarize.features <- function(siamcat, level = "g__",
                     tax.table.red <- tax.table.red[-which(
                         tax.table.red[,idx]==g),]
                     temp <- vapply(colnames(temp), FUN=function(x){
-                        y=temp[,x]
+                        y <- temp[,x]
                         if(length(unique(y))==1){
                             return(unique(y))
                         } else {
