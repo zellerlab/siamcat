@@ -291,9 +291,9 @@ single.roc.plot <- function(siamcat, colour, show.all, verbose) {
     x <- as.numeric(rownames(roc.summ$ci))
     yl <- roc.summ$ci[, 1]
     yu <-  roc.summ$ci[, 3]
-    polygon(1 - c(x, rev(x)), c(yl, rev(yu)),
-       col = alpha(colour, alpha=0.1),
-       border = NA)
+    polygon(1 - c(x, rev(x)), c(yl, rev(yu)), 
+        col = alpha(colour, alpha=0.1),
+        border = NA)
 
     if (!is.null(eval.data$roc.all)){
         if (verbose > 1)

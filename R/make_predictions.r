@@ -248,9 +248,8 @@ make.external.predictions <- function(siamcat.trained, siamcat.external,
                             num.models, ")..."))
         if (label$type == 'BINARY'){
             data$label <- as.factor(c(unique(label$label),
-                                      sample(unique(label$label), 
-                                        size=nrow(data)-2,
-                                        replace=TRUE)))
+                sample(unique(label$label), 
+                    size=nrow(data)-2, replace=TRUE)))
             test.task <- TaskClassif$new(id='classif', backend=data,
                                         target='label')
             pdata <- model$model$predict(task=test.task)

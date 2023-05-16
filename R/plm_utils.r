@@ -102,9 +102,8 @@ create.mlr.learner <- function(method, nrow.data, param.set=NULL,
             } else {
                 type <- 0
             }
-          mlr_learners$add("classif.liblinear", 
-                           LearnerClassifLiblineaR)
-            learner <- lrn('classif.liblinear', type=type,
+            mlr_learners$add("classif.liblinear", LearnerClassifLiblineaR)
+            learner <- lrn('classif.liblinear', type=type, 
                 wi=use.param.set$class.weights,
                 epsilon=use.param.set$epsilon)
             learner$predict_type <- 'prob'
