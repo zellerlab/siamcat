@@ -219,7 +219,7 @@ check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
             label$label <- label$label[rownames(meta.red)]
             meta <- meta.red
         }
-        # check the formulat
+        # check the formula
         if (test=='wilcoxon' & formula!='feat~label'){
             warning("For confounder-corrected tests, SIAMCAT uses linear",
                     " mixed effect models. Changing test to 'lm'!")
@@ -335,7 +335,6 @@ analyze.binary.markers <- function(feat, meta, label, param.list) {
         rownames(df.temp) <- rownames(meta)
         df.temp$label <- label$label
     }
-
     effect.size <- t(vapply(rownames(feat), FUN = function(x){
 
         df.temp$feat <- feat[x,rownames(df.temp)]
@@ -376,17 +375,17 @@ analyze.binary.markers <- function(feat, meta, label, param.list) {
         } else if (param.list$test=='lm'){
             if (take.log) df.temp$feat <- log10(df.temp$feat +
                                                     param.list$log.n0)
-            if (param.list$formula=='feat~label'){
+            if (!grepl("1\\|", param.list$formula)){
                 fit <- lm(formula = as.formula(param.list$formula),
                             data=df.temp)
                 res <- coefficients(summary(fit))
-                p.val <- res[2,4]
+                p.val <- res['label',4]
             } else {
                 fit <- suppressMessages(
                     lmerTest::lmer(formula=as.formula(param.list$formula),
                                     data=df.temp))
                 res <- coefficients(summary(fit))
-                p.val <- res[2,5]
+                p.val <- res['label',5]
             }
         }
 
