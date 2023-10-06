@@ -114,7 +114,7 @@ eval.regr <- function(siamcat, s.time, verbose=0){
         # mean predictions
         pred.mean <- rowMeans(pred)
         ess <- sum((label$label - mean(label$label))^2)
-        rss <- sum((abs(pred.mean) - label$label)^2)
+        rss <- sum((pred.mean - label$label)^2)
         r2.mean <- 1 - rss/ess
         mae.mean <- mean(abs(pred.mean - label$label))
         mse.mean <- mean((abs(pred.mean - label$label))^2)
