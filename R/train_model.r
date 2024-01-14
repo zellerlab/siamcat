@@ -242,7 +242,7 @@ train.model <- function(siamcat, method = "lasso",
             }
             train.label <- label.fac[fold.exm.idx]
             data <-
-                as.data.frame(t(feat)[fold.exm.idx,])
+                as.data.frame(t(feat)[fold.exm.idx,,drop=FALSE])
             stopifnot(nrow(data) == length(train.label))
             stopifnot(all(rownames(data) == names(train.label)))
 
@@ -250,7 +250,11 @@ train.model <- function(siamcat, method = "lasso",
                 data <- perform.feature.selection(data, train.label,
                     param.fs, verbose)
             }
-
+            
+            if (ncol(data) < 2){
+              stop("Not enough features for training! Only ", ncol(data), 
+                   " feature found")
+            }
             data$label <- train.label
 
 
