@@ -189,6 +189,9 @@ check.associations <- function(siamcat, formula="feat~label", test='wilcoxon',
             if (is.null(meta)){
                 stop("Metadata is needed for paired testing!")
             }
+            if (test != 'wilcoxon'){
+              stop("Paired information can only be used with the Wilcoxon test")
+            }
             # check that each entry in "paired" has two samples associated with
             # a different label, filter out the rest
             groups <- unique(meta[[paired]])
@@ -369,9 +372,13 @@ analyze.binary.markers <- function(feat, meta, label, param.list) {
 
         # p.val
         if (param.list$test=='wilcoxon'){
-            p.val <- wilcox.test(formula=as.formula(param.list$formula),
-                            data=df.temp, exact=FALSE,
-                            paired=!is.null(param.list$paired))$p.value
+            if (is.null(param.list$paired)) {
+              p.val <- wilcox.test(formula=as.formula(param.list$formula),
+                                   data=df.temp, exact=FALSE)$p.value
+            } else {
+              p.val <- wilcox.test(x.pos, x.neg, paired=TRUE, 
+                                   exact=FALSE)$p.value
+            }
         } else if (param.list$test=='lm'){
             if (take.log) df.temp$feat <- log10(df.temp$feat +
                                                     param.list$log.n0)
