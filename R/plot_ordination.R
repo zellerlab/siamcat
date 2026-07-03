@@ -31,6 +31,10 @@
 #' \code{\link[ggplot2]{ggsave}} is allowed). If \code{NULL} (default),
 #' the plot is only returned as a ggplot object and not saved to disk.
 #'
+#' @param width numeric, width of the plot in inches, defaults to 7
+#'
+#' @param height numeric, height of the plot in inches, defaults to 6
+#'
 #' @return Returns the ggplot plot object invisibly
 #'
 #' @keywords SIAMCAT plot.ordination
@@ -56,7 +60,7 @@
 # called like this to differentiate from phyloseq::plot.ordination
 plot.ordination.siamcat <- function(
     siamcat, color.by=NULL, name.color.by=NULL, palette=NULL, font.size=14,
-    fn.plot = NULL, verbose = 1
+    fn.plot = NULL, verbose = 1, width = 7, height = 6
 ) { 
     if (verbose > 1) message("+++ Starting plot.ordination")
 
@@ -105,7 +109,7 @@ plot.ordination.siamcat <- function(
 
     if (verbose > 1) message("+++ Producing plot file")
     if (!is.null(fn.plot)) {
-         ggsave(fn.plot, p, bg="white", width=7, height=6)
+         ggsave(fn.plot, p, bg="white", width=width, height=height)
     }
 
     return(p)
