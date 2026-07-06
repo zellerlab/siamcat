@@ -117,6 +117,30 @@ setMethod("orig_feat", "otu_table", function(siamcat) {
 })
 
 ################################################################################
+#' Retrieve a \link[phyloseq]{taxonomyTable-class} object from the tax_table
+#' slot in the phyloseq slot in a siamcat object
+#'
+#' @usage taxonomy(siamcat)
+#' @param siamcat (Required). An instance of \link{siamcat-class}
+#' that contains a phyloseq object with an instance of
+#' \link[phyloseq]{taxonomyTable-class}.
+#' @return The \link[phyloseq]{taxonomyTable-class} object or NULL.
+#' @export
+#' @keywords internal
+#' @rdname taxonomy-methods
+#' @docType methods
+#' @examples
+#' data(siamcat_example)
+#' temp <- taxonomy(siamcat_example)
+setGeneric("taxonomy", function(siamcat)
+    standardGeneric("taxonomy"))
+#' @rdname taxonomy-methods
+#' @aliases taxonomy
+setMethod("taxonomy", "siamcat", function(siamcat) {
+    tax_table(physeq(siamcat))
+})
+
+################################################################################
 #' @title Retrieve the original features from a SIAMCAT object
 #'
 #' @description Function to retrieve the original features from a SIAMCAT

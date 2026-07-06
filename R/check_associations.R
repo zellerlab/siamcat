@@ -149,6 +149,12 @@ check.associations <- function(siamcat, formula="feat~label",
         }
         formula_obj <- as.formula(formula)
         random_effects_present <- !is.null(reformulas::findbars(formula_obj))
+
+        if (!is.null(test)){
+            if (length(test) != 1) {
+                stop("Test must be a string of length 1 or NULL")
+            }
+        }
         
         # check label
         label <- label(siamcat)
@@ -156,9 +162,10 @@ check.associations <- function(siamcat, formula="feat~label",
             stop('Can not check assocations for a',
                 ' SIAMCAT object with TEST label! Exiting...')
         }
-        if (label$type=='CONTINUOUS' & test == 'wilcoxon'){
-            stop("Cannot test a SIAMCAT object with regression label using",
-                    " the Wilcoxon test.")
+        if (label$type=='CONTINUOUS' && !is.null(test)){
+            if (test == 'wilcoxon'){
+                stop("Cannot test a SIAMCAT object with regression label using the Wilcoxon test.")
+            }
         }
         
         # set NULL test
@@ -282,9 +289,11 @@ check.associations <- function(siamcat, formula="feat~label",
         # if only alpha changed no need to rerun, just update the param.list
         if (!is.null(associations(siamcat, verbose=0))){
             old.params <- assoc_param(siamcat)
-            check <- all.equal(
-                param.list[-which(names(param.list)=='alpha')],
-                old.params[-which(names(old.params)=='alpha')]
+            check <- isTRUE(
+                all.equal(
+                    param.list[-which(names(param.list)=='alpha')],
+                    old.params[-which(names(old.params)=='alpha')]
+                )
             )
             check <- all(check, nrow(associations(siamcat)) == nrow(feat))
             check <- all(check,
