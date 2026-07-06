@@ -18,7 +18,12 @@
 #'
 #' @param name.color.by string, label for the color legend. If \code{NULL}
 #' (default), the value of \code{color.by} is used.
-#'
+#' 
+#' @param rename.values named vector, used to rename the values of the color.by variable.
+#' The names of the vector are the original values, and the values of the vector are the new names.
+#' If \code{NULL} (default), no renaming is performed.
+#' The order of the names in the vector determines the order of the labels in the legend.
+#' 
 #' @param palette for continuous \code{color.by}: a ColorBrewer palette name,
 #' defaults to \code{"RdBu"}. For categorical \code{color.by}: a vector of
 #' valid R colors, defaults to \code{okabe_palette}. If \code{NULL},
@@ -34,6 +39,8 @@
 #' @param width numeric, width of the plot in inches, defaults to 7
 #'
 #' @param height numeric, height of the plot in inches, defaults to 6
+#' 
+#' @param title string, title for the plot. If \code{NULL} (default), no title is added.
 #'
 #' @return Returns the ggplot plot object invisibly
 #'
@@ -59,8 +66,9 @@
 
 # called like this to differentiate from phyloseq::plot.ordination
 plot.ordination.siamcat <- function(
-    siamcat, color.by=NULL, name.color.by=NULL, palette=NULL, font.size=14,
-    fn.plot = NULL, verbose = 1, width = 7, height = 6
+    siamcat, color.by = NULL, name.color.by = NULL, palette = NULL, font.size = 14,
+    rename.values = NULL, fn.plot = NULL, verbose = 1, width = 7, height = 6,
+    title = NULL
 ) { 
     if (verbose > 1) message("+++ Starting plot.ordination")
 
@@ -95,7 +103,7 @@ plot.ordination.siamcat <- function(
         } else {
             if (is.null(palette)) palette <- okabe_palette
             if (length(unique(meta_col)) <= length(okabe_palette)) {
-                p <- p + scale_color_manual(values = palette)
+                p <- p + scale_color_manual(values = palette, , labels = rename.values, breaks = names(rename.values))
             } else warning("Refusing to set palette with fewer levels than groups in 'group.by'.")
         }
     } else if (!is.null(color.by)) {
@@ -106,6 +114,13 @@ plot.ordination.siamcat <- function(
     }
 
     p <- p + theme_siamcat(font.size)
+
+    if (!is.null(title)) {
+        if (!(is.character(title) && length(title) == 1)) {
+            stop("Title must be a single string of length 1.")
+        }
+        p <- p + ggtitle(title)
+    }
 
     if (verbose > 1) message("+++ Producing plot file")
     if (!is.null(fn.plot)) {

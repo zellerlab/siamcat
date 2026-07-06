@@ -405,6 +405,10 @@ check.eval.data <- function(object){
 check.ordination <- function(object){
     errors <- character()
     if (!is.null(object)) {
+        if (!('distmat' %in% names(object))){
+            msg <- "Missing distmat object in ordination object."
+            errors <- c(errors, msg)
+        }
         if (!('ord' %in% names(object))){
             msg <- "Missing ord object in ordination object."
             errors <- c(errors, msg)

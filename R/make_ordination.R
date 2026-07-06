@@ -47,8 +47,10 @@ make.ordination <- function(siamcat, distance="bray", method="PCoA", feature.typ
     # these can arise because of filtering
     feat <- feat[,colSums(feat) > 1e-4]
     temp_phyloseq <- phyloseq(otu_table=otu_table(feat, taxa_are_rows=TRUE))
+    dmat <- phyloseq::distance(temp_phyloseq, method = distance)
     ordination(siamcat) <- list(
-        ord = phyloseq::ordinate(temp_phyloseq, method = method, distance = distance),
+        ord = phyloseq::ordinate(temp_phyloseq, method = method, distance = dmat),
+        distmat = dmat,
         distance = distance,
         method = method
     )
