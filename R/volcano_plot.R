@@ -33,6 +33,10 @@
 #'
 #' @param annot.y.exp float, percent vertical expansion of the plot area
 #' to accommodate annotations
+#' 
+#' @param annot.force float, passed to geom_text_repel
+#' 
+#' @param annot.force_pull float, passed to geom_text_repel
 #'
 #' @param font.size integer, base font size for the plot
 #'
@@ -53,7 +57,7 @@
 volcano.plot <- function(
     siamcat, alpha = NULL, effect.metric = NULL, fn.plot = NULL,
     color.scheme = c("red", "blue", "gray"), annotate = 3,
-    annot.size = 4, annot.y.exp = 0.2, font.size = 14
+    annot.size = 4, annot.y.exp = 0.2, annot.force=20, annot.force_pull=0, font.size = 14
 ) {
     associations <- associations(siamcat, verbose = 0)
     if (is.null(associations)) {
@@ -200,7 +204,7 @@ volcano.plot <- function(
                 max(-log10(associations$p.adj)),
                 max(-log10(associations$p.adj)) * (1 + annot.y.exp)
             ),
-            show.legend = FALSE, size = annot.size, force = 20, force_pull = 0
+            show.legend = FALSE, size = annot.size, force = annot.force, force_pull = annot.force_pull
         ) +
         geom_hline(
             yintercept = -log10(assoc.param$alpha),

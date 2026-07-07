@@ -90,7 +90,7 @@ check.assoc <- function(object){
     }
     # check that assoc.param contains all entries
     if (!all(names(object$assoc.param) == c('formula', 'alpha', 'mult.corr',
-        'log.n0', 'pr.cutoff', 'test', 'feature.type', 'paired', 'probs.fc'))){
+        'log.n0', 'pr.cutoff', 'test', 'feature.type', 'paired', 'probs.fc', 'select.feats'))){
             msg <- 'Association testing parameters do not contain all entries!'
             errors <- c(errors, msg)
         }

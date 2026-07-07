@@ -12,7 +12,7 @@
 #' @usage check.associations(siamcat, formula="feat~label", test='wilcoxon', 
 #' alpha=0.05, mult.corr="fdr", log.n0=1e-06, pr.cutoff=1e-06, 
 #' probs.fc=seq(.1, .9, .05), paired=NULL, feature.type='filtered', 
-#' verbose = 1)
+#' select.feats=NULL, verbose = 1)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #' 
@@ -49,6 +49,14 @@
 #'
 #' If \code{feature.type} is \code{"normalized"}, the normalized abundances
 #' will not be log10-transformed.
+#'
+#' @param select.feats character vector, names of a subset of features to
+#' test for association, defaults to \code{NULL}, in which case all features
+#' of the given \code{feature.type} are tested. If supplied, all entries must
+#' match feature names present in the chosen feature matrix, otherwise the
+#' function will stop with an error. This is useful to restrict testing to
+#' a pre-specified set of features (e.g. features of interest) without
+#' having to re-filter or re-normalize the whole SIAMCAT object.
 #' 
 #' @param verbose integer, control output: \code{0} for no output at all, 
 #' \code{1} for only information about progress and success, \code{2} for 
@@ -97,6 +105,14 @@
 #' after an intervention, the `paired` parameter can be supplied to the 
 #' function. This indicated a column in the metadata table that holds the 
 #' information about pairing. Note: this is applicable only for the Wilcoxon test.
+#'
+#' @section Selecting a feature subset:
+#' By default, \code{check.associations} tests all features of the chosen
+#' \code{feature.type}. If you only want to test association for a subset
+#' of features (for example a pre-defined panel of taxa/genes), pass a
+#' character vector of feature names via \code{select.feats}. All names
+#' must be found among the rownames of the feature matrix corresponding to
+#' \code{feature.type}, otherwise the function stops with an error.
 #' 
 #' @return object of class \link{siamcat-class} with the slot 
 #' \code{associations} filled
@@ -124,9 +140,16 @@
 #' # this is not run during checks
 #' # siamcat_paired <- check.associations(siamcat_paired, 
 #' #     paired='Individual_ID')
+#'
+#' # Testing only a subset of features
+#' #
+#' # this is not run during checks
+#' # siamcat_example <- check.associations(siamcat_example,
+#' #     select.feats=c('Feature1', 'Feature2', 'Feature3'))
 check.associations <- function(siamcat, formula="feat~label",
     test=NULL, alpha=0.05, mult.corr="fdr", log.n0=1e-06, pr.cutoff=1e-06,
-    probs.fc=seq(.1, .9, .05), paired=NULL, feature.type='filtered',
+    probs.fc=seq(.1, .9, .05), paired=NULL, feature.type='normalized',
+    select.feats=NULL,
     verbose = 1) {
         canonical_formula_obj <- as.formula("feat ~ label")
 
@@ -232,6 +255,37 @@ check.associations <- function(siamcat, formula="feat~label",
             stop('This function expects compositional data. Exiting...')
         }
 
+        # check and apply select.feats
+        if (!is.null(select.feats)){
+            if (!is.character(select.feats)){
+                stop("select.feats must be a character vector of feature names.")
+            }
+            if (length(select.feats) == 0){
+                stop("select.feats must contain at least one feature name.")
+            }
+            if (any(duplicated(select.feats))){
+                warning("Duplicated entries in select.feats detected, ",
+                    "keeping only unique feature names.")
+                select.feats <- unique(select.feats)
+            }
+            missing.feats <- setdiff(select.feats, rownames(feat))
+            if (length(missing.feats) > 0){
+                msg <- paste0("The following features in select.feats are ",
+                    "not present among the '", feature.type,
+                    "' features: ", paste(head(missing.feats, 10),
+                    collapse=", "),
+                    if (length(missing.feats) > 10) ", ..." else "",
+                    ". Exiting...")
+                stop(msg)
+            }
+            if (verbose > 1){
+                message("+ restricting association testing to ",
+                    length(select.feats), " out of ", nrow(feat),
+                    " features via select.feats")
+            }
+            feat <- feat[select.feats, , drop=FALSE]
+        }
+
         # check paired
         if (!is.null(paired)){
             if (label$type!='BINARY'){
@@ -283,7 +337,8 @@ check.associations <- function(siamcat, formula="feat~label",
             formula=formula, alpha=alpha, mult.corr=mult.corr,
             log.n0=log.n0, pr.cutoff=pr.cutoff,
             test=test, feature.type=feature.type,
-            paired=paired, probs.fc=probs.fc
+            paired=paired, probs.fc=probs.fc,
+            select.feats=select.feats
         )
 
         # if only alpha changed no need to rerun, just update the param.list
@@ -296,8 +351,10 @@ check.associations <- function(siamcat, formula="feat~label",
                 )
             )
             check <- all(check, nrow(associations(siamcat)) == nrow(feat))
-            check <- all(check,
+            if (check) {
+                check <- all(check,
                         all(rownames(associations(siamcat)) == rownames(feat)))
+            }
 
             if (check){
                 message("+ Enrichments have already been calculated!")
