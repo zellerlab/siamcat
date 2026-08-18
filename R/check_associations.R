@@ -520,7 +520,7 @@ analyze.binary.markers <- function(df.temp, feat, feat_orig, meta, label, param.
             } else {
                 stop("Unrecognised test, please raise an issue with the package developper.")
             }
-            p.val <- anova(fit_null, fit, test="LRT")[2, "Pr(>Chi)"]
+            p.val <- anova(fit_null, fit, test="LRT")[2, "Pr(>Chisq)"]
         }
 
         pb$tick()
