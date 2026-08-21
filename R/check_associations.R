@@ -509,6 +509,7 @@ analyze.binary.markers <- function(df.temp, feat, feat_orig, meta, label, param.
                 fit <- lm(formula=formula_obj, data=df.temp)
                 fit_null <- lm(formula=formula_null_obj, data=df.temp)
                 beta <- coef(fit)[['label']]
+                p.val <- anova(fit_null, fit, test="LRT")[2, "Pr(>Chi)"]
             } else if (param.list$test == "lmer"){
                 fit <- suppressMessages(
                     lme4::lmer(formula=formula_obj, data=df.temp, REML = FALSE)
@@ -517,10 +518,10 @@ analyze.binary.markers <- function(df.temp, feat, feat_orig, meta, label, param.
                     lme4::lmer(formula=formula_null_obj, data=df.temp, REML = FALSE)
                 )
                 beta <- lme4::fixef(fit)[['label']]
+                p.val <- anova(fit_null, fit, test="LRT")[2, "Pr(>Chisq)"]
             } else {
                 stop("Unrecognised test, please raise an issue with the package developper.")
             }
-            p.val <- anova(fit_null, fit, test="LRT")[2, "Pr(>Chisq)"]
         }
 
         pb$tick()
