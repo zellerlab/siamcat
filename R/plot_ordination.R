@@ -102,8 +102,14 @@ plot.ordination.siamcat <- function(
             p <- p + scale_color_distiller(palette = palette)
         } else {
             if (is.null(palette)) palette <- okabe_palette
+            if (is.null(rename.values)) {
+                labels <- unique(meta_col)
+                names(labels) <- labels
+            } else {
+                labels <- rename.values
+            }
             if (length(unique(meta_col)) <= length(okabe_palette)) {
-                p <- p + scale_color_manual(values = palette, , labels = rename.values, breaks = names(rename.values))
+                p <- p + scale_color_manual(values = palette, , labels = labels, breaks = names(labels))
             } else warning("Refusing to set palette with fewer levels than groups in 'group.by'.")
         }
     } else if (!is.null(color.by)) {
