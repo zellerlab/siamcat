@@ -39,6 +39,10 @@
 #' @param annot.force_pull float, passed to geom_text_repel
 #'
 #' @param font.size integer, base font size for the plot
+#' 
+#' @param title string or boolean or NULL, title for the plot.
+#' If \code{NULL}, the label name will be used.
+#' If \code{FALSE}, no title will be added.
 #'
 #' @return Returns the ggplot plot object
 #'
@@ -57,7 +61,8 @@
 volcano.plot <- function(
     siamcat, alpha = NULL, effect.metric = NULL, fn.plot = NULL,
     color.scheme = c("red", "blue", "gray"), annotate = 3,
-    annot.size = 4, annot.y.exp = 0.2, annot.force=20, annot.force_pull=0, font.size = 14
+    annot.size = 4, annot.y.exp = 0.2, annot.force=20, annot.force_pull=0,
+    font.size = 14, title=NULL
 ) {
     associations <- associations(siamcat, verbose = 0)
     if (is.null(associations)) {
@@ -237,18 +242,18 @@ volcano.plot <- function(
         )
     }
 
-    # save the plot
-    if (!is.null(fn.plot)) {
-        ggsave(
-            fn.plot, plot, bg = "white", height = 6, width = 7
-        )
-    }
-
     if (!isFALSE(title)) {
         if (!is.character(title)) {
             title <- label(siamcat)$name
         }
         plot <- plot + ggtitle(title)
+    }
+
+    # save the plot
+    if (!is.null(fn.plot)) {
+        ggsave(
+            fn.plot, plot, bg = "white", height = 6, width = 7
+        )
     }
 
     return(plot)
