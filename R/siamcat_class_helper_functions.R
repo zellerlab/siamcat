@@ -57,7 +57,8 @@ filter.label <- function(siamcat, ids, verbose = 1) {
     labels_new <- list(
         label = label_old$label[ids],
         info = label_old$info,
-        type = label_old$type
+        type = label_old$type,
+        name = label_old$name
     )
 
     if (verbose > 1){

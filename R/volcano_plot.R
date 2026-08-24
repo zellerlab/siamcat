@@ -244,5 +244,12 @@ volcano.plot <- function(
         )
     }
 
+    if (!isFALSE(title)) {
+        if (!is.character(title)) {
+            title <- label(siamcat)$name
+        }
+        plot <- plot + ggtitle(title)
+    }
+
     return(plot)
 }

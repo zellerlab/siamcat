@@ -130,7 +130,7 @@ trim <- function(x) {
 #'
 #' @return a list with tow items \itemize{
 #' \item \code{$type} type of the label: BINARY CONTINUOUS or CATEGORICAL
-#' \item \code{$class.descr} lables and information on what do they mean
+#' \item \code{$class.descr} labels and information on what do they mean
 #'}
 #'
 #' @keywords internal

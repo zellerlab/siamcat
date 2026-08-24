@@ -11,7 +11,7 @@
 check.label <- function(object){
     errors <- character()
     # check that all entries are there
-    if (!all(names(object) == c('label', 'info', 'type'))){
+    if (!all(names(object) == c('label', 'info', 'type', 'name'))){
         msg <- 'Label object does not contain all needed entries!'
         errors <- c(errors, msg)
     }

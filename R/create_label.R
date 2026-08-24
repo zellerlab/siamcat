@@ -41,6 +41,10 @@
 #' metadata should be retained. Please note that if this is set to
 #' \code{TRUE}, the function will return a list as result. Defaults to
 #' \code{FALSE}
+#' 
+#' @param label.name name of the label to be used in the SIAMCAT object.
+#' If not provided, the name of the column in the metadata will be used.
+#' If no metadata is provided, the label will be named "unnamed label".
 #'
 #' @param verbose integer, control output: \code{0} for no output at all, 
 #' \code{1} for only information about progress and success, \code{2} for 
@@ -72,14 +76,21 @@
 #' data('meta_crc_zeller')
 #'
 #' label <- create.label(label='Group', case='CRC', meta=meta.crc.zeller)
-create.label <- function(label, case=NULL, meta=NULL, control=NULL,
-    p.lab=NULL, n.lab=NULL, remove.meta.column=FALSE, verbose=1) {
+create.label <- function(
+    label, case=NULL, meta=NULL, control=NULL,
+    p.lab=NULL, n.lab=NULL, remove.meta.column=FALSE,
+    label.name=NULL, verbose=1
+) {
     if (verbose > 1)
         message("+ starting create.label")
     s.time <- proc.time()[3]
 
     #if metadata has been supplied and the label is of length 1
     if (!is.null(meta) & length(label) == 1){
+        # set column name as label.name if not provided
+        if (is.null(label.name)){
+            label.name <- label
+        }
         if (!label %in% colnames(meta))
             stop("Column ", label, " not found in the metadata\n")
         if (is(meta,'sample_data')){
@@ -108,6 +119,11 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
             'either a column name and metadata or a',
             ' label vector.\nExiting...!')
         stop(msg)
+    }
+
+    # if the label is passed as a vector and no name is provided
+    if(is.null(label.name)){
+        label.name <- "unnamed label"
     }
 
     # remove NAs in the label
@@ -190,19 +206,16 @@ create.label <- function(label, case=NULL, meta=NULL, control=NULL,
 
         label.new$info <- info
         label.new$type <- "BINARY"
-
-        label.new <- label.new
     } else if (is.double(label.vec) | is.integer(label.vec)){
         if (!is.null(case) | !is.null(control)){
             msg <- paste0("Case and control parameters will be ignored for",
                         " continuous labels!")
             warning(msg)
         }
-
         label.new <- list(label=label.vec, info=range(label.vec), 
                             type='CONTINUOUS')
-
     }
+    label.new$name <- label.name
 
     e.time <- proc.time()[3]
     if (verbose > 0){
