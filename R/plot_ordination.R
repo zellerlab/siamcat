@@ -19,6 +19,16 @@
 #' @param name.color.by string, label for the color legend. If \code{NULL}
 #' (default), the value of \code{color.by} is used.
 #' 
+#' @param shape.by string, name of a column in the sample metadata to use
+#' for setting the shape of points. If \code{NULL} (default), points are all of the same shape.
+#' Must be a categorical variable.
+#'
+#' @param name.shape.by string, label for the shape legend. If \code{NULL}
+#' (default), the value of \code{shape.by} is used.
+#'
+#' @param name.color.by string, label for the color legend. If \code{NULL}
+#' (default), the value of \code{color.by} is used.
+#' 
 #' @param rename.values named vector, used to rename the values of the color.by variable.
 #' The names of the vector are the original values, and the values of the vector are the new names.
 #' If \code{NULL} (default), no renaming is performed.
@@ -66,8 +76,8 @@
 
 # called like this to differentiate from phyloseq::plot.ordination
 plot.ordination.siamcat <- function(
-    siamcat, color.by = NULL, name.color.by = NULL, palette = NULL, font.size = 14,
-    rename.values = NULL, fn.plot = NULL, verbose = 1, width = 7, height = 6,
+    siamcat, color.by = NULL, shape.by = NULL, name.color.by = NULL, name.shape.by = NULL, font.size = 14,
+    palette = NULL, rename.values = NULL, fn.plot = NULL, verbose = 1, width = 7, height = 6,
     title = NULL
 ) { 
     if (verbose > 1) message("+++ Starting plot.ordination")
@@ -87,36 +97,71 @@ plot.ordination.siamcat <- function(
     # samples may differ because of dropping zero-abundance samples
     # see make.ordination
     meta <- meta[rownames(meta) %in% rownames(ord$vectors)]
+     # randomize order to avoid bias in plotting
+    meta <- meta[sample(rownames(meta)), , drop=FALSE]
     temp.phyloseq <- phyloseq(meta=meta)
 
     if (verbose > 1) message("+++ Generating plot")
-    if (!is.null(color.by) && color.by %in% colnames(meta)) {
+    if (!is.null(color.by)) {
+        if (! (color.by %in% colnames(meta))) {
+            stop("color.by column not found in metadata.")
+        }
         if (is.null(name.color.by)) name.color.by <- color.by
-        p <- phyloseq::plot_ordination(temp.phyloseq, ord, color=color.by) +
-            labs(x=xlab, y=ylab, color=name.color.by)
-        # override the shape
+    }
+    if (!is.null(shape.by) && shape.by %in% colnames(meta)) {
+        if (! (shape.by %in% colnames(meta))) {
+            stop("shape.by column not found in metadata.")
+        }
+        if (length(unique(meta[[shape.by]])) > 15) {
+            stop("shape.by column has more than 15 unique values.")
+        }
+        shapes <- 1:length(unique(meta[[shape.by]]))
+        set_shapes <- TRUE
+        if (is.null(name.shape.by)) name.shape.by <- shape.by
+    } else {
+        set_shapes <- FALSE
+    }
+
+    p <- phyloseq::plot_ordination(temp.phyloseq, ord, color=color.by, shape=shape.by) +
+        labs(x=xlab, y=ylab, color=name.color.by, shape=name.shape.by)
+
+    # override the shape
+    if (is.null(shape.by)) {
         p$layers[[1]]$aes_params$shape <- 1
+    }
+
+    # set color palette
+    if (!is.null(color.by)) {
         meta_col <- meta[[color.by]]
         if (is.numeric(meta_col)) {
             if (is.null(palette)) palette <- "RdBu"
             p <- p + scale_color_distiller(palette = palette)
         } else {
-            if (is.null(palette)) palette <- okabe_palette
             if (is.null(rename.values)) {
                 labels <- unique(meta_col)
                 names(labels) <- labels
             } else {
                 labels <- rename.values
             }
-            if (length(unique(meta_col)) <= length(okabe_palette)) {
-                p <- p + scale_color_manual(values = palette, , labels = labels, breaks = names(labels))
-            } else warning("Refusing to set palette with fewer levels than groups in 'group.by'.")
+            if (!is.null(palette)) {
+                if (length(unique(meta_col)) > length(palette)) {
+                    warning("The number of unique values in the color.by column is greater than the length of the provided palette. Discarding the provided palette and using the default palette instead.")
+                    palette <- NULL
+                }
+            }
+            if (is.null(palette)) {
+                if (length(unique(meta_col)) <= length(okabe_palette)) {
+                    palette <- okabe_palette
+                } else {
+                    palette <- RColorBrewer::brewer.pal(n = length(unique(meta_col)), name = "Set2")
+                }
+            }
+            p <- p + scale_color_manual(values = palette, labels = labels, breaks = names(labels))
         }
-    } else if (!is.null(color.by)) {
-        stop("color.by column not found in sample data.")
-    } else {
-        p <- phyloseq::plot_ordination(siamcat@phyloseq, ord) +
-                labs(x=xlab, y=ylab) 
+    }
+
+    if (set_shapes){
+        p <- p + scale_shape_manual(values = shapes)
     }
 
     p <- p + theme_siamcat(font.size)

@@ -338,7 +338,7 @@ validate.label <- function(label, feat, meta, case, control, verbose){
         'the complete workflow...')
         warning(msg)
         label <- list(label = rep(-1, ncol(feat)),
-            info=c('TEST'=-1), type="TEST")
+            info=c('TEST'=-1), type="TEST", name="TEST")
         names(label$label) <- colnames(feat)
     } else if (is.list(label)){
         label <- label
