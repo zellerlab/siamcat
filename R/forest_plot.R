@@ -1,14 +1,13 @@
 #!/usr/bin/Rscript
 ### SIAMCAT - Statistical Inference of Associations between
 ### Microbial Communities And host phenoTypes R flavor EMBL
-### Heidelberg 2012-2018 GNU GPL 3.0
 
-#' @title Visualize associations between features and classes as volcano plot
+#' @title Visualize associations between features and classes as forest plot
 #'
-#' @description This function creates a volcano plot to visualize the
+#' @description This function creates a forest plot to visualize the
 #' association between features and the label
 #'
-#' @usage volcano.plot(siamcat)
+#' @usage forest.plot(siamcat)
 #'
 #' @param siamcat object of class \link{siamcat-class}
 #'
@@ -22,21 +21,18 @@
 #' @param fn.plot string, filename for the plot (any extension supported by
 #' ggsave is allowed). If \code{fn.plot} is \code{NULL}, the plot will only
 #' be returned as a ggplot object.
+#' 
+#' @ param max.feat integer, maximum number of features to plot. Defaults to 30.
+#' 
+#' @ param max.pos.feat integer, maximum number of positively associated features to plot. Defaults to \code{NULL}.
+#' If set, this parameter overrides max.feat.
+#' 
+#' @ param max.neg.feat integer, maximum number of negatively associated features to plot. Defaults to \code{NULL}.
+#' If set, this parameter overrides max.feat.
 #'
 #' @param color.scheme valid R color scheme or vector of valid R colors (must
-#' be of length 3 for positive, negative, and non-significant associations),
-#' defaults to \code{NULL}, which uses the standard muted red, blue, and gray palette.
-#'
-#' @param annotate integer, number of features to annotate with the name
-#'
-#' @param annot.size integer, size of annotation text
-#'
-#' @param annot.y.exp float, percent vertical expansion of the plot area
-#' to accommodate annotations
-#' 
-#' @param annot.force float, passed to geom_text_repel
-#' 
-#' @param annot.force_pull float, passed to geom_text_repel
+#' be of length 2 for positive and negative associations),
+#' defaults to \code{NULL}, which uses the standard muted red and blue palette.
 #'
 #' @param font.size integer, base font size for the plot
 #' 
@@ -53,7 +49,7 @@
 #'
 #' @return Returns the ggplot plot object
 #'
-#' @keywords SIAMCAT volcano.plot
+#' @keywords SIAMCAT forest.plot
 #'
 #' @export
 #'
@@ -64,14 +60,13 @@
 #' data(siamcat_example)
 #'
 #' # Simple example
-#' volcano.plot(siamcat_example, fn.plot = "./volcano.pdf")
-volcano.plot <- function(
+#' forest.plot(siamcat_example, fn.plot = "./forest.pdf")
+forest.plot <- function(
     siamcat, alpha = NULL, effect.metric = NULL, fn.plot = NULL,
-    color.scheme = NULL, annotate = 3,
-    annot.size = 4, annot.y.exp = 0.2, annot.force=20, annot.force_pull=0,
-    font.size = 14, feat.renamer = NULL, title=NULL, width = 7, height = 6
+    color.scheme = NULL, max.feat = 30, max.pos.feat = NULL, max.neg.feat = NULL,
+    feat.renamer = NULL, font.size = 14, title=NULL, width = 7, height = 6
 ) {
-    if (is.null(color.scheme)) color.scheme <- pos_neg_neut_palette
+    if (is.null(color.scheme)) color.scheme <- pos_neg_neut_palette[1:2]
     associations <- associations(siamcat, verbose = 0)
     if (is.null(associations)) {
         stop(
@@ -101,7 +96,7 @@ volcano.plot <- function(
         "1" = {
             tryCatch(
                 {
-                    col <- brewer.pal(3, color.scheme)[c(1, 3, 2)]
+                    col <- brewer.pal(2, color.scheme)
                 },
                 error = function(e) {
                     stop(
@@ -110,10 +105,10 @@ volcano.plot <- function(
                     )
                 }
             )
-        }, "3" = {
+        }, "2" = {
             tryCatch(col2rgb(color.scheme), error = function(e) {
                 stop(
-                    "color.scheme contains 3 elements, so it is interpreted ",
+                    "color.scheme contains 2 elements, so it is interpreted ",
                     "as containing individual colors, but the color names are",
                     " invalid."
                 )
@@ -122,7 +117,7 @@ volcano.plot <- function(
         },
         {
             stop(
-                "color.scheme must contain 3 R color values or",
+                "color.scheme must contain 2 R color values or",
                 " the name of 1 ColorBrewer palette."
             )
         }
@@ -170,98 +165,63 @@ volcano.plot <- function(
         },
         {stop(sprintf("effect.metric %s is invalid", effect.metric))}
     )
+    
+    associations <- associations[associations$p.adj < assoc.param$alpha,]
+    if (nrow(associations) == 0) stop("No significant associations to show.")
+    associations <- associations[order(associations$p.adj),]
 
-    ns.label <- "n. s."
     switch(label(siamcat)$type,
         "CONTINUOUS" = {
             fill_lab <- "Effect direction"
-            associations$class <- ifelse(
-                associations$p.adj < assoc.param$alpha,
-                ifelse(associations$eff > eff.midpoint, "Positive", "Negative"),
-                ns.label
-            )
-            names(col) <- c("Positive", "Negative", ns.label)
+            associations$class <- ifelse(associations$eff > eff.midpoint, "Positive", "Negative")
+            names(col) <- c("Positive", "Negative")
         },
         "BINARY" = {
             fill_lab <- "Enrichment"
             control.label <- names(label(siamcat)$info)[label(siamcat)$info == -1]
             case.label <- names(label(siamcat)$info)[label(siamcat)$info == 1]
-            names(col) <- c(case.label, control.label, ns.label)
-            associations$class <- ifelse(
-                associations$p.adj < assoc.param$alpha,
-                ifelse(associations$eff > eff.midpoint, case.label, control.label),
-                ns.label
-            )
+            names(col) <- c(case.label, control.label)
+            associations$class <- ifelse(associations$eff > eff.midpoint, case.label, control.label)
         },
         {
             stop("label type is invalid. Please raise an issue with the package developers.")
         }
     )
 
-    associations.to.label <- associations[associations$p.adj < assoc.param$alpha,]
-    associations.to.label <- associations.to.label[order(associations.to.label$p.adj),]
-    associations.to.label <- rbind(
-        head(associations.to.label[associations.to.label$eff > eff.midpoint, ], annotate),
-        head(associations.to.label[associations.to.label$eff < eff.midpoint, ], annotate)
-    )
+    if (is.null(max.feat) && (is.null(max.pos.feat) || is.null(max.neg.feat))) {
+        stop("max.feat cannot be NULL if either max.pos.feat and max.neg.feat are also NULL.")
+        if (length(max.feat) != 1) stop("max.feat must be a single integer value.")
+    }
+    if (is.null(max.pos.feat) && is.null(max.neg.feat)) {
+        associations <- head(associations, max.feat)
+    } else {
+        if (!is.null(max.pos.feat) && length(max.pos.feat) != 1) stop("max.pos.feat must be a single integer value.")
+        if (!is.null(max.neg.feat) && length(max.neg.feat) != 1) stop("max.neg.feat must be a single integer value.")
+        if (is.null(max.pos.feat)) {
+            max.pos.feat <- max(max.feat - max.neg.feat, 0)
+        } else if (is.null(max.neg.feat)) {
+            max.neg.feat <- max(max.feat - max.pos.feat, 0)
+        }
+        associations <- rbind(
+            head(associations[associations$eff > eff.midpoint, ], max.pos.feat),
+            head(associations[associations$eff < eff.midpoint, ], max.neg.feat)
+        )
+    }
 
-    mult.corr.label <- c(
-        "holm" = "q",
-        "hochberg" = "q",
-        "hommel" = "q",
-        "bonferroni" = "q",
-        "BH" = "q",
-        "BY" = "q",
-        "fdr" = "q",
-        "none" = "p"
-    )[[assoc.param$mult.corr]]
+    associations$label <- factor(associations$label, levels = associations$label[order(associations$eff)])
 
     plot <- ggplot(
         associations,
-        aes(
-            x = eff, y = -log10(p.adj),
-            size = pr.all, fill = class, label = label
-        )
+        aes(x = eff, y = label, fill = class)
     ) +
-        geom_point(shape = 21, alpha = 0.3) +
-        ggrepel::geom_text_repel(
-            data = associations.to.label,
-            ylim = c(
-                max(-log10(associations$p.adj)),
-                max(-log10(associations$p.adj)) * (1 + annot.y.exp)
-            ),
-            show.legend = FALSE, size = annot.size, force = annot.force, force_pull = annot.force_pull
-        ) +
-        geom_hline(
-            yintercept = -log10(assoc.param$alpha),
-            color = "gray", lty = "dashed", lwd = 0.5
-        ) +
+        geom_col() +
         scale_fill_manual(
             values = col, breaks = names(col),
             guide = guide_legend(override.aes = list(size = 6))
         ) +
-        scale_size(guide = guide_legend(reverse = TRUE)) +
-        labs(
-            x = xlab, y = bquote(-log[10](italic(.(mult.corr.label)))),
-            size = "Prevalence", fill = fill_lab
-        ) +
-        theme_siamcat(font.size)
+        labs(x = xlab, fill = fill_lab) +
+        theme_siamcat_forest(font.size)
 
-    # compute maximum y (hard to do a priori because of ggrepel)
-    # this is for shifting the annotation of relative units to the plot area
-    y_span <- diff(layer_scales(plot)$y$range$range)
-    plot <- plot + annotate(
-        "text",
-        x = Inf, y = -log10(assoc.param$alpha) + 0.02*y_span,
-        label = deparse(bquote(alpha ~ "=" ~ .(assoc.param$alpha))),
-        color = "gray40", parse = TRUE, hjust = 1, vjust = 0
-    )
-
-    if (nrow(associations.to.label) != 0) {
-        plot <- plot + scale_y_continuous(
-            expand = expansion(mult = c(0.05, annot.y.exp))
-        )
-    }
 
     if (!isFALSE(title)) {
         if (!is.character(title)) {

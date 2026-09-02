@@ -72,7 +72,26 @@ theme_siamcat_hist <- function(font.size){
 }
 
 #'@keywords internal
+theme_siamcat_forest <- function(font.size){
+    line.size <- 0.5
+    half.line <- font.size / 2
+    theme_siamcat(font.size) %+replace%
+        theme(
+            axis.title.y = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.line.y = element_blank(),
+            panel.border = element_rect(colour = "black"),
+            panel.grid.major.x = element_line(color = "black", linewidth = 0.05),
+            legend.position = "none"
+        )
+}
+
+#'@keywords internal
 okabe_palette <- c(
     "black", "#E69F00", "#56B4E9", "#009E73",
     "#F0E442", "#0072B2", "#D55E00", "#CC79A7"
 )
+
+#'@keywords internal
+pos_neg_neut_palette <- c("#832424", "#3A3A98", "gray")
