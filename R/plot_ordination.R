@@ -34,6 +34,8 @@
 #' If \code{NULL} (default), no renaming is performed.
 #' The order of the names in the vector determines the order of the labels in the legend.
 #' 
+#' @param alpha numeric, transparency of the points
+#' 
 #' @param palette for continuous \code{color.by}: a ColorBrewer palette name,
 #' defaults to \code{"RdBu"}. For categorical \code{color.by}: a vector of
 #' valid R colors, defaults to \code{okabe_palette}. If \code{NULL},
@@ -77,8 +79,8 @@
 # called like this to differentiate from phyloseq::plot.ordination
 plot.ordination.siamcat <- function(
     siamcat, color.by = NULL, shape.by = NULL, name.color.by = NULL, name.shape.by = NULL, font.size = 14,
-    palette = NULL, rename.values = NULL, fn.plot = NULL, verbose = 1, width = 7, height = 6,
-    title = NULL
+    palette = NULL, rename.values = NULL, alpha = 0.6,
+    fn.plot = NULL, verbose = 1, width = 7, height = 6, title = NULL
 ) { 
     if (verbose > 1) message("+++ Starting plot.ordination")
 
@@ -127,8 +129,12 @@ plot.ordination.siamcat <- function(
 
     # override the shape
     if (is.null(shape.by)) {
-        p$layers[[1]]$aes_params$shape <- 1
+        p$layers[[1]]$aes_params$shape <- 19
     }
+
+    # override alpha
+    if (!(is.numeric(alpha) && length(alpha) == 1 && alpha <= 1 && alpha >= 0)) stop ("Value for parameter alpha must be a single float between 0 and 1.")
+    p$layers[[1]]$aes_params$alpha <- alpha
 
     # set color palette
     if (!is.null(color.by)) {
